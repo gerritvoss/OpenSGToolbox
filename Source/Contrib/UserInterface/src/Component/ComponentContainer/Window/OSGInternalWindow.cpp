@@ -152,7 +152,7 @@ void InternalWindow::close(void)
 
     if(!_VetoWindowClose && getDrawingSurface() != NULL)
     {
-        getDrawingSurface()->closeWindow(InternalWindowRefPtr(this));
+        getDrawingSurface()->closeWindow(this);
         produceWindowClosed();
     }
 }
@@ -189,9 +189,9 @@ bool InternalWindow::takeFocus(bool Temporary)
     {
         if(getDrawingSurface()->getFocusedWindow() != NULL)
         {
-            getDrawingSurface()->getFocusedWindow()->giveFocus(InternalWindowRefPtr(this));
+            getDrawingSurface()->getFocusedWindow()->giveFocus(this);
         }
-        getDrawingSurface()->setFocusedWindow(InternalWindowRefPtr(this));
+        getDrawingSurface()->setFocusedWindow(this);
         focusGained(FocusEvent::create(ComponentRefPtr(this),getSystemTime(),Temporary, getDrawingSurface()->getFocusedWindow()));
     }
     return true;
@@ -843,6 +843,42 @@ void InternalWindow::removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void InternalWindow::onCreate(const InternalWindow * Id)
+{
+    if(Id != NULL)
+    {
+        if(Id->getTitlebar() != NULL)
+        {
+            FieldContainerUnrecPtr FCCopy(Id->getTitlebar()->shallowCopy());
+            setTitlebar(dynamic_pointer_cast<Titlebar>(FCCopy));
+        }
+        if(Id->getBorder() != NULL)
+        {
+            FieldContainerUnrecPtr FCCopy(Id->getBorder()->shallowCopy());
+            setBorder(dynamic_pointer_cast<Border>(FCCopy));
+        }
+        if(Id->getDisabledBorder() != NULL)
+        {
+            FieldContainerUnrecPtr FCCopy(Id->getDisabledBorder()->shallowCopy());
+            setDisabledBorder(dynamic_pointer_cast<Border>(FCCopy));
+        }
+        if(Id->getFocusedBorder() != NULL)
+        {
+            FieldContainerUnrecPtr FCCopy(Id->getFocusedBorder()->shallowCopy());
+            setFocusedBorder(dynamic_pointer_cast<Border>(FCCopy));
+        }
+        if(Id->getRolloverBorder() != NULL)
+        {
+            FieldContainerUnrecPtr FCCopy(Id->getRolloverBorder()->shallowCopy());
+            setRolloverBorder(dynamic_pointer_cast<Border>(FCCopy));
+        }
+    }
+}
+
+void InternalWindow::onDestroy()
+{
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 InternalWindow::InternalWindow(void) :
@@ -868,31 +904,6 @@ InternalWindow::InternalWindow(const InternalWindow &source) :
     _IconifyButtonListener(this)
 
 {
-    if(getTitlebar() != NULL)
-    {
-        FieldContainerUnrecPtr FCCopy(getTitlebar()->shallowCopy());
-        setTitlebar(dynamic_pointer_cast<Titlebar>(FCCopy));
-    }
-    if(getBorder() != NULL)
-    {
-        FieldContainerUnrecPtr FCCopy(getBorder()->shallowCopy());
-        setBorder(dynamic_pointer_cast<Border>(FCCopy));
-    }
-    if(getDisabledBorder() != NULL)
-    {
-        FieldContainerUnrecPtr FCCopy(getDisabledBorder()->shallowCopy());
-        setDisabledBorder(dynamic_pointer_cast<Border>(FCCopy));
-    }
-    if(getFocusedBorder() != NULL)
-    {
-        FieldContainerUnrecPtr FCCopy(getFocusedBorder()->shallowCopy());
-        setFocusedBorder(dynamic_pointer_cast<Border>(FCCopy));
-    }
-    if(getRolloverBorder() != NULL)
-    {
-        FieldContainerUnrecPtr FCCopy(getRolloverBorder()->shallowCopy());
-        setRolloverBorder(dynamic_pointer_cast<Border>(FCCopy));
-    }
 }
 
 InternalWindow::~InternalWindow(void)
@@ -923,8 +934,8 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
     {
         for(UInt32 i(0) ; i<getMFActivePopupMenus()->size() ; ++i)
         {
-            getActivePopupMenus(i)->setParentContainer(ComponentContainerRefPtr(this));
-            getActivePopupMenus(i)->setParentWindow(InternalWindowRefPtr(this));
+            getActivePopupMenus(i)->setParentContainer(this);
+            getActivePopupMenus(i)->setParentWindow(this);
         }
 
         getDrawingSurface()->getEventProducer()->addMouseListener(&_PopupMenuInteractionListener);
@@ -935,8 +946,8 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
 
     if( (whichField & MenuBarFieldMask) && getMenuBar() != NULL)
     {
-        getMenuBar()->setParentContainer(ComponentContainerRefPtr(this));
-        getMenuBar()->setParentWindow(InternalWindowRefPtr(this));
+        getMenuBar()->setParentContainer(this);
+        getMenuBar()->setParentWindow(this);
     }
 
     if( (whichField & MenuBarFieldMask) || (whichField & TitlebarFieldMask))
@@ -951,8 +962,8 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
 
     if( (whichField & TitlebarFieldMask) && getTitlebar() != NULL)
     {
-        getTitlebar()->setParentContainer(ComponentContainerRefPtr(this));
-        getTitlebar()->setParentWindow(InternalWindowRefPtr(this));
+        getTitlebar()->setParentContainer(this);
+        getTitlebar()->setParentWindow(this);
     }
 
     if((whichField & TitlebarFieldMask) ||

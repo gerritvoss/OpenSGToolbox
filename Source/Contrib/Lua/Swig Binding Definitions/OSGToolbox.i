@@ -14,7 +14,7 @@
 
 #include "OSGAnimation.h"
 
-/*#include "OSGComponent.h"*/
+#include "OSGComponent.h"
 
 #include "OSGParticleSystem.h"
 #include "OSGDistribution1D.h"
@@ -70,7 +70,7 @@ namespace OSG {
     class WindowEventProducer;
     class Sound;
     class Animation;
-    /*class Component;*/
+    class Component;
     class ParticleSystem;
     class PhysicsBody;
     class PhysicsHandler;
@@ -791,112 +791,112 @@ namespace OSG {
             virtual ~ParticleSystem(void);
     };
 
-    //[>****************************************************<]
-    //[>                 ComponentRefPtr                       <]
-    //[>****************************************************<]
-    //class ComponentRefPtr : public AttachmentContainerRefPtr
-    //{
-      //public:
-         //ComponentRefPtr(void);
-         //ComponentRefPtr(const ComponentRefPtr               &source);
-         //[>ComponentRefPtr(const NullFieldContainerRefPtr &source);<]
+    /******************************************************/
+    /*                 ComponentRefPtr                       */
+    /******************************************************/
+    class ComponentRefPtr : public AttachmentContainerRefPtr
+    {
+      public:
+         ComponentRefPtr(void);
+         ComponentRefPtr(const ComponentRefPtr               &source);
+         /*ComponentRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        //~ComponentRefPtr(void); 
-        //Component *operator->(void);
-    //};
-    //%extend ComponentRefPtr
-    //{
-        //static ComponentRefPtr dcast(const FieldContainerRefPtr oIn)
-        //{
-            //OSG::dynamic_pointer_cast<OSG::Component>(oIn);
-        //}
-    //};
+        ~ComponentRefPtr(void); 
+        Component *operator->(void);
+    };
+    %extend ComponentRefPtr
+    {
+        static ComponentRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::Component>(oIn);
+        }
+    };
 
-    //[>****************************************************<]
-    //[>                 Component                       <]
-    //[>****************************************************<]
-    //class Component : public AttachmentContainer
-    //{
-      //public:
-        ////virtual void draw(const GraphicsRefPtr Graphics) const;
+    /******************************************************/
+    /*                 Component                       */
+    /******************************************************/
+    class Component : public AttachmentContainer
+    {
+      public:
+        //virtual void draw(const GraphicsRefPtr Graphics) const;
     
-        //virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-        //virtual void getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-        //virtual void getInsideBorderBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-        //virtual void getBoundsRenderingSurfaceSpace(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-        //virtual void updateContainerLayout(void);
-        //virtual void updateClipBounds(void);
-        //virtual Vec2f getRequestedSize(void) const;
-        //virtual Vec2f getContentRequestedSize(void) const;
-        //virtual Vec2f getBorderingLength(void) const;
+        virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        virtual void getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        virtual void getInsideBorderBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        virtual void getBoundsRenderingSurfaceSpace(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        virtual void updateContainerLayout(void);
+        virtual void updateClipBounds(void);
+        virtual Vec2f getRequestedSize(void) const;
+        virtual Vec2f getContentRequestedSize(void) const;
+        virtual Vec2f getBorderingLength(void) const;
         
-        ////Mouse Events
-        ////virtual void mouseClicked(const MouseEventRefPtr e);
-        ////virtual void mouseEntered(const MouseEventRefPtr e);
-        /////virtual void mouseExited(const MouseEventRefPtr e);
-        ////virtual void mousePressed(const MouseEventRefPtr e);
-        ////virtual void mouseReleased(const MouseEventRefPtr e);
+        //Mouse Events
+        //virtual void mouseClicked(const MouseEventRefPtr e);
+        //virtual void mouseEntered(const MouseEventRefPtr e);
+        ///virtual void mouseExited(const MouseEventRefPtr e);
+        //virtual void mousePressed(const MouseEventRefPtr e);
+        //virtual void mouseReleased(const MouseEventRefPtr e);
     
-        ////Mouse Motion Events
-        ////virtual void mouseMoved(const MouseEventRefPtr e);
-        ////virtual void mouseDragged(const MouseEventRefPtr e);
+        //Mouse Motion Events
+        //virtual void mouseMoved(const MouseEventRefPtr e);
+        //virtual void mouseDragged(const MouseEventRefPtr e);
     
-        ////Mouse Wheel Events
-        ////virtual void mouseWheelMoved(const MouseWheelEventRefPtr e);
+        //Mouse Wheel Events
+        //virtual void mouseWheelMoved(const MouseWheelEventRefPtr e);
     
-        ////Key Events
-        ////virtual void keyPressed(const KeyEventRefPtr e);
-        ////virtual void keyReleased(const KeyEventRefPtr e);
-        ////virtual void keyTyped(const KeyEventRefPtr e);
+        //Key Events
+        //virtual void keyPressed(const KeyEventRefPtr e);
+        //virtual void keyReleased(const KeyEventRefPtr e);
+        //virtual void keyTyped(const KeyEventRefPtr e);
     
-        ////Focus Events
-        ////virtual void focusGained(const FocusEventRefPtr e);
-        ////virtual void focusLost(const FocusEventRefPtr e);
+        //Focus Events
+        //virtual void focusGained(const FocusEventRefPtr e);
+        //virtual void focusLost(const FocusEventRefPtr e);
     
-        //void setMouseContained(bool Value);
-        //bool getMouseContained(void);
+        void setMouseContained(bool Value);
+        bool getMouseContained(void);
     
-        //virtual bool takeFocus(bool Temporary = false);
+        virtual bool takeFocus(bool Temporary = false);
         
-        //virtual bool isContained(const Pnt2f& p, bool TestAgainstClipBounds = true) const;
+        virtual bool isContained(const Pnt2f& p, bool TestAgainstClipBounds = true) const;
     
-        //virtual Real32 getBaseline(const Real32& x, const Real32& y) const;
+        virtual Real32 getBaseline(const Real32& x, const Real32& y) const;
     
-        //virtual Pnt2f getToolTipLocation(Pnt2f MousePosition);
-        ////virtual ToolTipRefPtr createToolTip(void);
+        virtual Pnt2f getToolTipLocation(Pnt2f MousePosition);
+        //virtual ToolTipRefPtr createToolTip(void);
         
-        //virtual Vec2f getPreferredScrollableViewportSize(void);
+        virtual Vec2f getPreferredScrollableViewportSize(void);
     
-        //virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+        virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
     
-        //virtual bool getScrollableTracksViewportHeight(void);
+        virtual bool getScrollableTracksViewportHeight(void);
     
-        //virtual bool getScrollableTracksViewportWidth(void);
+        virtual bool getScrollableTracksViewportWidth(void);
     
-        //virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+        virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
     
-        //virtual void scrollToPoint(const Pnt2f& PointInComponent);
+        virtual void scrollToPoint(const Pnt2f& PointInComponent);
     
-        ////static const OSG::BitVector BordersFieldMask;
-        ////virtual void setBorders(BorderRefPtr TheBorder);
+        //static const OSG::BitVector BordersFieldMask;
+        //virtual void setBorders(BorderRefPtr TheBorder);
     
-        ////static const OSG::BitVector BackgroundsFieldMask;
-        ////virtual void setBackgrounds(LayerRefPtr TheBackground);
+        //static const OSG::BitVector BackgroundsFieldMask;
+        //virtual void setBackgrounds(LayerRefPtr TheBackground);
         
-        ////static const OSG::BitVector ForegroundsFieldMask;
-        ////virtual void setForegrounds(LayerRefPtr TheForeground);
+        //static const OSG::BitVector ForegroundsFieldMask;
+        //virtual void setForegrounds(LayerRefPtr TheForeground);
     
-        //virtual Pnt2f getParentToLocal(const Pnt2f& Location);
+        virtual Pnt2f getParentToLocal(const Pnt2f& Location);
     
-        //virtual Pnt2f getLocalToParent(const Pnt2f& Location);
+        virtual Pnt2f getLocalToParent(const Pnt2f& Location);
     
-      //protected:
-            //Component(void);
-            //Component(const Component &source);
+      protected:
+            Component(void);
+            Component(const Component &source);
     
-            //virtual ~Component(void);
-    //};
+            virtual ~Component(void);
+    };
     
     /******************************************************/
     /*                 SoundRefPtr                       */

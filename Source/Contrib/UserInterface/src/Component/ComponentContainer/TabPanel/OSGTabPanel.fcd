@@ -249,7 +249,7 @@ A UI Tab Panel.
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"
-		access="public"
+		access="protected"
 	>
 	</Field>
 

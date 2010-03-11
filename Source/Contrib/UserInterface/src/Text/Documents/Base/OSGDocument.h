@@ -43,6 +43,9 @@
 #endif
 
 #include "OSGDocumentBase.h"
+#include "OSGDocumentListener.h"
+#include "OSGUndoableEditListener.h"
+#include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,6 +60,43 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Document : public DocumentBase
     /*==========================  PUBLIC  =================================*/
 
   public:
+    class Position
+    {
+      public:
+        virtual UInt32 getOffset(void) const = 0;
+    };
+
+    class AttributeSet
+    {
+      public:
+        //Returns true if this set contains this attribute with an equal value.
+        virtual bool    containsAttribute(const std::string& name, boost::any value) const = 0; 
+
+        //Returns true if this set contains all the attributes with equal values.
+        virtual bool    containsAttributes(const AttributeSet& attributes) const = 0; 
+
+        //Returns an attribute set that is guaranteed not to change over time.
+        virtual AttributeSet*   copyAttributes(void) const = 0; 
+
+        //Fetches the value of the given attribute.
+        virtual boost::any     getAttribute(const std::string& key) const = 0; 
+
+        //Returns the number of attributes contained in this set.
+        virtual int    getAttributeCount(void) const = 0; 
+
+        //Returns an enumeration over the names of the attributes in the set.
+        virtual Enumeration    getAttributeNames(void) = 0; 
+
+        //Gets the resolving parent.
+        virtual const AttributeSet&   getResolveParent(void) = 0; 
+
+        //Checks whether the named attribute has a value specified in the set without resolving through another attribute set.
+        virtual bool    isDefined(const std::string& attrName) const = 0; 
+
+        //Determines if the two attribute sets are equivalent.
+        virtual bool    operator=(const AttributeSet& attr) const = 0; 
+
+    };
 
     typedef DocumentBase Inherited;
     typedef Document     Self;
@@ -78,6 +118,53 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Document : public DocumentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    //Registers the given observer to begin receiving notifications when changes are made to the document.
+    virtual EventConnection addDocumentListener(DocumentListenerPtr Listener) = 0;
+    virtual void removeDocumentListener(DocumentListenerPtr Listener) = 0;
+    virtual bool isDocumentListenerAttached(DocumentListenerPtr Listener) const = 0;
+
+    //Registers the given observer to begin receiving notifications when undoable edits are made to the document.
+    virtual EventConnection addUndoableEditListener(UndoableEditListenerPtr Listener) = 0;
+    virtual void removeUndoableEditListener(UndoableEditListenerPtr Listener) = 0;
+    virtual bool isUndoableEditListenerAttached(UndoableEditListenerPtr Listener) const = 0;
+
+    //This method allows an application to mark a place in a sequence of character content.
+    virtual const Document:::Position&   createPosition(UInt32 offs) const = 0;
+
+    //Returns the root element that views should be based upon, unless some other mechanism for assigning views to element structures is provided.
+    virtual ElementUnrecPtr    getDefaultRootElement(void) const = 0;
+
+    //Returns a position that represents the end of the document.
+    virtual const Document:::Position&   getEndPosition(void) const = 0;
+
+    //Returns number of characters of content currently in the document.
+    virtual UInt32    getLength(void) const = 0;
+
+    //Gets the properties associated with the document.
+    virtual const boost::any&     getProperty(const std::string& key) const = 0;
+
+    //Returns all of the root elements that are defined.
+    virtual std::vector<ElementUnrecPtr>  getRootElements(void) const = 0;
+
+    //Returns a position that represents the start of the document.
+    virtual Position   getStartPosition(void) const = 0;
+
+    //Fetches the text contained within the given portion of the document.
+    virtual std::string     getText(UInt32 offset, UInt32 length) const = 0;
+
+    //Fetches the text contained within the given portion of the document.
+    //virtual void   getText(UInt32 offset, UInt32 length, Segment txt) const = 0;
+
+    //Inserts a string of content.
+    virtual void   insertString(UInt32 offset, std::string str, AttributeSet a) = 0;
+
+    //Associates a property with the document.
+    virtual void   putProperty(const std::string& key, boost::any value) = 0;
+
+    //Removes a portion of the content of the document.
+    virtual void   remove(UInt32 offs, UInt32 len) = 0;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

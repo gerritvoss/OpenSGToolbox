@@ -43,94 +43,95 @@
 #pragma once
 #endif
  
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include "Component/Scroll/OSGBoundedRangeModel.h"
-#include "Component/Spinner/OSGNumberSpinnerModel.h"
+#include "OSGBoundedRangeModel.h"
+#include "OSGNumberSpinnerModel.h"
 #include <set>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
 class BoundedRangeSpinnerModel;
 
-typedef boost::intrusive_ptr<BoundedRangeSpinnerModel> BoundedRangeSpinnerModelPtr;
+typedef boost::shared_ptr<BoundedRangeSpinnerModel> BoundedRangeSpinnerModelPtr;
 
-class OSG_USERINTERFACELIB_DLLMAPPING BoundedRangeSpinnerModel : public IntrusivePtrImplBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING BoundedRangeSpinnerModel
 {
-private:
-protected:
-	BoundedRangeModelPtr _TheBoundedRangeModel;
-	Int32SpinnerModelPtr _TheSpinnerModel;
+  private:
 
-	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
+  protected:
+    BoundedRangeModelRefPtr _TheBoundedRangeModel;
+    Int32SpinnerModelPtr _TheSpinnerModel;
+
+    typedef std::set<ChangeListenerPtr> ChangeListenerSet;
     typedef ChangeListenerSet::iterator ChangeListenerSetItor;
     typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
-	ChangeListenerSet _ChangeListeners;
+    ChangeListenerSet _ChangeListeners;
 
-	void produceStateChanged(void);
-	
-	//BoundedRangeModel Listener
-	class BoundedRangeModelChangeListener : public ChangeListener
-	{
-	public :
-		BoundedRangeModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
-		
-		virtual void stateChanged(const ChangeEventPtr e);
-	private:
-		BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
-	};
+    void produceStateChanged(void);
 
-	friend class BoundedRangeModelChangeListener;
+    //BoundedRangeModel Listener
+    class BoundedRangeModelChangeListener : public ChangeListener
+    {
+      public :
+        BoundedRangeModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
 
-	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
-	
-	//SpinnerModel Listener
-	class SpinnerModelChangeListener : public ChangeListener
-	{
-	public :
-		SpinnerModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
-		
-		virtual void stateChanged(const ChangeEventPtr e);
-	private:
-		BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
-	};
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
+      private:
+        BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
+    };
 
-	friend class SpinnerModelChangeListener;
+    friend class BoundedRangeModelChangeListener;
 
-	SpinnerModelChangeListener _SpinnerModelChangeListener;
+    BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
 
-	void attachListenersToModels(void);
+    //SpinnerModel Listener
+    class SpinnerModelChangeListener : public ChangeListener
+    {
+      public :
+        SpinnerModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
 
-	void dettachListenersFromModels(void);
-public:
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
+      private:
+        BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
+    };
+
+    friend class SpinnerModelChangeListener;
+
+    SpinnerModelChangeListener _SpinnerModelChangeListener;
+
+    void attachListenersToModels(void);
+
+    void dettachListenersFromModels(void);
+  public:
     //Returns the model's maximum.
     virtual Int32 getMaximum(void) const;
-    
+
     //Returns the minimum acceptable value.
     virtual Int32 getMinimum(void) const;
-    
+
     //Returns the model's current value.
     virtual Int32 getValue(void) const;
-    
+
     //Sets the model's maximum to newMaximum.
     virtual void setMaximum(Int32 newMaximum);
-    
+
     //Sets the model's minimum to newMinimum.
     virtual void setMinimum(Int32 newMinimum);
-    
+
     //Sets the model's current value to newValue if newValue satisfies the model's constraints.
     virtual void setValue(Int32 newValue);
-    
-	virtual EventConnection addChangeListener(ChangeListenerPtr Listener);
-	bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
-	virtual void removeChangeListener(ChangeListenerPtr Listener);
 
-	BoundedRangeModelPtr getBoundedRangeModel(void);
+    virtual EventConnection addChangeListener(ChangeListenerPtr Listener);
+    bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
+    virtual void removeChangeListener(ChangeListenerPtr Listener);
 
-	SpinnerModelPtr getSpinnerModel(void);
+    BoundedRangeModelRefPtr getBoundedRangeModel(void);
+
+    SpinnerModelPtr getSpinnerModel(void);
 
     BoundedRangeSpinnerModel(void);
     BoundedRangeSpinnerModel(const BoundedRangeSpinnerModel &source);

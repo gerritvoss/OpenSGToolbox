@@ -38,7 +38,7 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -49,7 +49,7 @@ bool BoundedRangeSpinnerModel::isChangeListenerAttached(ChangeListenerPtr Listen
 }
 
 inline
-BoundedRangeModelPtr BoundedRangeSpinnerModel::getBoundedRangeModel(void)
+BoundedRangeModelRefPtr BoundedRangeSpinnerModel::getBoundedRangeModel(void)
 {
 	return _TheBoundedRangeModel;
 }

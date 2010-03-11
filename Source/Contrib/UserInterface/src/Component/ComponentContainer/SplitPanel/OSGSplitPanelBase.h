@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,86 +58,101 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include "Component/OSGComponent.h" // MinComponent type
-#include "Component/OSGComponent.h" // MaxComponent type
-#include <OpenSG/OSGUInt32Fields.h> // DividerSize type
-#include <OpenSG/OSGReal32Fields.h> // DividerPosition type
-#include <OpenSG/OSGReal32Fields.h> // MinDividerPosition type
-#include <OpenSG/OSGReal32Fields.h> // MaxDividerPosition type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DividerDrawObject type
-#include <OpenSG/OSGBoolFields.h> // Expandable type
-#include <OpenSG/OSGUInt32Fields.h> // Orientation type
+#include "OSGComponentFields.h"         // MinComponent type
+#include "OSGSysFields.h"               // DividerSize type
+#include "OSGUIDrawObjectCanvasFields.h" // DividerDrawObject type
 
 #include "OSGSplitPanelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class SplitPanel;
-class BinaryDataHandler;
 
 //! \brief SplitPanel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SplitPanelBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SplitPanelPtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(SplitPanel);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        MinComponentFieldId       = Inherited::NextFieldId,
-        MaxComponentFieldId       = MinComponentFieldId       + 1,
-        DividerSizeFieldId        = MaxComponentFieldId       + 1,
-        DividerPositionFieldId    = DividerSizeFieldId        + 1,
-        MinDividerPositionFieldId = DividerPositionFieldId    + 1,
+        MinComponentFieldId = Inherited::NextFieldId,
+        MaxComponentFieldId = MinComponentFieldId + 1,
+        DividerSizeFieldId = MaxComponentFieldId + 1,
+        DividerPositionFieldId = DividerSizeFieldId + 1,
+        MinDividerPositionFieldId = DividerPositionFieldId + 1,
         MaxDividerPositionFieldId = MinDividerPositionFieldId + 1,
-        DividerDrawObjectFieldId  = MaxDividerPositionFieldId + 1,
-        ExpandableFieldId         = DividerDrawObjectFieldId  + 1,
-        OrientationFieldId        = ExpandableFieldId         + 1,
-        NextFieldId               = OrientationFieldId        + 1
+        DividerDrawObjectFieldId = MaxDividerPositionFieldId + 1,
+        ExpandableFieldId = DividerDrawObjectFieldId + 1,
+        OrientationFieldId = ExpandableFieldId + 1,
+        NextFieldId = OrientationFieldId + 1
     };
 
-    static const OSG::BitVector MinComponentFieldMask;
-    static const OSG::BitVector MaxComponentFieldMask;
-    static const OSG::BitVector DividerSizeFieldMask;
-    static const OSG::BitVector DividerPositionFieldMask;
-    static const OSG::BitVector MinDividerPositionFieldMask;
-    static const OSG::BitVector MaxDividerPositionFieldMask;
-    static const OSG::BitVector DividerDrawObjectFieldMask;
-    static const OSG::BitVector ExpandableFieldMask;
-    static const OSG::BitVector OrientationFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector MinComponentFieldMask =
+        (TypeTraits<BitVector>::One << MinComponentFieldId);
+    static const OSG::BitVector MaxComponentFieldMask =
+        (TypeTraits<BitVector>::One << MaxComponentFieldId);
+    static const OSG::BitVector DividerSizeFieldMask =
+        (TypeTraits<BitVector>::One << DividerSizeFieldId);
+    static const OSG::BitVector DividerPositionFieldMask =
+        (TypeTraits<BitVector>::One << DividerPositionFieldId);
+    static const OSG::BitVector MinDividerPositionFieldMask =
+        (TypeTraits<BitVector>::One << MinDividerPositionFieldId);
+    static const OSG::BitVector MaxDividerPositionFieldMask =
+        (TypeTraits<BitVector>::One << MaxDividerPositionFieldId);
+    static const OSG::BitVector DividerDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DividerDrawObjectFieldId);
+    static const OSG::BitVector ExpandableFieldMask =
+        (TypeTraits<BitVector>::One << ExpandableFieldId);
+    static const OSG::BitVector OrientationFieldMask =
+        (TypeTraits<BitVector>::One << OrientationFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecComponentPtr SFMinComponentType;
+    typedef SFUnrecComponentPtr SFMaxComponentType;
+    typedef SFUInt32          SFDividerSizeType;
+    typedef SFReal32          SFDividerPositionType;
+    typedef SFReal32          SFMinDividerPositionType;
+    typedef SFReal32          SFMaxDividerPositionType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDividerDrawObjectType;
+    typedef SFBool            SFExpandableType;
+    typedef SFUInt32          SFOrientationType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -146,53 +161,79 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *getSFMinComponent   (void);
-           SFComponentPtr      *getSFMaxComponent   (void);
-           SFUInt32            *getSFDividerSize    (void);
-           SFReal32            *getSFDividerPosition(void);
-           SFReal32            *getSFMinDividerPosition(void);
-           SFReal32            *getSFMaxDividerPosition(void);
-           SFUIDrawObjectCanvasPtr *getSFDividerDrawObject(void);
-           SFBool              *getSFExpandable     (void);
-           SFUInt32            *getSFOrientation    (void);
+            const SFUnrecComponentPtr *getSFMinComponent   (void) const;
+                  SFUnrecComponentPtr *editSFMinComponent   (void);
+            const SFUnrecComponentPtr *getSFMaxComponent   (void) const;
+                  SFUnrecComponentPtr *editSFMaxComponent   (void);
 
-           ComponentPtr        &getMinComponent   (void);
-     const ComponentPtr        &getMinComponent   (void) const;
-           ComponentPtr        &getMaxComponent   (void);
-     const ComponentPtr        &getMaxComponent   (void) const;
-           UInt32              &getDividerSize    (void);
-     const UInt32              &getDividerSize    (void) const;
-           Real32              &getDividerPosition(void);
-     const Real32              &getDividerPosition(void) const;
-           Real32              &getMinDividerPosition(void);
-     const Real32              &getMinDividerPosition(void) const;
-           Real32              &getMaxDividerPosition(void);
-     const Real32              &getMaxDividerPosition(void) const;
-           UIDrawObjectCanvasPtr &getDividerDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDividerDrawObject(void) const;
-           bool                &getExpandable     (void);
-     const bool                &getExpandable     (void) const;
-           UInt32              &getOrientation    (void);
-     const UInt32              &getOrientation    (void) const;
+                  SFUInt32            *editSFDividerSize    (void);
+            const SFUInt32            *getSFDividerSize     (void) const;
+
+                  SFReal32            *editSFDividerPosition(void);
+            const SFReal32            *getSFDividerPosition (void) const;
+
+                  SFReal32            *editSFMinDividerPosition(void);
+            const SFReal32            *getSFMinDividerPosition (void) const;
+
+                  SFReal32            *editSFMaxDividerPosition(void);
+            const SFReal32            *getSFMaxDividerPosition (void) const;
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDividerDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDividerDrawObject(void);
+
+                  SFBool              *editSFExpandable     (void);
+            const SFBool              *getSFExpandable      (void) const;
+
+                  SFUInt32            *editSFOrientation    (void);
+            const SFUInt32            *getSFOrientation     (void) const;
+
+
+                  Component * getMinComponent   (void) const;
+
+                  Component * getMaxComponent   (void) const;
+
+                  UInt32              &editDividerSize    (void);
+                  UInt32               getDividerSize     (void) const;
+
+                  Real32              &editDividerPosition(void);
+                  Real32               getDividerPosition (void) const;
+
+                  Real32              &editMinDividerPosition(void);
+                  Real32               getMinDividerPosition (void) const;
+
+                  Real32              &editMaxDividerPosition(void);
+                  Real32               getMaxDividerPosition (void) const;
+
+                  UIDrawObjectCanvas * getDividerDrawObject(void) const;
+
+                  bool                &editExpandable     (void);
+                  bool                 getExpandable      (void) const;
+
+                  UInt32              &editOrientation    (void);
+                  UInt32               getOrientation     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMinComponent   ( const ComponentPtr &value );
-     void setMaxComponent   ( const ComponentPtr &value );
-     void setDividerSize    ( const UInt32 &value );
-     void setDividerPosition( const Real32 &value );
-     void setMinDividerPosition( const Real32 &value );
-     void setMaxDividerPosition( const Real32 &value );
-     void setDividerDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setExpandable     ( const bool &value );
-     void setOrientation    ( const UInt32 &value );
+            void setMinComponent   (Component * const value);
+            void setMaxComponent   (Component * const value);
+            void setDividerSize    (const UInt32 value);
+            void setDividerPosition(const Real32 value);
+            void setMinDividerPosition(const Real32 value);
+            void setMaxDividerPosition(const Real32 value);
+            void setDividerDrawObject(UIDrawObjectCanvas * const value);
+            void setExpandable     (const bool value);
+            void setOrientation    (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -200,11 +241,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -212,34 +253,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SplitPanelPtr      create          (void); 
-    static  SplitPanelPtr      createEmpty     (void); 
+    static  SplitPanelTransitPtr  create          (void);
+    static  SplitPanel           *createEmpty     (void);
+
+    static  SplitPanelTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  SplitPanel            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  SplitPanelTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFComponentPtr      _sfMinComponent;
-    SFComponentPtr      _sfMaxComponent;
-    SFUInt32            _sfDividerSize;
-    SFReal32            _sfDividerPosition;
-    SFReal32            _sfMinDividerPosition;
-    SFReal32            _sfMaxDividerPosition;
-    SFUIDrawObjectCanvasPtr   _sfDividerDrawObject;
-    SFBool              _sfExpandable;
-    SFUInt32            _sfOrientation;
+    SFUnrecComponentPtr _sfMinComponent;
+    SFUnrecComponentPtr _sfMaxComponent;
+    SFUInt32          _sfDividerSize;
+    SFReal32          _sfDividerPosition;
+    SFReal32          _sfMinDividerPosition;
+    SFReal32          _sfMaxDividerPosition;
+    SFUnrecUIDrawObjectCanvasPtr _sfDividerDrawObject;
+    SFBool            _sfExpandable;
+    SFUInt32          _sfOrientation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,69 +312,96 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SplitPanelBase(void); 
+    virtual ~SplitPanelBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const SplitPanel *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleMinComponent    (void) const;
+    EditFieldHandlePtr editHandleMinComponent   (void);
+    GetFieldHandlePtr  getHandleMaxComponent    (void) const;
+    EditFieldHandlePtr editHandleMaxComponent   (void);
+    GetFieldHandlePtr  getHandleDividerSize     (void) const;
+    EditFieldHandlePtr editHandleDividerSize    (void);
+    GetFieldHandlePtr  getHandleDividerPosition (void) const;
+    EditFieldHandlePtr editHandleDividerPosition(void);
+    GetFieldHandlePtr  getHandleMinDividerPosition (void) const;
+    EditFieldHandlePtr editHandleMinDividerPosition(void);
+    GetFieldHandlePtr  getHandleMaxDividerPosition (void) const;
+    EditFieldHandlePtr editHandleMaxDividerPosition(void);
+    GetFieldHandlePtr  getHandleDividerDrawObject (void) const;
+    EditFieldHandlePtr editHandleDividerDrawObject(void);
+    GetFieldHandlePtr  getHandleExpandable      (void) const;
+    EditFieldHandlePtr editHandleExpandable     (void);
+    GetFieldHandlePtr  getHandleOrientation     (void) const;
+    EditFieldHandlePtr editHandleOrientation    (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SplitPanelBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      SplitPanelBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      SplitPanelBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SplitPanelBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef SplitPanelBase *SplitPanelBaseP;
 
-typedef osgIF<SplitPanelBase::isNodeCore,
-              CoredNodePtr<SplitPanel>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SplitPanelNodePtr;
-
-typedef RefPtr<SplitPanelPtr> SplitPanelRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGSPLITPANELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGSPLITPANELBASE_H_ */

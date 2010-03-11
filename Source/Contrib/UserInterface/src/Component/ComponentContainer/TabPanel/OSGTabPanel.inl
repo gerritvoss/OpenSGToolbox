@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -49,10 +47,9 @@ bool TabPanel::isSelectionListenerAttached(SelectionListenerPtr Listener) const
 }
 
 inline
-TabPanel::TabSelectionListener::TabSelectionListener(TabPanelPtr TheTabPanel) :
+TabPanel::TabSelectionListener::TabSelectionListener(TabPanelRefPtr TheTabPanel) :
 									_TabPanel(TheTabPanel)
 {
 }
 
 OSG_END_NAMESPACE
-

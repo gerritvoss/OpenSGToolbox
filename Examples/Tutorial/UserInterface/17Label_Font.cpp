@@ -77,50 +77,50 @@ void reshape(Vec2f Size);
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
             TutorialWindow->closeWindow();
-       }
-   }
+        }
+    }
 
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
 
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
-    /******************************************************
+/******************************************************
 
-            Creates a ListComponentGenerator class to 
-            create Labels for the List which contain
-            the Font name in that particular Font.
+  Creates a ListComponentGenerator class to 
+  create Labels for the List which contain
+  the Font name in that particular Font.
 
-            This creates the DefaultListCell (a 
-            Label with Text equal to the name
-            of the Font) and then changes that
-            Label's Font to be the Font contained
-            within the Label.
+  This creates the DefaultListCell (a 
+  Label with Text equal to the name
+  of the Font) and then changes that
+  Label's Font to be the Font contained
+  within the Label.
 
-            The ListComponentGenerator is what is
-            used to create the Component
-            values for the List.  The Default 
-            is to simply create Label components
-            which normally simply contain a text
-            string.  In this case, the
-            DefaultListComponentGenerator is 
-            modified slightly to give each
-            Label component the Font which
-            its text will display.
+  The ListComponentGenerator is what is
+  used to create the Component
+  values for the List.  The Default 
+  is to simply create Label components
+  which normally simply contain a text
+  string.  In this case, the
+  DefaultListComponentGenerator is 
+  modified slightly to give each
+  Label component the Font which
+  its text will display.
 
 
-    ******************************************************/
+ ******************************************************/
 
 class FontListComponentGenerator : public DefaultListComponentGenerator
 {
@@ -128,74 +128,211 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
   public:
     typedef          DefaultListComponentGenerator Inherited;
     typedef          FontListComponentGenerator Self;
-	typedef          FCRefPtr<Inherited::RefPtr,  Self      > PtrType;
+    typedef Inherited::TypeObject TypeObject;
 
-	OSG_FIELD_CONTAINER_DECL(PtrType)
-	
-	virtual ComponentRefPtr getListComponent(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
-    {
-        // Create using the DefaultListComponentGenerator a
-        // Label (its default) with the Font name as its text
+    OSG_GEN_INTERNALPTR(FontListComponentGenerator);
 
-        ComponentRefPtr TheComponent = Inherited::getListComponent(Parent, Value, Index, IsSelected, HasFocus);
-
-        std::string FontFamilyString;
-        // Converts the Fontname to correct type
-        try
+        virtual ComponentRefPtr getListComponent(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
         {
-            FontFamilyString = boost::any_cast<std::string>(Value);
-        }
-        catch(boost::bad_any_cast &)
-        {
-            FontFamilyString = "Times New Roman";
-        }
-        
-        // Add the required Font to FontMapItor
-        std::map<std::string, UIFontRefPtr>::iterator FontMapItor = FontMap.find(FontFamilyString);
-        if(FontMapItor != FontMap.end() && TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
-	    {
+            // Create using the DefaultListComponentGenerator a
+            // Label (its default) with the Font name as its text
+
+            ComponentRefPtr TheComponent = Inherited::getListComponent(Parent, Value, Index, IsSelected, HasFocus);
+
+            std::string FontFamilyString;
+            // Converts the Fontname to correct type
+            try
+            {
+                FontFamilyString = boost::any_cast<std::string>(Value);
+            }
+            catch(boost::bad_any_cast &)
+            {
+                FontFamilyString = "Times New Roman";
+            }
+
+            // Add the required Font to FontMapItor
+            std::map<std::string, UIFontRefPtr>::iterator FontMapItor = FontMap.find(FontFamilyString);
+            if(FontMapItor != FontMap.end() && TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
+            {
                 // Set the TextComponent's Font to be its correct Font
                 dynamic_pointer_cast<TextComponent>(TheComponent)->setFont((*FontMapItor).second);
+            }
+
+            return TheComponent;
         }
 
-        return TheComponent;
+    static FieldContainerType &getClassType   (void)
+    {
+        return _type;
     }
 
-protected:
+    static UInt32              getClassTypeId (void)
+    {
+        return _type.getId();
+    }
 
-	static FieldContainerType  _type;
+    static UInt16              getClassGroupId(void)
+    {
+        return _type.getGroupId();
+    }
 
-	FontListComponentGenerator(void) : Inherited()
+    virtual       FieldContainerType &getType         (void)
+    {
+        return _type;
+    }
+
+    virtual const FieldContainerType &getType         (void) const
+    {
+        return _type;
+    }
+
+  protected:
+
+    static FieldContainerType  _type;
+
+    FontListComponentGenerator(void) : Inherited()
     {
     }
 
-	FontListComponentGenerator(const FontListComponentGenerator& source) : Inherited(source)
+    FontListComponentGenerator(const FontListComponentGenerator& source) : Inherited(source)
     {
     }
 
     virtual ~FontListComponentGenerator(void)
     {
     }
-private:
-	friend class FieldContainer;
+
+  private:
+    friend class FieldContainer;
 
     FontListComponentGenerator &operator =(const FontListComponentGenerator &source)
-	{
-		return *this;
-	}
+    {
+        return *this;
+    }
 };
 
-FieldContainerType FontListComponentGenerator::_type("FontListComponentGenerator",
-                                     "DefaultListComponentGenerator",
-                                      NULL,
-                                      (PrototypeCreateF) &FontListComponentGenerator::createEmpty,
-                                      NULL,
-									  NULL,
-                                      0);
+FontListComponentGenerator::TypeObject FontListComponentGenerator::_type(
+    "FontListComponentGenerator",
+    "DefaultListComponentGenerator",
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&FontListComponentGenerator::createEmpty),
+    NULL,
+    NULL,
+    NULL,//reinterpret_cast<InitalInsertDescFunc>(&DefaultListComponentGenerator::classDescInserter),
+    false,
+    0,
+    "",
+    "FontListComponentGenerator"
+    );
 
-OSG_FIELD_CONTAINER_INL_DEF(FontListComponentGenerator::Self, FontListComponentGenerator::PtrType)
-OSG_FIELD_CONTAINER_DEF(FontListComponentGenerator::Self, FontListComponentGenerator::PtrType)
-typedef FontListComponentGenerator::PtrType FontListComponentGeneratorRefPtr;
+OSG_BEGIN_NAMESPACE
+
+OSG_GEN_CONTAINERPTR(FontListComponentGenerator);
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
+ */
+template <>
+struct FieldTraits<FontListComponentGenerator *> :
+    public FieldTraitsFCPtrBase<FontListComponentGenerator *>
+{
+  private:
+
+    static DataType             _type;
+
+  public:
+
+    typedef FieldTraits<FontListComponentGenerator *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFFontListComponentGeneratorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFFontListComponentGeneratorPtr"; }
+};
+
+template<> inline
+const Char8 *FieldTraits<FontListComponentGenerator *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecFontListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FontListComponentGenerator *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecFontListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FontListComponentGenerator *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakFontListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FontListComponentGenerator *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdFontListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FontListComponentGenerator *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecFontListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FontListComponentGenerator *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecFontListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FontListComponentGenerator *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakFontListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FontListComponentGenerator *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdFontListComponentGeneratorPtr"; 
+}
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FontListComponentGenerator *,
+                      RecordedRefCountPolicy  > SFRecFontListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FontListComponentGenerator *,
+                      UnrecordedRefCountPolicy> SFUnrecFontListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FontListComponentGenerator *,
+                      WeakRefCountPolicy      > SFWeakFontListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FontListComponentGenerator *,
+                      NoRefCountPolicy        > SFUncountedFontListComponentGeneratorPtr;
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FontListComponentGenerator *,
+                      RecordedRefCountPolicy  > MFRecFontListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FontListComponentGenerator *,
+                      UnrecordedRefCountPolicy> MFUnrecFontListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FontListComponentGenerator *,
+                      WeakRefCountPolicy      > MFWeakFontListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FontListComponentGenerator *,
+                      NoRefCountPolicy        > MFUncountedFontListComponentGeneratorPtr;
+OSG_END_NAMESPACE
 
 // Setup a FontListener to change the label's font
 // when a different item in the FontList is
@@ -208,7 +345,7 @@ class FontListListener: public ListSelectionListener
         if(!FontList->getSelectionModel()->isSelectionEmpty())
         {
             std::string ValueStr("");
-            
+
             try
             {
                 ValueStr = boost::any_cast<std::string>(FontList->getValueAtIndex(FontList->getSelectionModel()->getAnchorSelectionIndex()));
@@ -225,7 +362,7 @@ class FontListListener: public ListSelectionListener
             if(TheSelectedFont != NULL)
             {
                 // Set the font for ExampleLabel to be selected font
-                    ExampleLabel->setFont(TheSelectedFont);
+                ExampleLabel->setFont(TheSelectedFont);
             }
         }
     }
@@ -251,8 +388,8 @@ int main(int argc, char **argv)
 
     // Make Main Scene Node and add the Torus
     NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
-        scene->addChild(TorusGeometryNode);
+    scene->setCore(OSG::Group::create());
+    scene->addChild(TorusGeometryNode);
 
     // Create the Graphics
     GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
@@ -260,124 +397,124 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    
+
     /******************************************************
 
-            Determine which Fonts your computer can
-            use as a Font and makes a vector
-            containing them.
+      Determine which Fonts your computer can
+      use as a Font and makes a vector
+      containing them.
 
-    ******************************************************/
+     ******************************************************/
     std::vector<std::string> family;
-    TextFaceFactory::the().getFontFamilies(family);
+    TextFaceFactory::the()->getFontFamilies(family);
 
     /******************************************************
 
-            Cycle through all available Fonts
-            and add a Font of the type contained
-            in its string name to a map containing
-            both values.
+      Cycle through all available Fonts
+      and add a Font of the type contained
+      in its string name to a map containing
+      both values.
 
-    ******************************************************/
+     ******************************************************/
     for (unsigned int i =0; i<family.size(); ++i)
     {
         //Create the Fonts
         UIFontRefPtr TheFont = UIFont::create();
-            TheFont->setFamily(family[i]);
-            TheFont->setSize(16);
-            TheFont->setStyle(TextFace::STYLE_PLAIN);
+        TheFont->setFamily(family[i]);
+        TheFont->setSize(16);
+        TheFont->setStyle(TextFace::STYLE_PLAIN);
         // Setup the FontMap map to pair the
         // string Font name with a Font with
         // that Font
         FontMap[family[i]] = TheFont;
     }
 
-    
+
     /******************************************************
 
-            Create and edit a Font.
+      Create and edit a Font.
 
-            -setFamily("Name"): Determines the style of the 
-                Font.  All Fonts available on your machine
-                will be displayed when you run this 
-                tutorial in a List format.
-            -setSize(int): Determines the size of the 
-                Font.
-            -setFont(TextFace::ENUM): Determines the 
-                style of the Font.  Takes STYLE_PLAIN,
-                STYLE_BOLD, and STYLE_ITALIC arguments.
+      -setFamily("Name"): Determines the style of the 
+      Font.  All Fonts available on your machine
+      will be displayed when you run this 
+      tutorial in a List format.
+      -setSize(int): Determines the size of the 
+      Font.
+      -setFont(TextFace::ENUM): Determines the 
+      style of the Font.  Takes STYLE_PLAIN,
+      STYLE_BOLD, and STYLE_ITALIC arguments.
 
-			Note: for the Family type, a default is
-			automatically given if the input is 
-			something other than a recognized Font
-			family.  In this Tutorial, this is
-			only apparent initially as when a 
-			Font in the List is selected, the Font
-			changes.
+Note: for the Family type, a default is
+automatically given if the input is 
+something other than a recognized Font
+family.  In this Tutorial, this is
+only apparent initially as when a 
+Font in the List is selected, the Font
+changes.
 
-    ******************************************************/
+     ******************************************************/
     UIFontRefPtr ExampleLabelFont = UIFont::create();
-        //ExampleLabelFont->setFamily("Times New Roman");
-		// Displayed Font will be default (this Font name does NOT exist)
-        ExampleLabelFont->setFamily("RandomGibberishFontNameWhichDoesntExist");
-        ExampleLabelFont->setSize(25);
-        ExampleLabelFont->setStyle(TextFace::STYLE_PLAIN);
+    //ExampleLabelFont->setFamily("Times New Roman");
+    // Displayed Font will be default (this Font name does NOT exist)
+    ExampleLabelFont->setFamily("RandomGibberishFontNameWhichDoesntExist");
+    ExampleLabelFont->setSize(25);
+    ExampleLabelFont->setStyle(TextFace::STYLE_PLAIN);
 
     /******************************************************
 
 
-        Create and edit a Label.
+      Create and edit a Label.
 
-        Note that all Component characteristics can be 
-        modified as well (Background, PreferredSize, etc).
+      Note that all Component characteristics can be 
+      modified as well (Background, PreferredSize, etc).
 
-        -setFont(FontName): Determine the Font used
-			with the Label.
-        -setText("Text"): Determine the text on
-			the Label.  Text will be displayed
-			with this example.
-        -setTextColor(Color4f): Determine the Font
-			Color.
-        -setAlignment(Vec2f): Determine the 
-            alignment of the text a float 
-			between 0.0 and 1.0.  Note: higher (and lower) 
-			values are allowed, but will cause the text 
-			to not be  completely displayed.
+      -setFont(FontName): Determine the Font used
+      with the Label.
+      -setText("Text"): Determine the text on
+      the Label.  Text will be displayed
+      with this example.
+      -setTextColor(Color4f): Determine the Font
+      Color.
+      -setAlignment(Vec2f): Determine the 
+      alignment of the text a float 
+      between 0.0 and 1.0.  Note: higher (and lower) 
+      values are allowed, but will cause the text 
+      to not be  completely displayed.
 
-    ******************************************************/
+     ******************************************************/
 
-	// Create a GradientBackground to add to the Label
+    // Create a GradientBackground to add to the Label
     GradientLayerRefPtr ExampleLabelBackground = OSG::GradientLayer::create();
-        ExampleLabelBackground->getColors().push_back(Color4f(1.0, 0.0, 0.0, 1.0));
-		ExampleLabelBackground->getStops().push_back(0.0);
-        ExampleLabelBackground->getColors().push_back(Color4f(0.0, 0.0, 1.0, 1.0));
-		ExampleLabelBackground->getStops().push_back(1.0);
+    ExampleLabelBackground->editMFColors()->push_back(Color4f(1.0, 0.0, 0.0, 1.0));
+    ExampleLabelBackground->editMFStops()->push_back(0.0);
+    ExampleLabelBackground->editMFColors()->push_back(Color4f(0.0, 0.0, 1.0, 1.0));
+    ExampleLabelBackground->editMFStops()->push_back(1.0);
     ExampleLabel = OSG::Label::create();
-        ExampleLabel->setBackgrounds(ExampleLabelBackground);
-        ExampleLabel->setFont(ExampleLabelFont);
-        ExampleLabel->setText("Change My Font!");
-        ExampleLabel->setTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-        //ExampleLabel->setActiveTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-        ExampleLabel->setAlignment(Vec2f(0.5,0.5));
-        ExampleLabel->setPreferredSize(Vec2f(200, 50));
-        ExampleLabel->setTextSelectable(true);
-    
+    ExampleLabel->setBackgrounds(ExampleLabelBackground);
+    ExampleLabel->setFont(ExampleLabelFont);
+    ExampleLabel->setText("Change My Font!");
+    ExampleLabel->setTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+    //ExampleLabel->setActiveTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+    ExampleLabel->setAlignment(Vec2f(0.5,0.5));
+    ExampleLabel->setPreferredSize(Vec2f(200, 50));
+    ExampleLabel->setTextSelectable(true);
+
     /******************************************************
 
-            The following creates a List of all
-            the Fonts available on your machine,
-            and adds them to a ScrollPanel.
+      The following creates a List of all
+      the Fonts available on your machine,
+      and adds them to a ScrollPanel.
 
-            For more information about Lists, see
-            18List.
+      For more information about Lists, see
+      18List.
 
-            For more information about ScrollBars 
-            and ScrollPanels, see 27ScrollPanel.
-            
+      For more information about ScrollBars 
+      and ScrollPanels, see 27ScrollPanel.
 
-    ******************************************************/
+
+     ******************************************************/
     // Create ListModel Component
-	DefaultListModelRefPtr ListModel = DefaultListModel::create();
+    DefaultListModelRefPtr ListModel = DefaultListModel::create();
 
     // Display all Fonts available
     std::map<std::string, UIFontRefPtr>::iterator FontMapItor;
@@ -388,15 +525,16 @@ int main(int argc, char **argv)
     }
 
     // Creates ComponentGenerator
-	FontListComponentGeneratorRefPtr TheGenerator = FontListComponentGenerator::create();
+    FontListComponentGeneratorRefPtr TheGenerator =
+        dynamic_pointer_cast<FontListComponentGenerator>(FontListComponentGenerator::create());
 
     // Create the List of Fonts (see 18List for more information)
     FontList = List::create();
-        FontList->setPreferredSize(Vec2f(200, 300));
-        FontList->setOrientation(List::VERTICAL_ORIENTATION);
-		FontList->setCellGenerator(TheGenerator);
-		FontList->setModel(ListModel);
-    ListSelectionModelRefPtr SelectionModel(new DefaultListSelectionModel);
+    FontList->setPreferredSize(Vec2f(200, 300));
+    FontList->setOrientation(List::VERTICAL_ORIENTATION);
+    FontList->setCellGenerator(TheGenerator);
+    FontList->setModel(ListModel);
+    ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
     FontList->setSelectionModel(SelectionModel);
 
@@ -405,40 +543,40 @@ int main(int argc, char **argv)
 
     //ScrollPanel
     ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
-        ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
-        ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
+    ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     ExampleScrollPanel->setViewComponent(FontList);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
     ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
     FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
 
     InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-       MainInternalWindow->pushToChildren(ExampleLabel);
-       MainInternalWindow->pushToChildren(ExampleScrollPanel);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
+    MainInternalWindow->pushToChildren(ExampleLabel);
+    MainInternalWindow->pushToChildren(ExampleScrollPanel);
+    MainInternalWindow->setLayout(MainInternalWindowLayout);
+    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setDrawTitlebar(false);
+    MainInternalWindow->setResizable(false);
 
     // Create the Drawing Surface
     UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
-        TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    TutorialDrawingSurface->setGraphics(TutorialGraphics);
+    TutorialDrawingSurface->setEventProducer(TutorialWindow);
+
+    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
     UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
- 
+    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
@@ -448,7 +586,7 @@ int main(int argc, char **argv)
 
     // Add the UI Foreground Object to the Scene
     ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
-        TutorialViewport->addForeground(TutorialUIForeground);
+    TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
@@ -458,8 +596,8 @@ int main(int argc, char **argv)
     Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
     Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
     TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "17Label_Font");
+                               WinSize,
+                               "17Label_Font");
 
     //Enter main Loop
     TutorialWindow->mainLoop();

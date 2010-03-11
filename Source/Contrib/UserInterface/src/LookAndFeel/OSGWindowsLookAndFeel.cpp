@@ -59,8 +59,8 @@
 //#include "OSGDialogWindow.h"
 #include "OSGTitlebar.h"
 #include "OSGPanel.h"
-//#include "OSGSplitPanel.h"
-//#include "OSGTabPanel.h"
+#include "OSGSplitPanel.h"
+#include "OSGTabPanel.h"
 #include "OSGImageComponent.h"
 #include "OSGRectUIDrawObject.h"
 #include "OSGMultiColoredQuadUIDrawObject.h"
@@ -98,13 +98,13 @@
 #include "OSGDefaultListSelectionModel.h"
 #include "OSGDefaultListComponentGenerator.h"
 
-//#include "OSGSpinner.h"
-//#include "OSGSpinnerDefaultEditor.h"
-//#include "OSGSpinnerNumberEditor.h"
+#include "OSGSpinner.h"
+#include "OSGSpinnerDefaultEditor.h"
+#include "OSGSpinnerNumberEditor.h"
 
-//#include "OSGProgressBar.h"
+#include "OSGProgressBar.h"
 
-//#include "OSGSlider.h"
+#include "OSGSlider.h"
 
 //#include "OSGComboBox.h"
 //#include "OSGDefaultComboBoxEditor.h"
@@ -159,8 +159,8 @@ void WindowsLookAndFeel::init(void)
     //DialogWindowRefPtr WindowsDialogWindow = DialogWindow::create();
     PanelRefPtr WindowsPanel = Panel::create();
     //ToolbarRefPtr WindowsToolbar = Toolbar::create();
-    //SplitPanelRefPtr WindowsSplitPanel = SplitPanel::create();
-    //TabPanelRefPtr WindowsTabPanel = TabPanel::create();
+    SplitPanelRefPtr WindowsSplitPanel = SplitPanel::create();
+    TabPanelRefPtr WindowsTabPanel = TabPanel::create();
     ImageComponentRefPtr WindowsImageComponent = ImageComponent::create();
     CheckboxButtonRefPtr WindowsCheckboxButton = CheckboxButton::create();
     RadioButtonRefPtr WindowsRadioButton = RadioButton::create();
@@ -175,12 +175,12 @@ void WindowsLookAndFeel::init(void)
     RotatedComponentRefPtr WindowsRotatedComponent = RotatedComponent::create();
     DefaultListComponentGeneratorRefPtr WindowsDefaultListComponentGenerator = DefaultListComponentGenerator::create();
     ListRefPtr WindowsList = List::create();
-    //SpinnerRefPtr WindowsSpinner = Spinner::create();
-    //SpinnerDefaultEditorRefPtr WindowsSpinnerDefaultEditor = SpinnerDefaultEditor::create();
-    //SpinnerNumberEditorRefPtr WindowsSpinnerNumberEditor = SpinnerNumberEditor::create();
+    SpinnerRefPtr WindowsSpinner = Spinner::create();
+    SpinnerDefaultEditorRefPtr WindowsSpinnerDefaultEditor = SpinnerDefaultEditor::create();
+    SpinnerNumberEditorRefPtr WindowsSpinnerNumberEditor = SpinnerNumberEditor::create();
     SeparatorRefPtr WindowsSeparator = Separator::create();
-    //ProgressBarRefPtr WindowsProgressBar = ProgressBar::create();
-    //SliderRefPtr WindowsSlider = Slider::create();
+    ProgressBarRefPtr WindowsProgressBar = ProgressBar::create();
+    SliderRefPtr WindowsSlider = Slider::create();
     //DefaultComboBoxComponentGeneratorRefPtr WindowsDefaultComboBoxComponentGenerator = DefaultComboBoxComponentGenerator::create();
     //ComboBoxRefPtr WindowsComboBox = ComboBox::create();
     //TableHeaderRefPtr WindowsTableHeader = TableHeader::create();
@@ -204,8 +204,8 @@ void WindowsLookAndFeel::init(void)
     //pushToPrototypes(WindowsDialogWindow);
     pushToPrototypes(WindowsPanel);
     //pushToPrototypes(WindowsToolbar);
-    //pushToPrototypes(WindowsSplitPanel);
-    //pushToPrototypes(WindowsTabPanel);
+    pushToPrototypes(WindowsSplitPanel);
+    pushToPrototypes(WindowsTabPanel);
     pushToPrototypes(WindowsImageComponent);
     pushToPrototypes(WindowsCheckboxButton);
     pushToPrototypes(WindowsRadioButton);
@@ -226,12 +226,12 @@ void WindowsLookAndFeel::init(void)
     pushToPrototypes(WindowsRotatedComponent);
     pushToPrototypes(WindowsDefaultListComponentGenerator);
     pushToPrototypes(WindowsList);
-    //pushToPrototypes(WindowsSpinner);
-    //pushToPrototypes(WindowsSpinnerDefaultEditor);
-    //pushToPrototypes(WindowsSpinnerNumberEditor);
+    pushToPrototypes(WindowsSpinner);
+    pushToPrototypes(WindowsSpinnerDefaultEditor);
+    pushToPrototypes(WindowsSpinnerNumberEditor);
     pushToPrototypes(WindowsSeparator);
-    //pushToPrototypes(WindowsProgressBar);
-    //pushToPrototypes(WindowsSlider);
+    pushToPrototypes(WindowsProgressBar);
+    pushToPrototypes(WindowsSlider);
     //pushToPrototypes(WindowsDefaultComboBoxComponentGenerator);
     //pushToPrototypes(WindowsComboBox);
     //pushToPrototypes(WindowsTableHeader);
@@ -971,117 +971,117 @@ void WindowsLookAndFeel::init(void)
 
     ////Opacity
     //WindowsToolbar->setOpacity(1.0);
-    ///[>************************* SplitPanel *****************************
-    ////The only default value set will be the divider
+    //************************** SplitPanel *****************************
+    //The only default value set will be the divider
 
-    ////Windows Divider Background and Border
-    //ColorLayerRefPtr WindowsDividerBackground = ColorLayer::create();
-    //WindowsDividerBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+    //Windows Divider Background and Border
+    ColorLayerRefPtr WindowsDividerBackground = ColorLayer::create();
+    WindowsDividerBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 
-    ////Windows Divider
-    //UIDrawObjectCanvasRefPtr WindowsDividerDrawObject = UIDrawObjectCanvas::create();
-    //WindowsDividerDrawObject->setBackground(WindowsDividerBackground);
+    //Windows Divider
+    UIDrawObjectCanvasRefPtr WindowsDividerDrawObject = UIDrawObjectCanvas::create();
+    WindowsDividerDrawObject->setBackground(WindowsDividerBackground);
 
-    ////Windows SplitPanel
-    //WindowsSplitPanel->setEnabled(true);
-    //WindowsSplitPanel->setVisible(true);
+    //Windows SplitPanel
+    WindowsSplitPanel->setEnabled(true);
+    WindowsSplitPanel->setVisible(true);
 
-    //WindowsSplitPanel->setConstraints(NULL);
-    ////Sizes
-    //WindowsSplitPanel->setMinSize(Vec2f(0,0));
-    //WindowsSplitPanel->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsSplitPanel->setPreferredSize(Vec2f(100,100));
+    WindowsSplitPanel->setConstraints(NULL);
+    //Sizes
+    WindowsSplitPanel->setMinSize(Vec2f(0,0));
+    WindowsSplitPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsSplitPanel->setPreferredSize(Vec2f(100,100));
 
-    ////Border
-    //WindowsSplitPanel->setBorders(WindowsEmptyBorder);
+    //Border
+    WindowsSplitPanel->setBorders(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsSplitPanel->setBackgrounds(WindowsEmptyBackground);
+    //Background
+    WindowsSplitPanel->setBackgrounds(WindowsEmptyBackground);
 
-    ////Opacity
-    //WindowsSplitPanel->setOpacity(1.0);
+    //Opacity
+    WindowsSplitPanel->setOpacity(1.0);
 
-    //WindowsSplitPanel->setDividerDrawObject(WindowsDividerDrawObject);
-    //WindowsSplitPanel->setDividerSize(5);
-    //WindowsSplitPanel->setDividerPosition(100);
-    //WindowsSplitPanel->setExpandable(true);
-    //WindowsSplitPanel->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
+    WindowsSplitPanel->setDividerDrawObject(WindowsDividerDrawObject);
+    WindowsSplitPanel->setDividerSize(5);
+    WindowsSplitPanel->setDividerPosition(100);
+    WindowsSplitPanel->setExpandable(true);
+    WindowsSplitPanel->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
 
-    ///[>************************* TabPanel *****************************
-    //RoundedCornerLineBorderRefPtr WindowsTabPanelTabBorder = RoundedCornerLineBorder::create();
-    //WindowsTabPanelTabBorder->setColor( Color4f(0.57, 0.61, 0.61 ,1.0) );
-    //WindowsTabPanelTabBorder->setWidth(1);
-    //WindowsTabPanelTabBorder->setCornerRadius(3);
+    //************************** TabPanel *****************************
+    RoundedCornerLineBorderRefPtr WindowsTabPanelTabBorder = RoundedCornerLineBorder::create();
+    WindowsTabPanelTabBorder->setColor( Color4f(0.57, 0.61, 0.61 ,1.0) );
+    WindowsTabPanelTabBorder->setWidth(1);
+    WindowsTabPanelTabBorder->setCornerRadius(3);
 
-    //MatteBorderRefPtr WindowsTabPanelInsideActiveTabBorder = MatteBorder::create();
-    //WindowsTabPanelInsideActiveTabBorder->setLeftWidth(0);
-    //WindowsTabPanelInsideActiveTabBorder->setRightWidth(0);
-    //WindowsTabPanelInsideActiveTabBorder->setTopWidth(3);
-    //WindowsTabPanelInsideActiveTabBorder->setBottomWidth(0);
-    //WindowsTabPanelInsideActiveTabBorder->setColor(Color4f(1.0, 0.78, 0.24, 1.0));
+    MatteBorderRefPtr WindowsTabPanelInsideActiveTabBorder = MatteBorder::create();
+    WindowsTabPanelInsideActiveTabBorder->setLeftWidth(0);
+    WindowsTabPanelInsideActiveTabBorder->setRightWidth(0);
+    WindowsTabPanelInsideActiveTabBorder->setTopWidth(3);
+    WindowsTabPanelInsideActiveTabBorder->setBottomWidth(0);
+    WindowsTabPanelInsideActiveTabBorder->setColor(Color4f(1.0, 0.78, 0.24, 1.0));
 
-    //CompoundBorderRefPtr WindowsTabPanelActiveTabBorder = CompoundBorder::create();
-    //WindowsTabPanelActiveTabBorder->setInnerBorder(WindowsTabPanelInsideActiveTabBorder);
-    //WindowsTabPanelActiveTabBorder->setOuterBorder(WindowsTabPanelTabBorder);
+    CompoundBorderRefPtr WindowsTabPanelActiveTabBorder = CompoundBorder::create();
+    WindowsTabPanelActiveTabBorder->setInnerBorder(WindowsTabPanelInsideActiveTabBorder);
+    WindowsTabPanelActiveTabBorder->setOuterBorder(WindowsTabPanelTabBorder);
 
-    //GradientLayerRefPtr WindowsTabPanelTabBackground = GradientLayer::create();
-    //WindowsTabPanelTabBackground->editMFColors()->push_back(Color4f(1.0,1.0,1.0,1.0));
-    //WindowsTabPanelTabBackground->editMFStops()->push_back(0.0);
-    //WindowsTabPanelTabBackground->editMFColors()->push_back(Color4f(0.75,0.75,0.85,1.0));
-    //WindowsTabPanelTabBackground->editMFStops()->push_back(1.0);
-    //WindowsTabPanelTabBackground->setStartPosition(Vec2f(0.0f,0.0f));
-    //WindowsTabPanelTabBackground->setEndPosition(Vec2f(0.0f,1.0f));
+    GradientLayerRefPtr WindowsTabPanelTabBackground = GradientLayer::create();
+    WindowsTabPanelTabBackground->editMFColors()->push_back(Color4f(1.0,1.0,1.0,1.0));
+    WindowsTabPanelTabBackground->editMFStops()->push_back(0.0);
+    WindowsTabPanelTabBackground->editMFColors()->push_back(Color4f(0.75,0.75,0.85,1.0));
+    WindowsTabPanelTabBackground->editMFStops()->push_back(1.0);
+    WindowsTabPanelTabBackground->setStartPosition(Vec2f(0.0f,0.0f));
+    WindowsTabPanelTabBackground->setEndPosition(Vec2f(0.0f,1.0f));
 
-    //ColorLayerRefPtr WindowsTabPanelTabActiveBackground = ColorLayer::create();
-    //WindowsTabPanelTabActiveBackground->setColor(Color4f(0.9569,0.9529,0.9373,1.0));
+    ColorLayerRefPtr WindowsTabPanelTabActiveBackground = ColorLayer::create();
+    WindowsTabPanelTabActiveBackground->setColor(Color4f(0.9569,0.9529,0.9373,1.0));
 
-    //LineBorderRefPtr WindowsTabPanelContentBorder = LineBorder::create();
-    //WindowsTabPanelContentBorder->setWidth(1);
-    //WindowsTabPanelContentBorder->setColor(Color4f(0.57, 0.61, 0.61 ,1.0));
-    ////Windows TabPanel
-    //WindowsTabPanel->setEnabled(true);
-    //WindowsTabPanel->setVisible(true);
+    LineBorderRefPtr WindowsTabPanelContentBorder = LineBorder::create();
+    WindowsTabPanelContentBorder->setWidth(1);
+    WindowsTabPanelContentBorder->setColor(Color4f(0.57, 0.61, 0.61 ,1.0));
+    //Windows TabPanel
+    WindowsTabPanel->setEnabled(true);
+    WindowsTabPanel->setVisible(true);
 
-    //WindowsTabPanel->setConstraints(NULL);
-    ////Sizes
-    //WindowsTabPanel->setMinSize(Vec2f(0,0));
-    //WindowsTabPanel->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsTabPanel->setPreferredSize(Vec2f(100,100));
+    WindowsTabPanel->setConstraints(NULL);
+    //Sizes
+    WindowsTabPanel->setMinSize(Vec2f(0,0));
+    WindowsTabPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsTabPanel->setPreferredSize(Vec2f(100,100));
 
-    ////Border
-    //WindowsTabPanel->setBorders(WindowsEmptyBorder);
+    //Border
+    WindowsTabPanel->setBorders(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsTabPanel->setBackgrounds(WindowsEmptyBackground);
+    //Background
+    WindowsTabPanel->setBackgrounds(WindowsEmptyBackground);
 
-    ////Opacity
-    //WindowsTabPanel->setOpacity(1.0);
+    //Opacity
+    WindowsTabPanel->setOpacity(1.0);
 
-    ////TabPanel
-    //WindowsTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
-    //WindowsTabPanel->setTabAlignment(0.0f);
-    //WindowsTabPanel->setTabRotation(TabPanel::CLOCKWISE_0);
-    //WindowsTabPanel->setTabBorderInsets(Vec2f(0.0f,0.0f));
+    //TabPanel
+    WindowsTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
+    WindowsTabPanel->setTabAlignment(0.0f);
+    WindowsTabPanel->setTabRotation(TabPanel::CLOCKWISE_0);
+    WindowsTabPanel->setTabBorderInsets(Vec2f(0.0f,0.0f));
 
-    //WindowsTabPanel->setTabBorder(WindowsTabPanelTabBorder);
-    //WindowsTabPanel->setTabActiveBorder(WindowsTabPanelActiveTabBorder);
-    //WindowsTabPanel->setTabDisabledBorder(WindowsTabPanelTabBorder);
-    //WindowsTabPanel->setTabRolloverBorder(WindowsTabPanelActiveTabBorder);
-    //WindowsTabPanel->setTabFocusedBorder(WindowsTabPanelTabBorder);
+    WindowsTabPanel->setTabBorder(WindowsTabPanelTabBorder);
+    WindowsTabPanel->setTabActiveBorder(WindowsTabPanelActiveTabBorder);
+    WindowsTabPanel->setTabDisabledBorder(WindowsTabPanelTabBorder);
+    WindowsTabPanel->setTabRolloverBorder(WindowsTabPanelActiveTabBorder);
+    WindowsTabPanel->setTabFocusedBorder(WindowsTabPanelTabBorder);
 
-    //WindowsTabPanel->setTabBackground(WindowsTabPanelTabBackground);
-    //WindowsTabPanel->setTabActiveBackground(WindowsTabPanelTabActiveBackground);
-    //WindowsTabPanel->setTabDisabledBackground(WindowsTabPanelTabBackground);
-    //WindowsTabPanel->setTabRolloverBackground(WindowsTabPanelTabBackground);
-    //WindowsTabPanel->setTabFocusedBackground(WindowsTabPanelTabBackground);
+    WindowsTabPanel->setTabBackground(WindowsTabPanelTabBackground);
+    WindowsTabPanel->setTabActiveBackground(WindowsTabPanelTabActiveBackground);
+    WindowsTabPanel->setTabDisabledBackground(WindowsTabPanelTabBackground);
+    WindowsTabPanel->setTabRolloverBackground(WindowsTabPanelTabBackground);
+    WindowsTabPanel->setTabFocusedBackground(WindowsTabPanelTabBackground);
 
-    //WindowsTabPanel->setContentBorder(WindowsTabPanelContentBorder);
-    //WindowsTabPanel->setContentDisabledBorder(WindowsTabPanelContentBorder);
-    //WindowsTabPanel->setContentRolloverBorder(WindowsTabPanelContentBorder);
+    WindowsTabPanel->setContentBorder(WindowsTabPanelContentBorder);
+    WindowsTabPanel->setContentDisabledBorder(WindowsTabPanelContentBorder);
+    WindowsTabPanel->setContentRolloverBorder(WindowsTabPanelContentBorder);
 
-    //WindowsTabPanel->setContentBackground(WindowsTabPanelTabActiveBackground);
-    //WindowsTabPanel->setContentDisabledBackground(WindowsTabPanelTabActiveBackground);
-    //WindowsTabPanel->setContentRolloverBackground(WindowsTabPanelTabActiveBackground);
+    WindowsTabPanel->setContentBackground(WindowsTabPanelTabActiveBackground);
+    WindowsTabPanel->setContentDisabledBackground(WindowsTabPanelTabActiveBackground);
+    WindowsTabPanel->setContentRolloverBackground(WindowsTabPanelTabActiveBackground);
 
     //************************** ImageComponent *****************************
     //Windows ImageComponentBorder
@@ -3132,214 +3132,214 @@ void WindowsLookAndFeel::init(void)
     
 
 
-    ///[>************************* Spinner *****************************
+    //************************** Spinner *****************************
 
-    ////Spinner Next Draw Object
-    //PolygonUIDrawObjectRefPtr WindowsSpinnerNextButtonDrawObject1 = PolygonUIDrawObject::create();
-    //WindowsSpinnerNextButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
-    //WindowsSpinnerNextButtonDrawObject1->setOpacity(1.0);
-    //WindowsSpinnerNextButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(0,4));
-    //WindowsSpinnerNextButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(4,0));
-    //WindowsSpinnerNextButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(4,2));
-    //WindowsSpinnerNextButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(1,5));
-    //PolygonUIDrawObjectRefPtr WindowsSpinnerNextButtonDrawObject2 = PolygonUIDrawObject::create();
-    //WindowsSpinnerNextButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
-    //WindowsSpinnerNextButtonDrawObject2->setOpacity(1.0);
-    //WindowsSpinnerNextButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(4,0));
-    //WindowsSpinnerNextButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(8,4));
-    //WindowsSpinnerNextButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(7,5));
-    //WindowsSpinnerNextButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(4,2));
+    //Spinner Next Draw Object
+    PolygonUIDrawObjectRefPtr WindowsSpinnerNextButtonDrawObject1 = PolygonUIDrawObject::create();
+    WindowsSpinnerNextButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
+    WindowsSpinnerNextButtonDrawObject1->setOpacity(1.0);
+    WindowsSpinnerNextButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(0,4));
+    WindowsSpinnerNextButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(4,0));
+    WindowsSpinnerNextButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(4,2));
+    WindowsSpinnerNextButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(1,5));
+    PolygonUIDrawObjectRefPtr WindowsSpinnerNextButtonDrawObject2 = PolygonUIDrawObject::create();
+    WindowsSpinnerNextButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
+    WindowsSpinnerNextButtonDrawObject2->setOpacity(1.0);
+    WindowsSpinnerNextButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(4,0));
+    WindowsSpinnerNextButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(8,4));
+    WindowsSpinnerNextButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(7,5));
+    WindowsSpinnerNextButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(4,2));
 
-    //UIDrawObjectCanvasRefPtr WindowsSpinnerNextButtonCanvas = UIDrawObjectCanvas::create();
-    //WindowsSpinnerNextButtonCanvas->pushToDrawObjects(WindowsSpinnerNextButtonDrawObject1);
-    //WindowsSpinnerNextButtonCanvas->pushToDrawObjects(WindowsSpinnerNextButtonDrawObject2);
+    UIDrawObjectCanvasRefPtr WindowsSpinnerNextButtonCanvas = UIDrawObjectCanvas::create();
+    WindowsSpinnerNextButtonCanvas->pushToDrawObjects(WindowsSpinnerNextButtonDrawObject1);
+    WindowsSpinnerNextButtonCanvas->pushToDrawObjects(WindowsSpinnerNextButtonDrawObject2);
 
-    //ButtonRefPtr WindowsSpinnerNextButton = Button::create();
-    //WindowsSpinnerNextButton->setPreferredSize(Vec2f(17,17));
-    //WindowsSpinnerNextButton->setEnableActionOnMouseDownTime(true);
-    //WindowsSpinnerNextButton->setActionOnMouseDownRate(0.2);
+    ButtonRefPtr WindowsSpinnerNextButton = Button::create();
+    WindowsSpinnerNextButton->setPreferredSize(Vec2f(17,17));
+    WindowsSpinnerNextButton->setEnableActionOnMouseDownTime(true);
+    WindowsSpinnerNextButton->setActionOnMouseDownRate(0.2);
 
-    ////Border
-    //WindowsSpinnerNextButton->setBorder(WindowsScrollBarButtonBorder);
-    //WindowsSpinnerNextButton->setRolloverBorder(WindowsScrollBarButtonBorder);
-    //WindowsSpinnerNextButton->setFocusedBorder(WindowsScrollBarButtonBorder);
-    //WindowsSpinnerNextButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
+    //Border
+    WindowsSpinnerNextButton->setBorder(WindowsScrollBarButtonBorder);
+    WindowsSpinnerNextButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+    WindowsSpinnerNextButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+    WindowsSpinnerNextButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
 
-    ////Background
-    //WindowsSpinnerNextButton->setBackground(WindowsScrollBarButtonBackground);
-    //WindowsSpinnerNextButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
-    //WindowsSpinnerNextButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
-    //WindowsSpinnerNextButton->setFocusedBackground(WindowsScrollBarButtonBackground);
-    //WindowsSpinnerNextButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+    //Background
+    WindowsSpinnerNextButton->setBackground(WindowsScrollBarButtonBackground);
+    WindowsSpinnerNextButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+    WindowsSpinnerNextButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+    WindowsSpinnerNextButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+    WindowsSpinnerNextButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-    //WindowsSpinnerNextButton->setActiveOffset(Vec2f(0,0));
-    //WindowsSpinnerNextButton->setDrawObject(WindowsSpinnerNextButtonCanvas);
-    //WindowsSpinnerNextButton->setActiveDrawObject(WindowsSpinnerNextButtonCanvas);
-    //WindowsSpinnerNextButton->setFocusedDrawObject(WindowsSpinnerNextButtonCanvas);
-    //WindowsSpinnerNextButton->setRolloverDrawObject(WindowsSpinnerNextButtonCanvas);
-    //WindowsSpinnerNextButton->setDisabledDrawObject(WindowsSpinnerNextButtonCanvas);
+    WindowsSpinnerNextButton->setActiveOffset(Vec2f(0,0));
+    WindowsSpinnerNextButton->setDrawObject(WindowsSpinnerNextButtonCanvas);
+    WindowsSpinnerNextButton->setActiveDrawObject(WindowsSpinnerNextButtonCanvas);
+    WindowsSpinnerNextButton->setFocusedDrawObject(WindowsSpinnerNextButtonCanvas);
+    WindowsSpinnerNextButton->setRolloverDrawObject(WindowsSpinnerNextButtonCanvas);
+    WindowsSpinnerNextButton->setDisabledDrawObject(WindowsSpinnerNextButtonCanvas);
 
-    //WindowsSpinnerNextButton->setAlignment(Vec2f(0.5f,0.5f));
+    WindowsSpinnerNextButton->setAlignment(Vec2f(0.5f,0.5f));
 
-    ////Spinner Previous Draw Object
-    //PolygonUIDrawObjectRefPtr WindowsSpinnerPreviousButtonDrawObject1 = PolygonUIDrawObject::create();
-    //WindowsSpinnerPreviousButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
-    //WindowsSpinnerPreviousButtonDrawObject1->setOpacity(1.0);
-    //WindowsSpinnerPreviousButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(1,0));
-    //WindowsSpinnerPreviousButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(4,3));
-    //WindowsSpinnerPreviousButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(4,5));
-    //WindowsSpinnerPreviousButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(0,1));
-    //PolygonUIDrawObjectRefPtr WindowsSpinnerPreviousButtonDrawObject2 = PolygonUIDrawObject::create();
-    //WindowsSpinnerPreviousButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
-    //WindowsSpinnerPreviousButtonDrawObject2->setOpacity(1.0);
-    //WindowsSpinnerPreviousButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(4,3));
-    //WindowsSpinnerPreviousButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(7,0));
-    //WindowsSpinnerPreviousButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(8,1));
-    //WindowsSpinnerPreviousButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(4,5));
+    //Spinner Previous Draw Object
+    PolygonUIDrawObjectRefPtr WindowsSpinnerPreviousButtonDrawObject1 = PolygonUIDrawObject::create();
+    WindowsSpinnerPreviousButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
+    WindowsSpinnerPreviousButtonDrawObject1->setOpacity(1.0);
+    WindowsSpinnerPreviousButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(1,0));
+    WindowsSpinnerPreviousButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(4,3));
+    WindowsSpinnerPreviousButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(4,5));
+    WindowsSpinnerPreviousButtonDrawObject1->editMFVerticies()->push_back(Pnt2f(0,1));
+    PolygonUIDrawObjectRefPtr WindowsSpinnerPreviousButtonDrawObject2 = PolygonUIDrawObject::create();
+    WindowsSpinnerPreviousButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
+    WindowsSpinnerPreviousButtonDrawObject2->setOpacity(1.0);
+    WindowsSpinnerPreviousButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(4,3));
+    WindowsSpinnerPreviousButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(7,0));
+    WindowsSpinnerPreviousButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(8,1));
+    WindowsSpinnerPreviousButtonDrawObject2->editMFVerticies()->push_back(Pnt2f(4,5));
 
-    //UIDrawObjectCanvasRefPtr WindowsSpinnerPreviousButtonCanvas = UIDrawObjectCanvas::create();
-    //WindowsSpinnerPreviousButtonCanvas->pushToDrawObjects(WindowsSpinnerPreviousButtonDrawObject1);
-    //WindowsSpinnerPreviousButtonCanvas->pushToDrawObjects(WindowsSpinnerPreviousButtonDrawObject2);
-    //ButtonRefPtr WindowsSpinnerPreviousButton = Button::create();
-    //WindowsSpinnerPreviousButton->setPreferredSize(Vec2f(17,17));
-    //WindowsSpinnerPreviousButton->setEnableActionOnMouseDownTime(true);
-    //WindowsSpinnerPreviousButton->setActionOnMouseDownRate(0.2);
-    ////Border
-    //WindowsSpinnerPreviousButton->setBorder(WindowsScrollBarButtonBorder);
-    //WindowsSpinnerPreviousButton->setRolloverBorder(WindowsScrollBarButtonBorder);
-    //WindowsSpinnerPreviousButton->setFocusedBorder(WindowsScrollBarButtonBorder);
-    //WindowsSpinnerPreviousButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
+    UIDrawObjectCanvasRefPtr WindowsSpinnerPreviousButtonCanvas = UIDrawObjectCanvas::create();
+    WindowsSpinnerPreviousButtonCanvas->pushToDrawObjects(WindowsSpinnerPreviousButtonDrawObject1);
+    WindowsSpinnerPreviousButtonCanvas->pushToDrawObjects(WindowsSpinnerPreviousButtonDrawObject2);
+    ButtonRefPtr WindowsSpinnerPreviousButton = Button::create();
+    WindowsSpinnerPreviousButton->setPreferredSize(Vec2f(17,17));
+    WindowsSpinnerPreviousButton->setEnableActionOnMouseDownTime(true);
+    WindowsSpinnerPreviousButton->setActionOnMouseDownRate(0.2);
+    //Border
+    WindowsSpinnerPreviousButton->setBorder(WindowsScrollBarButtonBorder);
+    WindowsSpinnerPreviousButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+    WindowsSpinnerPreviousButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+    WindowsSpinnerPreviousButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
 
-    ////Background
-    //WindowsSpinnerPreviousButton->setBackground(WindowsScrollBarButtonBackground);
-    //WindowsSpinnerPreviousButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
-    //WindowsSpinnerPreviousButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
-    //WindowsSpinnerPreviousButton->setFocusedBackground(WindowsScrollBarButtonBackground);
-    //WindowsSpinnerPreviousButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+    //Background
+    WindowsSpinnerPreviousButton->setBackground(WindowsScrollBarButtonBackground);
+    WindowsSpinnerPreviousButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+    WindowsSpinnerPreviousButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+    WindowsSpinnerPreviousButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+    WindowsSpinnerPreviousButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-    //WindowsSpinnerPreviousButton->setActiveOffset(Vec2f(0,0));
+    WindowsSpinnerPreviousButton->setActiveOffset(Vec2f(0,0));
 
-    //WindowsSpinnerPreviousButton->setDrawObject(WindowsSpinnerPreviousButtonCanvas);
-    //WindowsSpinnerPreviousButton->setActiveDrawObject(WindowsSpinnerPreviousButtonCanvas);
-    //WindowsSpinnerPreviousButton->setFocusedDrawObject(WindowsSpinnerPreviousButtonCanvas);
-    //WindowsSpinnerPreviousButton->setRolloverDrawObject(WindowsSpinnerPreviousButtonCanvas);
-    //WindowsSpinnerPreviousButton->setDisabledDrawObject(WindowsSpinnerPreviousButtonCanvas);
+    WindowsSpinnerPreviousButton->setDrawObject(WindowsSpinnerPreviousButtonCanvas);
+    WindowsSpinnerPreviousButton->setActiveDrawObject(WindowsSpinnerPreviousButtonCanvas);
+    WindowsSpinnerPreviousButton->setFocusedDrawObject(WindowsSpinnerPreviousButtonCanvas);
+    WindowsSpinnerPreviousButton->setRolloverDrawObject(WindowsSpinnerPreviousButtonCanvas);
+    WindowsSpinnerPreviousButton->setDisabledDrawObject(WindowsSpinnerPreviousButtonCanvas);
 
-    //WindowsSpinnerPreviousButton->setAlignment(Vec2f(0.5f,0.5f));
+    WindowsSpinnerPreviousButton->setAlignment(Vec2f(0.5f,0.5f));
 
-    ////Windows SpinnerBorder
-    //EmptyBorderRefPtr WindowsSpinnerBorder = EmptyBorder::create();
+    //Windows SpinnerBorder
+    EmptyBorderRefPtr WindowsSpinnerBorder = EmptyBorder::create();
 
-    ////Windows SpinnerBackground
-    //EmptyLayerRefPtr WindowsSpinnerBackground = EmptyLayer::create();
+    //Windows SpinnerBackground
+    EmptyLayerRefPtr WindowsSpinnerBackground = EmptyLayer::create();
 
-    //WindowsSpinner->setConstraints(NULL);
-    ////Sizes
-    //WindowsSpinner->setMinSize(Vec2f(0,0));
-    //WindowsSpinner->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsSpinner->setPreferredSize(Vec2f(50,23));
+    WindowsSpinner->setConstraints(NULL);
+    //Sizes
+    WindowsSpinner->setMinSize(Vec2f(0,0));
+    WindowsSpinner->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsSpinner->setPreferredSize(Vec2f(50,23));
 
-    ////Border
-    //WindowsSpinner->setBorder(WindowsTextFieldBorder);
-    //WindowsSpinner->setRolloverBorder(WindowsTextFieldBorder);
-    //WindowsSpinner->setFocusedBorder(WindowsTextFieldBorder);
-    //WindowsSpinner->setDisabledBorder(WindowsTextFieldBorder);
+    //Border
+    WindowsSpinner->setBorder(WindowsTextFieldBorder);
+    WindowsSpinner->setRolloverBorder(WindowsTextFieldBorder);
+    WindowsSpinner->setFocusedBorder(WindowsTextFieldBorder);
+    WindowsSpinner->setDisabledBorder(WindowsTextFieldBorder);
 
-    ////Background
-    //WindowsSpinner->setBackground(WindowsTextFieldBackground);
-    //WindowsSpinner->setRolloverBackground(WindowsTextFieldBackground);
-    //WindowsSpinner->setFocusedBackground(WindowsTextFieldBackground);
-    //WindowsSpinner->setDisabledBackground(WindowsDisabledTextFieldBackground);
+    //Background
+    WindowsSpinner->setBackground(WindowsTextFieldBackground);
+    WindowsSpinner->setRolloverBackground(WindowsTextFieldBackground);
+    WindowsSpinner->setFocusedBackground(WindowsTextFieldBackground);
+    WindowsSpinner->setDisabledBackground(WindowsDisabledTextFieldBackground);
 
-    ////Opacity
-    //WindowsSpinner->setOpacity(1.0);
+    //Opacity
+    WindowsSpinner->setOpacity(1.0);
 
-    ////Spinner
-    //WindowsSpinner->setNextButton(WindowsSpinnerNextButton);
-    //WindowsSpinner->setPreviousButton(WindowsSpinnerPreviousButton);
-    //WindowsSpinner->setEditorToButtonOffset(2);
+    //Spinner
+    WindowsSpinner->setNextButton(WindowsSpinnerNextButton);
+    WindowsSpinner->setPreviousButton(WindowsSpinnerPreviousButton);
+    WindowsSpinner->setEditorToButtonOffset(2);
 
-    ///[>************************* SpinnerDefaultEditor *****************************
-    ////Windows SpinnerDefaultEditor TextField
-    //TextFieldRefPtr WindowsSpinnerDefaultEditorTextField = TextField::create();
-    //WindowsSpinnerDefaultEditorTextField->setAlignment(Vec2f(1.0f,0.5f));
+    //************************** SpinnerDefaultEditor *****************************
+    //Windows SpinnerDefaultEditor TextField
+    TextFieldRefPtr WindowsSpinnerDefaultEditorTextField = TextField::create();
+    WindowsSpinnerDefaultEditorTextField->setAlignment(Vec2f(1.0f,0.5f));
 
-    ////Border
-    //WindowsSpinnerDefaultEditorTextField->setBorder(WindowsEmptyBorder);
-    //WindowsSpinnerDefaultEditorTextField->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsSpinnerDefaultEditorTextField->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsSpinnerDefaultEditorTextField->setDisabledBorder(WindowsEmptyBorder);
+    //Border
+    WindowsSpinnerDefaultEditorTextField->setBorder(WindowsEmptyBorder);
+    WindowsSpinnerDefaultEditorTextField->setRolloverBorder(WindowsEmptyBorder);
+    WindowsSpinnerDefaultEditorTextField->setFocusedBorder(WindowsEmptyBorder);
+    WindowsSpinnerDefaultEditorTextField->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsSpinnerDefaultEditorTextField->setBackground(WindowsEmptyBackground);
-    //WindowsSpinnerDefaultEditorTextField->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsSpinnerDefaultEditorTextField->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsSpinnerDefaultEditorTextField->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsSpinnerDefaultEditorTextField->setBackground(WindowsEmptyBackground);
+    WindowsSpinnerDefaultEditorTextField->setRolloverBackground(WindowsEmptyBackground);
+    WindowsSpinnerDefaultEditorTextField->setFocusedBackground(WindowsEmptyBackground);
+    WindowsSpinnerDefaultEditorTextField->setDisabledBackground(WindowsEmptyBackground);
 
-    //WindowsSpinnerDefaultEditor->setConstraints(NULL);
-    ////Sizes
-    //WindowsSpinnerDefaultEditor->setMinSize(Vec2f(0,0));
-    //WindowsSpinnerDefaultEditor->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsSpinnerDefaultEditor->setPreferredSize(Vec2f(200,100));
+    WindowsSpinnerDefaultEditor->setConstraints(NULL);
+    //Sizes
+    WindowsSpinnerDefaultEditor->setMinSize(Vec2f(0,0));
+    WindowsSpinnerDefaultEditor->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsSpinnerDefaultEditor->setPreferredSize(Vec2f(200,100));
 
-    ////Border
-    //WindowsSpinnerDefaultEditor->setBorder(WindowsEmptyBorder);
-    //WindowsSpinnerDefaultEditor->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsSpinnerDefaultEditor->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsSpinnerDefaultEditor->setDisabledBorder(WindowsEmptyBorder);
+    //Border
+    WindowsSpinnerDefaultEditor->setBorder(WindowsEmptyBorder);
+    WindowsSpinnerDefaultEditor->setRolloverBorder(WindowsEmptyBorder);
+    WindowsSpinnerDefaultEditor->setFocusedBorder(WindowsEmptyBorder);
+    WindowsSpinnerDefaultEditor->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsSpinnerDefaultEditor->setBackground(WindowsEmptyBackground);
-    //WindowsSpinnerDefaultEditor->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsSpinnerDefaultEditor->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsSpinnerDefaultEditor->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsSpinnerDefaultEditor->setBackground(WindowsEmptyBackground);
+    WindowsSpinnerDefaultEditor->setRolloverBackground(WindowsEmptyBackground);
+    WindowsSpinnerDefaultEditor->setFocusedBackground(WindowsEmptyBackground);
+    WindowsSpinnerDefaultEditor->setDisabledBackground(WindowsEmptyBackground);
 
-    ////Opacity
-    //WindowsSpinnerDefaultEditor->setOpacity(1.0);
+    //Opacity
+    WindowsSpinnerDefaultEditor->setOpacity(1.0);
 
-    ////WindowsSpinnerDefaultEditor
-    //WindowsSpinnerDefaultEditor->setTextField(WindowsSpinnerDefaultEditorTextField);
+    //WindowsSpinnerDefaultEditor
+    WindowsSpinnerDefaultEditor->setTextField(WindowsSpinnerDefaultEditorTextField);
 
-    ///[>************************* SpinnerNumberEditor *****************************
-    ////Windows SpinnerNumberEditor TextField
-    //TextFieldRefPtr WindowsSpinnerNumberEditorTextField = TextField::create();
-    //WindowsSpinnerNumberEditorTextField->setAlignment(Vec2f(1.0f,0.5f));
+    //************************** SpinnerNumberEditor *****************************
+    //Windows SpinnerNumberEditor TextField
+    TextFieldRefPtr WindowsSpinnerNumberEditorTextField = TextField::create();
+    WindowsSpinnerNumberEditorTextField->setAlignment(Vec2f(1.0f,0.5f));
 
-    ////Border
-    //WindowsSpinnerNumberEditorTextField->setBorder(WindowsEmptyBorder);
-    //WindowsSpinnerNumberEditorTextField->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsSpinnerNumberEditorTextField->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsSpinnerNumberEditorTextField->setDisabledBorder(WindowsEmptyBorder);
+    //Border
+    WindowsSpinnerNumberEditorTextField->setBorder(WindowsEmptyBorder);
+    WindowsSpinnerNumberEditorTextField->setRolloverBorder(WindowsEmptyBorder);
+    WindowsSpinnerNumberEditorTextField->setFocusedBorder(WindowsEmptyBorder);
+    WindowsSpinnerNumberEditorTextField->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsSpinnerNumberEditorTextField->setBackground(WindowsEmptyBackground);
-    //WindowsSpinnerNumberEditorTextField->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsSpinnerNumberEditorTextField->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsSpinnerNumberEditorTextField->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsSpinnerNumberEditorTextField->setBackground(WindowsEmptyBackground);
+    WindowsSpinnerNumberEditorTextField->setRolloverBackground(WindowsEmptyBackground);
+    WindowsSpinnerNumberEditorTextField->setFocusedBackground(WindowsEmptyBackground);
+    WindowsSpinnerNumberEditorTextField->setDisabledBackground(WindowsEmptyBackground);
 
-    //WindowsSpinnerNumberEditor->setConstraints(NULL);
-    ////Sizes
-    //WindowsSpinnerNumberEditor->setMinSize(Vec2f(0,0));
-    //WindowsSpinnerNumberEditor->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsSpinnerNumberEditor->setPreferredSize(Vec2f(200,100));
+    WindowsSpinnerNumberEditor->setConstraints(NULL);
+    //Sizes
+    WindowsSpinnerNumberEditor->setMinSize(Vec2f(0,0));
+    WindowsSpinnerNumberEditor->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsSpinnerNumberEditor->setPreferredSize(Vec2f(200,100));
 
-    ////Border
-    //WindowsSpinnerNumberEditor->setBorder(WindowsEmptyBorder);
-    //WindowsSpinnerNumberEditor->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsSpinnerNumberEditor->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsSpinnerNumberEditor->setDisabledBorder(WindowsEmptyBorder);
+    //Border
+    WindowsSpinnerNumberEditor->setBorder(WindowsEmptyBorder);
+    WindowsSpinnerNumberEditor->setRolloverBorder(WindowsEmptyBorder);
+    WindowsSpinnerNumberEditor->setFocusedBorder(WindowsEmptyBorder);
+    WindowsSpinnerNumberEditor->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsSpinnerNumberEditor->setBackground(WindowsEmptyBackground);
-    //WindowsSpinnerNumberEditor->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsSpinnerNumberEditor->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsSpinnerNumberEditor->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsSpinnerNumberEditor->setBackground(WindowsEmptyBackground);
+    WindowsSpinnerNumberEditor->setRolloverBackground(WindowsEmptyBackground);
+    WindowsSpinnerNumberEditor->setFocusedBackground(WindowsEmptyBackground);
+    WindowsSpinnerNumberEditor->setDisabledBackground(WindowsEmptyBackground);
 
-    ////Opacity
-    //WindowsSpinnerNumberEditor->setOpacity(1.0);
+    //Opacity
+    WindowsSpinnerNumberEditor->setOpacity(1.0);
 
-    ////WindowsSpinnerNumberEditor
-    //WindowsSpinnerNumberEditor->setTextField(WindowsSpinnerNumberEditorTextField);
+    //WindowsSpinnerNumberEditor
+    WindowsSpinnerNumberEditor->setTextField(WindowsSpinnerNumberEditorTextField);
 
     //************************** Separator *****************************
     //Windows SeparatorBorder
@@ -3369,225 +3369,226 @@ void WindowsLookAndFeel::init(void)
     WindowsSeparator->setColor(Color4f(0.3,0.38,0.52,1.0));
     
 
-    ///[>************************* ProgressBar *****************************
-    ////Windows ProgressBarBorder
-    //RoundedCornerLineBorderRefPtr WindowsProgressBarBorder = RoundedCornerLineBorder::create();
-    //WindowsProgressBarBorder->setColor( Color4f(0.0, 0.0, 0.0 ,1.0) );
-    //WindowsProgressBarBorder->setWidth(1);
-    //WindowsProgressBarBorder->setCornerRadius(5);
+    //************************** ProgressBar *****************************
+    //Windows ProgressBarBorder
+    RoundedCornerLineBorderRefPtr WindowsProgressBarBorder = RoundedCornerLineBorder::create();
+    WindowsProgressBarBorder->setColor( Color4f(0.0, 0.0, 0.0 ,1.0) );
+    WindowsProgressBarBorder->setWidth(1);
+    WindowsProgressBarBorder->setCornerRadius(5);
 
-    ////Windows ProgressBarBackground
-    //ColorLayerRefPtr ProgressBarBackground = ColorLayer::create();
-    //ProgressBarBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+    //Windows ProgressBarBackground
+    ColorLayerRefPtr ProgressBarBackground = ColorLayer::create();
+    ProgressBarBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 
-    ////Windows ProgressBarDrawObjectBackground
-    //ColorLayerRefPtr ProgressBarDrawObjectBackground = ColorLayer::create();
-    //ProgressBarDrawObjectBackground->setColor(Color4f(0.0, 1.0, 0.0, 1.0));
+    //Windows ProgressBarDrawObjectBackground
+    ColorLayerRefPtr ProgressBarDrawObjectBackground = ColorLayer::create();
+    ProgressBarDrawObjectBackground->setColor(Color4f(0.0, 1.0, 0.0, 1.0));
 
-    ////ProgressBar DrawObjectCanvas
-    //UIDrawObjectCanvasRefPtr WindowsProgressBarCanvas = UIDrawObjectCanvas::create();
-    ////Border
-    //WindowsProgressBarCanvas->setBorder(WindowsEmptyBorder);
-    //WindowsProgressBarCanvas->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsProgressBarCanvas->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsProgressBarCanvas->setDisabledBorder(WindowsEmptyBorder);
+    //ProgressBar DrawObjectCanvas
+    UIDrawObjectCanvasRefPtr WindowsProgressBarCanvas = UIDrawObjectCanvas::create();
+    //Border
+    WindowsProgressBarCanvas->setBorder(WindowsEmptyBorder);
+    WindowsProgressBarCanvas->setRolloverBorder(WindowsEmptyBorder);
+    WindowsProgressBarCanvas->setFocusedBorder(WindowsEmptyBorder);
+    WindowsProgressBarCanvas->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsProgressBarCanvas->setBackground(ProgressBarDrawObjectBackground);
-    //WindowsProgressBarCanvas->setRolloverBackground(ProgressBarDrawObjectBackground);
-    //WindowsProgressBarCanvas->setFocusedBackground(ProgressBarDrawObjectBackground);
-    //WindowsProgressBarCanvas->setDisabledBackground(ProgressBarDrawObjectBackground);
+    //Background
+    WindowsProgressBarCanvas->setBackground(ProgressBarDrawObjectBackground);
+    WindowsProgressBarCanvas->setRolloverBackground(ProgressBarDrawObjectBackground);
+    WindowsProgressBarCanvas->setFocusedBackground(ProgressBarDrawObjectBackground);
+    WindowsProgressBarCanvas->setDisabledBackground(ProgressBarDrawObjectBackground);
 
-    ////ProgressBar
-    //WindowsProgressBar->setConstraints(NULL);
-    ////Sizes
-    //WindowsProgressBar->setMinSize(Vec2f(0,0));
-    //WindowsProgressBar->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsProgressBar->setPreferredSize(Vec2f(200,27));
+    //ProgressBar
+    WindowsProgressBar->setConstraints(NULL);
+    //Sizes
+    WindowsProgressBar->setMinSize(Vec2f(0,0));
+    WindowsProgressBar->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsProgressBar->setPreferredSize(Vec2f(200,27));
 
-    ////Border
-    //WindowsProgressBar->setBorder(WindowsProgressBarBorder);
-    //WindowsProgressBar->setRolloverBorder(WindowsProgressBarBorder);
-    //WindowsProgressBar->setFocusedBorder(WindowsProgressBarBorder);
-    //WindowsProgressBar->setDisabledBorder(WindowsProgressBarBorder);
+    //Border
+    WindowsProgressBar->setBorder(WindowsProgressBarBorder);
+    WindowsProgressBar->setRolloverBorder(WindowsProgressBarBorder);
+    WindowsProgressBar->setFocusedBorder(WindowsProgressBarBorder);
+    WindowsProgressBar->setDisabledBorder(WindowsProgressBarBorder);
 
-    ////Background
-    //WindowsProgressBar->setBackground(ProgressBarBackground);
-    //WindowsProgressBar->setRolloverBackground(ProgressBarBackground);
-    //WindowsProgressBar->setFocusedBackground(ProgressBarBackground);
-    //WindowsProgressBar->setDisabledBackground(ProgressBarBackground);
+    //Background
+    WindowsProgressBar->setBackground(ProgressBarBackground);
+    WindowsProgressBar->setRolloverBackground(ProgressBarBackground);
+    WindowsProgressBar->setFocusedBackground(ProgressBarBackground);
+    WindowsProgressBar->setDisabledBackground(ProgressBarBackground);
 
-    ////Opacity
-    //WindowsProgressBar->setOpacity(1.0);
+    //Opacity
+    WindowsProgressBar->setOpacity(1.0);
 
-    ////ProgressBar
-    //WindowsProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
-    //WindowsProgressBar->setIndeterminate(false);
-    //WindowsProgressBar->setIndeterminateBarMoveRate(0.5);
-    //WindowsProgressBar->setIndeterminateBarSize(0.25);
-    //WindowsProgressBar->setEnableProgressString(false);
-    //WindowsProgressBar->setProgressString(std::string(""));
-    //WindowsProgressBar->setAlignment(Vec2f(0.5f,0.5f));
-    //WindowsProgressBar->setFont(WindowsFont);
-    //WindowsProgressBar->setTextColor(Color4f(0.0,0.0,0.0,1.0));
-    //WindowsProgressBar->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
-    //WindowsProgressBar->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
-    //WindowsProgressBar->setDisabledTextColor(Color4f(0.0,0.0,0.0,1.0));
-    //WindowsProgressBar->setDrawObject(WindowsProgressBarCanvas);
-    //WindowsProgressBar->setFocusedDrawObject(WindowsProgressBarCanvas);
-    //WindowsProgressBar->setRolloverDrawObject(WindowsProgressBarCanvas);
-    //WindowsProgressBar->setDisabledDrawObject(WindowsProgressBarCanvas);
+    //ProgressBar
+    WindowsProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
+    WindowsProgressBar->setIndeterminate(false);
+    WindowsProgressBar->setIndeterminateBarMoveRate(0.5);
+    WindowsProgressBar->setIndeterminateBarSize(0.25);
+    WindowsProgressBar->setEnableProgressString(false);
+    WindowsProgressBar->setProgressString(std::string(""));
+    WindowsProgressBar->setAlignment(Vec2f(0.5f,0.5f));
+    WindowsProgressBar->setFont(WindowsFont);
+    WindowsProgressBar->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+    WindowsProgressBar->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+    WindowsProgressBar->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+    WindowsProgressBar->setDisabledTextColor(Color4f(0.0,0.0,0.0,1.0));
+    WindowsProgressBar->setDrawObject(WindowsProgressBarCanvas);
+    WindowsProgressBar->setFocusedDrawObject(WindowsProgressBarCanvas);
+    WindowsProgressBar->setRolloverDrawObject(WindowsProgressBarCanvas);
+    WindowsProgressBar->setDisabledDrawObject(WindowsProgressBarCanvas);
 
-    ///[>************************* Slider *****************************
-    //RoundedCornerLineBorderRefPtr WindowsSliderKnobButtonRoundedCornerBorder = RoundedCornerLineBorder::create();
-    //WindowsSliderKnobButtonRoundedCornerBorder->setColor( Color4f(0.71, 0.77, 0.80 ,1.0) );
-    //WindowsSliderKnobButtonRoundedCornerBorder->setWidth(1);
-    //WindowsSliderKnobButtonRoundedCornerBorder->setCornerRadius(3);
+    //************************** Slider *****************************
+    RoundedCornerLineBorderRefPtr WindowsSliderKnobButtonRoundedCornerBorder = RoundedCornerLineBorder::create();
+    WindowsSliderKnobButtonRoundedCornerBorder->setColor( Color4f(0.71, 0.77, 0.80 ,1.0) );
+    WindowsSliderKnobButtonRoundedCornerBorder->setWidth(1);
+    WindowsSliderKnobButtonRoundedCornerBorder->setCornerRadius(3);
 
-    //MatteBorderRefPtr WindowsSliderKnobButtonMatteBorder = MatteBorder::create();
-    //WindowsSliderKnobButtonMatteBorder->setRightWidth(3);
-    //WindowsSliderKnobButtonMatteBorder->setLeftWidth(3);
-    //WindowsSliderKnobButtonMatteBorder->setTopWidth(0);
-    //WindowsSliderKnobButtonMatteBorder->setBottomWidth(0);
-    //WindowsSliderKnobButtonMatteBorder->setColor(Color4f(0.28, 0.8, 0.27, 1.0));
+    MatteBorderRefPtr WindowsSliderKnobButtonMatteBorder = MatteBorder::create();
+    WindowsSliderKnobButtonMatteBorder->setRightWidth(3);
+    WindowsSliderKnobButtonMatteBorder->setLeftWidth(3);
+    WindowsSliderKnobButtonMatteBorder->setTopWidth(0);
+    WindowsSliderKnobButtonMatteBorder->setBottomWidth(0);
+    WindowsSliderKnobButtonMatteBorder->setColor(Color4f(0.28, 0.8, 0.27, 1.0));
 
-    //CompoundBorderRefPtr WindowsSliderKnobButtonBorder = CompoundBorder::create();
-    //WindowsSliderKnobButtonBorder->setInnerBorder(WindowsSliderKnobButtonMatteBorder);
-    //WindowsSliderKnobButtonBorder->setOuterBorder(WindowsSliderKnobButtonRoundedCornerBorder);
+    CompoundBorderRefPtr WindowsSliderKnobButtonBorder = CompoundBorder::create();
+    WindowsSliderKnobButtonBorder->setInnerBorder(WindowsSliderKnobButtonMatteBorder);
+    WindowsSliderKnobButtonBorder->setOuterBorder(WindowsSliderKnobButtonRoundedCornerBorder);
 
-    //ColorLayerRefPtr WindowsSliderBackground = ColorLayer::create();
-    //WindowsSliderBackground->setColor(Color4f(0.95, 0.95, 0.94, 1.0));
+    ColorLayerRefPtr WindowsSliderBackground = ColorLayer::create();
+    WindowsSliderBackground->setColor(Color4f(0.95, 0.95, 0.94, 1.0));
 
-    //ButtonRefPtr WindowsSliderKnobButton = Button::create();
-    //WindowsSliderKnobButton->setPreferredSize(Vec2f(21,11));
+    ButtonRefPtr WindowsSliderKnobButton = Button::create();
+    WindowsSliderKnobButton->setPreferredSize(Vec2f(21,11));
 
-    ////Border
-    //WindowsSliderKnobButton->setBorder(WindowsSliderKnobButtonBorder);
-    //WindowsSliderKnobButton->setActiveBorder(WindowsSliderKnobButtonBorder);
-    //WindowsSliderKnobButton->setRolloverBorder(WindowsSliderKnobButtonBorder);
-    //WindowsSliderKnobButton->setFocusedBorder(WindowsSliderKnobButtonBorder);
-    //WindowsSliderKnobButton->setDisabledBorder(WindowsSliderKnobButtonBorder);
+    //Border
+    WindowsSliderKnobButton->setBorder(WindowsSliderKnobButtonBorder);
+    WindowsSliderKnobButton->setActiveBorder(WindowsSliderKnobButtonBorder);
+    WindowsSliderKnobButton->setRolloverBorder(WindowsSliderKnobButtonBorder);
+    WindowsSliderKnobButton->setFocusedBorder(WindowsSliderKnobButtonBorder);
+    WindowsSliderKnobButton->setDisabledBorder(WindowsSliderKnobButtonBorder);
 
-    ////Background
-    //WindowsSliderKnobButton->setBackground(WindowsSliderBackground);
-    //WindowsSliderKnobButton->setActiveBackground(WindowsSliderBackground);
-    //WindowsSliderKnobButton->setDisabledBackground(WindowsSliderBackground);
-    //WindowsSliderKnobButton->setFocusedBackground(WindowsSliderBackground);
-    //WindowsSliderKnobButton->setRolloverBackground(WindowsSliderBackground);
+    //Background
+    WindowsSliderKnobButton->setBackground(WindowsSliderBackground);
+    WindowsSliderKnobButton->setActiveBackground(WindowsSliderBackground);
+    WindowsSliderKnobButton->setDisabledBackground(WindowsSliderBackground);
+    WindowsSliderKnobButton->setFocusedBackground(WindowsSliderBackground);
+    WindowsSliderKnobButton->setRolloverBackground(WindowsSliderBackground);
 
-    //WindowsSliderKnobButton->setActiveOffset(Vec2f(0,0));
+    WindowsSliderKnobButton->setActiveOffset(Vec2f(0,0));
 
-    //LabelRefPtr WindowsSliderPrototypeLabel = Label::create();
-    ////Border
-    //WindowsSliderPrototypeLabel->setBorder(WindowsEmptyBorder);
-    //WindowsSliderPrototypeLabel->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsSliderPrototypeLabel->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsSliderPrototypeLabel->setDisabledBorder(WindowsEmptyBorder);
+    LabelRefPtr WindowsSliderPrototypeLabel = Label::create();
+    //Border
+    WindowsSliderPrototypeLabel->setBorder(WindowsEmptyBorder);
+    WindowsSliderPrototypeLabel->setRolloverBorder(WindowsEmptyBorder);
+    WindowsSliderPrototypeLabel->setFocusedBorder(WindowsEmptyBorder);
+    WindowsSliderPrototypeLabel->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsSliderPrototypeLabel->setBackground(WindowsEmptyBackground);
-    //WindowsSliderPrototypeLabel->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsSliderPrototypeLabel->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsSliderPrototypeLabel->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsSliderPrototypeLabel->setBackground(WindowsEmptyBackground);
+    WindowsSliderPrototypeLabel->setRolloverBackground(WindowsEmptyBackground);
+    WindowsSliderPrototypeLabel->setFocusedBackground(WindowsEmptyBackground);
+    WindowsSliderPrototypeLabel->setDisabledBackground(WindowsEmptyBackground);
 
-    //WindowsSliderPrototypeLabel->setAlignment(Vec2f(0.0f,0.5f));
+    WindowsSliderPrototypeLabel->setAlignment(Vec2f(0.0f,0.5f));
 
-    ////Windows SliderBorder
-    //EtchedBorderRefPtr WindowsSliderBorder = EtchedBorder::create();
-    //WindowsSliderBorder->setWidth(2);
-    //WindowsSliderBorder->setRaised(true);
-    //WindowsSliderBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
-    //WindowsSliderBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
+    //Windows SliderBorder
+    EtchedBorderRefPtr WindowsSliderBorder = EtchedBorder::create();
+    WindowsSliderBorder->setWidth(2);
+    WindowsSliderBorder->setRaised(true);
+    WindowsSliderBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+    WindowsSliderBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
 
-    ////Windows SliderBackground
-    //ColorLayerRefPtr SliderBackground = ColorLayer::create();
-    //SliderBackground->setColor(Color4f(0.93, 0.91, 0.85, 1.0));
+    //Windows SliderBackground
+    ColorLayerRefPtr SliderBackground = ColorLayer::create();
+    SliderBackground->setColor(Color4f(0.93, 0.91, 0.85, 1.0));
 
-    ////Windows SliderDrawObjectBackground
-    //ColorLayerRefPtr SliderTrackDrawObjectBackground = ColorLayer::create();
-    //SliderTrackDrawObjectBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+    //Windows SliderDrawObjectBackground
+    ColorLayerRefPtr SliderTrackDrawObjectBackground = ColorLayer::create();
+    SliderTrackDrawObjectBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 
-    //BevelBorderRefPtr SliderTrackDrawObjectBorder = BevelBorder::create();
-    //SliderTrackDrawObjectBorder->setRaised(true);
-    //SliderTrackDrawObjectBorder->setWidth(1);
-    //SliderTrackDrawObjectBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
-    //SliderTrackDrawObjectBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
-    //SliderTrackDrawObjectBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
-    //SliderTrackDrawObjectBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
+    BevelBorderRefPtr SliderTrackDrawObjectBorder = BevelBorder::create();
+    SliderTrackDrawObjectBorder->setRaised(true);
+    SliderTrackDrawObjectBorder->setWidth(1);
+    SliderTrackDrawObjectBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+    SliderTrackDrawObjectBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+    SliderTrackDrawObjectBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+    SliderTrackDrawObjectBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
 
-    ////Slider DrawObjectCanvas
-    //UIDrawObjectCanvasRefPtr WindowsSliderTrackCanvas = UIDrawObjectCanvas::create();
-    //WindowsSliderTrackCanvas->setPreferredSize(Vec2f(5,5));
-    ////Border
-    //WindowsSliderTrackCanvas->setBorder(SliderTrackDrawObjectBorder);
-    //WindowsSliderTrackCanvas->setRolloverBorder(SliderTrackDrawObjectBorder);
-    //WindowsSliderTrackCanvas->setFocusedBorder(SliderTrackDrawObjectBorder);
-    //WindowsSliderTrackCanvas->setDisabledBorder(SliderTrackDrawObjectBorder);
+    //Slider DrawObjectCanvas
+    UIDrawObjectCanvasRefPtr WindowsSliderTrackCanvas = UIDrawObjectCanvas::create();
+    WindowsSliderTrackCanvas->setPreferredSize(Vec2f(5,5));
+    //Border
+    WindowsSliderTrackCanvas->setBorder(SliderTrackDrawObjectBorder);
+    WindowsSliderTrackCanvas->setRolloverBorder(SliderTrackDrawObjectBorder);
+    WindowsSliderTrackCanvas->setFocusedBorder(SliderTrackDrawObjectBorder);
+    WindowsSliderTrackCanvas->setDisabledBorder(SliderTrackDrawObjectBorder);
 
-    ////Background
-    //WindowsSliderTrackCanvas->setBackground(SliderTrackDrawObjectBackground);
-    //WindowsSliderTrackCanvas->setRolloverBackground(SliderTrackDrawObjectBackground);
-    //WindowsSliderTrackCanvas->setFocusedBackground(SliderTrackDrawObjectBackground);
-    //WindowsSliderTrackCanvas->setDisabledBackground(SliderTrackDrawObjectBackground);
+    //Background
+    WindowsSliderTrackCanvas->setBackground(SliderTrackDrawObjectBackground);
+    WindowsSliderTrackCanvas->setRolloverBackground(SliderTrackDrawObjectBackground);
+    WindowsSliderTrackCanvas->setFocusedBackground(SliderTrackDrawObjectBackground);
+    WindowsSliderTrackCanvas->setDisabledBackground(SliderTrackDrawObjectBackground);
 
-    ////Slider Major Tick Marks
-    //RectUIDrawObjectRefPtr WindowsSliderMajorTickMarks = RectUIDrawObject::create();
-    //WindowsSliderMajorTickMarks->setTopLeft(Pnt2f(0,0));
-    //WindowsSliderMajorTickMarks->setBottomRight(Pnt2f(7,1));
-    //WindowsSliderMajorTickMarks->setColor(Color4f(0.63,0.63,0.57,1.0));
+    //Slider Major Tick Marks
+    RectUIDrawObjectRefPtr WindowsSliderMajorTickMarks = RectUIDrawObject::create();
+    WindowsSliderMajorTickMarks->setTopLeft(Pnt2f(0,0));
+    WindowsSliderMajorTickMarks->setBottomRight(Pnt2f(7,1));
+    WindowsSliderMajorTickMarks->setColor(Color4f(0.63,0.63,0.57,1.0));
 
-    ////Slider Minor Tick Marks
-    //RectUIDrawObjectRefPtr WindowsSliderMinorTickMarks = RectUIDrawObject::create();
-    //WindowsSliderMinorTickMarks->setTopLeft(Pnt2f(0,0));
-    //WindowsSliderMinorTickMarks->setBottomRight(Pnt2f(4,1));
-    //WindowsSliderMinorTickMarks->setColor(Color4f(0.63,0.63,0.57,1.0));
+    //Slider Minor Tick Marks
+    RectUIDrawObjectRefPtr WindowsSliderMinorTickMarks = RectUIDrawObject::create();
+    WindowsSliderMinorTickMarks->setTopLeft(Pnt2f(0,0));
+    WindowsSliderMinorTickMarks->setBottomRight(Pnt2f(4,1));
+    WindowsSliderMinorTickMarks->setColor(Color4f(0.63,0.63,0.57,1.0));
 
 
-    ////Slider
-    //WindowsSlider->setConstraints(NULL);
-    ////Sizes
-    //WindowsSlider->setMinSize(Vec2f(0,0));
-    //WindowsSlider->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsSlider->setPreferredSize(Vec2f(200,27));
+    //Slider
+    WindowsSlider->setConstraints(NULL);
+    //Sizes
+    WindowsSlider->setMinSize(Vec2f(0,0));
+    WindowsSlider->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsSlider->setPreferredSize(Vec2f(200,27));
 
-    ////Border
-    //WindowsSlider->setBorder(WindowsSliderBorder);
-    //WindowsSlider->setRolloverBorder(WindowsSliderBorder);
-    //WindowsSlider->setFocusedBorder(WindowsSliderBorder);
-    //WindowsSlider->setDisabledBorder(WindowsSliderBorder);
+    //Border
+    WindowsSlider->setBorder(WindowsSliderBorder);
+    WindowsSlider->setRolloverBorder(WindowsSliderBorder);
+    WindowsSlider->setFocusedBorder(WindowsSliderBorder);
+    WindowsSlider->setDisabledBorder(WindowsSliderBorder);
 
-    ////Background
-    //WindowsSlider->setBackground(SliderBackground);
-    //WindowsSlider->setRolloverBackground(SliderBackground);
-    //WindowsSlider->setFocusedBackground(SliderBackground);
-    //WindowsSlider->setDisabledBackground(SliderBackground);
+    //Background
+    WindowsSlider->setBackground(SliderBackground);
+    WindowsSlider->setRolloverBackground(SliderBackground);
+    WindowsSlider->setFocusedBackground(SliderBackground);
+    WindowsSlider->setDisabledBackground(SliderBackground);
 
-    ////Opacity
-    //WindowsSlider->setOpacity(1.0);
+    //Opacity
+    WindowsSlider->setOpacity(1.0);
 
-    ////Slider
-    //WindowsSlider->setOrientation(Slider::VERTICAL_ORIENTATION);
-    //WindowsSlider->setKnobButton(WindowsSliderKnobButton);
-    //WindowsSlider->setMajorTickSpacing(25);
-    //WindowsSlider->setMinorTickSpacing(5);
-    //WindowsSlider->setSnapToTicks(false);
-    //WindowsSlider->setDrawMajorTicks(true);
-    //WindowsSlider->setDrawMinorTicks(true);
-    //WindowsSlider->setDrawTrack(true);
-    //WindowsSlider->setDrawLabels(true);
-    //WindowsSlider->setInverted(false);
-    //WindowsSlider->setLabelPrototype(WindowsSliderPrototypeLabel);
-    //WindowsSlider->setTrackDrawObject(WindowsSliderTrackCanvas);
-    //WindowsSlider->setMinTrackDrawObject(NULL);
-    //WindowsSlider->setMaxTrackDrawObject(NULL);
-    //WindowsSlider->setTrackInset(8);
-    //WindowsSlider->setTrackToTickOffset(8);
-    //WindowsSlider->setTrackToLabelOffset(18);
+    //Slider
+    WindowsSlider->setOrientation(Slider::VERTICAL_ORIENTATION);
+    WindowsSlider->setKnobButton(WindowsSliderKnobButton);
+    WindowsSlider->setMajorTickSpacing(25);
+    WindowsSlider->setMinorTickSpacing(5);
+    WindowsSlider->setSnapToTicks(false);
+    WindowsSlider->setDrawMajorTicks(true);
+    WindowsSlider->setDrawMinorTicks(true);
+    WindowsSlider->setDrawTrack(true);
+    WindowsSlider->setDrawLabels(true);
+    WindowsSlider->setInverted(false);
+    WindowsSlider->setLabelPrototype(WindowsSliderPrototypeLabel);
+    std::cout << "WindowsSlider->setLabelPrototype " << WindowsSliderPrototypeLabel << std::endl;
+    WindowsSlider->setTrackDrawObject(WindowsSliderTrackCanvas);
+    WindowsSlider->setMinTrackDrawObject(NULL);
+    WindowsSlider->setMaxTrackDrawObject(NULL);
+    WindowsSlider->setTrackInset(8);
+    WindowsSlider->setTrackToTickOffset(8);
+    WindowsSlider->setTrackToLabelOffset(18);
 
-    //WindowsSlider->getMajorTickDrawObjects().clear();
-    //WindowsSlider->pushToMajorTickDrawObjects(WindowsSliderMajorTickMarks);
-    //WindowsSlider->getMinorTickDrawObjects().clear();
-    //WindowsSlider->pushToMinorTickDrawObjects(WindowsSliderMinorTickMarks);
+    WindowsSlider->clearMajorTickDrawObjects();
+    WindowsSlider->pushToMajorTickDrawObjects(WindowsSliderMajorTickMarks);
+    WindowsSlider->clearMinorTickDrawObjects();
+    WindowsSlider->pushToMinorTickDrawObjects(WindowsSliderMinorTickMarks);
 
     ///[>************************* ComboBox *****************************
 

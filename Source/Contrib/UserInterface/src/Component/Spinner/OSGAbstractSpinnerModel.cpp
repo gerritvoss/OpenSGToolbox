@@ -45,7 +45,7 @@
 
 #define OSG_COMPILEUSERINTERFACELIB
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGAbstractSpinnerModel.h"
 
@@ -57,7 +57,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::AbstractSpinnerModel
+/*! \class OSG::AbstractSpinnerModel
 A AbstractSpinnerModel. 
 */
 
@@ -76,10 +76,10 @@ A AbstractSpinnerModel.
 
 EventConnection AbstractSpinnerModel::addChangeListener(ChangeListenerPtr l)
 {
-   _ChangeListeners.insert(l);
-   return EventConnection(
-       boost::bind(&AbstractSpinnerModel::isChangeListenerAttached, this, l),
-       boost::bind(&AbstractSpinnerModel::removeChangeListener, this, l));
+    _ChangeListeners.insert(l);
+    return EventConnection(
+                           boost::bind(&AbstractSpinnerModel::isChangeListenerAttached, this, l),
+                           boost::bind(&AbstractSpinnerModel::removeChangeListener, this, l));
 }
 
 bool AbstractSpinnerModel::isChangeListenerAttached(ChangeListenerPtr l) const
@@ -89,21 +89,21 @@ bool AbstractSpinnerModel::isChangeListenerAttached(ChangeListenerPtr l) const
 
 void AbstractSpinnerModel::removeChangeListener(ChangeListenerPtr l)
 {
-   ChangeListenerSetItor EraseIter(_ChangeListeners.find(l));
-   if(EraseIter != _ChangeListeners.end())
-   {
-      _ChangeListeners.erase(EraseIter);
-   }
+    ChangeListenerSetItor EraseIter(_ChangeListeners.find(l));
+    if(EraseIter != _ChangeListeners.end())
+    {
+        _ChangeListeners.erase(EraseIter);
+    }
 }
 
 void AbstractSpinnerModel::produceStateChanged(void)
 {
-   const ChangeEventPtr TheEvent = ChangeEvent::create(NullFC, getSystemTime());
-   ChangeListenerSet ModelListenerSet(_ChangeListeners);
-   for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->stateChanged(TheEvent);
-   }
+    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(NULL, getSystemTime());
+    ChangeListenerSet ModelListenerSet(_ChangeListeners);
+    for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->stateChanged(TheEvent);
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -114,20 +114,6 @@ void AbstractSpinnerModel::produceStateChanged(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

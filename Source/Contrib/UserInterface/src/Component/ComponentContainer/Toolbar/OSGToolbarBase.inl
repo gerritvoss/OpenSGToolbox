@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,85 +55,56 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ToolbarBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ToolbarBase::getClassTypeId(void) 
+OSG::UInt32 ToolbarBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ToolbarPtr ToolbarBase::create(void) 
-{
-    ToolbarPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ToolbarPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ToolbarPtr ToolbarBase::createEmpty(void) 
-{ 
-    ToolbarPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ToolbarBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Toolbar::_sfFloatable field.
-inline
-SFBool *ToolbarBase::getSFFloatable(void)
-{
-    return &_sfFloatable;
-}
-
-//! Get the Toolbar::_sfFloatingTitle field.
-inline
-SFString *ToolbarBase::getSFFloatingTitle(void)
-{
-    return &_sfFloatingTitle;
-}
-
-
 //! Get the value of the Toolbar::_sfFloatable field.
+
 inline
-bool &ToolbarBase::getFloatable(void)
+bool &ToolbarBase::editFloatable(void)
 {
+    editSField(FloatableFieldMask);
+
     return _sfFloatable.getValue();
 }
 
 //! Get the value of the Toolbar::_sfFloatable field.
 inline
-const bool &ToolbarBase::getFloatable(void) const
+      bool  ToolbarBase::getFloatable(void) const
 {
     return _sfFloatable.getValue();
 }
 
 //! Set the value of the Toolbar::_sfFloatable field.
 inline
-void ToolbarBase::setFloatable(const bool &value)
+void ToolbarBase::setFloatable(const bool value)
 {
+    editSField(FloatableFieldMask);
+
     _sfFloatable.setValue(value);
 }
-
 //! Get the value of the Toolbar::_sfFloatingTitle field.
+
 inline
-std::string &ToolbarBase::getFloatingTitle(void)
+std::string &ToolbarBase::editFloatingTitle(void)
 {
+    editSField(FloatingTitleFieldMask);
+
     return _sfFloatingTitle.getValue();
 }
 
@@ -150,11 +119,37 @@ const std::string &ToolbarBase::getFloatingTitle(void) const
 inline
 void ToolbarBase::setFloatingTitle(const std::string &value)
 {
+    editSField(FloatingTitleFieldMask);
+
     _sfFloatingTitle.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ToolbarBase::execSync (      ToolbarBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGTOOLBARBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (FloatableFieldMask & whichField))
+        _sfFloatable.syncWith(pFrom->_sfFloatable);
+
+    if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
+        _sfFloatingTitle.syncWith(pFrom->_sfFloatingTitle);
+}
+#endif
+
+
+inline
+const Char8 *ToolbarBase::getClassname(void)
+{
+    return "Toolbar";
+}
+OSG_GEN_CONTAINERPTR(Toolbar);
+
+OSG_END_NAMESPACE
 

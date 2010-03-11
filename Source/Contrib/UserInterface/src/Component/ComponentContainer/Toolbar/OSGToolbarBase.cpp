@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,207 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETOOLBARINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGToolbarBase.h"
 #include "OSGToolbar.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ToolbarBase::FloatableFieldMask = 
-    (TypeTraits<BitVector>::One << ToolbarBase::FloatableFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ToolbarBase::FloatingTitleFieldMask = 
-    (TypeTraits<BitVector>::One << ToolbarBase::FloatingTitleFieldId);
+/*! \class OSG::Toolbar
+    A UI Toolbar.
+ */
 
-const OSG::BitVector ToolbarBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var bool            ToolbarBase::_sfFloatable
     
 */
+
 /*! \var std::string     ToolbarBase::_sfFloatingTitle
     
 */
 
-//! Toolbar description
 
-FieldDescription *ToolbarBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Toolbar *>::_type("ToolbarPtr", "PanelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Toolbar *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Toolbar *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Toolbar *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ToolbarBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFBool::getClassType(), 
-                     "Floatable", 
-                     FloatableFieldId, FloatableFieldMask,
-                     false,
-                     (FieldAccessMethod) &ToolbarBase::getSFFloatable),
-    new FieldDescription(SFString::getClassType(), 
-                     "FloatingTitle", 
-                     FloatingTitleFieldId, FloatingTitleFieldMask,
-                     false,
-                     (FieldAccessMethod) &ToolbarBase::getSFFloatingTitle)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ToolbarBase::_type(
-    "Toolbar",
-    "Panel",
-    NULL,
-    (PrototypeCreateF) &ToolbarBase::createEmpty,
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Floatable",
+        "",
+        FloatableFieldId, FloatableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Toolbar::editHandleFloatable),
+        static_cast<FieldGetMethodSig >(&Toolbar::getHandleFloatable));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "FloatingTitle",
+        "",
+        FloatingTitleFieldId, FloatingTitleFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Toolbar::editHandleFloatingTitle),
+        static_cast<FieldGetMethodSig >(&Toolbar::getHandleFloatingTitle));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ToolbarBase::TypeObject ToolbarBase::_type(
+    ToolbarBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ToolbarBase::createEmptyLocal),
     Toolbar::initMethod,
-    _desc,
-    sizeof(_desc));
+    Toolbar::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Toolbar::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Toolbar\"\n"
+    "\tparent=\"Panel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Toolbar.\n"
+    "\t<Field\n"
+    "\t\tname=\"Floatable\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FloatingTitle\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Toolbar.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ToolbarBase, ToolbarPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ToolbarBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ToolbarBase::getType(void) const 
+FieldContainerType &ToolbarBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ToolbarBase::shallowCopy(void) const 
-{ 
-    ToolbarPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Toolbar *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ToolbarBase::getContainerSize(void) const 
-{ 
-    return sizeof(Toolbar); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ToolbarBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ToolbarBase::getType(void) const
 {
-    this->executeSyncImpl((ToolbarBase *) &other, whichField);
+    return _type;
 }
-#else
-void ToolbarBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ToolbarBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ToolbarBase *) &other, whichField, sInfo);
+    return sizeof(Toolbar);
 }
-void ToolbarBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFBool *ToolbarBase::editSFFloatable(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(FloatableFieldMask);
+
+    return &_sfFloatable;
 }
 
-void ToolbarBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFBool *ToolbarBase::getSFFloatable(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfFloatable;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ToolbarBase::ToolbarBase(void) :
-    _sfFloatable              (bool(false)), 
-    _sfFloatingTitle          (), 
-    Inherited() 
+SFString *ToolbarBase::editSFFloatingTitle(void)
 {
+    editSField(FloatingTitleFieldMask);
+
+    return &_sfFloatingTitle;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ToolbarBase::ToolbarBase(const ToolbarBase &source) :
-    _sfFloatable              (source._sfFloatable              ), 
-    _sfFloatingTitle          (source._sfFloatingTitle          ), 
-    Inherited                 (source)
+const SFString *ToolbarBase::getSFFloatingTitle(void) const
 {
+    return &_sfFloatingTitle;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ToolbarBase::~ToolbarBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ToolbarBase::getBinSize(const BitVector &whichField)
+UInt32 ToolbarBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +258,16 @@ UInt32 ToolbarBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfFloatable.getBinSize();
     }
-
     if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
     {
         returnValue += _sfFloatingTitle.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ToolbarBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ToolbarBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +275,14 @@ void ToolbarBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfFloatable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
     {
         _sfFloatingTitle.copyToBin(pMem);
     }
-
-
 }
 
-void ToolbarBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ToolbarBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +290,244 @@ void ToolbarBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfFloatable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
     {
         _sfFloatingTitle.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ToolbarBase::executeSyncImpl(      ToolbarBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ToolbarTransitPtr ToolbarBase::createLocal(BitVector bFlags)
 {
+    ToolbarTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (FloatableFieldMask & whichField))
-        _sfFloatable.syncWith(pOther->_sfFloatable);
+        fc = dynamic_pointer_cast<Toolbar>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
-        _sfFloatingTitle.syncWith(pOther->_sfFloatingTitle);
-
-
-}
-#else
-void ToolbarBase::executeSyncImpl(      ToolbarBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (FloatableFieldMask & whichField))
-        _sfFloatable.syncWith(pOther->_sfFloatable);
-
-    if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
-        _sfFloatingTitle.syncWith(pOther->_sfFloatingTitle);
-
-
-
+    return fc;
 }
 
-void ToolbarBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ToolbarTransitPtr ToolbarBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ToolbarTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Toolbar>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ToolbarTransitPtr ToolbarBase::create(void)
+{
+    ToolbarTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Toolbar>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Toolbar *ToolbarBase::createEmptyLocal(BitVector bFlags)
+{
+    Toolbar *returnValue;
+
+    newPtr<Toolbar>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Toolbar *ToolbarBase::createEmpty(void)
+{
+    Toolbar *returnValue;
+
+    newPtr<Toolbar>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ToolbarBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Toolbar *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Toolbar *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ToolbarBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Toolbar *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Toolbar *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ToolbarBase::shallowCopy(void) const
+{
+    Toolbar *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Toolbar *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ToolbarBase::ToolbarBase(void) :
+    Inherited(),
+    _sfFloatable              (bool(false)),
+    _sfFloatingTitle          ()
+{
+}
+
+ToolbarBase::ToolbarBase(const ToolbarBase &source) :
+    Inherited(source),
+    _sfFloatable              (source._sfFloatable              ),
+    _sfFloatingTitle          (source._sfFloatingTitle          )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ToolbarBase::~ToolbarBase(void)
+{
+}
+
+
+GetFieldHandlePtr ToolbarBase::getHandleFloatable       (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfFloatable,
+             this->getType().getFieldDesc(FloatableFieldId),
+             const_cast<ToolbarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ToolbarBase::editHandleFloatable      (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfFloatable,
+             this->getType().getFieldDesc(FloatableFieldId),
+             this));
+
+
+    editSField(FloatableFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ToolbarBase::getHandleFloatingTitle   (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfFloatingTitle,
+             this->getType().getFieldDesc(FloatingTitleFieldId),
+             const_cast<ToolbarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ToolbarBase::editHandleFloatingTitle  (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfFloatingTitle,
+             this->getType().getFieldDesc(FloatingTitleFieldId),
+             this));
+
+
+    editSField(FloatingTitleFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ToolbarBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Toolbar *pThis = static_cast<Toolbar *>(this);
+
+    pThis->execSync(static_cast<Toolbar *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ToolbarBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Toolbar *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Toolbar *>(pRefAspect),
+                  dynamic_cast<const Toolbar *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ToolbarBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ToolbarPtr>::_type("ToolbarPtr", "PanelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ToolbarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ToolbarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTOOLBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTOOLBARBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTOOLBARFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

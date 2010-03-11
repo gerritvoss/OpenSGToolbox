@@ -9,76 +9,76 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 // 23SplitPanel Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorLayer.h>
-#include <OpenSG/UserInterface/OSGBevelBorder.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGBorderLayout.h>
-#include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGSplitPanel.h>
+#include "OSGUIForeground.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGButton.h"
+#include "OSGLookAndFeelManager.h"
+#include "OSGColorLayer.h"
+#include "OSGBevelBorder.h"
+#include "OSGFlowLayout.h"
+#include "OSGBorderLayout.h"
+#include "OSGBorderLayoutConstraints.h"
+#include "OSGPanel.h"
+#include "OSGSplitPanel.h"
 
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-            TutorialWindowEventProducer->closeWindow();
-       }
-   }
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            TutorialWindow->closeWindow();
+        }
+    }
 
-   virtual void keyReleased(const KeyEventPtr e)
-   {
-   }
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
 
-   virtual void keyTyped(const KeyEventPtr e)
-   {
-   }
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
 int main(int argc, char **argv)
@@ -87,214 +87,186 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
-        scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    NodeRefPtr scene = OSG::Node::create();
+    scene->setCore(OSG::Group::create());
+    scene->addChild(TorusGeometryNode);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
     /******************************************************
-            
-            Create and edit some Button Components
 
-    ******************************************************/
+      Create and edit some Button Components
 
-    ButtonPtr ExampleButton1 = osg::Button::create();
-    ButtonPtr ExampleButton2 = osg::Button::create();
-    ButtonPtr ExampleButton3 = osg::Button::create();
-    ButtonPtr ExampleButton4 = osg::Button::create();
-    ButtonPtr ExampleButton5 = osg::Button::create();
-    ButtonPtr ExampleButton6 = osg::Button::create();
+     ******************************************************/
 
-    beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
-        ExampleButton1->setPreferredSize(Vec2f(200, 50));
-    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
+    ButtonRefPtr ExampleButton1 = OSG::Button::create();
+    ButtonRefPtr ExampleButton2 = OSG::Button::create();
+    ButtonRefPtr ExampleButton3 = OSG::Button::create();
+    ButtonRefPtr ExampleButton4 = OSG::Button::create();
+    ButtonRefPtr ExampleButton5 = OSG::Button::create();
+    ButtonRefPtr ExampleButton6 = OSG::Button::create();
 
-    beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
-        ExampleButton4->setPreferredSize(Vec2f(50, 50));
-    endEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
+    ExampleButton1->setPreferredSize(Vec2f(200, 50));
+
+    ExampleButton4->setPreferredSize(Vec2f(50, 50));
 
     /******************************************************
-            
-                Create two Panels to be used with
-				SplitPanel.
 
-    ******************************************************/
+      Create two Panels to be used with
+      SplitPanel.
 
-    PanelPtr ExampleSplitPanelPanel1 = osg::Panel::create();
-    PanelPtr ExampleSplitPanelPanel2 = osg::Panel::create();
-    FlowLayoutPtr PanelFlowLayout = osg::FlowLayout::create();
-    
-	beginEditCP(PanelFlowLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask);
-        PanelFlowLayout->setHorizontalGap(3);
-        PanelFlowLayout->setVerticalGap(3);
-    endEditCP(PanelFlowLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask);
+     ******************************************************/
 
-    beginEditCP(ExampleSplitPanelPanel1, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-        ExampleSplitPanelPanel1->getChildren().push_back(ExampleButton1);
-        ExampleSplitPanelPanel1->getChildren().push_back(ExampleButton2);
-        ExampleSplitPanelPanel1->getChildren().push_back(ExampleButton3);
-        ExampleSplitPanelPanel1->setLayout(PanelFlowLayout);
-    endEditCP(ExampleSplitPanelPanel1, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-    beginEditCP(ExampleSplitPanelPanel2, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-        ExampleSplitPanelPanel2->getChildren().push_back(ExampleButton4);
-        ExampleSplitPanelPanel2->getChildren().push_back(ExampleButton5);
-        ExampleSplitPanelPanel2->getChildren().push_back(ExampleButton6);
-        ExampleSplitPanelPanel2->setLayout(PanelFlowLayout);
-    endEditCP(ExampleSplitPanelPanel2, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+    PanelRefPtr ExampleSplitPanelPanel1 = OSG::Panel::create();
+    PanelRefPtr ExampleSplitPanelPanel2 = OSG::Panel::create();
+    FlowLayoutRefPtr PanelFlowLayout = OSG::FlowLayout::create();
+
+    PanelFlowLayout->setHorizontalGap(3);
+    PanelFlowLayout->setVerticalGap(3);
+
+    ExampleSplitPanelPanel1->pushToChildren(ExampleButton1);
+    ExampleSplitPanelPanel1->pushToChildren(ExampleButton2);
+    ExampleSplitPanelPanel1->pushToChildren(ExampleButton3);
+    ExampleSplitPanelPanel1->setLayout(PanelFlowLayout);
+    ExampleSplitPanelPanel2->pushToChildren(ExampleButton4);
+    ExampleSplitPanelPanel2->pushToChildren(ExampleButton5);
+    ExampleSplitPanelPanel2->pushToChildren(ExampleButton6);
+    ExampleSplitPanelPanel2->setLayout(PanelFlowLayout);
 
     // Creates a BorderLayout and Constraints (causing the SplitPanel  
     // to automatically fill entire center Frame)
-    BorderLayoutPtr MainInternalWindowLayout = osg::BorderLayout::create();
-    BorderLayoutConstraintsPtr ExampleSplitPanelConstraints = osg::BorderLayoutConstraints::create();
+    BorderLayoutRefPtr MainInternalWindowLayout = OSG::BorderLayout::create();
+    BorderLayoutConstraintsRefPtr ExampleSplitPanelConstraints = OSG::BorderLayoutConstraints::create();
 
-	beginEditCP(ExampleSplitPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
-        ExampleSplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
-    endEditCP(ExampleSplitPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
-        
+    ExampleSplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+
     /******************************************************
-            
-        Creates and sets up SplitPanel
 
-        -setMinComponent/setMaxComponent(Component):  Add 
-			up to two Components to the SplitPanel.  Note
-			that if you do not add both an empty Panel
-			will be added automatically.
-		-setOrientation(ENUM): Determines the alignment
-            of the split aspect.  The default is
-            Horizontal with an east/west split. The 
-            minComponent set previously is the west or 
-			north Component of the Panel (depending 
-			on the alignment) and the max is the east
-			or west Component.  Takes VERTICAL_ORIENTATION
-            and HORIZONTAL_ORIENTATION arguments.
-        -setDividerPosition("smart" REAL): Determines the initial 
-            location of the divider.  Note that this REAL is
-            a percentage if between 0.0 and 1.0 (inclusive) 
-            and absolute is greater than 1.0.  Also note that
-            when resizing a window with a percentage, the
-            divider will move, but with absolute, it does
-            not until it no longer fits in the panel.
-        -setDividerSize(SIZE): Determine divider Size
-			in pixels.
-        -setExpandable(bool): Determine whether
-            divider can be moved by user.  Default is
-            TRUE (is movable) while FALSE removes
-            the users ability to move the divider.
-        -setMaxDividerPosition("smart" REAL): Determine
-			the Maximum position for the divider.
-        -setMinDividerPosition("smart" REAL): Determine
-			the Minimum position for the divider.  Note 
-            that for both Max/Min, the "smart" REAL
-            follows same format as in setDividerPosition;
-            it is a percentage if between 0.0 and 1.0 
-            and absolute when > 1.0
+      Creates and sets up SplitPanel
 
-    ******************************************************/
-    
-    SplitPanelPtr ExampleSplitPanel = osg::SplitPanel::create();
+      -setMinComponent/setMaxComponent(Component):  Add 
+      up to two Components to the SplitPanel.  Note
+      that if you do not add both an empty Panel
+      will be added automatically.
+      -setOrientation(ENUM): Determines the alignment
+      of the split aspect.  The default is
+      Horizontal with an east/west split. The 
+      minComponent set previously is the west or 
+      north Component of the Panel (depending 
+      on the alignment) and the max is the east
+      or west Component.  Takes VERTICAL_ORIENTATION
+      and HORIZONTAL_ORIENTATION arguments.
+      -setDividerPosition("smart" REAL): Determines the initial 
+      location of the divider.  Note that this REAL is
+      a percentage if between 0.0 and 1.0 (inclusive) 
+      and absolute is greater than 1.0.  Also note that
+      when resizing a window with a percentage, the
+      divider will move, but with absolute, it does
+      not until it no longer fits in the panel.
+      -setDividerSize(SIZE): Determine divider Size
+      in pixels.
+      -setExpandable(bool): Determine whether
+      divider can be moved by user.  Default is
+      TRUE (is movable) while FALSE removes
+      the users ability to move the divider.
+      -setMaxDividerPosition("smart" REAL): Determine
+      the Maximum position for the divider.
+      -setMinDividerPosition("smart" REAL): Determine
+      the Minimum position for the divider.  Note 
+      that for both Max/Min, the "smart" REAL
+      follows same format as in setDividerPosition;
+      it is a percentage if between 0.0 and 1.0 
+      and absolute when > 1.0
 
-	beginEditCP(ExampleSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::OrientationFieldMask | SplitPanel::DividerPositionFieldMask | 
-		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask | SplitPanel::MaxDividerPositionFieldMask | SplitPanel::MinDividerPositionFieldMask);
-        ExampleSplitPanel->setConstraints(ExampleSplitPanelConstraints);
-        ExampleSplitPanel->setMinComponent(ExampleSplitPanelPanel1);
-        ExampleSplitPanel->setMaxComponent(ExampleSplitPanelPanel2);
-        // ExampleSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
-        // ExampleSplitPanel->setDividerPosition(.25); // this is a percentage
-        ExampleSplitPanel->setDividerPosition(300); // this is an absolute (300 > 1.0) 
-        // location from the left/top
-        ExampleSplitPanel->setDividerSize(5);
-        // ExampleSplitPanel->setExpandable(false);
-        ExampleSplitPanel->setMaxDividerPosition(.9);
-        ExampleSplitPanel->setMinDividerPosition(220);
-        
-        // also, if you want to change the way the divider looks, you can always set a
-        // DrawObjectCanvas in place of the default divider
-        // ExampleSplitPanel->setDividerDrawObject(drawObjectName);
-    endEditCP(ExampleSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::OrientationFieldMask | SplitPanel::DividerPositionFieldMask | 
-		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask | SplitPanel::MaxDividerPositionFieldMask | SplitPanel::MinDividerPositionFieldMask);
-    
+     ******************************************************/
+
+    SplitPanelRefPtr ExampleSplitPanel = OSG::SplitPanel::create();
+
+    ExampleSplitPanel->setConstraints(ExampleSplitPanelConstraints);
+    ExampleSplitPanel->setMinComponent(ExampleSplitPanelPanel1);
+    ExampleSplitPanel->setMaxComponent(ExampleSplitPanelPanel2);
+    // ExampleSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
+    // ExampleSplitPanel->setDividerPosition(.25); // this is a percentage
+    ExampleSplitPanel->setDividerPosition(300); // this is an absolute (300 > 1.0) 
+    // location from the left/top
+    ExampleSplitPanel->setDividerSize(5);
+    // ExampleSplitPanel->setExpandable(false);
+    ExampleSplitPanel->setMaxDividerPosition(.9);
+    ExampleSplitPanel->setMinDividerPosition(220);
+
+    // also, if you want to change the way the divider looks, you can always set a
+    // DrawObjectCanvas in place of the default divider
+    // ExampleSplitPanel->setDividerDrawObject(drawObjectName);
+
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleSplitPanel);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-	   MainInternalWindow->setAllInsets(5);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    MainInternalWindow->pushToChildren(ExampleSplitPanel);
+    MainInternalWindow->setLayout(MainInternalWindowLayout);
+    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setDrawTitlebar(false);
+    MainInternalWindow->setResizable(false);
+    MainInternalWindow->setAllInsets(5);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-        TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+    TutorialDrawingSurface->setGraphics(TutorialGraphics);
+    TutorialDrawingSurface->setEventProducer(TutorialWindow);
+
+    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-            endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
-            WinSize,
-            "01RubberBandCamera");
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
+                               WinSize,
+                               "23SplitPanel");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

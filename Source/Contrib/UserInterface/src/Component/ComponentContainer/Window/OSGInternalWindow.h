@@ -167,6 +167,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const InternalWindow *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
     
 	virtual void drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity = 1.0f) const;
 	virtual void drawUnclipped(const GraphicsWeakPtr TheGraphics, Real32 Opacity = 1.0f) const;

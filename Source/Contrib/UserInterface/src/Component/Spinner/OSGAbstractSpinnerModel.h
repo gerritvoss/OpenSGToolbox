@@ -43,38 +43,38 @@
 #pragma once
 #endif
  
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGSpinnerModel.h"
 #include <set>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractSpinnerModel : public SpinnerModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractSpinnerModel : public SpinnerModel
 {
-protected:
-	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
+  protected:
+    typedef std::set<ChangeListenerPtr> ChangeListenerSet;
     typedef ChangeListenerSet::iterator ChangeListenerSetItor;
     typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
-	ChangeListenerSet _ChangeListeners;
+    ChangeListenerSet _ChangeListeners;
 
-	void produceStateChanged(void);
-    
-public:
+    void produceStateChanged(void);
+
+  public:
 
     //Adds a ChangeListener to the model's listener list.
     virtual EventConnection addChangeListener(ChangeListenerPtr l);
-	virtual bool isChangeListenerAttached(ChangeListenerPtr l) const;
-    
+    virtual bool isChangeListenerAttached(ChangeListenerPtr l) const;
+
     //Removes a ChangeListener from the model's listener list.
     virtual void removeChangeListener(ChangeListenerPtr l);
-    
+
 };
 
-typedef boost::intrusive_ptr<AbstractSpinnerModel> AbstractSpinnerModelPtr;
+typedef boost::shared_ptr<AbstractSpinnerModel> AbstractSpinnerModelPtr;
 
 OSG_END_NAMESPACE
 

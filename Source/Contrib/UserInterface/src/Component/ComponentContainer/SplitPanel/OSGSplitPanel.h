@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,99 +42,61 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSplitPanelBase.h"
-#include <OpenSG/Input/OSGMouseListener.h>
-#include <OpenSG/Input/OSGMouseMotionListener.h>
+#include "OSGMouseListener.h"
+#include "OSGMouseMotionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SplitPanel class. See \ref 
-           PageUserInterfaceSplitPanel for a description.
+/*! \brief SplitPanel class. See \ref
+           PageContribUserInterfaceSplitPanel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase	
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SplitPanel : public SplitPanelBase
 {
-  private:
-
-    typedef SplitPanelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
-  public:
-      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
 
-	virtual void setDividerDrawObject( const UIDrawObjectCanvasPtr &value );
+  public:
+    enum Orientation
+    {
+        VERTICAL_ORIENTATION   = 0,
+        HORIZONTAL_ORIENTATION = 1
+    };
+
+    typedef SplitPanelBase Inherited;
+    typedef SplitPanel     Self;
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
-
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
+	virtual void setDividerDrawObject( const UIDrawObjectCanvasRefPtr &value );
+
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+
     virtual void detachFromEventProducer(void);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SplitPanelBase.
-
-    virtual void updateLayout(void);
-
-	class DividerListener : public MouseListener
-	{
-	public :
-		DividerListener(SplitPanelPtr ptr);
-		virtual void mouseClicked(const MouseEventPtr e);
-		virtual void mouseEntered(const MouseEventPtr e);
-		virtual void mouseExited(const MouseEventPtr e);
-		virtual void mousePressed(const MouseEventPtr e);
-		virtual void mouseReleased(const MouseEventPtr e);
-
-        void cancel(void);
-	protected :
-		SplitPanelPtr _SplitPanel;
-	};
-
-	friend class DividerListener;
-
-	DividerListener _DividerListener;
-	class DividerDraggedListener : public MouseMotionListener, public MouseListener
-	{
-	public :
-		DividerDraggedListener(SplitPanelPtr ptr);
-		virtual void mouseMoved(const MouseEventPtr e);
-		virtual void mouseDragged(const MouseEventPtr e);
-		
-		virtual void mouseClicked(const MouseEventPtr e);
-		virtual void mouseEntered(const MouseEventPtr e);
-		virtual void mouseExited(const MouseEventPtr e);
-		virtual void mousePressed(const MouseEventPtr e);
-		virtual void mouseReleased(const MouseEventPtr e);
-
-        void cancel(void);
-	protected :
-		SplitPanelPtr _SplitPanel;
-	};
-
-	friend class DividerDraggedListener;
-
-	DividerDraggedListener _DividerDraggedListener;
-
-    void updateChildren(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -148,20 +110,75 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SplitPanel(void); 
+    virtual ~SplitPanel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const SplitPanel *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+
+    virtual void updateLayout(void);
+
+    class DividerListener : public MouseListener
+    {
+      public :
+        DividerListener(SplitPanelRefPtr ptr);
+        virtual void mouseClicked(const MouseEventUnrecPtr e);
+        virtual void mouseEntered(const MouseEventUnrecPtr e);
+        virtual void mouseExited(const MouseEventUnrecPtr e);
+        virtual void mousePressed(const MouseEventUnrecPtr e);
+        virtual void mouseReleased(const MouseEventUnrecPtr e);
+
+        void cancel(void);
+      protected :
+        SplitPanelRefPtr _SplitPanel;
+    };
+
+    friend class DividerListener;
+
+    DividerListener _DividerListener;
+    class DividerDraggedListener : public MouseMotionListener, public MouseListener
+    {
+      public :
+        DividerDraggedListener(SplitPanelRefPtr ptr);
+        virtual void mouseMoved(const MouseEventUnrecPtr e);
+        virtual void mouseDragged(const MouseEventUnrecPtr e);
+
+        virtual void mouseClicked(const MouseEventUnrecPtr e);
+        virtual void mouseEntered(const MouseEventUnrecPtr e);
+        virtual void mouseExited(const MouseEventUnrecPtr e);
+        virtual void mousePressed(const MouseEventUnrecPtr e);
+        virtual void mouseReleased(const MouseEventUnrecPtr e);
+
+        void cancel(void);
+      protected :
+        SplitPanelRefPtr _SplitPanel;
+    };
+
+    friend class DividerDraggedListener;
+
+    DividerDraggedListener _DividerDraggedListener;
+
+    void updateChildren(void);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SplitPanelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SplitPanel &source);
 };
 
@@ -171,7 +188,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSplitPanelBase.inl"
 #include "OSGSplitPanel.inl"
-
-#define OSGSPLITPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSPLITPANEL_H_ */

@@ -42,174 +42,174 @@ OSG_BEGIN_NAMESPACE
 
 SpinnerModelPtr createDefaultNumberSpinnerModel(const DataType& TheType)
 {
-    if(TheType == FieldDataTraits< Int8 >::getType())
+    if(TheType == FieldTraits< Int8 >::getType())
     {
         return Int8SpinnerModelPtr(new Int8SpinnerModel());
     }
-    else if(TheType == FieldDataTraits< Int16 >::getType())
+    else if(TheType == FieldTraits< Int16 >::getType())
     {
         return Int16SpinnerModelPtr(new Int16SpinnerModel());
     }
-    else if(TheType == FieldDataTraits< Int32 >::getType())
+    else if(TheType == FieldTraits< Int32 >::getType())
     {
         return Int32SpinnerModelPtr(new Int32SpinnerModel());
     }
-    else if(TheType == FieldDataTraits< Int64 >::getType())
+    else if(TheType == FieldTraits< Int64 >::getType())
     {
         return Int64SpinnerModelPtr(new Int64SpinnerModel());
     }
-    else if(TheType == FieldDataTraits< UInt8 >::getType())
+    else if(TheType == FieldTraits< UInt8 >::getType())
     {
         return UInt8SpinnerModelPtr(new UInt8SpinnerModel());
     }
-    else if(TheType == FieldDataTraits< UInt16 >::getType())
+    else if(TheType == FieldTraits< UInt16 >::getType())
     {
         return UInt16SpinnerModelPtr(new UInt16SpinnerModel());
     }
-    else if(TheType == FieldDataTraits< UInt32 >::getType())
+    else if(TheType == FieldTraits< UInt32 >::getType())
     {
         return UInt32SpinnerModelPtr(new UInt32SpinnerModel());
     }
-    else if(TheType == FieldDataTraits< UInt64 >::getType())
+    else if(TheType == FieldTraits< UInt64 >::getType())
     {
         return UInt64SpinnerModelPtr(new UInt64SpinnerModel());
     }
-    /*else if(TheType == FieldDataTraits< Real16 >::getType())
-    {
-        return Real16SpinnerModelPtr(new Real16SpinnerModel());
-    }*/
-    else if(TheType == FieldDataTraits< Real32 >::getType())
+    /*else if(TheType == FieldTraits< Real16 >::getType())
+      {
+      return Real16SpinnerModelPtr(new Real16SpinnerModel());
+      }*/
+    else if(TheType == FieldTraits< Real32 >::getType())
     {
         return Real32SpinnerModelPtr(new Real32SpinnerModel());
     }
-    else if(TheType == FieldDataTraits< Real64 >::getType())
+    else if(TheType == FieldTraits< Real64 >::getType())
     {
         return Real64SpinnerModelPtr(new Real64SpinnerModel());
     }
-    /*else if(TheType == FieldDataTraits< Real128 >::getType())
-    {
-        return Real128SpinnerModelPtr(new Real128SpinnerModel());
-    }*/
-    return NULL;
+    /*else if(TheType == FieldTraits< Real128 >::getType())
+      {
+      return Real128SpinnerModelPtr(new Real128SpinnerModel());
+      }*/
+    return SpinnerModelPtr();
 }
 
 
-SpinnerModelPtr createDefaultNumberSpinnerModel(Field*  TheField)
+SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle)
 {
-    if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
+    if(TheFieldHandle->getCardinality() == FieldType::SingleField)
     {
-        if(TheField->getContentType() == FieldDataTraits< Int8 >::getType())
+        if(TheFieldHandle->getType().getContentType() == FieldTraits< Int8 >::getType())
         {
             Int8SpinnerModelPtr TheModel(new Int8SpinnerModel());
             TheModel->setMinimum(TypeTraits<Int8>::getMin());
             TheModel->setMaximum(TypeTraits<Int8>::getMax());
             TheModel->setStepSize(TypeTraits<Int8>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< Int8 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<Int8>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
-        else if(TheField->getContentType() == FieldDataTraits< Int16 >::getType())
+        else if(TheFieldHandle->getType().getContentType() == FieldTraits< Int16 >::getType())
         {
             Int16SpinnerModelPtr TheModel(new Int16SpinnerModel());
             TheModel->setMinimum(TypeTraits<Int16>::getMin());
             TheModel->setMaximum(TypeTraits<Int16>::getMax());
             TheModel->setStepSize(TypeTraits<Int16>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< Int16 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<Int16>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
-        else if(TheField->getContentType() == FieldDataTraits< Int32 >::getType())
+        else if(TheFieldHandle->getType().getContentType() == FieldTraits< Int32 >::getType())
         {
             Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
             TheModel->setMinimum(TypeTraits<Int32>::getMin());
             TheModel->setMaximum(TypeTraits<Int32>::getMax());
             TheModel->setStepSize(TypeTraits<Int32>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< Int32 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<Int32>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
-        else if(TheField->getContentType() == FieldDataTraits< Int64 >::getType())
+        else if(TheFieldHandle->getType().getContentType() == FieldTraits< Int64 >::getType())
         {
             Int64SpinnerModelPtr TheModel(new Int64SpinnerModel());
             TheModel->setMinimum(TypeTraits<Int64>::getMin());
             TheModel->setMaximum(TypeTraits<Int64>::getMax());
             TheModel->setStepSize(TypeTraits<Int64>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< Int64 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<Int64>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
-        else if(TheField->getContentType() == FieldDataTraits< UInt8 >::getType())
+        else if(TheFieldHandle->getType().getContentType() == FieldTraits< UInt8 >::getType())
         {
             UInt8SpinnerModelPtr TheModel(new UInt8SpinnerModel());
             TheModel->setMinimum(TypeTraits<UInt8>::getMin());
             TheModel->setMaximum(TypeTraits<UInt8>::getMax());
             TheModel->setStepSize(TypeTraits<UInt8>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< UInt8 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<UInt8>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
-        else if(TheField->getContentType() == FieldDataTraits< UInt16 >::getType())
+        else if(TheFieldHandle->getType().getContentType() == FieldTraits< UInt16 >::getType())
         {
             UInt16SpinnerModelPtr TheModel(new UInt16SpinnerModel());
             TheModel->setMinimum(TypeTraits<UInt16>::getMin());
             TheModel->setMaximum(TypeTraits<UInt16>::getMax());
             TheModel->setStepSize(TypeTraits<UInt16>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< UInt16 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<UInt16>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
-        else if(TheField->getContentType() == FieldDataTraits< UInt32 >::getType())
+        else if(TheFieldHandle->getType().getContentType() == FieldTraits< UInt32 >::getType())
         {
             UInt32SpinnerModelPtr TheModel(new UInt32SpinnerModel());
             TheModel->setMinimum(TypeTraits<UInt32>::getMin());
             TheModel->setMaximum(TypeTraits<UInt32>::getMax());
             TheModel->setStepSize(TypeTraits<UInt32>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< UInt32 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<UInt32>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
-        else if(TheField->getContentType() == FieldDataTraits< UInt64 >::getType())
+        else if(TheFieldHandle->getType().getContentType() == FieldTraits< UInt64 >::getType())
         {
             UInt64SpinnerModelPtr TheModel(new UInt64SpinnerModel());
             TheModel->setMinimum(TypeTraits<UInt64>::getMin());
             TheModel->setMaximum(TypeTraits<UInt64>::getMax());
             TheModel->setStepSize(TypeTraits<UInt64>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< UInt64 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<UInt64>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
-        /*else if(TheField->getContentType() == FieldDataTraits< Real16 >::getType())
-        {
-            Real16SpinnerModelPtr TheModel(new Real16SpinnerModel());
-            TheModel->setMinimum(-TypeTraits<Real16>::getMax());
-            TheModel->setMaximum(TypeTraits<Real16>::getMax());
-            TheModel->setStepSize(TypeTraits<Real16>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< Real16 >*>(TheField)->getValue());
+        /*else if(TheFieldHandle->getType().getContentType() == FieldTraits< Real16 >::getType())
+          {
+          Real16SpinnerModelPtr TheModel(new Real16SpinnerModel());
+          TheModel->setMinimum(-TypeTraits<Real16>::getMax());
+          TheModel->setMaximum(TypeTraits<Real16>::getMax());
+          TheModel->setStepSize(TypeTraits<Real16>::getOneElement());
+          TheModel->setValue(dynamic_cast<SField< Real16 >*>(TheField)->getValue());
 
-            return TheModel;
-        }*/
-        else if(TheField->getContentType() == FieldDataTraits< Real32 >::getType())
+          return TheModel;
+          }*/
+        else if(TheFieldHandle->getType().getContentType() == FieldTraits< Real32 >::getType())
         {
             Real32SpinnerModelPtr TheModel(new Real32SpinnerModel());
             TheModel->setMinimum(-TypeTraits<Real32>::getMax());
             TheModel->setMaximum(TypeTraits<Real32>::getMax());
             TheModel->setStepSize(TypeTraits<Real32>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< Real32 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<Real32>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
-        else if(TheField->getContentType() == FieldDataTraits< Real64 >::getType())
+        else if(TheFieldHandle->getType().getContentType() == FieldTraits< Real64 >::getType())
         {
             Real64SpinnerModelPtr TheModel(new Real64SpinnerModel());
             TheModel->setMinimum(-TypeTraits<Real64>::getMax());
             TheModel->setMaximum(TypeTraits<Real64>::getMax());
             TheModel->setStepSize(TypeTraits<Real64>::getOneElement());
-            TheModel->setValue(dynamic_cast<SField< Real64 >*>(TheField)->getValue());
+            TheModel->setValue(dynamic_cast<const SField<Real64>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
     }
-    return NULL;
+    return SpinnerModelPtr();
 }
 
 OSG_END_NAMESPACE

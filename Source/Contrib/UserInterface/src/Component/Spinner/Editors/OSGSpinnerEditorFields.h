@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/Container/OSGPanelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class SpinnerEditor;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SpinnerEditorPtr
+OSG_GEN_CONTAINERPTR(SpinnerEditor);
 
-typedef FCPtr<PanelPtr, SpinnerEditor> SpinnerEditorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<SpinnerEditorPtr> : 
-    public FieldTraitsRecurseMapper<SpinnerEditorPtr, true>
+struct FieldTraits<SpinnerEditor *> :
+    public FieldTraitsFCPtrBase<SpinnerEditor *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFSpinnerEditorPtr"; }
-    static const char *getMName(void) { return "MFSpinnerEditorPtr"; }
+    typedef FieldTraits<SpinnerEditor *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFSpinnerEditorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFSpinnerEditorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SpinnerEditorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<SpinnerEditor *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecSpinnerEditorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<SpinnerEditor *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecSpinnerEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SpinnerEditor *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakSpinnerEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SpinnerEditor *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdSpinnerEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SpinnerEditor *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecSpinnerEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SpinnerEditor *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecSpinnerEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SpinnerEditor *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakSpinnerEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SpinnerEditor *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdSpinnerEditorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SpinnerEditor *,
+                      RecordedRefCountPolicy  > SFRecSpinnerEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SpinnerEditor *,
+                      UnrecordedRefCountPolicy> SFUnrecSpinnerEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SpinnerEditor *,
+                      WeakRefCountPolicy      > SFWeakSpinnerEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SpinnerEditor *,
+                      NoRefCountPolicy        > SFUncountedSpinnerEditorPtr;
 
-typedef SField<SpinnerEditorPtr> SFSpinnerEditorPtr;
-#endif
 
-#ifndef OSG_COMPILESPINNEREDITORINST
-OSG_DLLEXPORT_DECL1(SField, SpinnerEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SpinnerEditor *,
+                      RecordedRefCountPolicy  > MFRecSpinnerEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SpinnerEditor *,
+                      UnrecordedRefCountPolicy> MFUnrecSpinnerEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SpinnerEditor *,
+                      WeakRefCountPolicy      > MFWeakSpinnerEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SpinnerEditor *,
+                      NoRefCountPolicy        > MFUncountedSpinnerEditorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<SpinnerEditorPtr> MFSpinnerEditorPtr;
-#endif
 
-#ifndef OSG_COMPILESPINNEREDITORINST
-OSG_DLLEXPORT_DECL1(MField, SpinnerEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecSpinnerEditorPtr : 
+    public PointerSField<SpinnerEditor *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecSpinnerEditorPtr : 
+    public PointerSField<SpinnerEditor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakSpinnerEditorPtr :
+    public PointerSField<SpinnerEditor *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedSpinnerEditorPtr :
+    public PointerSField<SpinnerEditor *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecSpinnerEditorPtr :
+    public PointerMField<SpinnerEditor *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecSpinnerEditorPtr :
+    public PointerMField<SpinnerEditor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakSpinnerEditorPtr :
+    public PointerMField<SpinnerEditor *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedSpinnerEditorPtr :
+    public PointerMField<SpinnerEditor *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGSPINNEREDITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGSPINNEREDITORFIELDS_H_ */

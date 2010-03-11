@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSpinnerNumberEditor.h"
 #include <boost/lexical_cast.hpp>
-#include "Component/Spinner/OSGSpinner.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OSGSpinner.h"
+#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SpinnerNumberEditor
-A UI SpinnerNumberEditor. 
-*/
+// Documentation for this class is emitted in the
+// OSGSpinnerNumberEditorBase.cpp file.
+// To modify it, please change the .fcd file (OSGSpinnerNumberEditor.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +65,13 @@ A UI SpinnerNumberEditor.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SpinnerNumberEditor::initMethod (void)
+void SpinnerNumberEditor::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -81,49 +81,45 @@ void SpinnerNumberEditor::initMethod (void)
 
 void SpinnerNumberEditor::commitEdit(void)
 {
-	try
-	{
+    try
+    {
         Real64 result = boost::lexical_cast<Real64>(getTextField()->getText());
 
-		getSpinner()->getModel()->setValue(getTextField()->getText());
-	}
+        getSpinner()->getModel()->setValue(getTextField()->getText());
+    }
     catch(std::exception &)
-	{
-		//Reset to the old value
-		beginEditCP(getTextField(), TextField::TextFieldMask);
-			std::string NewValue;
-            try
-            {
-                getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
-            }
-            catch(boost::bad_any_cast &)
-            {
-				getTextField()->setText("0.0");
-            }
-		endEditCP(getTextField(), TextField::TextFieldMask);
-	}
+    {
+        //Reset to the old value
+        std::string NewValue;
+        try
+        {
+            getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+        }
+        catch(boost::bad_any_cast &)
+        {
+            getTextField()->setText("0.0");
+        }
+    }
 }
 
-void SpinnerNumberEditor::stateChanged(const ChangeEventPtr e)
+void SpinnerNumberEditor::stateChanged(const ChangeEventUnrecPtr e)
 {
-	if(getSpinner()->getModel()->getValue().type() == typeid(Real32))
-	{
-		//Update the Value of the TextField
-		beginEditCP(getTextField(), TextField::TextFieldMask);
-            try
-            {
-                getTextField()->setText(boost::lexical_cast<std::string>(boost::any_cast<Real32>(getSpinner()->getModel()->getValue())));
-            }
-            catch(std::exception &)
-            {
-				getTextField()->setText("0.0");
-            }
-		endEditCP(getTextField(), TextField::TextFieldMask);
-	}
-	else
-	{
-		Inherited::stateChanged(e);
-	}
+    if(getSpinner()->getModel()->getValue().type() == typeid(Real32))
+    {
+        //Update the Value of the TextField
+        try
+        {
+            getTextField()->setText(boost::lexical_cast<std::string>(boost::any_cast<Real32>(getSpinner()->getModel()->getValue())));
+        }
+        catch(std::exception &)
+        {
+            getTextField()->setText("0.0");
+        }
+    }
+    else
+    {
+        Inherited::stateChanged(e);
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -148,41 +144,17 @@ SpinnerNumberEditor::~SpinnerNumberEditor(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SpinnerNumberEditor::changed(BitVector whichField, UInt32 origin)
+void SpinnerNumberEditor::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void SpinnerNumberEditor::dump(      UInt32    , 
+void SpinnerNumberEditor::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SpinnerNumberEditor NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSPINNERNUMBEREDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSPINNERNUMBEREDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSPINNERNUMBEREDITORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

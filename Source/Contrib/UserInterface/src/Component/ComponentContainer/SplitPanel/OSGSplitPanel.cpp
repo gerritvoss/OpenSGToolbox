@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,28 +40,25 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
+#include <OSGConfig.h>
 
-#include "Util/OSGUIDrawUtils.h"
-#include <OpenSG/OSGConfig.h>
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include "Component/Container/Window/OSGInternalWindow.h"
+#include "OSGSplitPanel.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawUtils.h"
 
 #include "OSGSplitPanel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SplitPanel
-A UI Split Panel. 	
-*/
+// Documentation for this class is emitted in the
+// OSGSplitPanelBase.cpp file.
+// To modify it, please change the .fcd file (OSGSplitPanel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -71,8 +68,13 @@ A UI Split Panel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SplitPanel::initMethod (void)
+void SplitPanel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -80,164 +82,156 @@ void SplitPanel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void SplitPanel::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
+void SplitPanel::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {
-	// draw the two contained components and the divider
-	if (getMinComponent() != NullFC)
-		getMinComponent()->draw(Graphics, getOpacity()*Opacity);
-	if (getMaxComponent() != NullFC)
-		getMaxComponent()->draw(Graphics, getOpacity()*Opacity);
-	if (getDividerDrawObject() != NullFC)
-		getDividerDrawObject()->draw(Graphics, getOpacity()*Opacity);
+    // draw the two contained components and the divider
+    if (getMinComponent() != NULL)
+        getMinComponent()->draw(Graphics, getOpacity()*Opacity);
+    if (getMaxComponent() != NULL)
+        getMaxComponent()->draw(Graphics, getOpacity()*Opacity);
+    if (getDividerDrawObject() != NULL)
+        getDividerDrawObject()->draw(Graphics, getOpacity()*Opacity);
 }
 
 void SplitPanel::updateLayout(void)
 {
-	Pnt2f TopLeft, BottomRight;
-	getInsideBorderBounds(TopLeft, BottomRight);
-	Vec2f BorderSize(BottomRight - TopLeft);
+    Pnt2f TopLeft, BottomRight;
+    getInsideBorderBounds(TopLeft, BottomRight);
+    Vec2f BorderSize(BottomRight - TopLeft);
 
-	UInt32 AxisIndex(0);
-	if(getOrientation() != SplitPanel::HORIZONTAL_ORIENTATION ) AxisIndex = 1;
+    UInt32 AxisIndex(0);
+    if(getOrientation() != SplitPanel::HORIZONTAL_ORIENTATION ) AxisIndex = 1;
 
-	Vec2f minSize(0,0);
-	Vec2f maxSize(0,0);
-	Vec2f divSize(0,0);
-	Pnt2f minPos(0,0);
-	Pnt2f maxPos(0,0);
-	Pnt2f divPos(0,0);
+    Vec2f minSize(0,0);
+    Vec2f maxSize(0,0);
+    Vec2f divSize(0,0);
+    Pnt2f minPos(0,0);
+    Pnt2f maxPos(0,0);
+    Pnt2f divPos(0,0);
 
-	if (getDividerPosition() < 0.0)
-		setDividerPosition(0.5);
-	if (getMinDividerPosition() < 0.0)
-		setMinDividerPosition(0.0);
-	if (getMaxDividerPosition() < 0.0)
-		setMaxDividerPosition(1.0);
-	
-	UInt32 dividerPosition(getDividerPosition());
-	if (getDividerPosition() <= 1.0)
-		dividerPosition = BorderSize[AxisIndex] * getDividerPosition();
+    if (getDividerPosition() < 0.0)
+        setDividerPosition(0.5);
+    if (getMinDividerPosition() < 0.0)
+        setMinDividerPosition(0.0);
+    if (getMaxDividerPosition() < 0.0)
+        setMaxDividerPosition(1.0);
 
-	// check the divider's min and max
-	if (getMinDividerPosition() <= 1.0)
-	{
-		if (dividerPosition < getMinDividerPosition() * BorderSize[AxisIndex])
-			dividerPosition = getMinDividerPosition() * BorderSize[AxisIndex];
-	}
-	else
-	{
-		if (dividerPosition < getMinDividerPosition())
-			dividerPosition = getMinDividerPosition();
-	}
-	if (getMaxDividerPosition() <= 1.0)
-	{
-		if (dividerPosition > getMaxDividerPosition() * BorderSize[AxisIndex])
-			dividerPosition = getMaxDividerPosition() * BorderSize[AxisIndex];
-	}
-	else
-	{
-		if (dividerPosition > getMaxDividerPosition())
-			dividerPosition = getMaxDividerPosition();
-	}
-	
-	// set the minimum component's size
-	minSize[AxisIndex] = dividerPosition - getDividerSize()/2;
+    UInt32 dividerPosition(getDividerPosition());
+    if (getDividerPosition() <= 1.0)
+        dividerPosition = BorderSize[AxisIndex] * getDividerPosition();
 
-	// check its min and max
-	if (getMinComponent() != NullFC)
-	{
-		if (minSize[AxisIndex] < getMinComponent()->getMinSize()[AxisIndex])
-		{
-			dividerPosition -= getMinComponent()->getMinSize()[AxisIndex] - minSize[AxisIndex];
-			minSize[AxisIndex] = getMinComponent()->getMinSize()[AxisIndex];
-		}
-		if (minSize[AxisIndex] > getMinComponent()->getMaxSize()[AxisIndex])
-		{
-			dividerPosition += minSize[AxisIndex] - getMinComponent()->getMaxSize()[AxisIndex];
-			minSize[AxisIndex] = getMinComponent()->getMaxSize()[AxisIndex];
-		}
-	}
+    // check the divider's min and max
+    if (getMinDividerPosition() <= 1.0)
+    {
+        if (dividerPosition < getMinDividerPosition() * BorderSize[AxisIndex])
+            dividerPosition = getMinDividerPosition() * BorderSize[AxisIndex];
+    }
+    else
+    {
+        if (dividerPosition < getMinDividerPosition())
+            dividerPosition = getMinDividerPosition();
+    }
+    if (getMaxDividerPosition() <= 1.0)
+    {
+        if (dividerPosition > getMaxDividerPosition() * BorderSize[AxisIndex])
+            dividerPosition = getMaxDividerPosition() * BorderSize[AxisIndex];
+    }
+    else
+    {
+        if (dividerPosition > getMaxDividerPosition())
+            dividerPosition = getMaxDividerPosition();
+    }
 
-	// set the maximum component's size
-	maxSize[AxisIndex] = BorderSize[AxisIndex] - minSize[AxisIndex] - getDividerSize();
+    // set the minimum component's size
+    minSize[AxisIndex] = dividerPosition - getDividerSize()/2;
 
-	// check its min and max
-	if (getMaxComponent() != NullFC)
-	{
-		if (maxSize[AxisIndex] < getMaxComponent()->getMinSize()[AxisIndex])
-		{
-			dividerPosition -= getMaxComponent()->getMinSize()[AxisIndex] - maxSize[AxisIndex];
-			minSize[AxisIndex] -= getMaxComponent()->getMinSize()[AxisIndex] - maxSize[AxisIndex];
-			maxSize[AxisIndex] = getMaxComponent()->getMinSize()[AxisIndex];
-		}
-		if (maxSize[AxisIndex] > getMaxComponent()->getMaxSize()[AxisIndex])
-		{
-			dividerPosition += maxSize[AxisIndex] - getMaxComponent()->getMaxSize()[AxisIndex];
-			minSize[AxisIndex] += maxSize[AxisIndex] - getMaxComponent()->getMaxSize()[AxisIndex];
-			maxSize[AxisIndex] = getMaxComponent()->getMaxSize()[AxisIndex];
-		}
-	}
+    // check its min and max
+    if (getMinComponent() != NULL)
+    {
+        if (minSize[AxisIndex] < getMinComponent()->getMinSize()[AxisIndex])
+        {
+            dividerPosition -= getMinComponent()->getMinSize()[AxisIndex] - minSize[AxisIndex];
+            minSize[AxisIndex] = getMinComponent()->getMinSize()[AxisIndex];
+        }
+        if (minSize[AxisIndex] > getMinComponent()->getMaxSize()[AxisIndex])
+        {
+            dividerPosition += minSize[AxisIndex] - getMinComponent()->getMaxSize()[AxisIndex];
+            minSize[AxisIndex] = getMinComponent()->getMaxSize()[AxisIndex];
+        }
+    }
 
-	// set the minor axis' size and max's position
-	minSize[(AxisIndex+1)%2] = maxSize[(AxisIndex+1)%2] = BorderSize[(AxisIndex+1)%2];
-	maxPos[AxisIndex] = minSize[AxisIndex] + getDividerSize();
+    // set the maximum component's size
+    maxSize[AxisIndex] = BorderSize[AxisIndex] - minSize[AxisIndex] - getDividerSize();
 
-	// set the divider's size and position
-	divSize[AxisIndex] = getDividerSize();
-	divSize[(AxisIndex+1)%2] = BorderSize[(AxisIndex+1)%2];
-	divPos[AxisIndex] = dividerPosition - getDividerSize()/2;
+    // check its min and max
+    if (getMaxComponent() != NULL)
+    {
+        if (maxSize[AxisIndex] < getMaxComponent()->getMinSize()[AxisIndex])
+        {
+            dividerPosition -= getMaxComponent()->getMinSize()[AxisIndex] - maxSize[AxisIndex];
+            minSize[AxisIndex] -= getMaxComponent()->getMinSize()[AxisIndex] - maxSize[AxisIndex];
+            maxSize[AxisIndex] = getMaxComponent()->getMinSize()[AxisIndex];
+        }
+        if (maxSize[AxisIndex] > getMaxComponent()->getMaxSize()[AxisIndex])
+        {
+            dividerPosition += maxSize[AxisIndex] - getMaxComponent()->getMaxSize()[AxisIndex];
+            minSize[AxisIndex] += maxSize[AxisIndex] - getMaxComponent()->getMaxSize()[AxisIndex];
+            maxSize[AxisIndex] = getMaxComponent()->getMaxSize()[AxisIndex];
+        }
+    }
 
-	// set the components to the right size and positions
-	if (getMinComponent() != NullFC)
-	{
-		beginEditCP(getMinComponent(), Component::SizeFieldMask|Component::PositionFieldMask);
-			getMinComponent()->setSize(minSize);
-			getMinComponent()->setPosition(minPos);
-		endEditCP(getMinComponent(), Component::SizeFieldMask|Component::PositionFieldMask);
-	}
-	if (getMaxComponent() != NullFC)
-	{
-		beginEditCP(getMaxComponent(), Component::SizeFieldMask|Component::PositionFieldMask);
-			getMaxComponent()->setSize(maxSize);
-			getMaxComponent()->setPosition(maxPos);
-		endEditCP(getMaxComponent(), Component::SizeFieldMask|Component::PositionFieldMask);
-	}
-	if (getDividerDrawObject() != NullFC)
-	{
-		beginEditCP(getDividerDrawObject(), Component::SizeFieldMask|Component::PositionFieldMask);
-			getDividerDrawObject()->setSize(divSize);
-			getDividerDrawObject()->setPosition(divPos);
-		endEditCP(getDividerDrawObject(), Component::SizeFieldMask|Component::PositionFieldMask);
-	}
+    // set the minor axis' size and max's position
+    minSize[(AxisIndex+1)%2] = maxSize[(AxisIndex+1)%2] = BorderSize[(AxisIndex+1)%2];
+    maxPos[AxisIndex] = minSize[AxisIndex] + getDividerSize();
+
+    // set the divider's size and position
+    divSize[AxisIndex] = getDividerSize();
+    divSize[(AxisIndex+1)%2] = BorderSize[(AxisIndex+1)%2];
+    divPos[AxisIndex] = dividerPosition - getDividerSize()/2;
+
+    // set the components to the right size and positions
+    if (getMinComponent() != NULL)
+    {
+        getMinComponent()->setSize(minSize);
+        getMinComponent()->setPosition(minPos);
+    }
+    if (getMaxComponent() != NULL)
+    {
+        getMaxComponent()->setSize(maxSize);
+        getMaxComponent()->setPosition(maxPos);
+    }
+    if (getDividerDrawObject() != NULL)
+    {
+        getDividerDrawObject()->setSize(divSize);
+        getDividerDrawObject()->setPosition(divPos);
+    }
 }
 
-void SplitPanel::setDividerDrawObject(const UIDrawObjectCanvasPtr &value)
+void SplitPanel::setDividerDrawObject(const UIDrawObjectCanvasRefPtr &value)
 {
-	if (getDividerDrawObject() != NullFC)
-	{
-		getDividerDrawObject()->removeMouseListener(&_DividerListener);
-	}
+    if (getDividerDrawObject() != NULL)
+    {
+        getDividerDrawObject()->removeMouseListener(&_DividerListener);
+    }
     _sfDividerDrawObject.setValue(value);
-	value->addMouseListener(&_DividerListener);
+    value->addMouseListener(&_DividerListener);
 }
 
 void SplitPanel::updateChildren(void)
 {
-    beginEditCP(SplitPanelPtr(this), SplitPanel::ChildrenFieldMask);
-        getChildren().clear();
-        if(getDividerDrawObject() != NullFC)
-        {
-	        getChildren().push_back(getDividerDrawObject());
-        }
-        if(getMinComponent() != NullFC)
-        {
-	        getChildren().push_back(getMinComponent());
-        }
-        if(getMaxComponent() != NullFC)
-        {
-	        getChildren().push_back(getMaxComponent());
-        }
-    endEditCP(SplitPanelPtr(this), SplitPanel::ChildrenFieldMask);
+    clearChildren();
+    if(getDividerDrawObject() != NULL)
+    {
+        pushToChildren(getDividerDrawObject());
+    }
+    if(getMinComponent() != NULL)
+    {
+        pushToChildren(getMinComponent());
+    }
+    if(getMaxComponent() != NULL)
+    {
+        pushToChildren(getMaxComponent());
+    }
 
 }
 
@@ -251,27 +245,37 @@ void SplitPanel::detachFromEventProducer(void)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void SplitPanel::onCreate(const SplitPanel * Id)
+{
+	if(getDividerDrawObject() != NULL)
+	{
+        FieldContainerUnrecPtr TheDividerDrawObject(getDividerDrawObject()->shallowCopy());
+        setDividerDrawObject(dynamic_pointer_cast<UIDrawObjectCanvas>(TheDividerDrawObject));
+        if(getDividerDrawObject() != NULL)
+        {
+            getDividerDrawObject()->addMouseListener(&_DividerListener);
+        }
+	}
+}
+
+void SplitPanel::onDestroy()
+{
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 SplitPanel::SplitPanel(void) :
     Inherited(),
-	_DividerListener (SplitPanelPtr(this)),
-	_DividerDraggedListener (SplitPanelPtr(this))
+	_DividerListener (this),
+	_DividerDraggedListener (this)
 {
 }
 
 SplitPanel::SplitPanel(const SplitPanel &source) :
     Inherited(source),
-	_DividerListener (SplitPanelPtr(this)),
-	_DividerDraggedListener (SplitPanelPtr(this))
+	_DividerListener (this),
+	_DividerDraggedListener (this)
 {
-	if(getDividerDrawObject() != NullFC)
-	{
-		beginEditCP(SplitPanelPtr(this), DividerDrawObjectFieldMask);
-			setDividerDrawObject(UIDrawObjectCanvasPtr::dcast(getDividerDrawObject()->shallowCopy()));
-		endEditCP(SplitPanelPtr(this), DividerDrawObjectFieldMask);
-		getDividerDrawObject()->addMouseListener(&_DividerListener);
-	}
 }
 
 SplitPanel::~SplitPanel(void)
@@ -280,9 +284,11 @@ SplitPanel::~SplitPanel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SplitPanel::changed(BitVector whichField, UInt32 origin)
+void SplitPanel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
 	if( (whichField & DividerSizeFieldMask) || (whichField & DividerPositionFieldMask) ||
 		(whichField & OrientationFieldMask) )
@@ -299,9 +305,8 @@ void SplitPanel::changed(BitVector whichField, UInt32 origin)
     }
     if( ((whichField & DividerDrawObjectFieldMask) ||
         (whichField & OrientationFieldMask) ||
-        (whichField & ExpandableFieldMask)) && getDividerDrawObject() != NullFC)
+        (whichField & ExpandableFieldMask)) && getDividerDrawObject() != NULL)
     {
-        beginEditCP(getDividerDrawObject(),Component::CursorFieldMask);
             if(!getExpandable())
             {
                 getDividerDrawObject()->setCursor(WindowEventProducer::CURSOR_POINTER);
@@ -317,28 +322,27 @@ void SplitPanel::changed(BitVector whichField, UInt32 origin)
                     getDividerDrawObject()->setCursor(WindowEventProducer::CURSOR_RESIZE_N_TO_S);
                 }
             }
-        endEditCP(getDividerDrawObject(),Component::CursorFieldMask);
     }
 }
 
-void SplitPanel::dump(      UInt32    , 
+void SplitPanel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SplitPanel NI" << std::endl;
 }
 
-SplitPanel::DividerListener::DividerListener(SplitPanelPtr ptr) :
+SplitPanel::DividerListener::DividerListener(SplitPanelRefPtr ptr) :
 	_SplitPanel(ptr)
 {
 }
-void SplitPanel::DividerListener::mouseClicked(const MouseEventPtr e)
+void SplitPanel::DividerListener::mouseClicked(const MouseEventUnrecPtr e)
 {
 }
-void SplitPanel::DividerListener::mouseEntered(const MouseEventPtr e)
+void SplitPanel::DividerListener::mouseEntered(const MouseEventUnrecPtr e)
 {
 	if (_SplitPanel->getExpandable())
 	{
-		if(_SplitPanel->getParentWindow() != NullFC && _SplitPanel->getParentWindow()->getDrawingSurface()!=NullFC&&_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+		if(_SplitPanel->getParentWindow() != NULL && _SplitPanel->getParentWindow()->getDrawingSurface()!=NULL&&_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 		{
 			if (_SplitPanel->getOrientation() == SplitPanel::HORIZONTAL_ORIENTATION)
 			{
@@ -351,30 +355,28 @@ void SplitPanel::DividerListener::mouseEntered(const MouseEventPtr e)
 		}
 	}
 }
-void SplitPanel::DividerListener::mouseExited(const MouseEventPtr e)
+void SplitPanel::DividerListener::mouseExited(const MouseEventUnrecPtr e)
 {
 	if (_SplitPanel->getExpandable())
 	{
-		if(_SplitPanel->getParentWindow() != NullFC && _SplitPanel->getParentWindow()->getDrawingSurface()!= NullFC && _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+		if(_SplitPanel->getParentWindow() != NULL && _SplitPanel->getParentWindow()->getDrawingSurface()!= NULL && _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 		{
 			_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
 		}
 	}
 }
-void SplitPanel::DividerListener::mousePressed(const MouseEventPtr e)
+void SplitPanel::DividerListener::mousePressed(const MouseEventUnrecPtr e)
 {
 	if (e->getButton() == MouseEvent::BUTTON1 &&
         _SplitPanel->getExpandable() &&
-        _SplitPanel->getParentWindow() != NullFC)
+        _SplitPanel->getParentWindow() != NULL)
 	{
 		_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
         _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_SplitPanel->_DividerDraggedListener));
-        beginEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
             _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setLockCursor(true);
-        endEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
 	}
 }
-void SplitPanel::DividerListener::mouseReleased(const MouseEventPtr e)
+void SplitPanel::DividerListener::mouseReleased(const MouseEventUnrecPtr e)
 {
 }
 
@@ -383,37 +385,35 @@ void SplitPanel::DividerListener::cancel(void)
     _SplitPanel->_DividerDraggedListener.cancel();
 }
 
-SplitPanel::DividerDraggedListener::DividerDraggedListener(SplitPanelPtr ptr) :
+SplitPanel::DividerDraggedListener::DividerDraggedListener(SplitPanelRefPtr ptr) :
 	_SplitPanel(ptr)
 {
 }
 	
-void SplitPanel::DividerDraggedListener::mouseClicked(const MouseEventPtr e)
+void SplitPanel::DividerDraggedListener::mouseClicked(const MouseEventUnrecPtr e)
 {
 }
-void SplitPanel::DividerDraggedListener::mouseEntered(const MouseEventPtr e)
+void SplitPanel::DividerDraggedListener::mouseEntered(const MouseEventUnrecPtr e)
 {
 }
-void SplitPanel::DividerDraggedListener::mouseExited(const MouseEventPtr e)
+void SplitPanel::DividerDraggedListener::mouseExited(const MouseEventUnrecPtr e)
 {
-	//if(_SplitPanel->getParentWindow() != NullFC)
+	//if(_SplitPanel->getParentWindow() != NULL)
 	//{
 	//	_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
 	//	_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
 	//}
 }
-void SplitPanel::DividerDraggedListener::mousePressed(const MouseEventPtr e)
+void SplitPanel::DividerDraggedListener::mousePressed(const MouseEventUnrecPtr e)
 {
 }
-void SplitPanel::DividerDraggedListener::mouseReleased(const MouseEventPtr e)
+void SplitPanel::DividerDraggedListener::mouseReleased(const MouseEventUnrecPtr e)
 {
-    if(e->getButton() == MouseEvent::BUTTON1 && _SplitPanel->getParentWindow() != NullFC)
+    if(e->getButton() == MouseEvent::BUTTON1 && _SplitPanel->getParentWindow() != NULL)
 	{
 		_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
 		_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
-        beginEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
             _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setLockCursor(false);
-        endEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
     }
 }
 
@@ -421,15 +421,13 @@ void SplitPanel::DividerDraggedListener::cancel(void)
 {
     _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
     _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
-    beginEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
         _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setLockCursor(false);
-    endEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
 }
 
-void SplitPanel::DividerDraggedListener::mouseMoved(const MouseEventPtr e)
+void SplitPanel::DividerDraggedListener::mouseMoved(const MouseEventUnrecPtr e)
 {
 }
-void SplitPanel::DividerDraggedListener::mouseDragged(const MouseEventPtr e)
+void SplitPanel::DividerDraggedListener::mouseDragged(const MouseEventUnrecPtr e)
 {
 	UInt32 AxisIndex(0);
 	if(_SplitPanel->getOrientation() != SplitPanel::HORIZONTAL_ORIENTATION ) AxisIndex = 1;
@@ -437,7 +435,6 @@ void SplitPanel::DividerDraggedListener::mouseDragged(const MouseEventPtr e)
 	if(e->getButton() == e->BUTTON1)
 	{
 		Pnt2f temp = ViewportToComponent(e->getLocation(), _SplitPanel, e->getViewport());
-		beginEditCP(_SplitPanel, DividerPositionFieldMask);
 			if (_SplitPanel->getDividerPosition() <= 1.0)
 			{
 				if (temp[AxisIndex] >= 0) // this ensures it stays as a percentage position
@@ -455,34 +452,8 @@ void SplitPanel::DividerDraggedListener::mouseDragged(const MouseEventPtr e)
 					_SplitPanel->setDividerPosition(temp[AxisIndex]);
 				}
 			}
-		endEditCP(_SplitPanel, DividerPositionFieldMask);
 		//_SplitPanel->updateLayout();
 	}
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSPLITPANELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSPLITPANELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSPLITPANELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

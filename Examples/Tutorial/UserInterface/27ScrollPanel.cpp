@@ -9,36 +9,36 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -46,39 +46,39 @@ void reshape(Vec2f Size);
 
 
 // 27ScrollPanel Headers
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGScrollPanel.h>
-#include <OpenSG/UserInterface/OSGScrollBar.h>
-#include <OpenSG/UserInterface/OSGDefaultBoundedRangeModel.h>
-#include <OpenSG/UserInterface/OSGUIViewport.h>
-#include <OpenSG/UserInterface/OSGButton.h>
+#include "OSGLookAndFeelManager.h"
+#include "OSGLayers.h"
+#include "OSGFlowLayout.h"
+#include "OSGPanel.h"
+#include "OSGScrollPanel.h"
+#include "OSGScrollBar.h"
+#include "OSGDefaultBoundedRangeModel.h"
+#include "OSGUIViewport.h"
+#include "OSGButton.h"
 
 // Declare function up front
-PanelPtr createPanelWithButtons(void);
+PanelRefPtr createPanelWithButtons(void);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-            TutorialWindowEventProducer->closeWindow();
-       }
-   }
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            TutorialWindow->closeWindow();
+        }
+    }
 
-   virtual void keyReleased(const KeyEventPtr e)
-   {
-   }
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
 
-   virtual void keyTyped(const KeyEventPtr e)
-   {
-   }
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
 int main(int argc, char **argv)
@@ -87,273 +87,253 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
-        scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    NodeRefPtr scene = OSG::Node::create();
+    scene->setCore(OSG::Group::create());
+    scene->addChild(TorusGeometryNode);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->setLookAndFeel(WindowsLookAndFeel::create());
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
     /******************************************************
-            
-            Create a Panel containing Buttons to
-            add to ScrollPanel using a function
-            (located at bottom of this file)
- 
-    ******************************************************/    
 
-    PanelPtr ExampleViewablePanel = createPanelWithButtons();
- 
+      Create a Panel containing Buttons to
+      add to ScrollPanel using a function
+      (located at bottom of this file)
+
+     ******************************************************/    
+
+    PanelRefPtr ExampleViewablePanel = createPanelWithButtons();
+
     /******************************************************
-            
-            Create a UIViewport to use with the
-            ScrollPanel.  This sets up a secondary
-            TutorialViewport inside the ScrollPanel.  
-			Without this, the ScrollPanel would 
-			not function correctly.
 
-            The Panel created above is added to be
-            viewed in the UIViewport and the size
-            and position are set.
- 
-    ******************************************************/    
-    UIViewportPtr ScrollPanelUIViewport = UIViewport::create();
+      Create a UIViewport to use with the
+      ScrollPanel.  This sets up a secondary
+      TutorialViewport inside the ScrollPanel.  
+      Without this, the ScrollPanel would 
+      not function correctly.
 
-    beginEditCP(ScrollPanelUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
-        ScrollPanelUIViewport->setViewComponent(ExampleViewablePanel);
-        ScrollPanelUIViewport->setViewPosition(Pnt2f(150,150));
-        ScrollPanelUIViewport->setPreferredSize(Vec2f(200,200));
-    endEditCP(ScrollPanelUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
+      The Panel created above is added to be
+      viewed in the UIViewport and the size
+      and position are set.
 
-       /******************************************************
-            
-            Create the ScrollPanel itself.
-            -setHorizontalResizePolicy(ScrollPanel::
-                ENUM):  Determines the Horizontal 
-				resize policy.  The ScrollPanel will 
-				automatically resize itself to the
-				Size of its Component within for 
-				RESIZE_TO_VIEW, or add a ScrollBar 
-				as needed for NO_RESIZE.  Takes
-				NO_RESIZE and RESIZE_TO_VIEW 
-				arguments.
-            -setVerticalResizePolicy(ScrollPanel::
-                ENUM):  Determines the Vertical 
-				resize policy.  The ScrollPanel will 
-				automatically resize itself to the
-				Size of its Component within for 
-				RESIZE_TO_VIEW, or add a ScrollBar 
-				as needed for NO_RESIZE.  Takes
-				NO_RESIZE and RESIZE_TO_VIEW 
-				arguments.
-            -setViewComponent(Component): Determine
-				which Component will be added into
-                the ScrollPanel.  Note that this
-                must be the same as the UIViewport
-                created above and does not require
-                a begin/endEditCP.
- 
-        ******************************************************/    
-    
-	ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
-    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2f(100,100));
-        ExampleScrollPanel->setVerticalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_LEFT);
-        ExampleScrollPanel->setHorizontalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_BOTTOM);
-        
-        //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-    
+     ******************************************************/    
+    UIViewportRefPtr ScrollPanelUIViewport = UIViewport::create();
+
+    ScrollPanelUIViewport->setViewComponent(ExampleViewablePanel);
+    ScrollPanelUIViewport->setViewPosition(Pnt2f(150,150));
+    ScrollPanelUIViewport->setPreferredSize(Vec2f(200,200));
+
+    /******************************************************
+
+      Create the ScrollPanel itself.
+      -setHorizontalResizePolicy(ScrollPanel::
+      ENUM):  Determines the Horizontal 
+      resize policy.  The ScrollPanel will 
+      automatically resize itself to the
+      Size of its Component within for 
+      RESIZE_TO_VIEW, or add a ScrollBar 
+      as needed for NO_RESIZE.  Takes
+      NO_RESIZE and RESIZE_TO_VIEW 
+      arguments.
+      -setVerticalResizePolicy(ScrollPanel::
+      ENUM):  Determines the Vertical 
+      resize policy.  The ScrollPanel will 
+      automatically resize itself to the
+      Size of its Component within for 
+      RESIZE_TO_VIEW, or add a ScrollBar 
+      as needed for NO_RESIZE.  Takes
+      NO_RESIZE and RESIZE_TO_VIEW 
+      arguments.
+      -setViewComponent(Component): Determine
+      which Component will be added into
+      the ScrollPanel.  Note that this
+      must be the same as the UIViewport
+      created above and does not require
+      a begin/endEditCP.
+
+     ******************************************************/    
+
+    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
+    ExampleScrollPanel->setPreferredSize(Vec2f(100,100));
+    ExampleScrollPanel->setVerticalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_LEFT);
+    ExampleScrollPanel->setHorizontalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_BOTTOM);
+
+    //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+
     ExampleScrollPanel->setViewComponent(ExampleViewablePanel);
 
 
-       /******************************************************
-            
-            Create two ScrollBars.
+    /******************************************************
 
-            First, create a DefaultBoundedRangeModel.
-            This determines some characteristics of 
-            the Scrollbar.  Note that you can link
-            several ScollBars to the same 
-            DefaultBoundedRangeModel; this will
-            cause them to move at the same time.
+      Create two ScrollBars.
 
-            -.setMinimum(int): Determine a numeric
-                value for the beginning of the 
-                ScrollBar.  Note that the visible
-                size will be set separately.
-            -.setMaximum(int): Determine a numeric
-                value for the end of the 
-                ScrollBar. 
-            -.setValue(int):  Determine the 
-                initial location of the Bar on the
-                ScrollBar.  This is determined from
-                the Min/Max values.
-            -.setExtent(int): Determine the size
-                of the Bar on the ScrollBar as a 
-                fraction of the total size (which is 
-                determined from the Min/Max values)
-				as well.
+      First, create a DefaultBoundedRangeModel.
+      This determines some characteristics of 
+      the Scrollbar.  Note that you can link
+      several ScollBars to the same 
+      DefaultBoundedRangeModel; this will
+      cause them to move at the same time.
 
-            Second, create the ScrollBar itself.
+      -.setMinimum(int): Determine a numeric
+      value for the beginning of the 
+      ScrollBar.  Note that the visible
+      size will be set separately.
+      -.setMaximum(int): Determine a numeric
+      value for the end of the 
+      ScrollBar. 
+      -.setValue(int):  Determine the 
+      initial location of the Bar on the
+      ScrollBar.  This is determined from
+      the Min/Max values.
+      -.setExtent(int): Determine the size
+      of the Bar on the ScrollBar as a 
+      fraction of the total size (which is 
+      determined from the Min/Max values)
+      as well.
 
-			-setOrientation(ENUM): Determine
-                the orientation of the ScrollBar.
-				Takes VERTICAL_ORIENTATION
-                and HORIZONTAL_ORIENTATION arguments.
-            -setUnitIncrement(int): Determines how
-                much the Scoller moves per click
-                on its end arrows.  References to the
-                Min/Max values as well.
-            -setBlockIncrement(int): Determine
-                how many units the ScrollBar moves 
-                when the "non-scroller" is clicked.
-                This references the Min/Max values
-                above as well (so if the Min/Max
-                range was 0 to 100, and this was 
-                100, then each click would move the
-                scoller to the opposite end).  It 
-                would also be impossible to directly
-                click the scroller to a middle location.
+      Second, create the ScrollBar itself.
 
-            Note that while in this tutorial both
-            ScrollBars use the same BoundedRangeModel
-            (which causes them to be linked), each 
-            ScrollBar individually has these last two 
-            settings uniquely set.  So while the 
-			Scrollers move together (because they
-			use the same Model), using each
-			will cause them to move at different
-			speeds due to these settings being
-			different.
+      -setOrientation(ENUM): Determine
+      the orientation of the ScrollBar.
+      Takes VERTICAL_ORIENTATION
+      and HORIZONTAL_ORIENTATION arguments.
+      -setUnitIncrement(int): Determines how
+      much the Scoller moves per click
+      on its end arrows.  References to the
+      Min/Max values as well.
+      -setBlockIncrement(int): Determine
+      how many units the ScrollBar moves 
+      when the "non-scroller" is clicked.
+      This references the Min/Max values
+      above as well (so if the Min/Max
+      range was 0 to 100, and this was 
+      100, then each click would move the
+      scoller to the opposite end).  It 
+      would also be impossible to directly
+      click the scroller to a middle location.
 
-    ******************************************************/    
-   
+      Note that while in this tutorial both
+      ScrollBars use the same BoundedRangeModel
+      (which causes them to be linked), each 
+      ScrollBar individually has these last two 
+      settings uniquely set.  So while the 
+      Scrollers move together (because they
+      use the same Model), using each
+      will cause them to move at different
+      speeds due to these settings being
+      different.
+
+     ******************************************************/    
+
     // Create a DefaultBoundedRangeModel
-    DefaultBoundedRangeModelPtr TheBoundedRangeModel = DefaultBoundedRangeModel::create();
+    DefaultBoundedRangeModelRefPtr TheBoundedRangeModel = DefaultBoundedRangeModel::create();
     TheBoundedRangeModel->setMinimum(10);
     TheBoundedRangeModel->setMaximum(100);
     TheBoundedRangeModel->setValue(10);
     TheBoundedRangeModel->setExtent(20);
 
-    ScrollBarPtr ExampleVerticalScrollBar = ScrollBar::create();
+    ScrollBarRefPtr ExampleVerticalScrollBar = ScrollBar::create();
     //ExampleScrollPanel->getHorizontalScrollBar()
-    beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::EnabledFieldMask | ScrollBar::UnitIncrementFieldMask | ScrollBar::BlockIncrementFieldMask | ScrollBar::RangeModelFieldMask);
-        ExampleVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
-        ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
-        ExampleVerticalScrollBar->setEnabled(false);
-        ExampleVerticalScrollBar->setUnitIncrement(10);
-        ExampleVerticalScrollBar->setBlockIncrement(100);
-        ExampleVerticalScrollBar->setRangeModel(TheBoundedRangeModel);
-	endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::EnabledFieldMask | ScrollBar::UnitIncrementFieldMask | ScrollBar::BlockIncrementFieldMask | ScrollBar::RangeModelFieldMask);
+    ExampleVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
+    ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
+    ExampleVerticalScrollBar->setEnabled(false);
+    ExampleVerticalScrollBar->setUnitIncrement(10);
+    ExampleVerticalScrollBar->setBlockIncrement(100);
+    ExampleVerticalScrollBar->setRangeModel(TheBoundedRangeModel);
 
-    ScrollBarPtr ExampleHorizontalScrollBar = ScrollBar::create();
-    beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::RangeModelFieldMask);
-        ExampleHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
-        ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
-        ExampleHorizontalScrollBar->setRangeModel(TheBoundedRangeModel);
-    endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask | ScrollBar::RangeModelFieldMask);
-    
-       
+    ScrollBarRefPtr ExampleHorizontalScrollBar = ScrollBar::create();
+    ExampleHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
+    ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
+    ExampleHorizontalScrollBar->setRangeModel(TheBoundedRangeModel);
+
+
     // Creates another DefaultBoundedRangeModel to use 
     // for separating the two ScrollBars from each other.
     // Make sure to comment out the addition of the 
     // previous setModel above.
-    
+
     /*
-    DefaultBoundedRangeModel TheBoundedRangeModel2;
-    TheBoundedRangeModel2.setMinimum(0);
-    TheBoundedRangeModel2.setMaximum(100);
-    TheBoundedRangeModel2.setValue(10);
-    TheBoundedRangeModel2.setExtent(20);
-    ExampleHorizontalScrollBar->setModel(&TheBoundedRangeModel2);
-    */
+       DefaultBoundedRangeModel TheBoundedRangeModel2;
+       TheBoundedRangeModel2.setMinimum(0);
+       TheBoundedRangeModel2.setMaximum(100);
+       TheBoundedRangeModel2.setValue(10);
+       TheBoundedRangeModel2.setExtent(20);
+       ExampleHorizontalScrollBar->setModel(&TheBoundedRangeModel2);
+       */
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleHorizontalScrollBar);
-       MainInternalWindow->getChildren().push_back(ExampleVerticalScrollBar);
-       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    MainInternalWindow->pushToChildren(ExampleHorizontalScrollBar);
+    MainInternalWindow->pushToChildren(ExampleVerticalScrollBar);
+    MainInternalWindow->pushToChildren(ExampleScrollPanel);
+    MainInternalWindow->setLayout(MainInternalWindowLayout);
+    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setDrawTitlebar(false);
+    MainInternalWindow->setResizable(false);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-        TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+    TutorialDrawingSurface->setGraphics(TutorialGraphics);
+    TutorialDrawingSurface->setEventProducer(TutorialWindow);
+
+    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
-            WinSize,
-            "01RubberBandCamera");
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
+                               WinSize,
+                               "27ScrollPanel");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 
@@ -361,47 +341,33 @@ int main(int argc, char **argv)
 }
 
 
-PanelPtr createPanelWithButtons(void)
+PanelRefPtr createPanelWithButtons(void)
 {
-	ButtonPtr PanelButton1 = Button::create();
-    ButtonPtr PanelButton2 = Button::create();
-    ButtonPtr PanelButton3 = Button::create();
-    ButtonPtr PanelButton4 = Button::create();
-    ButtonPtr PanelButton5 = Button::create();
-    ButtonPtr PanelButton6 = Button::create();
-    beginEditCP(PanelButton1, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-        PanelButton1->setText("This");
-    endEditCP(PanelButton1, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-    beginEditCP(PanelButton2, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-        PanelButton2->setText("is");
-    endEditCP(PanelButton2, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-    beginEditCP(PanelButton3, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-        PanelButton3->setText("a");
-    endEditCP(PanelButton3, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-    beginEditCP(PanelButton4, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-        PanelButton4->setText("sample");
-    endEditCP(PanelButton4, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-    beginEditCP(PanelButton5, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-        PanelButton5->setText("Scroll");
-    endEditCP(PanelButton5, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-    beginEditCP(PanelButton6, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-        PanelButton6->setText("Panel!");
-    endEditCP(PanelButton6, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+    ButtonRefPtr PanelButton1 = Button::create();
+    ButtonRefPtr PanelButton2 = Button::create();
+    ButtonRefPtr PanelButton3 = Button::create();
+    ButtonRefPtr PanelButton4 = Button::create();
+    ButtonRefPtr PanelButton5 = Button::create();
+    ButtonRefPtr PanelButton6 = Button::create();
+    PanelButton1->setText("This");
+    PanelButton2->setText("is");
+    PanelButton3->setText("a");
+    PanelButton4->setText("sample");
+    PanelButton5->setText("Scroll");
+    PanelButton6->setText("Panel!");
 
     // Create Panel to add Buttons to which will be inserted into 
     // the ScrollPanel itself
-    PanelPtr ScrollPanelInsertPanel = osg::Panel::create();
-    FlowLayoutPtr ScrollPanelInsertPanelLayout = osg::FlowLayout::create();
-	beginEditCP(ScrollPanelInsertPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-        ScrollPanelInsertPanel->setPreferredSize(Vec2f(100, 250 ));
-        ScrollPanelInsertPanel->getChildren().push_back(PanelButton1);
-        ScrollPanelInsertPanel->getChildren().push_back(PanelButton2);
-        ScrollPanelInsertPanel->getChildren().push_back(PanelButton3);
-        ScrollPanelInsertPanel->getChildren().push_back(PanelButton4);
-        ScrollPanelInsertPanel->getChildren().push_back(PanelButton5);
-        ScrollPanelInsertPanel->getChildren().push_back(PanelButton6);
-        ScrollPanelInsertPanel->setLayout(ScrollPanelInsertPanelLayout);
-    endEditCP(ScrollPanelInsertPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+    PanelRefPtr ScrollPanelInsertPanel = OSG::Panel::create();
+    FlowLayoutRefPtr ScrollPanelInsertPanelLayout = OSG::FlowLayout::create();
+    ScrollPanelInsertPanel->setPreferredSize(Vec2f(100, 250 ));
+    ScrollPanelInsertPanel->pushToChildren(PanelButton1);
+    ScrollPanelInsertPanel->pushToChildren(PanelButton2);
+    ScrollPanelInsertPanel->pushToChildren(PanelButton3);
+    ScrollPanelInsertPanel->pushToChildren(PanelButton4);
+    ScrollPanelInsertPanel->pushToChildren(PanelButton5);
+    ScrollPanelInsertPanel->pushToChildren(PanelButton6);
+    ScrollPanelInsertPanel->setLayout(ScrollPanelInsertPanelLayout);
 
     return ScrollPanelInsertPanel;
 }

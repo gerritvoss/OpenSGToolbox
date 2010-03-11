@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,60 +42,75 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 #include "OSGTabPanelBase.h"
-#include "Event/OSGFocusListener.h"
-#include "Models/SelectionModels/OSGSingleSelectionModel.h"
+#include "OSGFocusListener.h"
+#include "OSGSingleSelectionModel.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TabPanel class. See \ref 
-           PageUserInterfaceTabPanel for a description.
+/*! \brief TabPanel class. See \ref
+           PageContribUserInterfaceTabPanel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public FocusListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanel : public TabPanelBase, public FocusListener
 {
-  private:
-
-    typedef TabPanelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
-  public:
-	enum TabRotation {CLOCKWISE_0=0, CLOCKWISE_90=1, CLOCKWISE_180=2, CLOCKWISE_270=3};
-	enum TabPlacement {PLACEMENT_NORTH=0, PLACEMENT_EAST, PLACEMENT_SOUTH, PLACEMENT_WEST};
 
-	virtual void focusGained(const FocusEventPtr e);
-	virtual void focusLost(const FocusEventPtr e);
+  public:
+	enum TabRotation
+    {
+        CLOCKWISE_0   = 0,
+        CLOCKWISE_90  = 1,
+        CLOCKWISE_180 = 2,
+        CLOCKWISE_270 = 3
+    };
+
+	enum TabPlacement
+    {
+        PLACEMENT_NORTH = 0,
+        PLACEMENT_EAST  = 1,
+        PLACEMENT_SOUTH = 2,
+        PLACEMENT_WEST  = 3
+    };
+
+    typedef TabPanelBase Inherited;
+    typedef TabPanel     Self;
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
 
-	virtual void addTab(const ComponentPtr Tab, const ComponentPtr TabContent);
-	virtual void removeTab(const ComponentPtr Tab);
+	virtual void focusGained(const FocusEventUnrecPtr e);
+	virtual void focusLost(const FocusEventUnrecPtr e);
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+
+	virtual void addTab(const ComponentRefPtr Tab, const ComponentRefPtr TabContent);
+	virtual void removeTab(const ComponentRefPtr Tab);
 	virtual void removeTab(const UInt32 TabIndex);
 	virtual void removeAllTabs(void);
-	virtual void insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, const ComponentPtr TabContent);
-	virtual void insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const ComponentPtr TabContent);
+	virtual void insertTab(const ComponentRefPtr TabInsert, const ComponentRefPtr Tab, const ComponentRefPtr TabContent);
+	virtual void insertTab(const UInt32 TabIndex, const ComponentRefPtr Tab, const ComponentRefPtr TabContent);
     
     //Returns the currently selected component for this tabpanel.
-    ComponentPtr getSelectedComponent(void) const;
+    ComponentRefPtr getSelectedComponent(void) const;
 
     //Returns the currently selected index for this tabpanel.
     Int32 getSelectedIndex(void) const;
@@ -108,6 +123,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
     //Removes listener as a listener to changes in the model.
     void removeSelectionListener(SelectionListenerPtr listener);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TabPanelBase.
@@ -124,59 +140,71 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TabPanel(void); 
+    virtual ~TabPanel(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const TabPanel *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
     virtual void updateLayout(void);
 
 	//Mouse Events
-    virtual void mouseClicked(const MouseEventPtr e);
-    virtual void mouseEntered(const MouseEventPtr e);
-    virtual void mouseExited(const MouseEventPtr e);
-    virtual void mousePressed(const MouseEventPtr e);
-    virtual void mouseReleased(const MouseEventPtr e);
+    virtual void mouseClicked(const MouseEventUnrecPtr e);
+    virtual void mouseEntered(const MouseEventUnrecPtr e);
+    virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventPtr e);
-    virtual void mouseDragged(const MouseEventPtr e);
+    virtual void mouseMoved(const MouseEventUnrecPtr e);
+    virtual void mouseDragged(const MouseEventUnrecPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
 
-	void calculateTabBorderLengths(BorderPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
+	void calculateTabBorderLengths(BorderRefPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
 	void calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
 
-	void calculateContentBorderLengths(BorderPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
+	void calculateContentBorderLengths(BorderRefPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
 
-    virtual BorderPtr getDrawnTabBorder(const UInt32& Index) const;
-    virtual LayerPtr getDrawnTabBackground(const UInt32& Index) const;
-    virtual BorderPtr getDrawnContentBorder(void) const;
-    virtual LayerPtr getDrawnContentBackground(void) const;
+    virtual BorderRefPtr getDrawnTabBorder(const UInt32& Index) const;
+    virtual LayerRefPtr getDrawnTabBackground(const UInt32& Index) const;
+    virtual BorderRefPtr getDrawnContentBorder(void) const;
+    virtual LayerRefPtr getDrawnContentBackground(void) const;
 
 	Int32 _MouseInTabLastMouse;
     
 	class TabSelectionListener : public SelectionListener
 	{
 	public:
-		TabSelectionListener(TabPanelPtr TheTabPanel);
-        virtual void selectionChanged(const SelectionEventPtr e);
+		TabSelectionListener(TabPanelRefPtr TheTabPanel);
+        virtual void selectionChanged(const SelectionEventUnrecPtr e);
 	private:
-		TabPanelPtr _TabPanel;
+		TabPanelRefPtr _TabPanel;
 	};
 
 	friend class TabSelectionListener;
 
 	TabSelectionListener _TabSelectionListener;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TabPanelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TabPanel &source);
 };
 

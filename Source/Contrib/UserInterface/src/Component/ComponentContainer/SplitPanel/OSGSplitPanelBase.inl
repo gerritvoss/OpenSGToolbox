@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,300 +55,270 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SplitPanelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SplitPanelBase::getClassTypeId(void) 
+OSG::UInt32 SplitPanelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-SplitPanelPtr SplitPanelBase::create(void) 
-{
-    SplitPanelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SplitPanelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-SplitPanelPtr SplitPanelBase::createEmpty(void) 
-{ 
-    SplitPanelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 SplitPanelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SplitPanel::_sfMinComponent field.
-inline
-SFComponentPtr *SplitPanelBase::getSFMinComponent(void)
-{
-    return &_sfMinComponent;
-}
-
-//! Get the SplitPanel::_sfMaxComponent field.
-inline
-SFComponentPtr *SplitPanelBase::getSFMaxComponent(void)
-{
-    return &_sfMaxComponent;
-}
-
-//! Get the SplitPanel::_sfDividerSize field.
-inline
-SFUInt32 *SplitPanelBase::getSFDividerSize(void)
-{
-    return &_sfDividerSize;
-}
-
-//! Get the SplitPanel::_sfDividerPosition field.
-inline
-SFReal32 *SplitPanelBase::getSFDividerPosition(void)
-{
-    return &_sfDividerPosition;
-}
-
-//! Get the SplitPanel::_sfMinDividerPosition field.
-inline
-SFReal32 *SplitPanelBase::getSFMinDividerPosition(void)
-{
-    return &_sfMinDividerPosition;
-}
-
-//! Get the SplitPanel::_sfMaxDividerPosition field.
-inline
-SFReal32 *SplitPanelBase::getSFMaxDividerPosition(void)
-{
-    return &_sfMaxDividerPosition;
-}
-
-//! Get the SplitPanel::_sfDividerDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *SplitPanelBase::getSFDividerDrawObject(void)
-{
-    return &_sfDividerDrawObject;
-}
-
-//! Get the SplitPanel::_sfExpandable field.
-inline
-SFBool *SplitPanelBase::getSFExpandable(void)
-{
-    return &_sfExpandable;
-}
-
-//! Get the SplitPanel::_sfOrientation field.
-inline
-SFUInt32 *SplitPanelBase::getSFOrientation(void)
-{
-    return &_sfOrientation;
-}
-
 
 //! Get the value of the SplitPanel::_sfMinComponent field.
 inline
-ComponentPtr &SplitPanelBase::getMinComponent(void)
-{
-    return _sfMinComponent.getValue();
-}
-
-//! Get the value of the SplitPanel::_sfMinComponent field.
-inline
-const ComponentPtr &SplitPanelBase::getMinComponent(void) const
+Component * SplitPanelBase::getMinComponent(void) const
 {
     return _sfMinComponent.getValue();
 }
 
 //! Set the value of the SplitPanel::_sfMinComponent field.
 inline
-void SplitPanelBase::setMinComponent(const ComponentPtr &value)
+void SplitPanelBase::setMinComponent(Component * const value)
 {
+    editSField(MinComponentFieldMask);
+
     _sfMinComponent.setValue(value);
 }
 
 //! Get the value of the SplitPanel::_sfMaxComponent field.
 inline
-ComponentPtr &SplitPanelBase::getMaxComponent(void)
-{
-    return _sfMaxComponent.getValue();
-}
-
-//! Get the value of the SplitPanel::_sfMaxComponent field.
-inline
-const ComponentPtr &SplitPanelBase::getMaxComponent(void) const
+Component * SplitPanelBase::getMaxComponent(void) const
 {
     return _sfMaxComponent.getValue();
 }
 
 //! Set the value of the SplitPanel::_sfMaxComponent field.
 inline
-void SplitPanelBase::setMaxComponent(const ComponentPtr &value)
+void SplitPanelBase::setMaxComponent(Component * const value)
 {
+    editSField(MaxComponentFieldMask);
+
     _sfMaxComponent.setValue(value);
 }
-
 //! Get the value of the SplitPanel::_sfDividerSize field.
+
 inline
-UInt32 &SplitPanelBase::getDividerSize(void)
+UInt32 &SplitPanelBase::editDividerSize(void)
 {
+    editSField(DividerSizeFieldMask);
+
     return _sfDividerSize.getValue();
 }
 
 //! Get the value of the SplitPanel::_sfDividerSize field.
 inline
-const UInt32 &SplitPanelBase::getDividerSize(void) const
+      UInt32  SplitPanelBase::getDividerSize(void) const
 {
     return _sfDividerSize.getValue();
 }
 
 //! Set the value of the SplitPanel::_sfDividerSize field.
 inline
-void SplitPanelBase::setDividerSize(const UInt32 &value)
+void SplitPanelBase::setDividerSize(const UInt32 value)
 {
+    editSField(DividerSizeFieldMask);
+
     _sfDividerSize.setValue(value);
 }
-
 //! Get the value of the SplitPanel::_sfDividerPosition field.
+
 inline
-Real32 &SplitPanelBase::getDividerPosition(void)
+Real32 &SplitPanelBase::editDividerPosition(void)
 {
+    editSField(DividerPositionFieldMask);
+
     return _sfDividerPosition.getValue();
 }
 
 //! Get the value of the SplitPanel::_sfDividerPosition field.
 inline
-const Real32 &SplitPanelBase::getDividerPosition(void) const
+      Real32  SplitPanelBase::getDividerPosition(void) const
 {
     return _sfDividerPosition.getValue();
 }
 
 //! Set the value of the SplitPanel::_sfDividerPosition field.
 inline
-void SplitPanelBase::setDividerPosition(const Real32 &value)
+void SplitPanelBase::setDividerPosition(const Real32 value)
 {
+    editSField(DividerPositionFieldMask);
+
     _sfDividerPosition.setValue(value);
 }
-
 //! Get the value of the SplitPanel::_sfMinDividerPosition field.
+
 inline
-Real32 &SplitPanelBase::getMinDividerPosition(void)
+Real32 &SplitPanelBase::editMinDividerPosition(void)
 {
+    editSField(MinDividerPositionFieldMask);
+
     return _sfMinDividerPosition.getValue();
 }
 
 //! Get the value of the SplitPanel::_sfMinDividerPosition field.
 inline
-const Real32 &SplitPanelBase::getMinDividerPosition(void) const
+      Real32  SplitPanelBase::getMinDividerPosition(void) const
 {
     return _sfMinDividerPosition.getValue();
 }
 
 //! Set the value of the SplitPanel::_sfMinDividerPosition field.
 inline
-void SplitPanelBase::setMinDividerPosition(const Real32 &value)
+void SplitPanelBase::setMinDividerPosition(const Real32 value)
 {
+    editSField(MinDividerPositionFieldMask);
+
     _sfMinDividerPosition.setValue(value);
 }
-
 //! Get the value of the SplitPanel::_sfMaxDividerPosition field.
+
 inline
-Real32 &SplitPanelBase::getMaxDividerPosition(void)
+Real32 &SplitPanelBase::editMaxDividerPosition(void)
 {
+    editSField(MaxDividerPositionFieldMask);
+
     return _sfMaxDividerPosition.getValue();
 }
 
 //! Get the value of the SplitPanel::_sfMaxDividerPosition field.
 inline
-const Real32 &SplitPanelBase::getMaxDividerPosition(void) const
+      Real32  SplitPanelBase::getMaxDividerPosition(void) const
 {
     return _sfMaxDividerPosition.getValue();
 }
 
 //! Set the value of the SplitPanel::_sfMaxDividerPosition field.
 inline
-void SplitPanelBase::setMaxDividerPosition(const Real32 &value)
+void SplitPanelBase::setMaxDividerPosition(const Real32 value)
 {
+    editSField(MaxDividerPositionFieldMask);
+
     _sfMaxDividerPosition.setValue(value);
 }
 
 //! Get the value of the SplitPanel::_sfDividerDrawObject field.
 inline
-UIDrawObjectCanvasPtr &SplitPanelBase::getDividerDrawObject(void)
-{
-    return _sfDividerDrawObject.getValue();
-}
-
-//! Get the value of the SplitPanel::_sfDividerDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &SplitPanelBase::getDividerDrawObject(void) const
+UIDrawObjectCanvas * SplitPanelBase::getDividerDrawObject(void) const
 {
     return _sfDividerDrawObject.getValue();
 }
 
 //! Set the value of the SplitPanel::_sfDividerDrawObject field.
 inline
-void SplitPanelBase::setDividerDrawObject(const UIDrawObjectCanvasPtr &value)
+void SplitPanelBase::setDividerDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(DividerDrawObjectFieldMask);
+
     _sfDividerDrawObject.setValue(value);
 }
-
 //! Get the value of the SplitPanel::_sfExpandable field.
+
 inline
-bool &SplitPanelBase::getExpandable(void)
+bool &SplitPanelBase::editExpandable(void)
 {
+    editSField(ExpandableFieldMask);
+
     return _sfExpandable.getValue();
 }
 
 //! Get the value of the SplitPanel::_sfExpandable field.
 inline
-const bool &SplitPanelBase::getExpandable(void) const
+      bool  SplitPanelBase::getExpandable(void) const
 {
     return _sfExpandable.getValue();
 }
 
 //! Set the value of the SplitPanel::_sfExpandable field.
 inline
-void SplitPanelBase::setExpandable(const bool &value)
+void SplitPanelBase::setExpandable(const bool value)
 {
+    editSField(ExpandableFieldMask);
+
     _sfExpandable.setValue(value);
 }
-
 //! Get the value of the SplitPanel::_sfOrientation field.
+
 inline
-UInt32 &SplitPanelBase::getOrientation(void)
+UInt32 &SplitPanelBase::editOrientation(void)
 {
+    editSField(OrientationFieldMask);
+
     return _sfOrientation.getValue();
 }
 
 //! Get the value of the SplitPanel::_sfOrientation field.
 inline
-const UInt32 &SplitPanelBase::getOrientation(void) const
+      UInt32  SplitPanelBase::getOrientation(void) const
 {
     return _sfOrientation.getValue();
 }
 
 //! Set the value of the SplitPanel::_sfOrientation field.
 inline
-void SplitPanelBase::setOrientation(const UInt32 &value)
+void SplitPanelBase::setOrientation(const UInt32 value)
 {
+    editSField(OrientationFieldMask);
+
     _sfOrientation.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void SplitPanelBase::execSync (      SplitPanelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGSPLITPANELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (MinComponentFieldMask & whichField))
+        _sfMinComponent.syncWith(pFrom->_sfMinComponent);
+
+    if(FieldBits::NoField != (MaxComponentFieldMask & whichField))
+        _sfMaxComponent.syncWith(pFrom->_sfMaxComponent);
+
+    if(FieldBits::NoField != (DividerSizeFieldMask & whichField))
+        _sfDividerSize.syncWith(pFrom->_sfDividerSize);
+
+    if(FieldBits::NoField != (DividerPositionFieldMask & whichField))
+        _sfDividerPosition.syncWith(pFrom->_sfDividerPosition);
+
+    if(FieldBits::NoField != (MinDividerPositionFieldMask & whichField))
+        _sfMinDividerPosition.syncWith(pFrom->_sfMinDividerPosition);
+
+    if(FieldBits::NoField != (MaxDividerPositionFieldMask & whichField))
+        _sfMaxDividerPosition.syncWith(pFrom->_sfMaxDividerPosition);
+
+    if(FieldBits::NoField != (DividerDrawObjectFieldMask & whichField))
+        _sfDividerDrawObject.syncWith(pFrom->_sfDividerDrawObject);
+
+    if(FieldBits::NoField != (ExpandableFieldMask & whichField))
+        _sfExpandable.syncWith(pFrom->_sfExpandable);
+
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pFrom->_sfOrientation);
+}
+#endif
+
+
+inline
+const Char8 *SplitPanelBase::getClassname(void)
+{
+    return "SplitPanel";
+}
+OSG_GEN_CONTAINERPTR(SplitPanel);
+
+OSG_END_NAMESPACE
 

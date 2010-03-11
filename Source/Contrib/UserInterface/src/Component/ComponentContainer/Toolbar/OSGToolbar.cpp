@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGToolbar.h"
-#include "Component/Misc/OSGSeparator.h"
+#include "OSGSeparator.h"
 #include <deque>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Toolbar
-A UI Toolbar. 
-*/
+// Documentation for this class is emitted in the
+// OSGToolbarBase.cpp file.
+// To modify it, please change the .fcd file (OSGToolbar.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +64,13 @@ A UI Toolbar.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Toolbar::initMethod (void)
+void Toolbar::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -80,10 +80,8 @@ void Toolbar::initMethod (void)
 
 void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
 {
-	beginEditCP(BoxLayout::Ptr::dcast(getLayout()), BoxLayout::OrientationFieldMask);
-		BoxLayout::Ptr::dcast(getLayout())->setOrientation(TheOrientation);
-	endEditCP(BoxLayout::Ptr::dcast(getLayout()), BoxLayout::OrientationFieldMask);
-    
+    dynamic_pointer_cast<BoxLayout>(getLayout())->setOrientation(TheOrientation);
+
     Separator::Orientation Or;
     if(TheOrientation == BoxLayout::VERTICAL_ORIENTATION)
     {
@@ -94,13 +92,11 @@ void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
         Or = Separator::VERTICAL_ORIENTATION;
     }
 
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(getChildren()[i]->getType() == Separator::getClassType())
+        if(getChildren(i)->getType() == Separator::getClassType())
         {
-            beginEditCP(getChildren()[i], Separator::OrientationFieldMask);
-                Separator::Ptr::dcast(getChildren()[i])->setOrientation(Or);
-            endEditCP(getChildren()[i], Separator::OrientationFieldMask);
+            dynamic_pointer_cast<Separator>(getChildren(i))->setOrientation(Or);
         }
     }
 
@@ -109,29 +105,25 @@ void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
 
 BoxLayout::Orientation Toolbar::getOrientation(void) const
 {
-	return BoxLayout::Orientation(BoxLayout::Ptr::dcast(getLayout())->getOrientation());
+    return BoxLayout::Orientation(dynamic_pointer_cast<BoxLayout>(getLayout())->getOrientation());
 }
 
-void Toolbar::addTool(ComponentPtr TheTool)
+void Toolbar::addTool(ComponentRefPtr TheTool)
 {
     if(TheTool->getType() == Separator::getClassType())
     {
-        addSeparator(Separator::Ptr::dcast(TheTool));
+        addSeparator(dynamic_pointer_cast<Separator>(TheTool));
     }
 
-    beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
-        getChildren().push_back(TheTool);
-    endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+    pushToChildren(TheTool);
 }
 
-void Toolbar::removeTool(ComponentPtr TheTool)
+void Toolbar::removeTool(ComponentRefPtr TheTool)
 {
-    MFComponentPtr::iterator RemoveItor(getChildren().find(TheTool));
-    if(RemoveItor != getChildren().end())
+    MFComponentRefPtr::iterator RemoveItor(editMFChildren()->find(TheTool));
+    if(RemoveItor != editMFChildren()->end())
     {
-        beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
-            getChildren().erase(RemoveItor);
-        endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+        editMFChildren()->erase(RemoveItor);
     }
 }
 
@@ -139,11 +131,11 @@ void Toolbar::removeTool(const UInt32&  Index)
 {
     if(Index < getNumTools())
     {
-        MFComponentPtr::iterator RemoveItor(getChildren().begin());
+        MFComponentRefPtr::iterator RemoveItor(editMFChildren()->begin());
         UInt32 ToolCount(0);
-        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
-            if(getChildren()[i]->getType() != Separator::getClassType())
+            if(getChildren(i)->getType() != Separator::getClassType())
             {
                 ++ToolCount;
             }
@@ -154,18 +146,16 @@ void Toolbar::removeTool(const UInt32&  Index)
             ++RemoveItor;
         }
 
-        beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
-            getChildren().erase(RemoveItor);
-        endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+        editMFChildren()->erase(RemoveItor);
     }
 }
 
 void Toolbar::removeAllTools(void)
 {
     std::deque<UInt32> RemoveIndecies;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(getChildren()[i]->getType() != Separator::getClassType())
+        if(getChildren(i)->getType() != Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -178,8 +168,7 @@ void Toolbar::removeAllTools(void)
 
 void Toolbar::addSeparator(void)
 {
-    SeparatorPtr TheSeparator = Separator::create();
-    beginEditCP(TheSeparator, Separator::OrientationFieldMask);
+    SeparatorRefPtr TheSeparator = Separator::create();
     if(getOrientation() == BoxLayout::VERTICAL_ORIENTATION)
     {
         TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
@@ -188,16 +177,12 @@ void Toolbar::addSeparator(void)
     {
         TheSeparator->setOrientation(Separator::VERTICAL_ORIENTATION);
     }
-    endEditCP(TheSeparator, Separator::OrientationFieldMask);
 
-    beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
-        getChildren().push_back(TheSeparator);
-    endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+    pushToChildren(TheSeparator);
 }
 
-void Toolbar::addSeparator(SeparatorPtr TheSeparator)
+void Toolbar::addSeparator(SeparatorRefPtr TheSeparator)
 {
-    beginEditCP(TheSeparator, Separator::OrientationFieldMask);
     if(getOrientation() == BoxLayout::VERTICAL_ORIENTATION)
     {
         TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
@@ -206,22 +191,19 @@ void Toolbar::addSeparator(SeparatorPtr TheSeparator)
     {
         TheSeparator->setOrientation(Separator::VERTICAL_ORIENTATION);
     }
-    endEditCP(TheSeparator, Separator::OrientationFieldMask);
 
-    beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
-        getChildren().push_back(TheSeparator);
-    endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+    pushToChildren(TheSeparator);
 }
 
 void Toolbar::removeSeparator(const UInt32&  Index)
 {
     if(Index < getNumSeparators())
     {
-        MFComponentPtr::iterator RemoveItor(getChildren().begin());
+        MFComponentRefPtr::iterator RemoveItor(editMFChildren()->begin());
         UInt32 SeparatorCount(0);
-        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<editMFChildren()->size() ; ++i)
         {
-            if(getChildren()[i]->getType() == Separator::getClassType())
+            if(getChildren(i)->getType() == Separator::getClassType())
             {
                 ++SeparatorCount;
             }
@@ -232,29 +214,25 @@ void Toolbar::removeSeparator(const UInt32&  Index)
             ++RemoveItor;
         }
 
-        beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
-            getChildren().erase(RemoveItor);
-        endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+        editMFChildren()->erase(RemoveItor);
     }
 }
 
-void Toolbar::removeSeparator(SeparatorPtr TheSeparator)
+void Toolbar::removeSeparator(SeparatorRefPtr TheSeparator)
 {
-    MFComponentPtr::iterator RemoveItor(getChildren().find(TheSeparator));
-    if(RemoveItor != getChildren().end())
+    MFComponentRefPtr::iterator RemoveItor(editMFChildren()->find(TheSeparator));
+    if(RemoveItor != editMFChildren()->end())
     {
-        beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
-            getChildren().erase(RemoveItor);
-        endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+        editMFChildren()->erase(RemoveItor);
     }
 }
 
 void Toolbar::removeAllSeparators(void)
 {
     std::deque<UInt32> RemoveIndecies;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(getChildren()[i]->getType() == Separator::getClassType())
+        if(getChildren(i)->getType() == Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -268,9 +246,9 @@ void Toolbar::removeAllSeparators(void)
 UInt32 Toolbar::getNumSeparators(void) const
 {
     UInt32 NumSeparators(0);
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(getChildren()[i]->getType() == Separator::getClassType())
+        if(getChildren(i)->getType() == Separator::getClassType())
         {
             ++NumSeparators;
         }
@@ -284,20 +262,18 @@ void Toolbar::updateSeparatorSizes(void)
     getInsideInsetsBounds(InsideInsetsTopLeft, InsideInsetsBottomRight);
     Vec2f InsideInsetsSize(InsideInsetsBottomRight - InsideInsetsTopLeft);
 
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(getChildren()[i]->getType() == Separator::getClassType())
+        if(getChildren(i)->getType() == Separator::getClassType())
         {
-            beginEditCP(getChildren()[i], Separator::PreferredSizeFieldMask);
             if(getOrientation() == BoxLayout::HORIZONTAL_ORIENTATION)
             {
-                Separator::Ptr::dcast(getChildren()[i])->setPreferredSize(Vec2f(getChildren()[i]->getRequestedSize().x(), InsideInsetsSize.y()));
+                dynamic_pointer_cast<Separator>(getChildren(i))->setPreferredSize(Vec2f(getChildren(i)->getRequestedSize().x(), InsideInsetsSize.y()));
             }
             else
             {
-                Separator::Ptr::dcast(getChildren()[i])->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren()[i]->getRequestedSize().y()));
+                dynamic_pointer_cast<Separator>(getChildren(i))->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren(i)->getRequestedSize().y()));
             }
-            endEditCP(getChildren()[i], Separator::PreferredSizeFieldMask);
         }
     }
 }
@@ -306,21 +282,29 @@ void Toolbar::updateSeparatorSizes(void)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-BoxLayoutPtr Toolbar::createDefaultLayout(void) const
+void Toolbar::onCreate(const Toolbar * Id)
 {
-	BoxLayoutPtr TheLayout = BoxLayout::create();
-
-	beginEditCP(TheLayout);
-		TheLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
-		TheLayout->setMajorAxisAlignment(0.0f);
-		TheLayout->setMinorAxisAlignment(0.0f);
-		TheLayout->setComponentAlignment(0.0f);
-		TheLayout->setMajorAxisMinimumGap(2);
-		TheLayout->setMajorAxisMaximumGap(2);
-	endEditCP(TheLayout);
-
-	return TheLayout;
+    setLayout(createDefaultLayout());
 }
+
+void Toolbar::onDestroy()
+{
+}
+
+BoxLayoutRefPtr Toolbar::createDefaultLayout(void) const
+{
+    BoxLayoutRefPtr TheLayout = BoxLayout::create();
+
+    TheLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
+    TheLayout->setMajorAxisAlignment(0.0f);
+    TheLayout->setMinorAxisAlignment(0.0f);
+    TheLayout->setComponentAlignment(0.0f);
+    TheLayout->setMajorAxisMinimumGap(2);
+    TheLayout->setMajorAxisMaximumGap(2);
+
+    return TheLayout;
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 Toolbar::Toolbar(void) :
@@ -331,9 +315,6 @@ Toolbar::Toolbar(void) :
 Toolbar::Toolbar(const Toolbar &source) :
     Inherited(source)
 {
-	beginEditCP(ToolbarPtr(this), Toolbar::LayoutFieldMask);
-		setLayout(createDefaultLayout());
-	endEditCP(ToolbarPtr(this), Toolbar::LayoutFieldMask);
 }
 
 Toolbar::~Toolbar(void)
@@ -342,9 +323,11 @@ Toolbar::~Toolbar(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void Toolbar::changed(BitVector whichField, UInt32 origin)
+void Toolbar::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & SizeFieldMask)
     {
@@ -352,36 +335,10 @@ void Toolbar::changed(BitVector whichField, UInt32 origin)
     }
 }
 
-void Toolbar::dump(      UInt32    , 
+void Toolbar::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Toolbar NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTOOLBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTOOLBARBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTOOLBARFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

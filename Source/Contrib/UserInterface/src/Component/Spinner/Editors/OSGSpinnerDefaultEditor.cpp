@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSpinnerDefaultEditor.h"
-#include "Component/Spinner/OSGSpinner.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OSGSpinner.h"
+#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SpinnerDefaultEditor
-A UI SpinnerDefaultEditor. 	
-*/
+// Documentation for this class is emitted in the
+// OSGSpinnerDefaultEditorBase.cpp file.
+// To modify it, please change the .fcd file (OSGSpinnerDefaultEditor.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +64,13 @@ A UI SpinnerDefaultEditor.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SpinnerDefaultEditor::initMethod (void)
+void SpinnerDefaultEditor::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -80,114 +80,112 @@ void SpinnerDefaultEditor::initMethod (void)
 
 void SpinnerDefaultEditor::updateLayout(void)
 {
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        beginEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
-            getChildren()[i]->setPosition(Pnt2f(0,0));
-            getChildren()[i]->setSize(getSize());
-        endEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
+        getChildren(i)->setPosition(Pnt2f(0,0));
+        getChildren(i)->setSize(getSize());
     }
 }
 
 void SpinnerDefaultEditor::commitEdit(void)
 {
-	try
-	{
-		getSpinner()->getModel()->setValue(getTextField()->getText());
-	}
-	catch(IllegalArgumentException&)
-	{
-		//Reset to the old value
-		beginEditCP(getTextField(), TextField::TextFieldMask);
-			std::string NewValue;
-            try
-            {
-                getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
-            }
-            catch(boost::bad_any_cast &)
-            {
-				getTextField()->setText("");
-            }
-		endEditCP(getTextField(), TextField::TextFieldMask);
-	}
-}
-
-void SpinnerDefaultEditor::cancelEdit(void)
-{
-	//Reset to the old value
-	beginEditCP(getTextField(), TextField::TextFieldMask);
-		std::string NewValue;
+    try
+    {
+        getSpinner()->getModel()->setValue(getTextField()->getText());
+    }
+    catch(IllegalArgumentException&)
+    {
+        //Reset to the old value
+        std::string NewValue;
         try
         {
             getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
         }
         catch(boost::bad_any_cast &)
         {
-			getTextField()->setText("");
+            getTextField()->setText("");
         }
-	endEditCP(getTextField(), TextField::TextFieldMask);
+    }
 }
 
-void SpinnerDefaultEditor::dismiss(SpinnerPtr spinner)
+void SpinnerDefaultEditor::cancelEdit(void)
 {
-    if(getSpinner() != NullFC)
+    //Reset to the old value
+    std::string NewValue;
+    try
+    {
+        getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+    }
+    catch(boost::bad_any_cast &)
+    {
+        getTextField()->setText("");
+    }
+}
+
+void SpinnerDefaultEditor::dismiss(SpinnerRefPtr spinner)
+{
+    if(getSpinner() != NULL)
     {
         getSpinner()->removeChangeListener(this);
     }
 }
 
-void SpinnerDefaultEditor::stateChanged(const ChangeEventPtr e)
+void SpinnerDefaultEditor::stateChanged(const ChangeEventUnrecPtr e)
 {
     //Update the Value of the TextField
-	beginEditCP(getTextField(), TextField::TextFieldMask);
-		std::string NewValue;
-        try
-        {
-            getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
-        }
-        catch(boost::bad_any_cast &)
-        {
-			getTextField()->setText("");
-        }
-	endEditCP(getTextField(), TextField::TextFieldMask);
+    std::string NewValue;
+    try
+    {
+        getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+    }
+    catch(boost::bad_any_cast &)
+    {
+        getTextField()->setText("");
+    }
 }
 
 void SpinnerDefaultEditor::setEditable(bool Editable)
 {
-    beginEditCP(getTextField(), TextField::EditableFieldMask);
-        getTextField()->setEditable(Editable);
-    endEditCP(getTextField(), TextField::EditableFieldMask);
+    getTextField()->setEditable(Editable);
 }
 
 bool SpinnerDefaultEditor::getEditable(void) const
 {
-	return getTextField()->getEditable();
+    return getTextField()->getEditable();
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void SpinnerDefaultEditor::onCreate(const SpinnerDefaultEditor * Id)
+{
+    if(Id != NULL &&
+       Id->getTextField() != NULL)
+    {
+        FieldContainerUnrecPtr TheFC(Id->getTextField()->shallowCopy());
+
+        setTextField(dynamic_pointer_cast<TextField>(TheFC));
+        
+    }
+}
+
+void SpinnerDefaultEditor::onDestroy()
+{
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 SpinnerDefaultEditor::SpinnerDefaultEditor(void) :
     Inherited(),
-		_EditorTextFieldListener(SpinnerDefaultEditorPtr(this))
+		_EditorTextFieldListener(this)
 {
 }
 
 SpinnerDefaultEditor::SpinnerDefaultEditor(const SpinnerDefaultEditor &source) :
     Inherited(source),
-		_EditorTextFieldListener(SpinnerDefaultEditorPtr(this))
+		_EditorTextFieldListener(this)
 {
-    if(getTextField() != NullFC)
-    {
-        beginEditCP(SpinnerDefaultEditorPtr(this), TextFieldFieldMask);
-
-        setTextField(TextField::Ptr::dcast(getTextField()->shallowCopy()));
-        
-        endEditCP(SpinnerDefaultEditorPtr(this), TextFieldFieldMask);
-    }
 }
 
 SpinnerDefaultEditor::~SpinnerDefaultEditor(void)
@@ -196,16 +194,17 @@ SpinnerDefaultEditor::~SpinnerDefaultEditor(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SpinnerDefaultEditor::changed(BitVector whichField, UInt32 origin)
+void SpinnerDefaultEditor::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
-    if(whichField & SpinnerFieldMask && getSpinner() != NullFC)
+    if(whichField & SpinnerFieldMask && getSpinner() != NULL)
     {
         getSpinner()->addChangeListener(this);
         
         //Update the Value of the TextField
-	    beginEditCP(getTextField(), TextField::TextFieldMask);
 		    std::string NewValue;
             try
             {
@@ -215,75 +214,48 @@ void SpinnerDefaultEditor::changed(BitVector whichField, UInt32 origin)
             {
 			    getTextField()->setText("");
             }
-	    endEditCP(getTextField(), TextField::TextFieldMask);
     }
 
     if(whichField & TextFieldFieldMask)
     {
-        beginEditCP(SpinnerDefaultEditorPtr(this), ChildrenFieldMask);
-            getChildren().clear();
-            if(getTextField() != NullFC)
+            clearChildren();
+            if(getTextField() != NULL)
             {
-                getChildren().push_back(getTextField());
+                pushToChildren(getTextField());
 				getTextField()->addActionListener(&_EditorTextFieldListener);
 				getTextField()->addFocusListener(&_EditorTextFieldListener);
 				getTextField()->addKeyListener(&_EditorTextFieldListener);
             }
-        endEditCP(SpinnerDefaultEditorPtr(this), ChildrenFieldMask);
     }
 }
 
-void SpinnerDefaultEditor::dump(      UInt32    , 
+void SpinnerDefaultEditor::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SpinnerDefaultEditor NI" << std::endl;
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::actionPerformed(const ActionEventPtr e)
+void SpinnerDefaultEditor::EditorTextFieldListener::actionPerformed(const ActionEventUnrecPtr e)
 {
 	_SpinnerDefaultEditor->commitEdit();
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::focusGained(const FocusEventPtr e)
+void SpinnerDefaultEditor::EditorTextFieldListener::focusGained(const FocusEventUnrecPtr e)
 {
 	//Do Nothing
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::focusLost(const FocusEventPtr e)
+void SpinnerDefaultEditor::EditorTextFieldListener::focusLost(const FocusEventUnrecPtr e)
 {
 	_SpinnerDefaultEditor->commitEdit();
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::keyPressed(const KeyEventPtr e)
+void SpinnerDefaultEditor::EditorTextFieldListener::keyPressed(const KeyEventUnrecPtr e)
 {
 	if(e->getKey() == KeyEvent::KEY_ESCAPE)
 	{
 		_SpinnerDefaultEditor->cancelEdit();
 	}
 }
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSPINNERDEFAULTEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSPINNERDEFAULTEDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSPINNERDEFAULTEDITORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
-

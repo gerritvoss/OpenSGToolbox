@@ -43,8 +43,8 @@
 #pragma once
 #endif
  
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGAbstractSpinnerModel.h"
 
@@ -58,28 +58,28 @@ static std::string getNumberSpinnerModelClassModelName(void);
 template<class NumberTypeT>
 class NumberSpinnerModel : public AbstractSpinnerModel
 {
-public:
+  public:
     typedef NumberTypeT NumberType;
 
     typedef AbstractSpinnerModel Inherited;
 
     NumberSpinnerModel(void);
     NumberSpinnerModel(const NumberType& value);
-    
+
     //Return the object in the sequence that comes after the object returned by getValue().
     virtual boost::any getNextValue(void);
-    
+
     //Return the object in the sequence that comes before the object returned by getValue().
     virtual boost::any getPreviousValue(void);
-    
+
     //The current element of the sequence.
     virtual boost::any getValue(void);
-    
+
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner
     virtual void setValue(const boost::any& value);
-    
+
     virtual void setValue(const std::string& value);
-    
+
     //Returns the last number in the sequence.
     NumberType getMaximum(void) const;
 
@@ -101,10 +101,10 @@ public:
     //Changes the size of the value change computed by the getNextValue and getPreviousValue methods.
     void setStepSize(const NumberType& stepSize);
 
-	virtual std::string getModelName(void) const;
+    virtual std::string getModelName(void) const;
 
 
-protected:
+  protected:
     boost::any _Value;
     NumberType _Maximum;
     NumberType _Minimum;
@@ -112,40 +112,40 @@ protected:
 };
 
 typedef NumberSpinnerModel<Int8> Int8SpinnerModel;
-typedef boost::intrusive_ptr<Int8SpinnerModel> Int8SpinnerModelPtr;
+typedef boost::shared_ptr<Int8SpinnerModel> Int8SpinnerModelPtr;
 
 typedef NumberSpinnerModel<Int16> Int16SpinnerModel;
-typedef boost::intrusive_ptr<Int16SpinnerModel> Int16SpinnerModelPtr;
+typedef boost::shared_ptr<Int16SpinnerModel> Int16SpinnerModelPtr;
 
 typedef NumberSpinnerModel<Int32> Int32SpinnerModel;
-typedef boost::intrusive_ptr<Int32SpinnerModel> Int32SpinnerModelPtr;
+typedef boost::shared_ptr<Int32SpinnerModel> Int32SpinnerModelPtr;
 
 typedef NumberSpinnerModel<Int64> Int64SpinnerModel;
-typedef boost::intrusive_ptr<Int64SpinnerModel> Int64SpinnerModelPtr;
+typedef boost::shared_ptr<Int64SpinnerModel> Int64SpinnerModelPtr;
 
 typedef NumberSpinnerModel<UInt8> UInt8SpinnerModel;
-typedef boost::intrusive_ptr<UInt8SpinnerModel> UInt8SpinnerModelPtr;
+typedef boost::shared_ptr<UInt8SpinnerModel> UInt8SpinnerModelPtr;
 
 typedef NumberSpinnerModel<UInt16> UInt16SpinnerModel;
-typedef boost::intrusive_ptr<UInt16SpinnerModel> UInt16SpinnerModelPtr;
+typedef boost::shared_ptr<UInt16SpinnerModel> UInt16SpinnerModelPtr;
 
 typedef NumberSpinnerModel<UInt32> UInt32SpinnerModel;
-typedef boost::intrusive_ptr<UInt32SpinnerModel> UInt32SpinnerModelPtr;
+typedef boost::shared_ptr<UInt32SpinnerModel> UInt32SpinnerModelPtr;
 
 typedef NumberSpinnerModel<UInt64> UInt64SpinnerModel;
-typedef boost::intrusive_ptr<UInt64SpinnerModel> UInt64SpinnerModelPtr;
+typedef boost::shared_ptr<UInt64SpinnerModel> UInt64SpinnerModelPtr;
 
 typedef NumberSpinnerModel<Real16> Real16SpinnerModel;
-typedef boost::intrusive_ptr<Real16SpinnerModel> Real16SpinnerModelPtr;
+typedef boost::shared_ptr<Real16SpinnerModel> Real16SpinnerModelPtr;
 
 typedef NumberSpinnerModel<Real32> Real32SpinnerModel;
-typedef boost::intrusive_ptr<Real32SpinnerModel> Real32SpinnerModelPtr;
+typedef boost::shared_ptr<Real32SpinnerModel> Real32SpinnerModelPtr;
 
 typedef NumberSpinnerModel<Real64> Real64SpinnerModel;
-typedef boost::intrusive_ptr<Real64SpinnerModel> Real64SpinnerModelPtr;
+typedef boost::shared_ptr<Real64SpinnerModel> Real64SpinnerModelPtr;
 
 typedef NumberSpinnerModel<Real128> Real128SpinnerModel;
-typedef boost::intrusive_ptr<Real128SpinnerModel> Real128SpinnerModelPtr;
+typedef boost::shared_ptr<Real128SpinnerModel> Real128SpinnerModelPtr;
 
 OSG_END_NAMESPACE
 

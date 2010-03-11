@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,40 +42,40 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSpinnerEditorBase.h"
-#include "Component/Spinner/OSGSpinnerFields.h"
+#include "OSGSpinnerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SpinnerEditor class. See \ref 
-           PageUserInterfaceSpinnerEditor for a description.
+/*! \brief SpinnerEditor class. See \ref
+           PageContribUserInterfaceSpinnerEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpinnerEditor : public SpinnerEditorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerEditor : public SpinnerEditorBase
 {
-  private:
-
-    typedef SpinnerEditorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SpinnerEditorBase Inherited;
+    typedef SpinnerEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -87,15 +87,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerEditor : public SpinnerEditorBase
     virtual void cancelEdit(void) = 0;
 
     //Disconnect this editor from the specified JSpinner.
-    virtual void dismiss(SpinnerPtr spinner) = 0;
+    virtual void dismiss(SpinnerRefPtr spinner) = 0;
 
 	//Set whether or not this Editor is Editable
 	virtual void setEditable(bool Editable) = 0;
 
 	//Get whether or not this Editor is Editable
 	virtual bool getEditable(void) const = 0;
-
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SpinnerEditorBase.
@@ -112,20 +112,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerEditor : public SpinnerEditorBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SpinnerEditor(void); 
+    virtual ~SpinnerEditor(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SpinnerEditorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SpinnerEditor &source);
 };
 
@@ -135,7 +139,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSpinnerEditorBase.inl"
 #include "OSGSpinnerEditor.inl"
-
-#define OSGSPINNEREDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSPINNEREDITOR_H_ */

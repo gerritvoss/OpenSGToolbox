@@ -43,18 +43,17 @@
 #pragma once
 #endif
  
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 #include <boost/any.hpp>
-#include "Event/OSGChangeListener.h"
+#include <boost/shared_ptr.hpp>
+#include "OSGChangeListener.h"
 
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
-	  
-class OSG_USERINTERFACELIB_DLLMAPPING IllegalArgumentException : public std::exception
+
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING IllegalArgumentException : public std::exception
 {
     virtual const char* what() const throw()
     {
@@ -62,43 +61,43 @@ class OSG_USERINTERFACELIB_DLLMAPPING IllegalArgumentException : public std::exc
     }
 };
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpinnerModel : public IntrusivePtrImplBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerModel
 {
-private:
-protected:
-public:
+  private:
+  protected:
+  public:
 
     //Adds a ChangeListener to the model's listener list.
     virtual EventConnection addChangeListener(ChangeListenerPtr l) = 0;
-	virtual bool isChangeListenerAttached(ChangeListenerPtr l) const = 0;
-    
+    virtual bool isChangeListenerAttached(ChangeListenerPtr l) const = 0;
+
     //Removes a ChangeListener from the model's listener list.
     virtual void removeChangeListener(ChangeListenerPtr l) = 0;
-    
+
     //Return the object in the sequence that comes after the object returned by getValue().
     virtual boost::any getNextValue(void) = 0;
-    
+
     //Return the object in the sequence that comes before the object returned by getValue().
     virtual boost::any getPreviousValue(void) = 0;
-    
+
     //The current element of the sequence.
     virtual boost::any getValue(void) = 0;
-    
+
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
     virtual void setValue(const boost::any& value) = 0;
 
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
     virtual void setValue(const std::string& value) = 0;
 
-	virtual std::string getModelName(void) const = 0;
+    virtual std::string getModelName(void) const = 0;
 };
 
-typedef boost::intrusive_ptr<SpinnerModel> SpinnerModelPtr;
+typedef boost::shared_ptr<SpinnerModel> SpinnerModelPtr;
 
 
-SpinnerModelPtr OSG_USERINTERFACELIB_DLLMAPPING createDefaultNumberSpinnerModel(const DataType& TheType);
+SpinnerModelPtr OSG_CONTRIBUSERINTERFACE_DLLMAPPING createDefaultNumberSpinnerModel(const DataType& TheType);
 
-SpinnerModelPtr OSG_USERINTERFACELIB_DLLMAPPING createDefaultNumberSpinnerModel(Field*  TheField);
+SpinnerModelPtr OSG_CONTRIBUSERINTERFACE_DLLMAPPING createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle);
 
 OSG_END_NAMESPACE
 

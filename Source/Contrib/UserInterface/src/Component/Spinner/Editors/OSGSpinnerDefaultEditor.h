@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSpinnerDefaultEditorBase.h"
-#include "Event/OSGChangeListener.h"
-#include "Event/OSGActionListener.h"
-#include "Event/OSGFocusListener.h"
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGChangeListener.h"
+#include "OSGActionListener.h"
+#include "OSGFocusListener.h"
+#include "OSGKeyAdapter.h"
+#include "OSGTextField.h"
+#include "OSGSpinner.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SpinnerDefaultEditor class. See \ref 
-           PageUserInterfaceSpinnerDefaultEditor for a description.
+/*! \brief SpinnerDefaultEditor class. See \ref
+           PageContribUserInterfaceSpinnerDefaultEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefaultEditorBase,
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefaultEditorBase,
     public ChangeListener
-{
-  private:
 
-    typedef SpinnerDefaultEditorBase Inherited;
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
     friend class LookAndFeel;
+
+    typedef SpinnerDefaultEditorBase Inherited;
+    typedef SpinnerDefaultEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -93,21 +96,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefau
     virtual void cancelEdit(void);
 
     //Disconnect this editor from the specified JSpinner.
-    virtual void dismiss(SpinnerPtr spinner);
+    virtual void dismiss(SpinnerRefPtr spinner);
 
     //Called by the JTextField PropertyChangeListener.
     //void propertyChange(PropertyChangeEvent e);
 
     //This method is called when the spinner's model's state changes.
-    virtual void stateChanged(const ChangeEventPtr e);
+    virtual void stateChanged(const ChangeEventUnrecPtr e);
 	
 	//Set whether or not this Editor is Editable
 	virtual void setEditable(bool Editable);
 
 	//Get whether or not this Editor is Editable
 	virtual bool getEditable(void) const;
-	
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SpinnerDefaultEditorBase.
@@ -124,37 +127,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefau
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SpinnerDefaultEditor(void); 
+    virtual ~SpinnerDefaultEditor(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const SpinnerDefaultEditor *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+
     //Min Button Action Listener
-	class EditorTextFieldListener : public ActionListener, public FocusListener, public KeyAdapter
-	{
-	public:
-		EditorTextFieldListener(SpinnerDefaultEditorPtr TheSpinnerDefaultEditor);
-        virtual void actionPerformed(const ActionEventPtr e);
-		virtual void focusGained(const FocusEventPtr e);
-		virtual void focusLost(const FocusEventPtr e);
-		virtual void keyPressed(const KeyEventPtr e);
-	private:
-		SpinnerDefaultEditorPtr _SpinnerDefaultEditor;
-	};
+    class EditorTextFieldListener : public ActionListener, public FocusListener, public KeyAdapter
+    {
+      public:
+        EditorTextFieldListener(SpinnerDefaultEditorRefPtr TheSpinnerDefaultEditor);
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
+        virtual void focusGained(const FocusEventUnrecPtr e);
+        virtual void focusLost(const FocusEventUnrecPtr e);
+        virtual void keyPressed(const KeyEventUnrecPtr e);
+      private:
+        SpinnerDefaultEditorRefPtr _SpinnerDefaultEditor;
+    };
 
-	friend class EditorTextFieldListener;
+    friend class EditorTextFieldListener;
 
-	EditorTextFieldListener _EditorTextFieldListener;
-
+    EditorTextFieldListener _EditorTextFieldListener;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SpinnerDefaultEditorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SpinnerDefaultEditor &source);
 };
 
@@ -164,7 +178,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSpinnerDefaultEditorBase.inl"
 #include "OSGSpinnerDefaultEditor.inl"
-
-#define OSGSPINNERDEFAULTEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSPINNERDEFAULTEDITOR_H_ */

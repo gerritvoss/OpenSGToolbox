@@ -1539,89 +1539,91 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_OSG__Camera swig_types[10]
 #define SWIGTYPE_p_OSG__CameraRefPtr swig_types[11]
 #define SWIGTYPE_p_OSG__Color4f swig_types[12]
-#define SWIGTYPE_p_OSG__Distribution1D swig_types[13]
-#define SWIGTYPE_p_OSG__Distribution1DRefPtr swig_types[14]
-#define SWIGTYPE_p_OSG__Distribution2D swig_types[15]
-#define SWIGTYPE_p_OSG__Distribution2DRefPtr swig_types[16]
-#define SWIGTYPE_p_OSG__Distribution3D swig_types[17]
-#define SWIGTYPE_p_OSG__Distribution3DRefPtr swig_types[18]
-#define SWIGTYPE_p_OSG__EventProducer swig_types[19]
-#define SWIGTYPE_p_OSG__FieldContainer swig_types[20]
-#define SWIGTYPE_p_OSG__FieldContainerRefPtr swig_types[21]
-#define SWIGTYPE_p_OSG__FieldContainerType swig_types[22]
-#define SWIGTYPE_p_OSG__FrustumVolume swig_types[23]
-#define SWIGTYPE_p_OSG__Geometry swig_types[24]
-#define SWIGTYPE_p_OSG__GeometryRefPtr swig_types[25]
-#define SWIGTYPE_p_OSG__Image swig_types[26]
-#define SWIGTYPE_p_OSG__ImageRefPtr swig_types[27]
-#define SWIGTYPE_p_OSG__KeyEvent swig_types[28]
-#define SWIGTYPE_p_OSG__Line swig_types[29]
-#define SWIGTYPE_p_OSG__Matrix swig_types[30]
-#define SWIGTYPE_p_OSG__Node swig_types[31]
-#define SWIGTYPE_p_OSG__NodeCore swig_types[32]
-#define SWIGTYPE_p_OSG__NodeCoreRefPtr swig_types[33]
-#define SWIGTYPE_p_OSG__NodeRefPtr swig_types[34]
-#define SWIGTYPE_p_OSG__ParticleSystem swig_types[35]
-#define SWIGTYPE_p_OSG__ParticleSystemRefPtr swig_types[36]
-#define SWIGTYPE_p_OSG__PhysicsBody swig_types[37]
-#define SWIGTYPE_p_OSG__PhysicsBodyRefPtr swig_types[38]
-#define SWIGTYPE_p_OSG__PhysicsHandler swig_types[39]
-#define SWIGTYPE_p_OSG__PhysicsHandlerRefPtr swig_types[40]
-#define SWIGTYPE_p_OSG__PhysicsSpace swig_types[41]
-#define SWIGTYPE_p_OSG__PhysicsSpaceRefPtr swig_types[42]
-#define SWIGTYPE_p_OSG__PhysicsWorld swig_types[43]
-#define SWIGTYPE_p_OSG__PhysicsWorldRefPtr swig_types[44]
-#define SWIGTYPE_p_OSG__Pnt2f swig_types[45]
-#define SWIGTYPE_p_OSG__Pnt3f swig_types[46]
-#define SWIGTYPE_p_OSG__Sound swig_types[47]
-#define SWIGTYPE_p_OSG__SoundGroup swig_types[48]
-#define SWIGTYPE_p_OSG__SoundGroupRefPtr swig_types[49]
-#define SWIGTYPE_p_OSG__SoundManager swig_types[50]
-#define SWIGTYPE_p_OSG__SoundRefPtr swig_types[51]
-#define SWIGTYPE_p_OSG__TextureObjChunk swig_types[52]
-#define SWIGTYPE_p_OSG__TextureObjChunkRefPtr swig_types[53]
-#define SWIGTYPE_p_OSG__Vec2f swig_types[54]
-#define SWIGTYPE_p_OSG__Vec3f swig_types[55]
-#define SWIGTYPE_p_OSG__VideoManager swig_types[56]
-#define SWIGTYPE_p_OSG__VideoWrapper swig_types[57]
-#define SWIGTYPE_p_OSG__VideoWrapperRefPtr swig_types[58]
-#define SWIGTYPE_p_OSG__Viewport swig_types[59]
-#define SWIGTYPE_p_OSG__ViewportRefPtr swig_types[60]
-#define SWIGTYPE_p_OSG__Volume swig_types[61]
-#define SWIGTYPE_p_OSG__WindowEventProducer swig_types[62]
-#define SWIGTYPE_p_OSG__WindowEventProducerRefPtr swig_types[63]
-#define SWIGTYPE_p_ParentContainer swig_types[64]
-#define SWIGTYPE_p_PlaneSet swig_types[65]
-#define SWIGTYPE_p_PointType swig_types[66]
-#define SWIGTYPE_p_PointType3f swig_types[67]
-#define SWIGTYPE_p_QuaternionType swig_types[68]
-#define SWIGTYPE_p_SFCoreType swig_types[69]
-#define SWIGTYPE_p_SFParentType swig_types[70]
-#define SWIGTYPE_p_SFTravMaskType swig_types[71]
-#define SWIGTYPE_p_SFVolumeType swig_types[72]
-#define SWIGTYPE_p_TypeObject swig_types[73]
-#define SWIGTYPE_p_ValueType swig_types[74]
-#define SWIGTYPE_p_VectorType swig_types[75]
-#define SWIGTYPE_p_VectorType3f swig_types[76]
-#define SWIGTYPE_p_VolumeType swig_types[77]
-#define SWIGTYPE_p_char swig_types[78]
-#define SWIGTYPE_p_difference_type swig_types[79]
-#define SWIGTYPE_p_double swig_types[80]
-#define SWIGTYPE_p_float swig_types[81]
-#define SWIGTYPE_p_int swig_types[82]
-#define SWIGTYPE_p_key_type swig_types[83]
-#define SWIGTYPE_p_long swig_types[84]
-#define SWIGTYPE_p_long_double swig_types[85]
-#define SWIGTYPE_p_mapped_type swig_types[86]
-#define SWIGTYPE_p_signed_char swig_types[87]
-#define SWIGTYPE_p_size_type swig_types[88]
-#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[89]
-#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[90]
-#define SWIGTYPE_p_unsigned_char swig_types[91]
-#define SWIGTYPE_p_unsigned_int swig_types[92]
-#define SWIGTYPE_p_unsigned_long swig_types[93]
-static swig_type_info *swig_types[95];
-static swig_module_info swig_module = {swig_types, 94, 0, 0, 0, 0};
+#define SWIGTYPE_p_OSG__Component swig_types[13]
+#define SWIGTYPE_p_OSG__ComponentRefPtr swig_types[14]
+#define SWIGTYPE_p_OSG__Distribution1D swig_types[15]
+#define SWIGTYPE_p_OSG__Distribution1DRefPtr swig_types[16]
+#define SWIGTYPE_p_OSG__Distribution2D swig_types[17]
+#define SWIGTYPE_p_OSG__Distribution2DRefPtr swig_types[18]
+#define SWIGTYPE_p_OSG__Distribution3D swig_types[19]
+#define SWIGTYPE_p_OSG__Distribution3DRefPtr swig_types[20]
+#define SWIGTYPE_p_OSG__EventProducer swig_types[21]
+#define SWIGTYPE_p_OSG__FieldContainer swig_types[22]
+#define SWIGTYPE_p_OSG__FieldContainerRefPtr swig_types[23]
+#define SWIGTYPE_p_OSG__FieldContainerType swig_types[24]
+#define SWIGTYPE_p_OSG__FrustumVolume swig_types[25]
+#define SWIGTYPE_p_OSG__Geometry swig_types[26]
+#define SWIGTYPE_p_OSG__GeometryRefPtr swig_types[27]
+#define SWIGTYPE_p_OSG__Image swig_types[28]
+#define SWIGTYPE_p_OSG__ImageRefPtr swig_types[29]
+#define SWIGTYPE_p_OSG__KeyEvent swig_types[30]
+#define SWIGTYPE_p_OSG__Line swig_types[31]
+#define SWIGTYPE_p_OSG__Matrix swig_types[32]
+#define SWIGTYPE_p_OSG__Node swig_types[33]
+#define SWIGTYPE_p_OSG__NodeCore swig_types[34]
+#define SWIGTYPE_p_OSG__NodeCoreRefPtr swig_types[35]
+#define SWIGTYPE_p_OSG__NodeRefPtr swig_types[36]
+#define SWIGTYPE_p_OSG__ParticleSystem swig_types[37]
+#define SWIGTYPE_p_OSG__ParticleSystemRefPtr swig_types[38]
+#define SWIGTYPE_p_OSG__PhysicsBody swig_types[39]
+#define SWIGTYPE_p_OSG__PhysicsBodyRefPtr swig_types[40]
+#define SWIGTYPE_p_OSG__PhysicsHandler swig_types[41]
+#define SWIGTYPE_p_OSG__PhysicsHandlerRefPtr swig_types[42]
+#define SWIGTYPE_p_OSG__PhysicsSpace swig_types[43]
+#define SWIGTYPE_p_OSG__PhysicsSpaceRefPtr swig_types[44]
+#define SWIGTYPE_p_OSG__PhysicsWorld swig_types[45]
+#define SWIGTYPE_p_OSG__PhysicsWorldRefPtr swig_types[46]
+#define SWIGTYPE_p_OSG__Pnt2f swig_types[47]
+#define SWIGTYPE_p_OSG__Pnt3f swig_types[48]
+#define SWIGTYPE_p_OSG__Sound swig_types[49]
+#define SWIGTYPE_p_OSG__SoundGroup swig_types[50]
+#define SWIGTYPE_p_OSG__SoundGroupRefPtr swig_types[51]
+#define SWIGTYPE_p_OSG__SoundManager swig_types[52]
+#define SWIGTYPE_p_OSG__SoundRefPtr swig_types[53]
+#define SWIGTYPE_p_OSG__TextureObjChunk swig_types[54]
+#define SWIGTYPE_p_OSG__TextureObjChunkRefPtr swig_types[55]
+#define SWIGTYPE_p_OSG__Vec2f swig_types[56]
+#define SWIGTYPE_p_OSG__Vec3f swig_types[57]
+#define SWIGTYPE_p_OSG__VideoManager swig_types[58]
+#define SWIGTYPE_p_OSG__VideoWrapper swig_types[59]
+#define SWIGTYPE_p_OSG__VideoWrapperRefPtr swig_types[60]
+#define SWIGTYPE_p_OSG__Viewport swig_types[61]
+#define SWIGTYPE_p_OSG__ViewportRefPtr swig_types[62]
+#define SWIGTYPE_p_OSG__Volume swig_types[63]
+#define SWIGTYPE_p_OSG__WindowEventProducer swig_types[64]
+#define SWIGTYPE_p_OSG__WindowEventProducerRefPtr swig_types[65]
+#define SWIGTYPE_p_ParentContainer swig_types[66]
+#define SWIGTYPE_p_PlaneSet swig_types[67]
+#define SWIGTYPE_p_PointType swig_types[68]
+#define SWIGTYPE_p_PointType3f swig_types[69]
+#define SWIGTYPE_p_QuaternionType swig_types[70]
+#define SWIGTYPE_p_SFCoreType swig_types[71]
+#define SWIGTYPE_p_SFParentType swig_types[72]
+#define SWIGTYPE_p_SFTravMaskType swig_types[73]
+#define SWIGTYPE_p_SFVolumeType swig_types[74]
+#define SWIGTYPE_p_TypeObject swig_types[75]
+#define SWIGTYPE_p_ValueType swig_types[76]
+#define SWIGTYPE_p_VectorType swig_types[77]
+#define SWIGTYPE_p_VectorType3f swig_types[78]
+#define SWIGTYPE_p_VolumeType swig_types[79]
+#define SWIGTYPE_p_char swig_types[80]
+#define SWIGTYPE_p_difference_type swig_types[81]
+#define SWIGTYPE_p_double swig_types[82]
+#define SWIGTYPE_p_float swig_types[83]
+#define SWIGTYPE_p_int swig_types[84]
+#define SWIGTYPE_p_key_type swig_types[85]
+#define SWIGTYPE_p_long swig_types[86]
+#define SWIGTYPE_p_long_double swig_types[87]
+#define SWIGTYPE_p_mapped_type swig_types[88]
+#define SWIGTYPE_p_signed_char swig_types[89]
+#define SWIGTYPE_p_size_type swig_types[90]
+#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[91]
+#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[92]
+#define SWIGTYPE_p_unsigned_char swig_types[93]
+#define SWIGTYPE_p_unsigned_int swig_types[94]
+#define SWIGTYPE_p_unsigned_long swig_types[95]
+static swig_type_info *swig_types[97];
+static swig_module_info swig_module = {swig_types, 96, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1666,7 +1668,7 @@ typedef struct{} LANGUAGE_OBJ;
 
 #include "OSGAnimation.h"
 
-/*#include "OSGComponent.h"*/
+#include "OSGComponent.h"
 
 #include "OSGParticleSystem.h"
 #include "OSGDistribution1D.h"
@@ -1755,6 +1757,9 @@ SWIGINTERN OSG::PhysicsBodyRefPtr OSG_PhysicsBodyRefPtr_dcast(OSG::FieldContaine
         }
 SWIGINTERN OSG::PhysicsSpaceRefPtr OSG_PhysicsSpaceRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
             OSG::dynamic_pointer_cast<OSG::PhysicsSpace>(oIn);
+        }
+SWIGINTERN OSG::ComponentRefPtr OSG_ComponentRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
+            OSG::dynamic_pointer_cast<OSG::Component>(oIn);
         }
 SWIGINTERN OSG::SoundRefPtr OSG_SoundRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
             OSG::dynamic_pointer_cast<OSG::Sound>(oIn);
@@ -13627,6 +13632,2566 @@ static swig_lua_class *swig_OSG_ParticleSystem_bases[] = {0,0};
 static const char *swig_OSG_ParticleSystem_base_names[] = {"OSG::AttachmentContainer *",0};
 static swig_lua_class _wrap_class_OSG_ParticleSystem = { "ParticleSystem", &SWIGTYPE_p_OSG__ParticleSystem,0,0, swig_OSG_ParticleSystem_methods, swig_OSG_ParticleSystem_attributes, swig_OSG_ParticleSystem_bases, swig_OSG_ParticleSystem_base_names };
 
+static int _wrap_new_ComponentRefPtr__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *result = 0 ;
+  
+  SWIG_check_num_args("OSG::ComponentRefPtr",0,0)
+  result = (OSG::ComponentRefPtr *)new OSG::ComponentRefPtr();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__ComponentRefPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ComponentRefPtr__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = 0 ;
+  OSG::ComponentRefPtr *result = 0 ;
+  
+  SWIG_check_num_args("OSG::ComponentRefPtr",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::ComponentRefPtr",1,"OSG::ComponentRefPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("new_ComponentRefPtr",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (OSG::ComponentRefPtr *)new OSG::ComponentRefPtr((OSG::ComponentRefPtr const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__ComponentRefPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ComponentRefPtr(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_ComponentRefPtr__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_ComponentRefPtr__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_ComponentRefPtr'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    OSG::ComponentRefPtr()\n"
+    "    OSG::ComponentRefPtr(OSG::ComponentRefPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ComponentRefPtr___deref__(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Component *result = 0 ;
+  
+  SWIG_check_num_args("operator ->",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ->",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr___deref__",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (OSG::Component *)(arg1)->operator ->();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__Component,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::FieldContainerRefPtr arg1 ;
+  OSG::FieldContainerRefPtr *argp1 ;
+  OSG::ComponentRefPtr result;
+  
+  SWIG_check_num_args("OSG_ComponentRefPtr_dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG_ComponentRefPtr_dcast",1,"OSG::FieldContainerRefPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_OSG__FieldContainerRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_dcast",1,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+  }
+  arg1 = *argp1;
+  
+  result = OSG_ComponentRefPtr_dcast(arg1);
+  {
+    OSG::ComponentRefPtr * resultptr = new OSG::ComponentRefPtr((const OSG::ComponentRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__ComponentRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getBounds",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBounds",1,"OSG::ComponentRefPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getBounds",2,"OSG::Pnt2f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getBounds",3,"OSG::Pnt2f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getBounds",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getBounds",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getBounds",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (*arg1)->getBounds(*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getClipBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getClipBounds",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getClipBounds",1,"OSG::ComponentRefPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getClipBounds",2,"OSG::Pnt2f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getClipBounds",3,"OSG::Pnt2f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getClipBounds",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getClipBounds",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getClipBounds",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (*arg1)->getClipBounds(*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getInsideBorderBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getInsideBorderBounds",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getInsideBorderBounds",1,"OSG::ComponentRefPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getInsideBorderBounds",2,"OSG::Pnt2f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getInsideBorderBounds",3,"OSG::Pnt2f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getInsideBorderBounds",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getInsideBorderBounds",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getInsideBorderBounds",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (*arg1)->getInsideBorderBounds(*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getBoundsRenderingSurfaceSpace(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getBoundsRenderingSurfaceSpace",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBoundsRenderingSurfaceSpace",1,"OSG::ComponentRefPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getBoundsRenderingSurfaceSpace",2,"OSG::Pnt2f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getBoundsRenderingSurfaceSpace",3,"OSG::Pnt2f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getBoundsRenderingSurfaceSpace",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getBoundsRenderingSurfaceSpace",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getBoundsRenderingSurfaceSpace",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (*arg1)->getBoundsRenderingSurfaceSpace(*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_updateContainerLayout(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  
+  SWIG_check_num_args("updateContainerLayout",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("updateContainerLayout",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_updateContainerLayout",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  (*arg1)->updateContainerLayout();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_updateClipBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  
+  SWIG_check_num_args("updateClipBounds",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("updateClipBounds",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_updateClipBounds",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  (*arg1)->updateClipBounds();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getRequestedSize(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Vec2f result;
+  
+  SWIG_check_num_args("getRequestedSize",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRequestedSize",1,"OSG::ComponentRefPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getRequestedSize",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (*arg1)->getRequestedSize();
+  {
+    OSG::Vec2f * resultptr = new OSG::Vec2f((const OSG::Vec2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Vec2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getContentRequestedSize(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Vec2f result;
+  
+  SWIG_check_num_args("getContentRequestedSize",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getContentRequestedSize",1,"OSG::ComponentRefPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getContentRequestedSize",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (*arg1)->getContentRequestedSize();
+  {
+    OSG::Vec2f * resultptr = new OSG::Vec2f((const OSG::Vec2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Vec2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getBorderingLength(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Vec2f result;
+  
+  SWIG_check_num_args("getBorderingLength",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBorderingLength",1,"OSG::ComponentRefPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getBorderingLength",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (*arg1)->getBorderingLength();
+  {
+    OSG::Vec2f * resultptr = new OSG::Vec2f((const OSG::Vec2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Vec2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_setMouseContained(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setMouseContained",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setMouseContained",1,"OSG::ComponentRefPtr *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setMouseContained",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_setMouseContained",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (*arg1)->setMouseContained(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getMouseContained(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getMouseContained",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getMouseContained",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getMouseContained",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (bool)(*arg1)->getMouseContained();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_takeFocus__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  bool arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("takeFocus",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("takeFocus",1,"OSG::ComponentRefPtr *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("takeFocus",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_takeFocus",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  result = (bool)(*arg1)->takeFocus(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_takeFocus__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("takeFocus",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("takeFocus",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_takeFocus",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (bool)(*arg1)->takeFocus();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_takeFocus(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ComponentRefPtr_takeFocus__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ComponentRefPtr_takeFocus__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ComponentRefPtr_takeFocus'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    takeFocus(OSG::ComponentRefPtr *,bool)\n"
+    "    takeFocus(OSG::ComponentRefPtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ComponentRefPtr_isContained__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  bool arg3 ;
+  bool result;
+  
+  SWIG_check_num_args("isContained",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isContained",1,"OSG::ComponentRefPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("isContained",2,"OSG::Pnt2f const &");
+  if(!lua_isboolean(L,3)) SWIG_fail_arg("isContained",3,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_isContained",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_isContained",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  arg3 = (lua_toboolean(L, 3)!=0);
+  result = (bool)(*arg1)->isContained((OSG::Pnt2f const &)*arg2,arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_isContained__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isContained",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isContained",1,"OSG::ComponentRefPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("isContained",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_isContained",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_isContained",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  result = (bool)(*arg1)->isContained((OSG::Pnt2f const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_isContained(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__Pnt2f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ComponentRefPtr_isContained__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__Pnt2f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isboolean(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ComponentRefPtr_isContained__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ComponentRefPtr_isContained'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    isContained(OSG::ComponentRefPtr const *,OSG::Pnt2f const &,bool)\n"
+    "    isContained(OSG::ComponentRefPtr const *,OSG::Pnt2f const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ComponentRefPtr_getBaseline(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Real32 *arg2 = 0 ;
+  OSG::Real32 *arg3 = 0 ;
+  OSG::Real32 temp2 ;
+  OSG::Real32 temp3 ;
+  OSG::Real32 result;
+  
+  SWIG_check_num_args("getBaseline",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBaseline",1,"OSG::ComponentRefPtr const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getBaseline",2,"OSG::Real32 const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getBaseline",3,"OSG::Real32 const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getBaseline",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  temp2=(OSG::Real32)lua_tonumber(L,2); arg2=&temp2;
+  temp3=(OSG::Real32)lua_tonumber(L,3); arg3=&temp3;
+  result = (OSG::Real32)(*arg1)->getBaseline((OSG::Real32 const &)*arg2,(OSG::Real32 const &)*arg3);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getToolTipLocation(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f arg2 ;
+  OSG::Pnt2f *argp2 ;
+  OSG::Pnt2f result;
+  
+  SWIG_check_num_args("getToolTipLocation",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getToolTipLocation",2,"OSG::Pnt2f");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getToolTipLocation",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  arg2 = *argp2;
+  
+  result = (*arg1)->getToolTipLocation(arg2);
+  {
+    OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getPreferredScrollableViewportSize(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Vec2f result;
+  
+  SWIG_check_num_args("getPreferredScrollableViewportSize",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPreferredScrollableViewportSize",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getPreferredScrollableViewportSize",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (*arg1)->getPreferredScrollableViewportSize();
+  {
+    OSG::Vec2f * resultptr = new OSG::Vec2f((const OSG::Vec2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Vec2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getScrollableBlockIncrement(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  OSG::UInt32 *arg4 = 0 ;
+  OSG::Int32 *arg5 = 0 ;
+  OSG::UInt32 temp4 ;
+  OSG::Int32 temp5 ;
+  OSG::Int32 result;
+  
+  SWIG_check_num_args("getScrollableBlockIncrement",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getScrollableBlockIncrement",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getScrollableBlockIncrement",2,"OSG::Pnt2f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getScrollableBlockIncrement",3,"OSG::Pnt2f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getScrollableBlockIncrement",4,"OSG::UInt32 const &");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("getScrollableBlockIncrement",5,"OSG::Int32 const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getScrollableBlockIncrement",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getScrollableBlockIncrement",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getScrollableBlockIncrement",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  temp4=(OSG::UInt32)lua_tonumber(L,4); arg4=&temp4;
+  temp5=(OSG::Int32)lua_tonumber(L,5); arg5=&temp5;
+  result = (OSG::Int32)(*arg1)->getScrollableBlockIncrement((OSG::Pnt2f const &)*arg2,(OSG::Pnt2f const &)*arg3,(OSG::UInt32 const &)*arg4,(OSG::Int32 const &)*arg5);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getScrollableTracksViewportHeight(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getScrollableTracksViewportHeight",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getScrollableTracksViewportHeight",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getScrollableTracksViewportHeight",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (bool)(*arg1)->getScrollableTracksViewportHeight();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getScrollableTracksViewportWidth(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getScrollableTracksViewportWidth",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getScrollableTracksViewportWidth",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getScrollableTracksViewportWidth",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (bool)(*arg1)->getScrollableTracksViewportWidth();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getScrollableUnitIncrement(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  OSG::UInt32 *arg4 = 0 ;
+  OSG::Int32 *arg5 = 0 ;
+  OSG::UInt32 temp4 ;
+  OSG::Int32 temp5 ;
+  OSG::Int32 result;
+  
+  SWIG_check_num_args("getScrollableUnitIncrement",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getScrollableUnitIncrement",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getScrollableUnitIncrement",2,"OSG::Pnt2f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getScrollableUnitIncrement",3,"OSG::Pnt2f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getScrollableUnitIncrement",4,"OSG::UInt32 const &");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("getScrollableUnitIncrement",5,"OSG::Int32 const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getScrollableUnitIncrement",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getScrollableUnitIncrement",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getScrollableUnitIncrement",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  temp4=(OSG::UInt32)lua_tonumber(L,4); arg4=&temp4;
+  temp5=(OSG::Int32)lua_tonumber(L,5); arg5=&temp5;
+  result = (OSG::Int32)(*arg1)->getScrollableUnitIncrement((OSG::Pnt2f const &)*arg2,(OSG::Pnt2f const &)*arg3,(OSG::UInt32 const &)*arg4,(OSG::Int32 const &)*arg5);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_scrollToPoint(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  
+  SWIG_check_num_args("scrollToPoint",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scrollToPoint",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("scrollToPoint",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_scrollToPoint",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_scrollToPoint",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (*arg1)->scrollToPoint((OSG::Pnt2f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getParentToLocal(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f result;
+  
+  SWIG_check_num_args("getParentToLocal",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getParentToLocal",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getParentToLocal",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getParentToLocal",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getParentToLocal",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  result = (*arg1)->getParentToLocal((OSG::Pnt2f const &)*arg2);
+  {
+    OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_getLocalToParent(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f result;
+  
+  SWIG_check_num_args("getLocalToParent",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getLocalToParent",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getLocalToParent",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getLocalToParent",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getLocalToParent",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  result = (*arg1)->getLocalToParent((OSG::Pnt2f const &)*arg2);
+  {
+    OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_addAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::AttachmentRefPtr *arg2 = 0 ;
+  OSG::UInt16 arg3 ;
+  
+  SWIG_check_num_args("addAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"OSG::AttachmentRefPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("addAttachment",3,"OSG::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_addAttachment",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__AttachmentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_addAttachment",2,SWIGTYPE_p_OSG__AttachmentRefPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (OSG::UInt16)lua_tonumber(L, 3);
+  (*arg1)->addAttachment((OSG::AttachmentRefPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_addAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::AttachmentRefPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("addAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"OSG::AttachmentRefPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_addAttachment",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__AttachmentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_addAttachment",2,SWIGTYPE_p_OSG__AttachmentRefPtr);
+  }
+  
+  (*arg1)->addAttachment((OSG::AttachmentRefPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_addAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__AttachmentRefPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ComponentRefPtr_addAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__AttachmentRefPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ComponentRefPtr_addAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ComponentRefPtr_addAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addAttachment(OSG::ComponentRefPtr *,OSG::AttachmentRefPtr const &,OSG::UInt16)\n"
+    "    addAttachment(OSG::ComponentRefPtr *,OSG::AttachmentRefPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ComponentRefPtr_subAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::AttachmentRefPtr *arg2 = 0 ;
+  OSG::UInt16 arg3 ;
+  
+  SWIG_check_num_args("subAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"OSG::AttachmentRefPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subAttachment",3,"OSG::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_subAttachment",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__AttachmentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_subAttachment",2,SWIGTYPE_p_OSG__AttachmentRefPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (OSG::UInt16)lua_tonumber(L, 3);
+  (*arg1)->subAttachment((OSG::AttachmentRefPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_subAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::AttachmentRefPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("subAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"OSG::AttachmentRefPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_subAttachment",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__AttachmentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_subAttachment",2,SWIGTYPE_p_OSG__AttachmentRefPtr);
+  }
+  
+  (*arg1)->subAttachment((OSG::AttachmentRefPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_subAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__AttachmentRefPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ComponentRefPtr_subAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__AttachmentRefPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ComponentRefPtr_subAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ComponentRefPtr_subAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    subAttachment(OSG::ComponentRefPtr *,OSG::AttachmentRefPtr const &,OSG::UInt16)\n"
+    "    subAttachment(OSG::ComponentRefPtr *,OSG::AttachmentRefPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ComponentRefPtr_findAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::UInt32 arg2 ;
+  OSG::UInt16 arg3 ;
+  OSG::AttachmentRefPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"OSG::ComponentRefPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"OSG::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"OSG::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_findAttachment",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (OSG::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (OSG::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment(arg2,arg3);
+  {
+    OSG::AttachmentRefPtr * resultptr = new OSG::AttachmentRefPtr((const OSG::AttachmentRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__AttachmentRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_findAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::UInt32 arg2 ;
+  OSG::AttachmentRefPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"OSG::ComponentRefPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"OSG::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_findAttachment",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (OSG::UInt32)lua_tonumber(L, 2);
+  result = (*arg1)->findAttachment(arg2);
+  {
+    OSG::AttachmentRefPtr * resultptr = new OSG::AttachmentRefPtr((const OSG::AttachmentRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__AttachmentRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_findAttachment__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::FieldContainerType *arg2 = 0 ;
+  OSG::UInt16 arg3 ;
+  OSG::AttachmentRefPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"OSG::FieldContainerType const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"OSG::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_findAttachment",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__FieldContainerType,0))){
+    SWIG_fail_ptr("ComponentRefPtr_findAttachment",2,SWIGTYPE_p_OSG__FieldContainerType);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (OSG::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment((OSG::FieldContainerType const &)*arg2,arg3);
+  {
+    OSG::AttachmentRefPtr * resultptr = new OSG::AttachmentRefPtr((const OSG::AttachmentRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__AttachmentRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_findAttachment__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::FieldContainerType *arg2 = 0 ;
+  OSG::AttachmentRefPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"OSG::FieldContainerType const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_findAttachment",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__FieldContainerType,0))){
+    SWIG_fail_ptr("ComponentRefPtr_findAttachment",2,SWIGTYPE_p_OSG__FieldContainerType);
+  }
+  
+  result = (*arg1)->findAttachment((OSG::FieldContainerType const &)*arg2);
+  {
+    OSG::AttachmentRefPtr * resultptr = new OSG::AttachmentRefPtr((const OSG::AttachmentRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__AttachmentRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_findAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ComponentRefPtr_findAttachment__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ComponentRefPtr_findAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ComponentRefPtr_findAttachment__SWIG_2(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__ComponentRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ComponentRefPtr_findAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ComponentRefPtr_findAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    findAttachment(OSG::ComponentRefPtr *,OSG::UInt32,OSG::UInt16)\n"
+    "    findAttachment(OSG::ComponentRefPtr *,OSG::UInt32)\n"
+    "    findAttachment(OSG::ComponentRefPtr *,OSG::FieldContainerType const &,OSG::UInt16)\n"
+    "    findAttachment(OSG::ComponentRefPtr *,OSG::FieldContainerType const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ComponentRefPtr_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::FieldContainerType *result = 0 ;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_getType",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (OSG::FieldContainerType *) &(*arg1)->getType();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__FieldContainerType,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_shallowCopy(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::FieldContainerRefPtr result;
+  
+  SWIG_check_num_args("shallowCopy",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("shallowCopy",1,"OSG::ComponentRefPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_shallowCopy",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (*arg1)->shallowCopy();
+  {
+    OSG::FieldContainerRefPtr * resultptr = new OSG::FieldContainerRefPtr((const OSG::FieldContainerRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_ComponentRefPtr(void *obj) {
+OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_OSG_ComponentRefPtr_methods[] = {
+    {"__deref__", _wrap_ComponentRefPtr___deref__}, 
+    {"getBounds", _wrap_ComponentRefPtr_getBounds}, 
+    {"getClipBounds", _wrap_ComponentRefPtr_getClipBounds}, 
+    {"getInsideBorderBounds", _wrap_ComponentRefPtr_getInsideBorderBounds}, 
+    {"getBoundsRenderingSurfaceSpace", _wrap_ComponentRefPtr_getBoundsRenderingSurfaceSpace}, 
+    {"updateContainerLayout", _wrap_ComponentRefPtr_updateContainerLayout}, 
+    {"updateClipBounds", _wrap_ComponentRefPtr_updateClipBounds}, 
+    {"getRequestedSize", _wrap_ComponentRefPtr_getRequestedSize}, 
+    {"getContentRequestedSize", _wrap_ComponentRefPtr_getContentRequestedSize}, 
+    {"getBorderingLength", _wrap_ComponentRefPtr_getBorderingLength}, 
+    {"setMouseContained", _wrap_ComponentRefPtr_setMouseContained}, 
+    {"getMouseContained", _wrap_ComponentRefPtr_getMouseContained}, 
+    {"takeFocus", _wrap_ComponentRefPtr_takeFocus}, 
+    {"isContained", _wrap_ComponentRefPtr_isContained}, 
+    {"getBaseline", _wrap_ComponentRefPtr_getBaseline}, 
+    {"getToolTipLocation", _wrap_ComponentRefPtr_getToolTipLocation}, 
+    {"getPreferredScrollableViewportSize", _wrap_ComponentRefPtr_getPreferredScrollableViewportSize}, 
+    {"getScrollableBlockIncrement", _wrap_ComponentRefPtr_getScrollableBlockIncrement}, 
+    {"getScrollableTracksViewportHeight", _wrap_ComponentRefPtr_getScrollableTracksViewportHeight}, 
+    {"getScrollableTracksViewportWidth", _wrap_ComponentRefPtr_getScrollableTracksViewportWidth}, 
+    {"getScrollableUnitIncrement", _wrap_ComponentRefPtr_getScrollableUnitIncrement}, 
+    {"scrollToPoint", _wrap_ComponentRefPtr_scrollToPoint}, 
+    {"getParentToLocal", _wrap_ComponentRefPtr_getParentToLocal}, 
+    {"getLocalToParent", _wrap_ComponentRefPtr_getLocalToParent}, 
+    {"addAttachment", _wrap_ComponentRefPtr_addAttachment}, 
+    {"subAttachment", _wrap_ComponentRefPtr_subAttachment}, 
+    {"findAttachment", _wrap_ComponentRefPtr_findAttachment}, 
+    {"getType", _wrap_ComponentRefPtr_getType}, 
+    {"shallowCopy", _wrap_ComponentRefPtr_shallowCopy}, 
+    {0,0}
+};
+static swig_lua_attribute swig_OSG_ComponentRefPtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_OSG_ComponentRefPtr_bases[] = {0,0};
+static const char *swig_OSG_ComponentRefPtr_base_names[] = {"OSG::AttachmentContainerRefPtr *",0};
+static swig_lua_class _wrap_class_OSG_ComponentRefPtr = { "ComponentRefPtr", &SWIGTYPE_p_OSG__ComponentRefPtr,_wrap_new_ComponentRefPtr, swig_delete_ComponentRefPtr, swig_OSG_ComponentRefPtr_methods, swig_OSG_ComponentRefPtr_attributes, swig_OSG_ComponentRefPtr_bases, swig_OSG_ComponentRefPtr_base_names };
+
+static int _wrap_Component_getBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getBounds",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBounds",1,"OSG::Component const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getBounds",2,"OSG::Pnt2f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getBounds",3,"OSG::Pnt2f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getBounds",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getBounds",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getBounds",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  ((OSG::Component const *)arg1)->getBounds(*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getClipBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getClipBounds",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getClipBounds",1,"OSG::Component const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getClipBounds",2,"OSG::Pnt2f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getClipBounds",3,"OSG::Pnt2f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getClipBounds",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getClipBounds",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getClipBounds",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  ((OSG::Component const *)arg1)->getClipBounds(*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getInsideBorderBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getInsideBorderBounds",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getInsideBorderBounds",1,"OSG::Component const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getInsideBorderBounds",2,"OSG::Pnt2f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getInsideBorderBounds",3,"OSG::Pnt2f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getInsideBorderBounds",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getInsideBorderBounds",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getInsideBorderBounds",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  ((OSG::Component const *)arg1)->getInsideBorderBounds(*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getBoundsRenderingSurfaceSpace(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getBoundsRenderingSurfaceSpace",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBoundsRenderingSurfaceSpace",1,"OSG::Component const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getBoundsRenderingSurfaceSpace",2,"OSG::Pnt2f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getBoundsRenderingSurfaceSpace",3,"OSG::Pnt2f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getBoundsRenderingSurfaceSpace",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getBoundsRenderingSurfaceSpace",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getBoundsRenderingSurfaceSpace",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  ((OSG::Component const *)arg1)->getBoundsRenderingSurfaceSpace(*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_updateContainerLayout(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  
+  SWIG_check_num_args("updateContainerLayout",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("updateContainerLayout",1,"OSG::Component *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_updateContainerLayout",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  (arg1)->updateContainerLayout();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_updateClipBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  
+  SWIG_check_num_args("updateClipBounds",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("updateClipBounds",1,"OSG::Component *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_updateClipBounds",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  (arg1)->updateClipBounds();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getRequestedSize(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Vec2f result;
+  
+  SWIG_check_num_args("getRequestedSize",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRequestedSize",1,"OSG::Component const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getRequestedSize",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  result = ((OSG::Component const *)arg1)->getRequestedSize();
+  {
+    OSG::Vec2f * resultptr = new OSG::Vec2f((const OSG::Vec2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Vec2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getContentRequestedSize(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Vec2f result;
+  
+  SWIG_check_num_args("getContentRequestedSize",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getContentRequestedSize",1,"OSG::Component const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getContentRequestedSize",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  result = ((OSG::Component const *)arg1)->getContentRequestedSize();
+  {
+    OSG::Vec2f * resultptr = new OSG::Vec2f((const OSG::Vec2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Vec2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getBorderingLength(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Vec2f result;
+  
+  SWIG_check_num_args("getBorderingLength",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBorderingLength",1,"OSG::Component const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getBorderingLength",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  result = ((OSG::Component const *)arg1)->getBorderingLength();
+  {
+    OSG::Vec2f * resultptr = new OSG::Vec2f((const OSG::Vec2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Vec2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_setMouseContained(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setMouseContained",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setMouseContained",1,"OSG::Component *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setMouseContained",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_setMouseContained",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->setMouseContained(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getMouseContained(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getMouseContained",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getMouseContained",1,"OSG::Component *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getMouseContained",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  result = (bool)(arg1)->getMouseContained();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_takeFocus__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  bool arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("takeFocus",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("takeFocus",1,"OSG::Component *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("takeFocus",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_takeFocus",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  result = (bool)(arg1)->takeFocus(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_takeFocus__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("takeFocus",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("takeFocus",1,"OSG::Component *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_takeFocus",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  result = (bool)(arg1)->takeFocus();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_takeFocus(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Component, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Component_takeFocus__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Component, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Component_takeFocus__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Component_takeFocus'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    takeFocus(OSG::Component *,bool)\n"
+    "    takeFocus(OSG::Component *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Component_isContained__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  bool arg3 ;
+  bool result;
+  
+  SWIG_check_num_args("isContained",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isContained",1,"OSG::Component const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("isContained",2,"OSG::Pnt2f const &");
+  if(!lua_isboolean(L,3)) SWIG_fail_arg("isContained",3,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_isContained",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_isContained",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  arg3 = (lua_toboolean(L, 3)!=0);
+  result = (bool)((OSG::Component const *)arg1)->isContained((OSG::Pnt2f const &)*arg2,arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_isContained__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isContained",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isContained",1,"OSG::Component const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("isContained",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_isContained",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_isContained",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  result = (bool)((OSG::Component const *)arg1)->isContained((OSG::Pnt2f const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_isContained(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Component, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__Pnt2f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_Component_isContained__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Component, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__Pnt2f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isboolean(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Component_isContained__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Component_isContained'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    isContained(OSG::Component const *,OSG::Pnt2f const &,bool)\n"
+    "    isContained(OSG::Component const *,OSG::Pnt2f const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Component_getBaseline(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Real32 *arg2 = 0 ;
+  OSG::Real32 *arg3 = 0 ;
+  OSG::Real32 temp2 ;
+  OSG::Real32 temp3 ;
+  OSG::Real32 result;
+  
+  SWIG_check_num_args("getBaseline",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBaseline",1,"OSG::Component const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getBaseline",2,"OSG::Real32 const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getBaseline",3,"OSG::Real32 const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getBaseline",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  temp2=(OSG::Real32)lua_tonumber(L,2); arg2=&temp2;
+  temp3=(OSG::Real32)lua_tonumber(L,3); arg3=&temp3;
+  result = (OSG::Real32)((OSG::Component const *)arg1)->getBaseline((OSG::Real32 const &)*arg2,(OSG::Real32 const &)*arg3);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getToolTipLocation(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f arg2 ;
+  OSG::Pnt2f *argp2 ;
+  OSG::Pnt2f result;
+  
+  SWIG_check_num_args("getToolTipLocation",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::Component *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getToolTipLocation",2,"OSG::Pnt2f");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getToolTipLocation",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  arg2 = *argp2;
+  
+  result = (arg1)->getToolTipLocation(arg2);
+  {
+    OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getPreferredScrollableViewportSize(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Vec2f result;
+  
+  SWIG_check_num_args("getPreferredScrollableViewportSize",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPreferredScrollableViewportSize",1,"OSG::Component *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getPreferredScrollableViewportSize",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  result = (arg1)->getPreferredScrollableViewportSize();
+  {
+    OSG::Vec2f * resultptr = new OSG::Vec2f((const OSG::Vec2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Vec2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getScrollableBlockIncrement(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  OSG::UInt32 *arg4 = 0 ;
+  OSG::Int32 *arg5 = 0 ;
+  OSG::UInt32 temp4 ;
+  OSG::Int32 temp5 ;
+  OSG::Int32 result;
+  
+  SWIG_check_num_args("getScrollableBlockIncrement",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getScrollableBlockIncrement",1,"OSG::Component *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getScrollableBlockIncrement",2,"OSG::Pnt2f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getScrollableBlockIncrement",3,"OSG::Pnt2f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getScrollableBlockIncrement",4,"OSG::UInt32 const &");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("getScrollableBlockIncrement",5,"OSG::Int32 const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getScrollableBlockIncrement",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getScrollableBlockIncrement",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getScrollableBlockIncrement",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  temp4=(OSG::UInt32)lua_tonumber(L,4); arg4=&temp4;
+  temp5=(OSG::Int32)lua_tonumber(L,5); arg5=&temp5;
+  result = (OSG::Int32)(arg1)->getScrollableBlockIncrement((OSG::Pnt2f const &)*arg2,(OSG::Pnt2f const &)*arg3,(OSG::UInt32 const &)*arg4,(OSG::Int32 const &)*arg5);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getScrollableTracksViewportHeight(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getScrollableTracksViewportHeight",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getScrollableTracksViewportHeight",1,"OSG::Component *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getScrollableTracksViewportHeight",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  result = (bool)(arg1)->getScrollableTracksViewportHeight();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getScrollableTracksViewportWidth(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getScrollableTracksViewportWidth",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getScrollableTracksViewportWidth",1,"OSG::Component *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getScrollableTracksViewportWidth",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  result = (bool)(arg1)->getScrollableTracksViewportWidth();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getScrollableUnitIncrement(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f *arg3 = 0 ;
+  OSG::UInt32 *arg4 = 0 ;
+  OSG::Int32 *arg5 = 0 ;
+  OSG::UInt32 temp4 ;
+  OSG::Int32 temp5 ;
+  OSG::Int32 result;
+  
+  SWIG_check_num_args("getScrollableUnitIncrement",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getScrollableUnitIncrement",1,"OSG::Component *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getScrollableUnitIncrement",2,"OSG::Pnt2f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getScrollableUnitIncrement",3,"OSG::Pnt2f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getScrollableUnitIncrement",4,"OSG::UInt32 const &");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("getScrollableUnitIncrement",5,"OSG::Int32 const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getScrollableUnitIncrement",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getScrollableUnitIncrement",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getScrollableUnitIncrement",3,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  temp4=(OSG::UInt32)lua_tonumber(L,4); arg4=&temp4;
+  temp5=(OSG::Int32)lua_tonumber(L,5); arg5=&temp5;
+  result = (OSG::Int32)(arg1)->getScrollableUnitIncrement((OSG::Pnt2f const &)*arg2,(OSG::Pnt2f const &)*arg3,(OSG::UInt32 const &)*arg4,(OSG::Int32 const &)*arg5);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_scrollToPoint(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  
+  SWIG_check_num_args("scrollToPoint",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scrollToPoint",1,"OSG::Component *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("scrollToPoint",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_scrollToPoint",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_scrollToPoint",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (arg1)->scrollToPoint((OSG::Pnt2f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getParentToLocal(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f result;
+  
+  SWIG_check_num_args("getParentToLocal",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getParentToLocal",1,"OSG::Component *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getParentToLocal",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getParentToLocal",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getParentToLocal",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  result = (arg1)->getParentToLocal((OSG::Pnt2f const &)*arg2);
+  {
+    OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_getLocalToParent(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  OSG::Pnt2f result;
+  
+  SWIG_check_num_args("getLocalToParent",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getLocalToParent",1,"OSG::Component *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getLocalToParent",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_getLocalToParent",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_getLocalToParent",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  result = (arg1)->getLocalToParent((OSG::Pnt2f const &)*arg2);
+  {
+    OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static swig_lua_method swig_OSG_Component_methods[] = {
+    {"getBounds", _wrap_Component_getBounds}, 
+    {"getClipBounds", _wrap_Component_getClipBounds}, 
+    {"getInsideBorderBounds", _wrap_Component_getInsideBorderBounds}, 
+    {"getBoundsRenderingSurfaceSpace", _wrap_Component_getBoundsRenderingSurfaceSpace}, 
+    {"updateContainerLayout", _wrap_Component_updateContainerLayout}, 
+    {"updateClipBounds", _wrap_Component_updateClipBounds}, 
+    {"getRequestedSize", _wrap_Component_getRequestedSize}, 
+    {"getContentRequestedSize", _wrap_Component_getContentRequestedSize}, 
+    {"getBorderingLength", _wrap_Component_getBorderingLength}, 
+    {"setMouseContained", _wrap_Component_setMouseContained}, 
+    {"getMouseContained", _wrap_Component_getMouseContained}, 
+    {"takeFocus", _wrap_Component_takeFocus}, 
+    {"isContained", _wrap_Component_isContained}, 
+    {"getBaseline", _wrap_Component_getBaseline}, 
+    {"getToolTipLocation", _wrap_Component_getToolTipLocation}, 
+    {"getPreferredScrollableViewportSize", _wrap_Component_getPreferredScrollableViewportSize}, 
+    {"getScrollableBlockIncrement", _wrap_Component_getScrollableBlockIncrement}, 
+    {"getScrollableTracksViewportHeight", _wrap_Component_getScrollableTracksViewportHeight}, 
+    {"getScrollableTracksViewportWidth", _wrap_Component_getScrollableTracksViewportWidth}, 
+    {"getScrollableUnitIncrement", _wrap_Component_getScrollableUnitIncrement}, 
+    {"scrollToPoint", _wrap_Component_scrollToPoint}, 
+    {"getParentToLocal", _wrap_Component_getParentToLocal}, 
+    {"getLocalToParent", _wrap_Component_getLocalToParent}, 
+    {0,0}
+};
+static swig_lua_attribute swig_OSG_Component_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_OSG_Component_bases[] = {0,0};
+static const char *swig_OSG_Component_base_names[] = {"OSG::AttachmentContainer *",0};
+static swig_lua_class _wrap_class_OSG_Component = { "Component", &SWIGTYPE_p_OSG__Component,0,0, swig_OSG_Component_methods, swig_OSG_Component_attributes, swig_OSG_Component_bases, swig_OSG_Component_base_names };
+
 static int _wrap_new_SoundRefPtr__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   OSG::SoundRefPtr *result = 0 ;
@@ -23031,6 +25596,7 @@ static const struct luaL_reg swig_commands[] = {
     { "PhysicsBodyRefPtr_dcast", _wrap_PhysicsBodyRefPtr_dcast},
     { "PhysicsBody_create", _wrap_PhysicsBody_create},
     { "PhysicsSpaceRefPtr_dcast", _wrap_PhysicsSpaceRefPtr_dcast},
+    { "ComponentRefPtr_dcast", _wrap_ComponentRefPtr_dcast},
     { "SoundRefPtr_dcast", _wrap_SoundRefPtr_dcast},
     { "Sound_create", _wrap_Sound_create},
     { "SoundManager_the", _wrap_SoundManager_the},
@@ -23234,6 +25800,9 @@ static void *_p_OSG__Distribution1DTo_p_OSG__AttachmentContainer(void *x, int *S
 static void *_p_OSG__SoundTo_p_OSG__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainer *)  ((OSG::Sound *) x));
 }
+static void *_p_OSG__ComponentTo_p_OSG__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((OSG::AttachmentContainer *)  ((OSG::Component *) x));
+}
 static void *_p_OSG__NodeTo_p_OSG__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainer *)  ((OSG::Node *) x));
 }
@@ -23255,11 +25824,11 @@ static void *_p_OSG__ParticleSystemTo_p_OSG__AttachmentContainer(void *x, int *S
 static void *_p_OSG__NodeCoreTo_p_OSG__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainer *)  ((OSG::NodeCore *) x));
 }
-static void *_p_OSG__Distribution3DTo_p_OSG__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((OSG::AttachmentContainer *)  ((OSG::Distribution3D *) x));
-}
 static void *_p_OSG__GeometryTo_p_OSG__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainer *) (OSG::NodeCore *) ((OSG::Geometry *) x));
+}
+static void *_p_OSG__Distribution3DTo_p_OSG__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((OSG::AttachmentContainer *)  ((OSG::Distribution3D *) x));
 }
 static void *_p_OSG__ImageTo_p_OSG__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainer *)  ((OSG::Image *) x));
@@ -23281,6 +25850,9 @@ static void *_p_OSG__SoundTo_p_OSG__FieldContainer(void *x, int *SWIGUNUSEDPARM(
 }
 static void *_p_OSG__NodeTo_p_OSG__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::FieldContainer *) (OSG::AttachmentContainer *) ((OSG::Node *) x));
+}
+static void *_p_OSG__ComponentTo_p_OSG__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((OSG::FieldContainer *) (OSG::AttachmentContainer *) ((OSG::Component *) x));
 }
 static void *_p_OSG__SoundGroupTo_p_OSG__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::FieldContainer *) (OSG::AttachmentContainer *) ((OSG::SoundGroup *) x));
@@ -23354,6 +25926,9 @@ static void *_p_OSG__AttachmentContainerRefPtrTo_p_OSG__FieldContainerRefPtr(voi
 static void *_p_OSG__AttachmentRefPtrTo_p_OSG__FieldContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::FieldContainerRefPtr *)  ((OSG::AttachmentRefPtr *) x));
 }
+static void *_p_OSG__ComponentRefPtrTo_p_OSG__FieldContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((OSG::FieldContainerRefPtr *) (OSG::AttachmentContainerRefPtr *) ((OSG::ComponentRefPtr *) x));
+}
 static void *_p_OSG__SoundRefPtrTo_p_OSG__FieldContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::FieldContainerRefPtr *) (OSG::AttachmentContainerRefPtr *) ((OSG::SoundRefPtr *) x));
 }
@@ -23405,9 +25980,6 @@ static void *_p_OSG__PhysicsSpaceRefPtrTo_p_OSG__FieldContainerRefPtr(void *x, i
 static void *_p_OSG__ParticleSystemRefPtrTo_p_OSG__FieldContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::FieldContainerRefPtr *) (OSG::AttachmentContainerRefPtr *) ((OSG::ParticleSystemRefPtr *) x));
 }
-static void *_p_OSG__Distribution1DRefPtrTo_p_OSG__AttachmentContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((OSG::AttachmentContainerRefPtr *)  ((OSG::Distribution1DRefPtr *) x));
-}
 static void *_p_OSG__VideoWrapperRefPtrTo_p_OSG__AttachmentContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainerRefPtr *)  ((OSG::VideoWrapperRefPtr *) x));
 }
@@ -23420,11 +25992,17 @@ static void *_p_OSG__SoundGroupRefPtrTo_p_OSG__AttachmentContainerRefPtr(void *x
 static void *_p_OSG__SoundRefPtrTo_p_OSG__AttachmentContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainerRefPtr *)  ((OSG::SoundRefPtr *) x));
 }
+static void *_p_OSG__ComponentRefPtrTo_p_OSG__AttachmentContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((OSG::AttachmentContainerRefPtr *)  ((OSG::ComponentRefPtr *) x));
+}
 static void *_p_OSG__WindowEventProducerRefPtrTo_p_OSG__AttachmentContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainerRefPtr *)  ((OSG::WindowEventProducerRefPtr *) x));
 }
 static void *_p_OSG__ViewportRefPtrTo_p_OSG__AttachmentContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainerRefPtr *)  ((OSG::ViewportRefPtr *) x));
+}
+static void *_p_OSG__Distribution1DRefPtrTo_p_OSG__AttachmentContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((OSG::AttachmentContainerRefPtr *)  ((OSG::Distribution1DRefPtr *) x));
 }
 static void *_p_OSG__Distribution2DRefPtrTo_p_OSG__AttachmentContainerRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainerRefPtr *)  ((OSG::Distribution2DRefPtr *) x));
@@ -23477,6 +26055,8 @@ static swig_type_info _swigt__p_OSG__NodeCoreRefPtr = {"_p_OSG__NodeCoreRefPtr",
 static swig_type_info _swigt__p_OSG__AttachmentRefPtr = {"_p_OSG__AttachmentRefPtr", "OSG::AttachmentRefPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_OSG__CameraRefPtr = {"_p_OSG__CameraRefPtr", "OSG::CameraRefPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_OSG__Color4f = {"_p_OSG__Color4f", "OSG::Color4f *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_OSG__Component = {"_p_OSG__Component", "OSG::Component *", 0, 0, (void*)&_wrap_class_OSG_Component, 0};
+static swig_type_info _swigt__p_OSG__ComponentRefPtr = {"_p_OSG__ComponentRefPtr", "OSG::ComponentRefPtr *", 0, 0, (void*)&_wrap_class_OSG_ComponentRefPtr, 0};
 static swig_type_info _swigt__p_OSG__Distribution1D = {"_p_OSG__Distribution1D", "OSG::Distribution1D *", 0, 0, (void*)&_wrap_class_OSG_Distribution1D, 0};
 static swig_type_info _swigt__p_OSG__Distribution1DRefPtr = {"_p_OSG__Distribution1DRefPtr", "OSG::Distribution1DRefPtr *", 0, 0, (void*)&_wrap_class_OSG_Distribution1DRefPtr, 0};
 static swig_type_info _swigt__p_OSG__Distribution2D = {"_p_OSG__Distribution2D", "OSG::Distribution2D *", 0, 0, (void*)&_wrap_class_OSG_Distribution2D, 0};
@@ -23568,6 +26148,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_OSG__Camera,
   &_swigt__p_OSG__CameraRefPtr,
   &_swigt__p_OSG__Color4f,
+  &_swigt__p_OSG__Component,
+  &_swigt__p_OSG__ComponentRefPtr,
   &_swigt__p_OSG__Distribution1D,
   &_swigt__p_OSG__Distribution1DRefPtr,
   &_swigt__p_OSG__Distribution2D,
@@ -23662,13 +26244,15 @@ static swig_cast_info _swigc__p_OSG__NodeCore[] = {{&_swigt__p_OSG__NodeCore, 0,
 static swig_cast_info _swigc__p_OSG__Geometry[] = {{&_swigt__p_OSG__Geometry, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Node[] = {{&_swigt__p_OSG__Node, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Image[] = {{&_swigt__p_OSG__Image, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_OSG__AttachmentContainer[] = {  {&_swigt__p_OSG__Distribution1D, _p_OSG__Distribution1DTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Camera, _p_OSG__CameraTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Sound, _p_OSG__SoundTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Animation, _p_OSG__AnimationTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__SoundGroup, _p_OSG__SoundGroupTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Viewport, _p_OSG__ViewportTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__ParticleSystem, _p_OSG__ParticleSystemTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__NodeCore, _p_OSG__NodeCoreTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__AttachmentContainer, 0, 0, 0},  {&_swigt__p_OSG__Distribution3D, _p_OSG__Distribution3DTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Geometry, _p_OSG__GeometryTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__VideoWrapper, _p_OSG__VideoWrapperTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Node, _p_OSG__NodeTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Image, _p_OSG__ImageTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Distribution2D, _p_OSG__Distribution2DTo_p_OSG__AttachmentContainer, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OSG__AttachmentContainer[] = {  {&_swigt__p_OSG__Distribution1D, _p_OSG__Distribution1DTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Camera, _p_OSG__CameraTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Sound, _p_OSG__SoundTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Component, _p_OSG__ComponentTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Animation, _p_OSG__AnimationTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__SoundGroup, _p_OSG__SoundGroupTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Viewport, _p_OSG__ViewportTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__ParticleSystem, _p_OSG__ParticleSystemTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__NodeCore, _p_OSG__NodeCoreTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__AttachmentContainer, 0, 0, 0},  {&_swigt__p_OSG__Distribution3D, _p_OSG__Distribution3DTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Geometry, _p_OSG__GeometryTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__VideoWrapper, _p_OSG__VideoWrapperTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Node, _p_OSG__NodeTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Image, _p_OSG__ImageTo_p_OSG__AttachmentContainer, 0, 0},  {&_swigt__p_OSG__Distribution2D, _p_OSG__Distribution2DTo_p_OSG__AttachmentContainer, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__GeometryRefPtr[] = {{&_swigt__p_OSG__GeometryRefPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__NodeCoreRefPtr[] = {{&_swigt__p_OSG__NodeCoreRefPtr, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_OSG__AttachmentContainerRefPtr[] = {  {&_swigt__p_OSG__Distribution1DRefPtr, _p_OSG__Distribution1DRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__VideoWrapperRefPtr, _p_OSG__VideoWrapperRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AnimationRefPtr, _p_OSG__AnimationRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__SoundGroupRefPtr, _p_OSG__SoundGroupRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__SoundRefPtr, _p_OSG__SoundRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__WindowEventProducerRefPtr, _p_OSG__WindowEventProducerRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ViewportRefPtr, _p_OSG__ViewportRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution2DRefPtr, _p_OSG__Distribution2DRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution3DRefPtr, _p_OSG__Distribution3DRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AttachmentContainerRefPtr, 0, 0, 0},  {&_swigt__p_OSG__WindowEventProducer, _p_OSG__WindowEventProducerTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ParticleSystemRefPtr, _p_OSG__ParticleSystemRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ImageRefPtr, _p_OSG__ImageRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__CameraRefPtr, _p_OSG__CameraRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__NodeRefPtr, _p_OSG__NodeRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__GeometryRefPtr, _p_OSG__GeometryRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__NodeCoreRefPtr, _p_OSG__NodeCoreRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OSG__AttachmentContainerRefPtr[] = {  {&_swigt__p_OSG__VideoWrapperRefPtr, _p_OSG__VideoWrapperRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AnimationRefPtr, _p_OSG__AnimationRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__SoundGroupRefPtr, _p_OSG__SoundGroupRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__SoundRefPtr, _p_OSG__SoundRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ComponentRefPtr, _p_OSG__ComponentRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__WindowEventProducerRefPtr, _p_OSG__WindowEventProducerRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ViewportRefPtr, _p_OSG__ViewportRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution1DRefPtr, _p_OSG__Distribution1DRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution2DRefPtr, _p_OSG__Distribution2DRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution3DRefPtr, _p_OSG__Distribution3DRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AttachmentContainerRefPtr, 0, 0, 0},  {&_swigt__p_OSG__WindowEventProducer, _p_OSG__WindowEventProducerTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ParticleSystemRefPtr, _p_OSG__ParticleSystemRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ImageRefPtr, _p_OSG__ImageRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__CameraRefPtr, _p_OSG__CameraRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__NodeRefPtr, _p_OSG__NodeRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__GeometryRefPtr, _p_OSG__GeometryRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},  {&_swigt__p_OSG__NodeCoreRefPtr, _p_OSG__NodeCoreRefPtrTo_p_OSG__AttachmentContainerRefPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__AttachmentRefPtr[] = {  {&_swigt__p_OSG__AttachmentRefPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__CameraRefPtr[] = {  {&_swigt__p_OSG__CameraRefPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Color4f[] = {  {&_swigt__p_OSG__Color4f, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OSG__Component[] = {  {&_swigt__p_OSG__Component, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OSG__ComponentRefPtr[] = {  {&_swigt__p_OSG__ComponentRefPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Distribution1D[] = {  {&_swigt__p_OSG__Distribution1D, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Distribution1DRefPtr[] = {  {&_swigt__p_OSG__Distribution1DRefPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Distribution2D[] = {  {&_swigt__p_OSG__Distribution2D, 0, 0, 0},{0, 0, 0, 0}};
@@ -23678,8 +26262,8 @@ static swig_cast_info _swigc__p_OSG__Distribution3DRefPtr[] = {  {&_swigt__p_OSG
 static swig_cast_info _swigc__p_OSG__EventProducer[] = {  {&_swigt__p_OSG__EventProducer, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Attachment[] = {{&_swigt__p_OSG__Attachment, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__TextureObjChunk[] = {{&_swigt__p_OSG__TextureObjChunk, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_OSG__FieldContainer[] = {  {&_swigt__p_OSG__PhysicsBody, _p_OSG__PhysicsBodyTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Distribution1D, _p_OSG__Distribution1DTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Camera, _p_OSG__CameraTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Sound, _p_OSG__SoundTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Animation, _p_OSG__AnimationTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__SoundGroup, _p_OSG__SoundGroupTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Viewport, _p_OSG__ViewportTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__ParticleSystem, _p_OSG__ParticleSystemTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__PhysicsHandler, _p_OSG__PhysicsHandlerTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Attachment, _p_OSG__AttachmentTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__NodeCore, _p_OSG__NodeCoreTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__AttachmentContainer, _p_OSG__AttachmentContainerTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__FieldContainer, 0, 0, 0},  {&_swigt__p_OSG__PhysicsSpace, _p_OSG__PhysicsSpaceTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Distribution3D, _p_OSG__Distribution3DTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Geometry, _p_OSG__GeometryTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__VideoWrapper, _p_OSG__VideoWrapperTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Node, _p_OSG__NodeTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__PhysicsWorld, _p_OSG__PhysicsWorldTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Image, _p_OSG__ImageTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Distribution2D, _p_OSG__Distribution2DTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__TextureObjChunk, _p_OSG__TextureObjChunkTo_p_OSG__FieldContainer, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_OSG__FieldContainerRefPtr[] = {  {&_swigt__p_OSG__WindowEventProducerRefPtr, _p_OSG__WindowEventProducerRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ViewportRefPtr, _p_OSG__ViewportRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AttachmentContainerRefPtr, _p_OSG__AttachmentContainerRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AttachmentRefPtr, _p_OSG__AttachmentRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__SoundRefPtr, _p_OSG__SoundRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__SoundGroupRefPtr, _p_OSG__SoundGroupRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AnimationRefPtr, _p_OSG__AnimationRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__VideoWrapperRefPtr, _p_OSG__VideoWrapperRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution1DRefPtr, _p_OSG__Distribution1DRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution2DRefPtr, _p_OSG__Distribution2DRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution3DRefPtr, _p_OSG__Distribution3DRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__FieldContainerRefPtr, 0, 0, 0},  {&_swigt__p_OSG__PhysicsHandlerRefPtr, _p_OSG__PhysicsHandlerRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__PhysicsWorldRefPtr, _p_OSG__PhysicsWorldRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__WindowEventProducer, _p_OSG__WindowEventProducerTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__CameraRefPtr, _p_OSG__CameraRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ImageRefPtr, _p_OSG__ImageRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ParticleSystemRefPtr, _p_OSG__ParticleSystemRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__NodeRefPtr, _p_OSG__NodeRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__GeometryRefPtr, _p_OSG__GeometryRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__NodeCoreRefPtr, _p_OSG__NodeCoreRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__PhysicsBodyRefPtr, _p_OSG__PhysicsBodyRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__TextureObjChunkRefPtr, _p_OSG__TextureObjChunkRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__PhysicsSpaceRefPtr, _p_OSG__PhysicsSpaceRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OSG__FieldContainer[] = {  {&_swigt__p_OSG__PhysicsBody, _p_OSG__PhysicsBodyTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Distribution1D, _p_OSG__Distribution1DTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Camera, _p_OSG__CameraTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Sound, _p_OSG__SoundTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Component, _p_OSG__ComponentTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Animation, _p_OSG__AnimationTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__SoundGroup, _p_OSG__SoundGroupTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Viewport, _p_OSG__ViewportTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__ParticleSystem, _p_OSG__ParticleSystemTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__PhysicsHandler, _p_OSG__PhysicsHandlerTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Attachment, _p_OSG__AttachmentTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__NodeCore, _p_OSG__NodeCoreTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__AttachmentContainer, _p_OSG__AttachmentContainerTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__FieldContainer, 0, 0, 0},  {&_swigt__p_OSG__PhysicsSpace, _p_OSG__PhysicsSpaceTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Distribution3D, _p_OSG__Distribution3DTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Geometry, _p_OSG__GeometryTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Node, _p_OSG__NodeTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__VideoWrapper, _p_OSG__VideoWrapperTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__PhysicsWorld, _p_OSG__PhysicsWorldTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Image, _p_OSG__ImageTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__Distribution2D, _p_OSG__Distribution2DTo_p_OSG__FieldContainer, 0, 0},  {&_swigt__p_OSG__TextureObjChunk, _p_OSG__TextureObjChunkTo_p_OSG__FieldContainer, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OSG__FieldContainerRefPtr[] = {  {&_swigt__p_OSG__WindowEventProducerRefPtr, _p_OSG__WindowEventProducerRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ViewportRefPtr, _p_OSG__ViewportRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution3DRefPtr, _p_OSG__Distribution3DRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AttachmentContainerRefPtr, _p_OSG__AttachmentContainerRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AttachmentRefPtr, _p_OSG__AttachmentRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ComponentRefPtr, _p_OSG__ComponentRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__SoundRefPtr, _p_OSG__SoundRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__SoundGroupRefPtr, _p_OSG__SoundGroupRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__AnimationRefPtr, _p_OSG__AnimationRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__VideoWrapperRefPtr, _p_OSG__VideoWrapperRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution1DRefPtr, _p_OSG__Distribution1DRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__Distribution2DRefPtr, _p_OSG__Distribution2DRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__FieldContainerRefPtr, 0, 0, 0},  {&_swigt__p_OSG__PhysicsHandlerRefPtr, _p_OSG__PhysicsHandlerRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__PhysicsWorldRefPtr, _p_OSG__PhysicsWorldRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__WindowEventProducer, _p_OSG__WindowEventProducerTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ImageRefPtr, _p_OSG__ImageRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__ParticleSystemRefPtr, _p_OSG__ParticleSystemRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__CameraRefPtr, _p_OSG__CameraRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__NodeRefPtr, _p_OSG__NodeRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__GeometryRefPtr, _p_OSG__GeometryRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__NodeCoreRefPtr, _p_OSG__NodeCoreRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__PhysicsBodyRefPtr, _p_OSG__PhysicsBodyRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__TextureObjChunkRefPtr, _p_OSG__TextureObjChunkRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},  {&_swigt__p_OSG__PhysicsSpaceRefPtr, _p_OSG__PhysicsSpaceRefPtrTo_p_OSG__FieldContainerRefPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__FieldContainerType[] = {  {&_swigt__p_OSG__FieldContainerType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__ImageRefPtr[] = {  {&_swigt__p_OSG__ImageRefPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__KeyEvent[] = {  {&_swigt__p_OSG__KeyEvent, 0, 0, 0},{0, 0, 0, 0}};
@@ -23760,6 +26344,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_OSG__Camera,
   _swigc__p_OSG__CameraRefPtr,
   _swigc__p_OSG__Color4f,
+  _swigc__p_OSG__Component,
+  _swigc__p_OSG__ComponentRefPtr,
   _swigc__p_OSG__Distribution1D,
   _swigc__p_OSG__Distribution1DRefPtr,
   _swigc__p_OSG__Distribution2D,
@@ -24151,7 +26737,6 @@ void SWIG_init_user(lua_State* L)
   /* exec Lua code if applicable */
   SWIG_Lua_dostring(L,SWIG_LUACODE);
 }
-
 
 #include "OSGToolbox_wrap.h"
 #include <boost/bind.hpp>

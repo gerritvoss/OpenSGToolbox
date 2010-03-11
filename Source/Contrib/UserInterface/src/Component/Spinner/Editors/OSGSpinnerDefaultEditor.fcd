@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SpinnerDefaultEditor"
+	parent="SpinnerEditor"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+A UI SpinnerDefaultEditor.
+	<Field
+		name="TextField"
+		type="TextField"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	</Field>
+	<Field
+		name="Spinner"
+		type="Spinner"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	</Field>
+</FieldContainer>

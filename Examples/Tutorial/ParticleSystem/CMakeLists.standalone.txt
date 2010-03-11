@@ -1,9 +1,10 @@
 
-PROJECT(OpenSGNativeTutorials)
+PROJECT(OpenSGParticleSystemTutorials)
 
 MESSAGE(STATUS "Building native window tutorials standalone")
 
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OpenSGNativeTutorials_SOURCE_DIR}/../../../CMake")
+#SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OpenSGNativeTutorials_SOURCE_DIR}/../../../CMake")
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OpenSGParticleSystemTutorials_SOURCE_DIR}/../../../../../ToolboxDevMaster/OpenSGDevMaster_Toolbox/CMake")
 
 # show build command lines
 SET(CMAKE_VERBOSE_MAKEFILE OFF)

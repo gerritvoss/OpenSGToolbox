@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGProgressBarBase.h"
-#include "Event/OSGChangeListener.h"
+#include "OSGChangeListener.h"
 #include <set>
-#include <OpenSG/Input/OSGUpdateListener.h>
+#include "OSGUpdateListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
+#include "OSGBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ProgressBar class. See \ref 
-           PageUserInterfaceProgressBar for a description.
+/*! \brief ProgressBar class. See \ref
+           PageContribUserInterfaceProgressBar for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProgressBar : public ProgressBarBase
 {
-  private:
-
-    typedef ProgressBarBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
+    enum Orientation
+    {
+        VERTICAL_ORIENTATION   = 0,
+        HORIZONTAL_ORIENTATION = 1
+    };
+
+    typedef ProgressBarBase Inherited;
+    typedef ProgressBar     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -119,6 +124,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 
     virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ProgressBarBase.
@@ -135,57 +141,62 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ProgressBar(void); 
+    virtual ~ProgressBar(void);
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+    virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
     virtual Color4f getDrawnTextColor(void) const;
-    virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
+    virtual UIDrawObjectCanvasRefPtr getDrawnDrawObject(void) const;
 
-	void setupProgressBar();
-	void setupIndeterminateProgressBar(const Time& Elps);
-    
+    void setupProgressBar();
+    void setupIndeterminateProgressBar(const Time& Elps);
+
     //Listener for getting change updates of the UIViewport
-	class ModelChangeListener : public ChangeListener
-	{
-	public:
-		ModelChangeListener(ProgressBarPtr TheProgressBar);
-        virtual void stateChanged(const ChangeEventPtr e);
-	private:
-		ProgressBarPtr _ProgressBar;
-	};
+    class ModelChangeListener : public ChangeListener
+    {
+      public:
+        ModelChangeListener(ProgressBarRefPtr TheProgressBar);
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
+      private:
+        ProgressBarRefPtr _ProgressBar;
+    };
 
-	friend class ModelChangeListener;
+    friend class ModelChangeListener;
 
-	ModelChangeListener _ModelChangeListener;
+    ModelChangeListener _ModelChangeListener;
     EventConnection _RangeModelConnection;
 
-	class IndeterminateUpdateListener : public UpdateListener
-	{
-	public:
-		IndeterminateUpdateListener(ProgressBarPtr TheProgressBar);
-        virtual void update(const UpdateEventPtr e);
-	private:
-		ProgressBarPtr _ProgressBar;
-	};
+    class IndeterminateUpdateListener : public UpdateListener
+    {
+      public:
+        IndeterminateUpdateListener(ProgressBarRefPtr TheProgressBar);
+        virtual void update(const UpdateEventUnrecPtr e);
+      private:
+        ProgressBarRefPtr _ProgressBar;
+    };
 
-	friend class IndeterminateUpdateListener;
+    friend class IndeterminateUpdateListener;
 
-	IndeterminateUpdateListener _IndeterminateUpdateListener;
-	Real32 _IndeterminateBarPosition;
+    IndeterminateUpdateListener _IndeterminateUpdateListener;
+    Real32 _IndeterminateBarPosition;
 
     Pnt2f _ProgressBarPosition;
     Vec2f _ProgressBarSize;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ProgressBarBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ProgressBar &source);
 };
 
@@ -195,7 +206,5 @@ OSG_END_NAMESPACE
 
 #include "OSGProgressBarBase.inl"
 #include "OSGProgressBar.inl"
-
-#define OSGPROGRESSBAR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGPROGRESSBAR_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,110 +58,136 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/OSGComponent.h" // Parent
+#include "OSGComponent.h" // Parent
 
-#include <OpenSG/OSGBoolFields.h> // Indeterminate type
-#include <OpenSG/OSGReal32Fields.h> // IndeterminateBarMoveRate type
-#include <OpenSG/OSGReal32Fields.h> // IndeterminateBarSize type
-#include <OpenSG/OSGBoolFields.h> // EnableProgressString type
-#include <OpenSG/OSGStringFields.h> // ProgressString type
-#include <OpenSG/OSGVec2fFields.h> // Alignment type
-#include "Text/OSGUIFont.h" // Font type
-#include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
-#include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
-#include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
-#include <OpenSG/OSGColor4fFields.h> // TextColor type
-#include <OpenSG/OSGUInt32Fields.h> // Orientation type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
-#include "Component/Scroll/OSGBoundedRangeModel.h" // RangeModel type
+#include "OSGSysFields.h"               // Indeterminate type
+#include "OSGBaseFields.h"              // ProgressString type
+#include "OSGVecFields.h"               // Alignment type
+#include "OSGUIFontFields.h"            // Font type
+#include "OSGUIDrawObjectCanvasFields.h" // DrawObject type
+#include "OSGBoundedRangeModelFields.h" // RangeModel type
 
 #include "OSGProgressBarFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ProgressBar;
-class BinaryDataHandler;
 
 //! \brief ProgressBar Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProgressBarBase : public Component
 {
-  private:
-
-    typedef Component    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ProgressBarPtr  Ptr;
+    typedef Component Inherited;
+    typedef Component ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ProgressBar);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        IndeterminateFieldId            = Inherited::NextFieldId,
-        IndeterminateBarMoveRateFieldId = IndeterminateFieldId            + 1,
-        IndeterminateBarSizeFieldId     = IndeterminateBarMoveRateFieldId + 1,
-        EnableProgressStringFieldId     = IndeterminateBarSizeFieldId     + 1,
-        ProgressStringFieldId           = EnableProgressStringFieldId     + 1,
-        AlignmentFieldId                = ProgressStringFieldId           + 1,
-        FontFieldId                     = AlignmentFieldId                + 1,
-        FocusedTextColorFieldId         = FontFieldId                     + 1,
-        RolloverTextColorFieldId        = FocusedTextColorFieldId         + 1,
-        DisabledTextColorFieldId        = RolloverTextColorFieldId        + 1,
-        TextColorFieldId                = DisabledTextColorFieldId        + 1,
-        OrientationFieldId              = TextColorFieldId                + 1,
-        DrawObjectFieldId               = OrientationFieldId              + 1,
-        FocusedDrawObjectFieldId        = DrawObjectFieldId               + 1,
-        RolloverDrawObjectFieldId       = FocusedDrawObjectFieldId        + 1,
-        DisabledDrawObjectFieldId       = RolloverDrawObjectFieldId       + 1,
-        RangeModelFieldId               = DisabledDrawObjectFieldId       + 1,
-        NextFieldId                     = RangeModelFieldId               + 1
+        IndeterminateFieldId = Inherited::NextFieldId,
+        IndeterminateBarMoveRateFieldId = IndeterminateFieldId + 1,
+        IndeterminateBarSizeFieldId = IndeterminateBarMoveRateFieldId + 1,
+        EnableProgressStringFieldId = IndeterminateBarSizeFieldId + 1,
+        ProgressStringFieldId = EnableProgressStringFieldId + 1,
+        AlignmentFieldId = ProgressStringFieldId + 1,
+        FontFieldId = AlignmentFieldId + 1,
+        FocusedTextColorFieldId = FontFieldId + 1,
+        RolloverTextColorFieldId = FocusedTextColorFieldId + 1,
+        DisabledTextColorFieldId = RolloverTextColorFieldId + 1,
+        TextColorFieldId = DisabledTextColorFieldId + 1,
+        OrientationFieldId = TextColorFieldId + 1,
+        DrawObjectFieldId = OrientationFieldId + 1,
+        FocusedDrawObjectFieldId = DrawObjectFieldId + 1,
+        RolloverDrawObjectFieldId = FocusedDrawObjectFieldId + 1,
+        DisabledDrawObjectFieldId = RolloverDrawObjectFieldId + 1,
+        RangeModelFieldId = DisabledDrawObjectFieldId + 1,
+        NextFieldId = RangeModelFieldId + 1
     };
 
-    static const OSG::BitVector IndeterminateFieldMask;
-    static const OSG::BitVector IndeterminateBarMoveRateFieldMask;
-    static const OSG::BitVector IndeterminateBarSizeFieldMask;
-    static const OSG::BitVector EnableProgressStringFieldMask;
-    static const OSG::BitVector ProgressStringFieldMask;
-    static const OSG::BitVector AlignmentFieldMask;
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector FocusedTextColorFieldMask;
-    static const OSG::BitVector RolloverTextColorFieldMask;
-    static const OSG::BitVector DisabledTextColorFieldMask;
-    static const OSG::BitVector TextColorFieldMask;
-    static const OSG::BitVector OrientationFieldMask;
-    static const OSG::BitVector DrawObjectFieldMask;
-    static const OSG::BitVector FocusedDrawObjectFieldMask;
-    static const OSG::BitVector RolloverDrawObjectFieldMask;
-    static const OSG::BitVector DisabledDrawObjectFieldMask;
-    static const OSG::BitVector RangeModelFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector IndeterminateFieldMask =
+        (TypeTraits<BitVector>::One << IndeterminateFieldId);
+    static const OSG::BitVector IndeterminateBarMoveRateFieldMask =
+        (TypeTraits<BitVector>::One << IndeterminateBarMoveRateFieldId);
+    static const OSG::BitVector IndeterminateBarSizeFieldMask =
+        (TypeTraits<BitVector>::One << IndeterminateBarSizeFieldId);
+    static const OSG::BitVector EnableProgressStringFieldMask =
+        (TypeTraits<BitVector>::One << EnableProgressStringFieldId);
+    static const OSG::BitVector ProgressStringFieldMask =
+        (TypeTraits<BitVector>::One << ProgressStringFieldId);
+    static const OSG::BitVector AlignmentFieldMask =
+        (TypeTraits<BitVector>::One << AlignmentFieldId);
+    static const OSG::BitVector FontFieldMask =
+        (TypeTraits<BitVector>::One << FontFieldId);
+    static const OSG::BitVector FocusedTextColorFieldMask =
+        (TypeTraits<BitVector>::One << FocusedTextColorFieldId);
+    static const OSG::BitVector RolloverTextColorFieldMask =
+        (TypeTraits<BitVector>::One << RolloverTextColorFieldId);
+    static const OSG::BitVector DisabledTextColorFieldMask =
+        (TypeTraits<BitVector>::One << DisabledTextColorFieldId);
+    static const OSG::BitVector TextColorFieldMask =
+        (TypeTraits<BitVector>::One << TextColorFieldId);
+    static const OSG::BitVector OrientationFieldMask =
+        (TypeTraits<BitVector>::One << OrientationFieldId);
+    static const OSG::BitVector DrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DrawObjectFieldId);
+    static const OSG::BitVector FocusedDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << FocusedDrawObjectFieldId);
+    static const OSG::BitVector RolloverDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << RolloverDrawObjectFieldId);
+    static const OSG::BitVector DisabledDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DisabledDrawObjectFieldId);
+    static const OSG::BitVector RangeModelFieldMask =
+        (TypeTraits<BitVector>::One << RangeModelFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFBool            SFIndeterminateType;
+    typedef SFReal32          SFIndeterminateBarMoveRateType;
+    typedef SFReal32          SFIndeterminateBarSizeType;
+    typedef SFBool            SFEnableProgressStringType;
+    typedef SFString          SFProgressStringType;
+    typedef SFVec2f           SFAlignmentType;
+    typedef SFUnrecUIFontPtr  SFFontType;
+    typedef SFColor4f         SFFocusedTextColorType;
+    typedef SFColor4f         SFRolloverTextColorType;
+    typedef SFColor4f         SFDisabledTextColorType;
+    typedef SFColor4f         SFTextColorType;
+    typedef SFUInt32          SFOrientationType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFFocusedDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFRolloverDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDisabledDrawObjectType;
+    typedef SFUnrecBoundedRangeModelPtr SFRangeModelType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -170,85 +196,129 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFIndeterminate  (void);
-           SFReal32            *getSFIndeterminateBarMoveRate(void);
-           SFReal32            *getSFIndeterminateBarSize(void);
-           SFBool              *getSFEnableProgressString(void);
-           SFString            *getSFProgressString (void);
-           SFVec2f             *getSFAlignment      (void);
-           SFUIFontPtr         *getSFFont           (void);
-           SFColor4f           *getSFFocusedTextColor(void);
-           SFColor4f           *getSFRolloverTextColor(void);
-           SFColor4f           *getSFDisabledTextColor(void);
-           SFColor4f           *getSFTextColor      (void);
-           SFUInt32            *getSFOrientation    (void);
-           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
-           SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
-           SFBoundedRangeModelPtr *getSFRangeModel     (void);
 
-           bool                &getIndeterminate  (void);
-     const bool                &getIndeterminate  (void) const;
-           Real32              &getIndeterminateBarMoveRate(void);
-     const Real32              &getIndeterminateBarMoveRate(void) const;
-           Real32              &getIndeterminateBarSize(void);
-     const Real32              &getIndeterminateBarSize(void) const;
-           bool                &getEnableProgressString(void);
-     const bool                &getEnableProgressString(void) const;
-           std::string         &getProgressString (void);
-     const std::string         &getProgressString (void) const;
-           Vec2f               &getAlignment      (void);
-     const Vec2f               &getAlignment      (void) const;
-           UIFontPtr           &getFont           (void);
-     const UIFontPtr           &getFont           (void) const;
-           Color4f             &getFocusedTextColor(void);
-     const Color4f             &getFocusedTextColor(void) const;
-           Color4f             &getRolloverTextColor(void);
-     const Color4f             &getRolloverTextColor(void) const;
-           Color4f             &getDisabledTextColor(void);
-     const Color4f             &getDisabledTextColor(void) const;
-           Color4f             &getTextColor      (void);
-     const Color4f             &getTextColor      (void) const;
-           UInt32              &getOrientation    (void);
-     const UInt32              &getOrientation    (void) const;
-           UIDrawObjectCanvasPtr &getDrawObject     (void);
-     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
-           UIDrawObjectCanvasPtr &getFocusedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getFocusedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
-           BoundedRangeModelPtr &getRangeModel     (void);
-     const BoundedRangeModelPtr &getRangeModel     (void) const;
+                  SFBool              *editSFIndeterminate  (void);
+            const SFBool              *getSFIndeterminate   (void) const;
+
+                  SFReal32            *editSFIndeterminateBarMoveRate(void);
+            const SFReal32            *getSFIndeterminateBarMoveRate (void) const;
+
+                  SFReal32            *editSFIndeterminateBarSize(void);
+            const SFReal32            *getSFIndeterminateBarSize (void) const;
+
+                  SFBool              *editSFEnableProgressString(void);
+            const SFBool              *getSFEnableProgressString (void) const;
+
+                  SFString            *editSFProgressString (void);
+            const SFString            *getSFProgressString  (void) const;
+
+                  SFVec2f             *editSFAlignment      (void);
+            const SFVec2f             *getSFAlignment       (void) const;
+            const SFUnrecUIFontPtr    *getSFFont           (void) const;
+                  SFUnrecUIFontPtr    *editSFFont           (void);
+
+                  SFColor4f           *editSFFocusedTextColor(void);
+            const SFColor4f           *getSFFocusedTextColor (void) const;
+
+                  SFColor4f           *editSFRolloverTextColor(void);
+            const SFColor4f           *getSFRolloverTextColor (void) const;
+
+                  SFColor4f           *editSFDisabledTextColor(void);
+            const SFColor4f           *getSFDisabledTextColor (void) const;
+
+                  SFColor4f           *editSFTextColor      (void);
+            const SFColor4f           *getSFTextColor       (void) const;
+
+                  SFUInt32            *editSFOrientation    (void);
+            const SFUInt32            *getSFOrientation     (void) const;
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDrawObject     (void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDrawObject     (void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFFocusedDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFRolloverDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDisabledDrawObject(void);
+            const SFUnrecBoundedRangeModelPtr *getSFRangeModel     (void) const;
+                  SFUnrecBoundedRangeModelPtr *editSFRangeModel     (void);
+
+
+                  bool                &editIndeterminate  (void);
+                  bool                 getIndeterminate   (void) const;
+
+                  Real32              &editIndeterminateBarMoveRate(void);
+                  Real32               getIndeterminateBarMoveRate (void) const;
+
+                  Real32              &editIndeterminateBarSize(void);
+                  Real32               getIndeterminateBarSize (void) const;
+
+                  bool                &editEnableProgressString(void);
+                  bool                 getEnableProgressString (void) const;
+
+                  std::string         &editProgressString (void);
+            const std::string         &getProgressString  (void) const;
+
+                  Vec2f               &editAlignment      (void);
+            const Vec2f               &getAlignment       (void) const;
+
+                  UIFont * getFont           (void) const;
+
+                  Color4f             &editFocusedTextColor(void);
+            const Color4f             &getFocusedTextColor (void) const;
+
+                  Color4f             &editRolloverTextColor(void);
+            const Color4f             &getRolloverTextColor (void) const;
+
+                  Color4f             &editDisabledTextColor(void);
+            const Color4f             &getDisabledTextColor (void) const;
+
+                  Color4f             &editTextColor      (void);
+            const Color4f             &getTextColor       (void) const;
+
+                  UInt32              &editOrientation    (void);
+                  UInt32               getOrientation     (void) const;
+
+                  UIDrawObjectCanvas * getDrawObject     (void) const;
+
+                  UIDrawObjectCanvas * getFocusedDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getRolloverDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getDisabledDrawObject(void) const;
+
+                  BoundedRangeModel * getRangeModel     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setIndeterminate  ( const bool &value );
-     void setIndeterminateBarMoveRate( const Real32 &value );
-     void setIndeterminateBarSize( const Real32 &value );
-     void setEnableProgressString( const bool &value );
-     void setProgressString ( const std::string &value );
-     void setAlignment      ( const Vec2f &value );
-     void setFont           ( const UIFontPtr &value );
-     void setFocusedTextColor( const Color4f &value );
-     void setRolloverTextColor( const Color4f &value );
-     void setDisabledTextColor( const Color4f &value );
-     void setTextColor      ( const Color4f &value );
-     void setOrientation    ( const UInt32 &value );
-     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
-     void setFocusedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRangeModel     ( const BoundedRangeModelPtr &value );
+            void setIndeterminate  (const bool value);
+            void setIndeterminateBarMoveRate(const Real32 value);
+            void setIndeterminateBarSize(const Real32 value);
+            void setEnableProgressString(const bool value);
+            void setProgressString (const std::string &value);
+            void setAlignment      (const Vec2f &value);
+            void setFont           (UIFont * const value);
+            void setFocusedTextColor(const Color4f &value);
+            void setRolloverTextColor(const Color4f &value);
+            void setDisabledTextColor(const Color4f &value);
+            void setTextColor      (const Color4f &value);
+            void setOrientation    (const UInt32 value);
+            void setDrawObject     (UIDrawObjectCanvas * const value);
+            void setFocusedDrawObject(UIDrawObjectCanvas * const value);
+            void setRolloverDrawObject(UIDrawObjectCanvas * const value);
+            void setDisabledDrawObject(UIDrawObjectCanvas * const value);
+            void setRangeModel     (BoundedRangeModel * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -256,11 +326,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -268,42 +338,59 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ProgressBarPtr      create          (void); 
-    static  ProgressBarPtr      createEmpty     (void); 
+    static  ProgressBarTransitPtr  create          (void);
+    static  ProgressBar           *createEmpty     (void);
+
+    static  ProgressBarTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  ProgressBar            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ProgressBarTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFBool              _sfIndeterminate;
-    SFReal32            _sfIndeterminateBarMoveRate;
-    SFReal32            _sfIndeterminateBarSize;
-    SFBool              _sfEnableProgressString;
-    SFString            _sfProgressString;
-    SFVec2f             _sfAlignment;
-    SFUIFontPtr         _sfFont;
-    SFColor4f           _sfFocusedTextColor;
-    SFColor4f           _sfRolloverTextColor;
-    SFColor4f           _sfDisabledTextColor;
-    SFColor4f           _sfTextColor;
-    SFUInt32            _sfOrientation;
-    SFUIDrawObjectCanvasPtr   _sfDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfFocusedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
-    SFBoundedRangeModelPtr   _sfRangeModel;
+    SFBool            _sfIndeterminate;
+    SFReal32          _sfIndeterminateBarMoveRate;
+    SFReal32          _sfIndeterminateBarSize;
+    SFBool            _sfEnableProgressString;
+    SFString          _sfProgressString;
+    SFVec2f           _sfAlignment;
+    SFUnrecUIFontPtr  _sfFont;
+    SFColor4f         _sfFocusedTextColor;
+    SFColor4f         _sfRolloverTextColor;
+    SFColor4f         _sfDisabledTextColor;
+    SFColor4f         _sfTextColor;
+    SFUInt32          _sfOrientation;
+    SFUnrecUIDrawObjectCanvasPtr _sfDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfFocusedDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfRolloverDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfDisabledDrawObject;
+    SFUnrecBoundedRangeModelPtr _sfRangeModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -318,69 +405,112 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ProgressBarBase(void); 
+    virtual ~ProgressBarBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const ProgressBar *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleIndeterminate   (void) const;
+    EditFieldHandlePtr editHandleIndeterminate  (void);
+    GetFieldHandlePtr  getHandleIndeterminateBarMoveRate (void) const;
+    EditFieldHandlePtr editHandleIndeterminateBarMoveRate(void);
+    GetFieldHandlePtr  getHandleIndeterminateBarSize (void) const;
+    EditFieldHandlePtr editHandleIndeterminateBarSize(void);
+    GetFieldHandlePtr  getHandleEnableProgressString (void) const;
+    EditFieldHandlePtr editHandleEnableProgressString(void);
+    GetFieldHandlePtr  getHandleProgressString  (void) const;
+    EditFieldHandlePtr editHandleProgressString (void);
+    GetFieldHandlePtr  getHandleAlignment       (void) const;
+    EditFieldHandlePtr editHandleAlignment      (void);
+    GetFieldHandlePtr  getHandleFont            (void) const;
+    EditFieldHandlePtr editHandleFont           (void);
+    GetFieldHandlePtr  getHandleFocusedTextColor (void) const;
+    EditFieldHandlePtr editHandleFocusedTextColor(void);
+    GetFieldHandlePtr  getHandleRolloverTextColor (void) const;
+    EditFieldHandlePtr editHandleRolloverTextColor(void);
+    GetFieldHandlePtr  getHandleDisabledTextColor (void) const;
+    EditFieldHandlePtr editHandleDisabledTextColor(void);
+    GetFieldHandlePtr  getHandleTextColor       (void) const;
+    EditFieldHandlePtr editHandleTextColor      (void);
+    GetFieldHandlePtr  getHandleOrientation     (void) const;
+    EditFieldHandlePtr editHandleOrientation    (void);
+    GetFieldHandlePtr  getHandleDrawObject      (void) const;
+    EditFieldHandlePtr editHandleDrawObject     (void);
+    GetFieldHandlePtr  getHandleFocusedDrawObject (void) const;
+    EditFieldHandlePtr editHandleFocusedDrawObject(void);
+    GetFieldHandlePtr  getHandleRolloverDrawObject (void) const;
+    EditFieldHandlePtr editHandleRolloverDrawObject(void);
+    GetFieldHandlePtr  getHandleDisabledDrawObject (void) const;
+    EditFieldHandlePtr editHandleDisabledDrawObject(void);
+    GetFieldHandlePtr  getHandleRangeModel      (void) const;
+    EditFieldHandlePtr editHandleRangeModel     (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ProgressBarBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ProgressBarBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ProgressBarBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ProgressBarBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ProgressBarBase *ProgressBarBaseP;
 
-typedef osgIF<ProgressBarBase::isNodeCore,
-              CoredNodePtr<ProgressBar>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ProgressBarNodePtr;
-
-typedef RefPtr<ProgressBarPtr> ProgressBarRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGPROGRESSBARBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPROGRESSBARBASE_H_ */

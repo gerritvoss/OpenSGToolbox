@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,53 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSpinnerBase.h"
 #include "OSGSpinnerModel.h"
-#include "Event/OSGActionListener.h"
+#include "OSGActionListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
+#include "OSGTextField.h"
+#include "OSGButton.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Spinner class. See \ref 
-           PageUserInterfaceSpinner for a description.
+/*! \brief Spinner class. See \ref
+           PageContribUserInterfaceSpinner for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Spinner : public SpinnerBase
 {
-  private:
-
-    typedef SpinnerBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
+    enum Orientation
+    {
+        VERTICAL_ORIENTATION   = 0,
+        HORIZONTAL_ORIENTATION = 1
+    };
+
+    typedef SpinnerBase Inherited;
+    typedef Spinner     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 
     virtual void updateLayout(void);
 
@@ -120,8 +128,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
 	//This is only relevent when the Editor is a derived class of SpinnerEditor
 	bool getEditable(void) const;
 
-/*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SpinnerBase.
@@ -138,23 +146,37 @@ class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Spinner(void); 
+    virtual ~Spinner(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const Spinner *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
 
     SpinnerModelPtr _Model;
     
     //This method is called by the constructors to create the JComponent that displays the current value of the sequence.
-    ComponentPtr createEditor(SpinnerModelPtr model);
+    ComponentRefPtr createEditor(SpinnerModelPtr model);
 
     //Next Button Action Listener
 	class NextButtonActionListener : public ActionListener
 	{
 	public:
-		NextButtonActionListener(SpinnerPtr TheSpinner);
-        virtual void actionPerformed(const ActionEventPtr e);
+		NextButtonActionListener(SpinnerRefPtr TheSpinner);
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		SpinnerPtr _Spinner;
+		SpinnerRefPtr _Spinner;
 	};
 
 	friend class NextButtonActionListener;
@@ -165,25 +187,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
 	class PreviousButtonActionListener : public ActionListener
 	{
 	public:
-		PreviousButtonActionListener(SpinnerPtr TheSpinner);
-        virtual void actionPerformed(const ActionEventPtr e);
+		PreviousButtonActionListener(SpinnerRefPtr TheSpinner);
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		SpinnerPtr _Spinner;
+		SpinnerRefPtr _Spinner;
 	};
 
 	friend class PreviousButtonActionListener;
 
 	PreviousButtonActionListener _PreviousButtonActionListener;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SpinnerBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Spinner &source);
 };
 
@@ -193,7 +213,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSpinnerBase.inl"
 #include "OSGSpinner.inl"
-
-#define OSGSPINNER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSPINNER_H_ */

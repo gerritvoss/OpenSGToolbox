@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,194 +50,329 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESPINNERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGButton.h"                  // NextButton Class
+#include "OSGComponent.h"               // Editor Class
 
 #include "OSGSpinnerBase.h"
 #include "OSGSpinner.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SpinnerBase::NextButtonFieldMask = 
-    (TypeTraits<BitVector>::One << SpinnerBase::NextButtonFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  SpinnerBase::PreviousButtonFieldMask = 
-    (TypeTraits<BitVector>::One << SpinnerBase::PreviousButtonFieldId);
+/*! \class OSG::Spinner
+    A UI Spinner.
+ */
 
-const OSG::BitVector  SpinnerBase::EditorFieldMask = 
-    (TypeTraits<BitVector>::One << SpinnerBase::EditorFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  SpinnerBase::OrientationFieldMask = 
-    (TypeTraits<BitVector>::One << SpinnerBase::OrientationFieldId);
-
-const OSG::BitVector  SpinnerBase::EditorToButtonOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << SpinnerBase::EditorToButtonOffsetFieldId);
-
-const OSG::BitVector SpinnerBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ButtonPtr       SpinnerBase::_sfNextButton
+/*! \var Button *        SpinnerBase::_sfNextButton
     
 */
-/*! \var ButtonPtr       SpinnerBase::_sfPreviousButton
+
+/*! \var Button *        SpinnerBase::_sfPreviousButton
     
 */
-/*! \var ComponentPtr    SpinnerBase::_sfEditor
+
+/*! \var Component *     SpinnerBase::_sfEditor
     
 */
+
 /*! \var UInt32          SpinnerBase::_sfOrientation
     
 */
+
 /*! \var UInt32          SpinnerBase::_sfEditorToButtonOffset
     
 */
 
-//! Spinner description
 
-FieldDescription *SpinnerBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Spinner *>::_type("SpinnerPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Spinner *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Spinner *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Spinner *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SpinnerBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFButtonPtr::getClassType(), 
-                     "NextButton", 
-                     NextButtonFieldId, NextButtonFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpinnerBase::getSFNextButton),
-    new FieldDescription(SFButtonPtr::getClassType(), 
-                     "PreviousButton", 
-                     PreviousButtonFieldId, PreviousButtonFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpinnerBase::getSFPreviousButton),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "Editor", 
-                     EditorFieldId, EditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpinnerBase::getSFEditor),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Orientation", 
-                     OrientationFieldId, OrientationFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpinnerBase::getSFOrientation),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "EditorToButtonOffset", 
-                     EditorToButtonOffsetFieldId, EditorToButtonOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpinnerBase::getSFEditorToButtonOffset)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SpinnerBase::_type(
-    "Spinner",
-    "Container",
-    NULL,
-    (PrototypeCreateF) &SpinnerBase::createEmpty,
+    pDesc = new SFUnrecButtonPtr::Description(
+        SFUnrecButtonPtr::getClassType(),
+        "NextButton",
+        "",
+        NextButtonFieldId, NextButtonFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Spinner::editHandleNextButton),
+        static_cast<FieldGetMethodSig >(&Spinner::getHandleNextButton));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecButtonPtr::Description(
+        SFUnrecButtonPtr::getClassType(),
+        "PreviousButton",
+        "",
+        PreviousButtonFieldId, PreviousButtonFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Spinner::editHandlePreviousButton),
+        static_cast<FieldGetMethodSig >(&Spinner::getHandlePreviousButton));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "Editor",
+        "",
+        EditorFieldId, EditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Spinner::editHandleEditor),
+        static_cast<FieldGetMethodSig >(&Spinner::getHandleEditor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Orientation",
+        "",
+        OrientationFieldId, OrientationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Spinner::editHandleOrientation),
+        static_cast<FieldGetMethodSig >(&Spinner::getHandleOrientation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "EditorToButtonOffset",
+        "",
+        EditorToButtonOffsetFieldId, EditorToButtonOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Spinner::editHandleEditorToButtonOffset),
+        static_cast<FieldGetMethodSig >(&Spinner::getHandleEditorToButtonOffset));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+SpinnerBase::TypeObject SpinnerBase::_type(
+    SpinnerBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SpinnerBase::createEmptyLocal),
     Spinner::initMethod,
-    _desc,
-    sizeof(_desc));
+    Spinner::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Spinner::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Spinner\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Spinner.\n"
+    "\t<Field\n"
+    "\t\tname=\"NextButton\"\n"
+    "\t\ttype=\"Button\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PreviousButton\"\n"
+    "\t\ttype=\"Button\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Editor\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Orientation\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"Spinner::VERTICAL_ORIENTATION\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EditorToButtonOffset\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Spinner.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SpinnerBase, SpinnerPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SpinnerBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SpinnerBase::getType(void) const 
+FieldContainerType &SpinnerBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SpinnerBase::shallowCopy(void) const 
-{ 
-    SpinnerPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Spinner *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SpinnerBase::getContainerSize(void) const 
-{ 
-    return sizeof(Spinner); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SpinnerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SpinnerBase::getType(void) const
 {
-    this->executeSyncImpl((SpinnerBase *) &other, whichField);
+    return _type;
 }
-#else
-void SpinnerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SpinnerBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SpinnerBase *) &other, whichField, sInfo);
+    return sizeof(Spinner);
 }
-void SpinnerBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Spinner::_sfNextButton field.
+const SFUnrecButtonPtr *SpinnerBase::getSFNextButton(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfNextButton;
 }
 
-void SpinnerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecButtonPtr    *SpinnerBase::editSFNextButton     (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(NextButtonFieldMask);
 
+    return &_sfNextButton;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SpinnerBase::SpinnerBase(void) :
-    _sfNextButton             (ButtonPtr(NullFC)), 
-    _sfPreviousButton         (ButtonPtr(NullFC)), 
-    _sfEditor                 (ComponentPtr(NullFC)), 
-    _sfOrientation            (UInt32(Spinner::VERTICAL_ORIENTATION)), 
-    _sfEditorToButtonOffset   (UInt32(1)), 
-    Inherited() 
+//! Get the Spinner::_sfPreviousButton field.
+const SFUnrecButtonPtr *SpinnerBase::getSFPreviousButton(void) const
 {
+    return &_sfPreviousButton;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SpinnerBase::SpinnerBase(const SpinnerBase &source) :
-    _sfNextButton             (source._sfNextButton             ), 
-    _sfPreviousButton         (source._sfPreviousButton         ), 
-    _sfEditor                 (source._sfEditor                 ), 
-    _sfOrientation            (source._sfOrientation            ), 
-    _sfEditorToButtonOffset   (source._sfEditorToButtonOffset   ), 
-    Inherited                 (source)
+SFUnrecButtonPtr    *SpinnerBase::editSFPreviousButton (void)
 {
+    editSField(PreviousButtonFieldMask);
+
+    return &_sfPreviousButton;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-SpinnerBase::~SpinnerBase(void)
+//! Get the Spinner::_sfEditor field.
+const SFUnrecComponentPtr *SpinnerBase::getSFEditor(void) const
 {
+    return &_sfEditor;
 }
+
+SFUnrecComponentPtr *SpinnerBase::editSFEditor         (void)
+{
+    editSField(EditorFieldMask);
+
+    return &_sfEditor;
+}
+
+SFUInt32 *SpinnerBase::editSFOrientation(void)
+{
+    editSField(OrientationFieldMask);
+
+    return &_sfOrientation;
+}
+
+const SFUInt32 *SpinnerBase::getSFOrientation(void) const
+{
+    return &_sfOrientation;
+}
+
+
+SFUInt32 *SpinnerBase::editSFEditorToButtonOffset(void)
+{
+    editSField(EditorToButtonOffsetFieldMask);
+
+    return &_sfEditorToButtonOffset;
+}
+
+const SFUInt32 *SpinnerBase::getSFEditorToButtonOffset(void) const
+{
+    return &_sfEditorToButtonOffset;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SpinnerBase::getBinSize(const BitVector &whichField)
+UInt32 SpinnerBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -245,33 +380,28 @@ UInt32 SpinnerBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfNextButton.getBinSize();
     }
-
     if(FieldBits::NoField != (PreviousButtonFieldMask & whichField))
     {
         returnValue += _sfPreviousButton.getBinSize();
     }
-
     if(FieldBits::NoField != (EditorFieldMask & whichField))
     {
         returnValue += _sfEditor.getBinSize();
     }
-
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
         returnValue += _sfOrientation.getBinSize();
     }
-
     if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
     {
         returnValue += _sfEditorToButtonOffset.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SpinnerBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SpinnerBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -279,32 +409,26 @@ void SpinnerBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfNextButton.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PreviousButtonFieldMask & whichField))
     {
         _sfPreviousButton.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EditorFieldMask & whichField))
     {
         _sfEditor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
         _sfOrientation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
     {
         _sfEditorToButtonOffset.copyToBin(pMem);
     }
-
-
 }
 
-void SpinnerBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SpinnerBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -312,126 +436,367 @@ void SpinnerBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfNextButton.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PreviousButtonFieldMask & whichField))
     {
         _sfPreviousButton.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EditorFieldMask & whichField))
     {
         _sfEditor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
         _sfOrientation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
     {
         _sfEditorToButtonOffset.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SpinnerBase::executeSyncImpl(      SpinnerBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SpinnerTransitPtr SpinnerBase::createLocal(BitVector bFlags)
 {
+    SpinnerTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (NextButtonFieldMask & whichField))
-        _sfNextButton.syncWith(pOther->_sfNextButton);
+        fc = dynamic_pointer_cast<Spinner>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (PreviousButtonFieldMask & whichField))
-        _sfPreviousButton.syncWith(pOther->_sfPreviousButton);
-
-    if(FieldBits::NoField != (EditorFieldMask & whichField))
-        _sfEditor.syncWith(pOther->_sfEditor);
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
-
-    if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
-        _sfEditorToButtonOffset.syncWith(pOther->_sfEditorToButtonOffset);
-
-
-}
-#else
-void SpinnerBase::executeSyncImpl(      SpinnerBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (NextButtonFieldMask & whichField))
-        _sfNextButton.syncWith(pOther->_sfNextButton);
-
-    if(FieldBits::NoField != (PreviousButtonFieldMask & whichField))
-        _sfPreviousButton.syncWith(pOther->_sfPreviousButton);
-
-    if(FieldBits::NoField != (EditorFieldMask & whichField))
-        _sfEditor.syncWith(pOther->_sfEditor);
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
-
-    if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
-        _sfEditorToButtonOffset.syncWith(pOther->_sfEditorToButtonOffset);
-
-
-
+    return fc;
 }
 
-void SpinnerBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SpinnerTransitPtr SpinnerBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SpinnerTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Spinner>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+SpinnerTransitPtr SpinnerBase::create(void)
+{
+    SpinnerTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Spinner>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Spinner *SpinnerBase::createEmptyLocal(BitVector bFlags)
+{
+    Spinner *returnValue;
+
+    newPtr<Spinner>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Spinner *SpinnerBase::createEmpty(void)
+{
+    Spinner *returnValue;
+
+    newPtr<Spinner>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SpinnerBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Spinner *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Spinner *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SpinnerBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Spinner *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Spinner *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SpinnerBase::shallowCopy(void) const
+{
+    Spinner *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Spinner *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SpinnerBase::SpinnerBase(void) :
+    Inherited(),
+    _sfNextButton             (NULL),
+    _sfPreviousButton         (NULL),
+    _sfEditor                 (NULL),
+    _sfOrientation            (UInt32(Spinner::VERTICAL_ORIENTATION)),
+    _sfEditorToButtonOffset   (UInt32(1))
+{
+}
+
+SpinnerBase::SpinnerBase(const SpinnerBase &source) :
+    Inherited(source),
+    _sfNextButton             (NULL),
+    _sfPreviousButton         (NULL),
+    _sfEditor                 (NULL),
+    _sfOrientation            (source._sfOrientation            ),
+    _sfEditorToButtonOffset   (source._sfEditorToButtonOffset   )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SpinnerBase::~SpinnerBase(void)
+{
+}
+
+void SpinnerBase::onCreate(const Spinner *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Spinner *pThis = static_cast<Spinner *>(this);
+
+        pThis->setNextButton(source->getNextButton());
+
+        pThis->setPreviousButton(source->getPreviousButton());
+
+        pThis->setEditor(source->getEditor());
+    }
+}
+
+GetFieldHandlePtr SpinnerBase::getHandleNextButton      (void) const
+{
+    SFUnrecButtonPtr::GetHandlePtr returnValue(
+        new  SFUnrecButtonPtr::GetHandle(
+             &_sfNextButton,
+             this->getType().getFieldDesc(NextButtonFieldId),
+             const_cast<SpinnerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpinnerBase::editHandleNextButton     (void)
+{
+    SFUnrecButtonPtr::EditHandlePtr returnValue(
+        new  SFUnrecButtonPtr::EditHandle(
+             &_sfNextButton,
+             this->getType().getFieldDesc(NextButtonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Spinner::setNextButton,
+                    static_cast<Spinner *>(this), _1));
+
+    editSField(NextButtonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpinnerBase::getHandlePreviousButton  (void) const
+{
+    SFUnrecButtonPtr::GetHandlePtr returnValue(
+        new  SFUnrecButtonPtr::GetHandle(
+             &_sfPreviousButton,
+             this->getType().getFieldDesc(PreviousButtonFieldId),
+             const_cast<SpinnerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpinnerBase::editHandlePreviousButton (void)
+{
+    SFUnrecButtonPtr::EditHandlePtr returnValue(
+        new  SFUnrecButtonPtr::EditHandle(
+             &_sfPreviousButton,
+             this->getType().getFieldDesc(PreviousButtonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Spinner::setPreviousButton,
+                    static_cast<Spinner *>(this), _1));
+
+    editSField(PreviousButtonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpinnerBase::getHandleEditor          (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfEditor,
+             this->getType().getFieldDesc(EditorFieldId),
+             const_cast<SpinnerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpinnerBase::editHandleEditor         (void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfEditor,
+             this->getType().getFieldDesc(EditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Spinner::setEditor,
+                    static_cast<Spinner *>(this), _1));
+
+    editSField(EditorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpinnerBase::getHandleOrientation     (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             const_cast<SpinnerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpinnerBase::editHandleOrientation    (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             this));
+
+
+    editSField(OrientationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpinnerBase::getHandleEditorToButtonOffset (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfEditorToButtonOffset,
+             this->getType().getFieldDesc(EditorToButtonOffsetFieldId),
+             const_cast<SpinnerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpinnerBase::editHandleEditorToButtonOffset(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfEditorToButtonOffset,
+             this->getType().getFieldDesc(EditorToButtonOffsetFieldId),
+             this));
+
+
+    editSField(EditorToButtonOffsetFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SpinnerBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Spinner *pThis = static_cast<Spinner *>(this);
+
+    pThis->execSync(static_cast<Spinner *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SpinnerBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Spinner *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Spinner *>(pRefAspect),
+                  dynamic_cast<const Spinner *>(this));
+
+    return returnValue;
+}
+#endif
+
+void SpinnerBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Spinner *>(this)->setNextButton(NULL);
+
+    static_cast<Spinner *>(this)->setPreviousButton(NULL);
+
+    static_cast<Spinner *>(this)->setEditor(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SpinnerPtr>::_type("SpinnerPtr", "ContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(SpinnerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SpinnerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSPINNERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSPINNERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSPINNERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

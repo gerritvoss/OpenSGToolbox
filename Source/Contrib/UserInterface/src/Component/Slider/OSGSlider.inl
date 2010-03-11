@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -37,8 +37,6 @@
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
-
-#include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -115,18 +113,15 @@ void Slider::setValueIsAdjusting(bool b)
 }
 
 inline
-Slider::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(SliderPtr TheSlider) :
+Slider::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(SliderRefPtr TheSlider) :
    _Slider(TheSlider)
 {
 }
 
 inline
-Slider::KnobDraggedListener::KnobDraggedListener(SliderPtr TheSlider) :
+Slider::KnobDraggedListener::KnobDraggedListener(SliderRefPtr TheSlider) :
    _Slider(TheSlider)
 {
 }
 
 OSG_END_NAMESPACE
-
-#define OSGSLIDER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

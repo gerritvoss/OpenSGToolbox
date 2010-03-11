@@ -3,18 +3,21 @@
 <FieldContainer
 	name="ProgressBar"
 	parent="Component"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI ProgressBar.
 	<Field
 		name="Indeterminate"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -24,6 +27,7 @@ A UI ProgressBar.
 	<Field
 		name="IndeterminateBarMoveRate"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +37,7 @@ A UI ProgressBar.
 	<Field
 		name="IndeterminateBarSize"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +47,7 @@ A UI ProgressBar.
 	<Field
 		name="EnableProgressString"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -51,6 +57,7 @@ A UI ProgressBar.
 	<Field
 		name="ProgressString"
 		type="std::string"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -60,6 +67,7 @@ A UI ProgressBar.
 	<Field
 		name="Alignment"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5f,0.5f"
@@ -68,16 +76,17 @@ A UI ProgressBar.
 	</Field>
 	<Field
 		name="Font"
-		type="UIFontPtr"
+		type="UIFont"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Text/OSGUIFont.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="FocusedTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -86,6 +95,7 @@ A UI ProgressBar.
 	<Field
 		name="RolloverTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -94,6 +104,7 @@ A UI ProgressBar.
 	<Field
 		name="DisabledTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -102,6 +113,7 @@ A UI ProgressBar.
 	<Field
 		name="TextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -110,6 +122,7 @@ A UI ProgressBar.
 	<Field
 		name="Orientation"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -118,48 +131,48 @@ A UI ProgressBar.
 	</Field>
 	<Field
 		name="DrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="FocusedDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="RolloverDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="DisabledDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="RangeModel"
-		type="BoundedRangeModelPtr"
+		type="BoundedRangeModel"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Scroll/OSGBoundedRangeModel.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

@@ -36,26 +36,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-//Solves a system of linear equations of: 2 equations and 2 variables
-//
-//  Equation AX = B
-//A = [ A11  A12 ]
-//    [ A21  A22 ]
-//X = [ R1   R2  ]
-//B = [ B1   B2  ]
-//
-//The function returns -1 if there are an infinite number of solutions,
-// 0 for 0 solutions,
-// 1 for 1 solution
-
-const Real32 REAL32_COMPARE_ERROR = 0.00000001;
-
-template <class FloatTypeT>
-bool isEqual(FloatTypeT Left, FloatTypeT Right, FloatTypeT ERR = REAL32_COMPARE_ERROR)
-{
-	return osgabs<FloatTypeT>(Left - Right) > ERR;
-}
-
 template<class ValueTypeT, UInt32 SizeI>
 Int8 intersectLines(const osg::Point<ValueTypeT, SizeI>& p1,
 			    const osg::Vector<ValueTypeT, SizeI>& v1,
@@ -82,53 +62,17 @@ Int8 intersectLines(const osg::Point<ValueTypeT, SizeI>& p1,
 	}
 }
 
-template<class ValueTypeT, UInt32 SizeI>
-osg::Vector<ValueTypeT, SizeI> reflect(const osg::Vector<ValueTypeT, SizeI>& Vec, const osg::Vector<ValueTypeT, SizeI>& Normal)
-{
-   osg::Vector<ValueTypeT, SizeI> Result;
-
-   Result = Vec - (2 * (Vec.dot(Normal)) * Normal);
-
-   return Result;
-}
-
-
-template <class FloatTypeT>
-class Matrix22
-{
-public:
-	typedef Vector< Real32, 2 > VectorType;
-	Matrix22(FloatTypeT a11, FloatTypeT a12, FloatTypeT a21, FloatTypeT a22)
-	{
-		_Values[0] = a11;
-		_Values[1] = a12;
-		_Values[2] = a21;
-		_Values[3] = a22;
-	}
-
-	FloatTypeT det(void) const
-	{
-		return _Values[0]*_Values[3] - _Values[1]*_Values[2];
-	}
-	
-	Matrix22<FloatTypeT > inverse(void) const
-	{
-		return Matrix22<FloatTypeT>(_Values[3], -_Values[1], -_Values[2], _Values[0]);
-	}
-	
-	VectorType mult(const VectorType& src) const
-	{
-		return VectorType(_Values[0]*src[0] + _Values[1]*src[1], _Values[2]*src[0]+_Values[3]*src[1]);
-	}
-
-	VectorType operator*(const VectorType& src) const
-	{
-		return VectorType(_Values[0]*src[0] + _Values[1]*src[1], _Values[2]*src[0]+_Values[3]*src[1]);
-	}
-private:
-	FloatTypeT _Values[4];
-};
-
+//Solves a system of linear equations of: 2 equations and 2 variables
+//
+//  Equation AX = B
+//A = [ A11  A12 ]
+//    [ A21  A22 ]
+//X = [ R1   R2  ]
+//B = [ B1   B2  ]
+//
+//The function returns -1 if there are an infinite number of solutions,
+// 0 for 0 solutions,
+// 1 for 1 solution
 template <class FloatTypeT>
 Int8 solveLinearSystem2(FloatTypeT A11, FloatTypeT A12, FloatTypeT A21, FloatTypeT A22, FloatTypeT B1, FloatTypeT B2, FloatTypeT& X1, FloatTypeT& X2)
 {
@@ -161,19 +105,6 @@ Int8 solveLinearSystem2(FloatTypeT A11, FloatTypeT A12, FloatTypeT A21, FloatTyp
 
 	return 1;
 }
-
-
-void OSG_TOOLBOXLIB_DLLMAPPING makeViewFromUVND(Matrix& Result,const Vec3f& U,const Vec3f& V,const Vec3f& N,const Vec3f& D);
-
-void OSG_TOOLBOXLIB_DLLMAPPING makeViewFromUVNP(Matrix& Result,const Vec3f& U,const Vec3f& V,const Vec3f& N,const Pnt3f& P);
-
-void OSG_TOOLBOXLIB_DLLMAPPING getUVNDFromMat(const Matrix& Mat,Vec3f& U,Vec3f& V,Vec3f& N,Vec3f& D);
-
-void OSG_TOOLBOXLIB_DLLMAPPING getUVNPFromMat(const Matrix& Mat,Vec3f& U,Vec3f& V,Vec3f& N,Pnt3f& P);
-
-void OSG_TOOLBOXLIB_DLLMAPPING getPFromViewMat(Pnt3f& P, const Matrix& Mat);
-
-void OSG_TOOLBOXLIB_DLLMAPPING setViewMatEyePos(Matrix& Result,const Pnt3f& P);
 
 OSG_END_NAMESPACE
 

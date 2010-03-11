@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,33 +40,28 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSlider.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGUIDrawUtils.h"
 
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "Component/Text/OSGLabel.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGInternalWindow.h"
+#include "OSGLabel.h"
 #include <sstream>
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Slider
-A UI Spinner. 	
-*/
+// Documentation for this class is emitted in the
+// OSGSliderBase.cpp file.
+// To modify it, please change the .fcd file (OSGSlider.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -76,8 +71,13 @@ A UI Spinner.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Slider::initMethod (void)
+void Slider::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -87,64 +87,64 @@ void Slider::initMethod (void)
 
 EventConnection Slider::addChangeListener(ChangeListenerPtr l)
 {
-	return getRangeModel()->addChangeListener(l);
+    return getRangeModel()->addChangeListener(l);
 }
 
-void Slider::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
+void Slider::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 {
 
-	//Draw the Major Tick Marks
-	if(getDrawMajorTicks())
-	{
-		for(UInt32 i(0) ; i<getMajorTickPositions().size() ; ++i)
-		{
-			glPushMatrix();
-				glTranslatef(getMajorTickPositions()[i].x(), getMajorTickPositions()[i].y(), 0.0f);
-				if(getOrientation() != VERTICAL_ORIENTATION)
-				{
-					glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-				}
+    //Draw the Major Tick Marks
+    if(getDrawMajorTicks())
+    {
+        for(UInt32 i(0) ; i<getMFMajorTickPositions()->size() ; ++i)
+        {
+            glPushMatrix();
+            glTranslatef(getMajorTickPositions(i).x(), getMajorTickPositions(i).y(), 0.0f);
+            if(getOrientation() != VERTICAL_ORIENTATION)
+            {
+                glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+            }
 
-				//Draw the Draw Objects
-				for(UInt32 j(0) ; j<getMajorTickDrawObjects().size(); ++j)
-				{
-					getMajorTickDrawObjects()[j]->draw(TheGraphics,getOpacity()*Opacity);
-				}
+            //Draw the Draw Objects
+            for(UInt32 j(0) ; j<getMFMajorTickDrawObjects()->size(); ++j)
+            {
+                getMajorTickDrawObjects(j)->draw(TheGraphics,getOpacity()*Opacity);
+            }
 
-			glPopMatrix();
-		}
+            glPopMatrix();
+        }
 
-	}
+    }
 
-	//Draw the Minor Tick Marks
-	if(getDrawMinorTicks())
-	{
-		for(UInt32 i(0) ; i<getMinorTickPositions().size() ; ++i)
-		{
-			glPushMatrix();
-				glTranslatef(getMinorTickPositions()[i].x(), getMinorTickPositions()[i].y(), 0.0f);
-				if(getOrientation() != VERTICAL_ORIENTATION)
-				{
-					glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-				}
+    //Draw the Minor Tick Marks
+    if(getDrawMinorTicks())
+    {
+        for(UInt32 i(0) ; i<getMFMinorTickPositions()->size() ; ++i)
+        {
+            glPushMatrix();
+            glTranslatef(getMinorTickPositions(i).x(), getMinorTickPositions(i).y(), 0.0f);
+            if(getOrientation() != VERTICAL_ORIENTATION)
+            {
+                glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+            }
 
-				//Draw the Draw Objects
-				for(UInt32 j(0) ; j<getMinorTickDrawObjects().size(); ++j)
-				{
-					getMinorTickDrawObjects()[j]->draw(TheGraphics, getOpacity()*Opacity);
-				}
+            //Draw the Draw Objects
+            for(UInt32 j(0) ; j<getMFMinorTickDrawObjects()->size(); ++j)
+            {
+                getMinorTickDrawObjects(j)->draw(TheGraphics, getOpacity()*Opacity);
+            }
 
-			glPopMatrix();
-		}
-	}
+            glPopMatrix();
+        }
+    }
 
-	
-	Inherited::drawInternal(TheGraphics,Opacity);
+
+    Inherited::drawInternal(TheGraphics,Opacity);
 }
 
 void Slider::updateLayout(void)
 {
-	
+
     UInt16 MajorAxis, MinorAxis;
     if(getOrientation() == VERTICAL_ORIENTATION)
     {
@@ -156,140 +156,132 @@ void Slider::updateLayout(void)
     }
     MinorAxis = (MajorAxis+1)%2;
 
-	updateSliderTrack();
-	
-	//Update the Track
-	if(getDrawTrack() && getTrackDrawObject() != NullFC)
-	{
-		Pnt2f BorderTopLeft, BorderBottomRight;
-		getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+    updateSliderTrack();
 
-	   Vec2f Size(getTrackDrawObject()->getPreferredSize());
-	   Pnt2f AlignedPosition;
-	   Size[MajorAxis] = getTrackLength();
-	   
-       if(getOrientation() == VERTICAL_ORIENTATION)
-       {
-           AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, 0.5, getAlignment());
-       }
-       else
-       {
-           AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, getAlignment(), 0.5);
-       }
-	   
-	   beginEditCP(getTrackDrawObject(), PositionFieldMask | SizeFieldMask);
-	       getTrackDrawObject()->setPosition(AlignedPosition);
-	       getTrackDrawObject()->setSize(Size);
-	   endEditCP(getTrackDrawObject(), PositionFieldMask | SizeFieldMask);
-	}
-	
-	//Update the MinorTickMarks
-	if(getDrawMinorTicks() && getRangeModel() != NULL)
-	{
-		Pnt2f MinorTickTopLeft, MinorTickBottomRight;
-		getDrawObjectBounds(getMinorTickDrawObjects(), MinorTickTopLeft, MinorTickBottomRight);
-		
-	    Vec2f Alignment;
+    //Update the Track
+    if(getDrawTrack() && getTrackDrawObject() != NULL)
+    {
+        Pnt2f BorderTopLeft, BorderBottomRight;
+        getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+
+        Vec2f Size(getTrackDrawObject()->getPreferredSize());
+        Pnt2f AlignedPosition;
+        Size[MajorAxis] = getTrackLength();
+
+        if(getOrientation() == VERTICAL_ORIENTATION)
+        {
+            AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, 0.5, getAlignment());
+        }
+        else
+        {
+            AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, getAlignment(), 0.5);
+        }
+
+        getTrackDrawObject()->setPosition(AlignedPosition);
+        getTrackDrawObject()->setSize(Size);
+    }
+
+    //Update the MinorTickMarks
+    if(getDrawMinorTicks() && getRangeModel() != NULL)
+    {
+        Pnt2f MinorTickTopLeft, MinorTickBottomRight;
+        getDrawObjectBounds(*editMFMinorTickDrawObjects(), MinorTickTopLeft, MinorTickBottomRight);
+
+        Vec2f Alignment;
 
         Real32 MaxLength(0.0);
-        for(UInt32 i(0) ; i<getMinorTickDrawObjects().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFMinorTickDrawObjects()->size() ; ++i)
         {
             Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
-            getMinorTickDrawObjects()[i]->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+            getMinorTickDrawObjects(i)->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
             MaxLength = osgMax(MaxLength, DrawObjectBottomRight.x()-DrawObjectTopLeft.x());
         }
-		beginEditCP(SliderPtr(this), MinorTickPositionsFieldMask);
-			getMinorTickPositions().clear();
+        editMFMinorTickPositions()->clear();
 
-			for(UInt32 i(0) ; i< osgabs<Int32>(getMaximum() - getMinimum())/getMinorTickSpacing() ; ++i)
-			{
-				if( (i * getMinorTickSpacing())%getMajorTickSpacing() != 0 )
-				{
-					Alignment[MajorAxis] = static_cast<Real32>(i * getMinorTickSpacing())/static_cast<Real32>(getMaximum() - getMinimum());
-					getMinorTickPositions().push_back(
-						calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), (MinorTickBottomRight - MinorTickTopLeft), Alignment.y(), Alignment.x()));
-                    if(getTicksOnRightBottom())
-                    {
-					    getMinorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
-                    }
-                    else
-                    {
-					    getMinorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToTickOffset() - MaxLength;
-                    }
-				}
-			}
-		
-		endEditCP(SliderPtr(this), MinorTickPositionsFieldMask);
-	}
-	
-	//Update the MajorTickMarks
-	if(getDrawMajorTicks() && getRangeModel() != NULL)
-	{
-		Pnt2f MajorTickTopLeft, MajorTickBottomRight;
-		getDrawObjectBounds(getMajorTickDrawObjects(), MajorTickTopLeft, MajorTickBottomRight);
-		
-	    Vec2f Alignment;
-
-        Real32 MaxLength(0.0);
-        for(UInt32 i(0) ; i<getMajorTickDrawObjects().size() ; ++i)
+        for(UInt32 i(0) ; i< osgAbs<Int32>(getMaximum() - getMinimum())/getMinorTickSpacing() ; ++i)
         {
-            Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
-            getMajorTickDrawObjects()[i]->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
-            MaxLength = osgMax(MaxLength, DrawObjectBottomRight.x()-DrawObjectTopLeft.x());
-        }
-		beginEditCP(SliderPtr(this), MajorTickPositionsFieldMask);
-			getMajorTickPositions().clear();
-
-			for(UInt32 i(0) ; i<= osgabs<Int32>(getMaximum() - getMinimum())/getMajorTickSpacing() ; ++i)
-			{
-		        Alignment[MajorAxis] = static_cast<Real32>(i * getMajorTickSpacing())/static_cast<Real32>(getMaximum() - getMinimum());
-				getMajorTickPositions().push_back(
-					calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), (MajorTickBottomRight - MajorTickTopLeft), Alignment.y(), Alignment.x()));
-				if(getTicksOnRightBottom())
+            if( (i * getMinorTickSpacing())%getMajorTickSpacing() != 0 )
+            {
+                Alignment[MajorAxis] = static_cast<Real32>(i * getMinorTickSpacing())/static_cast<Real32>(getMaximum() - getMinimum());
+                editMFMinorTickPositions()->push_back(
+                                                  calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), (MinorTickBottomRight - MinorTickTopLeft), Alignment.y(), Alignment.x()));
+                if(getTicksOnRightBottom())
                 {
-                    getMajorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
+                    editMFMinorTickPositions()->back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
                 }
                 else
                 {
-                    getMajorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToTickOffset() - MaxLength;
+                    editMFMinorTickPositions()->back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToTickOffset() - MaxLength;
                 }
-			}
-		
-		endEditCP(SliderPtr(this), MajorTickPositionsFieldMask);
-	}
+            }
+        }
 
-	//Update the Labels
-	if(getDrawLabels() && getRangeModel() != NULL)
-	{
-		Vec2f Alignment;
-		Pnt2f Pos;
-		FieldContainerMap::iterator Itor;
-		for(Itor = getLabelMap().begin() ; Itor != getLabelMap().end() ; ++Itor)
-		{
-			Alignment[MajorAxis] = static_cast<Real32>((*Itor).first - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum());
-			Pos = calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), Component::Ptr::dcast((*Itor).second)->getPreferredSize(), Alignment.y(), Alignment.x());
+    }
+
+    //Update the MajorTickMarks
+    if(getDrawMajorTicks() && getRangeModel() != NULL)
+    {
+        Pnt2f MajorTickTopLeft, MajorTickBottomRight;
+        getDrawObjectBounds(*editMFMajorTickDrawObjects(), MajorTickTopLeft, MajorTickBottomRight);
+
+        Vec2f Alignment;
+
+        Real32 MaxLength(0.0);
+        for(UInt32 i(0) ; i<getMFMajorTickDrawObjects()->size() ; ++i)
+        {
+            Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
+            getMajorTickDrawObjects(i)->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+            MaxLength = osgMax(MaxLength, DrawObjectBottomRight.x()-DrawObjectTopLeft.x());
+        }
+        editMFMajorTickPositions()->clear();
+
+        for(UInt32 i(0) ; i<= osgAbs<Int32>(getMaximum() - getMinimum())/getMajorTickSpacing() ; ++i)
+        {
+            Alignment[MajorAxis] = static_cast<Real32>(i * getMajorTickSpacing())/static_cast<Real32>(getMaximum() - getMinimum());
+            editMFMajorTickPositions()->push_back(
+                                              calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), (MajorTickBottomRight - MajorTickTopLeft), Alignment.y(), Alignment.x()));
+            if(getTicksOnRightBottom())
+            {
+                editMFMajorTickPositions()->back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
+            }
+            else
+            {
+                editMFMajorTickPositions()->back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToTickOffset() - MaxLength;
+            }
+        }
+
+    }
+
+    //Update the Labels
+    if(getDrawLabels() && getRangeModel() != NULL)
+    {
+        Vec2f Alignment;
+        Pnt2f Pos;
+        FieldContainerMap::const_iterator Itor;
+        for(Itor = getLabelMap().begin() ; Itor != getLabelMap().end() ; ++Itor)
+        {
+            Alignment[MajorAxis] = static_cast<Real32>((*Itor).first - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum());
+            Pos = calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), dynamic_pointer_cast<Component>((*Itor).second)->getPreferredSize(), Alignment.y(), Alignment.x());
             if(getTicksOnRightBottom())
             {
                 Pos[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToLabelOffset();
             }
             else
             {
-                Pos[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToLabelOffset() - Component::Ptr::dcast((*Itor).second)->getPreferredSize()[MinorAxis];
+                Pos[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToLabelOffset() - dynamic_pointer_cast<Component>((*Itor).second)->getPreferredSize()[MinorAxis];
             }
 
-			beginEditCP(Component::Ptr::dcast((*Itor).second), PositionFieldMask | SizeFieldMask);
-				Component::Ptr::dcast((*Itor).second)->setPosition(Pos);
-				Component::Ptr::dcast((*Itor).second)->setSize(Component::Ptr::dcast((*Itor).second)->getPreferredSize());
-			endEditCP(Component::Ptr::dcast((*Itor).second), PositionFieldMask | SizeFieldMask);
-		}
-	}
+            dynamic_pointer_cast<Component>((*Itor).second)->setPosition(Pos);
+            dynamic_pointer_cast<Component>((*Itor).second)->setSize(dynamic_pointer_cast<Component>((*Itor).second)->getPreferredSize());
+        }
+    }
 }
 
 void Slider::updateSliderTrack(void)
 {
-	Pnt2f BorderTopLeft, BorderBottomRight;
-	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
-	
+    Pnt2f BorderTopLeft, BorderBottomRight;
+    getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+
     UInt16 MajorAxis, MinorAxis;
     if(getOrientation() == VERTICAL_ORIENTATION)
     {
@@ -301,79 +293,75 @@ void Slider::updateSliderTrack(void)
     }
     MinorAxis = (MajorAxis+1)%2;
 
-	//Update the Knob position
-	if(getKnobButton() != NullFC && getRangeModel() != NULL)
-	{
-	   Vec2f Size;
-	   Size[MinorAxis] = getKnobButton()->getPreferredSize().x();
-	   Size[MajorAxis] = getKnobButton()->getPreferredSize().y();
-	   Pnt2f AlignedPosition;
-	   //Size[MajorAxis] = getSize()[MajorAxis] - 2;
-	   Vec2f Alignment(0.5,0.5);
-	   Alignment[MajorAxis] = static_cast<Real32>(getValue() - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum());
-	   
-       AlignedPosition = calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), getKnobButton()->getPreferredSize(), Alignment.y(), Alignment.x());
-	   
-	   beginEditCP(getKnobButton(), PositionFieldMask | SizeFieldMask);
-	       getKnobButton()->setPosition(AlignedPosition);
-	       getKnobButton()->setSize(Size);
-	   endEditCP(getKnobButton(), PositionFieldMask | SizeFieldMask);
-	}
+    //Update the Knob position
+    if(getKnobButton() != NULL && getRangeModel() != NULL)
+    {
+        Vec2f Size;
+        Size[MinorAxis] = getKnobButton()->getPreferredSize().x();
+        Size[MajorAxis] = getKnobButton()->getPreferredSize().y();
+        Pnt2f AlignedPosition;
+        //Size[MajorAxis] = getSize()[MajorAxis] - 2;
+        Vec2f Alignment(0.5,0.5);
+        Alignment[MajorAxis] = static_cast<Real32>(getValue() - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum());
+
+        AlignedPosition = calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), getKnobButton()->getPreferredSize(), Alignment.y(), Alignment.x());
+
+        getKnobButton()->setPosition(AlignedPosition);
+        getKnobButton()->setSize(Size);
+    }
 
 }
 
 Pnt2f Slider::getSliderTrackTopLeft(void) const
 {
-	Pnt2f BorderTopLeft, BorderBottomRight;
-	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+    Pnt2f BorderTopLeft, BorderBottomRight;
+    getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
-	Pnt2f Pos;
-	
+    Pnt2f Pos;
+
     if(getOrientation() == VERTICAL_ORIENTATION)
     {
-		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), 0.0, getAlignment());
-		Pos[1] += getTrackInset();
+        Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), 0.0, getAlignment());
+        Pos[1] += getTrackInset();
     }
     else
     {
-		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), getAlignment(), 0.0);
-		Pos[0] += getTrackInset();
+        Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), getAlignment(), 0.0);
+        Pos[0] += getTrackInset();
     }
 
-	return Pos;
+    return Pos;
 }
 
 Vec2f Slider::getSliderTrackSize(void) const
 {
     if(getOrientation() == VERTICAL_ORIENTATION)
     {
-		return Vec2f(0, getTrackLength());
+        return Vec2f(0, getTrackLength());
     }
     else
     {
-		return Vec2f(getTrackLength(), 0);
+        return Vec2f(getTrackLength(), 0);
     }
 }
 
 FieldContainerMap Slider::createStandardLabels(UInt32 increment, Int32 start)
 {
-	FieldContainerMap NewMap;
-	for(Int32 i(start) ; i<=getMaximum() ; i += increment)
-	{
-		LabelPtr NewLabel;
-		NewLabel = Label::Ptr::dcast(getLabelPrototype()->shallowCopy());
+    FieldContainerMap NewMap;
+    for(Int32 i(start) ; i<=getMaximum() ; i += increment)
+    {
+        LabelRefPtr NewLabel;
+        NewLabel = dynamic_pointer_cast<Label>(getLabelPrototype()->shallowCopy());
 
-		std::stringstream TempSStream;
-		TempSStream << i;
+        std::stringstream TempSStream;
+        TempSStream << i;
 
-		beginEditCP(NewLabel, Label::TextFieldMask);
-			NewLabel->setText(TempSStream.str());
-		endEditCP(NewLabel, Label::TextFieldMask);
+        NewLabel->setText(TempSStream.str());
 
-		NewMap[i] = NewLabel;
-	}
+        NewMap[i] = NewLabel;
+    }
 
-	return NewMap;
+    return NewMap;
 }
 
 UInt32 Slider::getTrackLength(void) const
@@ -404,58 +392,58 @@ void Slider::setValue(Int32 n)
     {
         //Determine the closest tickmark to the value we are trying to set
 
-		Int32 Div, Mod;
+        Int32 Div, Mod;
 
-		Div = (n-getMinimum())/getMinorTickSpacing();
-		Mod = (n-getMinimum())%getMinorTickSpacing();
+        Div = (n-getMinimum())/getMinorTickSpacing();
+        Mod = (n-getMinimum())%getMinorTickSpacing();
 
-		if(Mod <= getMajorTickSpacing()/2)
-		{
-			getRangeModel()->setValue(getMinorTickSpacing() * Div + getMinimum());
-		}
-		else
-		{
-			getRangeModel()->setValue(getMinorTickSpacing() * (Div + 1) + getMinimum());
-		}
+        if(Mod <= getMajorTickSpacing()/2)
+        {
+            getRangeModel()->setValue(getMinorTickSpacing() * Div + getMinimum());
+        }
+        else
+        {
+            getRangeModel()->setValue(getMinorTickSpacing() * (Div + 1) + getMinimum());
+        }
     }
     else
     {
-	   getRangeModel()->setValue(n);
+        getRangeModel()->setValue(n);
     }
-    
+
 }
 
 Pnt2f Slider::calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size1, const Vec2f& Size2, const Real32& VAlign, const Real32& HAlign)
 {
-	Vec2f CorrectedSize2(Size2);
+    Vec2f CorrectedSize2(Size2);
 
-	if(getOrientation() != VERTICAL_ORIENTATION)
-	{
-		CorrectedSize2[0] = Size2.y();
-		CorrectedSize2[1] = Size2.x();
-	}
+    if(getOrientation() != VERTICAL_ORIENTATION)
+    {
+        CorrectedSize2[0] = Size2.y();
+        CorrectedSize2[1] = Size2.x();
+    }
 
-	Real32 CorrectedVAlign(VAlign),
-		   CorrectedHAlign(HAlign);
+    Real32 CorrectedVAlign(VAlign),
+           CorrectedHAlign(HAlign);
 
-	if(getInverted())
-	{
-		if(getOrientation() == VERTICAL_ORIENTATION)
-		{
-			CorrectedVAlign = (1.0-VAlign);
-		}
-		else
-		{
-			CorrectedHAlign = (1.0-HAlign);
-		}
-	}
-	
-	Pnt2f AlignedPosition;
+    if(getInverted())
+    {
+        if(getOrientation() == VERTICAL_ORIENTATION)
+        {
+            CorrectedVAlign = (1.0-VAlign);
+        }
+        else
+        {
+            CorrectedHAlign = (1.0-HAlign);
+        }
+    }
 
-	AlignedPosition[0] = Position1[0]-CorrectedSize2[0]/2+CorrectedHAlign*(Size1[0]);
-	AlignedPosition[1] = Position1[1]-CorrectedSize2[1]/2+CorrectedVAlign*(Size1[1]);
-	
-	return AlignedPosition;
+    Pnt2f AlignedPosition;
+
+    AlignedPosition[0] = Position1[0]-CorrectedSize2[0]/2+CorrectedHAlign*(Size1[0]);
+    AlignedPosition[1] = Position1[1]-CorrectedSize2[1]/2+CorrectedVAlign*(Size1[1]);
+
+    return AlignedPosition;
 }
 
 void Slider::detachFromEventProducer(void)
@@ -464,51 +452,60 @@ void Slider::detachFromEventProducer(void)
     _KnobDraggedListener.disconnect();
 }
 
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void Slider::onCreate(const Slider * Id)
+{
+    if(Id != NULL)
+    {
+        FieldContainerUnrecPtr TheFC(NULL);
+
+        if(Id->getKnobButton() != NULL)
+        {
+            TheFC = Id->getKnobButton()->shallowCopy();
+            setKnobButton(dynamic_pointer_cast<Button>(TheFC));
+        }
+        if(Id->getTrackDrawObject() != NULL)
+        {
+            TheFC = Id->getTrackDrawObject()->shallowCopy();
+            setTrackDrawObject(dynamic_pointer_cast<UIDrawObjectCanvas>(TheFC));
+        }
+        if(Id->getMinTrackDrawObject() != NULL)
+        {
+            TheFC = Id->getMinTrackDrawObject()->shallowCopy();
+            setMinTrackDrawObject(dynamic_pointer_cast<UIDrawObjectCanvas>(TheFC));
+        }
+        if(Id->getMaxTrackDrawObject() != NULL)
+        {
+            TheFC = Id->getMaxTrackDrawObject()->shallowCopy();
+            setMaxTrackDrawObject(dynamic_pointer_cast<UIDrawObjectCanvas>(TheFC));
+        }
+        setLabelPrototype(Id->getLabelPrototype());
+    }
+}
+
+void Slider::onDestroy()
+{
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
 Slider::Slider(void) :
     Inherited(),
-        _BoundedRangeModelChangeListener(SliderPtr(this)),
-        _KnobDraggedListener(SliderPtr(this)),
-		_UsingDefaultLabels(true)
+    _BoundedRangeModelChangeListener(this),
+    _KnobDraggedListener(this),
+    _UsingDefaultLabels(true)
 {
 }
 
 Slider::Slider(const Slider &source) :
     Inherited(source),
-        _BoundedRangeModelChangeListener(SliderPtr(this)),
-        _KnobDraggedListener(SliderPtr(this)),
-		_UsingDefaultLabels(source._UsingDefaultLabels)
+    _BoundedRangeModelChangeListener(this),
+    _KnobDraggedListener(this),
+    _UsingDefaultLabels(source._UsingDefaultLabels)
 {
-    if(getKnobButton() != NullFC)
-    {
-        beginEditCP(SliderPtr(this), KnobButtonFieldMask);
-            setKnobButton(Button::Ptr::dcast(getKnobButton()->shallowCopy()));
-        endEditCP(SliderPtr(this), KnobButtonFieldMask);
-    }
-    if(getTrackDrawObject() != NullFC)
-    {
-        beginEditCP(SliderPtr(this), TrackDrawObjectFieldMask);
-            setTrackDrawObject(UIDrawObjectCanvas::Ptr::dcast(getTrackDrawObject()->shallowCopy()));
-        endEditCP(SliderPtr(this), TrackDrawObjectFieldMask);
-    }
-    if(getMinTrackDrawObject() != NullFC)
-    {
-        beginEditCP(SliderPtr(this), MinTrackDrawObjectFieldMask);
-            setMinTrackDrawObject(UIDrawObjectCanvas::Ptr::dcast(getMinTrackDrawObject()->shallowCopy()));
-        endEditCP(SliderPtr(this), MinTrackDrawObjectFieldMask);
-    }
-    if(getMaxTrackDrawObject() != NullFC)
-    {
-        beginEditCP(SliderPtr(this), MaxTrackDrawObjectFieldMask);
-            setMaxTrackDrawObject(UIDrawObjectCanvas::Ptr::dcast(getMaxTrackDrawObject()->shallowCopy()));
-        endEditCP(SliderPtr(this), MaxTrackDrawObjectFieldMask);
-    }
 }
 
 Slider::~Slider(void)
@@ -517,26 +514,27 @@ Slider::~Slider(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void Slider::changed(BitVector whichField, UInt32 origin)
+void Slider::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
-	if((whichField & LabelMapFieldMask))
-	{
-		_UsingDefaultLabels = (getLabelMap().size() == 0);
-	}
+    Inherited::changed(whichField, origin, details);
 
-	if( ((whichField & DrawLabelsFieldMask) ||
-	     (whichField & LabelPrototypeFieldMask) ||
-	     (whichField & MajorTickSpacingFieldMask))&&
-		 getDrawLabels() &&
-		 getRangeModel() != NULL &&
-		 _UsingDefaultLabels)
-	{
-		beginEditCP(SliderPtr(this), LabelMapFieldMask);
-			setLabelMap(createStandardLabels(getMajorTickSpacing()));
-		endEditCP(SliderPtr(this), LabelMapFieldMask);
-		_UsingDefaultLabels = true;
-	}
+    if((whichField & LabelMapFieldMask))
+    {
+        _UsingDefaultLabels = (getLabelMap().size() == 0);
+    }
+
+    if( ((whichField & DrawLabelsFieldMask) ||
+         (whichField & LabelPrototypeFieldMask) ||
+         (whichField & MajorTickSpacingFieldMask))&&
+        getDrawLabels() &&
+        getRangeModel() != NULL &&
+        _UsingDefaultLabels)
+    {
+        setLabelMap(createStandardLabels(getMajorTickSpacing()));
+        _UsingDefaultLabels = true;
+    }
 
     if((whichField & KnobButtonFieldMask) ||
        (whichField & TrackDrawObjectFieldMask) ||
@@ -547,39 +545,37 @@ void Slider::changed(BitVector whichField, UInt32 origin)
        (whichField & LabelMapFieldMask) ||
        (whichField & LabelPrototypeFieldMask))
     {
-        beginEditCP(SliderPtr(this), ChildrenFieldMask);
-            getChildren().clear();
-            if(getDrawTrack())
+        clearChildren();
+        if(getDrawTrack())
+        {
+            if(getTrackDrawObject() != NULL)
             {
-                if(getTrackDrawObject() != NullFC)
-                {
-                    getChildren().push_back(getTrackDrawObject());
-                }
-                if(getMinTrackDrawObject() != NullFC)
-                {
-                    getChildren().push_back(getMinTrackDrawObject());
-                }
-                if(getMaxTrackDrawObject() != NullFC)
-                {
-                    getChildren().push_back(getMaxTrackDrawObject());
-                }
+                pushToChildren(getTrackDrawObject());
             }
-            if(getKnobButton() != NullFC)
+            if(getMinTrackDrawObject() != NULL)
             {
-                getChildren().push_back(getKnobButton());
+                pushToChildren(getMinTrackDrawObject());
             }
-			
-            if(getDrawLabels())
+            if(getMaxTrackDrawObject() != NULL)
             {
-				FieldContainerMap::iterator Itor;
-				for(Itor = getLabelMap().begin() ; Itor != getLabelMap().end() ; ++Itor)
-				{
-					getChildren().push_back(Component::Ptr::dcast((*Itor).second));
-				}
+                pushToChildren(getMaxTrackDrawObject());
             }
-        endEditCP(SliderPtr(this), ChildrenFieldMask);
+        }
+        if(getKnobButton() != NULL)
+        {
+            pushToChildren(getKnobButton());
+        }
+
+        if(getDrawLabels())
+        {
+            FieldContainerMap::const_iterator Itor;
+            for(Itor = getLabelMap().begin() ; Itor != getLabelMap().end() ; ++Itor)
+            {
+                pushToChildren(dynamic_pointer_cast<Component>((*Itor).second));
+            }
+        }
     }
-    
+
     if((whichField & KnobButtonFieldMask) ||
        (whichField & TrackDrawObjectFieldMask) ||
        (whichField & MinTrackDrawObjectFieldMask) ||
@@ -599,41 +595,39 @@ void Slider::changed(BitVector whichField, UInt32 origin)
     }
 
     if(whichField & KnobButtonFieldMask &&
-       getKnobButton() != NullFC)
+       getKnobButton() != NULL)
     {
         getKnobButton()->addMouseListener(&_KnobDraggedListener);
     }
     if(whichField & RangeModelFieldMask)
     {
         _RangeModelConnection.disconnect();
-        if(getRangeModel() != NullFC)
+        if(getRangeModel() != NULL)
         {
             _RangeModelConnection = getRangeModel()->addChangeListener(&_BoundedRangeModelChangeListener);
-		    if( getDrawLabels() &&
-			    _UsingDefaultLabels)
-		    {
-			    beginEditCP(SliderPtr(this), LabelMapFieldMask);
-				    setLabelMap(createStandardLabels(getMajorTickSpacing()));
-			    endEditCP(SliderPtr(this), LabelMapFieldMask);
-			    _UsingDefaultLabels = true;
-		    }
+            if( getDrawLabels() &&
+                _UsingDefaultLabels)
+            {
+                setLabelMap(createStandardLabels(getMajorTickSpacing()));
+                _UsingDefaultLabels = true;
+            }
         }
     }
 }
 
-void Slider::dump(      UInt32    , 
+void Slider::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Slider NI" << std::endl;
 }
 
-void Slider::BoundedRangeModelChangeListener::stateChanged(const ChangeEventPtr e)
+void Slider::BoundedRangeModelChangeListener::stateChanged(const ChangeEventUnrecPtr e)
 {
     _Slider->updateLayout();
 }
 
 
-void Slider::KnobDraggedListener::mouseDragged(const MouseEventPtr e)
+void Slider::KnobDraggedListener::mouseDragged(const MouseEventUnrecPtr e)
 {
 	if(e->getButton() == e->BUTTON1)
 	{
@@ -662,13 +656,13 @@ void Slider::KnobDraggedListener::mouseDragged(const MouseEventPtr e)
 	}
 }
 
-void Slider::KnobDraggedListener::mousePressed(const MouseEventPtr e)
+void Slider::KnobDraggedListener::mousePressed(const MouseEventUnrecPtr e)
 {
     if(e->getButton() == e->BUTTON1 &&
 		_Slider->getEnabled() &&
-       _Slider->getParentWindow() != NullFC &&
-       _Slider->getParentWindow()->getDrawingSurface() != NullFC &&
-       _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+       _Slider->getParentWindow() != NULL &&
+       _Slider->getParentWindow()->getDrawingSurface() != NULL &&
+       _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
     {
 		_InitialValue = _Slider->getValue();
         _Slider->getKnobButton()->removeMouseListener(this);
@@ -679,18 +673,18 @@ void Slider::KnobDraggedListener::mousePressed(const MouseEventPtr e)
     }
 }
 
-void Slider::KnobDraggedListener::mouseReleased(const MouseEventPtr e)
+void Slider::KnobDraggedListener::mouseReleased(const MouseEventUnrecPtr e)
 {
     if(e->getButton() == e->BUTTON1 &&
-       _Slider->getParentWindow() != NullFC &&
-       _Slider->getParentWindow()->getDrawingSurface() != NullFC &&
-       _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+       _Slider->getParentWindow() != NULL &&
+       _Slider->getParentWindow()->getDrawingSurface() != NULL &&
+       _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
     {
         disconnect();
     }
 }
 
-void Slider::KnobDraggedListener::keyTyped(const KeyEventPtr e)
+void Slider::KnobDraggedListener::keyTyped(const KeyEventUnrecPtr e)
 {
 	if(e->getKey() == KeyEvent::KEY_ESCAPE)
 	{
@@ -708,29 +702,4 @@ void Slider::KnobDraggedListener::disconnect(void)
     _Slider->getRangeModel()->setValueIsAdjusting(false);
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSLIDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSLIDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSLIDERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

@@ -10,36 +10,36 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -47,12 +47,12 @@ void reshape(Vec2f Size);
 
 
 // 29Spinner Headers
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGRadioButton.h>
-#include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
-#include <OpenSG/UserInterface/OSGSpinner.h>
-#include <OpenSG/UserInterface/OSGNumberSpinnerModel.h>
+#include "OSGFlowLayout.h"
+#include "OSGLayers.h"
+#include "OSGRadioButton.h"
+#include "OSGRadioButtonGroup.h"
+#include "OSGSpinner.h"
+#include "OSGNumberSpinnerModel.h"
 
 
 Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
@@ -62,13 +62,13 @@ class SingleIncrementButtonListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
         {         
             TheModel->setStepSize(1);
 
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
             TheModel->setStepSize(2);
    }
@@ -77,12 +77,12 @@ class DoubleIncrementButtonListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
         {         
             TheModel->setStepSize(2);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
             TheModel->setStepSize(1);
    }
@@ -94,19 +94,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -120,27 +120,25 @@ int main(int argc, char **argv)
     //Temp->setValue(0);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -155,7 +153,7 @@ int main(int argc, char **argv)
                 value the Spinner can have.
             -setStepSize(int): Determine the 
                 incremental step size.
-            -setValue(SharedFieldPtr(new SFInt32(int)):
+            -setValue(SharedFieldRefPtr(new SFInt32(int)):
                 Determine initial starting value
                 of the Spinner.
 
@@ -178,7 +176,7 @@ int main(int argc, char **argv)
  
     ******************************************************/    
 
-    SpinnerPtr ExampleSpinner = Spinner::create();
+    SpinnerRefPtr ExampleSpinner = Spinner::create();
     ExampleSpinner->setModel(TheModel);
     
     /******************************************************
@@ -191,91 +189,77 @@ int main(int argc, char **argv)
  
     ******************************************************/    
 
-    RadioButtonPtr SingleIncrementButton = RadioButton::create();
-    RadioButtonPtr DoubleIncrementButton = RadioButton::create();
-    beginEditCP(SingleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
+    RadioButtonRefPtr SingleIncrementButton = RadioButton::create();
+    RadioButtonRefPtr DoubleIncrementButton = RadioButton::create();
         SingleIncrementButton->setText("Increment by 1");
         SingleIncrementButton->setPreferredSize(Vec2f(100, 50));
-    beginEditCP(SingleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
     SingleIncrementButtonListener TheSingleIncrementButtonListener;
     SingleIncrementButton->addButtonSelectedListener(&TheSingleIncrementButtonListener);
 
-	beginEditCP(DoubleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
         DoubleIncrementButton->setText("Increment by 2");
         DoubleIncrementButton->setPreferredSize(Vec2f(100, 50));
         DoubleIncrementButton->setSelected(true);
-    beginEditCP(DoubleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
     DoubleIncrementButtonListener TheDoubleIncrementButtonListener;
     DoubleIncrementButton->addButtonSelectedListener(&TheDoubleIncrementButtonListener);
 
-    RadioButtonGroupPtr SelectionRadioButtonGroup = RadioButtonGroup::create();
+    RadioButtonGroupRefPtr SelectionRadioButtonGroup = RadioButtonGroup::create();
     SelectionRadioButtonGroup->addButton(SingleIncrementButton);
     SelectionRadioButtonGroup->addButton(DoubleIncrementButton);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(SingleIncrementButton);
-       MainInternalWindow->getChildren().push_back(DoubleIncrementButton);
-       MainInternalWindow->getChildren().push_back(ExampleSpinner);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+       MainInternalWindow->pushToChildren(SingleIncrementButton);
+       MainInternalWindow->pushToChildren(DoubleIncrementButton);
+       MainInternalWindow->pushToChildren(ExampleSpinner);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
 	
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "29Spinner");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

@@ -67,6 +67,7 @@ A UI Button.
 	<Field
 		name="Color"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

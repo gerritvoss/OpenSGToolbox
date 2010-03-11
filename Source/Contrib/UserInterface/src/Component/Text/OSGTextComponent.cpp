@@ -339,8 +339,9 @@ void TextComponent::copy(void) const
 void TextComponent::select(const UInt32& Start,
                            const UInt32& End)
 {
-    UInt32 ClampedStart = osgClamp<UInt32>(0, Start, osgMin<UInt32>(End,getText().size()));
-    UInt32 ClampedEnd = osgClamp<UInt32>(osgMax<UInt32>(Start,0), End, getText().size());
+    UInt32 MinPos(osgMin(Start,End)), MaxPos(osgMax(Start,End));
+    UInt32 ClampedStart = osgClamp<UInt32>(0, MinPos, osgMin<UInt32>(MaxPos,getText().size()));
+    UInt32 ClampedEnd = osgClamp<UInt32>(osgMax<UInt32>(MinPos,0), MaxPos, getText().size());
     _TextSelectionStart = ClampedStart;
     _TextSelectionEnd = ClampedEnd;
 }

@@ -398,6 +398,45 @@ void ScrollBar::onCreate(const ScrollBar * Id)
 {
     DefaultBoundedRangeModelUnrecPtr TheModel(DefaultBoundedRangeModel::create());
     setRangeModel(TheModel);
+
+    if(Id != NULL)
+    {
+        if(Id->getVerticalMinButton() != NULL &&
+            Id->getVerticalMaxButton() != NULL &&
+            Id->getVerticalScrollBar() != NULL &&
+            Id->getVerticalScrollField() != NULL)
+        {
+            FieldContainerUnrecPtr TempPtr(Id->getVerticalMinButton()->shallowCopy());
+            setVerticalMinButton(dynamic_pointer_cast<Button>(TempPtr));
+
+            TempPtr = Id->getVerticalMaxButton()->shallowCopy();
+            setVerticalMaxButton(dynamic_pointer_cast<Button>(TempPtr));
+
+            TempPtr = Id->getVerticalScrollBar()->shallowCopy();
+            setVerticalScrollBar(dynamic_pointer_cast<Button>(TempPtr));
+
+            TempPtr = Id->getVerticalScrollField()->shallowCopy();
+            setVerticalScrollField(dynamic_pointer_cast<Button>(TempPtr));
+        }
+        
+        if(Id->getHorizontalMinButton() != NULL &&
+            Id->getHorizontalMaxButton() != NULL &&
+            Id->getHorizontalScrollBar() != NULL &&
+            Id->getHorizontalScrollField() != NULL)
+        {
+            FieldContainerUnrecPtr TempPtr(Id->getHorizontalMinButton()->shallowCopy());
+            setHorizontalMinButton(dynamic_pointer_cast<Button>(TempPtr));
+
+            TempPtr = Id->getHorizontalMaxButton()->shallowCopy();
+            setHorizontalMaxButton(dynamic_pointer_cast<Button>(TempPtr));
+
+            TempPtr = Id->getHorizontalScrollBar()->shallowCopy();
+            setHorizontalScrollBar(dynamic_pointer_cast<Button>(TempPtr));
+
+            TempPtr = Id->getHorizontalScrollField()->shallowCopy();
+            setHorizontalScrollField(dynamic_pointer_cast<Button>(TempPtr));
+        }
+    }
 }
 
 void ScrollBar::onDestroy()
@@ -426,41 +465,6 @@ ScrollBar::ScrollBar(const ScrollBar &source) :
     _ScrollBarDraggedListener(this),
     _ScrollFieldListener(this)
 {
-    if(getVerticalMinButton() != NULL &&
-        getVerticalMaxButton() != NULL &&
-        getVerticalScrollBar() != NULL &&
-        getVerticalScrollField() != NULL)
-    {
-        FieldContainerUnrecPtr TempPtr(getVerticalMinButton()->shallowCopy());
-        setVerticalMinButton(dynamic_pointer_cast<Button>(TempPtr));
-
-        TempPtr = getVerticalMaxButton()->shallowCopy();
-        setVerticalMaxButton(dynamic_pointer_cast<Button>(TempPtr));
-
-        TempPtr = getVerticalScrollBar()->shallowCopy();
-        setVerticalScrollBar(dynamic_pointer_cast<Button>(TempPtr));
-
-        TempPtr = getVerticalScrollField()->shallowCopy();
-        setVerticalScrollField(dynamic_pointer_cast<Button>(TempPtr));
-    }
-    
-    if(getHorizontalMinButton() != NULL &&
-        getHorizontalMaxButton() != NULL &&
-        getHorizontalScrollBar() != NULL &&
-        getHorizontalScrollField() != NULL)
-    {
-        FieldContainerUnrecPtr TempPtr(getHorizontalMinButton()->shallowCopy());
-        setHorizontalMinButton(dynamic_pointer_cast<Button>(TempPtr));
-
-        TempPtr = getHorizontalMaxButton()->shallowCopy();
-        setHorizontalMaxButton(dynamic_pointer_cast<Button>(TempPtr));
-
-        TempPtr = getHorizontalScrollBar()->shallowCopy();
-        setHorizontalScrollBar(dynamic_pointer_cast<Button>(TempPtr));
-
-        TempPtr = getHorizontalScrollField()->shallowCopy();
-        setHorizontalScrollField(dynamic_pointer_cast<Button>(TempPtr));
-    }
 }
 
 ScrollBar::~ScrollBar(void)

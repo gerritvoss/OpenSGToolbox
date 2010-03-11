@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,444 +50,1268 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETABPANELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // Tabs Class
+#include "OSGBorder.h"                  // TabBorder Class
+#include "OSGLayer.h"                   // TabBackground Class
+#include "OSGSingleSelectionModel.h"    // SelectionModel Class
 
 #include "OSGTabPanelBase.h"
 #include "OSGTabPanel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TabPanelBase::TabsFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabsFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TabPanelBase::TabContentsFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabContentsFieldId);
+/*! \class OSG::TabPanel
+    A UI Tab Panel.
+ */
 
-const OSG::BitVector  TabPanelBase::TabPlacementFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabPlacementFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  TabPanelBase::TabAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabAlignmentFieldId);
-
-const OSG::BitVector  TabPanelBase::TabRotationFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabRotationFieldId);
-
-const OSG::BitVector  TabPanelBase::TabBorderInsetsFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabBorderInsetsFieldId);
-
-const OSG::BitVector  TabPanelBase::TabBorderFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabBorderFieldId);
-
-const OSG::BitVector  TabPanelBase::TabBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabBackgroundFieldId);
-
-const OSG::BitVector  TabPanelBase::TabDisabledBorderFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabDisabledBorderFieldId);
-
-const OSG::BitVector  TabPanelBase::TabDisabledBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabDisabledBackgroundFieldId);
-
-const OSG::BitVector  TabPanelBase::TabFocusedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabFocusedBorderFieldId);
-
-const OSG::BitVector  TabPanelBase::TabFocusedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabFocusedBackgroundFieldId);
-
-const OSG::BitVector  TabPanelBase::TabRolloverBorderFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabRolloverBorderFieldId);
-
-const OSG::BitVector  TabPanelBase::TabRolloverBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabRolloverBackgroundFieldId);
-
-const OSG::BitVector  TabPanelBase::TabActiveBorderFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabActiveBorderFieldId);
-
-const OSG::BitVector  TabPanelBase::TabActiveBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::TabActiveBackgroundFieldId);
-
-const OSG::BitVector  TabPanelBase::ContentBorderInsetsFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::ContentBorderInsetsFieldId);
-
-const OSG::BitVector  TabPanelBase::ContentBorderFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::ContentBorderFieldId);
-
-const OSG::BitVector  TabPanelBase::ContentBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::ContentBackgroundFieldId);
-
-const OSG::BitVector  TabPanelBase::ContentDisabledBorderFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::ContentDisabledBorderFieldId);
-
-const OSG::BitVector  TabPanelBase::ContentDisabledBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::ContentDisabledBackgroundFieldId);
-
-const OSG::BitVector  TabPanelBase::ContentRolloverBorderFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::ContentRolloverBorderFieldId);
-
-const OSG::BitVector  TabPanelBase::ContentRolloverBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::ContentRolloverBackgroundFieldId);
-
-const OSG::BitVector  TabPanelBase::SelectionModelFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::SelectionModelFieldId);
-
-const OSG::BitVector TabPanelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ComponentPtr    TabPanelBase::_mfTabs
+/*! \var Component *     TabPanelBase::_mfTabs
     
 */
-/*! \var ComponentPtr    TabPanelBase::_mfTabContents
+
+/*! \var Component *     TabPanelBase::_mfTabContents
     
 */
+
 /*! \var UInt32          TabPanelBase::_sfTabPlacement
     
 */
+
 /*! \var Real32          TabPanelBase::_sfTabAlignment
     
 */
+
 /*! \var UInt32          TabPanelBase::_sfTabRotation
     
 */
+
 /*! \var Vec2f           TabPanelBase::_sfTabBorderInsets
     
 */
-/*! \var BorderPtr       TabPanelBase::_sfTabBorder
+
+/*! \var Border *        TabPanelBase::_sfTabBorder
     
 */
-/*! \var LayerPtr        TabPanelBase::_sfTabBackground
+
+/*! \var Layer *         TabPanelBase::_sfTabBackground
     
 */
-/*! \var BorderPtr       TabPanelBase::_sfTabDisabledBorder
+
+/*! \var Border *        TabPanelBase::_sfTabDisabledBorder
     
 */
-/*! \var LayerPtr        TabPanelBase::_sfTabDisabledBackground
+
+/*! \var Layer *         TabPanelBase::_sfTabDisabledBackground
     
 */
-/*! \var BorderPtr       TabPanelBase::_sfTabFocusedBorder
+
+/*! \var Border *        TabPanelBase::_sfTabFocusedBorder
     
 */
-/*! \var LayerPtr        TabPanelBase::_sfTabFocusedBackground
+
+/*! \var Layer *         TabPanelBase::_sfTabFocusedBackground
     
 */
-/*! \var BorderPtr       TabPanelBase::_sfTabRolloverBorder
+
+/*! \var Border *        TabPanelBase::_sfTabRolloverBorder
     
 */
-/*! \var LayerPtr        TabPanelBase::_sfTabRolloverBackground
+
+/*! \var Layer *         TabPanelBase::_sfTabRolloverBackground
     
 */
-/*! \var BorderPtr       TabPanelBase::_sfTabActiveBorder
+
+/*! \var Border *        TabPanelBase::_sfTabActiveBorder
     
 */
-/*! \var LayerPtr        TabPanelBase::_sfTabActiveBackground
+
+/*! \var Layer *         TabPanelBase::_sfTabActiveBackground
     
 */
+
 /*! \var Vec2f           TabPanelBase::_sfContentBorderInsets
     
 */
-/*! \var BorderPtr       TabPanelBase::_sfContentBorder
-    
-*/
-/*! \var LayerPtr        TabPanelBase::_sfContentBackground
-    
-*/
-/*! \var BorderPtr       TabPanelBase::_sfContentDisabledBorder
-    
-*/
-/*! \var LayerPtr        TabPanelBase::_sfContentDisabledBackground
-    
-*/
-/*! \var BorderPtr       TabPanelBase::_sfContentRolloverBorder
-    
-*/
-/*! \var LayerPtr        TabPanelBase::_sfContentRolloverBackground
-    
-*/
-/*! \var SingleSelectionModelPtr TabPanelBase::_sfSelectionModel
+
+/*! \var Border *        TabPanelBase::_sfContentBorder
     
 */
 
-//! TabPanel description
+/*! \var Layer *         TabPanelBase::_sfContentBackground
+    
+*/
 
-FieldDescription *TabPanelBase::_desc[] = 
+/*! \var Border *        TabPanelBase::_sfContentDisabledBorder
+    
+*/
+
+/*! \var Layer *         TabPanelBase::_sfContentDisabledBackground
+    
+*/
+
+/*! \var Border *        TabPanelBase::_sfContentRolloverBorder
+    
+*/
+
+/*! \var Layer *         TabPanelBase::_sfContentRolloverBackground
+    
+*/
+
+/*! \var SingleSelectionModel * TabPanelBase::_sfSelectionModel
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TabPanel *>::_type("TabPanelPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TabPanel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TabPanel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TabPanel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TabPanelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFComponentPtr::getClassType(), 
-                     "Tabs", 
-                     TabsFieldId, TabsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editMFTabs)),
-    new FieldDescription(MFComponentPtr::getClassType(), 
-                     "TabContents", 
-                     TabContentsFieldId, TabContentsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editMFTabContents)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "TabPlacement", 
-                     TabPlacementFieldId, TabPlacementFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabPlacement)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TabAlignment", 
-                     TabAlignmentFieldId, TabAlignmentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabAlignment)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "TabRotation", 
-                     TabRotationFieldId, TabRotationFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabRotation)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "TabBorderInsets", 
-                     TabBorderInsetsFieldId, TabBorderInsetsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabBorderInsets)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "TabBorder", 
-                     TabBorderFieldId, TabBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "TabBackground", 
-                     TabBackgroundFieldId, TabBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabBackground)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "TabDisabledBorder", 
-                     TabDisabledBorderFieldId, TabDisabledBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabDisabledBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "TabDisabledBackground", 
-                     TabDisabledBackgroundFieldId, TabDisabledBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabDisabledBackground)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "TabFocusedBorder", 
-                     TabFocusedBorderFieldId, TabFocusedBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabFocusedBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "TabFocusedBackground", 
-                     TabFocusedBackgroundFieldId, TabFocusedBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabFocusedBackground)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "TabRolloverBorder", 
-                     TabRolloverBorderFieldId, TabRolloverBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabRolloverBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "TabRolloverBackground", 
-                     TabRolloverBackgroundFieldId, TabRolloverBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabRolloverBackground)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "TabActiveBorder", 
-                     TabActiveBorderFieldId, TabActiveBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabActiveBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "TabActiveBackground", 
-                     TabActiveBackgroundFieldId, TabActiveBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFTabActiveBackground)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "ContentBorderInsets", 
-                     ContentBorderInsetsFieldId, ContentBorderInsetsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFContentBorderInsets)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "ContentBorder", 
-                     ContentBorderFieldId, ContentBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFContentBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "ContentBackground", 
-                     ContentBackgroundFieldId, ContentBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFContentBackground)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "ContentDisabledBorder", 
-                     ContentDisabledBorderFieldId, ContentDisabledBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFContentDisabledBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "ContentDisabledBackground", 
-                     ContentDisabledBackgroundFieldId, ContentDisabledBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFContentDisabledBackground)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "ContentRolloverBorder", 
-                     ContentRolloverBorderFieldId, ContentRolloverBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFContentRolloverBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "ContentRolloverBackground", 
-                     ContentRolloverBackgroundFieldId, ContentRolloverBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFContentRolloverBackground)),
-    new FieldDescription(SFSingleSelectionModelPtr::getClassType(), 
-                     "SelectionModel", 
-                     SelectionModelFieldId, SelectionModelFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TabPanelBase::editSFSelectionModel))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TabPanelBase::_type(
-    "TabPanel",
-    "Container",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TabPanelBase::createEmpty),
+    pDesc = new MFUnrecComponentPtr::Description(
+        MFUnrecComponentPtr::getClassType(),
+        "Tabs",
+        "",
+        TabsFieldId, TabsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabs),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabs));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUnrecComponentPtr::Description(
+        MFUnrecComponentPtr::getClassType(),
+        "TabContents",
+        "",
+        TabContentsFieldId, TabContentsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabContents),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabContents));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "TabPlacement",
+        "",
+        TabPlacementFieldId, TabPlacementFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabPlacement),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabPlacement));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "TabAlignment",
+        "",
+        TabAlignmentFieldId, TabAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabAlignment),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "TabRotation",
+        "",
+        TabRotationFieldId, TabRotationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabRotation),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabRotation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "TabBorderInsets",
+        "",
+        TabBorderInsetsFieldId, TabBorderInsetsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabBorderInsets),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabBorderInsets));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "TabBorder",
+        "",
+        TabBorderFieldId, TabBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabBorder),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "TabBackground",
+        "",
+        TabBackgroundFieldId, TabBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabBackground),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "TabDisabledBorder",
+        "",
+        TabDisabledBorderFieldId, TabDisabledBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabDisabledBorder),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabDisabledBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "TabDisabledBackground",
+        "",
+        TabDisabledBackgroundFieldId, TabDisabledBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabDisabledBackground),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabDisabledBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "TabFocusedBorder",
+        "",
+        TabFocusedBorderFieldId, TabFocusedBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabFocusedBorder),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabFocusedBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "TabFocusedBackground",
+        "",
+        TabFocusedBackgroundFieldId, TabFocusedBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabFocusedBackground),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabFocusedBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "TabRolloverBorder",
+        "",
+        TabRolloverBorderFieldId, TabRolloverBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabRolloverBorder),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabRolloverBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "TabRolloverBackground",
+        "",
+        TabRolloverBackgroundFieldId, TabRolloverBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabRolloverBackground),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabRolloverBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "TabActiveBorder",
+        "",
+        TabActiveBorderFieldId, TabActiveBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabActiveBorder),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabActiveBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "TabActiveBackground",
+        "",
+        TabActiveBackgroundFieldId, TabActiveBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleTabActiveBackground),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabActiveBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "ContentBorderInsets",
+        "",
+        ContentBorderInsetsFieldId, ContentBorderInsetsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleContentBorderInsets),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentBorderInsets));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "ContentBorder",
+        "",
+        ContentBorderFieldId, ContentBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleContentBorder),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "ContentBackground",
+        "",
+        ContentBackgroundFieldId, ContentBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleContentBackground),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "ContentDisabledBorder",
+        "",
+        ContentDisabledBorderFieldId, ContentDisabledBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleContentDisabledBorder),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentDisabledBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "ContentDisabledBackground",
+        "",
+        ContentDisabledBackgroundFieldId, ContentDisabledBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleContentDisabledBackground),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentDisabledBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "ContentRolloverBorder",
+        "",
+        ContentRolloverBorderFieldId, ContentRolloverBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleContentRolloverBorder),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentRolloverBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "ContentRolloverBackground",
+        "",
+        ContentRolloverBackgroundFieldId, ContentRolloverBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleContentRolloverBackground),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentRolloverBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecSingleSelectionModelPtr::Description(
+        SFUnrecSingleSelectionModelPtr::getClassType(),
+        "SelectionModel",
+        "",
+        SelectionModelFieldId, SelectionModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TabPanel::editHandleSelectionModel),
+        static_cast<FieldGetMethodSig >(&TabPanel::getHandleSelectionModel));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+TabPanelBase::TypeObject TabPanelBase::_type(
+    TabPanelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TabPanelBase::createEmptyLocal),
     TabPanel::initMethod,
-    _desc,
-    sizeof(_desc));
+    TabPanel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TabPanel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TabPanel\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Tab Panel.\n"
+    "\t<Field\n"
+    "\t\tname=\"Tabs\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabContents\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabPlacement\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.5f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabRotation\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabBorderInsets\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0f,0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabDisabledBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabDisabledBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabFocusedBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabFocusedBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabRolloverBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabRolloverBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabActiveBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TabActiveBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ContentBorderInsets\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0f,0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ContentBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ContentBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ContentDisabledBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ContentDisabledBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ContentRolloverBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ContentRolloverBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectionModel\"\n"
+    "\t\ttype=\"SingleSelectionModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\n"
+    "</FieldContainer>\n"
+    "\t<!--<Field-->\n"
+    "\t\t<!--name=\"TabForeground\"-->\n"
+    "\t\t<!--type=\"Layer\"-->\n"
+    "\t\t<!--cardinality=\"single\"-->\n"
+    "\t\t<!--visibility=\"external\"-->\n"
+    "\t\t<!--defaultValue=\"NULL\"-->\n"
+    "\t\t<!--access=\"public\"-->\n"
+    "\t<!-->-->\n"
+    "\t<!--</Field>-->\n"
+    "\t<!--<Field-->\n"
+    "\t\t<!--name=\"TabDisabledForeground\"-->\n"
+    "\t\t<!--type=\"Layer\"-->\n"
+    "\t\t<!--cardinality=\"single\"-->\n"
+    "\t\t<!--visibility=\"external\"-->\n"
+    "\t\t<!--defaultValue=\"NULL\"-->\n"
+    "\t\t<!--access=\"public\"-->\n"
+    "\t<!-->-->\n"
+    "\t<!--</Field>-->\n"
+    "\t<!--<Field-->\n"
+    "\t\t<!--name=\"TabFocusedForeground\"-->\n"
+    "\t\t<!--type=\"Layer\"-->\n"
+    "\t\t<!--cardinality=\"single\"-->\n"
+    "\t\t<!--visibility=\"external\"-->\n"
+    "\t\t<!--defaultValue=\"NULL\"-->\n"
+    "\t\t<!--access=\"public\"-->\n"
+    "\t<!-->-->\n"
+    "\t<!--</Field>-->\n"
+    "\t<!--<Field-->\n"
+    "\t\t<!--name=\"TabRolloverForeground\"-->\n"
+    "\t\t<!--type=\"Layer\"-->\n"
+    "\t\t<!--cardinality=\"single\"-->\n"
+    "\t\t<!--visibility=\"external\"-->\n"
+    "\t\t<!--defaultValue=\"NULL\"-->\n"
+    "\t\t<!--access=\"public\"-->\n"
+    "\t<!-->-->\n"
+    "\t<!--</Field>-->\n"
+    "\t<!--<Field-->\n"
+    "\t\t<!--name=\"TabActiveForeground\"-->\n"
+    "\t\t<!--type=\"Layer\"-->\n"
+    "\t\t<!--cardinality=\"single\"-->\n"
+    "\t\t<!--visibility=\"external\"-->\n"
+    "\t\t<!--defaultValue=\"NULL\"-->\n"
+    "\t\t<!--access=\"public\"-->\n"
+    "\t<!-->-->\n"
+    "\t<!--</Field>-->\n"
+    "\t<!--<Field-->\n"
+    "\t\t<!--name=\"ContentForeground\"-->\n"
+    "\t\t<!--type=\"Layer\"-->\n"
+    "\t\t<!--cardinality=\"single\"-->\n"
+    "\t\t<!--visibility=\"external\"-->\n"
+    "\t\t<!--defaultValue=\"NULL\"-->\n"
+    "\t\t<!--access=\"public\"-->\n"
+    "\t<!-->-->\n"
+    "\t<!--</Field>-->\n"
+    "\t<!--<Field-->\n"
+    "\t\t<!--name=\"ContentDisabledForeground\"-->\n"
+    "\t\t<!--type=\"Layer\"-->\n"
+    "\t\t<!--cardinality=\"single\"-->\n"
+    "\t\t<!--visibility=\"external\"-->\n"
+    "\t\t<!--defaultValue=\"NULL\"-->\n"
+    "\t\t<!--access=\"public\"-->\n"
+    "\t<!-->-->\n"
+    "\t<!--</Field>-->\n"
+    "\t<!--<Field-->\n"
+    "\t\t<!--name=\"ContentRolloverForeground\"-->\n"
+    "\t\t<!--type=\"Layer\"-->\n"
+    "\t\t<!--cardinality=\"single\"-->\n"
+    "\t\t<!--visibility=\"external\"-->\n"
+    "\t\t<!--defaultValue=\"NULL\"-->\n"
+    "\t\t<!--access=\"public\"-->\n"
+    "\t<!-->-->\n"
+    "\t<!--</Field>-->\n",
+    "A UI Tab Panel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TabPanelBase, TabPanelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TabPanelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TabPanelBase::getType(void) const 
+FieldContainerType &TabPanelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TabPanelBase::shallowCopy(void) const 
-{ 
-    TabPanelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TabPanel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TabPanelBase::getContainerSize(void) const 
-{ 
-    return sizeof(TabPanel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TabPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TabPanelBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<TabPanelBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void TabPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TabPanelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TabPanelBase *) &other, whichField, sInfo);
+    return sizeof(TabPanel);
 }
-void TabPanelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the TabPanel::_mfTabs field.
+const MFUnrecComponentPtr *TabPanelBase::getMFTabs(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_mfTabs;
 }
 
-void TabPanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+MFUnrecComponentPtr *TabPanelBase::editMFTabs           (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editMField(TabsFieldMask, _mfTabs);
 
-    _mfTabs.terminateShare(uiAspect, this->getContainerSize());
-    _mfTabContents.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfTabs;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TabPanelBase::TabPanelBase(void) :
-    _mfTabs                   (), 
-    _mfTabContents            (), 
-    _sfTabPlacement           (UInt32(0)), 
-    _sfTabAlignment           (Real32(0.5f)), 
-    _sfTabRotation            (UInt32(0)), 
-    _sfTabBorderInsets        (Vec2f(0.0f,0.0f)), 
-    _sfTabBorder              (BorderPtr(NullFC)), 
-    _sfTabBackground          (LayerPtr(NullFC)), 
-    _sfTabDisabledBorder      (BorderPtr(NullFC)), 
-    _sfTabDisabledBackground  (LayerPtr(NullFC)), 
-    _sfTabFocusedBorder       (BorderPtr(NullFC)), 
-    _sfTabFocusedBackground   (LayerPtr(NullFC)), 
-    _sfTabRolloverBorder      (BorderPtr(NullFC)), 
-    _sfTabRolloverBackground  (LayerPtr(NullFC)), 
-    _sfTabActiveBorder        (BorderPtr(NullFC)), 
-    _sfTabActiveBackground    (LayerPtr(NullFC)), 
-    _sfContentBorderInsets    (Vec2f(0.0f,0.0f)), 
-    _sfContentBorder          (BorderPtr(NullFC)), 
-    _sfContentBackground      (LayerPtr(NullFC)), 
-    _sfContentDisabledBorder  (BorderPtr(NullFC)), 
-    _sfContentDisabledBackground(LayerPtr(NullFC)), 
-    _sfContentRolloverBorder  (BorderPtr(NullFC)), 
-    _sfContentRolloverBackground(LayerPtr(NullFC)), 
-    _sfSelectionModel         (SingleSelectionModelPtr(NullFC)), 
-    Inherited() 
+//! Get the TabPanel::_mfTabContents field.
+const MFUnrecComponentPtr *TabPanelBase::getMFTabContents(void) const
 {
+    return &_mfTabContents;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TabPanelBase::TabPanelBase(const TabPanelBase &source) :
-    _mfTabs                   (source._mfTabs                   ), 
-    _mfTabContents            (source._mfTabContents            ), 
-    _sfTabPlacement           (source._sfTabPlacement           ), 
-    _sfTabAlignment           (source._sfTabAlignment           ), 
-    _sfTabRotation            (source._sfTabRotation            ), 
-    _sfTabBorderInsets        (source._sfTabBorderInsets        ), 
-    _sfTabBorder              (source._sfTabBorder              ), 
-    _sfTabBackground          (source._sfTabBackground          ), 
-    _sfTabDisabledBorder      (source._sfTabDisabledBorder      ), 
-    _sfTabDisabledBackground  (source._sfTabDisabledBackground  ), 
-    _sfTabFocusedBorder       (source._sfTabFocusedBorder       ), 
-    _sfTabFocusedBackground   (source._sfTabFocusedBackground   ), 
-    _sfTabRolloverBorder      (source._sfTabRolloverBorder      ), 
-    _sfTabRolloverBackground  (source._sfTabRolloverBackground  ), 
-    _sfTabActiveBorder        (source._sfTabActiveBorder        ), 
-    _sfTabActiveBackground    (source._sfTabActiveBackground    ), 
-    _sfContentBorderInsets    (source._sfContentBorderInsets    ), 
-    _sfContentBorder          (source._sfContentBorder          ), 
-    _sfContentBackground      (source._sfContentBackground      ), 
-    _sfContentDisabledBorder  (source._sfContentDisabledBorder  ), 
-    _sfContentDisabledBackground(source._sfContentDisabledBackground), 
-    _sfContentRolloverBorder  (source._sfContentRolloverBorder  ), 
-    _sfContentRolloverBackground(source._sfContentRolloverBackground), 
-    _sfSelectionModel         (source._sfSelectionModel         ), 
-    Inherited                 (source)
+MFUnrecComponentPtr *TabPanelBase::editMFTabContents    (void)
 {
+    editMField(TabContentsFieldMask, _mfTabContents);
+
+    return &_mfTabContents;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-TabPanelBase::~TabPanelBase(void)
+SFUInt32 *TabPanelBase::editSFTabPlacement(void)
 {
+    editSField(TabPlacementFieldMask);
+
+    return &_sfTabPlacement;
 }
+
+const SFUInt32 *TabPanelBase::getSFTabPlacement(void) const
+{
+    return &_sfTabPlacement;
+}
+
+
+SFReal32 *TabPanelBase::editSFTabAlignment(void)
+{
+    editSField(TabAlignmentFieldMask);
+
+    return &_sfTabAlignment;
+}
+
+const SFReal32 *TabPanelBase::getSFTabAlignment(void) const
+{
+    return &_sfTabAlignment;
+}
+
+
+SFUInt32 *TabPanelBase::editSFTabRotation(void)
+{
+    editSField(TabRotationFieldMask);
+
+    return &_sfTabRotation;
+}
+
+const SFUInt32 *TabPanelBase::getSFTabRotation(void) const
+{
+    return &_sfTabRotation;
+}
+
+
+SFVec2f *TabPanelBase::editSFTabBorderInsets(void)
+{
+    editSField(TabBorderInsetsFieldMask);
+
+    return &_sfTabBorderInsets;
+}
+
+const SFVec2f *TabPanelBase::getSFTabBorderInsets(void) const
+{
+    return &_sfTabBorderInsets;
+}
+
+
+//! Get the TabPanel::_sfTabBorder field.
+const SFUnrecBorderPtr *TabPanelBase::getSFTabBorder(void) const
+{
+    return &_sfTabBorder;
+}
+
+SFUnrecBorderPtr    *TabPanelBase::editSFTabBorder      (void)
+{
+    editSField(TabBorderFieldMask);
+
+    return &_sfTabBorder;
+}
+
+//! Get the TabPanel::_sfTabBackground field.
+const SFUnrecLayerPtr *TabPanelBase::getSFTabBackground(void) const
+{
+    return &_sfTabBackground;
+}
+
+SFUnrecLayerPtr     *TabPanelBase::editSFTabBackground  (void)
+{
+    editSField(TabBackgroundFieldMask);
+
+    return &_sfTabBackground;
+}
+
+//! Get the TabPanel::_sfTabDisabledBorder field.
+const SFUnrecBorderPtr *TabPanelBase::getSFTabDisabledBorder(void) const
+{
+    return &_sfTabDisabledBorder;
+}
+
+SFUnrecBorderPtr    *TabPanelBase::editSFTabDisabledBorder(void)
+{
+    editSField(TabDisabledBorderFieldMask);
+
+    return &_sfTabDisabledBorder;
+}
+
+//! Get the TabPanel::_sfTabDisabledBackground field.
+const SFUnrecLayerPtr *TabPanelBase::getSFTabDisabledBackground(void) const
+{
+    return &_sfTabDisabledBackground;
+}
+
+SFUnrecLayerPtr     *TabPanelBase::editSFTabDisabledBackground(void)
+{
+    editSField(TabDisabledBackgroundFieldMask);
+
+    return &_sfTabDisabledBackground;
+}
+
+//! Get the TabPanel::_sfTabFocusedBorder field.
+const SFUnrecBorderPtr *TabPanelBase::getSFTabFocusedBorder(void) const
+{
+    return &_sfTabFocusedBorder;
+}
+
+SFUnrecBorderPtr    *TabPanelBase::editSFTabFocusedBorder(void)
+{
+    editSField(TabFocusedBorderFieldMask);
+
+    return &_sfTabFocusedBorder;
+}
+
+//! Get the TabPanel::_sfTabFocusedBackground field.
+const SFUnrecLayerPtr *TabPanelBase::getSFTabFocusedBackground(void) const
+{
+    return &_sfTabFocusedBackground;
+}
+
+SFUnrecLayerPtr     *TabPanelBase::editSFTabFocusedBackground(void)
+{
+    editSField(TabFocusedBackgroundFieldMask);
+
+    return &_sfTabFocusedBackground;
+}
+
+//! Get the TabPanel::_sfTabRolloverBorder field.
+const SFUnrecBorderPtr *TabPanelBase::getSFTabRolloverBorder(void) const
+{
+    return &_sfTabRolloverBorder;
+}
+
+SFUnrecBorderPtr    *TabPanelBase::editSFTabRolloverBorder(void)
+{
+    editSField(TabRolloverBorderFieldMask);
+
+    return &_sfTabRolloverBorder;
+}
+
+//! Get the TabPanel::_sfTabRolloverBackground field.
+const SFUnrecLayerPtr *TabPanelBase::getSFTabRolloverBackground(void) const
+{
+    return &_sfTabRolloverBackground;
+}
+
+SFUnrecLayerPtr     *TabPanelBase::editSFTabRolloverBackground(void)
+{
+    editSField(TabRolloverBackgroundFieldMask);
+
+    return &_sfTabRolloverBackground;
+}
+
+//! Get the TabPanel::_sfTabActiveBorder field.
+const SFUnrecBorderPtr *TabPanelBase::getSFTabActiveBorder(void) const
+{
+    return &_sfTabActiveBorder;
+}
+
+SFUnrecBorderPtr    *TabPanelBase::editSFTabActiveBorder(void)
+{
+    editSField(TabActiveBorderFieldMask);
+
+    return &_sfTabActiveBorder;
+}
+
+//! Get the TabPanel::_sfTabActiveBackground field.
+const SFUnrecLayerPtr *TabPanelBase::getSFTabActiveBackground(void) const
+{
+    return &_sfTabActiveBackground;
+}
+
+SFUnrecLayerPtr     *TabPanelBase::editSFTabActiveBackground(void)
+{
+    editSField(TabActiveBackgroundFieldMask);
+
+    return &_sfTabActiveBackground;
+}
+
+SFVec2f *TabPanelBase::editSFContentBorderInsets(void)
+{
+    editSField(ContentBorderInsetsFieldMask);
+
+    return &_sfContentBorderInsets;
+}
+
+const SFVec2f *TabPanelBase::getSFContentBorderInsets(void) const
+{
+    return &_sfContentBorderInsets;
+}
+
+
+//! Get the TabPanel::_sfContentBorder field.
+const SFUnrecBorderPtr *TabPanelBase::getSFContentBorder(void) const
+{
+    return &_sfContentBorder;
+}
+
+SFUnrecBorderPtr    *TabPanelBase::editSFContentBorder  (void)
+{
+    editSField(ContentBorderFieldMask);
+
+    return &_sfContentBorder;
+}
+
+//! Get the TabPanel::_sfContentBackground field.
+const SFUnrecLayerPtr *TabPanelBase::getSFContentBackground(void) const
+{
+    return &_sfContentBackground;
+}
+
+SFUnrecLayerPtr     *TabPanelBase::editSFContentBackground(void)
+{
+    editSField(ContentBackgroundFieldMask);
+
+    return &_sfContentBackground;
+}
+
+//! Get the TabPanel::_sfContentDisabledBorder field.
+const SFUnrecBorderPtr *TabPanelBase::getSFContentDisabledBorder(void) const
+{
+    return &_sfContentDisabledBorder;
+}
+
+SFUnrecBorderPtr    *TabPanelBase::editSFContentDisabledBorder(void)
+{
+    editSField(ContentDisabledBorderFieldMask);
+
+    return &_sfContentDisabledBorder;
+}
+
+//! Get the TabPanel::_sfContentDisabledBackground field.
+const SFUnrecLayerPtr *TabPanelBase::getSFContentDisabledBackground(void) const
+{
+    return &_sfContentDisabledBackground;
+}
+
+SFUnrecLayerPtr     *TabPanelBase::editSFContentDisabledBackground(void)
+{
+    editSField(ContentDisabledBackgroundFieldMask);
+
+    return &_sfContentDisabledBackground;
+}
+
+//! Get the TabPanel::_sfContentRolloverBorder field.
+const SFUnrecBorderPtr *TabPanelBase::getSFContentRolloverBorder(void) const
+{
+    return &_sfContentRolloverBorder;
+}
+
+SFUnrecBorderPtr    *TabPanelBase::editSFContentRolloverBorder(void)
+{
+    editSField(ContentRolloverBorderFieldMask);
+
+    return &_sfContentRolloverBorder;
+}
+
+//! Get the TabPanel::_sfContentRolloverBackground field.
+const SFUnrecLayerPtr *TabPanelBase::getSFContentRolloverBackground(void) const
+{
+    return &_sfContentRolloverBackground;
+}
+
+SFUnrecLayerPtr     *TabPanelBase::editSFContentRolloverBackground(void)
+{
+    editSField(ContentRolloverBackgroundFieldMask);
+
+    return &_sfContentRolloverBackground;
+}
+
+//! Get the TabPanel::_sfSelectionModel field.
+const SFUnrecSingleSelectionModelPtr *TabPanelBase::getSFSelectionModel(void) const
+{
+    return &_sfSelectionModel;
+}
+
+SFUnrecSingleSelectionModelPtr *TabPanelBase::editSFSelectionModel (void)
+{
+    editSField(SelectionModelFieldMask);
+
+    return &_sfSelectionModel;
+}
+
+
+
+void TabPanelBase::pushToTabs(Component * const value)
+{
+    editMField(TabsFieldMask, _mfTabs);
+
+    _mfTabs.push_back(value);
+}
+
+void TabPanelBase::assignTabs     (const MFUnrecComponentPtr &value)
+{
+    MFUnrecComponentPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecComponentPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<TabPanel *>(this)->clearTabs();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToTabs(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void TabPanelBase::removeFromTabs(UInt32 uiIndex)
+{
+    if(uiIndex < _mfTabs.size())
+    {
+        editMField(TabsFieldMask, _mfTabs);
+
+        _mfTabs.erase(uiIndex);
+    }
+}
+
+void TabPanelBase::removeObjFromTabs(Component * const value)
+{
+    Int32 iElemIdx = _mfTabs.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(TabsFieldMask, _mfTabs);
+
+        _mfTabs.erase(iElemIdx);
+    }
+}
+void TabPanelBase::clearTabs(void)
+{
+    editMField(TabsFieldMask, _mfTabs);
+
+
+    _mfTabs.clear();
+}
+
+void TabPanelBase::pushToTabContents(Component * const value)
+{
+    editMField(TabContentsFieldMask, _mfTabContents);
+
+    _mfTabContents.push_back(value);
+}
+
+void TabPanelBase::assignTabContents(const MFUnrecComponentPtr &value)
+{
+    MFUnrecComponentPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecComponentPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<TabPanel *>(this)->clearTabContents();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToTabContents(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void TabPanelBase::removeFromTabContents(UInt32 uiIndex)
+{
+    if(uiIndex < _mfTabContents.size())
+    {
+        editMField(TabContentsFieldMask, _mfTabContents);
+
+        _mfTabContents.erase(uiIndex);
+    }
+}
+
+void TabPanelBase::removeObjFromTabContents(Component * const value)
+{
+    Int32 iElemIdx = _mfTabContents.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(TabContentsFieldMask, _mfTabContents);
+
+        _mfTabContents.erase(iElemIdx);
+    }
+}
+void TabPanelBase::clearTabContents(void)
+{
+    editMField(TabContentsFieldMask, _mfTabContents);
+
+
+    _mfTabContents.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TabPanelBase::getBinSize(const BitVector &whichField)
+UInt32 TabPanelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -495,128 +1319,104 @@ UInt32 TabPanelBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _mfTabs.getBinSize();
     }
-
     if(FieldBits::NoField != (TabContentsFieldMask & whichField))
     {
         returnValue += _mfTabContents.getBinSize();
     }
-
     if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
     {
         returnValue += _sfTabPlacement.getBinSize();
     }
-
     if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
     {
         returnValue += _sfTabAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (TabRotationFieldMask & whichField))
     {
         returnValue += _sfTabRotation.getBinSize();
     }
-
     if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
     {
         returnValue += _sfTabBorderInsets.getBinSize();
     }
-
     if(FieldBits::NoField != (TabBorderFieldMask & whichField))
     {
         returnValue += _sfTabBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
     {
         returnValue += _sfTabBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
     {
         returnValue += _sfTabDisabledBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
     {
         returnValue += _sfTabDisabledBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
     {
         returnValue += _sfTabFocusedBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
     {
         returnValue += _sfTabFocusedBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
     {
         returnValue += _sfTabRolloverBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
     {
         returnValue += _sfTabRolloverBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
     {
         returnValue += _sfTabActiveBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
     {
         returnValue += _sfTabActiveBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
     {
         returnValue += _sfContentBorderInsets.getBinSize();
     }
-
     if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
     {
         returnValue += _sfContentBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
     {
         returnValue += _sfContentBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
     {
         returnValue += _sfContentDisabledBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
     {
         returnValue += _sfContentDisabledBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
     {
         returnValue += _sfContentRolloverBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
     {
         returnValue += _sfContentRolloverBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
         returnValue += _sfSelectionModel.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TabPanelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TabPanelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -624,127 +1424,102 @@ void TabPanelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfTabs.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabContentsFieldMask & whichField))
     {
         _mfTabContents.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
     {
         _sfTabPlacement.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
     {
         _sfTabAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabRotationFieldMask & whichField))
     {
         _sfTabRotation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
     {
         _sfTabBorderInsets.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabBorderFieldMask & whichField))
     {
         _sfTabBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
     {
         _sfTabBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
     {
         _sfTabDisabledBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
     {
         _sfTabDisabledBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
     {
         _sfTabFocusedBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
     {
         _sfTabFocusedBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
     {
         _sfTabRolloverBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
     {
         _sfTabRolloverBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
     {
         _sfTabActiveBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
     {
         _sfTabActiveBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
     {
         _sfContentBorderInsets.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
     {
         _sfContentBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
     {
         _sfContentBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
     {
         _sfContentDisabledBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
     {
         _sfContentDisabledBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
     {
         _sfContentRolloverBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
     {
         _sfContentRolloverBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
         _sfSelectionModel.copyToBin(pMem);
     }
-
-
 }
 
-void TabPanelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TabPanelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -752,321 +1527,1106 @@ void TabPanelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfTabs.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabContentsFieldMask & whichField))
     {
         _mfTabContents.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
     {
         _sfTabPlacement.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
     {
         _sfTabAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabRotationFieldMask & whichField))
     {
         _sfTabRotation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
     {
         _sfTabBorderInsets.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabBorderFieldMask & whichField))
     {
         _sfTabBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
     {
         _sfTabBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
     {
         _sfTabDisabledBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
     {
         _sfTabDisabledBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
     {
         _sfTabFocusedBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
     {
         _sfTabFocusedBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
     {
         _sfTabRolloverBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
     {
         _sfTabRolloverBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
     {
         _sfTabActiveBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
     {
         _sfTabActiveBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
     {
         _sfContentBorderInsets.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
     {
         _sfContentBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
     {
         _sfContentBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
     {
         _sfContentDisabledBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
     {
         _sfContentDisabledBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
     {
         _sfContentRolloverBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
     {
         _sfContentRolloverBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
         _sfSelectionModel.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TabPanelTransitPtr TabPanelBase::createLocal(BitVector bFlags)
 {
+    TabPanelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (TabsFieldMask & whichField))
-        _mfTabs.syncWith(pOther->_mfTabs);
+        fc = dynamic_pointer_cast<TabPanel>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (TabContentsFieldMask & whichField))
-        _mfTabContents.syncWith(pOther->_mfTabContents);
-
-    if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
-        _sfTabPlacement.syncWith(pOther->_sfTabPlacement);
-
-    if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
-        _sfTabAlignment.syncWith(pOther->_sfTabAlignment);
-
-    if(FieldBits::NoField != (TabRotationFieldMask & whichField))
-        _sfTabRotation.syncWith(pOther->_sfTabRotation);
-
-    if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
-        _sfTabBorderInsets.syncWith(pOther->_sfTabBorderInsets);
-
-    if(FieldBits::NoField != (TabBorderFieldMask & whichField))
-        _sfTabBorder.syncWith(pOther->_sfTabBorder);
-
-    if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
-        _sfTabBackground.syncWith(pOther->_sfTabBackground);
-
-    if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
-        _sfTabDisabledBorder.syncWith(pOther->_sfTabDisabledBorder);
-
-    if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
-        _sfTabDisabledBackground.syncWith(pOther->_sfTabDisabledBackground);
-
-    if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
-        _sfTabFocusedBorder.syncWith(pOther->_sfTabFocusedBorder);
-
-    if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
-        _sfTabFocusedBackground.syncWith(pOther->_sfTabFocusedBackground);
-
-    if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
-        _sfTabRolloverBorder.syncWith(pOther->_sfTabRolloverBorder);
-
-    if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
-        _sfTabRolloverBackground.syncWith(pOther->_sfTabRolloverBackground);
-
-    if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
-        _sfTabActiveBorder.syncWith(pOther->_sfTabActiveBorder);
-
-    if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
-        _sfTabActiveBackground.syncWith(pOther->_sfTabActiveBackground);
-
-    if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
-        _sfContentBorderInsets.syncWith(pOther->_sfContentBorderInsets);
-
-    if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
-        _sfContentBorder.syncWith(pOther->_sfContentBorder);
-
-    if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
-        _sfContentBackground.syncWith(pOther->_sfContentBackground);
-
-    if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
-        _sfContentDisabledBorder.syncWith(pOther->_sfContentDisabledBorder);
-
-    if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
-        _sfContentDisabledBackground.syncWith(pOther->_sfContentDisabledBackground);
-
-    if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
-        _sfContentRolloverBorder.syncWith(pOther->_sfContentRolloverBorder);
-
-    if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
-        _sfContentRolloverBackground.syncWith(pOther->_sfContentRolloverBackground);
-
-    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
-        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
-
-
-}
-#else
-void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
-        _sfTabPlacement.syncWith(pOther->_sfTabPlacement);
-
-    if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
-        _sfTabAlignment.syncWith(pOther->_sfTabAlignment);
-
-    if(FieldBits::NoField != (TabRotationFieldMask & whichField))
-        _sfTabRotation.syncWith(pOther->_sfTabRotation);
-
-    if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
-        _sfTabBorderInsets.syncWith(pOther->_sfTabBorderInsets);
-
-    if(FieldBits::NoField != (TabBorderFieldMask & whichField))
-        _sfTabBorder.syncWith(pOther->_sfTabBorder);
-
-    if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
-        _sfTabBackground.syncWith(pOther->_sfTabBackground);
-
-    if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
-        _sfTabDisabledBorder.syncWith(pOther->_sfTabDisabledBorder);
-
-    if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
-        _sfTabDisabledBackground.syncWith(pOther->_sfTabDisabledBackground);
-
-    if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
-        _sfTabFocusedBorder.syncWith(pOther->_sfTabFocusedBorder);
-
-    if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
-        _sfTabFocusedBackground.syncWith(pOther->_sfTabFocusedBackground);
-
-    if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
-        _sfTabRolloverBorder.syncWith(pOther->_sfTabRolloverBorder);
-
-    if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
-        _sfTabRolloverBackground.syncWith(pOther->_sfTabRolloverBackground);
-
-    if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
-        _sfTabActiveBorder.syncWith(pOther->_sfTabActiveBorder);
-
-    if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
-        _sfTabActiveBackground.syncWith(pOther->_sfTabActiveBackground);
-
-    if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
-        _sfContentBorderInsets.syncWith(pOther->_sfContentBorderInsets);
-
-    if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
-        _sfContentBorder.syncWith(pOther->_sfContentBorder);
-
-    if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
-        _sfContentBackground.syncWith(pOther->_sfContentBackground);
-
-    if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
-        _sfContentDisabledBorder.syncWith(pOther->_sfContentDisabledBorder);
-
-    if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
-        _sfContentDisabledBackground.syncWith(pOther->_sfContentDisabledBackground);
-
-    if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
-        _sfContentRolloverBorder.syncWith(pOther->_sfContentRolloverBorder);
-
-    if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
-        _sfContentRolloverBackground.syncWith(pOther->_sfContentRolloverBackground);
-
-    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
-        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
-
-
-    if(FieldBits::NoField != (TabsFieldMask & whichField))
-        _mfTabs.syncWith(pOther->_mfTabs, sInfo);
-
-    if(FieldBits::NoField != (TabContentsFieldMask & whichField))
-        _mfTabContents.syncWith(pOther->_mfTabContents, sInfo);
-
-
+    return fc;
 }
 
-void TabPanelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TabPanelTransitPtr TabPanelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TabPanelTransitPtr fc;
 
-    if(FieldBits::NoField != (TabsFieldMask & whichField))
-        _mfTabs.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (TabContentsFieldMask & whichField))
-        _mfTabContents.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<TabPanel>(tmpPtr);
+    }
 
+    return fc;
+}
+
+//! create a new instance of the class
+TabPanelTransitPtr TabPanelBase::create(void)
+{
+    TabPanelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TabPanel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TabPanel *TabPanelBase::createEmptyLocal(BitVector bFlags)
+{
+    TabPanel *returnValue;
+
+    newPtr<TabPanel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TabPanel *TabPanelBase::createEmpty(void)
+{
+    TabPanel *returnValue;
+
+    newPtr<TabPanel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TabPanelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TabPanel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TabPanel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TabPanelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TabPanel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TabPanel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TabPanelBase::shallowCopy(void) const
+{
+    TabPanel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TabPanel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TabPanelBase::TabPanelBase(void) :
+    Inherited(),
+    _mfTabs                   (),
+    _mfTabContents            (),
+    _sfTabPlacement           (UInt32(0)),
+    _sfTabAlignment           (Real32(0.5f)),
+    _sfTabRotation            (UInt32(0)),
+    _sfTabBorderInsets        (Vec2f(0.0f,0.0f)),
+    _sfTabBorder              (NULL),
+    _sfTabBackground          (NULL),
+    _sfTabDisabledBorder      (NULL),
+    _sfTabDisabledBackground  (NULL),
+    _sfTabFocusedBorder       (NULL),
+    _sfTabFocusedBackground   (NULL),
+    _sfTabRolloverBorder      (NULL),
+    _sfTabRolloverBackground  (NULL),
+    _sfTabActiveBorder        (NULL),
+    _sfTabActiveBackground    (NULL),
+    _sfContentBorderInsets    (Vec2f(0.0f,0.0f)),
+    _sfContentBorder          (NULL),
+    _sfContentBackground      (NULL),
+    _sfContentDisabledBorder  (NULL),
+    _sfContentDisabledBackground(NULL),
+    _sfContentRolloverBorder  (NULL),
+    _sfContentRolloverBackground(NULL),
+    _sfSelectionModel         (NULL)
+{
+}
+
+TabPanelBase::TabPanelBase(const TabPanelBase &source) :
+    Inherited(source),
+    _mfTabs                   (),
+    _mfTabContents            (),
+    _sfTabPlacement           (source._sfTabPlacement           ),
+    _sfTabAlignment           (source._sfTabAlignment           ),
+    _sfTabRotation            (source._sfTabRotation            ),
+    _sfTabBorderInsets        (source._sfTabBorderInsets        ),
+    _sfTabBorder              (NULL),
+    _sfTabBackground          (NULL),
+    _sfTabDisabledBorder      (NULL),
+    _sfTabDisabledBackground  (NULL),
+    _sfTabFocusedBorder       (NULL),
+    _sfTabFocusedBackground   (NULL),
+    _sfTabRolloverBorder      (NULL),
+    _sfTabRolloverBackground  (NULL),
+    _sfTabActiveBorder        (NULL),
+    _sfTabActiveBackground    (NULL),
+    _sfContentBorderInsets    (source._sfContentBorderInsets    ),
+    _sfContentBorder          (NULL),
+    _sfContentBackground      (NULL),
+    _sfContentDisabledBorder  (NULL),
+    _sfContentDisabledBackground(NULL),
+    _sfContentRolloverBorder  (NULL),
+    _sfContentRolloverBackground(NULL),
+    _sfSelectionModel         (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TabPanelBase::~TabPanelBase(void)
+{
+}
+
+void TabPanelBase::onCreate(const TabPanel *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        TabPanel *pThis = static_cast<TabPanel *>(this);
+
+        MFUnrecComponentPtr::const_iterator TabsIt  =
+            source->_mfTabs.begin();
+        MFUnrecComponentPtr::const_iterator TabsEnd =
+            source->_mfTabs.end  ();
+
+        while(TabsIt != TabsEnd)
+        {
+            pThis->pushToTabs(*TabsIt);
+
+            ++TabsIt;
+        }
+
+        MFUnrecComponentPtr::const_iterator TabContentsIt  =
+            source->_mfTabContents.begin();
+        MFUnrecComponentPtr::const_iterator TabContentsEnd =
+            source->_mfTabContents.end  ();
+
+        while(TabContentsIt != TabContentsEnd)
+        {
+            pThis->pushToTabContents(*TabContentsIt);
+
+            ++TabContentsIt;
+        }
+
+        pThis->setTabBorder(source->getTabBorder());
+
+        pThis->setTabBackground(source->getTabBackground());
+
+        pThis->setTabDisabledBorder(source->getTabDisabledBorder());
+
+        pThis->setTabDisabledBackground(source->getTabDisabledBackground());
+
+        pThis->setTabFocusedBorder(source->getTabFocusedBorder());
+
+        pThis->setTabFocusedBackground(source->getTabFocusedBackground());
+
+        pThis->setTabRolloverBorder(source->getTabRolloverBorder());
+
+        pThis->setTabRolloverBackground(source->getTabRolloverBackground());
+
+        pThis->setTabActiveBorder(source->getTabActiveBorder());
+
+        pThis->setTabActiveBackground(source->getTabActiveBackground());
+
+        pThis->setContentBorder(source->getContentBorder());
+
+        pThis->setContentBackground(source->getContentBackground());
+
+        pThis->setContentDisabledBorder(source->getContentDisabledBorder());
+
+        pThis->setContentDisabledBackground(source->getContentDisabledBackground());
+
+        pThis->setContentRolloverBorder(source->getContentRolloverBorder());
+
+        pThis->setContentRolloverBackground(source->getContentRolloverBackground());
+
+        pThis->setSelectionModel(source->getSelectionModel());
+    }
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabs            (void) const
+{
+    MFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  MFUnrecComponentPtr::GetHandle(
+             &_mfTabs,
+             this->getType().getFieldDesc(TabsFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabs           (void)
+{
+    MFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  MFUnrecComponentPtr::EditHandle(
+             &_mfTabs,
+             this->getType().getFieldDesc(TabsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&TabPanel::pushToTabs,
+                    static_cast<TabPanel *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&TabPanel::removeFromTabs,
+                    static_cast<TabPanel *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&TabPanel::removeObjFromTabs,
+                    static_cast<TabPanel *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&TabPanel::clearTabs,
+                    static_cast<TabPanel *>(this)));
+
+    editMField(TabsFieldMask, _mfTabs);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabContents     (void) const
+{
+    MFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  MFUnrecComponentPtr::GetHandle(
+             &_mfTabContents,
+             this->getType().getFieldDesc(TabContentsFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabContents    (void)
+{
+    MFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  MFUnrecComponentPtr::EditHandle(
+             &_mfTabContents,
+             this->getType().getFieldDesc(TabContentsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&TabPanel::pushToTabContents,
+                    static_cast<TabPanel *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&TabPanel::removeFromTabContents,
+                    static_cast<TabPanel *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&TabPanel::removeObjFromTabContents,
+                    static_cast<TabPanel *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&TabPanel::clearTabContents,
+                    static_cast<TabPanel *>(this)));
+
+    editMField(TabContentsFieldMask, _mfTabContents);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabPlacement    (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfTabPlacement,
+             this->getType().getFieldDesc(TabPlacementFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabPlacement   (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfTabPlacement,
+             this->getType().getFieldDesc(TabPlacementFieldId),
+             this));
+
+
+    editSField(TabPlacementFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabAlignment    (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfTabAlignment,
+             this->getType().getFieldDesc(TabAlignmentFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabAlignment   (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfTabAlignment,
+             this->getType().getFieldDesc(TabAlignmentFieldId),
+             this));
+
+
+    editSField(TabAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabRotation     (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfTabRotation,
+             this->getType().getFieldDesc(TabRotationFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabRotation    (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfTabRotation,
+             this->getType().getFieldDesc(TabRotationFieldId),
+             this));
+
+
+    editSField(TabRotationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabBorderInsets (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfTabBorderInsets,
+             this->getType().getFieldDesc(TabBorderInsetsFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabBorderInsets(void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfTabBorderInsets,
+             this->getType().getFieldDesc(TabBorderInsetsFieldId),
+             this));
+
+
+    editSField(TabBorderInsetsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabBorder       (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfTabBorder,
+             this->getType().getFieldDesc(TabBorderFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabBorder      (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfTabBorder,
+             this->getType().getFieldDesc(TabBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabBorder,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabBackground   (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfTabBackground,
+             this->getType().getFieldDesc(TabBackgroundFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabBackground  (void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfTabBackground,
+             this->getType().getFieldDesc(TabBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabBackground,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabDisabledBorder (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfTabDisabledBorder,
+             this->getType().getFieldDesc(TabDisabledBorderFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabDisabledBorder(void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfTabDisabledBorder,
+             this->getType().getFieldDesc(TabDisabledBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabDisabledBorder,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabDisabledBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabDisabledBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfTabDisabledBackground,
+             this->getType().getFieldDesc(TabDisabledBackgroundFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabDisabledBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfTabDisabledBackground,
+             this->getType().getFieldDesc(TabDisabledBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabDisabledBackground,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabDisabledBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabFocusedBorder (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfTabFocusedBorder,
+             this->getType().getFieldDesc(TabFocusedBorderFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabFocusedBorder(void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfTabFocusedBorder,
+             this->getType().getFieldDesc(TabFocusedBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabFocusedBorder,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabFocusedBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabFocusedBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfTabFocusedBackground,
+             this->getType().getFieldDesc(TabFocusedBackgroundFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabFocusedBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfTabFocusedBackground,
+             this->getType().getFieldDesc(TabFocusedBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabFocusedBackground,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabFocusedBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabRolloverBorder (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfTabRolloverBorder,
+             this->getType().getFieldDesc(TabRolloverBorderFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabRolloverBorder(void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfTabRolloverBorder,
+             this->getType().getFieldDesc(TabRolloverBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabRolloverBorder,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabRolloverBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabRolloverBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfTabRolloverBackground,
+             this->getType().getFieldDesc(TabRolloverBackgroundFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabRolloverBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfTabRolloverBackground,
+             this->getType().getFieldDesc(TabRolloverBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabRolloverBackground,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabRolloverBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabActiveBorder (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfTabActiveBorder,
+             this->getType().getFieldDesc(TabActiveBorderFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabActiveBorder(void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfTabActiveBorder,
+             this->getType().getFieldDesc(TabActiveBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabActiveBorder,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabActiveBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleTabActiveBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfTabActiveBackground,
+             this->getType().getFieldDesc(TabActiveBackgroundFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleTabActiveBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfTabActiveBackground,
+             this->getType().getFieldDesc(TabActiveBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setTabActiveBackground,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(TabActiveBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleContentBorderInsets (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfContentBorderInsets,
+             this->getType().getFieldDesc(ContentBorderInsetsFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleContentBorderInsets(void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfContentBorderInsets,
+             this->getType().getFieldDesc(ContentBorderInsetsFieldId),
+             this));
+
+
+    editSField(ContentBorderInsetsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleContentBorder   (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfContentBorder,
+             this->getType().getFieldDesc(ContentBorderFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleContentBorder  (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfContentBorder,
+             this->getType().getFieldDesc(ContentBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setContentBorder,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(ContentBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleContentBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfContentBackground,
+             this->getType().getFieldDesc(ContentBackgroundFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleContentBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfContentBackground,
+             this->getType().getFieldDesc(ContentBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setContentBackground,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(ContentBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleContentDisabledBorder (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfContentDisabledBorder,
+             this->getType().getFieldDesc(ContentDisabledBorderFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleContentDisabledBorder(void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfContentDisabledBorder,
+             this->getType().getFieldDesc(ContentDisabledBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setContentDisabledBorder,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(ContentDisabledBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleContentDisabledBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfContentDisabledBackground,
+             this->getType().getFieldDesc(ContentDisabledBackgroundFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleContentDisabledBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfContentDisabledBackground,
+             this->getType().getFieldDesc(ContentDisabledBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setContentDisabledBackground,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(ContentDisabledBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleContentRolloverBorder (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfContentRolloverBorder,
+             this->getType().getFieldDesc(ContentRolloverBorderFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleContentRolloverBorder(void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfContentRolloverBorder,
+             this->getType().getFieldDesc(ContentRolloverBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setContentRolloverBorder,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(ContentRolloverBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleContentRolloverBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfContentRolloverBackground,
+             this->getType().getFieldDesc(ContentRolloverBackgroundFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleContentRolloverBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfContentRolloverBackground,
+             this->getType().getFieldDesc(ContentRolloverBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setContentRolloverBackground,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(ContentRolloverBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TabPanelBase::getHandleSelectionModel  (void) const
+{
+    SFUnrecSingleSelectionModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecSingleSelectionModelPtr::GetHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
+             const_cast<TabPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TabPanelBase::editHandleSelectionModel (void)
+{
+    SFUnrecSingleSelectionModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecSingleSelectionModelPtr::EditHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TabPanel::setSelectionModel,
+                    static_cast<TabPanel *>(this), _1));
+
+    editSField(SelectionModelFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TabPanelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TabPanel *pThis = static_cast<TabPanel *>(this);
+
+    pThis->execSync(static_cast<TabPanel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TabPanelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TabPanel *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TabPanel *>(pRefAspect),
+                  dynamic_cast<const TabPanel *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TabPanelPtr>::_type("TabPanelPtr", "ContainerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TabPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TabPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void TabPanelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<TabPanel *>(this)->clearTabs();
+
+    static_cast<TabPanel *>(this)->clearTabContents();
+
+    static_cast<TabPanel *>(this)->setTabBorder(NULL);
+
+    static_cast<TabPanel *>(this)->setTabBackground(NULL);
+
+    static_cast<TabPanel *>(this)->setTabDisabledBorder(NULL);
+
+    static_cast<TabPanel *>(this)->setTabDisabledBackground(NULL);
+
+    static_cast<TabPanel *>(this)->setTabFocusedBorder(NULL);
+
+    static_cast<TabPanel *>(this)->setTabFocusedBackground(NULL);
+
+    static_cast<TabPanel *>(this)->setTabRolloverBorder(NULL);
+
+    static_cast<TabPanel *>(this)->setTabRolloverBackground(NULL);
+
+    static_cast<TabPanel *>(this)->setTabActiveBorder(NULL);
+
+    static_cast<TabPanel *>(this)->setTabActiveBackground(NULL);
+
+    static_cast<TabPanel *>(this)->setContentBorder(NULL);
+
+    static_cast<TabPanel *>(this)->setContentBackground(NULL);
+
+    static_cast<TabPanel *>(this)->setContentDisabledBorder(NULL);
+
+    static_cast<TabPanel *>(this)->setContentDisabledBackground(NULL);
+
+    static_cast<TabPanel *>(this)->setContentRolloverBorder(NULL);
+
+    static_cast<TabPanel *>(this)->setContentRolloverBackground(NULL);
+
+    static_cast<TabPanel *>(this)->setSelectionModel(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

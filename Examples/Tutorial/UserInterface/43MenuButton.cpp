@@ -7,81 +7,81 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 // 18List Headers
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGMenuButton.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
+#include "OSGLookAndFeelManager.h"
+#include "OSGFlowLayout.h"
+#include "OSGMenuButton.h"
+#include "OSGLayers.h"
 
 // List header files
-#include <OpenSG/UserInterface/OSGDefaultListModel.h>
+#include "OSGDefaultListModel.h"
 
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-            TutorialWindowEventProducer->closeWindow();
-       }
-   }
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            TutorialWindow->closeWindow();
+        }
+    }
 
-   virtual void keyReleased(const KeyEventPtr e)
-   {
-   }
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
 
-   virtual void keyTyped(const KeyEventPtr e)
-   {
-   }
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
 class ExampleMenuButtonActionListener : public ActionListener
 {
-public:
+  public:
 
-   virtual void actionPerformed(const ActionEventPtr e)
+    virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
-        MenuButtonPtr TheMenuButton(MenuButton::Ptr::dcast(e->getSource()));
-        if(TheMenuButton != NullFC)
+        MenuButtonRefPtr TheMenuButton(dynamic_cast<MenuButton*>(e->getSource()));
+        if(TheMenuButton != NULL)
         {
             try
             {
@@ -100,33 +100,31 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
-        scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    NodeRefPtr scene = OSG::Node::create();
+    scene->setCore(OSG::Group::create());
+    scene->addChild(TorusGeometryNode);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
     //Create list data model to use for the Popup menu
-	DefaultListModelPtr ExampleListModel = DefaultListModel::create();
+    DefaultListModelRefPtr ExampleListModel = DefaultListModel::create();
     ExampleListModel->pushBack(boost::any(std::string("Red")));
     ExampleListModel->pushBack(boost::any(std::string("Green")));
     ExampleListModel->pushBack(boost::any(std::string("Blue")));
@@ -144,84 +142,70 @@ int main(int argc, char **argv)
     ExampleListModel->pushBack(boost::any(std::string("Peach")));
 
     //Create the MenuButton
-    MenuButtonPtr ExampleMenuButton = MenuButton::create();
+    MenuButtonRefPtr ExampleMenuButton = MenuButton::create();
 
-    beginEditCP(ExampleMenuButton, MenuButton::TextFieldMask | MenuButton::PreferredSizeFieldMask | MenuButton::ModelFieldMask);
-        ExampleMenuButton->setText("Menu Button");
-        ExampleMenuButton->setPreferredSize(Vec2f(120, 20));
-        ExampleMenuButton->setModel(ExampleListModel);
-    endEditCP(ExampleMenuButton, MenuButton::TextFieldMask | MenuButton::PreferredSizeFieldMask | MenuButton::ModelFieldMask);
+    ExampleMenuButton->setText("Menu Button");
+    ExampleMenuButton->setPreferredSize(Vec2f(120, 20));
+    ExampleMenuButton->setModel(ExampleListModel);
     ExampleMenuButtonActionListener TheActionListener;
     ExampleMenuButton->addMenuActionListener(&TheActionListener);
 
     // Create MainFramelayout
-    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-    beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-        MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
-        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
-        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
-    endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-    
+    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+    MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+    MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
+    MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleMenuButton);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    MainInternalWindow->pushToChildren(ExampleMenuButton);
+    MainInternalWindow->setLayout(MainInternalWindowLayout);
+    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
+    MainInternalWindow->setDrawTitlebar(false);
+    MainInternalWindow->setResizable(false);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-        TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+    TutorialDrawingSurface->setGraphics(TutorialGraphics);
+    TutorialDrawingSurface->setEventProducer(TutorialWindow);
+
+    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
-            WinSize,
-            "01RubberBandCamera");
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
+                               WinSize,
+                               "43MenuButton");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

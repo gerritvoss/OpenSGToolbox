@@ -9,67 +9,67 @@
 // the Button causes it to appear pressed
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
-#include <OpenSG/OSGGradientBackground.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
+#include "OSGGradientBackground.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 //Headers
-#include <OpenSG/UserInterface/OSGGLViewport.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGBorders.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGButton.h>
+#include "OSGGLViewport.h"
+#include "OSGLayers.h"
+#include "OSGBorders.h"
+#include "OSGFlowLayout.h"
+#include "OSGButton.h"
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -80,27 +80,25 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -108,135 +106,107 @@ int main(int argc, char **argv)
 	//Create the nessicary parts for a viewport
 	Matrix TransformMatrix;
 	TransformMatrix.setTranslate(0.0f,0.0f, 0.0f);
-	TransformPtr CameraBeaconTransform = Transform::create();
-	beginEditCP(CameraBeaconTransform, Transform::MatrixFieldMask);
+	TransformRefPtr CameraBeaconTransform = Transform::create();
 		CameraBeaconTransform->setMatrix(TransformMatrix);
-	endEditCP(CameraBeaconTransform, Transform::MatrixFieldMask);
 
-	NodePtr CameraBeaconNode = Node::create();
-	beginEditCP(CameraBeaconNode, Node::CoreFieldMask);
+	NodeRefPtr CameraBeaconNode = Node::create();
 		CameraBeaconNode->setCore(CameraBeaconTransform);
-	endEditCP(CameraBeaconNode, Node::CoreFieldMask);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr GeometryNode = makeTorus(.5, 2, 32, 32);
+    NodeRefPtr GeometryNode = makeTorus(.5, 2, 32, 32);
 
     // Make Main Scene Node and add the Torus
-    NodePtr DefaultRootNode = osg::Node::create();
-    beginEditCP(DefaultRootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        DefaultRootNode->setCore(osg::Group::create());
+    NodeRefPtr DefaultRootNode = OSG::Node::create();
+        DefaultRootNode->setCore(OSG::Group::create());
         DefaultRootNode->addChild(GeometryNode);
         DefaultRootNode->addChild(CameraBeaconNode);
-    endEditCP(DefaultRootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	//Camera
-	PerspectiveCameraPtr DefaultCamera = PerspectiveCamera::create();
-     beginEditCP(DefaultCamera);
+	PerspectiveCameraRefPtr DefaultCamera = PerspectiveCamera::create();
 		 DefaultCamera->setBeacon(CameraBeaconNode);
 		 DefaultCamera->setFov   (deg2rad(60.f));
 		 DefaultCamera->setNear  (0.1f);
 		 DefaultCamera->setFar   (100.f);
-     endEditCP(DefaultCamera);
 
 	//Background
-	GradientBackgroundPtr DefaultBackground = GradientBackground::create();
-	beginEditCP(DefaultBackground, GradientBackground::ColorFieldMask | GradientBackground::PositionFieldMask);
+	GradientBackgroundRefPtr DefaultBackground = GradientBackground::create();
 		DefaultBackground->addLine(Color3f(0.0f,0.0f,0.0f), 0.0f);
 		DefaultBackground->addLine(Color3f(0.0f,0.0f,1.0f), 1.0f);
-	endEditCP(DefaultBackground, GradientBackground::ColorFieldMask | GradientBackground::PositionFieldMask);
 	
 	//Viewport
-	ViewportPtr DefaultViewport = Viewport::create();
-	beginEditCP(DefaultViewport);
+	ViewportRefPtr DefaultViewport = Viewport::create();
 		DefaultViewport->setCamera                  (DefaultCamera);
 		DefaultViewport->setRoot                    (DefaultRootNode);
 		DefaultViewport->setSize                    (0.0f,0.0f, 1.0f,1.0f);
 		DefaultViewport->setBackground              (DefaultBackground);
-	endEditCP(DefaultViewport);
 
 	//GL Viewport Component
-	LineBorderPtr TheGLViewportBorder = LineBorder::create();
-	beginEditCP(TheGLViewportBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+	LineBorderRefPtr TheGLViewportBorder = LineBorder::create();
 		TheGLViewportBorder->setColor(Color4f(1.0,0.0,0.0,1.0));
 		TheGLViewportBorder->setWidth(3.0);
-	endEditCP(TheGLViewportBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 
-	GLViewportPtr TheGLViewport = GLViewport::create();
-	beginEditCP(TheGLViewport, GLViewport::PortFieldMask | GLViewport::PreferredSizeFieldMask | GLViewport::BordersFieldMask);
+	GLViewportRefPtr TheGLViewport = GLViewport::create();
 		TheGLViewport->setPort(DefaultViewport);
 		TheGLViewport->setPreferredSize(Vec2f(400.0f,400.0f));
 		TheGLViewport->setBorders(TheGLViewportBorder);
-	endEditCP(TheGLViewport, GLViewport::PortFieldMask | GLViewport::PreferredSizeFieldMask | GLViewport::BordersFieldMask);
 	TheGLViewport->showAll();
 
-    ButtonPtr ExampleButton = osg::Button::create();
+    ButtonRefPtr ExampleButton = OSG::Button::create();
     
-    beginEditCP(ExampleButton, Button::TextFieldMask);
         ExampleButton->setText("Example");
-    endEditCP(ExampleButton, Button::TextFieldMask);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(TheGLViewport);
-       MainInternalWindow->getChildren().push_back(ExampleButton);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+       MainInternalWindow->pushToChildren(TheGLViewport);
+       MainInternalWindow->pushToChildren(ExampleButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.95f,0.95f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 	
 	// Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "41GLViewportComponent");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

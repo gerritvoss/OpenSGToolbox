@@ -62,70 +62,74 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        TutorialWindow->setDisplayCallback(display);
+        TutorialWindow->setReshapeCallback(reshape);
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
-    
-    //Make the Lua Activity
-    LuaActivityRefPtr TheLuaActivity = LuaActivity::create();
-    std::string LuaCode = 
-        "function handleEvent(Event, EventID)\n"
-        "    print(\"Source:  \", Event:getFieldValue(\"Source\"))\n"
-        "    print(\"TimeStamp:  \", Event:getFieldValue(\"TimeStamp\"))\n"
-        "    print(\"Button:  \", Event:getFieldValue(\"Button\"))\n"
-        "    print(\"Position:  \", Event:getFieldValue(\"Location\"):x(), \", \", Event:getFieldValue(\"Location\"):y())\n"
-        "end";
-    TheLuaActivity->setCode(LuaCode);
-    TheLuaActivity->setEntryFunction("handleEvent");
+        TutorialKeyListener TheKeyListener;
+        TutorialWindow->addKeyListener(&TheKeyListener);
+        
+        //Make the Lua Activity
+        LuaActivityRefPtr TheLuaActivity = LuaActivity::create();
+        std::string LuaCode = 
+            "function handleEvent(Event, EventID)\n"
+            "    print(\"Source:  \", Event:getFieldValue(\"Source\"))\n"
+            "    print(\"TimeStamp:  \", Event:getFieldValue(\"TimeStamp\"))\n"
+            "    print(\"Button:  \", Event:getFieldValue(\"Button\"))\n"
+            "    print(\"Position:  \", Event:getFieldValue(\"Location\"):x(), \", \", Event:getFieldValue(\"Location\"):y())\n"
+            "end";
+        TheLuaActivity->setCode(LuaCode);
+        TheLuaActivity->setEntryFunction("handleEvent");
 
-    TutorialWindow->attachActivity(TheLuaActivity, WindowEventProducer::MousePressedMethodId);
-    TutorialWindow->attachActivity(TheLuaActivity, WindowEventProducer::KeyTypedMethodId);
+        TutorialWindow->attachActivity(TheLuaActivity, WindowEventProducer::MousePressedMethodId);
+        //TutorialWindow->attachActivity(TheLuaActivity, WindowEventProducer::KeyTypedMethodId);
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
-    setName(TorusGeometryNode,"TorusGeometryNode");
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        setName(TorusGeometryNode,"TorusGeometryNode");
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
-        scene->addChild(TorusGeometryNode);
-    setName(scene,"Scene Node");
+        // Make Main Scene Node and add the Torus
+        NodeRefPtr scene = OSG::Node::create();
+            scene->setCore(OSG::Group::create());
+            scene->addChild(TorusGeometryNode);
+        setName(scene,"Scene Node");
 
-    //Scene Background
-    GradientBackgroundRefPtr SceneBackground = GradientBackground::create();
-    SceneBackground->addLine(Color3f(0.0,0.0,0.0),0.0);
-    setName(SceneBackground,"Scene Background");
+        //Scene Background
+        GradientBackgroundRefPtr SceneBackground = GradientBackground::create();
+        SceneBackground->addLine(Color3f(0.0,0.0,0.0),0.0);
+        setName(SceneBackground,"Scene Background");
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        // Create the SimpleSceneManager helper
+        mgr = new SimpleSceneManager;
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
+        // Tell the Manager what to manage
+        mgr->setWindow(TutorialWindow);
+        mgr->setRoot(scene);
 
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
-        TutorialViewport->setBackground(SceneBackground);
+        // Add the UI Foreground Object to the Scene
+        ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+            TutorialViewport->setBackground(SceneBackground);
 
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        mgr->showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "05LuaActivity");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                WinSize,
+                "05LuaActivity");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+
+        TutorialWindow = NULL;
+    }
 
     osgExit();
 

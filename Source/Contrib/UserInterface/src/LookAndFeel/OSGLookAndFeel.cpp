@@ -85,6 +85,8 @@ void LookAndFeel::initPrototypes(void)
     {
         //Set them as their class prototypes
         getPrototypes(i)->getType().setPrototype(getPrototypes(i));
+        //SLOG << "LookAndFeel: Redefining prototype for type: " <<
+            //getPrototypes(i)->getType().getName() << std::endl;
     }
 }
 

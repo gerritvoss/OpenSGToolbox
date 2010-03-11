@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,253 +55,131 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ProgressBarBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ProgressBarBase::getClassTypeId(void) 
+OSG::UInt32 ProgressBarBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ProgressBarPtr ProgressBarBase::create(void) 
-{
-    ProgressBarPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ProgressBarPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ProgressBarPtr ProgressBarBase::createEmpty(void) 
-{ 
-    ProgressBarPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ProgressBarBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ProgressBar::_sfIndeterminate field.
-inline
-SFBool *ProgressBarBase::getSFIndeterminate(void)
-{
-    return &_sfIndeterminate;
-}
-
-//! Get the ProgressBar::_sfIndeterminateBarMoveRate field.
-inline
-SFReal32 *ProgressBarBase::getSFIndeterminateBarMoveRate(void)
-{
-    return &_sfIndeterminateBarMoveRate;
-}
-
-//! Get the ProgressBar::_sfIndeterminateBarSize field.
-inline
-SFReal32 *ProgressBarBase::getSFIndeterminateBarSize(void)
-{
-    return &_sfIndeterminateBarSize;
-}
-
-//! Get the ProgressBar::_sfEnableProgressString field.
-inline
-SFBool *ProgressBarBase::getSFEnableProgressString(void)
-{
-    return &_sfEnableProgressString;
-}
-
-//! Get the ProgressBar::_sfProgressString field.
-inline
-SFString *ProgressBarBase::getSFProgressString(void)
-{
-    return &_sfProgressString;
-}
-
-//! Get the ProgressBar::_sfAlignment field.
-inline
-SFVec2f *ProgressBarBase::getSFAlignment(void)
-{
-    return &_sfAlignment;
-}
-
-//! Get the ProgressBar::_sfFont field.
-inline
-SFUIFontPtr *ProgressBarBase::getSFFont(void)
-{
-    return &_sfFont;
-}
-
-//! Get the ProgressBar::_sfFocusedTextColor field.
-inline
-SFColor4f *ProgressBarBase::getSFFocusedTextColor(void)
-{
-    return &_sfFocusedTextColor;
-}
-
-//! Get the ProgressBar::_sfRolloverTextColor field.
-inline
-SFColor4f *ProgressBarBase::getSFRolloverTextColor(void)
-{
-    return &_sfRolloverTextColor;
-}
-
-//! Get the ProgressBar::_sfDisabledTextColor field.
-inline
-SFColor4f *ProgressBarBase::getSFDisabledTextColor(void)
-{
-    return &_sfDisabledTextColor;
-}
-
-//! Get the ProgressBar::_sfTextColor field.
-inline
-SFColor4f *ProgressBarBase::getSFTextColor(void)
-{
-    return &_sfTextColor;
-}
-
-//! Get the ProgressBar::_sfOrientation field.
-inline
-SFUInt32 *ProgressBarBase::getSFOrientation(void)
-{
-    return &_sfOrientation;
-}
-
-//! Get the ProgressBar::_sfDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFDrawObject(void)
-{
-    return &_sfDrawObject;
-}
-
-//! Get the ProgressBar::_sfFocusedDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFFocusedDrawObject(void)
-{
-    return &_sfFocusedDrawObject;
-}
-
-//! Get the ProgressBar::_sfRolloverDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFRolloverDrawObject(void)
-{
-    return &_sfRolloverDrawObject;
-}
-
-//! Get the ProgressBar::_sfDisabledDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *ProgressBarBase::getSFDisabledDrawObject(void)
-{
-    return &_sfDisabledDrawObject;
-}
-
-//! Get the ProgressBar::_sfRangeModel field.
-inline
-SFBoundedRangeModelPtr *ProgressBarBase::getSFRangeModel(void)
-{
-    return &_sfRangeModel;
-}
-
-
 //! Get the value of the ProgressBar::_sfIndeterminate field.
+
 inline
-bool &ProgressBarBase::getIndeterminate(void)
+bool &ProgressBarBase::editIndeterminate(void)
 {
+    editSField(IndeterminateFieldMask);
+
     return _sfIndeterminate.getValue();
 }
 
 //! Get the value of the ProgressBar::_sfIndeterminate field.
 inline
-const bool &ProgressBarBase::getIndeterminate(void) const
+      bool  ProgressBarBase::getIndeterminate(void) const
 {
     return _sfIndeterminate.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfIndeterminate field.
 inline
-void ProgressBarBase::setIndeterminate(const bool &value)
+void ProgressBarBase::setIndeterminate(const bool value)
 {
+    editSField(IndeterminateFieldMask);
+
     _sfIndeterminate.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfIndeterminateBarMoveRate field.
+
 inline
-Real32 &ProgressBarBase::getIndeterminateBarMoveRate(void)
+Real32 &ProgressBarBase::editIndeterminateBarMoveRate(void)
 {
+    editSField(IndeterminateBarMoveRateFieldMask);
+
     return _sfIndeterminateBarMoveRate.getValue();
 }
 
 //! Get the value of the ProgressBar::_sfIndeterminateBarMoveRate field.
 inline
-const Real32 &ProgressBarBase::getIndeterminateBarMoveRate(void) const
+      Real32  ProgressBarBase::getIndeterminateBarMoveRate(void) const
 {
     return _sfIndeterminateBarMoveRate.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfIndeterminateBarMoveRate field.
 inline
-void ProgressBarBase::setIndeterminateBarMoveRate(const Real32 &value)
+void ProgressBarBase::setIndeterminateBarMoveRate(const Real32 value)
 {
+    editSField(IndeterminateBarMoveRateFieldMask);
+
     _sfIndeterminateBarMoveRate.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfIndeterminateBarSize field.
+
 inline
-Real32 &ProgressBarBase::getIndeterminateBarSize(void)
+Real32 &ProgressBarBase::editIndeterminateBarSize(void)
 {
+    editSField(IndeterminateBarSizeFieldMask);
+
     return _sfIndeterminateBarSize.getValue();
 }
 
 //! Get the value of the ProgressBar::_sfIndeterminateBarSize field.
 inline
-const Real32 &ProgressBarBase::getIndeterminateBarSize(void) const
+      Real32  ProgressBarBase::getIndeterminateBarSize(void) const
 {
     return _sfIndeterminateBarSize.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfIndeterminateBarSize field.
 inline
-void ProgressBarBase::setIndeterminateBarSize(const Real32 &value)
+void ProgressBarBase::setIndeterminateBarSize(const Real32 value)
 {
+    editSField(IndeterminateBarSizeFieldMask);
+
     _sfIndeterminateBarSize.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfEnableProgressString field.
+
 inline
-bool &ProgressBarBase::getEnableProgressString(void)
+bool &ProgressBarBase::editEnableProgressString(void)
 {
+    editSField(EnableProgressStringFieldMask);
+
     return _sfEnableProgressString.getValue();
 }
 
 //! Get the value of the ProgressBar::_sfEnableProgressString field.
 inline
-const bool &ProgressBarBase::getEnableProgressString(void) const
+      bool  ProgressBarBase::getEnableProgressString(void) const
 {
     return _sfEnableProgressString.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfEnableProgressString field.
 inline
-void ProgressBarBase::setEnableProgressString(const bool &value)
+void ProgressBarBase::setEnableProgressString(const bool value)
 {
+    editSField(EnableProgressStringFieldMask);
+
     _sfEnableProgressString.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfProgressString field.
+
 inline
-std::string &ProgressBarBase::getProgressString(void)
+std::string &ProgressBarBase::editProgressString(void)
 {
+    editSField(ProgressStringFieldMask);
+
     return _sfProgressString.getValue();
 }
 
@@ -318,13 +194,17 @@ const std::string &ProgressBarBase::getProgressString(void) const
 inline
 void ProgressBarBase::setProgressString(const std::string &value)
 {
+    editSField(ProgressStringFieldMask);
+
     _sfProgressString.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfAlignment field.
+
 inline
-Vec2f &ProgressBarBase::getAlignment(void)
+Vec2f &ProgressBarBase::editAlignment(void)
 {
+    editSField(AlignmentFieldMask);
+
     return _sfAlignment.getValue();
 }
 
@@ -339,34 +219,33 @@ const Vec2f &ProgressBarBase::getAlignment(void) const
 inline
 void ProgressBarBase::setAlignment(const Vec2f &value)
 {
+    editSField(AlignmentFieldMask);
+
     _sfAlignment.setValue(value);
 }
 
 //! Get the value of the ProgressBar::_sfFont field.
 inline
-UIFontPtr &ProgressBarBase::getFont(void)
-{
-    return _sfFont.getValue();
-}
-
-//! Get the value of the ProgressBar::_sfFont field.
-inline
-const UIFontPtr &ProgressBarBase::getFont(void) const
+UIFont * ProgressBarBase::getFont(void) const
 {
     return _sfFont.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfFont field.
 inline
-void ProgressBarBase::setFont(const UIFontPtr &value)
+void ProgressBarBase::setFont(UIFont * const value)
 {
+    editSField(FontFieldMask);
+
     _sfFont.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfFocusedTextColor field.
+
 inline
-Color4f &ProgressBarBase::getFocusedTextColor(void)
+Color4f &ProgressBarBase::editFocusedTextColor(void)
 {
+    editSField(FocusedTextColorFieldMask);
+
     return _sfFocusedTextColor.getValue();
 }
 
@@ -381,13 +260,17 @@ const Color4f &ProgressBarBase::getFocusedTextColor(void) const
 inline
 void ProgressBarBase::setFocusedTextColor(const Color4f &value)
 {
+    editSField(FocusedTextColorFieldMask);
+
     _sfFocusedTextColor.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfRolloverTextColor field.
+
 inline
-Color4f &ProgressBarBase::getRolloverTextColor(void)
+Color4f &ProgressBarBase::editRolloverTextColor(void)
 {
+    editSField(RolloverTextColorFieldMask);
+
     return _sfRolloverTextColor.getValue();
 }
 
@@ -402,13 +285,17 @@ const Color4f &ProgressBarBase::getRolloverTextColor(void) const
 inline
 void ProgressBarBase::setRolloverTextColor(const Color4f &value)
 {
+    editSField(RolloverTextColorFieldMask);
+
     _sfRolloverTextColor.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfDisabledTextColor field.
+
 inline
-Color4f &ProgressBarBase::getDisabledTextColor(void)
+Color4f &ProgressBarBase::editDisabledTextColor(void)
 {
+    editSField(DisabledTextColorFieldMask);
+
     return _sfDisabledTextColor.getValue();
 }
 
@@ -423,13 +310,17 @@ const Color4f &ProgressBarBase::getDisabledTextColor(void) const
 inline
 void ProgressBarBase::setDisabledTextColor(const Color4f &value)
 {
+    editSField(DisabledTextColorFieldMask);
+
     _sfDisabledTextColor.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfTextColor field.
+
 inline
-Color4f &ProgressBarBase::getTextColor(void)
+Color4f &ProgressBarBase::editTextColor(void)
 {
+    editSField(TextColorFieldMask);
+
     return _sfTextColor.getValue();
 }
 
@@ -444,137 +335,187 @@ const Color4f &ProgressBarBase::getTextColor(void) const
 inline
 void ProgressBarBase::setTextColor(const Color4f &value)
 {
+    editSField(TextColorFieldMask);
+
     _sfTextColor.setValue(value);
 }
-
 //! Get the value of the ProgressBar::_sfOrientation field.
+
 inline
-UInt32 &ProgressBarBase::getOrientation(void)
+UInt32 &ProgressBarBase::editOrientation(void)
 {
+    editSField(OrientationFieldMask);
+
     return _sfOrientation.getValue();
 }
 
 //! Get the value of the ProgressBar::_sfOrientation field.
 inline
-const UInt32 &ProgressBarBase::getOrientation(void) const
+      UInt32  ProgressBarBase::getOrientation(void) const
 {
     return _sfOrientation.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfOrientation field.
 inline
-void ProgressBarBase::setOrientation(const UInt32 &value)
+void ProgressBarBase::setOrientation(const UInt32 value)
 {
+    editSField(OrientationFieldMask);
+
     _sfOrientation.setValue(value);
 }
 
 //! Get the value of the ProgressBar::_sfDrawObject field.
 inline
-UIDrawObjectCanvasPtr &ProgressBarBase::getDrawObject(void)
-{
-    return _sfDrawObject.getValue();
-}
-
-//! Get the value of the ProgressBar::_sfDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &ProgressBarBase::getDrawObject(void) const
+UIDrawObjectCanvas * ProgressBarBase::getDrawObject(void) const
 {
     return _sfDrawObject.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfDrawObject field.
 inline
-void ProgressBarBase::setDrawObject(const UIDrawObjectCanvasPtr &value)
+void ProgressBarBase::setDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(DrawObjectFieldMask);
+
     _sfDrawObject.setValue(value);
 }
 
 //! Get the value of the ProgressBar::_sfFocusedDrawObject field.
 inline
-UIDrawObjectCanvasPtr &ProgressBarBase::getFocusedDrawObject(void)
-{
-    return _sfFocusedDrawObject.getValue();
-}
-
-//! Get the value of the ProgressBar::_sfFocusedDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &ProgressBarBase::getFocusedDrawObject(void) const
+UIDrawObjectCanvas * ProgressBarBase::getFocusedDrawObject(void) const
 {
     return _sfFocusedDrawObject.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfFocusedDrawObject field.
 inline
-void ProgressBarBase::setFocusedDrawObject(const UIDrawObjectCanvasPtr &value)
+void ProgressBarBase::setFocusedDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(FocusedDrawObjectFieldMask);
+
     _sfFocusedDrawObject.setValue(value);
 }
 
 //! Get the value of the ProgressBar::_sfRolloverDrawObject field.
 inline
-UIDrawObjectCanvasPtr &ProgressBarBase::getRolloverDrawObject(void)
-{
-    return _sfRolloverDrawObject.getValue();
-}
-
-//! Get the value of the ProgressBar::_sfRolloverDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &ProgressBarBase::getRolloverDrawObject(void) const
+UIDrawObjectCanvas * ProgressBarBase::getRolloverDrawObject(void) const
 {
     return _sfRolloverDrawObject.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfRolloverDrawObject field.
 inline
-void ProgressBarBase::setRolloverDrawObject(const UIDrawObjectCanvasPtr &value)
+void ProgressBarBase::setRolloverDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(RolloverDrawObjectFieldMask);
+
     _sfRolloverDrawObject.setValue(value);
 }
 
 //! Get the value of the ProgressBar::_sfDisabledDrawObject field.
 inline
-UIDrawObjectCanvasPtr &ProgressBarBase::getDisabledDrawObject(void)
-{
-    return _sfDisabledDrawObject.getValue();
-}
-
-//! Get the value of the ProgressBar::_sfDisabledDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &ProgressBarBase::getDisabledDrawObject(void) const
+UIDrawObjectCanvas * ProgressBarBase::getDisabledDrawObject(void) const
 {
     return _sfDisabledDrawObject.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfDisabledDrawObject field.
 inline
-void ProgressBarBase::setDisabledDrawObject(const UIDrawObjectCanvasPtr &value)
+void ProgressBarBase::setDisabledDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(DisabledDrawObjectFieldMask);
+
     _sfDisabledDrawObject.setValue(value);
 }
 
 //! Get the value of the ProgressBar::_sfRangeModel field.
 inline
-BoundedRangeModelPtr &ProgressBarBase::getRangeModel(void)
-{
-    return _sfRangeModel.getValue();
-}
-
-//! Get the value of the ProgressBar::_sfRangeModel field.
-inline
-const BoundedRangeModelPtr &ProgressBarBase::getRangeModel(void) const
+BoundedRangeModel * ProgressBarBase::getRangeModel(void) const
 {
     return _sfRangeModel.getValue();
 }
 
 //! Set the value of the ProgressBar::_sfRangeModel field.
 inline
-void ProgressBarBase::setRangeModel(const BoundedRangeModelPtr &value)
+void ProgressBarBase::setRangeModel(BoundedRangeModel * const value)
 {
+    editSField(RangeModelFieldMask);
+
     _sfRangeModel.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ProgressBarBase::execSync (      ProgressBarBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGPROGRESSBARBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (IndeterminateFieldMask & whichField))
+        _sfIndeterminate.syncWith(pFrom->_sfIndeterminate);
+
+    if(FieldBits::NoField != (IndeterminateBarMoveRateFieldMask & whichField))
+        _sfIndeterminateBarMoveRate.syncWith(pFrom->_sfIndeterminateBarMoveRate);
+
+    if(FieldBits::NoField != (IndeterminateBarSizeFieldMask & whichField))
+        _sfIndeterminateBarSize.syncWith(pFrom->_sfIndeterminateBarSize);
+
+    if(FieldBits::NoField != (EnableProgressStringFieldMask & whichField))
+        _sfEnableProgressString.syncWith(pFrom->_sfEnableProgressString);
+
+    if(FieldBits::NoField != (ProgressStringFieldMask & whichField))
+        _sfProgressString.syncWith(pFrom->_sfProgressString);
+
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pFrom->_sfAlignment);
+
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+        _sfFont.syncWith(pFrom->_sfFont);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pFrom->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pFrom->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pFrom->_sfDisabledTextColor);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pFrom->_sfTextColor);
+
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pFrom->_sfOrientation);
+
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+        _sfDrawObject.syncWith(pFrom->_sfDrawObject);
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+        _sfFocusedDrawObject.syncWith(pFrom->_sfFocusedDrawObject);
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+        _sfRolloverDrawObject.syncWith(pFrom->_sfRolloverDrawObject);
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+        _sfDisabledDrawObject.syncWith(pFrom->_sfDisabledDrawObject);
+
+    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
+        _sfRangeModel.syncWith(pFrom->_sfRangeModel);
+}
+#endif
+
+
+inline
+const Char8 *ProgressBarBase::getClassname(void)
+{
+    return "ProgressBar";
+}
+OSG_GEN_CONTAINERPTR(ProgressBar);
+
+OSG_END_NAMESPACE
 

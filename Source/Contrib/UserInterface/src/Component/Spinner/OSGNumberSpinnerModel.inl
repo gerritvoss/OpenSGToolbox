@@ -38,10 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGSFSysTypes.h>
-#include "OSGUserInterfaceDef.h"
-
 #include <boost/lexical_cast.hpp>
 
 OSG_BEGIN_NAMESPACE
@@ -49,28 +45,28 @@ OSG_BEGIN_NAMESPACE
 inline
 std::string getNumberSpinnerModelClassModelName(void)
 {
-	return std::string("Number Spinner Model");
+    return std::string("Number Spinner Model");
 }
 
 template<class NumberTypeT> inline
 std::string NumberSpinnerModel<NumberTypeT>::getModelName(void) const
 {
-	return getNumberSpinnerModelClassModelName();
+    return getNumberSpinnerModelClassModelName();
 }
 
 template<class NumberTypeT> inline
 NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(void) :
-  _Value(NumberType(0))
+    _Value(NumberType(0))
 {
 }
 
 template<class NumberTypeT> inline
 NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(const NumberType& value) :
-  _Value(value)
+    _Value(value)
 {
 }
 
-template<class NumberTypeT> inline
+    template<class NumberTypeT> inline
 boost::any NumberSpinnerModel<NumberTypeT>::getNextValue(void)
 {
     try
@@ -89,7 +85,7 @@ boost::any NumberSpinnerModel<NumberTypeT>::getNextValue(void)
     }
 }
 
-template<class NumberTypeT> inline
+    template<class NumberTypeT> inline
 boost::any NumberSpinnerModel<NumberTypeT>::getPreviousValue(void)
 {
     try
@@ -108,13 +104,13 @@ boost::any NumberSpinnerModel<NumberTypeT>::getPreviousValue(void)
     }
 }
 
-template<class NumberTypeT> inline
+    template<class NumberTypeT> inline
 boost::any NumberSpinnerModel<NumberTypeT>::getValue(void)
 {
     return _Value;
 }
 
-template<class NumberTypeT> inline
+    template<class NumberTypeT> inline
 void NumberSpinnerModel<NumberTypeT>::setValue(const boost::any& value)
 {
     NumberType RawValue;
@@ -134,11 +130,11 @@ void NumberSpinnerModel<NumberTypeT>::setValue(const boost::any& value)
     }
 
     _Value = boost::any(RawValue);
-    
+
     produceStateChanged();
 }
 
-template<class NumberTypeT> inline
+    template<class NumberTypeT> inline
 void NumberSpinnerModel<NumberTypeT>::setValue(const std::string& value)
 {
     NumberType NewValue(boost::lexical_cast<NumberTypeT>(value));
@@ -150,7 +146,7 @@ void NumberSpinnerModel<NumberTypeT>::setValue(const std::string& value)
     }
 
     _Value = boost::any(NewValue);
-    
+
     produceStateChanged();
 }
 
@@ -180,25 +176,25 @@ NumberTypeT NumberSpinnerModel<NumberTypeT>::getNumber(void) const
     }
 }
 
-template<class NumberTypeT> inline
+    template<class NumberTypeT> inline
 NumberTypeT NumberSpinnerModel<NumberTypeT>::getStepSize(void)
 {
     return _StepSize;
 }
 
-template<class NumberTypeT> inline
+    template<class NumberTypeT> inline
 void NumberSpinnerModel<NumberTypeT>::setMaximum(const NumberTypeT& maximum)
 {
     _Maximum = maximum;
 }
 
-template<class NumberTypeT> inline
+    template<class NumberTypeT> inline
 void NumberSpinnerModel<NumberTypeT>::setMinimum(const NumberTypeT& minimum)
 {
     _Minimum = minimum;
 }
 
-template<class NumberTypeT> inline
+    template<class NumberTypeT> inline
 void NumberSpinnerModel<NumberTypeT>::setStepSize(const NumberTypeT& stepSize)
 {
     _StepSize = stepSize;

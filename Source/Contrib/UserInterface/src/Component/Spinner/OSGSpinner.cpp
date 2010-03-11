@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,33 +40,29 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSpinner.h"
 
-#include "Component/Spinner/OSGListSpinnerModel.h"
-#include "Component/Spinner/OSGNumberSpinnerModel.h"
+#include "OSGListSpinnerModel.h"
+#include "OSGNumberSpinnerModel.h"
 
-#include "Component/Spinner/Editors/OSGSpinnerEditor.h"
-#include "Component/Spinner/Editors/OSGSpinnerDefaultEditor.h"
-#include "Component/Spinner/Editors/OSGSpinnerNumberEditor.h"
+#include "OSGSpinnerEditor.h"
+#include "OSGButton.h"
+#include "OSGSpinnerDefaultEditor.h"
+#include "OSGSpinnerNumberEditor.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Spinner
-A UI Spinner. 	
-*/
+// Documentation for this class is emitted in the
+// OSGSpinnerBase.cpp file.
+// To modify it, please change the .fcd file (OSGSpinner.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -76,8 +72,13 @@ A UI Spinner.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Spinner::initMethod (void)
+void Spinner::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -95,143 +96,137 @@ void Spinner::updateLayout(void)
     if(getOrientation() == Spinner::VERTICAL_ORIENTATION)
     {
         //Next Button
-        if(getNextButton() != NullFC)
+        if(getNextButton() != NULL)
         {
-            beginEditCP(getNextButton(), PositionFieldMask | SizeFieldMask);
-                getNextButton()->setSize(Vec2f(getNextButton()->getPreferredSize().x(), getSize().y()/2));
-                getNextButton()->setPosition(Pnt2f(getSize().x() - getNextButton()->getSize().x(), 0));
-            endEditCP(getNextButton(), PositionFieldMask | SizeFieldMask);
+            getNextButton()->setSize(Vec2f(getNextButton()->getPreferredSize().x(), getSize().y()/2));
+            getNextButton()->setPosition(Pnt2f(getSize().x() - getNextButton()->getSize().x(), 0));
         }
 
         //Previous Button
-        if(getPreviousButton() != NullFC)
+        if(getPreviousButton() != NULL)
         {
-            beginEditCP(getPreviousButton(), PositionFieldMask | SizeFieldMask);
-                getPreviousButton()->setSize(Vec2f(getPreviousButton()->getPreferredSize().x(), getSize().y()/2));
-                getPreviousButton()->setPosition(Pnt2f(getSize().x() - getPreviousButton()->getSize().x(), getSize().y()/2));
-            endEditCP(getPreviousButton(), PositionFieldMask | SizeFieldMask);
+            getPreviousButton()->setSize(Vec2f(getPreviousButton()->getPreferredSize().x(), getSize().y()/2));
+            getPreviousButton()->setPosition(Pnt2f(getSize().x() - getPreviousButton()->getSize().x(), getSize().y()/2));
         }
-        
+
         //Editor
-        if(getEditor() != NullFC)
+        if(getEditor() != NULL)
         {
-            beginEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
-                getEditor()->setSize(Vec2f(getSize().x() - getNextButton()->getSize().x() - getEditorToButtonOffset(), getSize().y()));
-                getEditor()->setPosition(Pnt2f(0,0));
-            endEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
+            getEditor()->setSize(Vec2f(getSize().x() - getNextButton()->getSize().x() - getEditorToButtonOffset(), getSize().y()));
+            getEditor()->setPosition(Pnt2f(0,0));
         }
-        
+
     }
     else
     {
         //Next Button
-        if(getNextButton() != NullFC)
+        if(getNextButton() != NULL)
         {
-            beginEditCP(getNextButton(), PositionFieldMask | SizeFieldMask);
-                getNextButton()->setSize(Vec2f(getSize().x()/2, getNextButton()->getPreferredSize().y()));
-                getNextButton()->setPosition(Pnt2f(0, getSize().y() - getNextButton()->getSize().y()));
-            endEditCP(getNextButton(), PositionFieldMask | SizeFieldMask);
+            getNextButton()->setSize(Vec2f(getSize().x()/2, getNextButton()->getPreferredSize().y()));
+            getNextButton()->setPosition(Pnt2f(0, getSize().y() - getNextButton()->getSize().y()));
         }
 
         //Previous Button
-        if(getPreviousButton() != NullFC)
+        if(getPreviousButton() != NULL)
         {
-            beginEditCP(getPreviousButton(), PositionFieldMask | SizeFieldMask);
-                getPreviousButton()->setSize(Vec2f(getSize().x()/2, getPreviousButton()->getPreferredSize().y()));
-                getPreviousButton()->setPosition(Pnt2f(getSize().x()/2, getSize().y() - getPreviousButton()->getSize().y()));
-            endEditCP(getPreviousButton(), PositionFieldMask | SizeFieldMask);
+            getPreviousButton()->setSize(Vec2f(getSize().x()/2, getPreviousButton()->getPreferredSize().y()));
+            getPreviousButton()->setPosition(Pnt2f(getSize().x()/2, getSize().y() - getPreviousButton()->getSize().y()));
         }
-        
+
         //Editor
-        if(getEditor() != NullFC)
+        if(getEditor() != NULL)
         {
-            beginEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
-                getEditor()->setSize(Vec2f(getSize().x(), getSize().y() - getNextButton()->getSize().y() - getEditorToButtonOffset()));
-                getEditor()->setPosition(Pnt2f(0,0));
-            endEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
+            getEditor()->setSize(Vec2f(getSize().x(), getSize().y() - getNextButton()->getSize().y() - getEditorToButtonOffset()));
+            getEditor()->setPosition(Pnt2f(0,0));
         }
     }
 }
 
-ComponentPtr Spinner::createEditor(SpinnerModelPtr model)
+ComponentRefPtr Spinner::createEditor(SpinnerModelPtr model)
 {
     //TODO: Implement
-    SpinnerDefaultEditorPtr TheEditor;
-	if(model->getModelName().compare(ListSpinnerModel::getClassModelName()) == 0)
-	{
-		TheEditor = SpinnerDefaultEditor::create();
-	}
-	else if(model->getModelName().compare(getNumberSpinnerModelClassModelName()) == 0)
-	{
-		TheEditor = SpinnerNumberEditor::create();
-	}
-	else
-	{
-		TheEditor = SpinnerDefaultEditor::create();
-	}
-    beginEditCP(TheEditor, SpinnerDefaultEditor::SpinnerFieldMask);
-        TheEditor->setSpinner(SpinnerPtr(this));
-    endEditCP(TheEditor, SpinnerDefaultEditor::SpinnerFieldMask);
+    SpinnerDefaultEditorRefPtr TheEditor;
+    if(model->getModelName().compare(ListSpinnerModel::getClassModelName()) == 0)
+    {
+        TheEditor = SpinnerDefaultEditor::create();
+    }
+    else if(model->getModelName().compare(getNumberSpinnerModelClassModelName()) == 0)
+    {
+        TheEditor = SpinnerNumberEditor::create();
+    }
+    else
+    {
+        TheEditor = SpinnerDefaultEditor::create();
+    }
+    TheEditor->setSpinner(SpinnerRefPtr(this));
     return TheEditor;
 }
 
 void Spinner::setModel(SpinnerModelPtr model)
 {
     _Model = model;
-    beginEditCP(SpinnerPtr(this), EditorFieldMask);
-        setEditor(createEditor(_Model));
-    endEditCP(SpinnerPtr(this), EditorFieldMask);
+    setEditor(createEditor(_Model));
 }
 
 void Spinner::setEditable(bool Editable)
 {
-	if(getEditor() != NullFC && getEditor()->getType().isDerivedFrom(SpinnerEditor::getClassType()))
-	{
-		SpinnerEditor::Ptr::dcast(getEditor())->setEditable(Editable);
-	}
+    if(getEditor() != NULL && getEditor()->getType().isDerivedFrom(SpinnerEditor::getClassType()))
+    {
+        dynamic_cast<SpinnerEditor*>(getEditor())->setEditable(Editable);
+    }
 }
 
 bool Spinner::getEditable(void) const
 {
-	if(getEditor() != NullFC && getEditor()->getType().isDerivedFrom(SpinnerEditor::getClassType()))
-	{
-		return SpinnerEditor::Ptr::dcast(getEditor())->getEditable();
-	}
-	else
-	{
-		return false;
-	}
+    if(getEditor() != NULL && getEditor()->getType().isDerivedFrom(SpinnerEditor::getClassType()))
+    {
+        return dynamic_cast<SpinnerEditor*>(getEditor())->getEditable();
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void Spinner::onCreate(const Spinner * Id)
+{
+    if(Id != NULL &&
+       Id->getNextButton() != NULL &&
+       Id->getPreviousButton() != NULL)
+    {
+        FieldContainerUnrecPtr TheFC(NULL);
+
+        TheFC = Id->getNextButton()->shallowCopy();
+        setNextButton(dynamic_pointer_cast<Button>(TheFC));
+
+        TheFC = Id->getPreviousButton()->shallowCopy();
+        setPreviousButton(dynamic_pointer_cast<Button>(TheFC));
+    }
+}
+
+void Spinner::onDestroy()
+{
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 Spinner::Spinner(void) :
     Inherited(),
-    _NextButtonActionListener(SpinnerPtr(this)),
-    _PreviousButtonActionListener(SpinnerPtr(this))
+    _NextButtonActionListener(this),
+    _PreviousButtonActionListener(this)
 {
 }
 
 Spinner::Spinner(const Spinner &source) :
     Inherited(source),
     _Model(source._Model),
-    _NextButtonActionListener(SpinnerPtr(this)),
-    _PreviousButtonActionListener(SpinnerPtr(this))
+    _NextButtonActionListener(this),
+    _PreviousButtonActionListener(this)
 {
-    if(getNextButton() != NullFC &&
-        getPreviousButton() != NullFC)
-    {
-        beginEditCP(SpinnerPtr(this), NextButtonFieldMask | PreviousButtonFieldMask );
-
-        setNextButton(Button::Ptr::dcast(getNextButton()->shallowCopy()));
-        setPreviousButton(Button::Ptr::dcast(getPreviousButton()->shallowCopy()));
-        
-        endEditCP(SpinnerPtr(this), NextButtonFieldMask | PreviousButtonFieldMask);
-    }
 }
 
 Spinner::~Spinner(void)
@@ -240,51 +235,50 @@ Spinner::~Spinner(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void Spinner::changed(BitVector whichField, UInt32 origin)
+void Spinner::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & NextButtonFieldMask ||
        whichField & PreviousButtonFieldMask ||
        whichField & EditorFieldMask)
     {
-        beginEditCP(SpinnerPtr(this), ChildrenFieldMask);
-            getChildren().clear();
-            if(getNextButton() != NullFC)
-            {
-                getChildren().push_back(getNextButton());
-            }
-            if(getPreviousButton() != NullFC)
-            {
-                getChildren().push_back(getPreviousButton());
-            }
-            if(getEditor() != NullFC)
-            {
-                getChildren().push_back(getEditor());
-            }
+        clearChildren();
+        if(getNextButton() != NULL)
+        {
+            pushToChildren(getNextButton());
+        }
+        if(getPreviousButton() != NULL)
+        {
+            pushToChildren(getPreviousButton());
+        }
+        if(getEditor() != NULL)
+        {
+            pushToChildren(getEditor());
+        }
 
-        endEditCP(SpinnerPtr(this), ChildrenFieldMask);
     }
-    
-    if(whichField & NextButtonFieldMask && getNextButton() != NullFC)
+
+    if(whichField & NextButtonFieldMask && getNextButton() != NULL)
     {
         getNextButton()->addMousePressedActionListener(&_NextButtonActionListener);
     }
-    
-    if(whichField & PreviousButtonFieldMask && getPreviousButton() != NullFC)
+
+    if(whichField & PreviousButtonFieldMask && getPreviousButton() != NULL)
     {
         getPreviousButton()->addMousePressedActionListener(&_PreviousButtonActionListener);
     }
 }
 
-void Spinner::dump(      UInt32    , 
+void Spinner::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Spinner NI" << std::endl;
 }
 
-
-void Spinner::NextButtonActionListener::actionPerformed(const ActionEventPtr e)
+void Spinner::NextButtonActionListener::actionPerformed(const ActionEventUnrecPtr e)
 {
     boost::any NewValue(_Spinner->getNextValue());
     if(!NewValue.empty())
@@ -293,7 +287,7 @@ void Spinner::NextButtonActionListener::actionPerformed(const ActionEventPtr e)
     }
 }
 
-void Spinner::PreviousButtonActionListener::actionPerformed(const ActionEventPtr e)
+void Spinner::PreviousButtonActionListener::actionPerformed(const ActionEventUnrecPtr e)
 {
     const boost::any& NewValue(_Spinner->getPreviousValue());
     if(!NewValue.empty())
@@ -302,29 +296,4 @@ void Spinner::PreviousButtonActionListener::actionPerformed(const ActionEventPtr
     }
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSPINNERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSPINNERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSPINNERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

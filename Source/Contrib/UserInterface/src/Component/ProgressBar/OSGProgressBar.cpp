@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,24 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGProgressBar.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawUtils.h"
 #include <sstream>
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ProgressBar
-A UI Spinner. 	
-*/
+// Documentation for this class is emitted in the
+// OSGProgressBarBase.cpp file.
+// To modify it, please change the .fcd file (OSGProgressBar.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,8 +67,13 @@ A UI Spinner.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ProgressBar::initMethod (void)
+void ProgressBar::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -104,7 +104,7 @@ Color4f ProgressBar::getDrawnTextColor(void) const
     }
 }
 
-UIDrawObjectCanvasPtr ProgressBar::getDrawnDrawObject(void) const
+UIDrawObjectCanvasRefPtr ProgressBar::getDrawnDrawObject(void) const
 {
     if(getEnabled())
     {
@@ -127,22 +127,20 @@ UIDrawObjectCanvasPtr ProgressBar::getDrawnDrawObject(void) const
     }
 }
 
-void ProgressBar::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
+void ProgressBar::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {
 
 	//Draw The ProgressBar
-    UIDrawObjectCanvasPtr DrawObject(getDrawnDrawObject());
-    if(DrawObject != NullFC)
+    UIDrawObjectCanvasRefPtr DrawObject(getDrawnDrawObject());
+    if(DrawObject != NULL)
     {
-		beginEditCP(DrawObject , SizeFieldMask | PositionFieldMask);
             DrawObject->setPosition(_ProgressBarPosition);
             DrawObject->setSize(_ProgressBarSize);
-		endEditCP(DrawObject , SizeFieldMask | PositionFieldMask);
         DrawObject->draw(Graphics,getOpacity()*Opacity);
     }
 	
 	//Draw The Progress String
-	if(getEnableProgressString() && getFont() != NullFC)
+	if(getEnableProgressString() && getFont() != NULL)
 	{
 		Pnt2f TopLeft, BottomRight;
 		getInsideBorderBounds(TopLeft, BottomRight);
@@ -153,7 +151,7 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
 		{
             if(!getIndeterminate())
             {
-			    UInt32 Percent(static_cast<Int32>( osgfloor(getPercentComplete() * 100.0f) ));
+			    UInt32 Percent(static_cast<Int32>( osgFloor(getPercentComplete() * 100.0f) ));
 
 			    std::stringstream TempSStream;
 			    TempSStream << Percent;
@@ -181,9 +179,9 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
 void ProgressBar::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-	if(getParentWindow() != NullFC &&
-		getParentWindow()->getDrawingSurface() != NullFC &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	if(getParentWindow() != NULL &&
+		getParentWindow()->getDrawingSurface() != NULL &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 	{
         getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
 	}
@@ -245,20 +243,18 @@ void ProgressBar::setupIndeterminateProgressBar(const Time& Elps)
 	_IndeterminateBarPosition += Elps * getIndeterminateBarMoveRate();
 	if(_IndeterminateBarPosition > 2.0)
 	{
-		_IndeterminateBarPosition -= 2.0f*osgfloor(_IndeterminateBarPosition/2.0f);
+		_IndeterminateBarPosition -= 2.0f*osgFloor(_IndeterminateBarPosition/2.0f);
 	}
 	setupProgressBar();
 }
 
 void ProgressBar::startIndeterminate(void)
 {
-    beginEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
         setIndeterminate(true);
-    endEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
     _IndeterminateBarPosition = 0;
-	if(getParentWindow() != NullFC &&
-		getParentWindow()->getDrawingSurface() != NullFC &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	if(getParentWindow() != NULL &&
+		getParentWindow()->getDrawingSurface() != NULL &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 	{
         getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_IndeterminateUpdateListener);
 	}
@@ -266,17 +262,16 @@ void ProgressBar::startIndeterminate(void)
 
 void ProgressBar::endIndeterminate(void)
 {
-    beginEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
         setIndeterminate(false);
-    endEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
-	if(getParentWindow() != NullFC &&
-		getParentWindow()->getDrawingSurface() != NullFC &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	if(getParentWindow() != NULL &&
+		getParentWindow()->getDrawingSurface() != NULL &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 	{
         getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
 	}
     setupProgressBar();
 }
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -286,16 +281,16 @@ void ProgressBar::endIndeterminate(void)
 
 ProgressBar::ProgressBar(void) :
     Inherited(),
-	_ModelChangeListener(ProgressBarPtr(this)),
-	_IndeterminateUpdateListener(ProgressBarPtr(this)),
+	_ModelChangeListener(this),
+	_IndeterminateUpdateListener(this),
     _IndeterminateBarPosition(0)
 {
 }
 
 ProgressBar::ProgressBar(const ProgressBar &source) :
     Inherited(source),
-	_ModelChangeListener(ProgressBarPtr(this)),
-	_IndeterminateUpdateListener(ProgressBarPtr(this)),
+	_ModelChangeListener(this),
+	_IndeterminateUpdateListener(this),
     _IndeterminateBarPosition(0),
     _ProgressBarPosition(source._ProgressBarPosition),
     _ProgressBarSize(source._ProgressBarSize)
@@ -308,9 +303,11 @@ ProgressBar::~ProgressBar(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ProgressBar::changed(BitVector whichField, UInt32 origin)
+void ProgressBar::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if((whichField & SizeFieldMask))
     {
@@ -319,53 +316,27 @@ void ProgressBar::changed(BitVector whichField, UInt32 origin)
     if(whichField & RangeModelFieldMask)
     {
         _RangeModelConnection.disconnect();
-        if(getRangeModel() != NullFC)
+        if(getRangeModel() != NULL)
         {
             _RangeModelConnection = getRangeModel()->addChangeListener(&_ModelChangeListener);
         }
     }
 }
 
-void ProgressBar::dump(      UInt32    , 
+void ProgressBar::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ProgressBar NI" << std::endl;
 }
 
-
-void ProgressBar::ModelChangeListener::stateChanged(const ChangeEventPtr e)
+void ProgressBar::ModelChangeListener::stateChanged(const ChangeEventUnrecPtr e)
 {
 	_ProgressBar->setupProgressBar();
 }
 
-void ProgressBar::IndeterminateUpdateListener::update(const UpdateEventPtr e)
+void ProgressBar::IndeterminateUpdateListener::update(const UpdateEventUnrecPtr e)
 {
 	_ProgressBar->setupIndeterminateProgressBar(e->getElapsedTime());
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPROGRESSBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPROGRESSBARBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPROGRESSBARFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

@@ -9,36 +9,36 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -46,34 +46,34 @@ void reshape(Vec2f Size);
 
 
 // 24PasswordField Headers
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGPasswordField.h>
+#include "OSGLayers.h"
+#include "OSGButton.h"
+#include "OSGLineBorder.h"
+#include "OSGFlowLayout.h"
+#include "OSGUIFont.h"
+#include "OSGPasswordField.h"
 
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-            TutorialWindowEventProducer->closeWindow();
-       }
-   }
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            TutorialWindow->closeWindow();
+        }
+    }
 
-   virtual void keyReleased(const KeyEventPtr e)
-   {
-   }
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
 
-   virtual void keyTyped(const KeyEventPtr e)
-   {
-   }
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
 int main(int argc, char **argv)
@@ -82,150 +82,126 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
-        scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    NodeRefPtr scene = OSG::Node::create();
+    scene->setCore(OSG::Group::create());
+    scene->addChild(TorusGeometryNode);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
     // Create a simple Font to be used with the PasswordField
-    UIFontPtr ExampleFont = osg::UIFont::create();
-    beginEditCP(ExampleFont, UIFont::SizeFieldMask);
-        ExampleFont->setSize(16);
-    endEditCP(ExampleFont, UIFont::SizeFieldMask);
+    UIFontRefPtr ExampleFont = OSG::UIFont::create();
+    ExampleFont->setSize(16);
 
     /******************************************************
 
 
-        Create and edit a PasswordField.
-		
-		A PasswordField is a TextField 
-        which allows for text to be
-        entered secretly.
+      Create and edit a PasswordField.
 
-        -setEchoCar("char"): Determine
-			which character replaces text in the 
-            PasswordField.
-            
-        See 16TextField for more information.
+      A PasswordField is a TextField 
+      which allows for text to be
+      entered secretly.
 
-    ******************************************************/
+      -setEchoCar("char"): Determine
+      which character replaces text in the 
+      PasswordField.
 
-    TextFieldPtr ExampleTextField = osg::TextField::create();
-    beginEditCP(ExampleTextField, TextField::TextFieldMask | TextField::EmptyDescTextFieldMask | TextField::PreferredSizeFieldMask);
-        ExampleTextField->setText("");
-        ExampleTextField->setEmptyDescText("username");
-        ExampleTextField->setPreferredSize(Vec2f(130.0f,ExampleTextField->getPreferredSize().y()));
-    endEditCP(ExampleTextField, TextField::TextFieldMask | TextField::EmptyDescTextFieldMask | TextField::PreferredSizeFieldMask);
+      See 16TextField for more information.
 
-    PasswordFieldPtr ExamplePasswordField = PasswordField::create();
+     ******************************************************/
 
-    beginEditCP(ExamplePasswordField, PasswordField::MinSizeFieldMask | PasswordField::MaxSizeFieldMask | PasswordField::PreferredSizeFieldMask 
-        | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::AlignmentFieldMask 
-        | PasswordField::EchoCharFieldMask | PasswordField::EmptyDescTextFieldMask 
-        | PasswordField::SelectionBoxColorFieldMask | PasswordField::SelectionTextColorFieldMask);
-        ExamplePasswordField->setPreferredSize(Vec2f(130, ExamplePasswordField->getPreferredSize().y()));
-        ExamplePasswordField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
-        ExamplePasswordField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
-        ExamplePasswordField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-        //ExamplePasswordField->setText("Text");
-        // "Text" will be replaced by "####" in the PasswordField
-        ExamplePasswordField->setEchoChar("#");
-        ExamplePasswordField->setEditable(true);
-        ExamplePasswordField->setFont(ExampleFont);
-        ExamplePasswordField->setSelectionStart(2);
-        ExamplePasswordField->setSelectionEnd(3);
-        ExamplePasswordField->setAlignment(Vec2f(0.0,0.5));
+    TextFieldRefPtr ExampleTextField = OSG::TextField::create();
+    ExampleTextField->setText("");
+    ExampleTextField->setEmptyDescText("username");
+    ExampleTextField->setPreferredSize(Vec2f(130.0f,ExampleTextField->getPreferredSize().y()));
 
-        ExamplePasswordField->setEmptyDescText("password");
-    endEditCP(ExamplePasswordField, PasswordField::MinSizeFieldMask | PasswordField::MaxSizeFieldMask | PasswordField::PreferredSizeFieldMask 
-        | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::AlignmentFieldMask 
-        | PasswordField::EchoCharFieldMask | PasswordField::EmptyDescTextFieldMask
-        | PasswordField::SelectionBoxColorFieldMask | PasswordField::SelectionTextColorFieldMask);
+    PasswordFieldRefPtr ExamplePasswordField = PasswordField::create();
+
+    ExamplePasswordField->setPreferredSize(Vec2f(130, ExamplePasswordField->getPreferredSize().y()));
+    ExamplePasswordField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+    ExamplePasswordField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
+    ExamplePasswordField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+    //ExamplePasswordField->setText("Text");
+    // "Text" will be replaced by "####" in the PasswordField
+    ExamplePasswordField->setEchoChar("#");
+    ExamplePasswordField->setEditable(true);
+    ExamplePasswordField->setFont(ExampleFont);
+    ExamplePasswordField->setSelectionStart(2);
+    ExamplePasswordField->setSelectionEnd(3);
+    ExamplePasswordField->setAlignment(Vec2f(0.0,0.5));
+
+    ExamplePasswordField->setEmptyDescText("password");
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
     MainInternalWindowLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleTextField);
-       MainInternalWindow->getChildren().push_back(ExamplePasswordField);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    MainInternalWindow->pushToChildren(ExampleTextField);
+    MainInternalWindow->pushToChildren(ExamplePasswordField);
+    MainInternalWindow->setLayout(MainInternalWindowLayout);
+    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setDrawTitlebar(false);
+    MainInternalWindow->setResizable(false);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-        TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+    TutorialDrawingSurface->setGraphics(TutorialGraphics);
+    TutorialDrawingSurface->setEventProducer(TutorialWindow);
 
-	// Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-            endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+    // Create the UI Foreground Object
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+
+    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
-            WinSize,
-            "01RubberBandCamera");
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
+                               WinSize,
+                               "24PasswordField");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

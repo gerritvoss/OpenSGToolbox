@@ -9,35 +9,35 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -45,147 +45,131 @@ void reshape(Vec2f Size);
 
 
 // 21ExampleInterface Headers
-#include <OpenSG/UserInterface/OSGUIRectangle.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGColorLayer.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGGridLayout.h>
-#include <OpenSG/UserInterface/OSGContainer.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGEmptyBorder.h>
-#include <OpenSG/UserInterface/OSGEtchedBorder.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGCheckboxButton.h>
-#include <OpenSG/UserInterface/OSGRadioButton.h>
-#include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
-#include <OpenSG/UserInterface/OSGTextArea.h>
-#include <OpenSG/UserInterface/OSGTextField.h>
+#include "OSGUIRectangle.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGButton.h"
+#include "OSGToggleButton.h"
+#include "OSGLineBorder.h"
+#include "OSGColorLayer.h"
+#include "OSGUIFont.h"
+#include "OSGAbsoluteLayout.h"
+#include "OSGAbsoluteLayoutConstraints.h"
+#include "OSGBoxLayout.h"
+#include "OSGFlowLayout.h"
+#include "OSGGridLayout.h"
+#include "OSGComponentContainer.h"
+#include "OSGPanel.h"
+#include "OSGLineBorder.h"
+#include "OSGEmptyBorder.h"
+#include "OSGEtchedBorder.h"
+#include "OSGLayers.h"
+#include "OSGLabel.h"
+#include "OSGCheckboxButton.h"
+#include "OSGRadioButton.h"
+#include "OSGRadioButtonGroup.h"
+#include "OSGTextArea.h"
+#include "OSGTextField.h"
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
 
 // Create functions create Component Panels to make 
 // code easier to read
-ComponentPtr createLeftPanelButtonPanel(void);
-ComponentPtr createLeftPanelRadioTextPanel(void);
-ComponentPtr createRightPanelButtonPanel(void);
-ComponentPtr createRightPanelCheckPanel(void);
+ComponentRefPtr createLeftPanelButtonPanel(void);
+ComponentRefPtr createLeftPanelRadioTextPanel(void);
+ComponentRefPtr createRightPanelButtonPanel(void);
+ComponentRefPtr createRightPanelCheckPanel(void);
 // This function makes a complex Background outside of the main code
 // to make code easier to read
-LayerPtr createComplexBackground(void);
+LayerRefPtr createComplexBackground(void);
 // These functions create materials to use with objects in scene
-ChunkMaterialPtr createRedMaterial(void);
-ChunkMaterialPtr createBlueMaterial(void);
-ChunkMaterialPtr createGreenMaterial(void);
-NodePtr scene, ExampleTorus, ExampleCone, ExampleSphere, ExampleBox;
+ChunkMaterialRefPtr createRedMaterial(void);
+ChunkMaterialRefPtr createBlueMaterial(void);
+ChunkMaterialRefPtr createGreenMaterial(void);
+NodeRefPtr scene, ExampleTorus, ExampleCone, ExampleSphere, ExampleBox;
 void create3DObjects(void);
 
 
 
 // Declare some variables up front 
-RadioButtonGroupPtr buttonGroup;
-TextAreaPtr LeftPanelTextArea;
+RadioButtonGroupRefPtr buttonGroup;
+TextAreaRefPtr LeftPanelTextArea;
 
 class MakeTorus : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
         {         
-            beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->addChild(ExampleTorus);
-            endEditCP(scene, Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
         {         
-            beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->subChild(ExampleTorus);
-            endEditCP(scene, Node::ChildrenFieldMask);
         }
 };
 class MakeSphere : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
         {         
-            beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->addChild(ExampleSphere);
-            endEditCP(scene, Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
-            beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->subChild(ExampleSphere);
-            endEditCP(scene, Node::ChildrenFieldMask);    
    }
 };
 class MakeBox : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
         {         
-            beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->addChild(ExampleBox);
-            endEditCP(scene, Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
-            beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->subChild(ExampleBox);
-            endEditCP(scene, Node::ChildrenFieldMask);   
    }
 };
 class MakeCone : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
         {         
-            beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->addChild(ExampleCone);
-            endEditCP(scene, Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
-            beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->subChild(ExampleCone);
-            endEditCP(scene, Node::ChildrenFieldMask);   
    }
 };
 
@@ -196,15 +180,13 @@ class BlackFont : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {
-        beginEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
             LeftPanelTextArea->setTextColor(Color4f( 0.0, 0.0 , 0.0, 1.0));
             LeftPanelTextArea->setRolloverTextColor(Color4f( 0.0, 0.0 , 0.0, 1.0));
-        endEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
    }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
     
    }
@@ -213,17 +195,15 @@ class RedFont : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {
 
-        beginEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
             LeftPanelTextArea->setTextColor(Color4f( 1.0, 0.0 , 0.0, 1.0));
             LeftPanelTextArea->setRolloverTextColor(Color4f( 1.0, 0.0 , 0.0, 1.0));
-        endEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
     
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
 
    }
@@ -232,17 +212,15 @@ class BlueFont : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {
 
-        beginEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
             LeftPanelTextArea->setTextColor(Color4f( 0.0, 0.0 , 1.0, 1.0));
             LeftPanelTextArea->setRolloverTextColor(Color4f( 0.0, 0.0 , 1.0, 1.0));
-        endEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
     
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
 
    }
@@ -251,17 +229,15 @@ class GreenFont : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {
 
-        beginEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
             LeftPanelTextArea->setTextColor(Color4f( 0.0, 1.0 , 0.0, 1.0));
             LeftPanelTextArea->setRolloverTextColor(Color4f( 0.0, 1.0 , 0.0, 1.0));
-        endEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
     
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
 
    }
@@ -279,25 +255,25 @@ MakeCone RightPanelCheck4Listener;
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEventPtr e)
+    virtual void mouseClicked(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEventPtr e)
+    virtual void mouseEntered(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mouseExited(const MouseEventPtr e)
+    virtual void mouseExited(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mousePressed(const MouseEventPtr e)
+    virtual void mousePressed(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
             mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
-    virtual void mouseReleased(const MouseEventPtr e)
+    virtual void mouseReleased(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
            mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
@@ -307,17 +283,17 @@ class TutorialMouseListener : public MouseListener
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEventPtr e)
+    virtual void mouseMoved(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
             mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
     }
 
-    virtual void mouseDragged(const MouseEventPtr e)
+    virtual void mouseDragged(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
             mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
@@ -331,41 +307,39 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialMouseListener mouseListener;
     TutorialMouseMotionListener mouseMotionListener;
-    TutorialWindowEventProducer->addMouseListener(&mouseListener);
-    TutorialWindowEventProducer->addMouseMotionListener(&mouseMotionListener);
+    TutorialWindow->addMouseListener(&mouseListener);
+    TutorialWindow->addMouseMotionListener(&mouseMotionListener);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
 
     // Set up Window
 
 	//Load in File
-	NodePtr LoadedFile = SceneFileHandler::the().read("C:\\Documents and Settings\\All Users\\Documents\\Cell.osb");
+	NodeRefPtr LoadedFile = SceneFileHandler::the()->read("C:\\Documents and Settings\\All Users\\Documents\\Cell.osb");
 
     // Make Main Scene Node
     create3DObjects();
-    scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
 		scene->addChild(LoadedFile);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->setLookAndFeel(WindowsLookAndFeel::create());
@@ -377,11 +351,9 @@ int main(int argc, char **argv)
             Create a Background
 
     ******************************************************/
-    ColorLayerPtr GreyBackground = osg::ColorLayer::create();
+    ColorLayerRefPtr GreyBackground = OSG::ColorLayer::create();
 
-    beginEditCP(GreyBackground, ColorLayer::ColorFieldMask);
         GreyBackground->setColor(Color4f(.93,.93,.93,1.0));
-    endEditCP(GreyBackground, ColorLayer::ColorFieldMask);
 
 
     /******************************************************
@@ -389,28 +361,22 @@ int main(int argc, char **argv)
             Create some Borders
 
     ******************************************************/
-    LineBorderPtr PanelBorder = osg::LineBorder::create();
-    EmptyBorderPtr Panel1Border = osg::EmptyBorder::create();
-    EmptyBorderPtr Panel2Border = osg::EmptyBorder::create();
-    EmptyBorderPtr emptyBorder = osg::EmptyBorder::create();
+    LineBorderRefPtr PanelBorder = OSG::LineBorder::create();
+    EmptyBorderRefPtr Panel1Border = OSG::EmptyBorder::create();
+    EmptyBorderRefPtr Panel2Border = OSG::EmptyBorder::create();
+    EmptyBorderRefPtr emptyBorder = OSG::EmptyBorder::create();
     
-    beginEditCP(PanelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
         PanelBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
         PanelBorder->setWidth(1);
-    endEditCP(PanelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 
-    beginEditCP(Panel1Border, EmptyBorder::TopWidthFieldMask | EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask);
         Panel1Border->setTopWidth(0);
         Panel1Border->setBottomWidth(6);
         Panel1Border->setLeftWidth(0);
         Panel1Border->setRightWidth(0);
-    beginEditCP(Panel1Border, EmptyBorder::TopWidthFieldMask | EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask);
-    beginEditCP(Panel2Border, EmptyBorder::TopWidthFieldMask | EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask);
         Panel2Border->setTopWidth(0);
         Panel2Border->setBottomWidth(0);
         Panel2Border->setLeftWidth(0);
         Panel2Border->setRightWidth(0);
-    beginEditCP(Panel2Border, EmptyBorder::TopWidthFieldMask | EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask);
     
 
     /******************************************************
@@ -419,42 +385,32 @@ int main(int argc, char **argv)
             with them
 
     ******************************************************/
-    LabelPtr LeftPanelLabel1 = osg::Label::create();
-    UIFontPtr LeftPanelLabel1Font = osg::UIFont::create();
+    LabelRefPtr LeftPanelLabel1 = OSG::Label::create();
+    UIFontRefPtr LeftPanelLabel1Font = OSG::UIFont::create();
 
-    beginEditCP(LeftPanelLabel1Font, UIFont::SizeFieldMask);
         LeftPanelLabel1Font->setSize(50);
-    endEditCP(LeftPanelLabel1Font, UIFont::SizeFieldMask);
 
-    beginEditCP(LeftPanelLabel1, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::AlignmentFieldMask);
         LeftPanelLabel1->setBorders(emptyBorder);
         LeftPanelLabel1->setBackgrounds(GreyBackground);
         LeftPanelLabel1->setFont(LeftPanelLabel1Font);
         LeftPanelLabel1->setText("OSG Gui");
         LeftPanelLabel1->setPreferredSize(Vec2f(300, 100));
 		LeftPanelLabel1->setAlignment(Vec2f(0.0f, 0.5f));
-	endEditCP(LeftPanelLabel1, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::AlignmentFieldMask);
 
      /******************************************************
 
             Create some Layouts
 
     ******************************************************/
-    BoxLayoutPtr MainInternalWindowLayout = osg::BoxLayout::create();
-    FlowLayoutPtr LeftPanelLayout = osg::FlowLayout::create();
-    BoxLayoutPtr RightPanelLayout = osg::BoxLayout::create();
-    beginEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask);
+    BoxLayoutRefPtr MainInternalWindowLayout = OSG::BoxLayout::create();
+    FlowLayoutRefPtr LeftPanelLayout = OSG::FlowLayout::create();
+    BoxLayoutRefPtr RightPanelLayout = OSG::BoxLayout::create();
         MainInternalWindowLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
-    endEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask);
 
-	beginEditCP(LeftPanelLayout, FlowLayout::OrientationFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
         LeftPanelLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
         LeftPanelLayout->setMinorAxisAlignment(1.0f);
-    endEditCP(LeftPanelLayout, FlowLayout::OrientationFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 
-    beginEditCP(RightPanelLayout, BoxLayout::OrientationFieldMask);
         RightPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(RightPanelLayout, BoxLayout::OrientationFieldMask);
     
 
     /******************************************************
@@ -462,35 +418,30 @@ int main(int argc, char **argv)
         Create MainFrame and Panels
 
     ******************************************************/
-    PanelPtr LeftPanel = osg::Panel::create();
-    PanelPtr RightPanel = osg::Panel::create();
+    PanelRefPtr LeftPanel = OSG::Panel::create();
+    PanelRefPtr RightPanel = OSG::Panel::create();
 
     // LeftPanel stuff
-    beginEditCP(LeftPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         LeftPanel->setPreferredSize(Vec2f(400, 500));
-        LeftPanel->getChildren().push_back(LeftPanelLabel1);
-        LeftPanel->getChildren().push_back(createLeftPanelButtonPanel());
-        LeftPanel->getChildren().push_back(createLeftPanelRadioTextPanel());
+        LeftPanel->pushToChildren(LeftPanelLabel1);
+        LeftPanel->pushToChildren(createLeftPanelButtonPanel());
+        LeftPanel->pushToChildren(createLeftPanelRadioTextPanel());
         LeftPanel->setLayout(LeftPanelLayout);
         LeftPanel->setBackgrounds(GreyBackground);
         LeftPanel->setBorders(Panel1Border);
-    endEditCP(LeftPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     //RightPanel stuff
-    beginEditCP(RightPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         RightPanel->setPreferredSize(Vec2f(200, 620));
-        RightPanel->getChildren().push_back(createRightPanelButtonPanel());
-        RightPanel->getChildren().push_back(createRightPanelCheckPanel());
+        RightPanel->pushToChildren(createRightPanelButtonPanel());
+        RightPanel->pushToChildren(createRightPanelCheckPanel());
         RightPanel->setLayout(RightPanelLayout);
         RightPanel->setBackgrounds(GreyBackground);
         RightPanel->setBorders(Panel2Border);
-    endEditCP(RightPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
     
     // Create The Main InternalWindow
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::BordersFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(LeftPanel);
-       MainInternalWindow->getChildren().push_back(RightPanel);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+       MainInternalWindow->pushToChildren(LeftPanel);
+       MainInternalWindow->pushToChildren(RightPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(GreyBackground);
        MainInternalWindow->setBorders(PanelBorder);
@@ -498,35 +449,26 @@ int main(int argc, char **argv)
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(1.0f,1.0f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::BordersFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Make A 3D Rectangle to draw the UI on
-    UIRectanglePtr UIRectCore = UIRectangle::create();
-    beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
+    UIRectangleRefPtr UIRectCore = UIRectangle::create();
         UIRectCore->setPoint(Pnt3f(-310.0,-310.0,370.0));
         UIRectCore->setWidth(620);
         UIRectCore->setHeight(620);
         UIRectCore->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
     
-    NodePtr UIRectNode = osg::Node::create();
-    beginEditCP(UIRectNode, Node::CoreFieldMask);
+    NodeRefPtr UIRectNode = OSG::Node::create();
         UIRectNode->setCore(UIRectCore);
-    endEditCP(UIRectNode, Node::CoreFieldMask);
     
-    beginEditCP(scene, Node::ChildrenFieldMask);
         // add the UIRect as a child
         scene->addChild(UIRectNode);
-    endEditCP(scene, Node::ChildrenFieldMask);
 
 
     mgr->setRoot(scene);
@@ -535,14 +477,14 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "21ExampleInterface");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 
@@ -550,95 +492,73 @@ int main(int argc, char **argv)
 }
 
 
-ComponentPtr createLeftPanelButtonPanel(void)
+ComponentRefPtr createLeftPanelButtonPanel(void)
 
 {
 
     // Create Label for this Panel
-    LabelPtr LeftPanelButtonPanelLabel = osg::Label::create();
+    LabelRefPtr LeftPanelButtonPanelLabel = OSG::Label::create();
 
-    beginEditCP(LeftPanelButtonPanelLabel, Label::TextColorFieldMask | Label::BackgroundFieldMask | Label::PreferredSizeFieldMask | Label::TextFieldMask | Label::AlignmentFieldMask);
         LeftPanelButtonPanelLabel->setTextColor(Color4f(1.0,1.0,1.0,1.0));
         LeftPanelButtonPanelLabel->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
         LeftPanelButtonPanelLabel->setBackground(createComplexBackground());
         LeftPanelButtonPanelLabel->setPreferredSize(Vec2f(100, 50));
         LeftPanelButtonPanelLabel->setText("Various Options");
 		LeftPanelButtonPanelLabel->setAlignment(Vec2f(0.5,0.5));
-	endEditCP(LeftPanelButtonPanelLabel, Label::TextColorFieldMask | Label::BackgroundFieldMask | Label::PreferredSizeFieldMask | Label::TextFieldMask | Label::AlignmentFieldMask);
 
     // Create and edit the Panel buttons
-    ButtonPtr LeftPanelButton1 = osg::Button::create();
-    ButtonPtr LeftPanelButton2 = osg::Button::create();
-    ButtonPtr LeftPanelButton3 = osg::Button::create();
-    ButtonPtr LeftPanelButton4 = osg::Button::create();
-    ButtonPtr LeftPanelButton5 = osg::Button::create();
-    ButtonPtr LeftPanelButton6 = osg::Button::create();
+    ButtonRefPtr LeftPanelButton1 = OSG::Button::create();
+    ButtonRefPtr LeftPanelButton2 = OSG::Button::create();
+    ButtonRefPtr LeftPanelButton3 = OSG::Button::create();
+    ButtonRefPtr LeftPanelButton4 = OSG::Button::create();
+    ButtonRefPtr LeftPanelButton5 = OSG::Button::create();
+    ButtonRefPtr LeftPanelButton6 = OSG::Button::create();
 
-    beginEditCP(LeftPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton1->setText("This");
         LeftPanelButton1->setPreferredSize(Vec2f(100,50));
-    endEditCP(LeftPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
     
-    beginEditCP(LeftPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton2->setText("is");
         LeftPanelButton2->setPreferredSize(Vec2f(100,50));
-    endEditCP(LeftPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
-    beginEditCP(LeftPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton3->setText("an");
         LeftPanelButton3->setPreferredSize(Vec2f(100,50));
-    endEditCP(LeftPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
-    beginEditCP(LeftPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton4->setText("example");
         LeftPanelButton4->setPreferredSize(Vec2f(100,50));
-    endEditCP(LeftPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
-    beginEditCP(LeftPanelButton5, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton5->setText("user");
         LeftPanelButton5->setPreferredSize(Vec2f(100,50));
-    endEditCP(LeftPanelButton5, Button::TextFieldMask, Component::PreferredSizeFieldMask);
     
-    beginEditCP(LeftPanelButton6, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton6->setText("interface.");
         LeftPanelButton6->setPreferredSize(Vec2f(100,50));
-    endEditCP(LeftPanelButton6, Button::TextFieldMask, Component::PreferredSizeFieldMask);
     
 
     // Create and edit Panel layout
-    BoxLayoutPtr LeftPanelButtonPanelLayout = osg::BoxLayout::create();
-    beginEditCP(LeftPanelButtonPanelLayout, BoxLayout::OrientationFieldMask);
+    BoxLayoutRefPtr LeftPanelButtonPanelLayout = OSG::BoxLayout::create();
         LeftPanelButtonPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(LeftPanelButtonPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create an edit Panel Background
-    ColorLayerPtr LeftPanelButtonPanelBackground = osg::ColorLayer::create();
-    beginEditCP(LeftPanelButtonPanelBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr LeftPanelButtonPanelBackground = OSG::ColorLayer::create();
         LeftPanelButtonPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
-    endEditCP(LeftPanelButtonPanelBackground, ColorLayer::ColorFieldMask);
 
     // Create Panel Border
-    LineBorderPtr LeftPanelBorder = osg::LineBorder::create();
-    beginEditCP(LeftPanelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+    LineBorderRefPtr LeftPanelBorder = OSG::LineBorder::create();
         LeftPanelBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
         LeftPanelBorder->setWidth(1);
-    endEditCP(LeftPanelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 
     // Create and edit Panel
-    PanelPtr LeftPanelButtonPanel = osg::Panel::create();
-    beginEditCP(LeftPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
+    PanelRefPtr LeftPanelButtonPanel = OSG::Panel::create();
         LeftPanelButtonPanel->setPreferredSize(Vec2f(180, 500));
-        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButtonPanelLabel);
-        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton1);
-        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton2);
-        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton3);
-        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton4);
-        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton5);
-        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton6);
+        LeftPanelButtonPanel->pushToChildren(LeftPanelButtonPanelLabel);
+        LeftPanelButtonPanel->pushToChildren(LeftPanelButton1);
+        LeftPanelButtonPanel->pushToChildren(LeftPanelButton2);
+        LeftPanelButtonPanel->pushToChildren(LeftPanelButton3);
+        LeftPanelButtonPanel->pushToChildren(LeftPanelButton4);
+        LeftPanelButtonPanel->pushToChildren(LeftPanelButton5);
+        LeftPanelButtonPanel->pushToChildren(LeftPanelButton6);
         LeftPanelButtonPanel->setLayout(LeftPanelButtonPanelLayout);
         LeftPanelButtonPanel->setBackgrounds(LeftPanelButtonPanelBackground);
         LeftPanelButtonPanel->setBorders(LeftPanelBorder);
-    endEditCP(LeftPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     return LeftPanelButtonPanel;
 }
@@ -646,45 +566,37 @@ ComponentPtr createLeftPanelButtonPanel(void)
 
 
 
-ComponentPtr createLeftPanelRadioTextPanel(void)
+ComponentRefPtr createLeftPanelRadioTextPanel(void)
 {
 
     // Create the RadioButton group
-    RadioButtonPtr RadioButton1 = osg::RadioButton::create();
-    RadioButtonPtr RadioButton2 = osg::RadioButton::create();
-    RadioButtonPtr RadioButton3 = osg::RadioButton::create();
-    RadioButtonPtr RadioButton4 = osg::RadioButton::create();
+    RadioButtonRefPtr RadioButton1 = OSG::RadioButton::create();
+    RadioButtonRefPtr RadioButton2 = OSG::RadioButton::create();
+    RadioButtonRefPtr RadioButton3 = OSG::RadioButton::create();
+    RadioButtonRefPtr RadioButton4 = OSG::RadioButton::create();
 
-    beginEditCP(RadioButton1, RadioButton::AlignmentFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
         RadioButton1->setAlignment(Vec2f(0.0,0.5));
         RadioButton1->setPreferredSize(Vec2f(100, 40));
         RadioButton1->setText("Black Text");
         RadioButton1->setToolTipText("Set TextArea text black");
-    endEditCP(RadioButton1, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
     RadioButton1->addButtonSelectedListener(&RadioButton1Listener);
 
-    beginEditCP(RadioButton2, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
         RadioButton2->setAlignment(Vec2f(0.0,0.5));
         RadioButton2->setPreferredSize(Vec2f(100, 40));
         RadioButton2->setText("Red Text");
         RadioButton2->setToolTipText("Set TextArea text red");
-    endEditCP(RadioButton2, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
     RadioButton2->addButtonSelectedListener(&RadioButton2Listener);
 
-    beginEditCP(RadioButton3, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
         RadioButton3->setAlignment(Vec2f(0.0,0.5));
         RadioButton3->setPreferredSize(Vec2f(100, 40));
         RadioButton3->setText("Green Text");
         RadioButton3->setToolTipText("Set TextArea text green");
-    endEditCP(RadioButton3, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
     RadioButton3->addButtonSelectedListener(&RadioButton3Listener);
 
-    beginEditCP(RadioButton4, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
         RadioButton4->setAlignment(Vec2f(0.0,0.5));
         RadioButton4->setPreferredSize(Vec2f(100, 40));
         RadioButton4->setText("Blue Text");
         RadioButton4->setToolTipText("Set TextArea text blue");
-    endEditCP(RadioButton4, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
     RadioButton4->addButtonSelectedListener(&RadioButton4Listener);
 
     buttonGroup = RadioButtonGroup::create();
@@ -695,330 +607,256 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
 
 
     // Create TextArea
-    LeftPanelTextArea = osg::TextArea::create();
-    beginEditCP(LeftPanelTextArea, TextArea::PreferredSizeFieldMask);
+    LeftPanelTextArea = OSG::TextArea::create();
         LeftPanelTextArea->setPreferredSize(Vec2f(125, 200));
-    endEditCP(LeftPanelTextArea, TextArea::PreferredSizeFieldMask);
 
     // Create Panel and its Background/Border to label TextField
-    LabelPtr LeftPanelTextFieldLabel = osg::Label::create();
-    EmptyLayerPtr LeftPanelTextFieldLabelBackground = osg::EmptyLayer::create();
-    EmptyBorderPtr LeftPanelTextFieldLabelBorder = osg::EmptyBorder::create();
-    beginEditCP(LeftPanelTextFieldLabel, Label::PreferredSizeFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::TextFieldMask);
+    LabelRefPtr LeftPanelTextFieldLabel = OSG::Label::create();
+    EmptyLayerRefPtr LeftPanelTextFieldLabelBackground = OSG::EmptyLayer::create();
+    EmptyBorderRefPtr LeftPanelTextFieldLabelBorder = OSG::EmptyBorder::create();
         LeftPanelTextFieldLabel->setPreferredSize(Vec2f(100, 25));
         LeftPanelTextFieldLabel->setBorders(LeftPanelTextFieldLabelBorder);
         LeftPanelTextFieldLabel->setBackgrounds(LeftPanelTextFieldLabelBackground);
         LeftPanelTextFieldLabel->setText("Text Field");
-    endEditCP(LeftPanelTextFieldLabel, Label::PreferredSizeFieldMask | Label::BordersFieldMask |  Label::BackgroundsFieldMask | Label::TextFieldMask);
 
     // Create TextField
-    TextFieldPtr LeftPanelTextField = osg::TextField::create();
-    beginEditCP(LeftPanelTextField, Component::PreferredSizeFieldMask);
+    TextFieldRefPtr LeftPanelTextField = OSG::TextField::create();
         LeftPanelTextField->setPreferredSize(Vec2f(125.0f, 22.0f));
-    endEditCP(LeftPanelTextField, Component::PreferredSizeFieldMask);
 
     
     // Create an edit Panel Background
-    ColorLayerPtr LeftPanelRadioTextPanelBackground = osg::ColorLayer::create();
-    beginEditCP(LeftPanelRadioTextPanelBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr LeftPanelRadioTextPanelBackground = OSG::ColorLayer::create();
         LeftPanelRadioTextPanelBackground->setColor(Color4f(0.93f,0.93f,0.93f,1.0f));
-    endEditCP(LeftPanelRadioTextPanelBackground, ColorLayer::ColorFieldMask);
 
     // Create and edit Panel layouts
-    FlowLayoutPtr LeftPanelRadioTextPanelLayout = osg::FlowLayout::create();
-    FlowLayoutPtr LeftPanelRadioTextPanelRadioPanelLayout = osg::FlowLayout::create();
-    FlowLayoutPtr LeftPanelRadioTextPanelTextPanelLayout = osg::FlowLayout::create();
-    beginEditCP(LeftPanelRadioTextPanelLayout, FlowLayout::MinorAxisAlignmentFieldMask);
+    FlowLayoutRefPtr LeftPanelRadioTextPanelLayout = OSG::FlowLayout::create();
+    FlowLayoutRefPtr LeftPanelRadioTextPanelRadioPanelLayout = OSG::FlowLayout::create();
+    FlowLayoutRefPtr LeftPanelRadioTextPanelTextPanelLayout = OSG::FlowLayout::create();
         LeftPanelRadioTextPanelLayout->setMinorAxisAlignment(0.0f);
-    beginEditCP(LeftPanelRadioTextPanelLayout, FlowLayout::MinorAxisAlignmentFieldMask);
 
     // Create two Panels for this Panel
-    PanelPtr LeftPanelRadioTextPanelRadioPanel = osg::Panel::create();
-    PanelPtr LeftPanelRadioTextPanelTextPanel = osg::Panel::create();
+    PanelRefPtr LeftPanelRadioTextPanelRadioPanel = OSG::Panel::create();
+    PanelRefPtr LeftPanelRadioTextPanelTextPanel = OSG::Panel::create();
 
     // Create some Borders
-    EmptyBorderPtr LeftPanelRadioTextPanelRadioPanelBorder = osg::EmptyBorder::create();
+    EmptyBorderRefPtr LeftPanelRadioTextPanelRadioPanelBorder = OSG::EmptyBorder::create();
 
-    beginEditCP(LeftPanelRadioTextPanelRadioPanel, Component::BordersFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundsFieldMask | Container::LayoutFieldMask | Container::ChildrenFieldMask);
         LeftPanelRadioTextPanelRadioPanel->setBorders(LeftPanelRadioTextPanelRadioPanelBorder);
         LeftPanelRadioTextPanelRadioPanel->setPreferredSize(Vec2f(125, 200));
         LeftPanelRadioTextPanelRadioPanel->setLayout(LeftPanelRadioTextPanelRadioPanelLayout);
         LeftPanelRadioTextPanelRadioPanel->setBackgrounds(LeftPanelRadioTextPanelBackground);
-        LeftPanelRadioTextPanelRadioPanel->getChildren().push_back(RadioButton1);
-        LeftPanelRadioTextPanelRadioPanel->getChildren().push_back(RadioButton2);
-        LeftPanelRadioTextPanelRadioPanel->getChildren().push_back(RadioButton3);
-        LeftPanelRadioTextPanelRadioPanel->getChildren().push_back(RadioButton4);
-    endEditCP(LeftPanelRadioTextPanelRadioPanel, Component::BordersFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundsFieldMask | Container::LayoutFieldMask | Container::ChildrenFieldMask);
+        LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton1);
+        LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton2);
+        LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton3);
+        LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton4);
 
     // Create Panel Border
-    LineBorderPtr PanelBorder1 = osg::LineBorder::create();
-    beginEditCP(PanelBorder1, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+    LineBorderRefPtr PanelBorder1 = OSG::LineBorder::create();
         PanelBorder1->setColor(Color4f(0.0,0.0,0.0,1.0));
         PanelBorder1->setWidth(1);
-    endEditCP(PanelBorder1, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 
     // Create and edit Panel
-    PanelPtr LeftPanelRadioTextPanel = osg::Panel::create();
-    beginEditCP(LeftPanelRadioTextPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
+    PanelRefPtr LeftPanelRadioTextPanel = OSG::Panel::create();
         LeftPanelRadioTextPanel->setPreferredSize(Vec2f(180, 500));
-        LeftPanelRadioTextPanel->getChildren().push_back(LeftPanelRadioTextPanelRadioPanel);
-        LeftPanelRadioTextPanel->getChildren().push_back(LeftPanelTextArea);
-        LeftPanelRadioTextPanel->getChildren().push_back(LeftPanelTextFieldLabel);
-        LeftPanelRadioTextPanel->getChildren().push_back(LeftPanelTextField);
+        LeftPanelRadioTextPanel->pushToChildren(LeftPanelRadioTextPanelRadioPanel);
+        LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextArea);
+        LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextFieldLabel);
+        LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextField);
         LeftPanelRadioTextPanel->setLayout(LeftPanelRadioTextPanelLayout);
         LeftPanelRadioTextPanel->setBackgrounds(LeftPanelRadioTextPanelBackground);
         LeftPanelRadioTextPanel->setBorders(PanelBorder1);
-    endEditCP(LeftPanelRadioTextPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     return LeftPanelRadioTextPanel;
 }
-ComponentPtr createRightPanelButtonPanel(void)
+ComponentRefPtr createRightPanelButtonPanel(void)
 {
     // Create and edit the Panel Buttons
-    ToggleButtonPtr RightPanelButton1 = osg::ToggleButton::create();
-    ToggleButtonPtr RightPanelButton2 = osg::ToggleButton::create();
-    ToggleButtonPtr RightPanelButton3 = osg::ToggleButton::create();
-    ToggleButtonPtr RightPanelButton4 = osg::ToggleButton::create();
+    ToggleButtonRefPtr RightPanelButton1 = OSG::ToggleButton::create();
+    ToggleButtonRefPtr RightPanelButton2 = OSG::ToggleButton::create();
+    ToggleButtonRefPtr RightPanelButton3 = OSG::ToggleButton::create();
+    ToggleButtonRefPtr RightPanelButton4 = OSG::ToggleButton::create();
 
-    beginEditCP(RightPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelButton1->setText("These");
         RightPanelButton1->setPreferredSize(Vec2f(100,50));
-    endEditCP(RightPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
     
-    beginEditCP(RightPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelButton2->setText("are");
         RightPanelButton2->setPreferredSize(Vec2f(100,50));
-    endEditCP(RightPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
-    beginEditCP(RightPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelButton3->setText("toggle");
         RightPanelButton3->setPreferredSize(Vec2f(100,50));
-    endEditCP(RightPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
-    beginEditCP(RightPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelButton4->setText("buttons");
         RightPanelButton4->setPreferredSize(Vec2f(100,50));
-    endEditCP(RightPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
 
     // Create an edit Panel Background
-    ColorLayerPtr RightPanelButtonPanelBackground = osg::ColorLayer::create();
-    beginEditCP(RightPanelButtonPanelBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr RightPanelButtonPanelBackground = OSG::ColorLayer::create();
         RightPanelButtonPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
-    endEditCP(RightPanelButtonPanelBackground, ColorLayer::ColorFieldMask);
 
     // Create and edit Panel layout
-    BoxLayoutPtr RightPanelButtonPanelLayout = osg::BoxLayout::create();
-    beginEditCP(RightPanelButtonPanelLayout, BoxLayout::OrientationFieldMask);
+    BoxLayoutRefPtr RightPanelButtonPanelLayout = OSG::BoxLayout::create();
         RightPanelButtonPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(RightPanelButtonPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create Panel Border
-    LineBorderPtr PanelBorder2 = osg::LineBorder::create();
-    beginEditCP(PanelBorder2, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+    LineBorderRefPtr PanelBorder2 = OSG::LineBorder::create();
         PanelBorder2->setColor(Color4f(0.0,0.0,0.0,1.0));
         PanelBorder2->setWidth(1);
-    endEditCP(PanelBorder2, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 
     // Create and edit Panel
-    PanelPtr RightPanelButtonPanel = osg::Panel::create();
-    beginEditCP(RightPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
+    PanelRefPtr RightPanelButtonPanel = OSG::Panel::create();
         RightPanelButtonPanel->setPreferredSize(Vec2f(200, 300));
-        RightPanelButtonPanel->getChildren().push_back(RightPanelButton1);
-        RightPanelButtonPanel->getChildren().push_back(RightPanelButton2);
-        RightPanelButtonPanel->getChildren().push_back(RightPanelButton3);
-        RightPanelButtonPanel->getChildren().push_back(RightPanelButton4);
+        RightPanelButtonPanel->pushToChildren(RightPanelButton1);
+        RightPanelButtonPanel->pushToChildren(RightPanelButton2);
+        RightPanelButtonPanel->pushToChildren(RightPanelButton3);
+        RightPanelButtonPanel->pushToChildren(RightPanelButton4);
         RightPanelButtonPanel->setLayout(RightPanelButtonPanelLayout);
         RightPanelButtonPanel->setBackgrounds(RightPanelButtonPanelBackground);
         RightPanelButtonPanel->setBorders(PanelBorder2);
-    endEditCP(RightPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     return RightPanelButtonPanel;
 
 }
-ComponentPtr createRightPanelCheckPanel(void)
+ComponentRefPtr createRightPanelCheckPanel(void)
 {
     // Create and edit the CheckBoxes
-    CheckboxButtonPtr RightPanelCheck1 = osg::CheckboxButton::create();
-    CheckboxButtonPtr RightPanelCheck2 = osg::CheckboxButton::create();
-    CheckboxButtonPtr RightPanelCheck3 = osg::CheckboxButton::create();
-    CheckboxButtonPtr RightPanelCheck4 = osg::CheckboxButton::create();
+    CheckboxButtonRefPtr RightPanelCheck1 = OSG::CheckboxButton::create();
+    CheckboxButtonRefPtr RightPanelCheck2 = OSG::CheckboxButton::create();
+    CheckboxButtonRefPtr RightPanelCheck3 = OSG::CheckboxButton::create();
+    CheckboxButtonRefPtr RightPanelCheck4 = OSG::CheckboxButton::create();
 	//NOTE HorizontalAlignment needs to be changed to Alignment only with Vec2f arg
-    beginEditCP(RightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck1->setText("Show Torus");
         RightPanelCheck1->setPreferredSize(Vec2f(125,50));
         RightPanelCheck1->setAlignment(0.0);
-    endEditCP(RightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         RightPanelCheck1->addButtonSelectedListener(&RightPanelCheck1Listener);
     
-    beginEditCP(RightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck2->setText("Show Box");
         RightPanelCheck2->setPreferredSize(Vec2f(125,50));
         RightPanelCheck2->setAlignment(Vec2f (0.5,0.0));
-    endEditCP(RightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         RightPanelCheck2->addButtonSelectedListener(&RightPanelCheck2Listener);
 
-    beginEditCP(RightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck3->setText("Show Sphere");
         RightPanelCheck3->setPreferredSize(Vec2f(125,50));
         RightPanelCheck3->setAlignment(Vec2f(0.0,0.0));
-    endEditCP(RightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         RightPanelCheck3->addButtonSelectedListener(&RightPanelCheck3Listener);
 
-    beginEditCP(RightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck4->setText("Show Cone");
         RightPanelCheck4->setPreferredSize(Vec2f(125,50));
         RightPanelCheck4->setAlignment(Vec2f(0.0,0.0));
-    endEditCP(RightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
         RightPanelCheck4->addButtonSelectedListener(&RightPanelCheck4Listener);
 
     // Create an edit Panel Background
-    ColorLayerPtr RightPanelCheckPanelBackground = osg::ColorLayer::create();
-    beginEditCP(RightPanelCheckPanelBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr RightPanelCheckPanelBackground = OSG::ColorLayer::create();
         RightPanelCheckPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
-    endEditCP(RightPanelCheckPanelBackground, ColorLayer::ColorFieldMask);
 
     // Create and edit Panel layout
-    BoxLayoutPtr RightPanelCheckPanelLayout = osg::BoxLayout::create();
-    beginEditCP(RightPanelCheckPanelLayout, BoxLayout::OrientationFieldMask);
+    BoxLayoutRefPtr RightPanelCheckPanelLayout = OSG::BoxLayout::create();
         RightPanelCheckPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
         RightPanelCheckPanelLayout->setMinorAxisAlignment(0.5f);
-    endEditCP(RightPanelCheckPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create Panel Border
-    LineBorderPtr PanelBorder3 = osg::LineBorder::create();
-    beginEditCP(PanelBorder3, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+    LineBorderRefPtr PanelBorder3 = OSG::LineBorder::create();
         PanelBorder3->setColor(Color4f(0.0,0.0,0.0,1.0));
         PanelBorder3->setWidth(1);
-    endEditCP(PanelBorder3, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 
     // Create and edit Panel
-    PanelPtr RightPanelCheckPanel = osg::Panel::create();
-    beginEditCP(RightPanelCheckPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
+    PanelRefPtr RightPanelCheckPanel = OSG::Panel::create();
         RightPanelCheckPanel->setPreferredSize(Vec2f(200, 300));
-        RightPanelCheckPanel->getChildren().push_back(RightPanelCheck1);
-        RightPanelCheckPanel->getChildren().push_back(RightPanelCheck2);
-        RightPanelCheckPanel->getChildren().push_back(RightPanelCheck3);
-        RightPanelCheckPanel->getChildren().push_back(RightPanelCheck4);
+        RightPanelCheckPanel->pushToChildren(RightPanelCheck1);
+        RightPanelCheckPanel->pushToChildren(RightPanelCheck2);
+        RightPanelCheckPanel->pushToChildren(RightPanelCheck3);
+        RightPanelCheckPanel->pushToChildren(RightPanelCheck4);
         RightPanelCheckPanel->setLayout(RightPanelCheckPanelLayout);
         RightPanelCheckPanel->setBackgrounds(RightPanelCheckPanelBackground);
         RightPanelCheckPanel->setBorders(PanelBorder3);
-    endEditCP(RightPanelCheckPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     return RightPanelCheckPanel;
 }
-LayerPtr createComplexBackground(void)
+LayerRefPtr createComplexBackground(void)
 {
 
     // Create complex Background 
-    ColorLayerPtr ComplexBackgroundBase = osg::ColorLayer::create();
-    GradientLayerPtr ComplexBackgroundGradient1 = osg::GradientLayer::create();
-    GradientLayerPtr ComplexBackgroundGradient2 = osg::GradientLayer::create();
-    GradientLayerPtr ComplexBackgroundGradient3 = osg::GradientLayer::create();
-    CompoundLayerPtr ComplexBackgroundCompound1 = osg::CompoundLayer::create();
-    CompoundLayerPtr ComplexBackgroundCompound2 = osg::CompoundLayer::create();
-    CompoundLayerPtr ComplexBackground = osg::CompoundLayer::create();
+    ColorLayerRefPtr ComplexBackgroundBase = OSG::ColorLayer::create();
+    GradientLayerRefPtr ComplexBackgroundGradient1 = OSG::GradientLayer::create();
+    GradientLayerRefPtr ComplexBackgroundGradient2 = OSG::GradientLayer::create();
+    GradientLayerRefPtr ComplexBackgroundGradient3 = OSG::GradientLayer::create();
+    CompoundLayerRefPtr ComplexBackgroundCompound1 = OSG::CompoundLayer::create();
+    CompoundLayerRefPtr ComplexBackgroundCompound2 = OSG::CompoundLayer::create();
+    CompoundLayerRefPtr ComplexBackground = OSG::CompoundLayer::create();
 
-    beginEditCP(ComplexBackgroundBase, ColorLayer::ColorFieldMask);
         ComplexBackgroundBase->setColor(Color4f(0.0, 0.0, .25, 1.0));
-    endEditCP(ComplexBackgroundBase, ColorLayer::ColorFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient1, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
-        ComplexBackgroundGradient1->getColors().push_back(Color4f(1.0, 0.0, 0.0, 0.5));
-		ComplexBackgroundGradient1->getStops().push_back(0.0);
-        ComplexBackgroundGradient1->getColors().push_back(Color4f(0.5, 0.0, 0.0, 0.3));
-		ComplexBackgroundGradient1->getStops().push_back(1.0);
+        ComplexBackgroundGradient1->editMFColors()->push_back(Color4f(1.0, 0.0, 0.0, 0.5));
+		ComplexBackgroundGradient1->editMFStops()->push_back(0.0);
+        ComplexBackgroundGradient1->editMFColors()->push_back(Color4f(0.5, 0.0, 0.0, 0.3));
+		ComplexBackgroundGradient1->editMFStops()->push_back(1.0);
         ComplexBackgroundGradient1->setStartPosition(Vec2f(0.0f,0.0f));
         ComplexBackgroundGradient1->setEndPosition(Vec2f(1.0f,0.0f));
-    endEditCP(ComplexBackgroundGradient1, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient2, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
-        ComplexBackgroundGradient2->getColors().push_back(Color4f(.6, 0.0, 0.3, 1.0));
-		ComplexBackgroundGradient2->getStops().push_back(0.0);
-        ComplexBackgroundGradient2->getColors().push_back(Color4f(.2, 0.0, 0.3, 0.5));
-		ComplexBackgroundGradient2->getStops().push_back(1.0);
+        ComplexBackgroundGradient2->editMFColors()->push_back(Color4f(.6, 0.0, 0.3, 1.0));
+		ComplexBackgroundGradient2->editMFStops()->push_back(0.0);
+        ComplexBackgroundGradient2->editMFColors()->push_back(Color4f(.2, 0.0, 0.3, 0.5));
+		ComplexBackgroundGradient2->editMFStops()->push_back(1.0);
         ComplexBackgroundGradient2->setStartPosition(Vec2f(0.0f,0.0f));
         ComplexBackgroundGradient2->setEndPosition(Vec2f(0.0f,1.0f));
-    endEditCP(ComplexBackgroundGradient2, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient3, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
-        ComplexBackgroundGradient3->getColors().push_back(Color4f(0.0, 0.0, 0.2, 0.2));
-		ComplexBackgroundGradient3->getStops().push_back(0.0);
-        ComplexBackgroundGradient3->getColors().push_back(Color4f(0.0, 0.0, 0.2, 0.3));
-		ComplexBackgroundGradient3->getStops().push_back(1.0);
+        ComplexBackgroundGradient3->editMFColors()->push_back(Color4f(0.0, 0.0, 0.2, 0.2));
+		ComplexBackgroundGradient3->editMFStops()->push_back(0.0);
+        ComplexBackgroundGradient3->editMFColors()->push_back(Color4f(0.0, 0.0, 0.2, 0.3));
+		ComplexBackgroundGradient3->editMFStops()->push_back(1.0);
         ComplexBackgroundGradient3->setStartPosition(Vec2f(0.0f,0.0f));
         ComplexBackgroundGradient3->setEndPosition(Vec2f(1.0f,0.0f));
-    endEditCP(ComplexBackgroundGradient3, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
 
-    beginEditCP(ComplexBackgroundCompound1, CompoundLayer::BackgroundsFieldMask);
-        ComplexBackgroundCompound1->getBackgrounds().push_back(ComplexBackgroundBase);
-        ComplexBackgroundCompound1->getBackgrounds().push_back(ComplexBackgroundGradient1);
-    endEditCP(ComplexBackgroundCompound1, CompoundLayer::BackgroundsFieldMask);
+        ComplexBackgroundCompound1->pushToBackgrounds(ComplexBackgroundBase);
+        ComplexBackgroundCompound1->pushToBackgrounds(ComplexBackgroundGradient1);
 
-    beginEditCP(ComplexBackgroundCompound2, CompoundLayer::BackgroundsFieldMask);
-        ComplexBackgroundCompound2->getBackgrounds().push_back(ComplexBackgroundGradient2);
-        ComplexBackgroundCompound2->getBackgrounds().push_back(ComplexBackgroundGradient3);
-    endEditCP(ComplexBackgroundCompound2, CompoundLayer::BackgroundsFieldMask);
+        ComplexBackgroundCompound2->pushToBackgrounds(ComplexBackgroundGradient2);
+        ComplexBackgroundCompound2->pushToBackgrounds(ComplexBackgroundGradient3);
 
-    beginEditCP(ComplexBackground, CompoundLayer::BackgroundsFieldMask);
-        ComplexBackground->getBackgrounds().push_back(ComplexBackgroundCompound1);
-        ComplexBackground->getBackgrounds().push_back(ComplexBackgroundCompound2);
-    endEditCP(ComplexBackground, CompoundLayer::BackgroundsFieldMask);
+        ComplexBackground->pushToBackgrounds(ComplexBackgroundCompound1);
+        ComplexBackground->pushToBackgrounds(ComplexBackgroundCompound2);
 
     return ComplexBackground;
 }
 
-ChunkMaterialPtr createRedMaterial(void){
+ChunkMaterialRefPtr createRedMaterial(void){
 
-    ChunkMaterialPtr RedBackgroundMaterial = ChunkMaterial::create();
-    MaterialChunkPtr RedBackgroundMaterialChunk = MaterialChunk::create();
-    beginEditCP(RedBackgroundMaterialChunk);
+    ChunkMaterialRefPtr RedBackgroundMaterial = ChunkMaterial::create();
+    MaterialChunkRefPtr RedBackgroundMaterialChunk = MaterialChunk::create();
         RedBackgroundMaterialChunk->setAmbient(Color4f(1.0,0.0,0.0,1.0));
         RedBackgroundMaterialChunk->setDiffuse(Color4f(1.0,0.0,0.0,1.0));
         RedBackgroundMaterialChunk->setSpecular(Color4f(1.0,0.0,0.0,1.0));
-    endEditCP(RedBackgroundMaterialChunk);
 
-    beginEditCP(RedBackgroundMaterial, ChunkMaterial::ChunksFieldMask);
         RedBackgroundMaterial->addChunk(RedBackgroundMaterialChunk);
-    endEditCP(RedBackgroundMaterial, ChunkMaterial::ChunksFieldMask);
 
     return RedBackgroundMaterial;
 
 }
-ChunkMaterialPtr createBlueMaterial(void){
+ChunkMaterialRefPtr createBlueMaterial(void){
 
-    ChunkMaterialPtr BlueBackgroundMaterial = ChunkMaterial::create();
-    MaterialChunkPtr BlueBackgroundMaterialChunk = MaterialChunk::create();
-    beginEditCP(BlueBackgroundMaterialChunk);
+    ChunkMaterialRefPtr BlueBackgroundMaterial = ChunkMaterial::create();
+    MaterialChunkRefPtr BlueBackgroundMaterialChunk = MaterialChunk::create();
         BlueBackgroundMaterialChunk->setAmbient(Color4f(0.0,0.0,0.8,1.0));
         BlueBackgroundMaterialChunk->setDiffuse(Color4f(0.0,0.0,0.8,1.0));
         BlueBackgroundMaterialChunk->setSpecular(Color4f(0.0,0.0,0.8,1.0));
-    endEditCP(BlueBackgroundMaterialChunk);
 
-    beginEditCP(BlueBackgroundMaterial, ChunkMaterial::ChunksFieldMask);
         BlueBackgroundMaterial->addChunk(BlueBackgroundMaterialChunk);
-    endEditCP(BlueBackgroundMaterial, ChunkMaterial::ChunksFieldMask);
 
     return BlueBackgroundMaterial;
 
 }
-ChunkMaterialPtr createGreenMaterial(void){
+ChunkMaterialRefPtr createGreenMaterial(void){
 
-    ChunkMaterialPtr GreenBackgroundMaterial = ChunkMaterial::create();
-    MaterialChunkPtr GreenBackgroundMaterialChunk = MaterialChunk::create();
-    beginEditCP(GreenBackgroundMaterialChunk);
+    ChunkMaterialRefPtr GreenBackgroundMaterial = ChunkMaterial::create();
+    MaterialChunkRefPtr GreenBackgroundMaterialChunk = MaterialChunk::create();
         GreenBackgroundMaterialChunk->setAmbient(Color4f(0.0,1.0,0.0,1.0));
         GreenBackgroundMaterialChunk->setDiffuse(Color4f(0.0,1.0,0.0,1.0));
         GreenBackgroundMaterialChunk->setSpecular(Color4f(0.0,1.0,0.0,1.0));
-    endEditCP(GreenBackgroundMaterialChunk);
 
-    beginEditCP(GreenBackgroundMaterial, ChunkMaterial::ChunksFieldMask);
         GreenBackgroundMaterial->addChunk(GreenBackgroundMaterialChunk);
-    endEditCP(GreenBackgroundMaterial, ChunkMaterial::ChunksFieldMask);
 
     return GreenBackgroundMaterial;
 
@@ -1027,24 +865,18 @@ ChunkMaterialPtr createGreenMaterial(void){
 void create3DObjects(void)
 {
     // Make Object Nodes
-    NodePtr ExampleTorusGeo = makeTorus(90, 270, 16, 16);
-    NodePtr ExampleConeGeo = makeCone(150, 50, 16, true, true);
-    NodePtr ExampleSphereGeo = makeSphere(4, 100);
-    NodePtr ExampleBoxGeo = makeBox(100, 100, 100, 1, 1, 1);
+    NodeRefPtr ExampleTorusGeo = makeTorus(90, 270, 16, 16);
+    NodeRefPtr ExampleConeGeo = makeCone(150, 50, 16, true, true);
+    NodeRefPtr ExampleSphereGeo = makeSphere(4, 100);
+    NodeRefPtr ExampleBoxGeo = makeBox(100, 100, 100, 1, 1, 1);
 
     // AssignTextures
-    
-    beginEditCP(ExampleConeGeo->getCore());
-        Geometry::Ptr::dcast(ExampleConeGeo->getCore())->setMaterial(createBlueMaterial());
-    endEditCP(ExampleConeGeo->getCore());    
 
-    beginEditCP(ExampleSphereGeo->getCore());
-        Geometry::Ptr::dcast(ExampleSphereGeo->getCore())->setMaterial(createRedMaterial());
-    endEditCP(ExampleSphereGeo->getCore());
+    dynamic_cast<Geometry*>(ExampleConeGeo->getCore())->setMaterial(createBlueMaterial());
 
-    beginEditCP(ExampleBoxGeo->getCore());
-        Geometry::Ptr::dcast(ExampleBoxGeo->getCore())->setMaterial(createGreenMaterial());
-    endEditCP(ExampleBoxGeo->getCore());    
+    dynamic_cast<Geometry*>(ExampleSphereGeo->getCore())->setMaterial(createRedMaterial());
+
+    dynamic_cast<Geometry*>(ExampleBoxGeo->getCore())->setMaterial(createGreenMaterial());
 
     // Preform transformations on them
     Matrix mat;
@@ -1052,63 +884,43 @@ void create3DObjects(void)
     
     // On Torus    
     mat.setTranslate(0.0,100.0,-200.0);
-    TransformPtr TorusTranCore = Transform::create();
-    beginEditCP(TorusTranCore, Transform::MatrixFieldMask);
+    TransformRefPtr TorusTranCore = Transform::create();
         TorusTranCore->setMatrix(mat);
-    endEditCP(TorusTranCore, Transform::MatrixFieldMask);
     
     ExampleTorus = Node::create();
-    beginEditCP(ExampleTorus, Node::CoreFieldMask | Node::ChildrenFieldMask);
         ExampleTorus->setCore(TorusTranCore);
         ExampleTorus->addChild(ExampleTorusGeo);
-    endEditCP(ExampleTorus, Node::CoreFieldMask | Node::ChildrenFieldMask);
     
     // On Sphere
     mat.setTranslate(250.0,0.0,0.0);
 
-    TransformPtr SphereTranCore = Transform::create();
-    beginEditCP(SphereTranCore, Transform::MatrixFieldMask);
+    TransformRefPtr SphereTranCore = Transform::create();
         SphereTranCore->setMatrix(mat);
-    endEditCP(SphereTranCore, Transform::MatrixFieldMask);
     
     ExampleSphere = Node::create();
-    beginEditCP(ExampleSphere, Node::CoreFieldMask | Node::ChildrenFieldMask);
         ExampleSphere->setCore(SphereTranCore);
         ExampleSphere->addChild(ExampleSphereGeo);
-    endEditCP(ExampleSphere, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // On Cone
     mat.setTranslate(0.0,0.0,-250.0);
 
-    TransformPtr ConeTranCore = Transform::create();
-    beginEditCP(ConeTranCore, Transform::MatrixFieldMask);
+    TransformRefPtr ConeTranCore = Transform::create();
         ConeTranCore->setMatrix(mat);
-    endEditCP(ConeTranCore, Transform::MatrixFieldMask);
     
     ExampleCone = Node::create();
-    beginEditCP(ExampleCone, Node::CoreFieldMask | Node::ChildrenFieldMask);
         ExampleCone->setCore(ConeTranCore);
         ExampleCone->addChild(ExampleConeGeo);
-    endEditCP(ExampleCone, Node::CoreFieldMask | Node::ChildrenFieldMask);
         
     // On Box
     mat.setTranslate(250.0,250.0,0.0);
 
-    TransformPtr ExampleBoxTranCore = Transform::create();
-    beginEditCP(ExampleBoxTranCore, Transform::MatrixFieldMask);
+    TransformRefPtr ExampleBoxTranCore = Transform::create();
         ExampleBoxTranCore->setMatrix(mat);
-    endEditCP(ExampleBoxTranCore, Transform::MatrixFieldMask);
     
     ExampleBox = Node::create();
-    beginEditCP(ExampleBox, Node::CoreFieldMask | Node::ChildrenFieldMask);
         ExampleBox->setCore(ExampleBoxTranCore);
         ExampleBox->addChild(ExampleBoxGeo);
-    endEditCP(ExampleBox, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-    addRefCP(ExampleTorus);
-    addRefCP(ExampleSphere);
-    addRefCP(ExampleBox);
-    addRefCP(ExampleCone);
 }
 
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,132 +58,170 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include "Component/Button/OSGButton.h" // KnobButton type
-#include <OpenSG/OSGUInt32Fields.h> // Orientation type
-#include <OpenSG/OSGUInt32Fields.h> // MajorTickSpacing type
-#include <OpenSG/OSGUInt32Fields.h> // MinorTickSpacing type
-#include <OpenSG/OSGBoolFields.h> // SnapToTicks type
-#include <OpenSG/OSGBoolFields.h> // DrawMajorTicks type
-#include <OpenSG/OSGBoolFields.h> // DrawTrack type
-#include <OpenSG/OSGBoolFields.h> // DrawMinorTicks type
-#include <OpenSG/OSGBoolFields.h> // DrawLabels type
-#include <OpenSG/OSGBoolFields.h> // Inverted type
-#include <OpenSG/Toolbox/OSGFieldContainerMapType.h> // LabelMap type
-#include "Component/Text/OSGLabelFields.h" // LabelPrototype type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // TrackDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // MinTrackDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // MaxTrackDrawObject type
-#include "Graphics/UIDrawObjects/OSGUIDrawObject.h" // MajorTickDrawObjects type
-#include "Graphics/UIDrawObjects/OSGUIDrawObject.h" // MinorTickDrawObjects type
-#include <OpenSG/OSGInt32Fields.h> // TrackInset type
-#include <OpenSG/OSGInt32Fields.h> // TrackToTickOffset type
-#include <OpenSG/OSGInt32Fields.h> // TrackToLabelOffset type
-#include <OpenSG/OSGReal32Fields.h> // Alignment type
-#include <OpenSG/OSGBoolFields.h> // TicksOnRightBottom type
-#include "Component/Scroll/OSGBoundedRangeModel.h" // RangeModel type
+#include "OSGButtonFields.h"            // KnobButton type
+#include "OSGSysFields.h"               // Orientation type
+#include "OSGVecFields.h"               // MajorTickPositions type
+#include "OSGFieldContainerMapFields.h" // LabelMap type
+#include "OSGLabelFields.h"             // LabelPrototype type
+#include "OSGUIDrawObjectCanvasFields.h" // TrackDrawObject type
+#include "OSGUIDrawObjectFields.h"      // MajorTickDrawObjects type
+#include "OSGBoundedRangeModelFields.h" // RangeModel type
 
 #include "OSGSliderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Slider;
-class BinaryDataHandler;
 
 //! \brief Slider Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SliderBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SliderPtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(Slider);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        KnobButtonFieldId           = Inherited::NextFieldId,
-        OrientationFieldId          = KnobButtonFieldId           + 1,
-        MajorTickSpacingFieldId     = OrientationFieldId          + 1,
-        MajorTickPositionsFieldId   = MajorTickSpacingFieldId     + 1,
-        MinorTickSpacingFieldId     = MajorTickPositionsFieldId   + 1,
-        MinorTickPositionsFieldId   = MinorTickSpacingFieldId     + 1,
-        SnapToTicksFieldId          = MinorTickPositionsFieldId   + 1,
-        DrawMajorTicksFieldId       = SnapToTicksFieldId          + 1,
-        DrawTrackFieldId            = DrawMajorTicksFieldId       + 1,
-        DrawMinorTicksFieldId       = DrawTrackFieldId            + 1,
-        DrawLabelsFieldId           = DrawMinorTicksFieldId       + 1,
-        InvertedFieldId             = DrawLabelsFieldId           + 1,
-        LabelMapFieldId             = InvertedFieldId             + 1,
-        LabelPrototypeFieldId       = LabelMapFieldId             + 1,
-        TrackDrawObjectFieldId      = LabelPrototypeFieldId       + 1,
-        MinTrackDrawObjectFieldId   = TrackDrawObjectFieldId      + 1,
-        MaxTrackDrawObjectFieldId   = MinTrackDrawObjectFieldId   + 1,
-        MajorTickDrawObjectsFieldId = MaxTrackDrawObjectFieldId   + 1,
+        KnobButtonFieldId = Inherited::NextFieldId,
+        OrientationFieldId = KnobButtonFieldId + 1,
+        MajorTickSpacingFieldId = OrientationFieldId + 1,
+        MajorTickPositionsFieldId = MajorTickSpacingFieldId + 1,
+        MinorTickSpacingFieldId = MajorTickPositionsFieldId + 1,
+        MinorTickPositionsFieldId = MinorTickSpacingFieldId + 1,
+        SnapToTicksFieldId = MinorTickPositionsFieldId + 1,
+        DrawMajorTicksFieldId = SnapToTicksFieldId + 1,
+        DrawTrackFieldId = DrawMajorTicksFieldId + 1,
+        DrawMinorTicksFieldId = DrawTrackFieldId + 1,
+        DrawLabelsFieldId = DrawMinorTicksFieldId + 1,
+        InvertedFieldId = DrawLabelsFieldId + 1,
+        LabelMapFieldId = InvertedFieldId + 1,
+        LabelPrototypeFieldId = LabelMapFieldId + 1,
+        TrackDrawObjectFieldId = LabelPrototypeFieldId + 1,
+        MinTrackDrawObjectFieldId = TrackDrawObjectFieldId + 1,
+        MaxTrackDrawObjectFieldId = MinTrackDrawObjectFieldId + 1,
+        MajorTickDrawObjectsFieldId = MaxTrackDrawObjectFieldId + 1,
         MinorTickDrawObjectsFieldId = MajorTickDrawObjectsFieldId + 1,
-        TrackInsetFieldId           = MinorTickDrawObjectsFieldId + 1,
-        TrackToTickOffsetFieldId    = TrackInsetFieldId           + 1,
-        TrackToLabelOffsetFieldId   = TrackToTickOffsetFieldId    + 1,
-        AlignmentFieldId            = TrackToLabelOffsetFieldId   + 1,
-        TicksOnRightBottomFieldId   = AlignmentFieldId            + 1,
-        RangeModelFieldId           = TicksOnRightBottomFieldId   + 1,
-        NextFieldId                 = RangeModelFieldId           + 1
+        TrackInsetFieldId = MinorTickDrawObjectsFieldId + 1,
+        TrackToTickOffsetFieldId = TrackInsetFieldId + 1,
+        TrackToLabelOffsetFieldId = TrackToTickOffsetFieldId + 1,
+        AlignmentFieldId = TrackToLabelOffsetFieldId + 1,
+        TicksOnRightBottomFieldId = AlignmentFieldId + 1,
+        RangeModelFieldId = TicksOnRightBottomFieldId + 1,
+        NextFieldId = RangeModelFieldId + 1
     };
 
-    static const OSG::BitVector KnobButtonFieldMask;
-    static const OSG::BitVector OrientationFieldMask;
-    static const OSG::BitVector MajorTickSpacingFieldMask;
-    static const OSG::BitVector MajorTickPositionsFieldMask;
-    static const OSG::BitVector MinorTickSpacingFieldMask;
-    static const OSG::BitVector MinorTickPositionsFieldMask;
-    static const OSG::BitVector SnapToTicksFieldMask;
-    static const OSG::BitVector DrawMajorTicksFieldMask;
-    static const OSG::BitVector DrawTrackFieldMask;
-    static const OSG::BitVector DrawMinorTicksFieldMask;
-    static const OSG::BitVector DrawLabelsFieldMask;
-    static const OSG::BitVector InvertedFieldMask;
-    static const OSG::BitVector LabelMapFieldMask;
-    static const OSG::BitVector LabelPrototypeFieldMask;
-    static const OSG::BitVector TrackDrawObjectFieldMask;
-    static const OSG::BitVector MinTrackDrawObjectFieldMask;
-    static const OSG::BitVector MaxTrackDrawObjectFieldMask;
-    static const OSG::BitVector MajorTickDrawObjectsFieldMask;
-    static const OSG::BitVector MinorTickDrawObjectsFieldMask;
-    static const OSG::BitVector TrackInsetFieldMask;
-    static const OSG::BitVector TrackToTickOffsetFieldMask;
-    static const OSG::BitVector TrackToLabelOffsetFieldMask;
-    static const OSG::BitVector AlignmentFieldMask;
-    static const OSG::BitVector TicksOnRightBottomFieldMask;
-    static const OSG::BitVector RangeModelFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector KnobButtonFieldMask =
+        (TypeTraits<BitVector>::One << KnobButtonFieldId);
+    static const OSG::BitVector OrientationFieldMask =
+        (TypeTraits<BitVector>::One << OrientationFieldId);
+    static const OSG::BitVector MajorTickSpacingFieldMask =
+        (TypeTraits<BitVector>::One << MajorTickSpacingFieldId);
+    static const OSG::BitVector MajorTickPositionsFieldMask =
+        (TypeTraits<BitVector>::One << MajorTickPositionsFieldId);
+    static const OSG::BitVector MinorTickSpacingFieldMask =
+        (TypeTraits<BitVector>::One << MinorTickSpacingFieldId);
+    static const OSG::BitVector MinorTickPositionsFieldMask =
+        (TypeTraits<BitVector>::One << MinorTickPositionsFieldId);
+    static const OSG::BitVector SnapToTicksFieldMask =
+        (TypeTraits<BitVector>::One << SnapToTicksFieldId);
+    static const OSG::BitVector DrawMajorTicksFieldMask =
+        (TypeTraits<BitVector>::One << DrawMajorTicksFieldId);
+    static const OSG::BitVector DrawTrackFieldMask =
+        (TypeTraits<BitVector>::One << DrawTrackFieldId);
+    static const OSG::BitVector DrawMinorTicksFieldMask =
+        (TypeTraits<BitVector>::One << DrawMinorTicksFieldId);
+    static const OSG::BitVector DrawLabelsFieldMask =
+        (TypeTraits<BitVector>::One << DrawLabelsFieldId);
+    static const OSG::BitVector InvertedFieldMask =
+        (TypeTraits<BitVector>::One << InvertedFieldId);
+    static const OSG::BitVector LabelMapFieldMask =
+        (TypeTraits<BitVector>::One << LabelMapFieldId);
+    static const OSG::BitVector LabelPrototypeFieldMask =
+        (TypeTraits<BitVector>::One << LabelPrototypeFieldId);
+    static const OSG::BitVector TrackDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << TrackDrawObjectFieldId);
+    static const OSG::BitVector MinTrackDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << MinTrackDrawObjectFieldId);
+    static const OSG::BitVector MaxTrackDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << MaxTrackDrawObjectFieldId);
+    static const OSG::BitVector MajorTickDrawObjectsFieldMask =
+        (TypeTraits<BitVector>::One << MajorTickDrawObjectsFieldId);
+    static const OSG::BitVector MinorTickDrawObjectsFieldMask =
+        (TypeTraits<BitVector>::One << MinorTickDrawObjectsFieldId);
+    static const OSG::BitVector TrackInsetFieldMask =
+        (TypeTraits<BitVector>::One << TrackInsetFieldId);
+    static const OSG::BitVector TrackToTickOffsetFieldMask =
+        (TypeTraits<BitVector>::One << TrackToTickOffsetFieldId);
+    static const OSG::BitVector TrackToLabelOffsetFieldMask =
+        (TypeTraits<BitVector>::One << TrackToLabelOffsetFieldId);
+    static const OSG::BitVector AlignmentFieldMask =
+        (TypeTraits<BitVector>::One << AlignmentFieldId);
+    static const OSG::BitVector TicksOnRightBottomFieldMask =
+        (TypeTraits<BitVector>::One << TicksOnRightBottomFieldId);
+    static const OSG::BitVector RangeModelFieldMask =
+        (TypeTraits<BitVector>::One << RangeModelFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecButtonPtr  SFKnobButtonType;
+    typedef SFUInt32          SFOrientationType;
+    typedef SFUInt32          SFMajorTickSpacingType;
+    typedef MFPnt2f           MFMajorTickPositionsType;
+    typedef SFUInt32          SFMinorTickSpacingType;
+    typedef MFPnt2f           MFMinorTickPositionsType;
+    typedef SFBool            SFSnapToTicksType;
+    typedef SFBool            SFDrawMajorTicksType;
+    typedef SFBool            SFDrawTrackType;
+    typedef SFBool            SFDrawMinorTicksType;
+    typedef SFBool            SFDrawLabelsType;
+    typedef SFBool            SFInvertedType;
+    typedef SFFieldContainerMap SFLabelMapType;
+    typedef SFUnrecLabelPtr   SFLabelPrototypeType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFTrackDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFMinTrackDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFMaxTrackDrawObjectType;
+    typedef MFUnrecUIDrawObjectPtr MFMajorTickDrawObjectsType;
+    typedef MFUnrecUIDrawObjectPtr MFMinorTickDrawObjectsType;
+    typedef SFInt32           SFTrackInsetType;
+    typedef SFInt32           SFTrackToTickOffsetType;
+    typedef SFInt32           SFTrackToLabelOffsetType;
+    typedef SFReal32          SFAlignmentType;
+    typedef SFBool            SFTicksOnRightBottomType;
+    typedef SFUnrecBoundedRangeModelPtr SFRangeModelType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -192,121 +230,189 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFButtonPtr         *getSFKnobButton     (void);
-           SFUInt32            *getSFOrientation    (void);
-           SFUInt32            *getSFMajorTickSpacing(void);
-           SFUInt32            *getSFMinorTickSpacing(void);
-           SFBool              *getSFSnapToTicks    (void);
-           SFBool              *getSFDrawMajorTicks (void);
-           SFBool              *getSFDrawTrack      (void);
-           SFBool              *getSFDrawMinorTicks (void);
-           SFBool              *getSFDrawLabels     (void);
-           SFBool              *getSFInverted       (void);
-           SFFieldContainerMap *getSFLabelMap       (void);
-           SFLabelPtr          *getSFLabelPrototype (void);
-           SFUIDrawObjectCanvasPtr *getSFTrackDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFMinTrackDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFMaxTrackDrawObject(void);
-           MFUIDrawObjectPtr   *getMFMajorTickDrawObjects(void);
-           MFUIDrawObjectPtr   *getMFMinorTickDrawObjects(void);
-           SFInt32             *getSFTrackInset     (void);
-           SFInt32             *getSFTrackToTickOffset(void);
-           SFInt32             *getSFTrackToLabelOffset(void);
-           SFReal32            *getSFAlignment      (void);
-           SFBool              *getSFTicksOnRightBottom(void);
-           SFBoundedRangeModelPtr *getSFRangeModel     (void);
+            const SFUnrecButtonPtr    *getSFKnobButton     (void) const;
+                  SFUnrecButtonPtr    *editSFKnobButton     (void);
 
-           ButtonPtr           &getKnobButton     (void);
-     const ButtonPtr           &getKnobButton     (void) const;
-           UInt32              &getOrientation    (void);
-     const UInt32              &getOrientation    (void) const;
-           UInt32              &getMajorTickSpacing(void);
-     const UInt32              &getMajorTickSpacing(void) const;
-           UInt32              &getMinorTickSpacing(void);
-     const UInt32              &getMinorTickSpacing(void) const;
-           bool                &getSnapToTicks    (void);
-     const bool                &getSnapToTicks    (void) const;
-           bool                &getDrawMajorTicks (void);
-     const bool                &getDrawMajorTicks (void) const;
-           bool                &getDrawTrack      (void);
-     const bool                &getDrawTrack      (void) const;
-           bool                &getDrawMinorTicks (void);
-     const bool                &getDrawMinorTicks (void) const;
-           bool                &getDrawLabels     (void);
-     const bool                &getDrawLabels     (void) const;
-           bool                &getInverted       (void);
-     const bool                &getInverted       (void) const;
-           FieldContainerMap   &getLabelMap       (void);
-     const FieldContainerMap   &getLabelMap       (void) const;
-           LabelPtr            &getLabelPrototype (void);
-     const LabelPtr            &getLabelPrototype (void) const;
-           UIDrawObjectCanvasPtr &getTrackDrawObject(void);
-     const UIDrawObjectCanvasPtr &getTrackDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getMinTrackDrawObject(void);
-     const UIDrawObjectCanvasPtr &getMinTrackDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getMaxTrackDrawObject(void);
-     const UIDrawObjectCanvasPtr &getMaxTrackDrawObject(void) const;
-           Int32               &getTrackInset     (void);
-     const Int32               &getTrackInset     (void) const;
-           Int32               &getTrackToTickOffset(void);
-     const Int32               &getTrackToTickOffset(void) const;
-           Int32               &getTrackToLabelOffset(void);
-     const Int32               &getTrackToLabelOffset(void) const;
-           Real32              &getAlignment      (void);
-     const Real32              &getAlignment      (void) const;
-           bool                &getTicksOnRightBottom(void);
-     const bool                &getTicksOnRightBottom(void) const;
-           BoundedRangeModelPtr &getRangeModel     (void);
-     const BoundedRangeModelPtr &getRangeModel     (void) const;
-           UIDrawObjectPtr     &getMajorTickDrawObjects(const UInt32 index);
-           MFUIDrawObjectPtr   &getMajorTickDrawObjects(void);
-     const MFUIDrawObjectPtr   &getMajorTickDrawObjects(void) const;
-           UIDrawObjectPtr     &getMinorTickDrawObjects(const UInt32 index);
-           MFUIDrawObjectPtr   &getMinorTickDrawObjects(void);
-     const MFUIDrawObjectPtr   &getMinorTickDrawObjects(void) const;
+                  SFUInt32            *editSFOrientation    (void);
+            const SFUInt32            *getSFOrientation     (void) const;
+
+                  SFUInt32            *editSFMajorTickSpacing(void);
+            const SFUInt32            *getSFMajorTickSpacing (void) const;
+
+                  SFUInt32            *editSFMinorTickSpacing(void);
+            const SFUInt32            *getSFMinorTickSpacing (void) const;
+
+                  SFBool              *editSFSnapToTicks    (void);
+            const SFBool              *getSFSnapToTicks     (void) const;
+
+                  SFBool              *editSFDrawMajorTicks (void);
+            const SFBool              *getSFDrawMajorTicks  (void) const;
+
+                  SFBool              *editSFDrawTrack      (void);
+            const SFBool              *getSFDrawTrack       (void) const;
+
+                  SFBool              *editSFDrawMinorTicks (void);
+            const SFBool              *getSFDrawMinorTicks  (void) const;
+
+                  SFBool              *editSFDrawLabels     (void);
+            const SFBool              *getSFDrawLabels      (void) const;
+
+                  SFBool              *editSFInverted       (void);
+            const SFBool              *getSFInverted        (void) const;
+
+                  SFFieldContainerMap *editSFLabelMap       (void);
+            const SFFieldContainerMap *getSFLabelMap        (void) const;
+            const SFUnrecLabelPtr     *getSFLabelPrototype (void) const;
+                  SFUnrecLabelPtr     *editSFLabelPrototype (void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFTrackDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFTrackDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFMinTrackDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFMinTrackDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFMaxTrackDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFMaxTrackDrawObject(void);
+            const MFUnrecUIDrawObjectPtr *getMFMajorTickDrawObjects(void) const;
+                  MFUnrecUIDrawObjectPtr *editMFMajorTickDrawObjects(void);
+            const MFUnrecUIDrawObjectPtr *getMFMinorTickDrawObjects(void) const;
+                  MFUnrecUIDrawObjectPtr *editMFMinorTickDrawObjects(void);
+
+                  SFInt32             *editSFTrackInset     (void);
+            const SFInt32             *getSFTrackInset      (void) const;
+
+                  SFInt32             *editSFTrackToTickOffset(void);
+            const SFInt32             *getSFTrackToTickOffset (void) const;
+
+                  SFInt32             *editSFTrackToLabelOffset(void);
+            const SFInt32             *getSFTrackToLabelOffset (void) const;
+
+                  SFReal32            *editSFAlignment      (void);
+            const SFReal32            *getSFAlignment       (void) const;
+
+                  SFBool              *editSFTicksOnRightBottom(void);
+            const SFBool              *getSFTicksOnRightBottom (void) const;
+            const SFUnrecBoundedRangeModelPtr *getSFRangeModel     (void) const;
+                  SFUnrecBoundedRangeModelPtr *editSFRangeModel     (void);
+
+
+                  Button * getKnobButton     (void) const;
+
+                  UInt32              &editOrientation    (void);
+                  UInt32               getOrientation     (void) const;
+
+                  UInt32              &editMajorTickSpacing(void);
+                  UInt32               getMajorTickSpacing (void) const;
+
+                  UInt32              &editMinorTickSpacing(void);
+                  UInt32               getMinorTickSpacing (void) const;
+
+                  bool                &editSnapToTicks    (void);
+                  bool                 getSnapToTicks     (void) const;
+
+                  bool                &editDrawMajorTicks (void);
+                  bool                 getDrawMajorTicks  (void) const;
+
+                  bool                &editDrawTrack      (void);
+                  bool                 getDrawTrack       (void) const;
+
+                  bool                &editDrawMinorTicks (void);
+                  bool                 getDrawMinorTicks  (void) const;
+
+                  bool                &editDrawLabels     (void);
+                  bool                 getDrawLabels      (void) const;
+
+                  bool                &editInverted       (void);
+                  bool                 getInverted        (void) const;
+
+                  FieldContainerMap   &editLabelMap       (void);
+            const FieldContainerMap   &getLabelMap        (void) const;
+
+                  Label * getLabelPrototype (void) const;
+
+                  UIDrawObjectCanvas * getTrackDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getMinTrackDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getMaxTrackDrawObject(void) const;
+
+                  UIDrawObject * getMajorTickDrawObjects(const UInt32 index) const;
+
+                  UIDrawObject * getMinorTickDrawObjects(const UInt32 index) const;
+
+                  Int32               &editTrackInset     (void);
+                  Int32                getTrackInset      (void) const;
+
+                  Int32               &editTrackToTickOffset(void);
+                  Int32                getTrackToTickOffset (void) const;
+
+                  Int32               &editTrackToLabelOffset(void);
+                  Int32                getTrackToLabelOffset (void) const;
+
+                  Real32              &editAlignment      (void);
+                  Real32               getAlignment       (void) const;
+
+                  bool                &editTicksOnRightBottom(void);
+                  bool                 getTicksOnRightBottom (void) const;
+
+                  BoundedRangeModel * getRangeModel     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setKnobButton     ( const ButtonPtr &value );
-     void setOrientation    ( const UInt32 &value );
-     void setMajorTickSpacing( const UInt32 &value );
-     void setMinorTickSpacing( const UInt32 &value );
-     void setSnapToTicks    ( const bool &value );
-     void setDrawMajorTicks ( const bool &value );
-     void setDrawTrack      ( const bool &value );
-     void setDrawMinorTicks ( const bool &value );
-     void setDrawLabels     ( const bool &value );
-     void setInverted       ( const bool &value );
-     void setLabelMap       ( const FieldContainerMap &value );
-     void setLabelPrototype ( const LabelPtr &value );
-     void setTrackDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setMinTrackDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setMaxTrackDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setTrackInset     ( const Int32 &value );
-     void setTrackToTickOffset( const Int32 &value );
-     void setTrackToLabelOffset( const Int32 &value );
-     void setAlignment      ( const Real32 &value );
-     void setTicksOnRightBottom( const bool &value );
-     void setRangeModel     ( const BoundedRangeModelPtr &value );
+            void setKnobButton     (Button * const value);
+            void setOrientation    (const UInt32 value);
+            void setMajorTickSpacing(const UInt32 value);
+            void setMinorTickSpacing(const UInt32 value);
+            void setSnapToTicks    (const bool value);
+            void setDrawMajorTicks (const bool value);
+            void setDrawTrack      (const bool value);
+            void setDrawMinorTicks (const bool value);
+            void setDrawLabels     (const bool value);
+            void setInverted       (const bool value);
+            void setLabelMap       (const FieldContainerMap &value);
+            void setLabelPrototype (Label * const value);
+            void setTrackDrawObject(UIDrawObjectCanvas * const value);
+            void setMinTrackDrawObject(UIDrawObjectCanvas * const value);
+            void setMaxTrackDrawObject(UIDrawObjectCanvas * const value);
+            void setTrackInset     (const Int32 value);
+            void setTrackToTickOffset(const Int32 value);
+            void setTrackToLabelOffset(const Int32 value);
+            void setAlignment      (const Real32 value);
+            void setTicksOnRightBottom(const bool value);
+            void setRangeModel     (BoundedRangeModel * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
     /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToMajorTickDrawObjects           (UIDrawObject * const value   );
+    void assignMajorTickDrawObjects          (const MFUnrecUIDrawObjectPtr &value);
+    void removeFromMajorTickDrawObjects (UInt32               uiIndex );
+    void removeObjFromMajorTickDrawObjects(UIDrawObject * const value   );
+    void clearMajorTickDrawObjects            (void                         );
+
+    void pushToMinorTickDrawObjects           (UIDrawObject * const value   );
+    void assignMinorTickDrawObjects          (const MFUnrecUIDrawObjectPtr &value);
+    void removeFromMinorTickDrawObjects (UInt32               uiIndex );
+    void removeObjFromMinorTickDrawObjects(UIDrawObject * const value   );
+    void clearMinorTickDrawObjects            (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -314,50 +420,67 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SliderPtr      create          (void); 
-    static  SliderPtr      createEmpty     (void); 
+    static  SliderTransitPtr  create          (void);
+    static  Slider           *createEmpty     (void);
+
+    static  SliderTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  Slider            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  SliderTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFButtonPtr         _sfKnobButton;
-    SFUInt32            _sfOrientation;
-    SFUInt32            _sfMajorTickSpacing;
-    MFPnt2s             _mfMajorTickPositions;
-    SFUInt32            _sfMinorTickSpacing;
-    MFPnt2s             _mfMinorTickPositions;
-    SFBool              _sfSnapToTicks;
-    SFBool              _sfDrawMajorTicks;
-    SFBool              _sfDrawTrack;
-    SFBool              _sfDrawMinorTicks;
-    SFBool              _sfDrawLabels;
-    SFBool              _sfInverted;
-    SFFieldContainerMap   _sfLabelMap;
-    SFLabelPtr          _sfLabelPrototype;
-    SFUIDrawObjectCanvasPtr   _sfTrackDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfMinTrackDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfMaxTrackDrawObject;
-    MFUIDrawObjectPtr   _mfMajorTickDrawObjects;
-    MFUIDrawObjectPtr   _mfMinorTickDrawObjects;
-    SFInt32             _sfTrackInset;
-    SFInt32             _sfTrackToTickOffset;
-    SFInt32             _sfTrackToLabelOffset;
-    SFReal32            _sfAlignment;
-    SFBool              _sfTicksOnRightBottom;
-    SFBoundedRangeModelPtr   _sfRangeModel;
+    SFUnrecButtonPtr  _sfKnobButton;
+    SFUInt32          _sfOrientation;
+    SFUInt32          _sfMajorTickSpacing;
+    MFPnt2f           _mfMajorTickPositions;
+    SFUInt32          _sfMinorTickSpacing;
+    MFPnt2f           _mfMinorTickPositions;
+    SFBool            _sfSnapToTicks;
+    SFBool            _sfDrawMajorTicks;
+    SFBool            _sfDrawTrack;
+    SFBool            _sfDrawMinorTicks;
+    SFBool            _sfDrawLabels;
+    SFBool            _sfInverted;
+    SFFieldContainerMap _sfLabelMap;
+    SFUnrecLabelPtr   _sfLabelPrototype;
+    SFUnrecUIDrawObjectCanvasPtr _sfTrackDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfMinTrackDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfMaxTrackDrawObject;
+    MFUnrecUIDrawObjectPtr _mfMajorTickDrawObjects;
+    MFUnrecUIDrawObjectPtr _mfMinorTickDrawObjects;
+    SFInt32           _sfTrackInset;
+    SFInt32           _sfTrackToTickOffset;
+    SFInt32           _sfTrackToLabelOffset;
+    SFReal32          _sfAlignment;
+    SFBool            _sfTicksOnRightBottom;
+    SFUnrecBoundedRangeModelPtr _sfRangeModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -372,22 +495,89 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SliderBase(void); 
+    virtual ~SliderBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const Slider *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleKnobButton      (void) const;
+    EditFieldHandlePtr editHandleKnobButton     (void);
+    GetFieldHandlePtr  getHandleOrientation     (void) const;
+    EditFieldHandlePtr editHandleOrientation    (void);
+    GetFieldHandlePtr  getHandleMajorTickSpacing (void) const;
+    EditFieldHandlePtr editHandleMajorTickSpacing(void);
+    GetFieldHandlePtr  getHandleMajorTickPositions (void) const;
+    EditFieldHandlePtr editHandleMajorTickPositions(void);
+    GetFieldHandlePtr  getHandleMinorTickSpacing (void) const;
+    EditFieldHandlePtr editHandleMinorTickSpacing(void);
+    GetFieldHandlePtr  getHandleMinorTickPositions (void) const;
+    EditFieldHandlePtr editHandleMinorTickPositions(void);
+    GetFieldHandlePtr  getHandleSnapToTicks     (void) const;
+    EditFieldHandlePtr editHandleSnapToTicks    (void);
+    GetFieldHandlePtr  getHandleDrawMajorTicks  (void) const;
+    EditFieldHandlePtr editHandleDrawMajorTicks (void);
+    GetFieldHandlePtr  getHandleDrawTrack       (void) const;
+    EditFieldHandlePtr editHandleDrawTrack      (void);
+    GetFieldHandlePtr  getHandleDrawMinorTicks  (void) const;
+    EditFieldHandlePtr editHandleDrawMinorTicks (void);
+    GetFieldHandlePtr  getHandleDrawLabels      (void) const;
+    EditFieldHandlePtr editHandleDrawLabels     (void);
+    GetFieldHandlePtr  getHandleInverted        (void) const;
+    EditFieldHandlePtr editHandleInverted       (void);
+    GetFieldHandlePtr  getHandleLabelMap        (void) const;
+    EditFieldHandlePtr editHandleLabelMap       (void);
+    GetFieldHandlePtr  getHandleLabelPrototype  (void) const;
+    EditFieldHandlePtr editHandleLabelPrototype (void);
+    GetFieldHandlePtr  getHandleTrackDrawObject (void) const;
+    EditFieldHandlePtr editHandleTrackDrawObject(void);
+    GetFieldHandlePtr  getHandleMinTrackDrawObject (void) const;
+    EditFieldHandlePtr editHandleMinTrackDrawObject(void);
+    GetFieldHandlePtr  getHandleMaxTrackDrawObject (void) const;
+    EditFieldHandlePtr editHandleMaxTrackDrawObject(void);
+    GetFieldHandlePtr  getHandleMajorTickDrawObjects (void) const;
+    EditFieldHandlePtr editHandleMajorTickDrawObjects(void);
+    GetFieldHandlePtr  getHandleMinorTickDrawObjects (void) const;
+    EditFieldHandlePtr editHandleMinorTickDrawObjects(void);
+    GetFieldHandlePtr  getHandleTrackInset      (void) const;
+    EditFieldHandlePtr editHandleTrackInset     (void);
+    GetFieldHandlePtr  getHandleTrackToTickOffset (void) const;
+    EditFieldHandlePtr editHandleTrackToTickOffset(void);
+    GetFieldHandlePtr  getHandleTrackToLabelOffset (void) const;
+    EditFieldHandlePtr editHandleTrackToLabelOffset(void);
+    GetFieldHandlePtr  getHandleAlignment       (void) const;
+    EditFieldHandlePtr editHandleAlignment      (void);
+    GetFieldHandlePtr  getHandleTicksOnRightBottom (void) const;
+    EditFieldHandlePtr editHandleTicksOnRightBottom(void);
+    GetFieldHandlePtr  getHandleRangeModel      (void) const;
+    EditFieldHandlePtr editHandleRangeModel     (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFPnt2s             *getMFMajorTickPositions(void);
-           MFPnt2s             *getMFMinorTickPositions(void);
 
-           Pnt2s               &getMajorTickPositions(UInt32 index);
-           MFPnt2s             &getMajorTickPositions(void);
-     const MFPnt2s             &getMajorTickPositions(void) const;
-           Pnt2s               &getMinorTickPositions(UInt32 index);
-           MFPnt2s             &getMinorTickPositions(void);
-     const MFPnt2s             &getMinorTickPositions(void) const;
+                  MFPnt2f             *editMFMajorTickPositions(void);
+            const MFPnt2f             *getMFMajorTickPositions (void) const;
+
+                  MFPnt2f             *editMFMinorTickPositions(void);
+            const MFPnt2f             *getMFMinorTickPositions (void) const;
+
+
+                  Pnt2f               &editMajorTickPositions(const UInt32 index);
+            const Pnt2f               &getMajorTickPositions (const UInt32 index) const;
+
+                  Pnt2f               &editMinorTickPositions(const UInt32 index);
+            const Pnt2f               &getMinorTickPositions (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -397,65 +587,66 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SliderBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      SliderBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      SliderBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SliderBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef SliderBase *SliderBaseP;
 
-typedef osgIF<SliderBase::isNodeCore,
-              CoredNodePtr<Slider>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SliderNodePtr;
-
-typedef RefPtr<SliderPtr> SliderRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGSLIDERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGSLIDERBASE_H_ */

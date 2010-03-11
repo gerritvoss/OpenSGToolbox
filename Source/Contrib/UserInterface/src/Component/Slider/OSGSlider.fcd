@@ -2,29 +2,32 @@
 
 <FieldContainer
 	name="Slider"
-	parent="Container"
-	library="UserInterface"
-	pointerfieldtypes="both"
+	parent="ComponentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Slider.
 	<Field
 		name="KnobButton"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Orientation"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -34,6 +37,7 @@ A UI Slider.
 	<Field
 		name="MajorTickSpacing"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,7 +46,8 @@ A UI Slider.
 	</Field>
 	<Field
 		name="MajorTickPositions"
-		type="Pnt2s"
+		type="Pnt2f"
+		category="data"
 		cardinality="multi"
 		visibility="internal"
 		access="protected"
@@ -51,6 +56,7 @@ A UI Slider.
 	<Field
 		name="MinorTickSpacing"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -59,7 +65,8 @@ A UI Slider.
 	</Field>
 	<Field
 		name="MinorTickPositions"
-		type="Pnt2s"
+		type="Pnt2f"
+		category="data"
 		cardinality="multi"
 		visibility="internal"
 		access="protected"
@@ -68,6 +75,7 @@ A UI Slider.
 	<Field
 		name="SnapToTicks"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -77,6 +85,7 @@ A UI Slider.
 	<Field
 		name="DrawMajorTicks"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -86,6 +95,7 @@ A UI Slider.
 	<Field
 		name="DrawTrack"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -95,6 +105,7 @@ A UI Slider.
 	<Field
 		name="DrawMinorTicks"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -104,6 +115,7 @@ A UI Slider.
 	<Field
 		name="DrawLabels"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -113,6 +125,7 @@ A UI Slider.
 	<Field
 		name="Inverted"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -122,69 +135,70 @@ A UI Slider.
 	<Field
 		name="LabelMap"
 		type="FieldContainerMap"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="OpenSG/Toolbox/OSGFieldContainerMapType.h"
 	>
 	</Field>
 	<Field
 		name="LabelPrototype"
-		type="LabelPtr"
+		type="Label"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Text/OSGLabelFields.h"
 	>
 	</Field>
 	<Field
 		name="TrackDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="MinTrackDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="MaxTrackDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="MajorTickDrawObjects"
-		type="UIDrawObjectPtr"
+		type="UIDrawObject"
+		category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Graphics/UIDrawObjects/OSGUIDrawObject.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="MinorTickDrawObjects"
-		type="UIDrawObjectPtr"
+		type="UIDrawObject"
+		category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Graphics/UIDrawObjects/OSGUIDrawObject.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TrackInset"
 		type="Int32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -194,6 +208,7 @@ A UI Slider.
 	<Field
 		name="TrackToTickOffset"
 		type="Int32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -203,6 +218,7 @@ A UI Slider.
 	<Field
 		name="TrackToLabelOffset"
 		type="Int32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -212,6 +228,7 @@ A UI Slider.
 	<Field
 		name="Alignment"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -221,6 +238,7 @@ A UI Slider.
 	<Field
 		name="TicksOnRightBottom"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -229,12 +247,12 @@ A UI Slider.
 	</Field>
 	<Field
 		name="RangeModel"
-		type="BoundedRangeModelPtr"
+		type="BoundedRangeModel"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Scroll/OSGBoundedRangeModel.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

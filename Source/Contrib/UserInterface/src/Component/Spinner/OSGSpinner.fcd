@@ -2,49 +2,52 @@
 
 <FieldContainer
 	name="Spinner"
-	parent="Container"
-	library="UserInterface"
-	pointerfieldtypes="both"
+	parent="ComponentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Spinner.
 	<Field
 		name="NextButton"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="PreviousButton"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Editor"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/OSGComponentFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Orientation"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -54,6 +57,7 @@ A UI Spinner.
 	<Field
 		name="EditorToButtonOffset"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

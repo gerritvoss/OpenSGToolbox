@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,52 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSliderBase.h"
-#include "Event/OSGChangeListener.h"
+#include "OSGChangeListener.h"
 
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
+#include "OSGMouseAdapter.h"
+#include "OSGKeyAdapter.h"
+#include "OSGMouseMotionAdapter.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
+#include "OSGBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Slider class. See \ref 
-           PageUserInterfaceSlider for a description.
+/*! \brief Slider class. See \ref
+           PageContribUserInterfaceSlider for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Slider : public SliderBase
 {
-  private:
-
-    typedef SliderBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
+    enum Orientation
+    {
+        VERTICAL_ORIENTATION   = 0,
+        HORIZONTAL_ORIENTATION = 1
+    };
+
+    typedef SliderBase Inherited;
+    typedef Slider     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -134,6 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 
     virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SliderBase.
@@ -150,18 +156,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Slider(void); 
+    virtual ~Slider(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const Slider *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
     
     //Listener for getting change updates of the BoundedRangeModel
 	class BoundedRangeModelChangeListener : public ChangeListener
 	{
 	public:
-		BoundedRangeModelChangeListener(SliderPtr TheSlider);
-        virtual void stateChanged(const ChangeEventPtr e);
+		BoundedRangeModelChangeListener(SliderRefPtr TheSlider);
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
 	private:
-		SliderPtr _Slider;
+		SliderRefPtr _Slider;
 	};
 
 	friend class BoundedRangeModelChangeListener;
@@ -172,17 +192,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 	class KnobDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
 	{
 	public :
-		KnobDraggedListener(SliderPtr TheSlider);
-		virtual void mouseDragged(const MouseEventPtr e);
+		KnobDraggedListener(SliderRefPtr TheSlider);
+		virtual void mouseDragged(const MouseEventUnrecPtr e);
 		
-		virtual void mousePressed(const MouseEventPtr e);
-		virtual void mouseReleased(const MouseEventPtr e);
+		virtual void mousePressed(const MouseEventUnrecPtr e);
+		virtual void mouseReleased(const MouseEventUnrecPtr e);
 		
-		virtual void keyTyped(const KeyEventPtr e);
+		virtual void keyTyped(const KeyEventUnrecPtr e);
 
 		void disconnect(void);
 	protected :
-		SliderPtr _Slider;
+		SliderRefPtr _Slider;
 		Int32 _InitialValue;
 	};
 
@@ -197,22 +217,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 	Int32 getTrackMax(void) const;
 
 	Pnt2f calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size1, const Vec2f& Size2, const Real32& VAlign, const Real32& HAlign);
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
 
 	Pnt2f getSliderTrackTopLeft(void) const;
 	Vec2f getSliderTrackSize(void) const;
 
 	bool _UsingDefaultLabels;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SliderBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Slider &source);
 };
 
@@ -222,7 +240,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSliderBase.inl"
 #include "OSGSlider.inl"
-
-#define OSGSLIDER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSLIDER_H_ */

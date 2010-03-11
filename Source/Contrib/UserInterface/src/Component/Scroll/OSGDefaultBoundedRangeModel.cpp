@@ -242,7 +242,6 @@ DefaultBoundedRangeModel::DefaultBoundedRangeModel(const DefaultBoundedRangeMode
 
 DefaultBoundedRangeModel::~DefaultBoundedRangeModel(void)
 {
-    std::cout << "DefaultBoundedRangeModel::~DefaultBoundedRangeModel " << this << std::endl;
 }
 
 /*----------------------------- class specific ----------------------------*/

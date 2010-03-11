@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Slider;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SliderPtr
+OSG_GEN_CONTAINERPTR(Slider);
 
-typedef FCPtr<ContainerPtr, Slider> SliderPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<SliderPtr> : 
-    public FieldTraitsRecurseMapper<SliderPtr, true>
+struct FieldTraits<Slider *> :
+    public FieldTraitsFCPtrBase<Slider *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFSliderPtr"; }
-    static const char *getMName(void) { return "MFSliderPtr"; }
+    typedef FieldTraits<Slider *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFSliderPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFSliderPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SliderPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<Slider *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecSliderPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<Slider *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecSliderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Slider *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakSliderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Slider *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdSliderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Slider *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecSliderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Slider *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecSliderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Slider *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakSliderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Slider *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdSliderPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Slider *,
+                      RecordedRefCountPolicy  > SFRecSliderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Slider *,
+                      UnrecordedRefCountPolicy> SFUnrecSliderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Slider *,
+                      WeakRefCountPolicy      > SFWeakSliderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Slider *,
+                      NoRefCountPolicy        > SFUncountedSliderPtr;
 
-typedef SField<SliderPtr> SFSliderPtr;
-#endif
 
-#ifndef OSG_COMPILESLIDERINST
-OSG_DLLEXPORT_DECL1(SField, SliderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Slider *,
+                      RecordedRefCountPolicy  > MFRecSliderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Slider *,
+                      UnrecordedRefCountPolicy> MFUnrecSliderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Slider *,
+                      WeakRefCountPolicy      > MFWeakSliderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Slider *,
+                      NoRefCountPolicy        > MFUncountedSliderPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<SliderPtr> MFSliderPtr;
-#endif
 
-#ifndef OSG_COMPILESLIDERINST
-OSG_DLLEXPORT_DECL1(MField, SliderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecSliderPtr : 
+    public PointerSField<Slider *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecSliderPtr : 
+    public PointerSField<Slider *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakSliderPtr :
+    public PointerSField<Slider *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedSliderPtr :
+    public PointerSField<Slider *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecSliderPtr :
+    public PointerMField<Slider *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecSliderPtr :
+    public PointerMField<Slider *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakSliderPtr :
+    public PointerMField<Slider *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedSliderPtr :
+    public PointerMField<Slider *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGSLIDERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGSLIDERFIELDS_H_ */

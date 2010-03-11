@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,458 +50,1203 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESLIDERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGButton.h"                  // KnobButton Class
+#include "OSGLabel.h"                   // LabelPrototype Class
+#include "OSGUIDrawObjectCanvas.h"      // TrackDrawObject Class
+#include "OSGUIDrawObject.h"            // MajorTickDrawObjects Class
+#include "OSGBoundedRangeModel.h"       // RangeModel Class
 
 #include "OSGSliderBase.h"
 #include "OSGSlider.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SliderBase::KnobButtonFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::KnobButtonFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  SliderBase::OrientationFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::OrientationFieldId);
+/*! \class OSG::Slider
+    A UI Slider.
+ */
 
-const OSG::BitVector  SliderBase::MajorTickSpacingFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::MajorTickSpacingFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  SliderBase::MajorTickPositionsFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::MajorTickPositionsFieldId);
-
-const OSG::BitVector  SliderBase::MinorTickSpacingFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::MinorTickSpacingFieldId);
-
-const OSG::BitVector  SliderBase::MinorTickPositionsFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::MinorTickPositionsFieldId);
-
-const OSG::BitVector  SliderBase::SnapToTicksFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::SnapToTicksFieldId);
-
-const OSG::BitVector  SliderBase::DrawMajorTicksFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::DrawMajorTicksFieldId);
-
-const OSG::BitVector  SliderBase::DrawTrackFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::DrawTrackFieldId);
-
-const OSG::BitVector  SliderBase::DrawMinorTicksFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::DrawMinorTicksFieldId);
-
-const OSG::BitVector  SliderBase::DrawLabelsFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::DrawLabelsFieldId);
-
-const OSG::BitVector  SliderBase::InvertedFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::InvertedFieldId);
-
-const OSG::BitVector  SliderBase::LabelMapFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::LabelMapFieldId);
-
-const OSG::BitVector  SliderBase::LabelPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::LabelPrototypeFieldId);
-
-const OSG::BitVector  SliderBase::TrackDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::TrackDrawObjectFieldId);
-
-const OSG::BitVector  SliderBase::MinTrackDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::MinTrackDrawObjectFieldId);
-
-const OSG::BitVector  SliderBase::MaxTrackDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::MaxTrackDrawObjectFieldId);
-
-const OSG::BitVector  SliderBase::MajorTickDrawObjectsFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::MajorTickDrawObjectsFieldId);
-
-const OSG::BitVector  SliderBase::MinorTickDrawObjectsFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::MinorTickDrawObjectsFieldId);
-
-const OSG::BitVector  SliderBase::TrackInsetFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::TrackInsetFieldId);
-
-const OSG::BitVector  SliderBase::TrackToTickOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::TrackToTickOffsetFieldId);
-
-const OSG::BitVector  SliderBase::TrackToLabelOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::TrackToLabelOffsetFieldId);
-
-const OSG::BitVector  SliderBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::AlignmentFieldId);
-
-const OSG::BitVector  SliderBase::TicksOnRightBottomFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::TicksOnRightBottomFieldId);
-
-const OSG::BitVector  SliderBase::RangeModelFieldMask = 
-    (TypeTraits<BitVector>::One << SliderBase::RangeModelFieldId);
-
-const OSG::BitVector SliderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ButtonPtr       SliderBase::_sfKnobButton
+/*! \var Button *        SliderBase::_sfKnobButton
     
 */
+
 /*! \var UInt32          SliderBase::_sfOrientation
     
 */
+
 /*! \var UInt32          SliderBase::_sfMajorTickSpacing
     
 */
-/*! \var Pnt2s           SliderBase::_mfMajorTickPositions
+
+/*! \var Pnt2f           SliderBase::_mfMajorTickPositions
     
 */
+
 /*! \var UInt32          SliderBase::_sfMinorTickSpacing
     
 */
-/*! \var Pnt2s           SliderBase::_mfMinorTickPositions
+
+/*! \var Pnt2f           SliderBase::_mfMinorTickPositions
     
 */
+
 /*! \var bool            SliderBase::_sfSnapToTicks
     
 */
+
 /*! \var bool            SliderBase::_sfDrawMajorTicks
     
 */
+
 /*! \var bool            SliderBase::_sfDrawTrack
     
 */
+
 /*! \var bool            SliderBase::_sfDrawMinorTicks
     
 */
+
 /*! \var bool            SliderBase::_sfDrawLabels
     
 */
+
 /*! \var bool            SliderBase::_sfInverted
     
 */
+
 /*! \var FieldContainerMap SliderBase::_sfLabelMap
     
 */
-/*! \var LabelPtr        SliderBase::_sfLabelPrototype
+
+/*! \var Label *         SliderBase::_sfLabelPrototype
     
 */
-/*! \var UIDrawObjectCanvasPtr SliderBase::_sfTrackDrawObject
+
+/*! \var UIDrawObjectCanvas * SliderBase::_sfTrackDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr SliderBase::_sfMinTrackDrawObject
+
+/*! \var UIDrawObjectCanvas * SliderBase::_sfMinTrackDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr SliderBase::_sfMaxTrackDrawObject
+
+/*! \var UIDrawObjectCanvas * SliderBase::_sfMaxTrackDrawObject
     
 */
-/*! \var UIDrawObjectPtr SliderBase::_mfMajorTickDrawObjects
+
+/*! \var UIDrawObject *  SliderBase::_mfMajorTickDrawObjects
     
 */
-/*! \var UIDrawObjectPtr SliderBase::_mfMinorTickDrawObjects
+
+/*! \var UIDrawObject *  SliderBase::_mfMinorTickDrawObjects
     
 */
+
 /*! \var Int32           SliderBase::_sfTrackInset
     
 */
+
 /*! \var Int32           SliderBase::_sfTrackToTickOffset
     
 */
+
 /*! \var Int32           SliderBase::_sfTrackToLabelOffset
     
 */
+
 /*! \var Real32          SliderBase::_sfAlignment
     
 */
+
 /*! \var bool            SliderBase::_sfTicksOnRightBottom
     
 */
-/*! \var BoundedRangeModelPtr SliderBase::_sfRangeModel
+
+/*! \var BoundedRangeModel * SliderBase::_sfRangeModel
     
 */
 
-//! Slider description
 
-FieldDescription *SliderBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Slider *>::_type("SliderPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Slider *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Slider *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Slider *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SliderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFButtonPtr::getClassType(), 
-                     "KnobButton", 
-                     KnobButtonFieldId, KnobButtonFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFKnobButton),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Orientation", 
-                     OrientationFieldId, OrientationFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFOrientation),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "MajorTickSpacing", 
-                     MajorTickSpacingFieldId, MajorTickSpacingFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFMajorTickSpacing),
-    new FieldDescription(MFPnt2s::getClassType(), 
-                     "MajorTickPositions", 
-                     MajorTickPositionsFieldId, MajorTickPositionsFieldMask,
-                     true,
-                     (FieldAccessMethod) &SliderBase::getMFMajorTickPositions),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "MinorTickSpacing", 
-                     MinorTickSpacingFieldId, MinorTickSpacingFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFMinorTickSpacing),
-    new FieldDescription(MFPnt2s::getClassType(), 
-                     "MinorTickPositions", 
-                     MinorTickPositionsFieldId, MinorTickPositionsFieldMask,
-                     true,
-                     (FieldAccessMethod) &SliderBase::getMFMinorTickPositions),
-    new FieldDescription(SFBool::getClassType(), 
-                     "SnapToTicks", 
-                     SnapToTicksFieldId, SnapToTicksFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFSnapToTicks),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DrawMajorTicks", 
-                     DrawMajorTicksFieldId, DrawMajorTicksFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFDrawMajorTicks),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DrawTrack", 
-                     DrawTrackFieldId, DrawTrackFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFDrawTrack),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DrawMinorTicks", 
-                     DrawMinorTicksFieldId, DrawMinorTicksFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFDrawMinorTicks),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DrawLabels", 
-                     DrawLabelsFieldId, DrawLabelsFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFDrawLabels),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Inverted", 
-                     InvertedFieldId, InvertedFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFInverted),
-    new FieldDescription(SFFieldContainerMap::getClassType(), 
-                     "LabelMap", 
-                     LabelMapFieldId, LabelMapFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFLabelMap),
-    new FieldDescription(SFLabelPtr::getClassType(), 
-                     "LabelPrototype", 
-                     LabelPrototypeFieldId, LabelPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFLabelPrototype),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "TrackDrawObject", 
-                     TrackDrawObjectFieldId, TrackDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFTrackDrawObject),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "MinTrackDrawObject", 
-                     MinTrackDrawObjectFieldId, MinTrackDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFMinTrackDrawObject),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "MaxTrackDrawObject", 
-                     MaxTrackDrawObjectFieldId, MaxTrackDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFMaxTrackDrawObject),
-    new FieldDescription(MFUIDrawObjectPtr::getClassType(), 
-                     "MajorTickDrawObjects", 
-                     MajorTickDrawObjectsFieldId, MajorTickDrawObjectsFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getMFMajorTickDrawObjects),
-    new FieldDescription(MFUIDrawObjectPtr::getClassType(), 
-                     "MinorTickDrawObjects", 
-                     MinorTickDrawObjectsFieldId, MinorTickDrawObjectsFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getMFMinorTickDrawObjects),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "TrackInset", 
-                     TrackInsetFieldId, TrackInsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFTrackInset),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "TrackToTickOffset", 
-                     TrackToTickOffsetFieldId, TrackToTickOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFTrackToTickOffset),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "TrackToLabelOffset", 
-                     TrackToLabelOffsetFieldId, TrackToLabelOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFTrackToLabelOffset),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFAlignment),
-    new FieldDescription(SFBool::getClassType(), 
-                     "TicksOnRightBottom", 
-                     TicksOnRightBottomFieldId, TicksOnRightBottomFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFTicksOnRightBottom),
-    new FieldDescription(SFBoundedRangeModelPtr::getClassType(), 
-                     "RangeModel", 
-                     RangeModelFieldId, RangeModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &SliderBase::getSFRangeModel)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SliderBase::_type(
-    "Slider",
-    "Container",
-    NULL,
-    (PrototypeCreateF) &SliderBase::createEmpty,
+    pDesc = new SFUnrecButtonPtr::Description(
+        SFUnrecButtonPtr::getClassType(),
+        "KnobButton",
+        "",
+        KnobButtonFieldId, KnobButtonFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleKnobButton),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleKnobButton));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Orientation",
+        "",
+        OrientationFieldId, OrientationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleOrientation),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleOrientation));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "MajorTickSpacing",
+        "",
+        MajorTickSpacingFieldId, MajorTickSpacingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleMajorTickSpacing),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleMajorTickSpacing));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFPnt2f::Description(
+        MFPnt2f::getClassType(),
+        "MajorTickPositions",
+        "",
+        MajorTickPositionsFieldId, MajorTickPositionsFieldMask,
+        true,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleMajorTickPositions),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleMajorTickPositions));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "MinorTickSpacing",
+        "",
+        MinorTickSpacingFieldId, MinorTickSpacingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleMinorTickSpacing),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleMinorTickSpacing));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFPnt2f::Description(
+        MFPnt2f::getClassType(),
+        "MinorTickPositions",
+        "",
+        MinorTickPositionsFieldId, MinorTickPositionsFieldMask,
+        true,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleMinorTickPositions),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleMinorTickPositions));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "SnapToTicks",
+        "",
+        SnapToTicksFieldId, SnapToTicksFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleSnapToTicks),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleSnapToTicks));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DrawMajorTicks",
+        "",
+        DrawMajorTicksFieldId, DrawMajorTicksFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleDrawMajorTicks),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleDrawMajorTicks));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DrawTrack",
+        "",
+        DrawTrackFieldId, DrawTrackFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleDrawTrack),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleDrawTrack));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DrawMinorTicks",
+        "",
+        DrawMinorTicksFieldId, DrawMinorTicksFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleDrawMinorTicks),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleDrawMinorTicks));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DrawLabels",
+        "",
+        DrawLabelsFieldId, DrawLabelsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleDrawLabels),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleDrawLabels));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Inverted",
+        "",
+        InvertedFieldId, InvertedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleInverted),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleInverted));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFFieldContainerMap::Description(
+        SFFieldContainerMap::getClassType(),
+        "LabelMap",
+        "",
+        LabelMapFieldId, LabelMapFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleLabelMap),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleLabelMap));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLabelPtr::Description(
+        SFUnrecLabelPtr::getClassType(),
+        "LabelPrototype",
+        "",
+        LabelPrototypeFieldId, LabelPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleLabelPrototype),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleLabelPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "TrackDrawObject",
+        "",
+        TrackDrawObjectFieldId, TrackDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleTrackDrawObject),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleTrackDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "MinTrackDrawObject",
+        "",
+        MinTrackDrawObjectFieldId, MinTrackDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleMinTrackDrawObject),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleMinTrackDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "MaxTrackDrawObject",
+        "",
+        MaxTrackDrawObjectFieldId, MaxTrackDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleMaxTrackDrawObject),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleMaxTrackDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFUnrecUIDrawObjectPtr::Description(
+        MFUnrecUIDrawObjectPtr::getClassType(),
+        "MajorTickDrawObjects",
+        "",
+        MajorTickDrawObjectsFieldId, MajorTickDrawObjectsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleMajorTickDrawObjects),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleMajorTickDrawObjects));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFUnrecUIDrawObjectPtr::Description(
+        MFUnrecUIDrawObjectPtr::getClassType(),
+        "MinorTickDrawObjects",
+        "",
+        MinorTickDrawObjectsFieldId, MinorTickDrawObjectsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleMinorTickDrawObjects),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleMinorTickDrawObjects));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "TrackInset",
+        "",
+        TrackInsetFieldId, TrackInsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleTrackInset),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleTrackInset));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "TrackToTickOffset",
+        "",
+        TrackToTickOffsetFieldId, TrackToTickOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleTrackToTickOffset),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleTrackToTickOffset));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "TrackToLabelOffset",
+        "",
+        TrackToLabelOffsetFieldId, TrackToLabelOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleTrackToLabelOffset),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleTrackToLabelOffset));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Alignment",
+        "",
+        AlignmentFieldId, AlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleAlignment),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "TicksOnRightBottom",
+        "",
+        TicksOnRightBottomFieldId, TicksOnRightBottomFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleTicksOnRightBottom),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleTicksOnRightBottom));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecBoundedRangeModelPtr::Description(
+        SFUnrecBoundedRangeModelPtr::getClassType(),
+        "RangeModel",
+        "",
+        RangeModelFieldId, RangeModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Slider::editHandleRangeModel),
+        static_cast<FieldGetMethodSig >(&Slider::getHandleRangeModel));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+SliderBase::TypeObject SliderBase::_type(
+    SliderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SliderBase::createEmptyLocal),
     Slider::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(SliderBase, SliderPtr)
+    Slider::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Slider::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Slider\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Slider.\n"
+    "\t<Field\n"
+    "\t\tname=\"KnobButton\"\n"
+    "\t\ttype=\"Button\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Orientation\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"Slider::VERTICAL_ORIENTATION\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MajorTickSpacing\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MajorTickPositions\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinorTickSpacing\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinorTickPositions\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SnapToTicks\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawMajorTicks\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawTrack\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawMinorTicks\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawLabels\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Inverted\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LabelMap\"\n"
+    "\t\ttype=\"FieldContainerMap\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LabelPrototype\"\n"
+    "\t\ttype=\"Label\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TrackDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinTrackDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxTrackDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MajorTickDrawObjects\"\n"
+    "\t\ttype=\"UIDrawObject\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinorTickDrawObjects\"\n"
+    "\t\ttype=\"UIDrawObject\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TrackInset\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"6\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TrackToTickOffset\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"8\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TrackToLabelOffset\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"16\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Alignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TicksOnRightBottom\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RangeModel\"\n"
+    "\t\ttype=\"BoundedRangeModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Slider.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SliderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SliderBase::getType(void) const 
+FieldContainerType &SliderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SliderBase::shallowCopy(void) const 
-{ 
-    SliderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Slider *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SliderBase::getContainerSize(void) const 
-{ 
-    return sizeof(Slider); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SliderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SliderBase::getType(void) const
 {
-    this->executeSyncImpl((SliderBase *) &other, whichField);
+    return _type;
 }
-#else
-void SliderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SliderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SliderBase *) &other, whichField, sInfo);
+    return sizeof(Slider);
 }
-void SliderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Slider::_sfKnobButton field.
+const SFUnrecButtonPtr *SliderBase::getSFKnobButton(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfKnobButton;
 }
 
-void SliderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecButtonPtr    *SliderBase::editSFKnobButton     (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(KnobButtonFieldMask);
 
-    _mfMajorTickPositions.terminateShare(uiAspect, this->getContainerSize());
-    _mfMinorTickPositions.terminateShare(uiAspect, this->getContainerSize());
-    _mfMajorTickDrawObjects.terminateShare(uiAspect, this->getContainerSize());
-    _mfMinorTickDrawObjects.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfKnobButton;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SliderBase::SliderBase(void) :
-    _sfKnobButton             (ButtonPtr(NullFC)), 
-    _sfOrientation            (UInt32(Slider::VERTICAL_ORIENTATION)), 
-    _sfMajorTickSpacing       (UInt32(1)), 
-    _mfMajorTickPositions     (), 
-    _sfMinorTickSpacing       (UInt32(1)), 
-    _mfMinorTickPositions     (), 
-    _sfSnapToTicks            (bool(false)), 
-    _sfDrawMajorTicks         (bool(false)), 
-    _sfDrawTrack              (bool(false)), 
-    _sfDrawMinorTicks         (bool(false)), 
-    _sfDrawLabels             (bool(false)), 
-    _sfInverted               (bool(false)), 
-    _sfLabelMap               (), 
-    _sfLabelPrototype         (), 
-    _sfTrackDrawObject        (), 
-    _sfMinTrackDrawObject     (), 
-    _sfMaxTrackDrawObject     (), 
-    _mfMajorTickDrawObjects   (), 
-    _mfMinorTickDrawObjects   (), 
-    _sfTrackInset             (Int32(6)), 
-    _sfTrackToTickOffset      (Int32(8)), 
-    _sfTrackToLabelOffset     (Int32(16)), 
-    _sfAlignment              (Real32(0.5)), 
-    _sfTicksOnRightBottom     (bool(true)), 
-    _sfRangeModel             (BoundedRangeModelPtr(NullFC)), 
-    Inherited() 
+SFUInt32 *SliderBase::editSFOrientation(void)
 {
+    editSField(OrientationFieldMask);
+
+    return &_sfOrientation;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SliderBase::SliderBase(const SliderBase &source) :
-    _sfKnobButton             (source._sfKnobButton             ), 
-    _sfOrientation            (source._sfOrientation            ), 
-    _sfMajorTickSpacing       (source._sfMajorTickSpacing       ), 
-    _mfMajorTickPositions     (source._mfMajorTickPositions     ), 
-    _sfMinorTickSpacing       (source._sfMinorTickSpacing       ), 
-    _mfMinorTickPositions     (source._mfMinorTickPositions     ), 
-    _sfSnapToTicks            (source._sfSnapToTicks            ), 
-    _sfDrawMajorTicks         (source._sfDrawMajorTicks         ), 
-    _sfDrawTrack              (source._sfDrawTrack              ), 
-    _sfDrawMinorTicks         (source._sfDrawMinorTicks         ), 
-    _sfDrawLabels             (source._sfDrawLabels             ), 
-    _sfInverted               (source._sfInverted               ), 
-    _sfLabelMap               (source._sfLabelMap               ), 
-    _sfLabelPrototype         (source._sfLabelPrototype         ), 
-    _sfTrackDrawObject        (source._sfTrackDrawObject        ), 
-    _sfMinTrackDrawObject     (source._sfMinTrackDrawObject     ), 
-    _sfMaxTrackDrawObject     (source._sfMaxTrackDrawObject     ), 
-    _mfMajorTickDrawObjects   (source._mfMajorTickDrawObjects   ), 
-    _mfMinorTickDrawObjects   (source._mfMinorTickDrawObjects   ), 
-    _sfTrackInset             (source._sfTrackInset             ), 
-    _sfTrackToTickOffset      (source._sfTrackToTickOffset      ), 
-    _sfTrackToLabelOffset     (source._sfTrackToLabelOffset     ), 
-    _sfAlignment              (source._sfAlignment              ), 
-    _sfTicksOnRightBottom     (source._sfTicksOnRightBottom     ), 
-    _sfRangeModel             (source._sfRangeModel             ), 
-    Inherited                 (source)
+const SFUInt32 *SliderBase::getSFOrientation(void) const
 {
+    return &_sfOrientation;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-SliderBase::~SliderBase(void)
+SFUInt32 *SliderBase::editSFMajorTickSpacing(void)
 {
+    editSField(MajorTickSpacingFieldMask);
+
+    return &_sfMajorTickSpacing;
 }
+
+const SFUInt32 *SliderBase::getSFMajorTickSpacing(void) const
+{
+    return &_sfMajorTickSpacing;
+}
+
+
+MFPnt2f *SliderBase::editMFMajorTickPositions(void)
+{
+    editMField(MajorTickPositionsFieldMask, _mfMajorTickPositions);
+
+    return &_mfMajorTickPositions;
+}
+
+const MFPnt2f *SliderBase::getMFMajorTickPositions(void) const
+{
+    return &_mfMajorTickPositions;
+}
+
+
+SFUInt32 *SliderBase::editSFMinorTickSpacing(void)
+{
+    editSField(MinorTickSpacingFieldMask);
+
+    return &_sfMinorTickSpacing;
+}
+
+const SFUInt32 *SliderBase::getSFMinorTickSpacing(void) const
+{
+    return &_sfMinorTickSpacing;
+}
+
+
+MFPnt2f *SliderBase::editMFMinorTickPositions(void)
+{
+    editMField(MinorTickPositionsFieldMask, _mfMinorTickPositions);
+
+    return &_mfMinorTickPositions;
+}
+
+const MFPnt2f *SliderBase::getMFMinorTickPositions(void) const
+{
+    return &_mfMinorTickPositions;
+}
+
+
+SFBool *SliderBase::editSFSnapToTicks(void)
+{
+    editSField(SnapToTicksFieldMask);
+
+    return &_sfSnapToTicks;
+}
+
+const SFBool *SliderBase::getSFSnapToTicks(void) const
+{
+    return &_sfSnapToTicks;
+}
+
+
+SFBool *SliderBase::editSFDrawMajorTicks(void)
+{
+    editSField(DrawMajorTicksFieldMask);
+
+    return &_sfDrawMajorTicks;
+}
+
+const SFBool *SliderBase::getSFDrawMajorTicks(void) const
+{
+    return &_sfDrawMajorTicks;
+}
+
+
+SFBool *SliderBase::editSFDrawTrack(void)
+{
+    editSField(DrawTrackFieldMask);
+
+    return &_sfDrawTrack;
+}
+
+const SFBool *SliderBase::getSFDrawTrack(void) const
+{
+    return &_sfDrawTrack;
+}
+
+
+SFBool *SliderBase::editSFDrawMinorTicks(void)
+{
+    editSField(DrawMinorTicksFieldMask);
+
+    return &_sfDrawMinorTicks;
+}
+
+const SFBool *SliderBase::getSFDrawMinorTicks(void) const
+{
+    return &_sfDrawMinorTicks;
+}
+
+
+SFBool *SliderBase::editSFDrawLabels(void)
+{
+    editSField(DrawLabelsFieldMask);
+
+    return &_sfDrawLabels;
+}
+
+const SFBool *SliderBase::getSFDrawLabels(void) const
+{
+    return &_sfDrawLabels;
+}
+
+
+SFBool *SliderBase::editSFInverted(void)
+{
+    editSField(InvertedFieldMask);
+
+    return &_sfInverted;
+}
+
+const SFBool *SliderBase::getSFInverted(void) const
+{
+    return &_sfInverted;
+}
+
+
+SFFieldContainerMap *SliderBase::editSFLabelMap(void)
+{
+    editSField(LabelMapFieldMask);
+
+    return &_sfLabelMap;
+}
+
+const SFFieldContainerMap *SliderBase::getSFLabelMap(void) const
+{
+    return &_sfLabelMap;
+}
+
+
+//! Get the Slider::_sfLabelPrototype field.
+const SFUnrecLabelPtr *SliderBase::getSFLabelPrototype(void) const
+{
+    return &_sfLabelPrototype;
+}
+
+SFUnrecLabelPtr     *SliderBase::editSFLabelPrototype (void)
+{
+    editSField(LabelPrototypeFieldMask);
+
+    return &_sfLabelPrototype;
+}
+
+//! Get the Slider::_sfTrackDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *SliderBase::getSFTrackDrawObject(void) const
+{
+    return &_sfTrackDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *SliderBase::editSFTrackDrawObject(void)
+{
+    editSField(TrackDrawObjectFieldMask);
+
+    return &_sfTrackDrawObject;
+}
+
+//! Get the Slider::_sfMinTrackDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *SliderBase::getSFMinTrackDrawObject(void) const
+{
+    return &_sfMinTrackDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *SliderBase::editSFMinTrackDrawObject(void)
+{
+    editSField(MinTrackDrawObjectFieldMask);
+
+    return &_sfMinTrackDrawObject;
+}
+
+//! Get the Slider::_sfMaxTrackDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *SliderBase::getSFMaxTrackDrawObject(void) const
+{
+    return &_sfMaxTrackDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *SliderBase::editSFMaxTrackDrawObject(void)
+{
+    editSField(MaxTrackDrawObjectFieldMask);
+
+    return &_sfMaxTrackDrawObject;
+}
+
+//! Get the Slider::_mfMajorTickDrawObjects field.
+const MFUnrecUIDrawObjectPtr *SliderBase::getMFMajorTickDrawObjects(void) const
+{
+    return &_mfMajorTickDrawObjects;
+}
+
+MFUnrecUIDrawObjectPtr *SliderBase::editMFMajorTickDrawObjects(void)
+{
+    editMField(MajorTickDrawObjectsFieldMask, _mfMajorTickDrawObjects);
+
+    return &_mfMajorTickDrawObjects;
+}
+
+//! Get the Slider::_mfMinorTickDrawObjects field.
+const MFUnrecUIDrawObjectPtr *SliderBase::getMFMinorTickDrawObjects(void) const
+{
+    return &_mfMinorTickDrawObjects;
+}
+
+MFUnrecUIDrawObjectPtr *SliderBase::editMFMinorTickDrawObjects(void)
+{
+    editMField(MinorTickDrawObjectsFieldMask, _mfMinorTickDrawObjects);
+
+    return &_mfMinorTickDrawObjects;
+}
+
+SFInt32 *SliderBase::editSFTrackInset(void)
+{
+    editSField(TrackInsetFieldMask);
+
+    return &_sfTrackInset;
+}
+
+const SFInt32 *SliderBase::getSFTrackInset(void) const
+{
+    return &_sfTrackInset;
+}
+
+
+SFInt32 *SliderBase::editSFTrackToTickOffset(void)
+{
+    editSField(TrackToTickOffsetFieldMask);
+
+    return &_sfTrackToTickOffset;
+}
+
+const SFInt32 *SliderBase::getSFTrackToTickOffset(void) const
+{
+    return &_sfTrackToTickOffset;
+}
+
+
+SFInt32 *SliderBase::editSFTrackToLabelOffset(void)
+{
+    editSField(TrackToLabelOffsetFieldMask);
+
+    return &_sfTrackToLabelOffset;
+}
+
+const SFInt32 *SliderBase::getSFTrackToLabelOffset(void) const
+{
+    return &_sfTrackToLabelOffset;
+}
+
+
+SFReal32 *SliderBase::editSFAlignment(void)
+{
+    editSField(AlignmentFieldMask);
+
+    return &_sfAlignment;
+}
+
+const SFReal32 *SliderBase::getSFAlignment(void) const
+{
+    return &_sfAlignment;
+}
+
+
+SFBool *SliderBase::editSFTicksOnRightBottom(void)
+{
+    editSField(TicksOnRightBottomFieldMask);
+
+    return &_sfTicksOnRightBottom;
+}
+
+const SFBool *SliderBase::getSFTicksOnRightBottom(void) const
+{
+    return &_sfTicksOnRightBottom;
+}
+
+
+//! Get the Slider::_sfRangeModel field.
+const SFUnrecBoundedRangeModelPtr *SliderBase::getSFRangeModel(void) const
+{
+    return &_sfRangeModel;
+}
+
+SFUnrecBoundedRangeModelPtr *SliderBase::editSFRangeModel     (void)
+{
+    editSField(RangeModelFieldMask);
+
+    return &_sfRangeModel;
+}
+
+
+
+void SliderBase::pushToMajorTickDrawObjects(UIDrawObject * const value)
+{
+    editMField(MajorTickDrawObjectsFieldMask, _mfMajorTickDrawObjects);
+
+    _mfMajorTickDrawObjects.push_back(value);
+}
+
+void SliderBase::assignMajorTickDrawObjects(const MFUnrecUIDrawObjectPtr &value)
+{
+    MFUnrecUIDrawObjectPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecUIDrawObjectPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<Slider *>(this)->clearMajorTickDrawObjects();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToMajorTickDrawObjects(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void SliderBase::removeFromMajorTickDrawObjects(UInt32 uiIndex)
+{
+    if(uiIndex < _mfMajorTickDrawObjects.size())
+    {
+        editMField(MajorTickDrawObjectsFieldMask, _mfMajorTickDrawObjects);
+
+        _mfMajorTickDrawObjects.erase(uiIndex);
+    }
+}
+
+void SliderBase::removeObjFromMajorTickDrawObjects(UIDrawObject * const value)
+{
+    Int32 iElemIdx = _mfMajorTickDrawObjects.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(MajorTickDrawObjectsFieldMask, _mfMajorTickDrawObjects);
+
+        _mfMajorTickDrawObjects.erase(iElemIdx);
+    }
+}
+void SliderBase::clearMajorTickDrawObjects(void)
+{
+    editMField(MajorTickDrawObjectsFieldMask, _mfMajorTickDrawObjects);
+
+
+    _mfMajorTickDrawObjects.clear();
+}
+
+void SliderBase::pushToMinorTickDrawObjects(UIDrawObject * const value)
+{
+    editMField(MinorTickDrawObjectsFieldMask, _mfMinorTickDrawObjects);
+
+    _mfMinorTickDrawObjects.push_back(value);
+}
+
+void SliderBase::assignMinorTickDrawObjects(const MFUnrecUIDrawObjectPtr &value)
+{
+    MFUnrecUIDrawObjectPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecUIDrawObjectPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<Slider *>(this)->clearMinorTickDrawObjects();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToMinorTickDrawObjects(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void SliderBase::removeFromMinorTickDrawObjects(UInt32 uiIndex)
+{
+    if(uiIndex < _mfMinorTickDrawObjects.size())
+    {
+        editMField(MinorTickDrawObjectsFieldMask, _mfMinorTickDrawObjects);
+
+        _mfMinorTickDrawObjects.erase(uiIndex);
+    }
+}
+
+void SliderBase::removeObjFromMinorTickDrawObjects(UIDrawObject * const value)
+{
+    Int32 iElemIdx = _mfMinorTickDrawObjects.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(MinorTickDrawObjectsFieldMask, _mfMinorTickDrawObjects);
+
+        _mfMinorTickDrawObjects.erase(iElemIdx);
+    }
+}
+void SliderBase::clearMinorTickDrawObjects(void)
+{
+    editMField(MinorTickDrawObjectsFieldMask, _mfMinorTickDrawObjects);
+
+
+    _mfMinorTickDrawObjects.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SliderBase::getBinSize(const BitVector &whichField)
+UInt32 SliderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -509,133 +1254,108 @@ UInt32 SliderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfKnobButton.getBinSize();
     }
-
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
         returnValue += _sfOrientation.getBinSize();
     }
-
     if(FieldBits::NoField != (MajorTickSpacingFieldMask & whichField))
     {
         returnValue += _sfMajorTickSpacing.getBinSize();
     }
-
     if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
     {
         returnValue += _mfMajorTickPositions.getBinSize();
     }
-
     if(FieldBits::NoField != (MinorTickSpacingFieldMask & whichField))
     {
         returnValue += _sfMinorTickSpacing.getBinSize();
     }
-
     if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
     {
         returnValue += _mfMinorTickPositions.getBinSize();
     }
-
     if(FieldBits::NoField != (SnapToTicksFieldMask & whichField))
     {
         returnValue += _sfSnapToTicks.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawMajorTicksFieldMask & whichField))
     {
         returnValue += _sfDrawMajorTicks.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawTrackFieldMask & whichField))
     {
         returnValue += _sfDrawTrack.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawMinorTicksFieldMask & whichField))
     {
         returnValue += _sfDrawMinorTicks.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawLabelsFieldMask & whichField))
     {
         returnValue += _sfDrawLabels.getBinSize();
     }
-
     if(FieldBits::NoField != (InvertedFieldMask & whichField))
     {
         returnValue += _sfInverted.getBinSize();
     }
-
     if(FieldBits::NoField != (LabelMapFieldMask & whichField))
     {
         returnValue += _sfLabelMap.getBinSize();
     }
-
     if(FieldBits::NoField != (LabelPrototypeFieldMask & whichField))
     {
         returnValue += _sfLabelPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (TrackDrawObjectFieldMask & whichField))
     {
         returnValue += _sfTrackDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (MinTrackDrawObjectFieldMask & whichField))
     {
         returnValue += _sfMinTrackDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxTrackDrawObjectFieldMask & whichField))
     {
         returnValue += _sfMaxTrackDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (MajorTickDrawObjectsFieldMask & whichField))
     {
         returnValue += _mfMajorTickDrawObjects.getBinSize();
     }
-
     if(FieldBits::NoField != (MinorTickDrawObjectsFieldMask & whichField))
     {
         returnValue += _mfMinorTickDrawObjects.getBinSize();
     }
-
     if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
     {
         returnValue += _sfTrackInset.getBinSize();
     }
-
     if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
     {
         returnValue += _sfTrackToTickOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
     {
         returnValue += _sfTrackToLabelOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         returnValue += _sfAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
     {
         returnValue += _sfTicksOnRightBottom.getBinSize();
     }
-
     if(FieldBits::NoField != (RangeModelFieldMask & whichField))
     {
         returnValue += _sfRangeModel.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SliderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SliderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -643,132 +1363,106 @@ void SliderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfKnobButton.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
         _sfOrientation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorTickSpacingFieldMask & whichField))
     {
         _sfMajorTickSpacing.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
     {
         _mfMajorTickPositions.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinorTickSpacingFieldMask & whichField))
     {
         _sfMinorTickSpacing.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
     {
         _mfMinorTickPositions.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SnapToTicksFieldMask & whichField))
     {
         _sfSnapToTicks.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawMajorTicksFieldMask & whichField))
     {
         _sfDrawMajorTicks.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawTrackFieldMask & whichField))
     {
         _sfDrawTrack.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawMinorTicksFieldMask & whichField))
     {
         _sfDrawMinorTicks.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawLabelsFieldMask & whichField))
     {
         _sfDrawLabels.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InvertedFieldMask & whichField))
     {
         _sfInverted.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LabelMapFieldMask & whichField))
     {
         _sfLabelMap.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LabelPrototypeFieldMask & whichField))
     {
         _sfLabelPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TrackDrawObjectFieldMask & whichField))
     {
         _sfTrackDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinTrackDrawObjectFieldMask & whichField))
     {
         _sfMinTrackDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxTrackDrawObjectFieldMask & whichField))
     {
         _sfMaxTrackDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorTickDrawObjectsFieldMask & whichField))
     {
         _mfMajorTickDrawObjects.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinorTickDrawObjectsFieldMask & whichField))
     {
         _mfMinorTickDrawObjects.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
     {
         _sfTrackInset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
     {
         _sfTrackToTickOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
     {
         _sfTrackToLabelOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         _sfAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
     {
         _sfTicksOnRightBottom.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RangeModelFieldMask & whichField))
     {
         _sfRangeModel.copyToBin(pMem);
     }
-
-
 }
 
-void SliderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SliderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -776,358 +1470,1073 @@ void SliderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfKnobButton.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
         _sfOrientation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorTickSpacingFieldMask & whichField))
     {
         _sfMajorTickSpacing.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
     {
         _mfMajorTickPositions.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinorTickSpacingFieldMask & whichField))
     {
         _sfMinorTickSpacing.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
     {
         _mfMinorTickPositions.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SnapToTicksFieldMask & whichField))
     {
         _sfSnapToTicks.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawMajorTicksFieldMask & whichField))
     {
         _sfDrawMajorTicks.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawTrackFieldMask & whichField))
     {
         _sfDrawTrack.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawMinorTicksFieldMask & whichField))
     {
         _sfDrawMinorTicks.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawLabelsFieldMask & whichField))
     {
         _sfDrawLabels.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InvertedFieldMask & whichField))
     {
         _sfInverted.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LabelMapFieldMask & whichField))
     {
         _sfLabelMap.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LabelPrototypeFieldMask & whichField))
     {
         _sfLabelPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TrackDrawObjectFieldMask & whichField))
     {
         _sfTrackDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinTrackDrawObjectFieldMask & whichField))
     {
         _sfMinTrackDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxTrackDrawObjectFieldMask & whichField))
     {
         _sfMaxTrackDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorTickDrawObjectsFieldMask & whichField))
     {
         _mfMajorTickDrawObjects.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinorTickDrawObjectsFieldMask & whichField))
     {
         _mfMinorTickDrawObjects.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
     {
         _sfTrackInset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
     {
         _sfTrackToTickOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
     {
         _sfTrackToLabelOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         _sfAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
     {
         _sfTicksOnRightBottom.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RangeModelFieldMask & whichField))
     {
         _sfRangeModel.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SliderBase::executeSyncImpl(      SliderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SliderTransitPtr SliderBase::createLocal(BitVector bFlags)
 {
+    SliderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (KnobButtonFieldMask & whichField))
-        _sfKnobButton.syncWith(pOther->_sfKnobButton);
+        fc = dynamic_pointer_cast<Slider>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
-
-    if(FieldBits::NoField != (MajorTickSpacingFieldMask & whichField))
-        _sfMajorTickSpacing.syncWith(pOther->_sfMajorTickSpacing);
-
-    if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
-        _mfMajorTickPositions.syncWith(pOther->_mfMajorTickPositions);
-
-    if(FieldBits::NoField != (MinorTickSpacingFieldMask & whichField))
-        _sfMinorTickSpacing.syncWith(pOther->_sfMinorTickSpacing);
-
-    if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
-        _mfMinorTickPositions.syncWith(pOther->_mfMinorTickPositions);
-
-    if(FieldBits::NoField != (SnapToTicksFieldMask & whichField))
-        _sfSnapToTicks.syncWith(pOther->_sfSnapToTicks);
-
-    if(FieldBits::NoField != (DrawMajorTicksFieldMask & whichField))
-        _sfDrawMajorTicks.syncWith(pOther->_sfDrawMajorTicks);
-
-    if(FieldBits::NoField != (DrawTrackFieldMask & whichField))
-        _sfDrawTrack.syncWith(pOther->_sfDrawTrack);
-
-    if(FieldBits::NoField != (DrawMinorTicksFieldMask & whichField))
-        _sfDrawMinorTicks.syncWith(pOther->_sfDrawMinorTicks);
-
-    if(FieldBits::NoField != (DrawLabelsFieldMask & whichField))
-        _sfDrawLabels.syncWith(pOther->_sfDrawLabels);
-
-    if(FieldBits::NoField != (InvertedFieldMask & whichField))
-        _sfInverted.syncWith(pOther->_sfInverted);
-
-    if(FieldBits::NoField != (LabelMapFieldMask & whichField))
-        _sfLabelMap.syncWith(pOther->_sfLabelMap);
-
-    if(FieldBits::NoField != (LabelPrototypeFieldMask & whichField))
-        _sfLabelPrototype.syncWith(pOther->_sfLabelPrototype);
-
-    if(FieldBits::NoField != (TrackDrawObjectFieldMask & whichField))
-        _sfTrackDrawObject.syncWith(pOther->_sfTrackDrawObject);
-
-    if(FieldBits::NoField != (MinTrackDrawObjectFieldMask & whichField))
-        _sfMinTrackDrawObject.syncWith(pOther->_sfMinTrackDrawObject);
-
-    if(FieldBits::NoField != (MaxTrackDrawObjectFieldMask & whichField))
-        _sfMaxTrackDrawObject.syncWith(pOther->_sfMaxTrackDrawObject);
-
-    if(FieldBits::NoField != (MajorTickDrawObjectsFieldMask & whichField))
-        _mfMajorTickDrawObjects.syncWith(pOther->_mfMajorTickDrawObjects);
-
-    if(FieldBits::NoField != (MinorTickDrawObjectsFieldMask & whichField))
-        _mfMinorTickDrawObjects.syncWith(pOther->_mfMinorTickDrawObjects);
-
-    if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
-        _sfTrackInset.syncWith(pOther->_sfTrackInset);
-
-    if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
-        _sfTrackToTickOffset.syncWith(pOther->_sfTrackToTickOffset);
-
-    if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
-        _sfTrackToLabelOffset.syncWith(pOther->_sfTrackToLabelOffset);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
-        _sfTicksOnRightBottom.syncWith(pOther->_sfTicksOnRightBottom);
-
-    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
-        _sfRangeModel.syncWith(pOther->_sfRangeModel);
-
-
-}
-#else
-void SliderBase::executeSyncImpl(      SliderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (KnobButtonFieldMask & whichField))
-        _sfKnobButton.syncWith(pOther->_sfKnobButton);
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
-
-    if(FieldBits::NoField != (MajorTickSpacingFieldMask & whichField))
-        _sfMajorTickSpacing.syncWith(pOther->_sfMajorTickSpacing);
-
-    if(FieldBits::NoField != (MinorTickSpacingFieldMask & whichField))
-        _sfMinorTickSpacing.syncWith(pOther->_sfMinorTickSpacing);
-
-    if(FieldBits::NoField != (SnapToTicksFieldMask & whichField))
-        _sfSnapToTicks.syncWith(pOther->_sfSnapToTicks);
-
-    if(FieldBits::NoField != (DrawMajorTicksFieldMask & whichField))
-        _sfDrawMajorTicks.syncWith(pOther->_sfDrawMajorTicks);
-
-    if(FieldBits::NoField != (DrawTrackFieldMask & whichField))
-        _sfDrawTrack.syncWith(pOther->_sfDrawTrack);
-
-    if(FieldBits::NoField != (DrawMinorTicksFieldMask & whichField))
-        _sfDrawMinorTicks.syncWith(pOther->_sfDrawMinorTicks);
-
-    if(FieldBits::NoField != (DrawLabelsFieldMask & whichField))
-        _sfDrawLabels.syncWith(pOther->_sfDrawLabels);
-
-    if(FieldBits::NoField != (InvertedFieldMask & whichField))
-        _sfInverted.syncWith(pOther->_sfInverted);
-
-    if(FieldBits::NoField != (LabelMapFieldMask & whichField))
-        _sfLabelMap.syncWith(pOther->_sfLabelMap);
-
-    if(FieldBits::NoField != (LabelPrototypeFieldMask & whichField))
-        _sfLabelPrototype.syncWith(pOther->_sfLabelPrototype);
-
-    if(FieldBits::NoField != (TrackDrawObjectFieldMask & whichField))
-        _sfTrackDrawObject.syncWith(pOther->_sfTrackDrawObject);
-
-    if(FieldBits::NoField != (MinTrackDrawObjectFieldMask & whichField))
-        _sfMinTrackDrawObject.syncWith(pOther->_sfMinTrackDrawObject);
-
-    if(FieldBits::NoField != (MaxTrackDrawObjectFieldMask & whichField))
-        _sfMaxTrackDrawObject.syncWith(pOther->_sfMaxTrackDrawObject);
-
-    if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
-        _sfTrackInset.syncWith(pOther->_sfTrackInset);
-
-    if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
-        _sfTrackToTickOffset.syncWith(pOther->_sfTrackToTickOffset);
-
-    if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
-        _sfTrackToLabelOffset.syncWith(pOther->_sfTrackToLabelOffset);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (TicksOnRightBottomFieldMask & whichField))
-        _sfTicksOnRightBottom.syncWith(pOther->_sfTicksOnRightBottom);
-
-    if(FieldBits::NoField != (RangeModelFieldMask & whichField))
-        _sfRangeModel.syncWith(pOther->_sfRangeModel);
-
-
-    if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
-        _mfMajorTickPositions.syncWith(pOther->_mfMajorTickPositions, sInfo);
-
-    if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
-        _mfMinorTickPositions.syncWith(pOther->_mfMinorTickPositions, sInfo);
-
-    if(FieldBits::NoField != (MajorTickDrawObjectsFieldMask & whichField))
-        _mfMajorTickDrawObjects.syncWith(pOther->_mfMajorTickDrawObjects, sInfo);
-
-    if(FieldBits::NoField != (MinorTickDrawObjectsFieldMask & whichField))
-        _mfMinorTickDrawObjects.syncWith(pOther->_mfMinorTickDrawObjects, sInfo);
-
-
+    return fc;
 }
 
-void SliderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SliderTransitPtr SliderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SliderTransitPtr fc;
 
-    if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
-        _mfMajorTickPositions.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
-        _mfMinorTickPositions.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<Slider>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (MajorTickDrawObjectsFieldMask & whichField))
-        _mfMajorTickDrawObjects.beginEdit(uiAspect, uiContainerSize);
+    return fc;
+}
 
-    if(FieldBits::NoField != (MinorTickDrawObjectsFieldMask & whichField))
-        _mfMinorTickDrawObjects.beginEdit(uiAspect, uiContainerSize);
+//! create a new instance of the class
+SliderTransitPtr SliderBase::create(void)
+{
+    SliderTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Slider>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Slider *SliderBase::createEmptyLocal(BitVector bFlags)
+{
+    Slider *returnValue;
+
+    newPtr<Slider>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Slider *SliderBase::createEmpty(void)
+{
+    Slider *returnValue;
+
+    newPtr<Slider>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SliderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Slider *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Slider *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SliderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Slider *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Slider *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SliderBase::shallowCopy(void) const
+{
+    Slider *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Slider *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SliderBase::SliderBase(void) :
+    Inherited(),
+    _sfKnobButton             (NULL),
+    _sfOrientation            (UInt32(Slider::VERTICAL_ORIENTATION)),
+    _sfMajorTickSpacing       (UInt32(1)),
+    _mfMajorTickPositions     (),
+    _sfMinorTickSpacing       (UInt32(1)),
+    _mfMinorTickPositions     (),
+    _sfSnapToTicks            (bool(false)),
+    _sfDrawMajorTicks         (bool(false)),
+    _sfDrawTrack              (bool(false)),
+    _sfDrawMinorTicks         (bool(false)),
+    _sfDrawLabels             (bool(false)),
+    _sfInverted               (bool(false)),
+    _sfLabelMap               (),
+    _sfLabelPrototype         (NULL),
+    _sfTrackDrawObject        (NULL),
+    _sfMinTrackDrawObject     (NULL),
+    _sfMaxTrackDrawObject     (NULL),
+    _mfMajorTickDrawObjects   (),
+    _mfMinorTickDrawObjects   (),
+    _sfTrackInset             (Int32(6)),
+    _sfTrackToTickOffset      (Int32(8)),
+    _sfTrackToLabelOffset     (Int32(16)),
+    _sfAlignment              (Real32(0.5)),
+    _sfTicksOnRightBottom     (bool(true)),
+    _sfRangeModel             (NULL)
+{
+}
+
+SliderBase::SliderBase(const SliderBase &source) :
+    Inherited(source),
+    _sfKnobButton             (NULL),
+    _sfOrientation            (source._sfOrientation            ),
+    _sfMajorTickSpacing       (source._sfMajorTickSpacing       ),
+    _mfMajorTickPositions     (source._mfMajorTickPositions     ),
+    _sfMinorTickSpacing       (source._sfMinorTickSpacing       ),
+    _mfMinorTickPositions     (source._mfMinorTickPositions     ),
+    _sfSnapToTicks            (source._sfSnapToTicks            ),
+    _sfDrawMajorTicks         (source._sfDrawMajorTicks         ),
+    _sfDrawTrack              (source._sfDrawTrack              ),
+    _sfDrawMinorTicks         (source._sfDrawMinorTicks         ),
+    _sfDrawLabels             (source._sfDrawLabels             ),
+    _sfInverted               (source._sfInverted               ),
+    _sfLabelMap               (source._sfLabelMap               ),
+    _sfLabelPrototype         (NULL),
+    _sfTrackDrawObject        (NULL),
+    _sfMinTrackDrawObject     (NULL),
+    _sfMaxTrackDrawObject     (NULL),
+    _mfMajorTickDrawObjects   (),
+    _mfMinorTickDrawObjects   (),
+    _sfTrackInset             (source._sfTrackInset             ),
+    _sfTrackToTickOffset      (source._sfTrackToTickOffset      ),
+    _sfTrackToLabelOffset     (source._sfTrackToLabelOffset     ),
+    _sfAlignment              (source._sfAlignment              ),
+    _sfTicksOnRightBottom     (source._sfTicksOnRightBottom     ),
+    _sfRangeModel             (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SliderBase::~SliderBase(void)
+{
+}
+
+void SliderBase::onCreate(const Slider *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Slider *pThis = static_cast<Slider *>(this);
+
+        pThis->setKnobButton(source->getKnobButton());
+
+        pThis->setLabelPrototype(source->getLabelPrototype());
+
+        pThis->setTrackDrawObject(source->getTrackDrawObject());
+
+        pThis->setMinTrackDrawObject(source->getMinTrackDrawObject());
+
+        pThis->setMaxTrackDrawObject(source->getMaxTrackDrawObject());
+
+        MFUnrecUIDrawObjectPtr::const_iterator MajorTickDrawObjectsIt  =
+            source->_mfMajorTickDrawObjects.begin();
+        MFUnrecUIDrawObjectPtr::const_iterator MajorTickDrawObjectsEnd =
+            source->_mfMajorTickDrawObjects.end  ();
+
+        while(MajorTickDrawObjectsIt != MajorTickDrawObjectsEnd)
+        {
+            pThis->pushToMajorTickDrawObjects(*MajorTickDrawObjectsIt);
+
+            ++MajorTickDrawObjectsIt;
+        }
+
+        MFUnrecUIDrawObjectPtr::const_iterator MinorTickDrawObjectsIt  =
+            source->_mfMinorTickDrawObjects.begin();
+        MFUnrecUIDrawObjectPtr::const_iterator MinorTickDrawObjectsEnd =
+            source->_mfMinorTickDrawObjects.end  ();
+
+        while(MinorTickDrawObjectsIt != MinorTickDrawObjectsEnd)
+        {
+            pThis->pushToMinorTickDrawObjects(*MinorTickDrawObjectsIt);
+
+            ++MinorTickDrawObjectsIt;
+        }
+
+        pThis->setRangeModel(source->getRangeModel());
+    }
+}
+
+GetFieldHandlePtr SliderBase::getHandleKnobButton      (void) const
+{
+    SFUnrecButtonPtr::GetHandlePtr returnValue(
+        new  SFUnrecButtonPtr::GetHandle(
+             &_sfKnobButton,
+             this->getType().getFieldDesc(KnobButtonFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleKnobButton     (void)
+{
+    SFUnrecButtonPtr::EditHandlePtr returnValue(
+        new  SFUnrecButtonPtr::EditHandle(
+             &_sfKnobButton,
+             this->getType().getFieldDesc(KnobButtonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Slider::setKnobButton,
+                    static_cast<Slider *>(this), _1));
+
+    editSField(KnobButtonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleOrientation     (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleOrientation    (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             this));
+
+
+    editSField(OrientationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleMajorTickSpacing (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfMajorTickSpacing,
+             this->getType().getFieldDesc(MajorTickSpacingFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleMajorTickSpacing(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfMajorTickSpacing,
+             this->getType().getFieldDesc(MajorTickSpacingFieldId),
+             this));
+
+
+    editSField(MajorTickSpacingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleMajorTickPositions (void) const
+{
+    MFPnt2f::GetHandlePtr returnValue(
+        new  MFPnt2f::GetHandle(
+             &_mfMajorTickPositions,
+             this->getType().getFieldDesc(MajorTickPositionsFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleMajorTickPositions(void)
+{
+    MFPnt2f::EditHandlePtr returnValue(
+        new  MFPnt2f::EditHandle(
+             &_mfMajorTickPositions,
+             this->getType().getFieldDesc(MajorTickPositionsFieldId),
+             this));
+
+
+    editMField(MajorTickPositionsFieldMask, _mfMajorTickPositions);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleMinorTickSpacing (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfMinorTickSpacing,
+             this->getType().getFieldDesc(MinorTickSpacingFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleMinorTickSpacing(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfMinorTickSpacing,
+             this->getType().getFieldDesc(MinorTickSpacingFieldId),
+             this));
+
+
+    editSField(MinorTickSpacingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleMinorTickPositions (void) const
+{
+    MFPnt2f::GetHandlePtr returnValue(
+        new  MFPnt2f::GetHandle(
+             &_mfMinorTickPositions,
+             this->getType().getFieldDesc(MinorTickPositionsFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleMinorTickPositions(void)
+{
+    MFPnt2f::EditHandlePtr returnValue(
+        new  MFPnt2f::EditHandle(
+             &_mfMinorTickPositions,
+             this->getType().getFieldDesc(MinorTickPositionsFieldId),
+             this));
+
+
+    editMField(MinorTickPositionsFieldMask, _mfMinorTickPositions);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleSnapToTicks     (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfSnapToTicks,
+             this->getType().getFieldDesc(SnapToTicksFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleSnapToTicks    (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfSnapToTicks,
+             this->getType().getFieldDesc(SnapToTicksFieldId),
+             this));
+
+
+    editSField(SnapToTicksFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleDrawMajorTicks  (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDrawMajorTicks,
+             this->getType().getFieldDesc(DrawMajorTicksFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleDrawMajorTicks (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDrawMajorTicks,
+             this->getType().getFieldDesc(DrawMajorTicksFieldId),
+             this));
+
+
+    editSField(DrawMajorTicksFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleDrawTrack       (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDrawTrack,
+             this->getType().getFieldDesc(DrawTrackFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleDrawTrack      (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDrawTrack,
+             this->getType().getFieldDesc(DrawTrackFieldId),
+             this));
+
+
+    editSField(DrawTrackFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleDrawMinorTicks  (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDrawMinorTicks,
+             this->getType().getFieldDesc(DrawMinorTicksFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleDrawMinorTicks (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDrawMinorTicks,
+             this->getType().getFieldDesc(DrawMinorTicksFieldId),
+             this));
+
+
+    editSField(DrawMinorTicksFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleDrawLabels      (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDrawLabels,
+             this->getType().getFieldDesc(DrawLabelsFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleDrawLabels     (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDrawLabels,
+             this->getType().getFieldDesc(DrawLabelsFieldId),
+             this));
+
+
+    editSField(DrawLabelsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleInverted        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfInverted,
+             this->getType().getFieldDesc(InvertedFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleInverted       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfInverted,
+             this->getType().getFieldDesc(InvertedFieldId),
+             this));
+
+
+    editSField(InvertedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleLabelMap        (void) const
+{
+    SFFieldContainerMap::GetHandlePtr returnValue(
+        new  SFFieldContainerMap::GetHandle(
+             &_sfLabelMap,
+             this->getType().getFieldDesc(LabelMapFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleLabelMap       (void)
+{
+    SFFieldContainerMap::EditHandlePtr returnValue(
+        new  SFFieldContainerMap::EditHandle(
+             &_sfLabelMap,
+             this->getType().getFieldDesc(LabelMapFieldId),
+             this));
+
+
+    editSField(LabelMapFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleLabelPrototype  (void) const
+{
+    SFUnrecLabelPtr::GetHandlePtr returnValue(
+        new  SFUnrecLabelPtr::GetHandle(
+             &_sfLabelPrototype,
+             this->getType().getFieldDesc(LabelPrototypeFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleLabelPrototype (void)
+{
+    SFUnrecLabelPtr::EditHandlePtr returnValue(
+        new  SFUnrecLabelPtr::EditHandle(
+             &_sfLabelPrototype,
+             this->getType().getFieldDesc(LabelPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Slider::setLabelPrototype,
+                    static_cast<Slider *>(this), _1));
+
+    editSField(LabelPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleTrackDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfTrackDrawObject,
+             this->getType().getFieldDesc(TrackDrawObjectFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleTrackDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfTrackDrawObject,
+             this->getType().getFieldDesc(TrackDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Slider::setTrackDrawObject,
+                    static_cast<Slider *>(this), _1));
+
+    editSField(TrackDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleMinTrackDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfMinTrackDrawObject,
+             this->getType().getFieldDesc(MinTrackDrawObjectFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleMinTrackDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfMinTrackDrawObject,
+             this->getType().getFieldDesc(MinTrackDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Slider::setMinTrackDrawObject,
+                    static_cast<Slider *>(this), _1));
+
+    editSField(MinTrackDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleMaxTrackDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfMaxTrackDrawObject,
+             this->getType().getFieldDesc(MaxTrackDrawObjectFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleMaxTrackDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfMaxTrackDrawObject,
+             this->getType().getFieldDesc(MaxTrackDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Slider::setMaxTrackDrawObject,
+                    static_cast<Slider *>(this), _1));
+
+    editSField(MaxTrackDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleMajorTickDrawObjects (void) const
+{
+    MFUnrecUIDrawObjectPtr::GetHandlePtr returnValue(
+        new  MFUnrecUIDrawObjectPtr::GetHandle(
+             &_mfMajorTickDrawObjects,
+             this->getType().getFieldDesc(MajorTickDrawObjectsFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleMajorTickDrawObjects(void)
+{
+    MFUnrecUIDrawObjectPtr::EditHandlePtr returnValue(
+        new  MFUnrecUIDrawObjectPtr::EditHandle(
+             &_mfMajorTickDrawObjects,
+             this->getType().getFieldDesc(MajorTickDrawObjectsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&Slider::pushToMajorTickDrawObjects,
+                    static_cast<Slider *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&Slider::removeFromMajorTickDrawObjects,
+                    static_cast<Slider *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&Slider::removeObjFromMajorTickDrawObjects,
+                    static_cast<Slider *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&Slider::clearMajorTickDrawObjects,
+                    static_cast<Slider *>(this)));
+
+    editMField(MajorTickDrawObjectsFieldMask, _mfMajorTickDrawObjects);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleMinorTickDrawObjects (void) const
+{
+    MFUnrecUIDrawObjectPtr::GetHandlePtr returnValue(
+        new  MFUnrecUIDrawObjectPtr::GetHandle(
+             &_mfMinorTickDrawObjects,
+             this->getType().getFieldDesc(MinorTickDrawObjectsFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleMinorTickDrawObjects(void)
+{
+    MFUnrecUIDrawObjectPtr::EditHandlePtr returnValue(
+        new  MFUnrecUIDrawObjectPtr::EditHandle(
+             &_mfMinorTickDrawObjects,
+             this->getType().getFieldDesc(MinorTickDrawObjectsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&Slider::pushToMinorTickDrawObjects,
+                    static_cast<Slider *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&Slider::removeFromMinorTickDrawObjects,
+                    static_cast<Slider *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&Slider::removeObjFromMinorTickDrawObjects,
+                    static_cast<Slider *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&Slider::clearMinorTickDrawObjects,
+                    static_cast<Slider *>(this)));
+
+    editMField(MinorTickDrawObjectsFieldMask, _mfMinorTickDrawObjects);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleTrackInset      (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfTrackInset,
+             this->getType().getFieldDesc(TrackInsetFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleTrackInset     (void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfTrackInset,
+             this->getType().getFieldDesc(TrackInsetFieldId),
+             this));
+
+
+    editSField(TrackInsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleTrackToTickOffset (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfTrackToTickOffset,
+             this->getType().getFieldDesc(TrackToTickOffsetFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleTrackToTickOffset(void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfTrackToTickOffset,
+             this->getType().getFieldDesc(TrackToTickOffsetFieldId),
+             this));
+
+
+    editSField(TrackToTickOffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleTrackToLabelOffset (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfTrackToLabelOffset,
+             this->getType().getFieldDesc(TrackToLabelOffsetFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleTrackToLabelOffset(void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfTrackToLabelOffset,
+             this->getType().getFieldDesc(TrackToLabelOffsetFieldId),
+             this));
+
+
+    editSField(TrackToLabelOffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleAlignment       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleAlignment      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             this));
+
+
+    editSField(AlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleTicksOnRightBottom (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfTicksOnRightBottom,
+             this->getType().getFieldDesc(TicksOnRightBottomFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleTicksOnRightBottom(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfTicksOnRightBottom,
+             this->getType().getFieldDesc(TicksOnRightBottomFieldId),
+             this));
+
+
+    editSField(TicksOnRightBottomFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SliderBase::getHandleRangeModel      (void) const
+{
+    SFUnrecBoundedRangeModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecBoundedRangeModelPtr::GetHandle(
+             &_sfRangeModel,
+             this->getType().getFieldDesc(RangeModelFieldId),
+             const_cast<SliderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SliderBase::editHandleRangeModel     (void)
+{
+    SFUnrecBoundedRangeModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecBoundedRangeModelPtr::EditHandle(
+             &_sfRangeModel,
+             this->getType().getFieldDesc(RangeModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Slider::setRangeModel,
+                    static_cast<Slider *>(this), _1));
+
+    editSField(RangeModelFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SliderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Slider *pThis = static_cast<Slider *>(this);
+
+    pThis->execSync(static_cast<Slider *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SliderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Slider *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Slider *>(pRefAspect),
+                  dynamic_cast<const Slider *>(this));
+
+    return returnValue;
+}
+#endif
+
+void SliderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Slider *>(this)->setKnobButton(NULL);
+
+    static_cast<Slider *>(this)->setLabelPrototype(NULL);
+
+    static_cast<Slider *>(this)->setTrackDrawObject(NULL);
+
+    static_cast<Slider *>(this)->setMinTrackDrawObject(NULL);
+
+    static_cast<Slider *>(this)->setMaxTrackDrawObject(NULL);
+
+    static_cast<Slider *>(this)->clearMajorTickDrawObjects();
+
+    static_cast<Slider *>(this)->clearMinorTickDrawObjects();
+
+    static_cast<Slider *>(this)->setRangeModel(NULL);
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfMajorTickPositions.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfMinorTickPositions.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SliderPtr>::_type("SliderPtr", "ContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(SliderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SliderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSLIDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSLIDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSLIDERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

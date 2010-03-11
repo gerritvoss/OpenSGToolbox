@@ -10,95 +10,95 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 // 01 Button Headers
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGBorders.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGList.h>
-#include <OpenSG/UserInterface/OSGDefaultListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
-#include <OpenSG/UserInterface/OSGScrollPanel.h>
+#include "OSGButton.h"
+#include "OSGLabel.h"
+#include "OSGLayers.h"
+#include "OSGBorders.h"
+#include "OSGFlowLayout.h"
+#include "OSGList.h"
+#include "OSGDefaultListModel.h"
+#include "OSGDefaultListSelectionModel.h"
+#include "OSGScrollPanel.h"
 
-#include <OpenSG/UserInterface/OSGUndoableCommand.h>
-#include <OpenSG/UserInterface/OSGCommandManager.h>
-#include <OpenSG/UserInterface/OSGUndoManager.h>
+#include "OSGUndoableCommand.h"
+#include "OSGCommandManager.h"
+#include "OSGUndoManager.h"
 
-ColorLayerPtr ChangableBackground;
-LineBorderPtr ChangableBorder;
+ColorLayerRefPtr ChangableBackground;
+LineBorderRefPtr ChangableBorder;
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
 
 
 class SetBorderColor;
-typedef boost::intrusive_ptr<SetBorderColor> SetBorderColorPtr;
+typedef boost::intrusive_ptr<SetBorderColor> SetBorderColorRefPtr;
 
 class SetBorderColor: public UndoableCommand
 {
 protected:
 	typedef UndoableCommand Inherited;
 
-	LineBorderPtr _TheBorder;
+	LineBorderRefPtr _TheBorder;
 	Color4f _ChangeToColor;
 	Color4f _PreviousColor;
 
-	SetBorderColor(LineBorderPtr TheBorder, Color4f ChangeToColor) : Inherited(),
+	SetBorderColor(LineBorderRefPtr TheBorder, Color4f ChangeToColor) : Inherited(),
 		_TheBorder(TheBorder),
 		_ChangeToColor(ChangeToColor)
 	{
@@ -120,9 +120,7 @@ protected:
 
 		_PreviousColor = _TheBorder->getColor();
 
-		beginEditCP(_TheBorder, LineBorder::ColorFieldMask);
 			_TheBorder->setColor(_ChangeToColor);
-		endEditCP(_TheBorder, LineBorder::ColorFieldMask);
 	}
 public:
 
@@ -141,17 +139,13 @@ public:
 	virtual void redo(void)
 	{
 		Inherited::redo();
-		beginEditCP(_TheBorder, LineBorder::ColorFieldMask);
 			_TheBorder->setColor(_ChangeToColor);
-		endEditCP(_TheBorder, LineBorder::ColorFieldMask);
 	}
 	
 	virtual void undo(void)
 	{
 		Inherited::undo();
-		beginEditCP(_TheBorder, LineBorder::ColorFieldMask);
 			_TheBorder->setColor(_PreviousColor);
-		endEditCP(_TheBorder, LineBorder::ColorFieldMask);
 	}
 
 	virtual bool isSignificant(void) const
@@ -173,27 +167,27 @@ public:
 	{
 	}
 	
-	static SetBorderColorPtr create(LineBorderPtr TheBorder, Color4f ChangeToColor)
+	static SetBorderColorRefPtr create(LineBorderRefPtr TheBorder, Color4f ChangeToColor)
 	{
-		return SetBorderColorPtr(new SetBorderColor(TheBorder, ChangeToColor));
+		return SetBorderColorRefPtr(new SetBorderColor(TheBorder, ChangeToColor));
 	}
 };
 
 CommandType SetBorderColor::_Type("SetBorderColor", "UndoableCommand");
 
 class SetBackgroundColor;
-typedef boost::intrusive_ptr<SetBackgroundColor> SetBackgroundColorPtr;
+typedef boost::intrusive_ptr<SetBackgroundColor> SetBackgroundColorRefPtr;
 
 class SetBackgroundColor: public UndoableCommand
 {
 protected:
 	typedef UndoableCommand Inherited;
 
-	ColorLayerPtr _TheBackground;
+	ColorLayerRefPtr _TheBackground;
 	Color4f _ChangeToColor;
 	Color4f _PreviousColor;
 
-	SetBackgroundColor(ColorLayerPtr TheBackground, Color4f ChangeToColor) : Inherited(),
+	SetBackgroundColor(ColorLayerRefPtr TheBackground, Color4f ChangeToColor) : Inherited(),
 		_TheBackground(TheBackground),
 		_ChangeToColor(ChangeToColor)
 	{
@@ -215,9 +209,7 @@ protected:
 
 		_PreviousColor = _TheBackground->getColor();
 
-		beginEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 			_TheBackground->setColor(_ChangeToColor);
-		endEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 	}
 public:
 
@@ -237,17 +229,13 @@ public:
 	virtual void redo(void)
 	{
 		Inherited::redo();
-		beginEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 			_TheBackground->setColor(_ChangeToColor);
-		endEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 	}
 	
 	virtual void undo(void)
 	{
 		Inherited::undo();
-		beginEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 			_TheBackground->setColor(_PreviousColor);
-		endEditCP(_TheBackground, ColorLayer::ColorFieldMask);
 	}
 
 	virtual bool isSignificant(void) const
@@ -269,9 +257,9 @@ public:
 	{
 	}
 	
-	static SetBackgroundColorPtr create(ColorLayerPtr TheBackground, Color4f ChangeToColor)
+	static SetBackgroundColorRefPtr create(ColorLayerRefPtr TheBackground, Color4f ChangeToColor)
 	{
-		return SetBackgroundColorPtr(new SetBackgroundColor(TheBackground, ChangeToColor));
+		return SetBackgroundColorRefPtr(new SetBackgroundColor(TheBackground, ChangeToColor));
 	}
 };
 
@@ -288,21 +276,21 @@ class SetBorderColorActionListener : public ActionListener
 {
 protected:
 	Color4f _ChangeToColor;
-	LineBorderPtr _TheBorder;
-	CommandManagerPtr _CommandManager;
+	LineBorderRefPtr _TheBorder;
+	CommandManagerRefPtr _CommandManager;
 
 public:
 
-	SetBorderColorActionListener(LineBorderPtr TheBorder, Color4f ChangeToColor, CommandManagerPtr Manager) : ActionListener(),
+	SetBorderColorActionListener(LineBorderRefPtr TheBorder, Color4f ChangeToColor, CommandManagerRefPtr Manager) : ActionListener(),
 		_TheBorder(TheBorder),
 		_ChangeToColor(ChangeToColor),
 		_CommandManager(Manager)
 	{
 	}
 
-   virtual void actionPerformed(const ActionEventPtr e)
+   virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
-		SetBorderColorPtr TheCommand = SetBorderColor::create(_TheBorder, _ChangeToColor);
+		SetBorderColorRefPtr TheCommand = SetBorderColor::create(_TheBorder, _ChangeToColor);
 
 		_CommandManager->executeCommand(TheCommand);
     }
@@ -312,31 +300,31 @@ class SetBackgroundColorActionListener : public ActionListener
 {
 protected:
 	Color4f _ChangeToColor;
-	ColorLayerPtr _TheBackground;
-	CommandManagerPtr _CommandManager;
+	ColorLayerRefPtr _TheBackground;
+	CommandManagerRefPtr _CommandManager;
 
 public:
 
-	SetBackgroundColorActionListener(ColorLayerPtr TheBackground, Color4f ChangeToColor, CommandManagerPtr Manager) : ActionListener(),
+	SetBackgroundColorActionListener(ColorLayerRefPtr TheBackground, Color4f ChangeToColor, CommandManagerRefPtr Manager) : ActionListener(),
 		_TheBackground(TheBackground),
 		_ChangeToColor(ChangeToColor),
 		_CommandManager(Manager)
 	{
 	}
 
-   virtual void actionPerformed(const ActionEventPtr e)
+   virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
-		SetBackgroundColorPtr TheCommand = SetBackgroundColor::create(_TheBackground, _ChangeToColor);
+		SetBackgroundColorRefPtr TheCommand = SetBackgroundColor::create(_TheBackground, _ChangeToColor);
 
 		_CommandManager->executeCommand(TheCommand);
     }
 };
 
-ListPtr UndoRedoList;
-UndoManagerPtr TheUndoManager;
-DefaultListModelPtr UndoRedoListModel;
-ButtonPtr UndoButton;
-ButtonPtr RedoButton;
+ListRefPtr UndoRedoList;
+UndoManagerRefPtr TheUndoManager;
+DefaultListModelRefPtr UndoRedoListModel;
+ButtonRefPtr UndoButton;
+ButtonRefPtr RedoButton;
 
 class UndoButtonActionListener : public ActionListener
 {
@@ -348,7 +336,7 @@ public:
 	{
 	}
 
-   virtual void actionPerformed(const ActionEventPtr e)
+   virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
 		TheUndoManager->undo();
     }
@@ -364,7 +352,7 @@ public:
 	{
 	}
 
-   virtual void actionPerformed(const ActionEventPtr e)
+   virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
 		TheUndoManager->redo();
     }
@@ -374,7 +362,7 @@ class UndoManagerChangeListener : public ChangeListener
 {
 public:
 
-	virtual void stateChanged(const ChangeEventPtr e)
+	virtual void stateChanged(const ChangeEventUnrecPtr e)
 	{
 		while(UndoRedoListModel->getSize() > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 		{
@@ -401,16 +389,12 @@ public:
 		if((UndoCount == 0 && UndoButton->getEnabled()) ||
 			(UndoCount != 0 && !UndoButton->getEnabled()) )
 		{
-			beginEditCP(UndoButton, Button::EnabledFieldMask);
 				UndoButton->setEnabled(UndoCount != 0);
-			endEditCP(UndoButton, Button::EnabledFieldMask);
 		}
 		if((RedoCount == 0 && RedoButton->getEnabled()) ||
 			(RedoCount != 0 && !RedoButton->getEnabled()) )
 		{
-			beginEditCP(RedoButton, Button::EnabledFieldMask);
 				RedoButton->setEnabled(RedoCount != 0);
-			endEditCP(RedoButton, Button::EnabledFieldMask);
 		}
 	}
 };
@@ -421,7 +405,7 @@ public:
 class UndoRedoListListener: public ListSelectionListener
 {
   public:
-    virtual void selectionChanged(const ListSelectionEventPtr e)
+    virtual void selectionChanged(const ListSelectionEventUnrecPtr e)
     {
 		if(!UndoRedoList->getSelectionModel()->isSelectionEmpty())
         {
@@ -439,27 +423,25 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -472,184 +454,148 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    ChangableBorder = osg::LineBorder::create();
-	beginEditCP(ChangableBorder, LineBorder::ColorFieldMask);
+    ChangableBorder = OSG::LineBorder::create();
 		ChangableBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-	endEditCP(ChangableBorder, LineBorder::ColorFieldMask);
     
-	ChangableBackground = osg::ColorLayer::create();
-	beginEditCP(ChangableBackground, ColorLayer::ColorFieldMask);
+	ChangableBackground = OSG::ColorLayer::create();
 		ChangableBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
-	endEditCP(ChangableBackground, ColorLayer::ColorFieldMask);
 
-    LabelPtr ChangableLabel = osg::Label::create();
+    LabelRefPtr ChangableLabel = OSG::Label::create();
 
-	beginEditCP(ChangableLabel, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
             ChangableLabel->setText("Changable");
             ChangableLabel->setBorders(ChangableBorder);
             ChangableLabel->setBackgrounds(ChangableBackground);
-    endEditCP(ChangableLabel, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
 	//Command Buttons
 	TheUndoManager = UndoManager::create();
 	UndoManagerChangeListener TheUndoManagerChangeListener;
 	TheUndoManager->addChangeListener(&TheUndoManagerChangeListener);
 
-	CommandManagerPtr TheCommandManager = CommandManager::create(TheUndoManager);
-    ButtonPtr BorderRedButton = osg::Button::create();
-    beginEditCP(BorderRedButton, Button::TextFieldMask );
+	CommandManagerRefPtr TheCommandManager = CommandManager::create(TheUndoManager);
+    ButtonRefPtr BorderRedButton = OSG::Button::create();
             BorderRedButton->setText("Border Red");
-    endEditCP(BorderRedButton, Button::TextFieldMask);
     SetBorderColorActionListener TheSetRedBorderColorActionListener(ChangableBorder, Color4f(1.0,0.0,0.0,1.0), TheCommandManager);
     BorderRedButton->addActionListener(&TheSetRedBorderColorActionListener);
 	
-    ButtonPtr BorderGreenButton = osg::Button::create();
-    beginEditCP(BorderGreenButton, Button::TextFieldMask );
+    ButtonRefPtr BorderGreenButton = OSG::Button::create();
             BorderGreenButton->setText("Border Green");
-    endEditCP(BorderGreenButton, Button::TextFieldMask);
     SetBorderColorActionListener TheSetGreenBorderColorActionListener(ChangableBorder, Color4f(0.0,1.0,0.0,1.0), TheCommandManager);
     BorderGreenButton->addActionListener(&TheSetGreenBorderColorActionListener);
 	
-    ButtonPtr BorderBlueButton = osg::Button::create();
-    beginEditCP(BorderBlueButton, Button::TextFieldMask );
+    ButtonRefPtr BorderBlueButton = OSG::Button::create();
             BorderBlueButton->setText("Border Blue");
-    endEditCP(BorderBlueButton, Button::TextFieldMask);
     SetBorderColorActionListener TheSetBlueBorderColorActionListener(ChangableBorder, Color4f(0.0,0.0,1.0,1.0), TheCommandManager);
     BorderBlueButton->addActionListener(&TheSetBlueBorderColorActionListener);
 	
 	//Background
-    ButtonPtr BackgroundRedButton = osg::Button::create();
-    beginEditCP(BackgroundRedButton, Button::TextFieldMask );
+    ButtonRefPtr BackgroundRedButton = OSG::Button::create();
             BackgroundRedButton->setText("Background Red");
-    endEditCP(BackgroundRedButton, Button::TextFieldMask);
     SetBackgroundColorActionListener TheSetRedBackgroundColorActionListener(ChangableBackground, Color4f(1.0,0.0,0.0,1.0), TheCommandManager);
     BackgroundRedButton->addActionListener(&TheSetRedBackgroundColorActionListener);
 	
-    ButtonPtr BackgroundGreenButton = osg::Button::create();
-    beginEditCP(BackgroundGreenButton, Button::TextFieldMask );
+    ButtonRefPtr BackgroundGreenButton = OSG::Button::create();
             BackgroundGreenButton->setText("Background Green");
-    endEditCP(BackgroundGreenButton, Button::TextFieldMask);
     SetBackgroundColorActionListener TheSetGreenBackgroundColorActionListener(ChangableBackground, Color4f(0.0,1.0,0.0,1.0), TheCommandManager);
     BackgroundGreenButton->addActionListener(&TheSetGreenBackgroundColorActionListener);
 	
-    ButtonPtr BackgroundBlueButton = osg::Button::create();
-    beginEditCP(BackgroundBlueButton, Button::TextFieldMask );
+    ButtonRefPtr BackgroundBlueButton = OSG::Button::create();
             BackgroundBlueButton->setText("Background Blue");
-    endEditCP(BackgroundBlueButton, Button::TextFieldMask);
     SetBackgroundColorActionListener TheSetBlueBackgroundColorActionListener(ChangableBackground, Color4f(0.0,0.0,1.0,1.0), TheCommandManager);
     BackgroundBlueButton->addActionListener(&TheSetBlueBackgroundColorActionListener);
 
 	//UndoList
 	UndoRedoListModel = DefaultListModel::create();
     UndoRedoListModel->pushBack(boost::any(std::string("Top")));
-	ListSelectionModelPtr UndoRedoListSelectionModel(new DefaultListSelectionModel());
+	ListSelectionModelRefPtr UndoRedoListSelectionModel(new DefaultListSelectionModel());
 
 	UndoRedoList = List::create();
-	beginEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
         UndoRedoList->setPreferredSize(Vec2f(200, 300));
         UndoRedoList->setOrientation(List::VERTICAL_ORIENTATION);
 		UndoRedoList->setModel(UndoRedoListModel);
-    endEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 
     UndoRedoList->setSelectionModel(UndoRedoListSelectionModel);
 
     UndoRedoListListener TheUndoRedoListListener;
     UndoRedoList->getSelectionModel()->addListSelectionListener(&TheUndoRedoListListener);
 
-    UndoButton = osg::Button::create();
-	beginEditCP(UndoButton, Button::TextFieldMask | Button::EnabledFieldMask);
+    UndoButton = OSG::Button::create();
             UndoButton->setText("Undo");
 			UndoButton->setEnabled(TheUndoManager->numberOfUndos() != 0);
-    endEditCP(UndoButton, Button::TextFieldMask | Button::EnabledFieldMask);
     UndoButtonActionListener TheUndoButtonActionListener;
     UndoButton->addActionListener(&TheUndoButtonActionListener);
 	
 
-    RedoButton = osg::Button::create();
-	beginEditCP(RedoButton, Button::TextFieldMask | Button::EnabledFieldMask);
+    RedoButton = OSG::Button::create();
             RedoButton->setText("Redo");
 			RedoButton->setEnabled(TheUndoManager->numberOfRedos() != 0);
-    endEditCP(RedoButton, Button::TextFieldMask | Button::EnabledFieldMask);
     RedoButtonActionListener TheRedoButtonActionListener;
     RedoButton->addActionListener(&TheRedoButtonActionListener);
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelPtr UndoRedoScrollPanel = ScrollPanel::create();
-    beginEditCP(UndoRedoScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    ScrollPanelRefPtr UndoRedoScrollPanel = ScrollPanel::create();
         UndoRedoScrollPanel->setPreferredSize(Vec2f(200,200));
         UndoRedoScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(UndoRedoScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     UndoRedoScrollPanel->setViewComponent(UndoRedoList);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(BorderRedButton);
-       MainInternalWindow->getChildren().push_back(BorderGreenButton);
-       MainInternalWindow->getChildren().push_back(BorderBlueButton);
-       MainInternalWindow->getChildren().push_back(BackgroundRedButton);
-       MainInternalWindow->getChildren().push_back(BackgroundGreenButton);
-       MainInternalWindow->getChildren().push_back(BackgroundBlueButton);
-       MainInternalWindow->getChildren().push_back(ChangableLabel);
-       MainInternalWindow->getChildren().push_back(UndoRedoScrollPanel);
-       MainInternalWindow->getChildren().push_back(UndoButton);
-       MainInternalWindow->getChildren().push_back(RedoButton);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+       MainInternalWindow->pushToChildren(BorderRedButton);
+       MainInternalWindow->pushToChildren(BorderGreenButton);
+       MainInternalWindow->pushToChildren(BorderBlueButton);
+       MainInternalWindow->pushToChildren(BackgroundRedButton);
+       MainInternalWindow->pushToChildren(BackgroundGreenButton);
+       MainInternalWindow->pushToChildren(BackgroundBlueButton);
+       MainInternalWindow->pushToChildren(ChangableLabel);
+       MainInternalWindow->pushToChildren(UndoRedoScrollPanel);
+       MainInternalWindow->pushToChildren(UndoButton);
+       MainInternalWindow->pushToChildren(RedoButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.95f,0.95f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 	
 	// Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "40UndoableCommand");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 
