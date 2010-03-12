@@ -103,8 +103,9 @@ void GLViewport::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) co
                          InsideInsetTopLeftToWindow, InsideInsetBottomRightToWindow);
 
 
-        InsideInsetTopLeftToWindow = ComponentToWindow(InsideInsetTopLeftToWindow,this, Graphics->getDrawEnv()->getAction()->getViewport());
-        InsideInsetBottomRightToWindow = ComponentToWindow(InsideInsetBottomRightToWindow,this, Graphics->getDrawEnv()->getAction()->getViewport());
+		ViewportRefPtr TheViewport(Graphics->getDrawEnv()->getAction()->getViewport());
+        InsideInsetTopLeftToWindow = ComponentToWindow(InsideInsetTopLeftToWindow,this, TheViewport);
+        InsideInsetBottomRightToWindow = ComponentToWindow(InsideInsetBottomRightToWindow,this, TheViewport);
 
 
 
@@ -178,7 +179,7 @@ void GLViewport::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) co
             getPort()->render(_Action);
 
 
-            Graphics->getDrawEnv()->getAction()->getViewport()->activate();
+            TheViewport->activate();
 
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();

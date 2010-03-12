@@ -104,12 +104,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CompoundUndoableEdit : public Abstract
 	virtual ~CompoundUndoableEdit(void);
 
 	CompoundUndoableEditPtr create(void);
-
-	template <class InTypeT> inline
-	static Ptr dcast(InTypeT oIn)
-	{
-		return Ptr(dynamic_cast<Self *>(oIn.get()));
-	}
   protected:
 	  typedef std::deque<UndoableEditPtr> EditVector;
 

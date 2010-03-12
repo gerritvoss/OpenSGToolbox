@@ -19,6 +19,7 @@
 #include "OSGNode.h"
 #include "OSGGroup.h"
 #include "OSGViewport.h"
+#include "OSGPerspectiveCamera.h"
 #include "OSGGradientBackground.h"
 
 // The general scene file loading handler

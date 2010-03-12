@@ -208,6 +208,39 @@ void Titlebar::updateClipBounds(void)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void Titlebar::onCreate(const Titlebar * Id)
+{
+	Inherited::onCreate(Id);
+
+	if(Id != NULL)
+	{
+		if(Id->getIconifyButton() != NULL)
+		{
+			FieldContainerUnrecPtr FCCopy(Id->getIconifyButton()->shallowCopy());
+			setIconifyButton(dynamic_pointer_cast<Button>(FCCopy));
+		}
+		if(Id->getMaximizeButton() != NULL)
+		{
+			FieldContainerUnrecPtr FCCopy(Id->getMaximizeButton()->shallowCopy());
+			setMaximizeButton(dynamic_pointer_cast<Button>(FCCopy));
+		}
+		if(Id->getCloseButton() != NULL)
+		{
+			FieldContainerUnrecPtr FCCopy(Id->getCloseButton()->shallowCopy());
+			setCloseButton(dynamic_pointer_cast<Button>(FCCopy));
+		}
+		if(Id->getTitleLabel() != NULL)
+		{
+			FieldContainerUnrecPtr FCCopy(Id->getTitleLabel()->shallowCopy());
+			setTitleLabel(dynamic_pointer_cast<Label>(FCCopy));
+		}
+	}
+}
+
+void Titlebar::onDestroy()
+{
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 Titlebar::Titlebar(void) :
@@ -218,26 +251,6 @@ Titlebar::Titlebar(void) :
 Titlebar::Titlebar(const Titlebar &source) :
     Inherited(source)
 {
-    if(getIconifyButton() != NULL)
-    {
-        FieldContainerUnrecPtr FCCopy(getIconifyButton()->shallowCopy());
-        setIconifyButton(dynamic_pointer_cast<Button>(FCCopy));
-    }
-    if(getMaximizeButton() != NULL)
-    {
-        FieldContainerUnrecPtr FCCopy(getMaximizeButton()->shallowCopy());
-        setMaximizeButton(dynamic_pointer_cast<Button>(FCCopy));
-    }
-    if(getCloseButton() != NULL)
-    {
-        FieldContainerUnrecPtr FCCopy(getCloseButton()->shallowCopy());
-        setCloseButton(dynamic_pointer_cast<Button>(FCCopy));
-    }
-    if(getTitleLabel() != NULL)
-    {
-        FieldContainerUnrecPtr FCCopy(getTitleLabel()->shallowCopy());
-        setTitleLabel(dynamic_pointer_cast<Label>(FCCopy));
-    }
 }
 
 Titlebar::~Titlebar(void)

@@ -838,6 +838,8 @@ void TabPanel::removeSelectionListener(SelectionListenerPtr listener)
 
 void TabPanel::onCreate(const TabPanel * Id)
 {
+	Inherited::onCreate(Id);
+
     DefaultSingleSelectionModelUnrecPtr Model(DefaultSingleSelectionModel::create());
     setSelectionModel(Model);
 }

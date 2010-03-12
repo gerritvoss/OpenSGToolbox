@@ -87,7 +87,7 @@ public:
 
 
 class SetBorderColor;
-typedef boost::intrusive_ptr<SetBorderColor> SetBorderColorRefPtr;
+typedef boost::shared_ptr<SetBorderColor> SetBorderColorRefPtr;
 
 class SetBorderColor: public UndoableCommand
 {
@@ -131,9 +131,10 @@ public:
 
 	virtual std::string getCommandDescription(void) const
 	{
-		std::string Temp;
-		FieldDataTraits<Color4f>::putToString(_ChangeToColor, Temp);
-		return std::string("Set Border Color to: ") + Temp;
+		std::ostringstream Temp;
+		OutStream osgStream(Temp);
+		FieldTraits<Color4f>::putToStream(_ChangeToColor, osgStream);
+		return std::string("Set Border Color to: ") + Temp.str();
 	}
 
 	virtual void redo(void)
@@ -176,7 +177,7 @@ public:
 CommandType SetBorderColor::_Type("SetBorderColor", "UndoableCommand");
 
 class SetBackgroundColor;
-typedef boost::intrusive_ptr<SetBackgroundColor> SetBackgroundColorRefPtr;
+typedef boost::shared_ptr<SetBackgroundColor> SetBackgroundColorRefPtr;
 
 class SetBackgroundColor: public UndoableCommand
 {
@@ -220,9 +221,10 @@ public:
 
 	virtual std::string getCommandDescription(void) const
 	{
-		std::string Temp;
-		FieldDataTraits<Color4f>::putToString(_ChangeToColor, Temp);
-		return std::string("Set Background Color to: ") + Temp;
+		std::ostringstream Temp;
+		OutStream osgStream(Temp);
+		FieldTraits<Color4f>::putToStream(_ChangeToColor, osgStream);
+		return std::string("Set Background Color to: ") + Temp.str();
 	}
 
 
@@ -277,11 +279,11 @@ class SetBorderColorActionListener : public ActionListener
 protected:
 	Color4f _ChangeToColor;
 	LineBorderRefPtr _TheBorder;
-	CommandManagerRefPtr _CommandManager;
+	CommandManagerPtr _CommandManager;
 
 public:
 
-	SetBorderColorActionListener(LineBorderRefPtr TheBorder, Color4f ChangeToColor, CommandManagerRefPtr Manager) : ActionListener(),
+	SetBorderColorActionListener(LineBorderRefPtr TheBorder, Color4f ChangeToColor, CommandManagerPtr Manager) : ActionListener(),
 		_TheBorder(TheBorder),
 		_ChangeToColor(ChangeToColor),
 		_CommandManager(Manager)
@@ -301,11 +303,11 @@ class SetBackgroundColorActionListener : public ActionListener
 protected:
 	Color4f _ChangeToColor;
 	ColorLayerRefPtr _TheBackground;
-	CommandManagerRefPtr _CommandManager;
+	CommandManagerPtr _CommandManager;
 
 public:
 
-	SetBackgroundColorActionListener(ColorLayerRefPtr TheBackground, Color4f ChangeToColor, CommandManagerRefPtr Manager) : ActionListener(),
+	SetBackgroundColorActionListener(ColorLayerRefPtr TheBackground, Color4f ChangeToColor, CommandManagerPtr Manager) : ActionListener(),
 		_TheBackground(TheBackground),
 		_ChangeToColor(ChangeToColor),
 		_CommandManager(Manager)
@@ -314,14 +316,14 @@ public:
 
    virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
-		SetBackgroundColorRefPtr TheCommand = SetBackgroundColor::create(_TheBackground, _ChangeToColor);
+		UndoableCommandPtr TheCommand = SetBackgroundColor::create(_TheBackground, _ChangeToColor);
 
 		_CommandManager->executeCommand(TheCommand);
     }
 };
 
 ListRefPtr UndoRedoList;
-UndoManagerRefPtr TheUndoManager;
+UndoManagerPtr TheUndoManager;
 DefaultListModelRefPtr UndoRedoListModel;
 ButtonRefPtr UndoButton;
 ButtonRefPtr RedoButton;
@@ -471,7 +473,7 @@ int main(int argc, char **argv)
 	UndoManagerChangeListener TheUndoManagerChangeListener;
 	TheUndoManager->addChangeListener(&TheUndoManagerChangeListener);
 
-	CommandManagerRefPtr TheCommandManager = CommandManager::create(TheUndoManager);
+	CommandManagerPtr TheCommandManager = CommandManager::create(TheUndoManager);
     ButtonRefPtr BorderRedButton = OSG::Button::create();
             BorderRedButton->setText("Border Red");
     SetBorderColorActionListener TheSetRedBorderColorActionListener(ChangableBorder, Color4f(1.0,0.0,0.0,1.0), TheCommandManager);
@@ -506,7 +508,7 @@ int main(int argc, char **argv)
 	//UndoList
 	UndoRedoListModel = DefaultListModel::create();
     UndoRedoListModel->pushBack(boost::any(std::string("Top")));
-	ListSelectionModelRefPtr UndoRedoListSelectionModel(new DefaultListSelectionModel());
+	ListSelectionModelPtr UndoRedoListSelectionModel(new DefaultListSelectionModel());
 
 	UndoRedoList = List::create();
         UndoRedoList->setPreferredSize(Vec2f(200, 300));

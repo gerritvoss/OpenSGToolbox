@@ -145,12 +145,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UndoManager : public CompoundUndoableE
     virtual ~UndoManager(void);
 
     static UndoManagerPtr create(void);
-
-    template <class InTypeT> inline
-        static Ptr dcast(InTypeT oIn)
-        {
-            return Ptr(dynamic_cast<Self *>(oIn.get()));
-        }
   protected:
     Int32 _IndexOfNextAdd;
     Int32 _Limit;

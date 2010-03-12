@@ -47,6 +47,7 @@
 
 #include "OSGDefaultListComponentGenerator.h"
 #include "OSGComponent.h"
+#include "OSGLabel.h"
 #include "OSGStringUtils.h"
 #include "OSGList.h"
 
@@ -91,7 +92,16 @@ ComponentRefPtr DefaultListComponentGenerator::getListComponent(ListRefPtr Paren
 
 ComponentRefPtr DefaultListComponentGenerator::getListComponentFromString(ListRefPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
-	ComponentRefPtr TheComponent = dynamic_pointer_cast<Component>(getDrawObjectPrototype()->shallowCopy());
+	ComponentRefPtr TheComponent;
+
+	if(getDrawObjectPrototype() != NULL)
+	{
+		TheComponent = dynamic_pointer_cast<Component>(getDrawObjectPrototype()->shallowCopy());
+	}
+	else
+	{
+		TheComponent = Label::create();
+	}
 
 	if(TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
 	{

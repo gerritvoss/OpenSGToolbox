@@ -458,6 +458,8 @@ void Slider::detachFromEventProducer(void)
 
 void Slider::onCreate(const Slider * Id)
 {
+	Inherited::onCreate(Id);
+
     if(Id != NULL)
     {
         FieldContainerUnrecPtr TheFC(NULL);

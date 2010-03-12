@@ -214,7 +214,10 @@ void SplitPanel::setDividerDrawObject(const UIDrawObjectCanvasRefPtr &value)
         getDividerDrawObject()->removeMouseListener(&_DividerListener);
     }
     _sfDividerDrawObject.setValue(value);
-    value->addMouseListener(&_DividerListener);
+    if (getDividerDrawObject() != NULL)
+    {
+		value->addMouseListener(&_DividerListener);
+	}
 }
 
 void SplitPanel::updateChildren(void)
@@ -247,6 +250,8 @@ void SplitPanel::detachFromEventProducer(void)
 
 void SplitPanel::onCreate(const SplitPanel * Id)
 {
+	Inherited::onCreate(Id);
+
 	if(getDividerDrawObject() != NULL)
 	{
         FieldContainerUnrecPtr TheDividerDrawObject(getDividerDrawObject()->shallowCopy());

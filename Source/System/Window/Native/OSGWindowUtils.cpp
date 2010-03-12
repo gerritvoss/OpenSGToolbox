@@ -47,7 +47,7 @@ WindowEventProducerTransitPtr createNativeWindow(void)
 #if defined(__APPLE__)
     return WindowEventProducerTransitPtr(CarbonWindow::create());
 #elif defined(WIN32)
-    return WindowEventProducerTransitPtr(Win32Window::create());
+    return WindowEventProducerTransitPtr(WIN32Window::create());
 #elif defined(__linux)
     return WindowEventProducerTransitPtr(XWindow::create());
 #endif

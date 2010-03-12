@@ -110,7 +110,7 @@ Action::ResultE UIRectangle::renderActionEnterHandler(Action *action)
 
     func = boost::bind(&UIRectangle::drawPrimitives, this, _1);
 
-    a->dropFunctor(func, NULL);
+    a->dropFunctor(func, _State, 0, false);
 
     if(a->pushVisibility())
     {
@@ -233,6 +233,9 @@ void UIRectangle::onCreate(const UIRectangle * Id)
     {
         getMouseTransformFunctor()->setParent(this);
     }
+
+	
+	_State = State::create();
 }
 
 void UIRectangle::onDestroy()
@@ -276,6 +279,12 @@ void UIRectangle::changed(ConstFieldMaskArg whichField,
             getDrawingSurface()->setSize(Vec2f(static_cast<Real32>(getWidth()), static_cast<Real32>(getHeight())));
 		}
     }
+	
+	if( (whichField & DrawingSurfaceFieldMask) &&
+		getDrawingSurface() != NULL)
+    {
+        getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
+	}
 }
 
 void UIRectangle::dump(      UInt32    ,

@@ -111,6 +111,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Titlebar : public TitlebarBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const Titlebar *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
 
   private:

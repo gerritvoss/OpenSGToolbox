@@ -47,6 +47,7 @@
 #include "OSGUIDrawingSurface.h"
 #include "OSGPolygonChunk.h"
 #include "OSGColorMaskChunk.h"
+#include "OSGState.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -140,6 +141,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangle : public UIRectangleBase
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const UIRectangle &source);
+
+	StateRefPtr _State;
+
+
 };
 
 typedef UIRectangle *UIRectangleP;

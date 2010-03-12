@@ -99,11 +99,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractUndoableEdit : public Undoable
 	
 	virtual ~AbstractUndoableEdit(void);
 
-	template <class InTypeT> inline
-	static Ptr dcast(InTypeT oIn)
-	{
-		return Ptr(dynamic_cast<Self *>(oIn.get()));
-	}
   protected:
 	bool _Alive;
 	bool _HasBeenDone;

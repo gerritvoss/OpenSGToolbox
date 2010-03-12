@@ -107,12 +107,6 @@ public:
 	virtual void undo(void) = 0;
 	
 	virtual ~UndoableEdit(void);
-
-	template <class InTypeT> inline
-	static Ptr dcast(InTypeT oIn)
-	{
-		return Ptr(dynamic_cast<Self *>(oIn.get()));
-	}
 };
 
 

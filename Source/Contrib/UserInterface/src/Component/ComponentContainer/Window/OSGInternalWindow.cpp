@@ -845,6 +845,8 @@ void InternalWindow::removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers
 
 void InternalWindow::onCreate(const InternalWindow * Id)
 {
+	Inherited::onCreate(Id);
+
     if(Id != NULL)
     {
         if(Id->getTitlebar() != NULL)

@@ -121,6 +121,9 @@ class TutorialKeyListener : public KeyListener
 
 
  ******************************************************/
+class FontListComponentGenerator;
+
+typedef TransitPtr   < FontListComponentGenerator > FontListComponentGeneratorTransitPtr;
 
 class FontListComponentGenerator : public DefaultListComponentGenerator
 {
@@ -185,6 +188,13 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
     {
         return _type;
     }
+
+	static FontListComponentGeneratorTransitPtr create(void)
+	{
+		FontListComponentGeneratorTransitPtr fc(new FontListComponentGenerator());
+
+		return fc;
+	}
 
   protected:
 
@@ -525,8 +535,7 @@ changes.
     }
 
     // Creates ComponentGenerator
-    FontListComponentGeneratorRefPtr TheGenerator =
-        dynamic_pointer_cast<FontListComponentGenerator>(FontListComponentGenerator::create());
+    FontListComponentGeneratorRefPtr TheGenerator = FontListComponentGenerator::create();
 
     // Create the List of Fonts (see 18List for more information)
     FontList = List::create();

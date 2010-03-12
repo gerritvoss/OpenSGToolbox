@@ -64,12 +64,6 @@ public:
     static const CommandType &getClassType(void);
 
 	virtual ~UndoableCommand(void);
-
-	template <class InTypeT> inline
-	static Ptr dcast(InTypeT oIn)
-	{
-		return Ptr(dynamic_cast<Self *>(oIn.get()));
-	}
 };
 
 
