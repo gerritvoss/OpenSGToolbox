@@ -125,7 +125,7 @@ int main(int argc, char **argv)
 	//Camera
 	PerspectiveCameraRefPtr DefaultCamera = PerspectiveCamera::create();
 		 DefaultCamera->setBeacon(CameraBeaconNode);
-		 DefaultCamera->setFov   (deg2rad(60.f));
+		 DefaultCamera->setFov   (osgDegree2Rad(60.f));
 		 DefaultCamera->setNear  (0.1f);
 		 DefaultCamera->setFar   (100.f);
 

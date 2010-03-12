@@ -6,54 +6,54 @@
 // Includes: Font and Label creation and settings
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 //Input
-#include <OpenSG/Input/OSGWindowUtils.h>
-#include <OpenSG/Input/OSGMouseAdapter.h>
+#include "OSGWindowUtils.h"
+#include "OSGMouseAdapter.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGBorderLayout.h>
-#include <OpenSG/UserInterface/OSGGridBagLayout.h>
-#include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
-#include <OpenSG/UserInterface/OSGGridBagLayoutConstraints.h>
-#include <OpenSG/UserInterface/OSGGradientLayer.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-//#include <OpenSG/UserInterface/OSGUIDefines.h>
-#include <OpenSG/OSGTypeFactory.h>
-#include <OpenSG/OSGFieldFactory.h>
-#include <OpenSG/OSGFieldContainerFactory.h>
+#include "OSGInternalWindow.h"
+#include "OSGUIForeground.h"
+#include "OSGLayers.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGFlowLayout.h"
+#include "OSGBorderLayout.h"
+#include "OSGGridBagLayout.h"
+#include "OSGBorderLayoutConstraints.h"
+#include "OSGGridBagLayoutConstraints.h"
+#include "OSGGradientLayer.h"
+#include "OSGLookAndFeelManager.h"
+//#include "OSGUIDefines.h"
+#include "OSGTypeFactory.h"
+
+#include "OSGFieldContainerFactory.h"
 
 // Include Label and Font headerfiles
-#include <OpenSG/UserInterface/OSGLabel.h>
+#include "OSGLabel.h"
 
 // List header files
-#include <OpenSG/UserInterface/OSGList.h>
-#include <OpenSG/UserInterface/OSGDefaultListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
-#include <OpenSG/UserInterface/OSGListModel.h>
+#include "OSGList.h"
+#include "OSGDefaultListModel.h"
+#include "OSGDefaultListSelectionModel.h"
+#include "OSGListModel.h"
 
-#include <OpenSG/UserInterface/OSGScrollPanel.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
+#include "OSGScrollPanel.h"
+#include "OSGPanel.h"
+#include "OSGLabel.h"
 
 #include <sstream>
 
@@ -65,7 +65,7 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Declare upfront so they can be referenced
 
@@ -76,23 +76,23 @@ void reshape(Vec2f Size);
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-            TutorialWindowEventProducer->closeWindow();
-       }
-   }
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            TutorialWindow->closeWindow();
+        }
+    }
 
-   virtual void keyReleased(const KeyEventPtr e)
-   {
-   }
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
 
-   virtual void keyTyped(const KeyEventPtr e)
-   {
-   }
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
 // Setup a listener to change the label's font
@@ -101,19 +101,19 @@ public:
 class TypeListListener: public MouseAdapter
 {
   public:
-    virtual void mouseClicked(const MouseEventPtr e)
+    virtual void mouseClicked(const MouseEventUnrecPtr e)
     {
     }
 };
 
 class OpenSGTypePanel
 {
-public:
+  public:
 
     class FCListListener: public ListSelectionListener
     {
       public:
-        virtual void selectionChanged(const ListSelectionEventPtr e)
+        virtual void selectionChanged(const ListSelectionEventUnrecPtr e)
         {
             if(!_List->getSelectionModel()->isSelectionEmpty())
             {
@@ -132,17 +132,17 @@ public:
                 {
 
                     // Output selected font
-                    std::cout << "Field Container Type: " << TheFCType->getCName() << std::endl;
+                    std::cout << "Field ComponentContainer Type: " << TheFCType->getCName() << std::endl;
                     std::cout << std::setw(25) << "Field Name" << " | " << std::setw(22) << "Type" << " | " << std::setw(11) << "Cardinality"  << " | " << std::setw(25) << "Default Value" << std::endl;
                     for(UInt32 i(1) ; i<TheFCType->getNumFieldDescs()+1 ; ++i)
                     {
-                        FieldDescription* Desc = TheFCType->getFieldDescription(i);
+                        FieldDescriptionBase* Desc = TheFCType->getFieldDesc(i);
                         if(!Desc->isInternal())
                         {
-                            FieldType* TheField = FieldFactory::the().getFieldType(Desc->getTypeId());
+                            const FieldType& TheField( Desc->getFieldType() );
                             std::cout << std::setw(25) << Desc->getCName() << " | " ;
-                            std::cout << std::setw(22) << TheField->getContentType().getCName() << " | " ;
-                            if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
+                            std::cout << std::setw(22) << TheField.getContentType().getCName() << " | " ;
+                            if(TheField.getCardinality() == FieldType::SingleField)
                             {
                                 std::cout << std::setw(11) << "Single"  << " | " ;
                             }
@@ -151,13 +151,13 @@ public:
                                 std::cout << std::setw(11) << "Many"  << " | " ;
                             }
 
-                                if(TheFCType->getPrototype() != NullFC &&
-                                    TheFCType->getPrototype()->getField(Desc->getFieldId()) != NULL)
-                                {
-                                    std::string Value;
-                                    TheFCType->getPrototype()->getField(Desc->getFieldId())->getValueByStr(Value, 0);
-                                    std::cout << std::setw(25) << Value;
-                                }
+                            if(TheFCType->getPrototype() != NULL &&
+                               TheFCType->getPrototype()->getField(Desc->getFieldId()) != NULL)
+                            {
+                                std::string Value;
+                                //TheFCType->getPrototype()->getField(Desc->getFieldId())->getValueByStr(Value, 0);
+                                std::cout << std::setw(25) << Value;
+                            }
 
                             std::cout   << std::endl;
                         }
@@ -167,437 +167,368 @@ public:
             }
         }
 
-        void setList(ListPtr TheList)
+        void setList(ListRefPtr TheList)
         {
-             _List = TheList;
+            _List = TheList;
         }
-    protected:
-        ListPtr _List;
+      protected:
+        ListRefPtr _List;
     };
 
-protected:
-	PanelPtr _MainPanel;
-	DefaultListModelPtr _TypeModel;
-	DefaultListModelPtr _FieldTypeModel;
-	DefaultListModelPtr _FieldContainerTypeModel;
+  protected:
+    PanelRefPtr _MainPanel;
+    DefaultListModelRefPtr _TypeModel;
+    DefaultListModelRefPtr _FieldTypeModel;
+    DefaultListModelRefPtr _FieldContainerTypeModel;
     FCListListener TheFCListListener;
 
-	PanelPtr createTypePanel(void)
-	{
-		//Put all the FieldTypes into the model
-		_TypeModel = DefaultListModel::create();
-		for (UInt32 i(1); i <= TypeFactory::the()->getNumTypes() ; ++i)
-		{
-			TypeBase* TheType;
-			TheType = TypeFactory::the()->findType(i);
-			if(TheType != NULL)
-			{
-				// Add all available Fonts to it
-				_TypeModel->pushBack(boost::any(std::string(TheType->getCName())));
-			}
-		}
-		// Create TypeList
-		ListPtr TypeList = List::create();
-		beginEditCP(TypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
-			TypeList->setPreferredSize( Vec2f (200, 300) );
-			TypeList->setOrientation(List::VERTICAL_ORIENTATION);
-			TypeList->setModel(_TypeModel);
-		endEditCP(TypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
+    PanelRefPtr createTypePanel(void)
+    {
+        //Put all the FieldTypes into the model
+        _TypeModel = DefaultListModel::create();
+        for (UInt32 i(1); i <= TypeFactory::the()->getNumTypes() ; ++i)
+        {
+            TypeBase* TheType;
+            TheType = TypeFactory::the()->findType(i);
+            if(TheType != NULL)
+            {
+                // Add all available Fonts to it
+                _TypeModel->pushBack(boost::any(std::string(TheType->getCName())));
+            }
+        }
+        // Create TypeList
+        ListRefPtr TypeList = List::create();
+        TypeList->setPreferredSize( Vec2f (200, 300) );
+        TypeList->setOrientation(List::VERTICAL_ORIENTATION);
+        TypeList->setModel(_TypeModel);
 
-		// Assign the Model, and SelectionModel
-		// to the List
-		// Creates and assigns a SelectionMode
-		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
-		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
-		TypeList->setSelectionModel(FieldSelectionModel);
-		
-		GridBagLayoutConstraintsPtr TypeListScrollPanelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(TypeListScrollPanelConstraints);
-			TypeListScrollPanelConstraints->setGridX(0);
-			TypeListScrollPanelConstraints->setGridY(0);
-			TypeListScrollPanelConstraints->setGridHeight(1);
-			TypeListScrollPanelConstraints->setGridWidth(2);
-			TypeListScrollPanelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
-			TypeListScrollPanelConstraints->setVerticalAlignment(1.0);
-		endEditCP(TypeListScrollPanelConstraints);
+        // Assign the Model, and SelectionModel
+        // to the List
+        // Creates and assigns a SelectionMode
+        ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
+        FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+        TypeList->setSelectionModel(FieldSelectionModel);
 
-		//TypeListScrollPanel
-		ScrollPanelPtr TypeListScrollPanel = ScrollPanel::create();
-		beginEditCP(TypeListScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | Component::ConstraintsFieldMask);
-			TypeListScrollPanel->setPreferredSize(Vec2f(200,300));
-			TypeListScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-			//TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-			TypeListScrollPanel->setConstraints(TypeListScrollPanelConstraints);
-		endEditCP(TypeListScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | Component::ConstraintsFieldMask);
-		TypeListScrollPanel->setViewComponent(TypeList);
+        GridBagLayoutConstraintsRefPtr TypeListScrollPanelConstraints = OSG::GridBagLayoutConstraints::create();
+        TypeListScrollPanelConstraints->setGridX(0);
+        TypeListScrollPanelConstraints->setGridY(0);
+        TypeListScrollPanelConstraints->setGridHeight(1);
+        TypeListScrollPanelConstraints->setGridWidth(2);
+        TypeListScrollPanelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
+        TypeListScrollPanelConstraints->setVerticalAlignment(1.0);
 
-		//Number of FieldContainerTypes Label
-		GridBagLayoutConstraintsPtr NumTypesLabelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(NumTypesLabelConstraints);
-			NumTypesLabelConstraints->setGridX(0);
-			NumTypesLabelConstraints->setGridY(1);
-			NumTypesLabelConstraints->setGridHeight(1);
-			NumTypesLabelConstraints->setGridWidth(1);
-			NumTypesLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
-			NumTypesLabelConstraints->setWeightX(1.0);
-			NumTypesLabelConstraints->setVerticalAlignment(0.0);
-		endEditCP(NumTypesLabelConstraints);
+        //TypeListScrollPanel
+        ScrollPanelRefPtr TypeListScrollPanel = ScrollPanel::create();
+        TypeListScrollPanel->setPreferredSize(Vec2f(200,300));
+        TypeListScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        TypeListScrollPanel->setConstraints(TypeListScrollPanelConstraints);
+        TypeListScrollPanel->setViewComponent(TypeList);
 
-		LabelPtr NumTypesLabel = Label::create();
-		beginEditCP(NumTypesLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
-			NumTypesLabel->setText("Number Field Types: ");
-			NumTypesLabel->setConstraints(NumTypesLabelConstraints);
-		endEditCP(NumTypesLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
-		
-		//Number of FieldContainerTypes Value Label
-		GridBagLayoutConstraintsPtr NumTypesValueLabelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(NumTypesValueLabelConstraints);
-			NumTypesValueLabelConstraints->setGridX(1);
-			NumTypesValueLabelConstraints->setGridY(1);
-			NumTypesValueLabelConstraints->setGridHeight(1);
-			NumTypesValueLabelConstraints->setGridWidth(1);
-			NumTypesValueLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
-			NumTypesValueLabelConstraints->setWeightX(1.0);
-			NumTypesValueLabelConstraints->setVerticalAlignment(0.0);
-		endEditCP(NumTypesValueLabelConstraints);
+        //Number of FieldContainerTypes Label
+        GridBagLayoutConstraintsRefPtr NumTypesLabelConstraints = OSG::GridBagLayoutConstraints::create();
+        NumTypesLabelConstraints->setGridX(0);
+        NumTypesLabelConstraints->setGridY(1);
+        NumTypesLabelConstraints->setGridHeight(1);
+        NumTypesLabelConstraints->setGridWidth(1);
+        NumTypesLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
+        NumTypesLabelConstraints->setWeightX(1.0);
+        NumTypesLabelConstraints->setVerticalAlignment(0.0);
 
-		LabelPtr NumTypesValueLabel = Label::create();
-		std::stringstream TempSStream;
-		TempSStream << TypeFactory::the()->getNumTypes();
-		beginEditCP(NumTypesValueLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
-			NumTypesValueLabel->setText(TempSStream.str());
-			NumTypesValueLabel->setConstraints(NumTypesValueLabelConstraints);
-		endEditCP(NumTypesValueLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
+        LabelRefPtr NumTypesLabel = Label::create();
+        NumTypesLabel->setText("Number Field Types: ");
+        NumTypesLabel->setConstraints(NumTypesLabelConstraints);
 
-		//Create Main Panel Layout
-		GridBagLayoutPtr TypePanelLayout = osg::GridBagLayout::create();
-		beginEditCP(TypePanelLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
-			TypePanelLayout->setColumns(2);
-			TypePanelLayout->setRows(2);
-		endEditCP(TypePanelLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
+        //Number of FieldContainerTypes Value Label
+        GridBagLayoutConstraintsRefPtr NumTypesValueLabelConstraints = OSG::GridBagLayoutConstraints::create();
+        NumTypesValueLabelConstraints->setGridX(1);
+        NumTypesValueLabelConstraints->setGridY(1);
+        NumTypesValueLabelConstraints->setGridHeight(1);
+        NumTypesValueLabelConstraints->setGridWidth(1);
+        NumTypesValueLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
+        NumTypesValueLabelConstraints->setWeightX(1.0);
+        NumTypesValueLabelConstraints->setVerticalAlignment(0.0);
 
-		//Create Main Panel
-		PanelPtr TypePanel = Panel::create();
+        LabelRefPtr NumTypesValueLabel = Label::create();
+        std::stringstream TempSStream;
+        TempSStream << TypeFactory::the()->getNumTypes();
+        NumTypesValueLabel->setText(TempSStream.str());
+        NumTypesValueLabel->setConstraints(NumTypesValueLabelConstraints);
 
-		beginEditCP(TypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-			TypePanel->getChildren().push_back(TypeListScrollPanel);
-			TypePanel->getChildren().push_back(NumTypesLabel);
-			TypePanel->getChildren().push_back(NumTypesValueLabel);
-			TypePanel->setLayout(TypePanelLayout);
-		endEditCP(TypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-		return TypePanel;
-	}
+        //Create Main Panel Layout
+        GridBagLayoutRefPtr TypePanelLayout = OSG::GridBagLayout::create();
+        TypePanelLayout->setColumns(2);
+        TypePanelLayout->setRows(2);
 
-	PanelPtr createFieldTypePanel(void)
-	{
-		//Put all the FieldTypes into the model
-		_FieldTypeModel = DefaultListModel::create();
-		UInt32 NumTypesFound(0);
-		for (UInt32 i(0); NumTypesFound < FieldFactory::the().getNFieldTypes() ; ++i)
-		{
-			FieldType* TheType;
-			TheType = FieldFactory::the().getFieldType(i);
-			if(TheType != NULL)
-			{
-				// Add all available Fonts to it
-				_FieldTypeModel->pushBack(boost::any(std::string(TheType->getCName())));
-				++NumTypesFound;
-			}
-		}
+        //Create Main Panel
+        PanelRefPtr TypePanel = Panel::create();
 
-		// Create FieldTypeList
-		ListPtr FieldTypeList = List::create();
-		beginEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
-			FieldTypeList->setPreferredSize( Vec2f (200, 300) );
-			FieldTypeList->setOrientation(List::VERTICAL_ORIENTATION);
-			FieldTypeList->setModel(_FieldTypeModel);
-		endEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
+        TypePanel->pushToChildren(TypeListScrollPanel);
+        TypePanel->pushToChildren(NumTypesLabel);
+        TypePanel->pushToChildren(NumTypesValueLabel);
+        TypePanel->setLayout(TypePanelLayout);
+        return TypePanel;
+    }
 
-		// Assign the Model, and SelectionModel
-		// to the List
-		// Creates and assigns a SelectionMode
-		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
-		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
-		FieldTypeList->setSelectionModel(FieldSelectionModel);
-		
-		GridBagLayoutConstraintsPtr FieldTypeListScrollPanelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(FieldTypeListScrollPanelConstraints);
-			FieldTypeListScrollPanelConstraints->setGridX(0);
-			FieldTypeListScrollPanelConstraints->setGridY(0);
-			FieldTypeListScrollPanelConstraints->setGridHeight(1);
-			FieldTypeListScrollPanelConstraints->setGridWidth(2);
-			FieldTypeListScrollPanelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
-			FieldTypeListScrollPanelConstraints->setVerticalAlignment(1.0);
-		endEditCP(FieldTypeListScrollPanelConstraints);
+    PanelRefPtr createFieldTypePanel(void)
+    {
+        //Put all the FieldTypes into the model
+        _FieldTypeModel = DefaultListModel::create();
+        UInt32 NumTypesFound(0);
+        for (UInt32 i(1); i <= TypeFactory::the()->getNumTypes() ; ++i)
+        {
+            TypeBase* TheType;
+            TheType = TypeFactory::the()->findType(i);
+            if(TheType != NULL &&
+               dynamic_cast<FieldType*>(TheType) != NULL)
+            {
+                // Add all available Fonts to it
+                _FieldTypeModel->pushBack(boost::any(std::string(TheType->getCName())));
+                ++NumTypesFound;
+            }
+        }
 
-		//FieldTypeListScrollPanel
-		ScrollPanelPtr FieldTypeListScrollPanel = ScrollPanel::create();
-		beginEditCP(FieldTypeListScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | Component::ConstraintsFieldMask);
-			FieldTypeListScrollPanel->setPreferredSize(Vec2f(200,300));
-			FieldTypeListScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-			//TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-			FieldTypeListScrollPanel->setConstraints(FieldTypeListScrollPanelConstraints);
-		endEditCP(FieldTypeListScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | Component::ConstraintsFieldMask);
-		FieldTypeListScrollPanel->setViewComponent(FieldTypeList);
+        // Create FieldTypeList
+        ListRefPtr FieldTypeList = List::create();
+        FieldTypeList->setPreferredSize( Vec2f (200, 300) );
+        FieldTypeList->setOrientation(List::VERTICAL_ORIENTATION);
+        FieldTypeList->setModel(_FieldTypeModel);
 
-		//Number of FieldContainerTypes Label
-		GridBagLayoutConstraintsPtr NumFieldTypesLabelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(NumFieldTypesLabelConstraints);
-			NumFieldTypesLabelConstraints->setGridX(0);
-			NumFieldTypesLabelConstraints->setGridY(1);
-			NumFieldTypesLabelConstraints->setGridHeight(1);
-			NumFieldTypesLabelConstraints->setGridWidth(1);
-			NumFieldTypesLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
-			NumFieldTypesLabelConstraints->setWeightX(1.0);
-			NumFieldTypesLabelConstraints->setVerticalAlignment(0.0);
-		endEditCP(NumFieldTypesLabelConstraints);
+        // Assign the Model, and SelectionModel
+        // to the List
+        // Creates and assigns a SelectionMode
+        ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
+        FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+        FieldTypeList->setSelectionModel(FieldSelectionModel);
 
-		LabelPtr NumFieldTypesLabel = Label::create();
-		beginEditCP(NumFieldTypesLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
-			NumFieldTypesLabel->setText("Number Field Types: ");
-			NumFieldTypesLabel->setConstraints(NumFieldTypesLabelConstraints);
-		endEditCP(NumFieldTypesLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
-		
-		//Number of FieldContainerTypes Value Label
-		GridBagLayoutConstraintsPtr NumFieldTypesValueLabelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(NumFieldTypesValueLabelConstraints);
-			NumFieldTypesValueLabelConstraints->setGridX(1);
-			NumFieldTypesValueLabelConstraints->setGridY(1);
-			NumFieldTypesValueLabelConstraints->setGridHeight(1);
-			NumFieldTypesValueLabelConstraints->setGridWidth(1);
-			NumFieldTypesValueLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
-			NumFieldTypesValueLabelConstraints->setWeightX(1.0);
-			NumFieldTypesValueLabelConstraints->setVerticalAlignment(0.0);
-		endEditCP(NumFieldTypesValueLabelConstraints);
+        GridBagLayoutConstraintsRefPtr FieldTypeListScrollPanelConstraints = OSG::GridBagLayoutConstraints::create();
+        FieldTypeListScrollPanelConstraints->setGridX(0);
+        FieldTypeListScrollPanelConstraints->setGridY(0);
+        FieldTypeListScrollPanelConstraints->setGridHeight(1);
+        FieldTypeListScrollPanelConstraints->setGridWidth(2);
+        FieldTypeListScrollPanelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
+        FieldTypeListScrollPanelConstraints->setVerticalAlignment(1.0);
 
-		LabelPtr NumFieldTypesValueLabel = Label::create();
-		std::stringstream TempSStream;
-		TempSStream << FieldFactory::the().getNFieldTypes();
-		beginEditCP(NumFieldTypesValueLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
-			NumFieldTypesValueLabel->setText(TempSStream.str());
-			NumFieldTypesValueLabel->setConstraints(NumFieldTypesValueLabelConstraints);
-		endEditCP(NumFieldTypesValueLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
+        //FieldTypeListScrollPanel
+        ScrollPanelRefPtr FieldTypeListScrollPanel = ScrollPanel::create();
+        FieldTypeListScrollPanel->setPreferredSize(Vec2f(200,300));
+        FieldTypeListScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        FieldTypeListScrollPanel->setConstraints(FieldTypeListScrollPanelConstraints);
+        FieldTypeListScrollPanel->setViewComponent(FieldTypeList);
 
-		//Create Main Panel Layout
-		GridBagLayoutPtr FieldTypePanelLayout = osg::GridBagLayout::create();
-		beginEditCP(FieldTypePanelLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
-			FieldTypePanelLayout->setColumns(2);
-			FieldTypePanelLayout->setRows(2);
-		endEditCP(FieldTypePanelLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
+        //Number of FieldContainerTypes Label
+        GridBagLayoutConstraintsRefPtr NumFieldTypesLabelConstraints = OSG::GridBagLayoutConstraints::create();
+        NumFieldTypesLabelConstraints->setGridX(0);
+        NumFieldTypesLabelConstraints->setGridY(1);
+        NumFieldTypesLabelConstraints->setGridHeight(1);
+        NumFieldTypesLabelConstraints->setGridWidth(1);
+        NumFieldTypesLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
+        NumFieldTypesLabelConstraints->setWeightX(1.0);
+        NumFieldTypesLabelConstraints->setVerticalAlignment(0.0);
 
-		//Create Main Panel
-		PanelPtr FieldTypePanel = Panel::create();
+        LabelRefPtr NumFieldTypesLabel = Label::create();
+        NumFieldTypesLabel->setText("Number Field Types: ");
+        NumFieldTypesLabel->setConstraints(NumFieldTypesLabelConstraints);
 
-		beginEditCP(FieldTypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-			FieldTypePanel->getChildren().push_back(FieldTypeListScrollPanel);
-			FieldTypePanel->getChildren().push_back(NumFieldTypesLabel);
-			FieldTypePanel->getChildren().push_back(NumFieldTypesValueLabel);
-			FieldTypePanel->setLayout(FieldTypePanelLayout);
-		endEditCP(FieldTypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-		return FieldTypePanel;
-	}
+        //Number of FieldContainerTypes Value Label
+        GridBagLayoutConstraintsRefPtr NumFieldTypesValueLabelConstraints = OSG::GridBagLayoutConstraints::create();
+        NumFieldTypesValueLabelConstraints->setGridX(1);
+        NumFieldTypesValueLabelConstraints->setGridY(1);
+        NumFieldTypesValueLabelConstraints->setGridHeight(1);
+        NumFieldTypesValueLabelConstraints->setGridWidth(1);
+        NumFieldTypesValueLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
+        NumFieldTypesValueLabelConstraints->setWeightX(1.0);
+        NumFieldTypesValueLabelConstraints->setVerticalAlignment(0.0);
 
-	PanelPtr createFieldContainerTypePanel(void)
-	{
-		//Put all the FieldContainerTypes into the model
-		_FieldContainerTypeModel = DefaultListModel::create();
-		UInt32 NumTypesFound(0);
-		for (UInt32 i(0); NumTypesFound < FieldContainerFactory::the()->getNumTypes() ; ++i)
-		{
-			FieldContainerType* TheType;
-			TheType = FieldContainerFactory::the()->findType(i);
-			if(TheType != NULL)
-			{
-				// Add all available Fonts to it
-				_FieldContainerTypeModel->pushBack(boost::any(std::string(TheType->getCName())));
-				++NumTypesFound;
-			}
-		}
+        LabelRefPtr NumFieldTypesValueLabel = Label::create();
+        std::stringstream TempSStream;
+        TempSStream << NumTypesFound;
+        NumFieldTypesValueLabel->setText(TempSStream.str());
+        NumFieldTypesValueLabel->setConstraints(NumFieldTypesValueLabelConstraints);
 
-		// Create FieldContainerTypeList
-		ListPtr FieldContainerTypeList = List::create();
-		beginEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
-			FieldContainerTypeList->setPreferredSize( Vec2f (200, 300) );
-			FieldContainerTypeList->setOrientation(List::VERTICAL_ORIENTATION);
-			FieldContainerTypeList->setModel(_FieldContainerTypeModel);
-		endEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
+        //Create Main Panel Layout
+        GridBagLayoutRefPtr FieldTypePanelLayout = OSG::GridBagLayout::create();
+        FieldTypePanelLayout->setColumns(2);
+        FieldTypePanelLayout->setRows(2);
 
-		// Assign the Model, and SelectionModel
-		// to the List
-		// Creates and assigns a SelectionMode
-		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
-		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
-		FieldContainerTypeList->setSelectionModel(FieldSelectionModel);
+        //Create Main Panel
+        PanelRefPtr FieldTypePanel = Panel::create();
+
+        FieldTypePanel->pushToChildren(FieldTypeListScrollPanel);
+        FieldTypePanel->pushToChildren(NumFieldTypesLabel);
+        FieldTypePanel->pushToChildren(NumFieldTypesValueLabel);
+        FieldTypePanel->setLayout(FieldTypePanelLayout);
+        return FieldTypePanel;
+    }
+
+    PanelRefPtr createFieldContainerTypePanel(void)
+    {
+        //Put all the FieldContainerTypes into the model
+        _FieldContainerTypeModel = DefaultListModel::create();
+        UInt32 NumTypesFound(0);
+        for (UInt32 i(0); NumTypesFound < FieldContainerFactory::the()->getNumTypes() ; ++i)
+        {
+            FieldContainerType* TheType;
+            TheType = FieldContainerFactory::the()->findType(i);
+            if(TheType != NULL)
+            {
+                // Add all available Fonts to it
+                _FieldContainerTypeModel->pushBack(boost::any(std::string(TheType->getCName())));
+                ++NumTypesFound;
+            }
+        }
+
+        // Create FieldContainerTypeList
+        ListRefPtr FieldContainerTypeList = List::create();
+        FieldContainerTypeList->setPreferredSize( Vec2f (200, 300) );
+        FieldContainerTypeList->setOrientation(List::VERTICAL_ORIENTATION);
+        FieldContainerTypeList->setModel(_FieldContainerTypeModel);
+
+        // Assign the Model, and SelectionModel
+        // to the List
+        // Creates and assigns a SelectionMode
+        ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
+        FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+        FieldContainerTypeList->setSelectionModel(FieldSelectionModel);
         TheFCListListener.setList(FieldContainerTypeList);
         FieldContainerTypeList->getSelectionModel()->addListSelectionListener(&TheFCListListener);
-		
-		GridBagLayoutConstraintsPtr FieldContainerTypeListScrollPanelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(FieldContainerTypeListScrollPanelConstraints);
-			FieldContainerTypeListScrollPanelConstraints->setGridX(0);
-			FieldContainerTypeListScrollPanelConstraints->setGridY(0);
-			FieldContainerTypeListScrollPanelConstraints->setGridHeight(1);
-			FieldContainerTypeListScrollPanelConstraints->setGridWidth(2);
-			FieldContainerTypeListScrollPanelConstraints->setFill(GridBagLayoutConstraints::FILL_NONE);
-			FieldContainerTypeListScrollPanelConstraints->setVerticalAlignment(1.0);
-		endEditCP(FieldContainerTypeListScrollPanelConstraints);
 
-		//FieldContainerTypeListScrollPanel
-		ScrollPanelPtr FieldContainerTypeListScrollPanel = ScrollPanel::create();
-		beginEditCP(FieldContainerTypeListScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | ScrollPanel::ConstraintsFieldMask);
-			FieldContainerTypeListScrollPanel->setPreferredSize(Vec2f(200,300));
-			FieldContainerTypeListScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-			//TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-			FieldContainerTypeListScrollPanel->setConstraints(FieldContainerTypeListScrollPanelConstraints);
-		endEditCP(FieldContainerTypeListScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | ScrollPanel::ConstraintsFieldMask);
-		FieldContainerTypeListScrollPanel->setViewComponent(FieldContainerTypeList);
+        GridBagLayoutConstraintsRefPtr FieldContainerTypeListScrollPanelConstraints = OSG::GridBagLayoutConstraints::create();
+        FieldContainerTypeListScrollPanelConstraints->setGridX(0);
+        FieldContainerTypeListScrollPanelConstraints->setGridY(0);
+        FieldContainerTypeListScrollPanelConstraints->setGridHeight(1);
+        FieldContainerTypeListScrollPanelConstraints->setGridWidth(2);
+        FieldContainerTypeListScrollPanelConstraints->setFill(GridBagLayoutConstraints::FILL_NONE);
+        FieldContainerTypeListScrollPanelConstraints->setVerticalAlignment(1.0);
 
-		//Number of FieldContainerTypes Label
-		GridBagLayoutConstraintsPtr NumFCTypesLabelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(NumFCTypesLabelConstraints);
-			NumFCTypesLabelConstraints->setGridX(0);
-			NumFCTypesLabelConstraints->setGridY(1);
-			NumFCTypesLabelConstraints->setGridHeight(1);
-			NumFCTypesLabelConstraints->setGridWidth(1);
-			NumFCTypesLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
-			NumFCTypesLabelConstraints->setWeightX(1.0);
-			NumFCTypesLabelConstraints->setVerticalAlignment(0.0);
-		endEditCP(NumFCTypesLabelConstraints);
+        //FieldContainerTypeListScrollPanel
+        ScrollPanelRefPtr FieldContainerTypeListScrollPanel = ScrollPanel::create();
+        FieldContainerTypeListScrollPanel->setPreferredSize(Vec2f(200,300));
+        FieldContainerTypeListScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        FieldContainerTypeListScrollPanel->setConstraints(FieldContainerTypeListScrollPanelConstraints);
+        FieldContainerTypeListScrollPanel->setViewComponent(FieldContainerTypeList);
 
-		LabelPtr NumFCTypesLabel = Label::create();
-		beginEditCP(NumFCTypesLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
-			NumFCTypesLabel->setText("Number Field Container Types: ");
-			NumFCTypesLabel->setConstraints(NumFCTypesLabelConstraints);
-		endEditCP(NumFCTypesLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
-		
-		//Number of FieldContainerTypes Value Label
-		GridBagLayoutConstraintsPtr NumFCTypesValueLabelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(NumFCTypesValueLabelConstraints);
-			NumFCTypesValueLabelConstraints->setGridX(1);
-			NumFCTypesValueLabelConstraints->setGridY(1);
-			NumFCTypesValueLabelConstraints->setGridHeight(1);
-			NumFCTypesValueLabelConstraints->setGridWidth(1);
-			NumFCTypesValueLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
-			NumFCTypesValueLabelConstraints->setWeightX(1.0);
-			NumFCTypesValueLabelConstraints->setVerticalAlignment(0.0);
-		endEditCP(NumFCTypesValueLabelConstraints);
+        //Number of FieldContainerTypes Label
+        GridBagLayoutConstraintsRefPtr NumFCTypesLabelConstraints = OSG::GridBagLayoutConstraints::create();
+        NumFCTypesLabelConstraints->setGridX(0);
+        NumFCTypesLabelConstraints->setGridY(1);
+        NumFCTypesLabelConstraints->setGridHeight(1);
+        NumFCTypesLabelConstraints->setGridWidth(1);
+        NumFCTypesLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
+        NumFCTypesLabelConstraints->setWeightX(1.0);
+        NumFCTypesLabelConstraints->setVerticalAlignment(0.0);
 
-		LabelPtr NumFCTypesValueLabel = Label::create();
-		std::stringstream TempSStream;
-		TempSStream << FieldContainerFactory::the()->getNumTypes();
-		beginEditCP(NumFCTypesValueLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
-			NumFCTypesValueLabel->setText(TempSStream.str());
-			NumFCTypesValueLabel->setConstraints(NumFCTypesValueLabelConstraints);
-		endEditCP(NumFCTypesValueLabel, Label::TextFieldMask | Component::ConstraintsFieldMask);
+        LabelRefPtr NumFCTypesLabel = Label::create();
+        NumFCTypesLabel->setText("Number Field ComponentContainer Types: ");
+        NumFCTypesLabel->setConstraints(NumFCTypesLabelConstraints);
 
-		//Create Main Panel Layout
-		GridBagLayoutPtr FieldContainerTypePanelLayout = osg::GridBagLayout::create();
-		beginEditCP(FieldContainerTypePanelLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
-			FieldContainerTypePanelLayout->setColumns(2);
-			FieldContainerTypePanelLayout->setRows(2);
-		endEditCP(FieldContainerTypePanelLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
+        //Number of FieldContainerTypes Value Label
+        GridBagLayoutConstraintsRefPtr NumFCTypesValueLabelConstraints = OSG::GridBagLayoutConstraints::create();
+        NumFCTypesValueLabelConstraints->setGridX(1);
+        NumFCTypesValueLabelConstraints->setGridY(1);
+        NumFCTypesValueLabelConstraints->setGridHeight(1);
+        NumFCTypesValueLabelConstraints->setGridWidth(1);
+        NumFCTypesValueLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
+        NumFCTypesValueLabelConstraints->setWeightX(1.0);
+        NumFCTypesValueLabelConstraints->setVerticalAlignment(0.0);
 
-		//Create Main Panel
-		PanelPtr FieldContainerTypePanel = Panel::create();
+        LabelRefPtr NumFCTypesValueLabel = Label::create();
+        std::stringstream TempSStream;
+        TempSStream << FieldContainerFactory::the()->getNumTypes();
+        NumFCTypesValueLabel->setText(TempSStream.str());
+        NumFCTypesValueLabel->setConstraints(NumFCTypesValueLabelConstraints);
 
-		beginEditCP(FieldContainerTypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-			FieldContainerTypePanel->getChildren().push_back(FieldContainerTypeListScrollPanel);
-			FieldContainerTypePanel->getChildren().push_back(NumFCTypesLabel);
-			FieldContainerTypePanel->getChildren().push_back(NumFCTypesValueLabel);
-			FieldContainerTypePanel->setLayout(FieldContainerTypePanelLayout);
-		endEditCP(FieldContainerTypePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-        
+        //Create Main Panel Layout
+        GridBagLayoutRefPtr FieldContainerTypePanelLayout = OSG::GridBagLayout::create();
+        FieldContainerTypePanelLayout->setColumns(2);
+        FieldContainerTypePanelLayout->setRows(2);
 
-		return FieldContainerTypePanel;
-	}
-public:
-	PanelPtr getPanel(void) const
-	{
-		return _MainPanel;
-	}
+        //Create Main Panel
+        PanelRefPtr FieldContainerTypePanel = Panel::create();
 
-	OpenSGTypePanel()
-	{
-		//Create the Type Panels
-		GridBagLayoutConstraintsPtr TypePanelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(TypePanelConstraints);
-			TypePanelConstraints->setGridX(0);
-			TypePanelConstraints->setGridY(0);
-			TypePanelConstraints->setGridHeight(1);
-			TypePanelConstraints->setGridWidth(1);
-			TypePanelConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
-			TypePanelConstraints->setWeightX(1.0);
-			TypePanelConstraints->setWeightY(1.0);
-			TypePanelConstraints->setPadBottom(2);
-			TypePanelConstraints->setPadLeft(2);
-			TypePanelConstraints->setPadRight(2);
-			TypePanelConstraints->setPadTop(2);
-		endEditCP(TypePanelConstraints);
-
-		PanelPtr TypePanel = createTypePanel();
-		beginEditCP(TypePanel, Component::ConstraintsFieldMask);
-			TypePanel->setConstraints(TypePanelConstraints);
-		endEditCP(TypePanel, Component::ConstraintsFieldMask);
+        FieldContainerTypePanel->pushToChildren(FieldContainerTypeListScrollPanel);
+        FieldContainerTypePanel->pushToChildren(NumFCTypesLabel);
+        FieldContainerTypePanel->pushToChildren(NumFCTypesValueLabel);
+        FieldContainerTypePanel->setLayout(FieldContainerTypePanelLayout);
 
 
-		GridBagLayoutConstraintsPtr FieldTypePanelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(FieldTypePanelConstraints);
-			FieldTypePanelConstraints->setGridX(1);
-			FieldTypePanelConstraints->setGridY(0);
-			FieldTypePanelConstraints->setGridHeight(1);
-			FieldTypePanelConstraints->setGridWidth(1);
-			FieldTypePanelConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
-			FieldTypePanelConstraints->setWeightX(1.0);
-			FieldTypePanelConstraints->setWeightY(1.0);
-			FieldTypePanelConstraints->setPadBottom(2);
-			FieldTypePanelConstraints->setPadLeft(2);
-			FieldTypePanelConstraints->setPadRight(2);
-			FieldTypePanelConstraints->setPadTop(2);
-		endEditCP(FieldTypePanelConstraints);
+        return FieldContainerTypePanel;
+    }
+  public:
+    PanelRefPtr getPanel(void) const
+    {
+        return _MainPanel;
+    }
 
-		PanelPtr FieldTypePanel = createFieldTypePanel();
-		beginEditCP(FieldTypePanel, Component::ConstraintsFieldMask);
-			FieldTypePanel->setConstraints(FieldTypePanelConstraints);
-		endEditCP(FieldTypePanel, Component::ConstraintsFieldMask);
+    OpenSGTypePanel()
+    {
+        //Create the Type Panels
+        GridBagLayoutConstraintsRefPtr TypePanelConstraints = OSG::GridBagLayoutConstraints::create();
+        TypePanelConstraints->setGridX(0);
+        TypePanelConstraints->setGridY(0);
+        TypePanelConstraints->setGridHeight(1);
+        TypePanelConstraints->setGridWidth(1);
+        TypePanelConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
+        TypePanelConstraints->setWeightX(1.0);
+        TypePanelConstraints->setWeightY(1.0);
+        TypePanelConstraints->setPadBottom(2);
+        TypePanelConstraints->setPadLeft(2);
+        TypePanelConstraints->setPadRight(2);
+        TypePanelConstraints->setPadTop(2);
 
-		GridBagLayoutConstraintsPtr FieldContainerTypePanelConstraints = osg::GridBagLayoutConstraints::create();
-		beginEditCP(FieldContainerTypePanelConstraints);
-			FieldContainerTypePanelConstraints->setGridX(2);
-			FieldContainerTypePanelConstraints->setGridY(0);
-			FieldContainerTypePanelConstraints->setGridHeight(1);
-			FieldContainerTypePanelConstraints->setGridWidth(1);
-			FieldContainerTypePanelConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
-			FieldContainerTypePanelConstraints->setWeightX(1.0);
-			FieldContainerTypePanelConstraints->setWeightY(1.0);
-			FieldContainerTypePanelConstraints->setPadBottom(2);
-			FieldContainerTypePanelConstraints->setPadLeft(2);
-			FieldContainerTypePanelConstraints->setPadRight(2);
-			FieldContainerTypePanelConstraints->setPadTop(2);
-		endEditCP(FieldContainerTypePanelConstraints);
+        PanelRefPtr TypePanel = createTypePanel();
+        TypePanel->setConstraints(TypePanelConstraints);
 
-		PanelPtr FieldContainerTypePanel = createFieldContainerTypePanel();
-		beginEditCP(FieldContainerTypePanel, Component::ConstraintsFieldMask);
-			FieldContainerTypePanel->setConstraints(FieldContainerTypePanelConstraints);
-		endEditCP(FieldContainerTypePanel, Component::ConstraintsFieldMask);
 
-		//Create Main Panel Layout
-		GridBagLayoutPtr MainPanelLayout = osg::GridBagLayout::create();
+        GridBagLayoutConstraintsRefPtr FieldTypePanelConstraints = OSG::GridBagLayoutConstraints::create();
+        FieldTypePanelConstraints->setGridX(1);
+        FieldTypePanelConstraints->setGridY(0);
+        FieldTypePanelConstraints->setGridHeight(1);
+        FieldTypePanelConstraints->setGridWidth(1);
+        FieldTypePanelConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
+        FieldTypePanelConstraints->setWeightX(1.0);
+        FieldTypePanelConstraints->setWeightY(1.0);
+        FieldTypePanelConstraints->setPadBottom(2);
+        FieldTypePanelConstraints->setPadLeft(2);
+        FieldTypePanelConstraints->setPadRight(2);
+        FieldTypePanelConstraints->setPadTop(2);
 
-			
-		beginEditCP(MainPanelLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
-			MainPanelLayout->setColumns(3);
-			MainPanelLayout->setRows(1);
-		endEditCP(MainPanelLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
+        PanelRefPtr FieldTypePanel = createFieldTypePanel();
+        FieldTypePanel->setConstraints(FieldTypePanelConstraints);
 
-		//Create Main Panel
+        GridBagLayoutConstraintsRefPtr FieldContainerTypePanelConstraints = OSG::GridBagLayoutConstraints::create();
+        FieldContainerTypePanelConstraints->setGridX(2);
+        FieldContainerTypePanelConstraints->setGridY(0);
+        FieldContainerTypePanelConstraints->setGridHeight(1);
+        FieldContainerTypePanelConstraints->setGridWidth(1);
+        FieldContainerTypePanelConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
+        FieldContainerTypePanelConstraints->setWeightX(1.0);
+        FieldContainerTypePanelConstraints->setWeightY(1.0);
+        FieldContainerTypePanelConstraints->setPadBottom(2);
+        FieldContainerTypePanelConstraints->setPadLeft(2);
+        FieldContainerTypePanelConstraints->setPadRight(2);
+        FieldContainerTypePanelConstraints->setPadTop(2);
+
+        PanelRefPtr FieldContainerTypePanel = createFieldContainerTypePanel();
+        FieldContainerTypePanel->setConstraints(FieldContainerTypePanelConstraints);
+
+        //Create Main Panel Layout
+        GridBagLayoutRefPtr MainPanelLayout = OSG::GridBagLayout::create();
+
+
+        MainPanelLayout->setColumns(3);
+        MainPanelLayout->setRows(1);
+
+        //Create Main Panel
         _MainPanel = Panel::createEmpty();
 
-		beginEditCP(_MainPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-			_MainPanel->getChildren().push_back(TypePanel);
-			_MainPanel->getChildren().push_back(FieldTypePanel);
-			_MainPanel->getChildren().push_back(FieldContainerTypePanel);
-			_MainPanel->setLayout(MainPanelLayout);
-		endEditCP(_MainPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-	}
+        _MainPanel->pushToChildren(TypePanel);
+        _MainPanel->pushToChildren(FieldTypePanel);
+        _MainPanel->pushToChildren(FieldContainerTypePanel);
+        _MainPanel->setLayout(MainPanelLayout);
+    }
 };
 
 // Initialize GLUT & OpenSG and set up the scene
@@ -607,127 +538,111 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-    
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
+
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
 
     // Make Torus Node
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    NodeRefPtr scene = OSG::Node::create();
     {
-        scene->setCore(osg::Group::create());
- 
+        scene->setCore(OSG::Group::create());
+
         // add the torus as a child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsRefPtr graphics = OSG::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
-	LookAndFeelManager::the()->getLookAndFeel()->init();
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-	// Create ListModel Component
-	/*AbstractListModel TypeModel;
+    // Create ListModel Component
+    /*AbstractListModel TypeModel;
 
-	// Display all Types available
-	for (UInt32 i(1); i < TypeFactory::the()->getNumTypes()+1 ; ++i)
-	{
-		TypeBase* TheType;
-		TheType = TypeFactory::the()->findType(i);
-		if(TheType != NULL)
-		{
-			// Add all available Fonts to it
-			TypeModel.pushBack(boost::any(std::string(TheType->getCName())));
-		}
-	}*/
-	
-	
+    // Display all Types available
+    for (UInt32 i(1); i < TypeFactory::the()->getNumTypes()+1 ; ++i)
+    {
+    TypeBase* TheType;
+    TheType = TypeFactory::the()->findType(i);
+    if(TheType != NULL)
+    {
+    // Add all available Fonts to it
+    TypeModel.pushBack(boost::any(std::string(TheType->getCName())));
+    }
+    }*/
 
-	BorderLayoutConstraintsPtr OpenSGTypePanelConstraints = osg::BorderLayoutConstraints::create();
-	beginEditCP(OpenSGTypePanelConstraints, BorderLayoutConstraints::RegionFieldMask);
-		OpenSGTypePanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
-	endEditCP(OpenSGTypePanelConstraints, BorderLayoutConstraints::RegionFieldMask);
-	
+
+
+    BorderLayoutConstraintsRefPtr OpenSGTypePanelConstraints = OSG::BorderLayoutConstraints::create();
+    OpenSGTypePanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+
     OpenSGTypePanel TheOpenSGTypePanel;
-	beginEditCP(TheOpenSGTypePanel.getPanel(), Component::ConstraintsFieldMask);
-		TheOpenSGTypePanel.getPanel()->setConstraints(OpenSGTypePanelConstraints);
-	endEditCP(TheOpenSGTypePanel.getPanel(), Component::ConstraintsFieldMask);
+    TheOpenSGTypePanel.getPanel()->setConstraints(OpenSGTypePanelConstraints);
 
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-	BorderLayoutPtr MainInternalWindowLayout = osg::BorderLayout::create();
+    BorderLayoutRefPtr MainInternalWindowLayout = OSG::BorderLayout::create();
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-	   MainInternalWindow->getChildren().push_back(TheOpenSGTypePanel.getPanel());
-	   MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    MainInternalWindow->pushToChildren(TheOpenSGTypePanel.getPanel());
+    MainInternalWindow->setLayout(MainInternalWindowLayout);
+    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setDrawTitlebar(false);
+    MainInternalWindow->setResizable(false);
 
-	//Create the Drawing Surface
-	UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-	beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask|UIDrawingSurface::EventProducerFieldMask);
-		TutorialDrawingSurface->setGraphics(graphics);
-	    TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP  (TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask|UIDrawingSurface::EventProducerFieldMask);
-	
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    //Create the Drawing Surface
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+    TutorialDrawingSurface->setGraphics(graphics);
+    TutorialDrawingSurface->setEventProducer(TutorialWindow);
 
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask);
-	    foreground->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask);
- 
+    // Create the UI Foreground Object
+    UIForegroundRefPtr foreground = OSG::UIForeground::create();
+
+    foreground->setDrawingSurface(TutorialDrawingSurface);
+
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // tell the manager what to manage
-    mgr->setWindow(MainWindow );
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot  (scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().push_back(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportRefPtr viewport = mgr->getWindow()->getPort(0);
+    viewport->addForeground(foreground);
 
     // show the whole scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
-            WinSize,
-            "01RubberBandCamera");
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
+                               WinSize,
+                               "50OpenSGTypes");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 
