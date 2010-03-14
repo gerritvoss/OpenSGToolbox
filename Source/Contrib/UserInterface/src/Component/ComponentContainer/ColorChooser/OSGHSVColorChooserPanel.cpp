@@ -99,69 +99,93 @@ void HSVColorChooserPanel::updateChooser(void)
     dettachModelListener();
 
     Real32 Hue, Saturation, Value;
-    getColorFromModel().getValuesHSV(Hue, Saturation, Value);
+    Color4f ColorSelected(getColorFromModel());
+    ColorSelected.getValuesHSV(Hue, Saturation, Value);
     Color4f TempColor(getColorFromModel());
     //Update the Hue Bounded Range
     Hue = osgClamp<Real32>(_HueModel->getMinimum(), Hue, _HueModel->getMaximum());
     if(static_cast<Int32>(Hue) != _HueModel->getValue())
     {
-        //_HueModel->setValue(Hue);
+        _HueModel->setValue(Hue);
     }
     _HueSliderTrackBackground->editMFColors()->clear();
     _HueSliderTrackBackground->editMFStops()->clear();
     //Red
     TempColor.setValuesHSV(0.0f, Saturation, Value);
+	TempColor[3] = ColorSelected.alpha();
     _HueSliderTrackBackground->editMFColors()->push_back(TempColor);
     _HueSliderTrackBackground->editMFStops()->push_back(0.0);
     //Yellow
     TempColor.setValuesHSV(60.0f, Saturation, Value);
+	TempColor[3] = ColorSelected.alpha();
     _HueSliderTrackBackground->editMFColors()->push_back(TempColor);
     _HueSliderTrackBackground->editMFStops()->push_back(0.166667);
     //Green
     TempColor.setValuesHSV(120.0f, Saturation, Value);
+	TempColor[3] = ColorSelected.alpha();
     _HueSliderTrackBackground->editMFColors()->push_back(TempColor);
     _HueSliderTrackBackground->editMFStops()->push_back(0.333333);
     //Teal
     TempColor.setValuesHSV(180.0f, Saturation, Value);
+	TempColor[3] = ColorSelected.alpha();
     _HueSliderTrackBackground->editMFColors()->push_back(TempColor);
     _HueSliderTrackBackground->editMFStops()->push_back(0.5);
     //Blue
     TempColor.setValuesHSV(240.0f, Saturation, Value);
+	TempColor[3] = ColorSelected.alpha();
     _HueSliderTrackBackground->editMFColors()->push_back(TempColor);
     _HueSliderTrackBackground->editMFStops()->push_back(0.666667);
     //Purple
     TempColor.setValuesHSV(300.0f, Saturation, Value);
+	TempColor[3] = ColorSelected.alpha();
     _HueSliderTrackBackground->editMFColors()->push_back(TempColor);
     _HueSliderTrackBackground->editMFStops()->push_back(0.833333);
     //Red
     TempColor.setValuesHSV(360.0f, Saturation, Value);
+	TempColor[3] = ColorSelected.alpha();
     _HueSliderTrackBackground->editMFColors()->push_back(TempColor);
     _HueSliderTrackBackground->editMFStops()->push_back(1.0);
 
     //Update the Saturation Bounded Range
-    //_SaturationModel->setValue(osgClamp(0.0f, Saturation, 1.0f) * _SaturationModel->getMaximum());
+	Saturation = osgClamp(0.0f, Saturation, 1.0f) * _SaturationModel->getMaximum();
+    if(static_cast<Int32>(Saturation) != _SaturationModel->getValue())
+    {
+		_SaturationModel->setValue(Saturation);
+	}
     _SaturationSliderTrackBackground->editMFColors()->clear();
     _SaturationSliderTrackBackground->editMFStops()->clear();
     TempColor.setValuesHSV(Hue, 0.0f, Value);
+	TempColor[3] = ColorSelected.alpha();
     _SaturationSliderTrackBackground->editMFColors()->push_back(TempColor);
     _SaturationSliderTrackBackground->editMFStops()->push_back(0.0);
     TempColor.setValuesHSV(Hue, 1.0f, Value);
+	TempColor[3] = ColorSelected.alpha();
     _SaturationSliderTrackBackground->editMFColors()->push_back(TempColor);
     _SaturationSliderTrackBackground->editMFStops()->push_back(1.0);
 
     //Update the Value Bounded Range
-    //_ValueModel->setValue(osgClamp(0.0f, Value, 1.0f) * _ValueModel->getMaximum());
+	Value = osgClamp(0.0f, Value, 1.0f) * _ValueModel->getMaximum();
+    if(static_cast<Int32>(Value) != _ValueModel->getValue())
+    {
+		_ValueModel->setValue(Value);
+	}
     _ValueSliderTrackBackground->editMFColors()->clear();
     _ValueSliderTrackBackground->editMFStops()->clear();
     TempColor.setValuesHSV(Hue, Saturation, 0.0f);
+	TempColor[3] = ColorSelected.alpha();
     _ValueSliderTrackBackground->editMFColors()->push_back(TempColor);
     _ValueSliderTrackBackground->editMFStops()->push_back(0.0);
     TempColor.setValuesHSV(Hue, Saturation, 1.0f);
+	TempColor[3] = ColorSelected.alpha();
     _ValueSliderTrackBackground->editMFColors()->push_back(TempColor);
     _ValueSliderTrackBackground->editMFStops()->push_back(1.0);
 
     //Update the Alpha Bounded Range
-    //_AlphaModel->setValue(osgClamp(0.0f, getColorFromModel().alpha(), 1.0f) * _AlphaModel->getMaximum());
+    Int32 Alpha = osgClamp(0.0f, ColorSelected.alpha(), 1.0f) * 255;
+    if(static_cast<Int32>(Alpha) != _AlphaModel->getValue())
+    {
+        _AlphaModel->setValue(Alpha);
+    }
 
     if(getIncludeAlpha())
     {
@@ -178,6 +202,7 @@ void HSVColorChooserPanel::updateChooser(void)
                                                                        1.0f));
         _AlphaSliderTrackBackground->editMFStops()->push_back(1.0);
     }
+	commitChanges();
 
     attachModelListener();
 }
@@ -419,10 +444,11 @@ void HSVColorChooserPanel::buildChooser(void)
 
 void HSVColorChooserPanel::updateColorSelectedModel(void)
 {
-	Color4f TempColor(1.0,1.0,1.0,static_cast<Real32>(_AlphaModel->getValue())/static_cast<Real32>(_AlphaModel->getMaximum()));
+	Color4f TempColor;
 	TempColor.setValuesHSV(static_cast<Real32>(_HueModel->getValue()),
 		static_cast<Real32>(_SaturationModel->getValue())/static_cast<Real32>(_SaturationModel->getMaximum()),
 		static_cast<Real32>(_ValueModel->getValue())/static_cast<Real32>(_ValueModel->getMaximum()));
+	TempColor[3] = static_cast<Real32>(_AlphaModel->getValue())/static_cast<Real32>(_AlphaModel->getMaximum());
 
 	bool isValueAdjusting = _HueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
 		                    _SaturationModel->getBoundedRangeModel()->getValueIsAdjusting() ||

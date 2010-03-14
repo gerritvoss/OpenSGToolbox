@@ -214,7 +214,7 @@ void DerivedFieldContainerComboBoxModel::changed(ConstFieldMaskArg whichField,
         UInt32 PreListSize(_FieldList.size());
         _FieldList.clear();
 
-        for(UInt32 i(0) ; i<getMFDerivedFieldContainerTypes()->size() ; ++i)
+        for(UInt32 i(0) ; i<getMFInternalFieldContainerTypes()->size() ; ++i)
         {
             _FieldList.push_back(boost::any(FieldContainerFactory::the()->findType(getInternalFieldContainerTypes(i))));
         }
