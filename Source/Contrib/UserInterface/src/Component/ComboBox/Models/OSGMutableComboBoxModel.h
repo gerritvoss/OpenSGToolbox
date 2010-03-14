@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,39 +42,39 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGMutableComboBoxModelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MutableComboBoxModel class. See \ref 
-           PageUserInterfaceMutableComboBoxModel for a description.
+/*! \brief MutableComboBoxModel class. See \ref
+           PageContribUserInterfaceMutableComboBoxModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING MutableComboBoxModel : public MutableComboBoxModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MutableComboBoxModel : public MutableComboBoxModelBase
 {
-  private:
-
-    typedef MutableComboBoxModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef MutableComboBoxModelBase Inherited;
+    typedef MutableComboBoxModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -93,6 +93,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MutableComboBoxModel : public MutableCombo
 	//Removes all elements
 	virtual void removeAllElements(void) = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in MutableComboBoxModelBase.
@@ -109,20 +110,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING MutableComboBoxModel : public MutableCombo
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MutableComboBoxModel(void); 
+    virtual ~MutableComboBoxModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class MutableComboBoxModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const MutableComboBoxModel &source);
 };
 
@@ -132,7 +137,5 @@ OSG_END_NAMESPACE
 
 #include "OSGMutableComboBoxModelBase.inl"
 #include "OSGMutableComboBoxModel.inl"
-
-#define OSGMUTABLECOMBOBOXMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMUTABLECOMBOBOXMODEL_H_ */

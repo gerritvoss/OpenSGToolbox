@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,257 +50,476 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMBOBOXINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGToggleButton.h"            // ExpandButton Class
+#include "OSGComboBoxEditor.h"          // Editor Class
+#include "OSGComboBoxModel.h"           // Model Class
+#include "OSGComponentGenerator.h"      // CellGenerator Class
+#include "OSGComponent.h"               // ComponentGeneratorSelectedItem Class
+#include "OSGListGeneratedPopupMenu.h"  // ComboListPopupMenu Class
 
 #include "OSGComboBoxBase.h"
 #include "OSGComboBox.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ComboBoxBase::ExpandButtonFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::ExpandButtonFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ComboBoxBase::EditorFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::EditorFieldId);
+/*! \class OSG::ComboBox
+    A UI ComboBox
+ */
 
-const OSG::BitVector  ComboBoxBase::ModelFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::ModelFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  ComboBoxBase::CellGeneratorFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::CellGeneratorFieldId);
-
-const OSG::BitVector  ComboBoxBase::ComponentGeneratorSelectedItemFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::ComponentGeneratorSelectedItemFieldId);
-
-const OSG::BitVector  ComboBoxBase::EditableFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::EditableFieldId);
-
-const OSG::BitVector  ComboBoxBase::MaxRowCountFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::MaxRowCountFieldId);
-
-const OSG::BitVector  ComboBoxBase::ComboListPopupMenuFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::ComboListPopupMenuFieldId);
-
-const OSG::BitVector ComboBoxBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ToggleButtonPtr ComboBoxBase::_sfExpandButton
+/*! \var ToggleButton *  ComboBoxBase::_sfExpandButton
     
 */
-/*! \var ComboBoxEditorPtr ComboBoxBase::_sfEditor
+
+/*! \var ComboBoxEditor * ComboBoxBase::_sfEditor
     
 */
-/*! \var ComboBoxModelPtr ComboBoxBase::_sfModel
+
+/*! \var ComboBoxModel * ComboBoxBase::_sfModel
     
 */
-/*! \var ComponentGeneratorPtr ComboBoxBase::_sfCellGenerator
+
+/*! \var ComponentGenerator * ComboBoxBase::_sfCellGenerator
     
 */
-/*! \var ComponentPtr    ComboBoxBase::_sfComponentGeneratorSelectedItem
+
+/*! \var Component *     ComboBoxBase::_sfComponentGeneratorSelectedItem
     
 */
+
 /*! \var bool            ComboBoxBase::_sfEditable
     
 */
+
 /*! \var UInt32          ComboBoxBase::_sfMaxRowCount
     
 */
-/*! \var ListGeneratedPopupMenuPtr ComboBoxBase::_sfComboListPopupMenu
+
+/*! \var ListGeneratedPopupMenu * ComboBoxBase::_sfComboListPopupMenu
     
 */
 
-//! ComboBox description
 
-FieldDescription *ComboBoxBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ComboBox *>::_type("ComboBoxPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ComboBox *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ComboBox *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ComboBox *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ComboBoxBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFToggleButtonPtr::getClassType(), 
-                     "ExpandButton", 
-                     ExpandButtonFieldId, ExpandButtonFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFExpandButton)),
-    new FieldDescription(SFComboBoxEditorPtr::getClassType(), 
-                     "Editor", 
-                     EditorFieldId, EditorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFEditor)),
-    new FieldDescription(SFComboBoxModelPtr::getClassType(), 
-                     "Model", 
-                     ModelFieldId, ModelFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFModel)),
-    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
-                     "CellGenerator", 
-                     CellGeneratorFieldId, CellGeneratorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFCellGenerator)),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "ComponentGeneratorSelectedItem", 
-                     ComponentGeneratorSelectedItemFieldId, ComponentGeneratorSelectedItemFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFComponentGeneratorSelectedItem)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Editable", 
-                     EditableFieldId, EditableFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFEditable)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "MaxRowCount", 
-                     MaxRowCountFieldId, MaxRowCountFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFMaxRowCount)),
-    new FieldDescription(SFListGeneratedPopupMenuPtr::getClassType(), 
-                     "ComboListPopupMenu", 
-                     ComboListPopupMenuFieldId, ComboListPopupMenuFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFComboListPopupMenu))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ComboBoxBase::_type(
-    "ComboBox",
-    "Container",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ComboBoxBase::createEmpty),
+    pDesc = new SFUnrecToggleButtonPtr::Description(
+        SFUnrecToggleButtonPtr::getClassType(),
+        "ExpandButton",
+        "",
+        ExpandButtonFieldId, ExpandButtonFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBox::editHandleExpandButton),
+        static_cast<FieldGetMethodSig >(&ComboBox::getHandleExpandButton));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComboBoxEditorPtr::Description(
+        SFUnrecComboBoxEditorPtr::getClassType(),
+        "Editor",
+        "",
+        EditorFieldId, EditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBox::editHandleEditor),
+        static_cast<FieldGetMethodSig >(&ComboBox::getHandleEditor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComboBoxModelPtr::Description(
+        SFUnrecComboBoxModelPtr::getClassType(),
+        "Model",
+        "",
+        ModelFieldId, ModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBox::editHandleModel),
+        static_cast<FieldGetMethodSig >(&ComboBox::getHandleModel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentGeneratorPtr::Description(
+        SFUnrecComponentGeneratorPtr::getClassType(),
+        "CellGenerator",
+        "",
+        CellGeneratorFieldId, CellGeneratorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBox::editHandleCellGenerator),
+        static_cast<FieldGetMethodSig >(&ComboBox::getHandleCellGenerator));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "ComponentGeneratorSelectedItem",
+        "",
+        ComponentGeneratorSelectedItemFieldId, ComponentGeneratorSelectedItemFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBox::editHandleComponentGeneratorSelectedItem),
+        static_cast<FieldGetMethodSig >(&ComboBox::getHandleComponentGeneratorSelectedItem));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Editable",
+        "",
+        EditableFieldId, EditableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBox::editHandleEditable),
+        static_cast<FieldGetMethodSig >(&ComboBox::getHandleEditable));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "MaxRowCount",
+        "",
+        MaxRowCountFieldId, MaxRowCountFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBox::editHandleMaxRowCount),
+        static_cast<FieldGetMethodSig >(&ComboBox::getHandleMaxRowCount));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecListGeneratedPopupMenuPtr::Description(
+        SFUnrecListGeneratedPopupMenuPtr::getClassType(),
+        "ComboListPopupMenu",
+        "",
+        ComboListPopupMenuFieldId, ComboListPopupMenuFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBox::editHandleComboListPopupMenu),
+        static_cast<FieldGetMethodSig >(&ComboBox::getHandleComboListPopupMenu));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ComboBoxBase::TypeObject ComboBoxBase::_type(
+    ComboBoxBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ComboBoxBase::createEmptyLocal),
     ComboBox::initMethod,
-    _desc,
-    sizeof(_desc));
+    ComboBox::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ComboBox::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"ComboBox\"\n"
+    "    parent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    parentProducer=\"Component\"\n"
+    "    >\n"
+    "    A UI ComboBox\n"
+    "    <Field\n"
+    "        name=\"ExpandButton\"\n"
+    "        type=\"ToggleButton\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Editor\"\n"
+    "        type=\"ComboBoxEditor\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Model\"\n"
+    "        type=\"ComboBoxModel\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"CellGenerator\"\n"
+    "        type=\"ComponentGenerator\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ComponentGeneratorSelectedItem\"\n"
+    "        type=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"protected\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Editable\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"MaxRowCount\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"5\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ComboListPopupMenu\"\n"
+    "        type=\"ListGeneratedPopupMenu\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"protected\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <ProducedMethod\n"
+    "        name=\"ActionPerformed\"\n"
+    "        type=\"ActionEvent\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI ComboBox\n"
+    );
 
 //! ComboBox Produced Methods
 
 MethodDescription *ComboBoxBase::_methodDesc[] =
 {
     new MethodDescription("ActionPerformed", 
+                    "",
                      ActionPerformedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType ComboBoxBase::_producerType(
     "ComboBoxProducerType",
     "ComponentProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(ComboBoxBase, ComboBoxPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ComboBoxBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ComboBoxBase::getType(void) const 
+FieldContainerType &ComboBoxBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &ComboBoxBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &ComboBoxBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr ComboBoxBase::shallowCopy(void) const 
-{ 
-    ComboBoxPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ComboBox *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 ComboBoxBase::getContainerSize(void) const 
-{ 
-    return sizeof(ComboBox); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComboBoxBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 ComboBoxBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<ComboBoxBase *>(&other),
-                          whichField);
+    return sizeof(ComboBox);
 }
-#else
-void ComboBoxBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ComboBox::_sfExpandButton field.
+const SFUnrecToggleButtonPtr *ComboBoxBase::getSFExpandButton(void) const
 {
-    this->executeSyncImpl((ComboBoxBase *) &other, whichField, sInfo);
+    return &_sfExpandButton;
 }
-void ComboBoxBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+SFUnrecToggleButtonPtr *ComboBoxBase::editSFExpandButton   (void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ExpandButtonFieldMask);
+
+    return &_sfExpandButton;
 }
 
-void ComboBoxBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+//! Get the ComboBox::_sfEditor field.
+const SFUnrecComboBoxEditorPtr *ComboBoxBase::getSFEditor(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfEditor;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ComboBoxBase::ComboBoxBase(void) :
-    _sfExpandButton           (ToggleButtonPtr(NullFC)), 
-    _sfEditor                 (ComboBoxEditorPtr(NullFC)), 
-    _sfModel                  (ComboBoxModelPtr(NullFC)), 
-    _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
-    _sfComponentGeneratorSelectedItem(ComponentPtr(NullFC)), 
-    _sfEditable               (bool(true)), 
-    _sfMaxRowCount            (UInt32(5)), 
-    _sfComboListPopupMenu     (ListGeneratedPopupMenuPtr(NullFC)), 
-    Inherited() 
+SFUnrecComboBoxEditorPtr *ComboBoxBase::editSFEditor         (void)
 {
-    _Producer.setType(&_producerType);
+    editSField(EditorFieldMask);
+
+    return &_sfEditor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ComboBoxBase::ComboBoxBase(const ComboBoxBase &source) :
-    _sfExpandButton           (source._sfExpandButton           ), 
-    _sfEditor                 (source._sfEditor                 ), 
-    _sfModel                  (source._sfModel                  ), 
-    _sfCellGenerator          (source._sfCellGenerator          ), 
-    _sfComponentGeneratorSelectedItem(source._sfComponentGeneratorSelectedItem), 
-    _sfEditable               (source._sfEditable               ), 
-    _sfMaxRowCount            (source._sfMaxRowCount            ), 
-    _sfComboListPopupMenu     (source._sfComboListPopupMenu     ), 
-    Inherited                 (source)
+//! Get the ComboBox::_sfModel field.
+const SFUnrecComboBoxModelPtr *ComboBoxBase::getSFModel(void) const
 {
+    return &_sfModel;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-ComboBoxBase::~ComboBoxBase(void)
+SFUnrecComboBoxModelPtr *ComboBoxBase::editSFModel          (void)
 {
+    editSField(ModelFieldMask);
+
+    return &_sfModel;
 }
+
+//! Get the ComboBox::_sfCellGenerator field.
+const SFUnrecComponentGeneratorPtr *ComboBoxBase::getSFCellGenerator(void) const
+{
+    return &_sfCellGenerator;
+}
+
+SFUnrecComponentGeneratorPtr *ComboBoxBase::editSFCellGenerator  (void)
+{
+    editSField(CellGeneratorFieldMask);
+
+    return &_sfCellGenerator;
+}
+
+//! Get the ComboBox::_sfComponentGeneratorSelectedItem field.
+const SFUnrecComponentPtr *ComboBoxBase::getSFComponentGeneratorSelectedItem(void) const
+{
+    return &_sfComponentGeneratorSelectedItem;
+}
+
+SFUnrecComponentPtr *ComboBoxBase::editSFComponentGeneratorSelectedItem(void)
+{
+    editSField(ComponentGeneratorSelectedItemFieldMask);
+
+    return &_sfComponentGeneratorSelectedItem;
+}
+
+SFBool *ComboBoxBase::editSFEditable(void)
+{
+    editSField(EditableFieldMask);
+
+    return &_sfEditable;
+}
+
+const SFBool *ComboBoxBase::getSFEditable(void) const
+{
+    return &_sfEditable;
+}
+
+
+SFUInt32 *ComboBoxBase::editSFMaxRowCount(void)
+{
+    editSField(MaxRowCountFieldMask);
+
+    return &_sfMaxRowCount;
+}
+
+const SFUInt32 *ComboBoxBase::getSFMaxRowCount(void) const
+{
+    return &_sfMaxRowCount;
+}
+
+
+//! Get the ComboBox::_sfComboListPopupMenu field.
+const SFUnrecListGeneratedPopupMenuPtr *ComboBoxBase::getSFComboListPopupMenu(void) const
+{
+    return &_sfComboListPopupMenu;
+}
+
+SFUnrecListGeneratedPopupMenuPtr *ComboBoxBase::editSFComboListPopupMenu(void)
+{
+    editSField(ComboListPopupMenuFieldMask);
+
+    return &_sfComboListPopupMenu;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ComboBoxBase::getBinSize(const BitVector &whichField)
+UInt32 ComboBoxBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -308,48 +527,40 @@ UInt32 ComboBoxBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfExpandButton.getBinSize();
     }
-
     if(FieldBits::NoField != (EditorFieldMask & whichField))
     {
         returnValue += _sfEditor.getBinSize();
     }
-
     if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
         returnValue += _sfModel.getBinSize();
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         returnValue += _sfCellGenerator.getBinSize();
     }
-
     if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
     {
         returnValue += _sfComponentGeneratorSelectedItem.getBinSize();
     }
-
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         returnValue += _sfEditable.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
     {
         returnValue += _sfMaxRowCount.getBinSize();
     }
-
     if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
     {
         returnValue += _sfComboListPopupMenu.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ComboBoxBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ComboBoxBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -357,47 +568,38 @@ void ComboBoxBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfExpandButton.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EditorFieldMask & whichField))
     {
         _sfEditor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
         _sfModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
     {
         _sfComponentGeneratorSelectedItem.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         _sfEditable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
     {
         _sfMaxRowCount.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
     {
         _sfComboListPopupMenu.copyToBin(pMem);
     }
-
-
 }
 
-void ComboBoxBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ComboBoxBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -405,139 +607,482 @@ void ComboBoxBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfExpandButton.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EditorFieldMask & whichField))
     {
         _sfEditor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
         _sfModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
     {
         _sfComponentGeneratorSelectedItem.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         _sfEditable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
     {
         _sfMaxRowCount.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
     {
         _sfComboListPopupMenu.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComboBoxBase::executeSyncImpl(      ComboBoxBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ComboBoxTransitPtr ComboBoxBase::createLocal(BitVector bFlags)
 {
+    ComboBoxTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ExpandButtonFieldMask & whichField))
-        _sfExpandButton.syncWith(pOther->_sfExpandButton);
+        fc = dynamic_pointer_cast<ComboBox>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (EditorFieldMask & whichField))
-        _sfEditor.syncWith(pOther->_sfEditor);
-
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
-
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-    if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
-        _sfComponentGeneratorSelectedItem.syncWith(pOther->_sfComponentGeneratorSelectedItem);
-
-    if(FieldBits::NoField != (EditableFieldMask & whichField))
-        _sfEditable.syncWith(pOther->_sfEditable);
-
-    if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
-        _sfMaxRowCount.syncWith(pOther->_sfMaxRowCount);
-
-    if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
-        _sfComboListPopupMenu.syncWith(pOther->_sfComboListPopupMenu);
-
-
-}
-#else
-void ComboBoxBase::executeSyncImpl(      ComboBoxBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ExpandButtonFieldMask & whichField))
-        _sfExpandButton.syncWith(pOther->_sfExpandButton);
-
-    if(FieldBits::NoField != (EditorFieldMask & whichField))
-        _sfEditor.syncWith(pOther->_sfEditor);
-
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
-
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-    if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
-        _sfComponentGeneratorSelectedItem.syncWith(pOther->_sfComponentGeneratorSelectedItem);
-
-    if(FieldBits::NoField != (EditableFieldMask & whichField))
-        _sfEditable.syncWith(pOther->_sfEditable);
-
-    if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
-        _sfMaxRowCount.syncWith(pOther->_sfMaxRowCount);
-
-    if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
-        _sfComboListPopupMenu.syncWith(pOther->_sfComboListPopupMenu);
-
-
-
+    return fc;
 }
 
-void ComboBoxBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ComboBoxTransitPtr ComboBoxBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ComboBoxTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ComboBox>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ComboBoxTransitPtr ComboBoxBase::create(void)
+{
+    ComboBoxTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ComboBox>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ComboBox *ComboBoxBase::createEmptyLocal(BitVector bFlags)
+{
+    ComboBox *returnValue;
+
+    newPtr<ComboBox>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ComboBox *ComboBoxBase::createEmpty(void)
+{
+    ComboBox *returnValue;
+
+    newPtr<ComboBox>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ComboBoxBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ComboBox *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComboBox *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComboBoxBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ComboBox *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComboBox *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComboBoxBase::shallowCopy(void) const
+{
+    ComboBox *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ComboBox *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ComboBoxBase::ComboBoxBase(void) :
+    Inherited(),
+    _sfExpandButton           (NULL),
+    _sfEditor                 (NULL),
+    _sfModel                  (NULL),
+    _sfCellGenerator          (NULL),
+    _sfComponentGeneratorSelectedItem(NULL),
+    _sfEditable               (bool(true)),
+    _sfMaxRowCount            (UInt32(5)),
+    _sfComboListPopupMenu     (NULL)
+{
+    _Producer.setType(&_producerType);
+}
+
+ComboBoxBase::ComboBoxBase(const ComboBoxBase &source) :
+    Inherited(source),
+    _sfExpandButton           (NULL),
+    _sfEditor                 (NULL),
+    _sfModel                  (NULL),
+    _sfCellGenerator          (NULL),
+    _sfComponentGeneratorSelectedItem(NULL),
+    _sfEditable               (source._sfEditable               ),
+    _sfMaxRowCount            (source._sfMaxRowCount            ),
+    _sfComboListPopupMenu     (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ComboBoxBase::~ComboBoxBase(void)
+{
+}
+
+void ComboBoxBase::onCreate(const ComboBox *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ComboBox *pThis = static_cast<ComboBox *>(this);
+
+        pThis->setExpandButton(source->getExpandButton());
+
+        pThis->setEditor(source->getEditor());
+
+        pThis->setModel(source->getModel());
+
+        pThis->setCellGenerator(source->getCellGenerator());
+
+        pThis->setComponentGeneratorSelectedItem(source->getComponentGeneratorSelectedItem());
+
+        pThis->setComboListPopupMenu(source->getComboListPopupMenu());
+    }
+}
+
+GetFieldHandlePtr ComboBoxBase::getHandleExpandButton    (void) const
+{
+    SFUnrecToggleButtonPtr::GetHandlePtr returnValue(
+        new  SFUnrecToggleButtonPtr::GetHandle(
+             &_sfExpandButton,
+             this->getType().getFieldDesc(ExpandButtonFieldId),
+             const_cast<ComboBoxBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxBase::editHandleExpandButton   (void)
+{
+    SFUnrecToggleButtonPtr::EditHandlePtr returnValue(
+        new  SFUnrecToggleButtonPtr::EditHandle(
+             &_sfExpandButton,
+             this->getType().getFieldDesc(ExpandButtonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComboBox::setExpandButton,
+                    static_cast<ComboBox *>(this), _1));
+
+    editSField(ExpandButtonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComboBoxBase::getHandleEditor          (void) const
+{
+    SFUnrecComboBoxEditorPtr::GetHandlePtr returnValue(
+        new  SFUnrecComboBoxEditorPtr::GetHandle(
+             &_sfEditor,
+             this->getType().getFieldDesc(EditorFieldId),
+             const_cast<ComboBoxBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxBase::editHandleEditor         (void)
+{
+    SFUnrecComboBoxEditorPtr::EditHandlePtr returnValue(
+        new  SFUnrecComboBoxEditorPtr::EditHandle(
+             &_sfEditor,
+             this->getType().getFieldDesc(EditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComboBox::setEditor,
+                    static_cast<ComboBox *>(this), _1));
+
+    editSField(EditorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComboBoxBase::getHandleModel           (void) const
+{
+    SFUnrecComboBoxModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecComboBoxModelPtr::GetHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             const_cast<ComboBoxBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxBase::editHandleModel          (void)
+{
+    SFUnrecComboBoxModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecComboBoxModelPtr::EditHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComboBox::setModel,
+                    static_cast<ComboBox *>(this), _1));
+
+    editSField(ModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComboBoxBase::getHandleCellGenerator   (void) const
+{
+    SFUnrecComponentGeneratorPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::GetHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             const_cast<ComboBoxBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxBase::editHandleCellGenerator  (void)
+{
+    SFUnrecComponentGeneratorPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::EditHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComboBox::setCellGenerator,
+                    static_cast<ComboBox *>(this), _1));
+
+    editSField(CellGeneratorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComboBoxBase::getHandleComponentGeneratorSelectedItem (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfComponentGeneratorSelectedItem,
+             this->getType().getFieldDesc(ComponentGeneratorSelectedItemFieldId),
+             const_cast<ComboBoxBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxBase::editHandleComponentGeneratorSelectedItem(void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfComponentGeneratorSelectedItem,
+             this->getType().getFieldDesc(ComponentGeneratorSelectedItemFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComboBox::setComponentGeneratorSelectedItem,
+                    static_cast<ComboBox *>(this), _1));
+
+    editSField(ComponentGeneratorSelectedItemFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComboBoxBase::getHandleEditable        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfEditable,
+             this->getType().getFieldDesc(EditableFieldId),
+             const_cast<ComboBoxBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxBase::editHandleEditable       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfEditable,
+             this->getType().getFieldDesc(EditableFieldId),
+             this));
+
+
+    editSField(EditableFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComboBoxBase::getHandleMaxRowCount     (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfMaxRowCount,
+             this->getType().getFieldDesc(MaxRowCountFieldId),
+             const_cast<ComboBoxBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxBase::editHandleMaxRowCount    (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfMaxRowCount,
+             this->getType().getFieldDesc(MaxRowCountFieldId),
+             this));
+
+
+    editSField(MaxRowCountFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComboBoxBase::getHandleComboListPopupMenu (void) const
+{
+    SFUnrecListGeneratedPopupMenuPtr::GetHandlePtr returnValue(
+        new  SFUnrecListGeneratedPopupMenuPtr::GetHandle(
+             &_sfComboListPopupMenu,
+             this->getType().getFieldDesc(ComboListPopupMenuFieldId),
+             const_cast<ComboBoxBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxBase::editHandleComboListPopupMenu(void)
+{
+    SFUnrecListGeneratedPopupMenuPtr::EditHandlePtr returnValue(
+        new  SFUnrecListGeneratedPopupMenuPtr::EditHandle(
+             &_sfComboListPopupMenu,
+             this->getType().getFieldDesc(ComboListPopupMenuFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComboBox::setComboListPopupMenu,
+                    static_cast<ComboBox *>(this), _1));
+
+    editSField(ComboListPopupMenuFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ComboBoxBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ComboBox *pThis = static_cast<ComboBox *>(this);
+
+    pThis->execSync(static_cast<ComboBox *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ComboBoxBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ComboBox *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ComboBox *>(pRefAspect),
+                  dynamic_cast<const ComboBox *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ComboBoxPtr>::_type("ComboBoxPtr", "ContainerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ComboBoxPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ComboBoxPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void ComboBoxBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ComboBox *>(this)->setExpandButton(NULL);
+
+    static_cast<ComboBox *>(this)->setEditor(NULL);
+
+    static_cast<ComboBox *>(this)->setModel(NULL);
+
+    static_cast<ComboBox *>(this)->setCellGenerator(NULL);
+
+    static_cast<ComboBox *>(this)->setComponentGeneratorSelectedItem(NULL);
+
+    static_cast<ComboBox *>(this)->setComboListPopupMenu(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

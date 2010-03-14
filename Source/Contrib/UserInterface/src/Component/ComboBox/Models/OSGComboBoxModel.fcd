@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ComboBoxModel"
+	parent="ListModel"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="abstract"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+    parentProducer="ListModel"
+>
+A UI ComboBoxModel.
+	<ProducedMethod
+		name="SelectionChanged"
+		type="ComboBoxSelectionEventPtr"
+	>
+	</ProducedMethod>
+</FieldContainer>

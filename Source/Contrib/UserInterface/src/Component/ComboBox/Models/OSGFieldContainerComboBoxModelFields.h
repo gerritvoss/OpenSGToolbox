@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGAbstractComboBoxModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class FieldContainerComboBoxModel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! FieldContainerComboBoxModelPtr
+OSG_GEN_CONTAINERPTR(FieldContainerComboBoxModel);
 
-typedef FCPtr<AbstractComboBoxModelPtr, FieldContainerComboBoxModel> FieldContainerComboBoxModelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<FieldContainerComboBoxModelPtr> : 
-    public FieldTraitsRecurseMapper<FieldContainerComboBoxModelPtr, true>
+struct FieldTraits<FieldContainerComboBoxModel *> :
+    public FieldTraitsFCPtrBase<FieldContainerComboBoxModel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFFieldContainerComboBoxModelPtr"; }
-    static const char *getMName(void) { return "MFFieldContainerComboBoxModelPtr"; }
+    typedef FieldTraits<FieldContainerComboBoxModel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFFieldContainerComboBoxModelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFFieldContainerComboBoxModelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<FieldContainerComboBoxModelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<FieldContainerComboBoxModel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecFieldContainerComboBoxModelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<FieldContainerComboBoxModel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecFieldContainerComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FieldContainerComboBoxModel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakFieldContainerComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FieldContainerComboBoxModel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdFieldContainerComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FieldContainerComboBoxModel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecFieldContainerComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FieldContainerComboBoxModel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecFieldContainerComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FieldContainerComboBoxModel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakFieldContainerComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FieldContainerComboBoxModel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdFieldContainerComboBoxModelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FieldContainerComboBoxModel *,
+                      RecordedRefCountPolicy  > SFRecFieldContainerComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FieldContainerComboBoxModel *,
+                      UnrecordedRefCountPolicy> SFUnrecFieldContainerComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FieldContainerComboBoxModel *,
+                      WeakRefCountPolicy      > SFWeakFieldContainerComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FieldContainerComboBoxModel *,
+                      NoRefCountPolicy        > SFUncountedFieldContainerComboBoxModelPtr;
 
-typedef SField<FieldContainerComboBoxModelPtr> SFFieldContainerComboBoxModelPtr;
-#endif
 
-#ifndef OSG_COMPILEFIELDCONTAINERCOMBOBOXMODELINST
-OSG_DLLEXPORT_DECL1(SField, FieldContainerComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FieldContainerComboBoxModel *,
+                      RecordedRefCountPolicy  > MFRecFieldContainerComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FieldContainerComboBoxModel *,
+                      UnrecordedRefCountPolicy> MFUnrecFieldContainerComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FieldContainerComboBoxModel *,
+                      WeakRefCountPolicy      > MFWeakFieldContainerComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FieldContainerComboBoxModel *,
+                      NoRefCountPolicy        > MFUncountedFieldContainerComboBoxModelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<FieldContainerComboBoxModelPtr> MFFieldContainerComboBoxModelPtr;
-#endif
 
-#ifndef OSG_COMPILEFIELDCONTAINERCOMBOBOXMODELINST
-OSG_DLLEXPORT_DECL1(MField, FieldContainerComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecFieldContainerComboBoxModelPtr : 
+    public PointerSField<FieldContainerComboBoxModel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecFieldContainerComboBoxModelPtr : 
+    public PointerSField<FieldContainerComboBoxModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakFieldContainerComboBoxModelPtr :
+    public PointerSField<FieldContainerComboBoxModel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedFieldContainerComboBoxModelPtr :
+    public PointerSField<FieldContainerComboBoxModel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecFieldContainerComboBoxModelPtr :
+    public PointerMField<FieldContainerComboBoxModel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecFieldContainerComboBoxModelPtr :
+    public PointerMField<FieldContainerComboBoxModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakFieldContainerComboBoxModelPtr :
+    public PointerMField<FieldContainerComboBoxModel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedFieldContainerComboBoxModelPtr :
+    public PointerMField<FieldContainerComboBoxModel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGFIELDCONTAINERCOMBOBOXMODELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGFIELDCONTAINERCOMBOBOXMODELFIELDS_H_ */

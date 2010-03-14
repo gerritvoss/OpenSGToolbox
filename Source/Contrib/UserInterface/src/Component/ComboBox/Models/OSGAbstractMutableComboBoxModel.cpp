@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbstractMutableComboBoxModel.h"
-#include "Component/List/OSGListDataListener.h"
+#include "OSGListDataListener.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbstractMutableComboBoxModel
-A UI AbstractMutableComboBoxModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGAbstractMutableComboBoxModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbstractMutableComboBoxModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +65,13 @@ A UI AbstractMutableComboBoxModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbstractMutableComboBoxModel::initMethod (void)
+void AbstractMutableComboBoxModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -96,9 +96,9 @@ void AbstractMutableComboBoxModel::removeListDataListener(ListDataListenerPtr l)
     }
 }
 
-void AbstractMutableComboBoxModel::produceListDataContentsChanged(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
+void AbstractMutableComboBoxModel::produceListDataContentsChanged(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
     for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
     {
@@ -107,9 +107,9 @@ void AbstractMutableComboBoxModel::produceListDataContentsChanged(FieldContainer
     _Producer.produceEvent(ListDataContentsChangedMethodId,e);
 }
 
-void AbstractMutableComboBoxModel::produceListDataIntervalAdded(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
+void AbstractMutableComboBoxModel::produceListDataIntervalAdded(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
     for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
     {
@@ -118,9 +118,9 @@ void AbstractMutableComboBoxModel::produceListDataIntervalAdded(FieldContainerPt
     _Producer.produceEvent(ListDataIntervalAddedMethodId,e);
 }
 
-void AbstractMutableComboBoxModel::produceListDataIntervalRemoved(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
+void AbstractMutableComboBoxModel::produceListDataIntervalRemoved(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
     for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
     {
@@ -146,9 +146,9 @@ void AbstractMutableComboBoxModel::removeSelectionListener(ComboBoxSelectionList
     }
 }
 
-void AbstractMutableComboBoxModel::produceSelectionChanged(FieldContainerPtr Source, const Int32& CurrentIndex, const Int32& PreviousIndex)
+void AbstractMutableComboBoxModel::produceSelectionChanged(FieldContainerRefPtr Source, const Int32& CurrentIndex, const Int32& PreviousIndex)
 {
-    const ComboBoxSelectionEventPtr e = ComboBoxSelectionEvent::create(Source, getSystemTime(), CurrentIndex, PreviousIndex);
+    const ComboBoxSelectionEventUnrecPtr e = ComboBoxSelectionEvent::create(Source, getSystemTime(), CurrentIndex, PreviousIndex);
     ComboBoxSelectionListenerSet SelectionListenerSet(_SelectionListeners);
     for(ComboBoxSelectionListenerSetConstIter SetItor(SelectionListenerSet.begin()) ; SetItor != SelectionListenerSet.end() ; ++SetItor)
     {
@@ -156,6 +156,7 @@ void AbstractMutableComboBoxModel::produceSelectionChanged(FieldContainerPtr Sou
     }
     _Producer.produceEvent(SelectionChangedMethodId,e);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -178,41 +179,17 @@ AbstractMutableComboBoxModel::~AbstractMutableComboBoxModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractMutableComboBoxModel::changed(BitVector whichField, UInt32 origin)
+void AbstractMutableComboBoxModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbstractMutableComboBoxModel::dump(      UInt32    , 
+void AbstractMutableComboBoxModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbstractMutableComboBoxModel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTMUTABLECOMBOBOXMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTMUTABLECOMBOBOXMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTMUTABLECOMBOBOXMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

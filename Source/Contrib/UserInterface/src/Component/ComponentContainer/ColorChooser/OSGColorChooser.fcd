@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+    name="ColorChooser"
+    parent="Panel"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+    structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+    >
+    A UI ColorChooser.
+    <Field
+        name="InternalChooserPanels"
+        type="AbstractColorChooserPanel"
+        category="pointer"
+        cardinality="multi"
+        visibility="external"
+        access="protected"
+        >
+    </Field>
+    <Field
+        name="PreviewPanel"
+        type="Component"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        access="public"
+        defaultValue="NULL"
+        >
+    </Field>
+</FieldContainer>

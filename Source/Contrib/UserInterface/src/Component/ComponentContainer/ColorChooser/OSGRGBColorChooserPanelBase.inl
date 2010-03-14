@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,73 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &RGBColorChooserPanelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 RGBColorChooserPanelBase::getClassTypeId(void) 
+OSG::UInt32 RGBColorChooserPanelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-RGBColorChooserPanelPtr RGBColorChooserPanelBase::create(void) 
-{
-    RGBColorChooserPanelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = RGBColorChooserPanelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-RGBColorChooserPanelPtr RGBColorChooserPanelBase::createEmpty(void) 
-{ 
-    RGBColorChooserPanelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 RGBColorChooserPanelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the RGBColorChooserPanel::_sfIncludeAlpha field.
-inline
-SFBool *RGBColorChooserPanelBase::getSFIncludeAlpha(void)
-{
-    return &_sfIncludeAlpha;
-}
-
-
 //! Get the value of the RGBColorChooserPanel::_sfIncludeAlpha field.
+
 inline
-bool &RGBColorChooserPanelBase::getIncludeAlpha(void)
+bool &RGBColorChooserPanelBase::editIncludeAlpha(void)
 {
+    editSField(IncludeAlphaFieldMask);
+
     return _sfIncludeAlpha.getValue();
 }
 
 //! Get the value of the RGBColorChooserPanel::_sfIncludeAlpha field.
 inline
-const bool &RGBColorChooserPanelBase::getIncludeAlpha(void) const
+      bool  RGBColorChooserPanelBase::getIncludeAlpha(void) const
 {
     return _sfIncludeAlpha.getValue();
 }
 
 //! Set the value of the RGBColorChooserPanel::_sfIncludeAlpha field.
 inline
-void RGBColorChooserPanelBase::setIncludeAlpha(const bool &value)
+void RGBColorChooserPanelBase::setIncludeAlpha(const bool value)
 {
+    editSField(IncludeAlphaFieldMask);
+
     _sfIncludeAlpha.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void RGBColorChooserPanelBase::execSync (      RGBColorChooserPanelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGRGBCOLORCHOOSERPANELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (IncludeAlphaFieldMask & whichField))
+        _sfIncludeAlpha.syncWith(pFrom->_sfIncludeAlpha);
+}
+#endif
+
+
+inline
+const Char8 *RGBColorChooserPanelBase::getClassname(void)
+{
+    return "RGBColorChooserPanel";
+}
+OSG_GEN_CONTAINERPTR(RGBColorChooserPanel);
+
+OSG_END_NAMESPACE
 

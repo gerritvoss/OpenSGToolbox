@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,168 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTCOMBOBOXEDITORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGTextField.h"               // Editor Class
 
 #include "OSGDefaultComboBoxEditorBase.h"
 #include "OSGDefaultComboBoxEditor.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DefaultComboBoxEditorBase::EditorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxEditorBase::EditorFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector DefaultComboBoxEditorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::DefaultComboBoxEditor
+    A UI DefaultComboBoxEditor.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var TextFieldPtr    DefaultComboBoxEditorBase::_sfEditor
+/*! \var TextField *     DefaultComboBoxEditorBase::_sfEditor
     
 */
 
-//! DefaultComboBoxEditor description
 
-FieldDescription *DefaultComboBoxEditorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultComboBoxEditor *>::_type("DefaultComboBoxEditorPtr", "ComboBoxEditorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultComboBoxEditor *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultComboBoxEditor *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultComboBoxEditor *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultComboBoxEditorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFTextFieldPtr::getClassType(), 
-                     "Editor", 
-                     EditorFieldId, EditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxEditorBase::getSFEditor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DefaultComboBoxEditorBase::_type(
-    "DefaultComboBoxEditor",
-    "ComboBoxEditor",
-    NULL,
-    (PrototypeCreateF) &DefaultComboBoxEditorBase::createEmpty,
+    pDesc = new SFUnrecTextFieldPtr::Description(
+        SFUnrecTextFieldPtr::getClassType(),
+        "Editor",
+        "",
+        EditorFieldId, EditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxEditor::editHandleEditor),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxEditor::getHandleEditor));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DefaultComboBoxEditorBase::TypeObject DefaultComboBoxEditorBase::_type(
+    DefaultComboBoxEditorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultComboBoxEditorBase::createEmptyLocal),
     DefaultComboBoxEditor::initMethod,
-    _desc,
-    sizeof(_desc));
+    DefaultComboBoxEditor::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultComboBoxEditor::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultComboBoxEditor\"\n"
+    "\tparent=\"ComboBoxEditor\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI DefaultComboBoxEditor.\n"
+    "\t<Field\n"
+    "\t\tname=\"Editor\"\n"
+    "\t\ttype=\"TextField\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI DefaultComboBoxEditor.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DefaultComboBoxEditorBase, DefaultComboBoxEditorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultComboBoxEditorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultComboBoxEditorBase::getType(void) const 
+FieldContainerType &DefaultComboBoxEditorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultComboBoxEditorBase::shallowCopy(void) const 
-{ 
-    DefaultComboBoxEditorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultComboBoxEditor *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultComboBoxEditorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultComboBoxEditor); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultComboBoxEditorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultComboBoxEditorBase::getType(void) const
 {
-    this->executeSyncImpl((DefaultComboBoxEditorBase *) &other, whichField);
+    return _type;
 }
-#else
-void DefaultComboBoxEditorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultComboBoxEditorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultComboBoxEditorBase *) &other, whichField, sInfo);
+    return sizeof(DefaultComboBoxEditor);
 }
-void DefaultComboBoxEditorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the DefaultComboBoxEditor::_sfEditor field.
+const SFUnrecTextFieldPtr *DefaultComboBoxEditorBase::getSFEditor(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfEditor;
 }
 
-void DefaultComboBoxEditorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecTextFieldPtr *DefaultComboBoxEditorBase::editSFEditor         (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(EditorFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DefaultComboBoxEditorBase::DefaultComboBoxEditorBase(void) :
-    _sfEditor                 (), 
-    Inherited() 
-{
+    return &_sfEditor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-DefaultComboBoxEditorBase::DefaultComboBoxEditorBase(const DefaultComboBoxEditorBase &source) :
-    _sfEditor                 (source._sfEditor                 ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-DefaultComboBoxEditorBase::~DefaultComboBoxEditorBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultComboBoxEditorBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultComboBoxEditorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +220,11 @@ UInt32 DefaultComboBoxEditorBase::getBinSize(const BitVector &whichField)
         returnValue += _sfEditor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DefaultComboBoxEditorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultComboBoxEditorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +232,10 @@ void DefaultComboBoxEditorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfEditor.copyToBin(pMem);
     }
-
-
 }
 
-void DefaultComboBoxEditorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultComboBoxEditorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +243,229 @@ void DefaultComboBoxEditorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfEditor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultComboBoxEditorBase::executeSyncImpl(      DefaultComboBoxEditorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultComboBoxEditorTransitPtr DefaultComboBoxEditorBase::createLocal(BitVector bFlags)
 {
+    DefaultComboBoxEditorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (EditorFieldMask & whichField))
-        _sfEditor.syncWith(pOther->_sfEditor);
+        fc = dynamic_pointer_cast<DefaultComboBoxEditor>(tmpPtr);
+    }
 
-
-}
-#else
-void DefaultComboBoxEditorBase::executeSyncImpl(      DefaultComboBoxEditorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (EditorFieldMask & whichField))
-        _sfEditor.syncWith(pOther->_sfEditor);
-
-
-
+    return fc;
 }
 
-void DefaultComboBoxEditorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultComboBoxEditorTransitPtr DefaultComboBoxEditorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultComboBoxEditorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultComboBoxEditor>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultComboBoxEditorTransitPtr DefaultComboBoxEditorBase::create(void)
+{
+    DefaultComboBoxEditorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultComboBoxEditor>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultComboBoxEditor *DefaultComboBoxEditorBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultComboBoxEditor *returnValue;
+
+    newPtr<DefaultComboBoxEditor>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultComboBoxEditor *DefaultComboBoxEditorBase::createEmpty(void)
+{
+    DefaultComboBoxEditor *returnValue;
+
+    newPtr<DefaultComboBoxEditor>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultComboBoxEditorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultComboBoxEditor *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultComboBoxEditor *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultComboBoxEditorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultComboBoxEditor *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultComboBoxEditor *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultComboBoxEditorBase::shallowCopy(void) const
+{
+    DefaultComboBoxEditor *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultComboBoxEditor *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultComboBoxEditorBase::DefaultComboBoxEditorBase(void) :
+    Inherited(),
+    _sfEditor                 (NULL)
+{
+}
+
+DefaultComboBoxEditorBase::DefaultComboBoxEditorBase(const DefaultComboBoxEditorBase &source) :
+    Inherited(source),
+    _sfEditor                 (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultComboBoxEditorBase::~DefaultComboBoxEditorBase(void)
+{
+}
+
+void DefaultComboBoxEditorBase::onCreate(const DefaultComboBoxEditor *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DefaultComboBoxEditor *pThis = static_cast<DefaultComboBoxEditor *>(this);
+
+        pThis->setEditor(source->getEditor());
+    }
+}
+
+GetFieldHandlePtr DefaultComboBoxEditorBase::getHandleEditor          (void) const
+{
+    SFUnrecTextFieldPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::GetHandle(
+             &_sfEditor,
+             this->getType().getFieldDesc(EditorFieldId),
+             const_cast<DefaultComboBoxEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxEditorBase::editHandleEditor         (void)
+{
+    SFUnrecTextFieldPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::EditHandle(
+             &_sfEditor,
+             this->getType().getFieldDesc(EditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultComboBoxEditor::setEditor,
+                    static_cast<DefaultComboBoxEditor *>(this), _1));
+
+    editSField(EditorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultComboBoxEditorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultComboBoxEditor *pThis = static_cast<DefaultComboBoxEditor *>(this);
+
+    pThis->execSync(static_cast<DefaultComboBoxEditor *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultComboBoxEditorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultComboBoxEditor *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultComboBoxEditor *>(pRefAspect),
+                  dynamic_cast<const DefaultComboBoxEditor *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DefaultComboBoxEditorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DefaultComboBoxEditor *>(this)->setEditor(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultComboBoxEditorPtr>::_type("DefaultComboBoxEditorPtr", "ComboBoxEditorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultComboBoxEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultComboBoxEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTCOMBOBOXEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTCOMBOBOXEDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTCOMBOBOXEDITORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,48 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGComboBoxSelectionEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ComboBoxSelectionEvent class. See \ref 
-           PageUserInterfaceComboBoxSelectionEvent for a description.
+/*! \brief ComboBoxSelectionEvent class. See \ref
+           PageContribUserInterfaceComboBoxSelectionEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxSelectionEvent : public ComboBoxSelectionEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxSelectionEvent : public ComboBoxSelectionEventBase
 {
-  private:
-
-    typedef ComboBoxSelectionEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ComboBoxSelectionEventBase Inherited;
+    typedef ComboBoxSelectionEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  ComboBoxSelectionEventPtr      create(  FieldContainerPtr Source,
-                                                    Time TimeStamp,
-                                                    Int32 CurrentIndex,
-                                                    Int32 PreviousIndex); 
+    static  ComboBoxSelectionEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                           Time TimeStamp,
+                                                           Int32 CurrentIndex,
+                                                           Int32 PreviousIndex); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ComboBoxSelectionEventBase.
@@ -100,20 +102,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxSelectionEvent : public ComboBoxSe
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComboBoxSelectionEvent(void); 
+    virtual ~ComboBoxSelectionEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ComboBoxSelectionEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ComboBoxSelectionEvent &source);
 };
 

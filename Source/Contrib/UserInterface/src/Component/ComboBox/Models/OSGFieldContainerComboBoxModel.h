@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,40 +42,40 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGFieldContainerComboBoxModelBase.h"
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FieldContainerComboBoxModel class. See \ref 
-           PageUserInterfaceFieldContainerComboBoxModel for a description.
+/*! \brief FieldContainerComboBoxModel class. See \ref
+           PageContribUserInterfaceFieldContainerComboBoxModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING FieldContainerComboBoxModel : public FieldContainerComboBoxModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerComboBoxModel : public FieldContainerComboBoxModelBase
 {
-  private:
-
-    typedef FieldContainerComboBoxModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef FieldContainerComboBoxModelBase Inherited;
+    typedef FieldContainerComboBoxModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -95,6 +95,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FieldContainerComboBoxModel : public Field
 
     virtual boost::any getElementAt(UInt32 index) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in FieldContainerComboBoxModelBase.
@@ -111,22 +112,28 @@ class OSG_USERINTERFACELIB_DLLMAPPING FieldContainerComboBoxModel : public Field
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FieldContainerComboBoxModel(void); 
+    virtual ~FieldContainerComboBoxModel(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
     std::vector<boost::any> _FieldList;
 	Int32 _SelectedIndex;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class FieldContainerComboBoxModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const FieldContainerComboBoxModel &source);
 };
 
@@ -136,7 +143,5 @@ OSG_END_NAMESPACE
 
 #include "OSGFieldContainerComboBoxModelBase.inl"
 #include "OSGFieldContainerComboBoxModel.inl"
-
-#define OSGFIELDCONTAINERCOMBOBOXMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGFIELDCONTAINERCOMBOBOXMODEL_H_ */

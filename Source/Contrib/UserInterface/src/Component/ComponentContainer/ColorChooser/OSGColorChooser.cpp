@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,25 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGColorChooser.h"
 #include "OSGAbstractColorChooserPanel.h"
 #include "OSGDefaultColorSelectionModel.h"
-#include "Component/Container/OSGTabPanel.h"
-#include "Component/Text/OSGLabel.h"
-#include "Layer/OSGColorLayer.h"
+#include "OSGTabPanel.h"
+#include "OSGLabel.h"
+#include "OSGColorLayer.h"
+#include "OSGDefaultColorSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ColorChooser
-A UI ColorChooser. 
-*/
+// Documentation for this class is emitted in the
+// OSGColorChooserBase.cpp file.
+// To modify it, please change the .fcd file (OSGColorChooser.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,21 +68,27 @@ A UI ColorChooser.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ColorChooser::initMethod (void)
+void ColorChooser::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
 void ColorChooser::updateLayout(void)
 {
 	Pnt2f InsetsTopLeft, InsetsBottomRight;
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
-	ComponentPtr PreviewPanel;
-	if(getPreviewPanel() != NullFC)
+	ComponentRefPtr PreviewPanel;
+	if(getPreviewPanel() != NULL)
 	{
 		PreviewPanel = getPreviewPanel();
 	}
@@ -96,42 +98,35 @@ void ColorChooser::updateLayout(void)
 	}
 	Pnt2f PreviewTopLeft(InsetsTopLeft.x(), InsetsBottomRight.y()), PreviewBottomRight(InsetsBottomRight);
 	PreviewTopLeft.setValues(PreviewTopLeft.x(), InsetsBottomRight.y()-PreviewPanel->getPreferredSize().y());
-	beginEditCP(PreviewPanel, Component::PositionFieldMask | Component::SizeFieldMask);
 		PreviewPanel->setPosition(PreviewTopLeft);
 		PreviewPanel->setSize(PreviewBottomRight - PreviewTopLeft);
-	endEditCP(PreviewPanel, Component::PositionFieldMask | Component::SizeFieldMask);
 
 	Pnt2f ChooserTopLeft(InsetsTopLeft),
 		  ChooserBottomRight(InsetsBottomRight.x(), PreviewTopLeft.y());
-	if(getInternalChooserPanels().size() > 1 &&
-		_LayoutTabPanel != NullFC)
+	if(getMFInternalChooserPanels()->size() > 1 &&
+		_LayoutTabPanel != NULL)
 	{
-		beginEditCP(_LayoutTabPanel, Component::PositionFieldMask | Component::SizeFieldMask);
 			_LayoutTabPanel->setPosition(ChooserTopLeft);
 			_LayoutTabPanel->setSize(ChooserBottomRight - ChooserTopLeft);
-		endEditCP(_LayoutTabPanel, Component::PositionFieldMask | Component::SizeFieldMask);
 	}
-	else if(getInternalChooserPanels().size() == 1)
+	else if(getMFInternalChooserPanels()->size() == 1)
 	{
-		beginEditCP(getInternalChooserPanels().front(), Component::PositionFieldMask | Component::SizeFieldMask);
-			getInternalChooserPanels().front()->setPosition(ChooserTopLeft);
-			getInternalChooserPanels().front()->setSize(ChooserBottomRight - ChooserTopLeft);
-		endEditCP(getInternalChooserPanels().front(), Component::PositionFieldMask | Component::SizeFieldMask);
+			editMFInternalChooserPanels()->front()->setPosition(ChooserTopLeft);
+			editMFInternalChooserPanels()->front()->setSize(ChooserBottomRight - ChooserTopLeft);
 	}
 
 }
 
-void ColorChooser::addChooserPanel(AbstractColorChooserPanelPtr panel)
+void ColorChooser::addChooserPanel(AbstractColorChooserPanelRefPtr panel)
 {
-	MFAbstractColorChooserPanelPtr::iterator SearchItor(getInternalChooserPanels().find(panel));
+	MFInternalChooserPanelsType::iterator
+        SearchItor(editMFInternalChooserPanels()->find(panel));
 
-	if(SearchItor == getInternalChooserPanels().end())
+	if(SearchItor == editMFInternalChooserPanels()->end())
 	{
-		panel->installChooserPanel(ColorChooserPtr(this));
+		panel->installChooserPanel(this);
 
-		beginEditCP(ColorChooserPtr(this), InternalChooserPanelsFieldMask);
-			getInternalChooserPanels().push_back(panel);
-		endEditCP(ColorChooserPtr(this), InternalChooserPanelsFieldMask);
+			pushToInternalChooserPanels(panel);
 	}
 }
 
@@ -139,9 +134,9 @@ ColorChooser::ColorChooserPanelVector ColorChooser::getChooserPanels(void) const
 {
 	ColorChooserPanelVector Result;
 
-	for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
+	for(UInt32 i(0) ; i<getMFInternalChooserPanels()->size() ; ++i)
 	{
-		Result.push_back(getInternalChooserPanels()[i]);
+		Result.push_back(getInternalChooserPanels(i));
 	}
 
 	return Result;
@@ -164,23 +159,22 @@ ColorSelectionModelPtr ColorChooser::getSelectionModel(void)
 	return _SelectionModel;
 }
 
-AbstractColorChooserPanelPtr ColorChooser::removeChooserPanel(AbstractColorChooserPanelPtr panel)
+AbstractColorChooserPanelRefPtr ColorChooser::removeChooserPanel(AbstractColorChooserPanelRefPtr panel)
 {
-	MFAbstractColorChooserPanelPtr::iterator SearchItor(getInternalChooserPanels().find(panel));
+	MFInternalChooserPanelsType::iterator
+        SearchItor(editMFInternalChooserPanels()->find(panel));
 
-	if(SearchItor != getInternalChooserPanels().end())
+	if(SearchItor == editMFInternalChooserPanels()->end())
 	{
-		panel->uninstallChooserPanel(ColorChooserPtr(this));
+		panel->uninstallChooserPanel(this);
 
-		beginEditCP(ColorChooserPtr(this), InternalChooserPanelsFieldMask);
-			getInternalChooserPanels().erase(SearchItor);
-		endEditCP(ColorChooserPtr(this), InternalChooserPanelsFieldMask);
+        removeObjFromInternalChooserPanels(panel);
 
 		return panel;
 	}
 	else
 	{
-		return NullFC;
+		return NULL;
 	}
 }
 
@@ -194,11 +188,11 @@ void ColorChooser::setChooserPanels(ColorChooserPanelVector panels)
 
 	//Remove all of the panels not in
 	ColorChooserPanelVector RemovalVector;
-	for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
+	for(UInt32 i(0) ; i<getMFInternalChooserPanels()->size() ; ++i)
 	{
-		if(std::find(panels.begin(), panels.end(), getInternalChooserPanels()[i]) == panels.end())
+		if(std::find(panels.begin(), panels.end(), getInternalChooserPanels(i)) == panels.end())
 		{
-			RemovalVector.push_back(getInternalChooserPanels()[i]);
+			RemovalVector.push_back(getInternalChooserPanels(i));
 		}
 	}
 	for(UInt32 i(0) ; i<RemovalVector.size() ; ++i)
@@ -231,13 +225,11 @@ void ColorChooser::setSelectionModel(ColorSelectionModelPtr newModel)
 
 void ColorChooser::updateChoosers(void)
 {
-	beginEditCP(_DefaultPreviewPanelBackground, ColorLayer::ColorFieldMask);
 		_DefaultPreviewPanelBackground->setColor(_SelectionModel->getSelectedColor());
-	endEditCP(_DefaultPreviewPanelBackground, ColorLayer::ColorFieldMask);
 
-	for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
+	for(UInt32 i(0) ; i<getMFInternalChooserPanels()->size() ; ++i)
 	{
-		getInternalChooserPanels()[i]->updateChooser();
+		getInternalChooserPanels(i)->updateChooser();
 	}
 }
 
@@ -246,119 +238,129 @@ void ColorChooser::createDefaultPanel(void)
 	_DefaultPreviewPanelBackground = ColorLayer::create();
 
 	_DefaultPreviewPanel = Label::create();
-	beginEditCP(_DefaultPreviewPanel, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::PreferredSizeFieldMask);
 		_DefaultPreviewPanel->setPreferredSize(Vec2f(50.0f,50.0f));
-		_DefaultPreviewPanel->setBorders(NullFC);
+		_DefaultPreviewPanel->setBorders(NULL);
 		_DefaultPreviewPanel->setBackgrounds(_DefaultPreviewPanelBackground);
-	endEditCP(_DefaultPreviewPanel, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::PreferredSizeFieldMask);
 
 }
 
 void ColorChooser::updateChildren(void)
 {
-	if(getInternalChooserPanels().size() > 1)
+	if(getMFInternalChooserPanels()->size() > 1)
 	{
-		if(_LayoutTabPanel == NullFC)
+		if(_LayoutTabPanel == NULL)
 		{
 			_LayoutTabPanel = TabPanel::create();
-			addRefCP(_LayoutTabPanel);
 		}
 
 		_LayoutTabPanel->removeAllTabs();
-		LabelPtr TabLabel;
-		for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
+		LabelRefPtr TabLabel;
+		for(UInt32 i(0) ; i<getMFInternalChooserPanels()->size() ; ++i)
 		{
 			TabLabel = Label::create();
-			beginEditCP(TabLabel, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
-				TabLabel->setText(getInternalChooserPanels()[i]->getDisplayText());
-				TabLabel->setBorders(NullFC);
-				TabLabel->setBackgrounds(NullFC);
-			endEditCP(TabLabel, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+				TabLabel->setText(getInternalChooserPanels(i)->getDisplayText());
+				TabLabel->setBorders(NULL);
+				TabLabel->setBackgrounds(NULL);
 
-			_LayoutTabPanel->addTab(TabLabel, getInternalChooserPanels()[i]);
+			_LayoutTabPanel->addTab(TabLabel, getInternalChooserPanels(i));
 		}
 
         _LayoutTabPanel->setSelectedIndex(0);
 
-		beginEditCP(ColorChooserPtr(this), ColorChooser::ChildrenFieldMask);
-			getChildren().clear();
-			getChildren().push_back(_LayoutTabPanel);
-			if(getPreviewPanel() != NullFC)
+			clearChildren();
+			pushToChildren(_LayoutTabPanel);
+			if(getPreviewPanel() != NULL)
 			{
-				getChildren().push_back(getPreviewPanel());
+				pushToChildren(getPreviewPanel());
 			}
 			else
 			{
-				getChildren().push_back(_DefaultPreviewPanel);
+				pushToChildren(_DefaultPreviewPanel);
 			}
-		endEditCP(ColorChooserPtr(this), ColorChooser::ChildrenFieldMask);
 	}
-	else if(getInternalChooserPanels().size() == 1)
+	else if(getMFInternalChooserPanels()->size() == 1)
 	{
-		if(_LayoutTabPanel != NullFC)
+		if(_LayoutTabPanel != NULL)
 		{
-			subRefCP(_LayoutTabPanel);
-			_LayoutTabPanel = NullFC;
+			_LayoutTabPanel = NULL;
 		}
 
-		beginEditCP(ColorChooserPtr(this), ColorChooser::ChildrenFieldMask);
-			getChildren().clear();
-			getChildren().push_back(getInternalChooserPanels().front());
-			if(getPreviewPanel() != NullFC)
+			clearChildren();
+			pushToChildren(getMFInternalChooserPanels()->front());
+			if(getPreviewPanel() != NULL)
 			{
-				getChildren().push_back(getPreviewPanel());
+				pushToChildren(getPreviewPanel());
 			}
 			else
 			{
-				getChildren().push_back(_DefaultPreviewPanel);
+				pushToChildren(_DefaultPreviewPanel);
 			}
-		endEditCP(ColorChooserPtr(this), ColorChooser::ChildrenFieldMask);
 	}
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-/*----------------------- constructors & destructors ----------------------*/
-
-ColorChooser::ColorChooser(void) :
-    Inherited(),
-		_SelectionModel(new DefaultColorSelectionModel()),
-		_ColorSelectedChangeListener(ColorChooserPtr(this)),
-		_LayoutTabPanel(NullFC)
+void ColorChooser::onCreate(const ColorChooser * Id)
 {
-	_SelectionModel->addChangeListener(&_ColorSelectedChangeListener);
-	//createDefaultPanel();
-}
+	Inherited::onCreate(Id);
 
-ColorChooser::ColorChooser(const ColorChooser &source) :
-    Inherited(source),
-		_SelectionModel(new DefaultColorSelectionModel()),
-		_ColorSelectedChangeListener(ColorChooserPtr(this)),
-		_LayoutTabPanel(NullFC)
-{
+    if(GlobalSystemState == Startup)
+    {
+        return;
+    }
+
+    _SelectionModel = ColorSelectionModelPtr(new DefaultColorSelectionModel()),
 	_SelectionModel->addChangeListener(&_ColorSelectedChangeListener);
+
 	createDefaultPanel();
-	for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
+	for(UInt32 i(0) ; i<getMFInternalChooserPanels()->size() ; ++i)
 	{
-		getInternalChooserPanels()[i] = AbstractColorChooserPanel::Ptr::dcast(getInternalChooserPanels()[i]->shallowCopy());
-		getInternalChooserPanels()[i]->installChooserPanel(ColorChooserPtr(this));
+        FieldContainerUnrecPtr FCCopy(getInternalChooserPanels(i)->shallowCopy());
+		(*editMFInternalChooserPanels())[i] = dynamic_pointer_cast<AbstractColorChooserPanel>(FCCopy);
+		getInternalChooserPanels(i)->installChooserPanel(this);
 	}
 	
 	updateChildren();
 }
 
+void ColorChooser::onDestroy()
+{
+    if(_SelectionModel != NULL)
+    {
+        _SelectionModel->removeChangeListener(&_ColorSelectedChangeListener);
+    }
+}
+
+/*----------------------- constructors & destructors ----------------------*/
+
+ColorChooser::ColorChooser(void) :
+    Inherited(),
+		_SelectionModel(),
+		_ColorSelectedChangeListener(this),
+		_LayoutTabPanel(NULL)
+{
+}
+
+ColorChooser::ColorChooser(const ColorChooser &source) :
+    Inherited(source),
+		_SelectionModel(),
+		_ColorSelectedChangeListener(this),
+		_LayoutTabPanel(NULL)
+{
+}
+
 ColorChooser::~ColorChooser(void)
 {
-	_SelectionModel->removeChangeListener(&_ColorSelectedChangeListener);
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void ColorChooser::changed(BitVector whichField, UInt32 origin)
+void ColorChooser::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
 	if((whichField & PreviewPanelFieldMask) || 
 	   (whichField & InternalChooserPanelsFieldMask))
@@ -372,41 +374,15 @@ void ColorChooser::changed(BitVector whichField, UInt32 origin)
 	}
 }
 
-void ColorChooser::dump(      UInt32    , 
+void ColorChooser::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ColorChooser NI" << std::endl;
 }
 
-
-void ColorChooser::ColorSelectedChangeListener::stateChanged(const ChangeEventPtr e)
+void ColorChooser::ColorSelectedChangeListener::stateChanged(const ChangeEventUnrecPtr e)
 {
 	_ColorChooser->updateChoosers();
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOLORCHOOSERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOLORCHOOSERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOLORCHOOSERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

@@ -43,18 +43,17 @@
 #pragma once
 #endif
  
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGColor.h>
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
-#include "Event/OSGChangeListener.h"
+#include "OSGColor.h"
+#include "OSGChangeListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING ColorSelectionModel : public IntrusivePtrImplBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorSelectionModel
 {
 private:
 protected:
@@ -69,7 +68,7 @@ public:
 	virtual void setSelectedColor(const Color4f& Value, bool isValueAdjusting) = 0;
 };
 
-typedef boost::intrusive_ptr<ColorSelectionModel> ColorSelectionModelPtr;
+typedef boost::shared_ptr<ColorSelectionModel> ColorSelectionModelPtr;
 
 OSG_END_NAMESPACE
 

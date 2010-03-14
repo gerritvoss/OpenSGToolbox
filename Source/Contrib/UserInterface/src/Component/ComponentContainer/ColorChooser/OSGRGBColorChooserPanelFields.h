@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGAbstractColorChooserPanelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class RGBColorChooserPanel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! RGBColorChooserPanelPtr
+OSG_GEN_CONTAINERPTR(RGBColorChooserPanel);
 
-typedef FCPtr<AbstractColorChooserPanelPtr, RGBColorChooserPanel> RGBColorChooserPanelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<RGBColorChooserPanelPtr> : 
-    public FieldTraitsRecurseMapper<RGBColorChooserPanelPtr, true>
+struct FieldTraits<RGBColorChooserPanel *> :
+    public FieldTraitsFCPtrBase<RGBColorChooserPanel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFRGBColorChooserPanelPtr"; }
-    static const char *getMName(void) { return "MFRGBColorChooserPanelPtr"; }
+    typedef FieldTraits<RGBColorChooserPanel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFRGBColorChooserPanelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFRGBColorChooserPanelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<RGBColorChooserPanelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<RGBColorChooserPanel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecRGBColorChooserPanelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<RGBColorChooserPanel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecRGBColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RGBColorChooserPanel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakRGBColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RGBColorChooserPanel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdRGBColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RGBColorChooserPanel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecRGBColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RGBColorChooserPanel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecRGBColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RGBColorChooserPanel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakRGBColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RGBColorChooserPanel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdRGBColorChooserPanelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RGBColorChooserPanel *,
+                      RecordedRefCountPolicy  > SFRecRGBColorChooserPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RGBColorChooserPanel *,
+                      UnrecordedRefCountPolicy> SFUnrecRGBColorChooserPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RGBColorChooserPanel *,
+                      WeakRefCountPolicy      > SFWeakRGBColorChooserPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RGBColorChooserPanel *,
+                      NoRefCountPolicy        > SFUncountedRGBColorChooserPanelPtr;
 
-typedef SField<RGBColorChooserPanelPtr> SFRGBColorChooserPanelPtr;
-#endif
 
-#ifndef OSG_COMPILERGBCOLORCHOOSERPANELINST
-OSG_DLLEXPORT_DECL1(SField, RGBColorChooserPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RGBColorChooserPanel *,
+                      RecordedRefCountPolicy  > MFRecRGBColorChooserPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RGBColorChooserPanel *,
+                      UnrecordedRefCountPolicy> MFUnrecRGBColorChooserPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RGBColorChooserPanel *,
+                      WeakRefCountPolicy      > MFWeakRGBColorChooserPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RGBColorChooserPanel *,
+                      NoRefCountPolicy        > MFUncountedRGBColorChooserPanelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<RGBColorChooserPanelPtr> MFRGBColorChooserPanelPtr;
-#endif
 
-#ifndef OSG_COMPILERGBCOLORCHOOSERPANELINST
-OSG_DLLEXPORT_DECL1(MField, RGBColorChooserPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecRGBColorChooserPanelPtr : 
+    public PointerSField<RGBColorChooserPanel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecRGBColorChooserPanelPtr : 
+    public PointerSField<RGBColorChooserPanel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakRGBColorChooserPanelPtr :
+    public PointerSField<RGBColorChooserPanel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedRGBColorChooserPanelPtr :
+    public PointerSField<RGBColorChooserPanel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecRGBColorChooserPanelPtr :
+    public PointerMField<RGBColorChooserPanel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecRGBColorChooserPanelPtr :
+    public PointerMField<RGBColorChooserPanel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakRGBColorChooserPanelPtr :
+    public PointerMField<RGBColorChooserPanel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedRGBColorChooserPanelPtr :
+    public PointerMField<RGBColorChooserPanel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGRGBCOLORCHOOSERPANELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGRGBCOLORCHOOSERPANELFIELDS_H_ */

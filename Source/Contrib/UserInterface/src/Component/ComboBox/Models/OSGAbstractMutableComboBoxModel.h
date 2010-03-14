@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,42 +42,40 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGAbstractMutableComboBoxModelBase.h"
 #include <set>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
-
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractMutableComboBoxModel class. See \ref 
-           PageUserInterfaceAbstractMutableComboBoxModel for a description.
+/*! \brief AbstractMutableComboBoxModel class. See \ref
+           PageContribUserInterfaceAbstractMutableComboBoxModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractMutableComboBoxModel : public AbstractMutableComboBoxModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractMutableComboBoxModel : public AbstractMutableComboBoxModelBase
 {
-  private:
-
-    typedef AbstractMutableComboBoxModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AbstractMutableComboBoxModelBase Inherited;
+    typedef AbstractMutableComboBoxModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -89,6 +87,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractMutableComboBoxModel : public Abst
 	virtual bool isSelectionListenerAttached(ComboBoxSelectionListenerPtr l) const;
 	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AbstractMutableComboBoxModelBase.
@@ -105,37 +104,41 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractMutableComboBoxModel : public Abst
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractMutableComboBoxModel(void); 
+    virtual ~AbstractMutableComboBoxModel(void);
 
     /*! \}                                                                 */
-	
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     
 	typedef std::set<ListDataListenerPtr> ListDataListenerSet;
 	typedef ListDataListenerSet::iterator ListDataListenerSetIter;
 	typedef ListDataListenerSet::const_iterator ListDataListenerSetConstIter;
 	ListDataListenerSet _DataListeners;
 
-	void produceListDataContentsChanged(FieldContainerPtr Source, UInt32 index0, UInt32 index1);
-	void produceListDataIntervalAdded(FieldContainerPtr Source, UInt32 index0, UInt32 index1);
-	void produceListDataIntervalRemoved(FieldContainerPtr Source, UInt32 index0, UInt32 index1);
+	void produceListDataContentsChanged(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1);
+	void produceListDataIntervalAdded(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1);
+	void produceListDataIntervalRemoved(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1);
 
 	typedef std::set<ComboBoxSelectionListenerPtr> ComboBoxSelectionListenerSet;
 	typedef ComboBoxSelectionListenerSet::iterator ComboBoxSelectionListenerSetIter;
 	typedef ComboBoxSelectionListenerSet::const_iterator ComboBoxSelectionListenerSetConstIter;
 	ComboBoxSelectionListenerSet _SelectionListeners;
 
-	void produceSelectionChanged(FieldContainerPtr Source, const Int32& CurrentIndex, const Int32& PreviousIndex);
+	void produceSelectionChanged(FieldContainerRefPtr Source, const Int32& CurrentIndex, const Int32& PreviousIndex);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AbstractMutableComboBoxModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AbstractMutableComboBoxModel &source);
 };
 
@@ -145,7 +148,5 @@ OSG_END_NAMESPACE
 
 #include "OSGAbstractMutableComboBoxModelBase.inl"
 #include "OSGAbstractMutableComboBoxModel.inl"
-
-#define OSGABSTRACTMUTABLECOMBOBOXMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGABSTRACTMUTABLECOMBOBOXMODEL_H_ */

@@ -42,13 +42,13 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGColorSelectionModel.h"
 #include <set>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,7 +56,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceAbstractColorSelectionModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractColorSelectionModel : public ColorSelectionModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractColorSelectionModel : public ColorSelectionModel
 {
     /*==========================  PUBLIC  =================================*/
   public:
@@ -70,7 +70,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractColorSelectionModel : public Color
     typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
 	
     ChangeListenerSet       _ChangeListeners;
-    void produceStateChanged(const ChangeEventPtr e);
+    void produceStateChanged(const ChangeEventUnrecPtr e);
     /*==========================  PRIVATE  ================================*/
   private:
 };

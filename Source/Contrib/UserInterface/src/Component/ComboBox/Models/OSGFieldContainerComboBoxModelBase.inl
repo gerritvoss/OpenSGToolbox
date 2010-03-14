@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,132 +55,117 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &FieldContainerComboBoxModelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 FieldContainerComboBoxModelBase::getClassTypeId(void) 
+OSG::UInt32 FieldContainerComboBoxModelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-FieldContainerComboBoxModelPtr FieldContainerComboBoxModelBase::create(void) 
-{
-    FieldContainerComboBoxModelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = FieldContainerComboBoxModelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-FieldContainerComboBoxModelPtr FieldContainerComboBoxModelBase::createEmpty(void) 
-{ 
-    FieldContainerComboBoxModelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 FieldContainerComboBoxModelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the FieldContainerComboBoxModel::_mfFieldContainerTypes field.
-inline
-MFString *FieldContainerComboBoxModelBase::getMFFieldContainerTypes(void)
-{
-    return &_mfFieldContainerTypes;
-}
-
-//! Get the FieldContainerComboBoxModel::_mfInternalFieldContainerTypes field.
-inline
-MFUInt32 *FieldContainerComboBoxModelBase::getMFInternalFieldContainerTypes(void)
-{
-    return &_mfInternalFieldContainerTypes;
-}
-
-//! Get the FieldContainerComboBoxModel::_sfIncludeAbstract field.
-inline
-SFBool *FieldContainerComboBoxModelBase::getSFIncludeAbstract(void)
-{
-    return &_sfIncludeAbstract;
-}
-
-
 //! Get the value of the FieldContainerComboBoxModel::_sfIncludeAbstract field.
+
 inline
-bool &FieldContainerComboBoxModelBase::getIncludeAbstract(void)
+bool &FieldContainerComboBoxModelBase::editIncludeAbstract(void)
 {
+    editSField(IncludeAbstractFieldMask);
+
     return _sfIncludeAbstract.getValue();
 }
 
 //! Get the value of the FieldContainerComboBoxModel::_sfIncludeAbstract field.
 inline
-const bool &FieldContainerComboBoxModelBase::getIncludeAbstract(void) const
+      bool  FieldContainerComboBoxModelBase::getIncludeAbstract(void) const
 {
     return _sfIncludeAbstract.getValue();
 }
 
 //! Set the value of the FieldContainerComboBoxModel::_sfIncludeAbstract field.
 inline
-void FieldContainerComboBoxModelBase::setIncludeAbstract(const bool &value)
+void FieldContainerComboBoxModelBase::setIncludeAbstract(const bool value)
 {
+    editSField(IncludeAbstractFieldMask);
+
     _sfIncludeAbstract.setValue(value);
 }
 
-
 //! Get the value of the \a index element the FieldContainerComboBoxModel::_mfFieldContainerTypes field.
 inline
-std::string &FieldContainerComboBoxModelBase::getFieldContainerTypes(const UInt32 index)
+const std::string &FieldContainerComboBoxModelBase::getFieldContainerTypes(const UInt32 index) const
 {
     return _mfFieldContainerTypes[index];
 }
 
-//! Get the FieldContainerComboBoxModel::_mfFieldContainerTypes field.
 inline
-MFString &FieldContainerComboBoxModelBase::getFieldContainerTypes(void)
+std::string &FieldContainerComboBoxModelBase::editFieldContainerTypes(const UInt32 index)
 {
-    return _mfFieldContainerTypes;
+    editMField(FieldContainerTypesFieldMask, _mfFieldContainerTypes);
+
+    return _mfFieldContainerTypes[index];
 }
 
-//! Get the FieldContainerComboBoxModel::_mfFieldContainerTypes field.
-inline
-const MFString &FieldContainerComboBoxModelBase::getFieldContainerTypes(void) const
-{
-    return _mfFieldContainerTypes;
-}
 
 //! Get the value of the \a index element the FieldContainerComboBoxModel::_mfInternalFieldContainerTypes field.
 inline
-UInt32 &FieldContainerComboBoxModelBase::getInternalFieldContainerTypes(const UInt32 index)
+      UInt32  FieldContainerComboBoxModelBase::getInternalFieldContainerTypes(const UInt32 index) const
 {
     return _mfInternalFieldContainerTypes[index];
 }
 
-//! Get the FieldContainerComboBoxModel::_mfInternalFieldContainerTypes field.
 inline
-MFUInt32 &FieldContainerComboBoxModelBase::getInternalFieldContainerTypes(void)
+UInt32 &FieldContainerComboBoxModelBase::editInternalFieldContainerTypes(const UInt32 index)
 {
-    return _mfInternalFieldContainerTypes;
+    editMField(InternalFieldContainerTypesFieldMask, _mfInternalFieldContainerTypes);
+
+    return _mfInternalFieldContainerTypes[index];
 }
 
-//! Get the FieldContainerComboBoxModel::_mfInternalFieldContainerTypes field.
+
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFUInt32 &FieldContainerComboBoxModelBase::getInternalFieldContainerTypes(void) const
+void FieldContainerComboBoxModelBase::execSync (      FieldContainerComboBoxModelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfInternalFieldContainerTypes;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (FieldContainerTypesFieldMask & whichField))
+        _mfFieldContainerTypes.syncWith(pFrom->_mfFieldContainerTypes,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (InternalFieldContainerTypesFieldMask & whichField))
+        _mfInternalFieldContainerTypes.syncWith(pFrom->_mfInternalFieldContainerTypes,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
+        _sfIncludeAbstract.syncWith(pFrom->_sfIncludeAbstract);
 }
+#endif
+
+
+inline
+const Char8 *FieldContainerComboBoxModelBase::getClassname(void)
+{
+    return "FieldContainerComboBoxModel";
+}
+OSG_GEN_CONTAINERPTR(FieldContainerComboBoxModel);
 
 OSG_END_NAMESPACE
-
-#define OSGFIELDCONTAINERCOMBOBOXMODELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

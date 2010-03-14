@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/Container/OSGPanelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ColorChooser;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ColorChooserPtr
+OSG_GEN_CONTAINERPTR(ColorChooser);
 
-typedef FCPtr<PanelPtr, ColorChooser> ColorChooserPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ColorChooserPtr> : 
-    public FieldTraitsRecurseMapper<ColorChooserPtr, true>
+struct FieldTraits<ColorChooser *> :
+    public FieldTraitsFCPtrBase<ColorChooser *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFColorChooserPtr"; }
-    static const char *getMName(void) { return "MFColorChooserPtr"; }
+    typedef FieldTraits<ColorChooser *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFColorChooserPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFColorChooserPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ColorChooserPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ColorChooser *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecColorChooserPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ColorChooser *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecColorChooserPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorChooser *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakColorChooserPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorChooser *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdColorChooserPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorChooser *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecColorChooserPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorChooser *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecColorChooserPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorChooser *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakColorChooserPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorChooser *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdColorChooserPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ColorChooser *,
+                      RecordedRefCountPolicy  > SFRecColorChooserPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ColorChooser *,
+                      UnrecordedRefCountPolicy> SFUnrecColorChooserPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ColorChooser *,
+                      WeakRefCountPolicy      > SFWeakColorChooserPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ColorChooser *,
+                      NoRefCountPolicy        > SFUncountedColorChooserPtr;
 
-typedef SField<ColorChooserPtr> SFColorChooserPtr;
-#endif
 
-#ifndef OSG_COMPILECOLORCHOOSERINST
-OSG_DLLEXPORT_DECL1(SField, ColorChooserPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ColorChooser *,
+                      RecordedRefCountPolicy  > MFRecColorChooserPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ColorChooser *,
+                      UnrecordedRefCountPolicy> MFUnrecColorChooserPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ColorChooser *,
+                      WeakRefCountPolicy      > MFWeakColorChooserPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ColorChooser *,
+                      NoRefCountPolicy        > MFUncountedColorChooserPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ColorChooserPtr> MFColorChooserPtr;
-#endif
 
-#ifndef OSG_COMPILECOLORCHOOSERINST
-OSG_DLLEXPORT_DECL1(MField, ColorChooserPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecColorChooserPtr : 
+    public PointerSField<ColorChooser *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecColorChooserPtr : 
+    public PointerSField<ColorChooser *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakColorChooserPtr :
+    public PointerSField<ColorChooser *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedColorChooserPtr :
+    public PointerSField<ColorChooser *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecColorChooserPtr :
+    public PointerMField<ColorChooser *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecColorChooserPtr :
+    public PointerMField<ColorChooser *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakColorChooserPtr :
+    public PointerMField<ColorChooser *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedColorChooserPtr :
+    public PointerMField<ColorChooser *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGCOLORCHOOSERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGCOLORCHOOSERFIELDS_H_ */

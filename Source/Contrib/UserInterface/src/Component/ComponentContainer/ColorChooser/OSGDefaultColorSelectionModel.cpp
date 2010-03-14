@@ -43,9 +43,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGDefaultColorSelectionModel.h"
 
@@ -55,7 +53,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultColorSelectionModel
+/*! \class OSG::DefaultColorSelectionModel
 A DefaultColorSelectionModel. 
 */
 
@@ -81,7 +79,8 @@ void DefaultColorSelectionModel::setSelectedColor(const Color4f& Value, bool isV
 	if(_SelectedColor != Value)
 	{
 		_SelectedColor = Value;
-		produceStateChanged(ChangeEvent::create(NullFC, getSystemTime()));
+        ChangeEventUnrecPtr TheEvent(ChangeEvent::create(NULL, getSystemTime()));
+		produceStateChanged(TheEvent);
 	}
 }
 

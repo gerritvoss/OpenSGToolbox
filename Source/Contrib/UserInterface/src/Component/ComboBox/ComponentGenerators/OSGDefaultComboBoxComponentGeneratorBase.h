@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,95 +58,115 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGComboBoxComponentGenerator.h" // Parent
 
-#include "Component/OSGComponentFields.h" // DrawObjectPrototype type
-#include "Layer/OSGLayerFields.h" // SelectedBackground type
-#include "Layer/OSGLayerFields.h" // FocusedBackground type
-#include "Layer/OSGLayerFields.h" // SelectedForeground type
-#include "Layer/OSGLayerFields.h" // FocusedForeground type
-#include "Border/OSGBorderFields.h" // SelectedBorder type
-#include "Border/OSGBorderFields.h" // FocusedBorder type
-#include <OpenSG/OSGColor4fFields.h> // SelectedTextColor type
-#include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
-#include <OpenSG/OSGBoolFields.h> // FocusedTextColorHasPriority type
-#include <OpenSG/OSGBoolFields.h> // FocusedBorderHasPriority type
-#include <OpenSG/OSGBoolFields.h> // FocusedBackgroundHasPriority type
+#include "OSGComponentFields.h"         // DrawObjectPrototype type
+#include "OSGLayerFields.h"             // SelectedBackground type
+#include "OSGBorderFields.h"            // SelectedBorder type
+#include "OSGBaseFields.h"              // SelectedTextColor type
+#include "OSGSysFields.h"               // FocusedTextColorHasPriority type
 
 #include "OSGDefaultComboBoxComponentGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DefaultComboBoxComponentGenerator;
-class BinaryDataHandler;
 
 //! \brief DefaultComboBoxComponentGenerator Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxComponentGeneratorBase : public ComboBoxComponentGenerator
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultComboBoxComponentGeneratorBase : public ComboBoxComponentGenerator
 {
-  private:
-
-    typedef ComboBoxComponentGenerator    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DefaultComboBoxComponentGeneratorPtr  Ptr;
+    typedef ComboBoxComponentGenerator Inherited;
+    typedef ComboBoxComponentGenerator ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DefaultComboBoxComponentGenerator);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        DrawObjectPrototypeFieldId          = Inherited::NextFieldId,
-        SelectedBackgroundFieldId           = DrawObjectPrototypeFieldId          + 1,
-        FocusedBackgroundFieldId            = SelectedBackgroundFieldId           + 1,
-        SelectedForegroundFieldId           = FocusedBackgroundFieldId            + 1,
-        FocusedForegroundFieldId            = SelectedForegroundFieldId           + 1,
-        SelectedBorderFieldId               = FocusedForegroundFieldId            + 1,
-        FocusedBorderFieldId                = SelectedBorderFieldId               + 1,
-        SelectedTextColorFieldId            = FocusedBorderFieldId                + 1,
-        FocusedTextColorFieldId             = SelectedTextColorFieldId            + 1,
-        FocusedTextColorHasPriorityFieldId  = FocusedTextColorFieldId             + 1,
-        FocusedBorderHasPriorityFieldId     = FocusedTextColorHasPriorityFieldId  + 1,
-        FocusedBackgroundHasPriorityFieldId = FocusedBorderHasPriorityFieldId     + 1,
-        NextFieldId                         = FocusedBackgroundHasPriorityFieldId + 1
+        DrawObjectPrototypeFieldId = Inherited::NextFieldId,
+        SelectedBackgroundFieldId = DrawObjectPrototypeFieldId + 1,
+        FocusedBackgroundFieldId = SelectedBackgroundFieldId + 1,
+        SelectedForegroundFieldId = FocusedBackgroundFieldId + 1,
+        FocusedForegroundFieldId = SelectedForegroundFieldId + 1,
+        SelectedBorderFieldId = FocusedForegroundFieldId + 1,
+        FocusedBorderFieldId = SelectedBorderFieldId + 1,
+        SelectedTextColorFieldId = FocusedBorderFieldId + 1,
+        FocusedTextColorFieldId = SelectedTextColorFieldId + 1,
+        FocusedTextColorHasPriorityFieldId = FocusedTextColorFieldId + 1,
+        FocusedBorderHasPriorityFieldId = FocusedTextColorHasPriorityFieldId + 1,
+        FocusedBackgroundHasPriorityFieldId = FocusedBorderHasPriorityFieldId + 1,
+        NextFieldId = FocusedBackgroundHasPriorityFieldId + 1
     };
 
-    static const OSG::BitVector DrawObjectPrototypeFieldMask;
-    static const OSG::BitVector SelectedBackgroundFieldMask;
-    static const OSG::BitVector FocusedBackgroundFieldMask;
-    static const OSG::BitVector SelectedForegroundFieldMask;
-    static const OSG::BitVector FocusedForegroundFieldMask;
-    static const OSG::BitVector SelectedBorderFieldMask;
-    static const OSG::BitVector FocusedBorderFieldMask;
-    static const OSG::BitVector SelectedTextColorFieldMask;
-    static const OSG::BitVector FocusedTextColorFieldMask;
-    static const OSG::BitVector FocusedTextColorHasPriorityFieldMask;
-    static const OSG::BitVector FocusedBorderHasPriorityFieldMask;
-    static const OSG::BitVector FocusedBackgroundHasPriorityFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector DrawObjectPrototypeFieldMask =
+        (TypeTraits<BitVector>::One << DrawObjectPrototypeFieldId);
+    static const OSG::BitVector SelectedBackgroundFieldMask =
+        (TypeTraits<BitVector>::One << SelectedBackgroundFieldId);
+    static const OSG::BitVector FocusedBackgroundFieldMask =
+        (TypeTraits<BitVector>::One << FocusedBackgroundFieldId);
+    static const OSG::BitVector SelectedForegroundFieldMask =
+        (TypeTraits<BitVector>::One << SelectedForegroundFieldId);
+    static const OSG::BitVector FocusedForegroundFieldMask =
+        (TypeTraits<BitVector>::One << FocusedForegroundFieldId);
+    static const OSG::BitVector SelectedBorderFieldMask =
+        (TypeTraits<BitVector>::One << SelectedBorderFieldId);
+    static const OSG::BitVector FocusedBorderFieldMask =
+        (TypeTraits<BitVector>::One << FocusedBorderFieldId);
+    static const OSG::BitVector SelectedTextColorFieldMask =
+        (TypeTraits<BitVector>::One << SelectedTextColorFieldId);
+    static const OSG::BitVector FocusedTextColorFieldMask =
+        (TypeTraits<BitVector>::One << FocusedTextColorFieldId);
+    static const OSG::BitVector FocusedTextColorHasPriorityFieldMask =
+        (TypeTraits<BitVector>::One << FocusedTextColorHasPriorityFieldId);
+    static const OSG::BitVector FocusedBorderHasPriorityFieldMask =
+        (TypeTraits<BitVector>::One << FocusedBorderHasPriorityFieldId);
+    static const OSG::BitVector FocusedBackgroundHasPriorityFieldMask =
+        (TypeTraits<BitVector>::One << FocusedBackgroundHasPriorityFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecComponentPtr SFDrawObjectPrototypeType;
+    typedef SFUnrecLayerPtr   SFSelectedBackgroundType;
+    typedef SFUnrecLayerPtr   SFFocusedBackgroundType;
+    typedef SFUnrecLayerPtr   SFSelectedForegroundType;
+    typedef SFUnrecLayerPtr   SFFocusedForegroundType;
+    typedef SFUnrecBorderPtr  SFSelectedBorderType;
+    typedef SFUnrecBorderPtr  SFFocusedBorderType;
+    typedef SFColor4f         SFSelectedTextColorType;
+    typedef SFColor4f         SFFocusedTextColorType;
+    typedef SFBool            SFFocusedTextColorHasPriorityType;
+    typedef SFBool            SFFocusedBorderHasPriorityType;
+    typedef SFBool            SFFocusedBackgroundHasPriorityType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -155,65 +175,92 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxComponentGeneratorBase : pu
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *getSFDrawObjectPrototype(void);
-           SFLayerPtr          *getSFSelectedBackground(void);
-           SFLayerPtr          *getSFFocusedBackground(void);
-           SFLayerPtr          *getSFSelectedForeground(void);
-           SFLayerPtr          *getSFFocusedForeground(void);
-           SFBorderPtr         *getSFSelectedBorder (void);
-           SFBorderPtr         *getSFFocusedBorder  (void);
-           SFColor4f           *getSFSelectedTextColor(void);
-           SFColor4f           *getSFFocusedTextColor(void);
-           SFBool              *getSFFocusedTextColorHasPriority(void);
-           SFBool              *getSFFocusedBorderHasPriority(void);
-           SFBool              *getSFFocusedBackgroundHasPriority(void);
+            const SFUnrecComponentPtr *getSFDrawObjectPrototype(void) const;
+                  SFUnrecComponentPtr *editSFDrawObjectPrototype(void);
+            const SFUnrecLayerPtr     *getSFSelectedBackground(void) const;
+                  SFUnrecLayerPtr     *editSFSelectedBackground(void);
+            const SFUnrecLayerPtr     *getSFFocusedBackground(void) const;
+                  SFUnrecLayerPtr     *editSFFocusedBackground(void);
+            const SFUnrecLayerPtr     *getSFSelectedForeground(void) const;
+                  SFUnrecLayerPtr     *editSFSelectedForeground(void);
+            const SFUnrecLayerPtr     *getSFFocusedForeground(void) const;
+                  SFUnrecLayerPtr     *editSFFocusedForeground(void);
+            const SFUnrecBorderPtr    *getSFSelectedBorder (void) const;
+                  SFUnrecBorderPtr    *editSFSelectedBorder (void);
+            const SFUnrecBorderPtr    *getSFFocusedBorder  (void) const;
+                  SFUnrecBorderPtr    *editSFFocusedBorder  (void);
 
-           ComponentPtr        &getDrawObjectPrototype(void);
-     const ComponentPtr        &getDrawObjectPrototype(void) const;
-           LayerPtr            &getSelectedBackground(void);
-     const LayerPtr            &getSelectedBackground(void) const;
-           LayerPtr            &getFocusedBackground(void);
-     const LayerPtr            &getFocusedBackground(void) const;
-           LayerPtr            &getSelectedForeground(void);
-     const LayerPtr            &getSelectedForeground(void) const;
-           LayerPtr            &getFocusedForeground(void);
-     const LayerPtr            &getFocusedForeground(void) const;
-           BorderPtr           &getSelectedBorder (void);
-     const BorderPtr           &getSelectedBorder (void) const;
-           BorderPtr           &getFocusedBorder  (void);
-     const BorderPtr           &getFocusedBorder  (void) const;
-           Color4f             &getSelectedTextColor(void);
-     const Color4f             &getSelectedTextColor(void) const;
-           Color4f             &getFocusedTextColor(void);
-     const Color4f             &getFocusedTextColor(void) const;
-           bool                &getFocusedTextColorHasPriority(void);
-     const bool                &getFocusedTextColorHasPriority(void) const;
-           bool                &getFocusedBorderHasPriority(void);
-     const bool                &getFocusedBorderHasPriority(void) const;
-           bool                &getFocusedBackgroundHasPriority(void);
-     const bool                &getFocusedBackgroundHasPriority(void) const;
+                  SFColor4f           *editSFSelectedTextColor(void);
+            const SFColor4f           *getSFSelectedTextColor (void) const;
+
+                  SFColor4f           *editSFFocusedTextColor(void);
+            const SFColor4f           *getSFFocusedTextColor (void) const;
+
+                  SFBool              *editSFFocusedTextColorHasPriority(void);
+            const SFBool              *getSFFocusedTextColorHasPriority (void) const;
+
+                  SFBool              *editSFFocusedBorderHasPriority(void);
+            const SFBool              *getSFFocusedBorderHasPriority (void) const;
+
+                  SFBool              *editSFFocusedBackgroundHasPriority(void);
+            const SFBool              *getSFFocusedBackgroundHasPriority (void) const;
+
+
+                  Component * getDrawObjectPrototype(void) const;
+
+                  Layer * getSelectedBackground(void) const;
+
+                  Layer * getFocusedBackground(void) const;
+
+                  Layer * getSelectedForeground(void) const;
+
+                  Layer * getFocusedForeground(void) const;
+
+                  Border * getSelectedBorder (void) const;
+
+                  Border * getFocusedBorder  (void) const;
+
+                  Color4f             &editSelectedTextColor(void);
+            const Color4f             &getSelectedTextColor (void) const;
+
+                  Color4f             &editFocusedTextColor(void);
+            const Color4f             &getFocusedTextColor (void) const;
+
+                  bool                &editFocusedTextColorHasPriority(void);
+                  bool                 getFocusedTextColorHasPriority (void) const;
+
+                  bool                &editFocusedBorderHasPriority(void);
+                  bool                 getFocusedBorderHasPriority (void) const;
+
+                  bool                &editFocusedBackgroundHasPriority(void);
+                  bool                 getFocusedBackgroundHasPriority (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDrawObjectPrototype( const ComponentPtr &value );
-     void setSelectedBackground( const LayerPtr &value );
-     void setFocusedBackground( const LayerPtr &value );
-     void setSelectedForeground( const LayerPtr &value );
-     void setFocusedForeground( const LayerPtr &value );
-     void setSelectedBorder ( const BorderPtr &value );
-     void setFocusedBorder  ( const BorderPtr &value );
-     void setSelectedTextColor( const Color4f &value );
-     void setFocusedTextColor( const Color4f &value );
-     void setFocusedTextColorHasPriority( const bool &value );
-     void setFocusedBorderHasPriority( const bool &value );
-     void setFocusedBackgroundHasPriority( const bool &value );
+            void setDrawObjectPrototype(Component * const value);
+            void setSelectedBackground(Layer * const value);
+            void setFocusedBackground(Layer * const value);
+            void setSelectedForeground(Layer * const value);
+            void setFocusedForeground(Layer * const value);
+            void setSelectedBorder (Border * const value);
+            void setFocusedBorder  (Border * const value);
+            void setSelectedTextColor(const Color4f &value);
+            void setFocusedTextColor(const Color4f &value);
+            void setFocusedTextColorHasPriority(const bool value);
+            void setFocusedBorderHasPriority(const bool value);
+            void setFocusedBackgroundHasPriority(const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -221,11 +268,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxComponentGeneratorBase : pu
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -233,37 +280,54 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxComponentGeneratorBase : pu
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DefaultComboBoxComponentGeneratorPtr      create          (void); 
-    static  DefaultComboBoxComponentGeneratorPtr      createEmpty     (void); 
+    static  DefaultComboBoxComponentGeneratorTransitPtr  create          (void);
+    static  DefaultComboBoxComponentGenerator           *createEmpty     (void);
+
+    static  DefaultComboBoxComponentGeneratorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DefaultComboBoxComponentGenerator            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DefaultComboBoxComponentGeneratorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFComponentPtr      _sfDrawObjectPrototype;
-    SFLayerPtr          _sfSelectedBackground;
-    SFLayerPtr          _sfFocusedBackground;
-    SFLayerPtr          _sfSelectedForeground;
-    SFLayerPtr          _sfFocusedForeground;
-    SFBorderPtr         _sfSelectedBorder;
-    SFBorderPtr         _sfFocusedBorder;
-    SFColor4f           _sfSelectedTextColor;
-    SFColor4f           _sfFocusedTextColor;
-    SFBool              _sfFocusedTextColorHasPriority;
-    SFBool              _sfFocusedBorderHasPriority;
-    SFBool              _sfFocusedBackgroundHasPriority;
+    SFUnrecComponentPtr _sfDrawObjectPrototype;
+    SFUnrecLayerPtr   _sfSelectedBackground;
+    SFUnrecLayerPtr   _sfFocusedBackground;
+    SFUnrecLayerPtr   _sfSelectedForeground;
+    SFUnrecLayerPtr   _sfFocusedForeground;
+    SFUnrecBorderPtr  _sfSelectedBorder;
+    SFUnrecBorderPtr  _sfFocusedBorder;
+    SFColor4f         _sfSelectedTextColor;
+    SFColor4f         _sfFocusedTextColor;
+    SFBool            _sfFocusedTextColorHasPriority;
+    SFBool            _sfFocusedBorderHasPriority;
+    SFBool            _sfFocusedBackgroundHasPriority;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -278,69 +342,102 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxComponentGeneratorBase : pu
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultComboBoxComponentGeneratorBase(void); 
+    virtual ~DefaultComboBoxComponentGeneratorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const DefaultComboBoxComponentGenerator *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleDrawObjectPrototype (void) const;
+    EditFieldHandlePtr editHandleDrawObjectPrototype(void);
+    GetFieldHandlePtr  getHandleSelectedBackground (void) const;
+    EditFieldHandlePtr editHandleSelectedBackground(void);
+    GetFieldHandlePtr  getHandleFocusedBackground (void) const;
+    EditFieldHandlePtr editHandleFocusedBackground(void);
+    GetFieldHandlePtr  getHandleSelectedForeground (void) const;
+    EditFieldHandlePtr editHandleSelectedForeground(void);
+    GetFieldHandlePtr  getHandleFocusedForeground (void) const;
+    EditFieldHandlePtr editHandleFocusedForeground(void);
+    GetFieldHandlePtr  getHandleSelectedBorder  (void) const;
+    EditFieldHandlePtr editHandleSelectedBorder (void);
+    GetFieldHandlePtr  getHandleFocusedBorder   (void) const;
+    EditFieldHandlePtr editHandleFocusedBorder  (void);
+    GetFieldHandlePtr  getHandleSelectedTextColor (void) const;
+    EditFieldHandlePtr editHandleSelectedTextColor(void);
+    GetFieldHandlePtr  getHandleFocusedTextColor (void) const;
+    EditFieldHandlePtr editHandleFocusedTextColor(void);
+    GetFieldHandlePtr  getHandleFocusedTextColorHasPriority (void) const;
+    EditFieldHandlePtr editHandleFocusedTextColorHasPriority(void);
+    GetFieldHandlePtr  getHandleFocusedBorderHasPriority (void) const;
+    EditFieldHandlePtr editHandleFocusedBorderHasPriority(void);
+    GetFieldHandlePtr  getHandleFocusedBackgroundHasPriority (void) const;
+    EditFieldHandlePtr editHandleFocusedBackgroundHasPriority(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DefaultComboBoxComponentGeneratorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DefaultComboBoxComponentGeneratorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DefaultComboBoxComponentGeneratorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DefaultComboBoxComponentGeneratorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DefaultComboBoxComponentGeneratorBase *DefaultComboBoxComponentGeneratorBaseP;
 
-typedef osgIF<DefaultComboBoxComponentGeneratorBase::isNodeCore,
-              CoredNodePtr<DefaultComboBoxComponentGenerator>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DefaultComboBoxComponentGeneratorNodePtr;
-
-typedef RefPtr<DefaultComboBoxComponentGeneratorPtr> DefaultComboBoxComponentGeneratorRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTCOMBOBOXCOMPONENTGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDEFAULTCOMBOBOXCOMPONENTGENERATORBASE_H_ */

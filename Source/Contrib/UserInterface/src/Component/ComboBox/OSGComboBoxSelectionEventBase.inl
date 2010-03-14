@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,116 +55,101 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ComboBoxSelectionEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ComboBoxSelectionEventBase::getClassTypeId(void) 
+OSG::UInt32 ComboBoxSelectionEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ComboBoxSelectionEventPtr ComboBoxSelectionEventBase::create(void) 
-{
-    ComboBoxSelectionEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ComboBoxSelectionEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ComboBoxSelectionEventPtr ComboBoxSelectionEventBase::createEmpty(void) 
-{ 
-    ComboBoxSelectionEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ComboBoxSelectionEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ComboBoxSelectionEvent::_sfCurrentIndex field.
-inline
-const SFInt32 *ComboBoxSelectionEventBase::getSFCurrentIndex(void) const
-{
-    return &_sfCurrentIndex;
-}
-
-//! Get the ComboBoxSelectionEvent::_sfCurrentIndex field.
-inline
-SFInt32 *ComboBoxSelectionEventBase::editSFCurrentIndex(void)
-{
-    return &_sfCurrentIndex;
-}
-
-//! Get the ComboBoxSelectionEvent::_sfPreviousIndex field.
-inline
-const SFInt32 *ComboBoxSelectionEventBase::getSFPreviousIndex(void) const
-{
-    return &_sfPreviousIndex;
-}
-
-//! Get the ComboBoxSelectionEvent::_sfPreviousIndex field.
-inline
-SFInt32 *ComboBoxSelectionEventBase::editSFPreviousIndex(void)
-{
-    return &_sfPreviousIndex;
-}
-
-
 //! Get the value of the ComboBoxSelectionEvent::_sfCurrentIndex field.
+
 inline
 Int32 &ComboBoxSelectionEventBase::editCurrentIndex(void)
 {
+    editSField(CurrentIndexFieldMask);
+
     return _sfCurrentIndex.getValue();
 }
 
 //! Get the value of the ComboBoxSelectionEvent::_sfCurrentIndex field.
 inline
-const Int32 &ComboBoxSelectionEventBase::getCurrentIndex(void) const
+      Int32  ComboBoxSelectionEventBase::getCurrentIndex(void) const
 {
     return _sfCurrentIndex.getValue();
 }
 
 //! Set the value of the ComboBoxSelectionEvent::_sfCurrentIndex field.
 inline
-void ComboBoxSelectionEventBase::setCurrentIndex(const Int32 &value)
+void ComboBoxSelectionEventBase::setCurrentIndex(const Int32 value)
 {
+    editSField(CurrentIndexFieldMask);
+
     _sfCurrentIndex.setValue(value);
 }
-
 //! Get the value of the ComboBoxSelectionEvent::_sfPreviousIndex field.
+
 inline
 Int32 &ComboBoxSelectionEventBase::editPreviousIndex(void)
 {
+    editSField(PreviousIndexFieldMask);
+
     return _sfPreviousIndex.getValue();
 }
 
 //! Get the value of the ComboBoxSelectionEvent::_sfPreviousIndex field.
 inline
-const Int32 &ComboBoxSelectionEventBase::getPreviousIndex(void) const
+      Int32  ComboBoxSelectionEventBase::getPreviousIndex(void) const
 {
     return _sfPreviousIndex.getValue();
 }
 
 //! Set the value of the ComboBoxSelectionEvent::_sfPreviousIndex field.
 inline
-void ComboBoxSelectionEventBase::setPreviousIndex(const Int32 &value)
+void ComboBoxSelectionEventBase::setPreviousIndex(const Int32 value)
 {
+    editSField(PreviousIndexFieldMask);
+
     _sfPreviousIndex.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ComboBoxSelectionEventBase::execSync (      ComboBoxSelectionEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (CurrentIndexFieldMask & whichField))
+        _sfCurrentIndex.syncWith(pFrom->_sfCurrentIndex);
+
+    if(FieldBits::NoField != (PreviousIndexFieldMask & whichField))
+        _sfPreviousIndex.syncWith(pFrom->_sfPreviousIndex);
+}
+#endif
+
+
+inline
+const Char8 *ComboBoxSelectionEventBase::getClassname(void)
+{
+    return "ComboBoxSelectionEvent";
+}
+OSG_GEN_CONTAINERPTR(ComboBoxSelectionEvent);
 
 OSG_END_NAMESPACE
 

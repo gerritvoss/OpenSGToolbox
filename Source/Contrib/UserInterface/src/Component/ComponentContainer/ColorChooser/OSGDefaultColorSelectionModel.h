@@ -42,8 +42,8 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGAbstractColorSelectionModel.h"
 
@@ -53,7 +53,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultColorSelectionModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultColorSelectionModel : public AbstractColorSelectionModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultColorSelectionModel : public AbstractColorSelectionModel
 {
     /*==========================  PUBLIC  =================================*/
   public:
@@ -72,7 +72,5 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultColorSelectionModel : public Abstra
 typedef DefaultColorSelectionModel *DefaultColorSelectionModelPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTCOLOR_SELECTIONMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSG_DEFAULT_COLOR_SELECTION_MODEL_H_ */

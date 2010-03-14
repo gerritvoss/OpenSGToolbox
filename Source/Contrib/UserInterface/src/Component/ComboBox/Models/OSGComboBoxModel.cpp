@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGComboBoxModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ComboBoxModel
-A UI ComboBoxModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGComboBoxModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGComboBoxModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +62,13 @@ A UI ComboBoxModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ComboBoxModel::initMethod (void)
+void ComboBoxModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -98,17 +98,17 @@ ComboBoxModel::~ComboBoxModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ComboBoxModel::changed(BitVector whichField, UInt32 origin)
+void ComboBoxModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ComboBoxModel::dump(      UInt32    , 
+void ComboBoxModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ComboBoxModel NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

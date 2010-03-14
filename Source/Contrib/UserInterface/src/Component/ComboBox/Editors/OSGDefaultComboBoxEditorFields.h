@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGComboBoxEditorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DefaultComboBoxEditor;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DefaultComboBoxEditorPtr
+OSG_GEN_CONTAINERPTR(DefaultComboBoxEditor);
 
-typedef FCPtr<ComboBoxEditorPtr, DefaultComboBoxEditor> DefaultComboBoxEditorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<DefaultComboBoxEditorPtr> : 
-    public FieldTraitsRecurseMapper<DefaultComboBoxEditorPtr, true>
+struct FieldTraits<DefaultComboBoxEditor *> :
+    public FieldTraitsFCPtrBase<DefaultComboBoxEditor *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFDefaultComboBoxEditorPtr"; }
-    static const char *getMName(void) { return "MFDefaultComboBoxEditorPtr"; }
+    typedef FieldTraits<DefaultComboBoxEditor *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFDefaultComboBoxEditorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFDefaultComboBoxEditorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DefaultComboBoxEditorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<DefaultComboBoxEditor *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecDefaultComboBoxEditorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<DefaultComboBoxEditor *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecDefaultComboBoxEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultComboBoxEditor *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakDefaultComboBoxEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultComboBoxEditor *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdDefaultComboBoxEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultComboBoxEditor *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecDefaultComboBoxEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultComboBoxEditor *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecDefaultComboBoxEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultComboBoxEditor *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakDefaultComboBoxEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultComboBoxEditor *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdDefaultComboBoxEditorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultComboBoxEditor *,
+                      RecordedRefCountPolicy  > SFRecDefaultComboBoxEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultComboBoxEditor *,
+                      UnrecordedRefCountPolicy> SFUnrecDefaultComboBoxEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultComboBoxEditor *,
+                      WeakRefCountPolicy      > SFWeakDefaultComboBoxEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultComboBoxEditor *,
+                      NoRefCountPolicy        > SFUncountedDefaultComboBoxEditorPtr;
 
-typedef SField<DefaultComboBoxEditorPtr> SFDefaultComboBoxEditorPtr;
-#endif
 
-#ifndef OSG_COMPILEDEFAULTCOMBOBOXEDITORINST
-OSG_DLLEXPORT_DECL1(SField, DefaultComboBoxEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultComboBoxEditor *,
+                      RecordedRefCountPolicy  > MFRecDefaultComboBoxEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultComboBoxEditor *,
+                      UnrecordedRefCountPolicy> MFUnrecDefaultComboBoxEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultComboBoxEditor *,
+                      WeakRefCountPolicy      > MFWeakDefaultComboBoxEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultComboBoxEditor *,
+                      NoRefCountPolicy        > MFUncountedDefaultComboBoxEditorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<DefaultComboBoxEditorPtr> MFDefaultComboBoxEditorPtr;
-#endif
 
-#ifndef OSG_COMPILEDEFAULTCOMBOBOXEDITORINST
-OSG_DLLEXPORT_DECL1(MField, DefaultComboBoxEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecDefaultComboBoxEditorPtr : 
+    public PointerSField<DefaultComboBoxEditor *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecDefaultComboBoxEditorPtr : 
+    public PointerSField<DefaultComboBoxEditor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakDefaultComboBoxEditorPtr :
+    public PointerSField<DefaultComboBoxEditor *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedDefaultComboBoxEditorPtr :
+    public PointerSField<DefaultComboBoxEditor *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecDefaultComboBoxEditorPtr :
+    public PointerMField<DefaultComboBoxEditor *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecDefaultComboBoxEditorPtr :
+    public PointerMField<DefaultComboBoxEditor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakDefaultComboBoxEditorPtr :
+    public PointerMField<DefaultComboBoxEditor *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedDefaultComboBoxEditorPtr :
+    public PointerMField<DefaultComboBoxEditor *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTCOMBOBOXEDITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGDEFAULTCOMBOBOXEDITORFIELDS_H_ */

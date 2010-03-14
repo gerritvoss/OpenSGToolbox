@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,285 +50,609 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTCOMBOBOXCOMPONENTGENERATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // DrawObjectPrototype Class
+#include "OSGLayer.h"                   // SelectedBackground Class
+#include "OSGBorder.h"                  // SelectedBorder Class
 
 #include "OSGDefaultComboBoxComponentGeneratorBase.h"
 #include "OSGDefaultComboBoxComponentGenerator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::DrawObjectPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::DrawObjectPrototypeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::SelectedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::SelectedBackgroundFieldId);
+/*! \class OSG::DefaultComboBoxComponentGenerator
+    A UI Default ComboBox ComponentGenerator.
+ */
 
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::FocusedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::FocusedBackgroundFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::SelectedForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::SelectedForegroundFieldId);
-
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::FocusedForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::FocusedForegroundFieldId);
-
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::SelectedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::SelectedBorderFieldId);
-
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::FocusedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::FocusedBorderFieldId);
-
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::SelectedTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::SelectedTextColorFieldId);
-
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::FocusedTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::FocusedTextColorFieldId);
-
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::FocusedTextColorHasPriorityFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::FocusedTextColorHasPriorityFieldId);
-
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::FocusedBorderHasPriorityFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::FocusedBorderHasPriorityFieldId);
-
-const OSG::BitVector  DefaultComboBoxComponentGeneratorBase::FocusedBackgroundHasPriorityFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultComboBoxComponentGeneratorBase::FocusedBackgroundHasPriorityFieldId);
-
-const OSG::BitVector DefaultComboBoxComponentGeneratorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ComponentPtr    DefaultComboBoxComponentGeneratorBase::_sfDrawObjectPrototype
+/*! \var Component *     DefaultComboBoxComponentGeneratorBase::_sfDrawObjectPrototype
     
 */
-/*! \var LayerPtr        DefaultComboBoxComponentGeneratorBase::_sfSelectedBackground
+
+/*! \var Layer *         DefaultComboBoxComponentGeneratorBase::_sfSelectedBackground
     
 */
-/*! \var LayerPtr        DefaultComboBoxComponentGeneratorBase::_sfFocusedBackground
+
+/*! \var Layer *         DefaultComboBoxComponentGeneratorBase::_sfFocusedBackground
     
 */
-/*! \var LayerPtr        DefaultComboBoxComponentGeneratorBase::_sfSelectedForeground
+
+/*! \var Layer *         DefaultComboBoxComponentGeneratorBase::_sfSelectedForeground
     
 */
-/*! \var LayerPtr        DefaultComboBoxComponentGeneratorBase::_sfFocusedForeground
+
+/*! \var Layer *         DefaultComboBoxComponentGeneratorBase::_sfFocusedForeground
     
 */
-/*! \var BorderPtr       DefaultComboBoxComponentGeneratorBase::_sfSelectedBorder
+
+/*! \var Border *        DefaultComboBoxComponentGeneratorBase::_sfSelectedBorder
     
 */
-/*! \var BorderPtr       DefaultComboBoxComponentGeneratorBase::_sfFocusedBorder
+
+/*! \var Border *        DefaultComboBoxComponentGeneratorBase::_sfFocusedBorder
     
 */
+
 /*! \var Color4f         DefaultComboBoxComponentGeneratorBase::_sfSelectedTextColor
     
 */
+
 /*! \var Color4f         DefaultComboBoxComponentGeneratorBase::_sfFocusedTextColor
     
 */
+
 /*! \var bool            DefaultComboBoxComponentGeneratorBase::_sfFocusedTextColorHasPriority
     
 */
+
 /*! \var bool            DefaultComboBoxComponentGeneratorBase::_sfFocusedBorderHasPriority
     
 */
+
 /*! \var bool            DefaultComboBoxComponentGeneratorBase::_sfFocusedBackgroundHasPriority
     
 */
 
-//! DefaultComboBoxComponentGenerator description
 
-FieldDescription *DefaultComboBoxComponentGeneratorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultComboBoxComponentGenerator *>::_type("DefaultComboBoxComponentGeneratorPtr", "ComboBoxComponentGeneratorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultComboBoxComponentGenerator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultComboBoxComponentGenerator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultComboBoxComponentGenerator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "DrawObjectPrototype", 
-                     DrawObjectPrototypeFieldId, DrawObjectPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFDrawObjectPrototype),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "SelectedBackground", 
-                     SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFSelectedBackground),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "FocusedBackground", 
-                     FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFFocusedBackground),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "SelectedForeground", 
-                     SelectedForegroundFieldId, SelectedForegroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFSelectedForeground),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "FocusedForeground", 
-                     FocusedForegroundFieldId, FocusedForegroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFFocusedForeground),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "SelectedBorder", 
-                     SelectedBorderFieldId, SelectedBorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFSelectedBorder),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "FocusedBorder", 
-                     FocusedBorderFieldId, FocusedBorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFFocusedBorder),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "SelectedTextColor", 
-                     SelectedTextColorFieldId, SelectedTextColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFSelectedTextColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "FocusedTextColor", 
-                     FocusedTextColorFieldId, FocusedTextColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFFocusedTextColor),
-    new FieldDescription(SFBool::getClassType(), 
-                     "FocusedTextColorHasPriority", 
-                     FocusedTextColorHasPriorityFieldId, FocusedTextColorHasPriorityFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFFocusedTextColorHasPriority),
-    new FieldDescription(SFBool::getClassType(), 
-                     "FocusedBorderHasPriority", 
-                     FocusedBorderHasPriorityFieldId, FocusedBorderHasPriorityFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFFocusedBorderHasPriority),
-    new FieldDescription(SFBool::getClassType(), 
-                     "FocusedBackgroundHasPriority", 
-                     FocusedBackgroundHasPriorityFieldId, FocusedBackgroundHasPriorityFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultComboBoxComponentGeneratorBase::getSFFocusedBackgroundHasPriority)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DefaultComboBoxComponentGeneratorBase::_type(
-    "DefaultComboBoxComponentGenerator",
-    "ComboBoxComponentGenerator",
-    NULL,
-    (PrototypeCreateF) &DefaultComboBoxComponentGeneratorBase::createEmpty,
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "DrawObjectPrototype",
+        "",
+        DrawObjectPrototypeFieldId, DrawObjectPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleDrawObjectPrototype),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleDrawObjectPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "SelectedBackground",
+        "",
+        SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleSelectedBackground),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleSelectedBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "FocusedBackground",
+        "",
+        FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleFocusedBackground),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleFocusedBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "SelectedForeground",
+        "",
+        SelectedForegroundFieldId, SelectedForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleSelectedForeground),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleSelectedForeground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "FocusedForeground",
+        "",
+        FocusedForegroundFieldId, FocusedForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleFocusedForeground),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleFocusedForeground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "SelectedBorder",
+        "",
+        SelectedBorderFieldId, SelectedBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleSelectedBorder),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleSelectedBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "FocusedBorder",
+        "",
+        FocusedBorderFieldId, FocusedBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleFocusedBorder),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleFocusedBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "SelectedTextColor",
+        "",
+        SelectedTextColorFieldId, SelectedTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleSelectedTextColor),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleSelectedTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "FocusedTextColor",
+        "",
+        FocusedTextColorFieldId, FocusedTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleFocusedTextColor),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleFocusedTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "FocusedTextColorHasPriority",
+        "",
+        FocusedTextColorHasPriorityFieldId, FocusedTextColorHasPriorityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleFocusedTextColorHasPriority),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleFocusedTextColorHasPriority));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "FocusedBorderHasPriority",
+        "",
+        FocusedBorderHasPriorityFieldId, FocusedBorderHasPriorityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleFocusedBorderHasPriority),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleFocusedBorderHasPriority));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "FocusedBackgroundHasPriority",
+        "",
+        FocusedBackgroundHasPriorityFieldId, FocusedBackgroundHasPriorityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultComboBoxComponentGenerator::editHandleFocusedBackgroundHasPriority),
+        static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleFocusedBackgroundHasPriority));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DefaultComboBoxComponentGeneratorBase::TypeObject DefaultComboBoxComponentGeneratorBase::_type(
+    DefaultComboBoxComponentGeneratorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultComboBoxComponentGeneratorBase::createEmptyLocal),
     DefaultComboBoxComponentGenerator::initMethod,
-    _desc,
-    sizeof(_desc));
+    DefaultComboBoxComponentGenerator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultComboBoxComponentGenerator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultComboBoxComponentGenerator\"\n"
+    "\tparent=\"ComboBoxComponentGenerator\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Default ComboBox ComponentGenerator.\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawObjectPrototype\"\n"
+    "\t\ttype=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedTextColorHasPriority\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBorderHasPriority\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBackgroundHasPriority\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Default ComboBox ComponentGenerator.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DefaultComboBoxComponentGeneratorBase, DefaultComboBoxComponentGeneratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultComboBoxComponentGeneratorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultComboBoxComponentGeneratorBase::getType(void) const 
+FieldContainerType &DefaultComboBoxComponentGeneratorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultComboBoxComponentGeneratorBase::shallowCopy(void) const 
-{ 
-    DefaultComboBoxComponentGeneratorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultComboBoxComponentGenerator *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultComboBoxComponentGeneratorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultComboBoxComponentGenerator); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultComboBoxComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultComboBoxComponentGeneratorBase::getType(void) const
 {
-    this->executeSyncImpl((DefaultComboBoxComponentGeneratorBase *) &other, whichField);
+    return _type;
 }
-#else
-void DefaultComboBoxComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultComboBoxComponentGeneratorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultComboBoxComponentGeneratorBase *) &other, whichField, sInfo);
+    return sizeof(DefaultComboBoxComponentGenerator);
 }
-void DefaultComboBoxComponentGeneratorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the DefaultComboBoxComponentGenerator::_sfDrawObjectPrototype field.
+const SFUnrecComponentPtr *DefaultComboBoxComponentGeneratorBase::getSFDrawObjectPrototype(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfDrawObjectPrototype;
 }
 
-void DefaultComboBoxComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecComponentPtr *DefaultComboBoxComponentGeneratorBase::editSFDrawObjectPrototype(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(DrawObjectPrototypeFieldMask);
 
+    return &_sfDrawObjectPrototype;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DefaultComboBoxComponentGeneratorBase::DefaultComboBoxComponentGeneratorBase(void) :
-    _sfDrawObjectPrototype    (ComponentPtr(NullFC)), 
-    _sfSelectedBackground     (LayerPtr(NullFC)), 
-    _sfFocusedBackground      (LayerPtr(NullFC)), 
-    _sfSelectedForeground     (LayerPtr(NullFC)), 
-    _sfFocusedForeground      (LayerPtr(NullFC)), 
-    _sfSelectedBorder         (BorderPtr(NullFC)), 
-    _sfFocusedBorder          (BorderPtr(NullFC)), 
-    _sfSelectedTextColor      (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfFocusedTextColor       (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfFocusedTextColorHasPriority(bool(true)), 
-    _sfFocusedBorderHasPriority(bool(true)), 
-    _sfFocusedBackgroundHasPriority(bool(true)), 
-    Inherited() 
+//! Get the DefaultComboBoxComponentGenerator::_sfSelectedBackground field.
+const SFUnrecLayerPtr *DefaultComboBoxComponentGeneratorBase::getSFSelectedBackground(void) const
 {
+    return &_sfSelectedBackground;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultComboBoxComponentGeneratorBase::DefaultComboBoxComponentGeneratorBase(const DefaultComboBoxComponentGeneratorBase &source) :
-    _sfDrawObjectPrototype    (source._sfDrawObjectPrototype    ), 
-    _sfSelectedBackground     (source._sfSelectedBackground     ), 
-    _sfFocusedBackground      (source._sfFocusedBackground      ), 
-    _sfSelectedForeground     (source._sfSelectedForeground     ), 
-    _sfFocusedForeground      (source._sfFocusedForeground      ), 
-    _sfSelectedBorder         (source._sfSelectedBorder         ), 
-    _sfFocusedBorder          (source._sfFocusedBorder          ), 
-    _sfSelectedTextColor      (source._sfSelectedTextColor      ), 
-    _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
-    _sfFocusedTextColorHasPriority(source._sfFocusedTextColorHasPriority), 
-    _sfFocusedBorderHasPriority(source._sfFocusedBorderHasPriority), 
-    _sfFocusedBackgroundHasPriority(source._sfFocusedBackgroundHasPriority), 
-    Inherited                 (source)
+SFUnrecLayerPtr     *DefaultComboBoxComponentGeneratorBase::editSFSelectedBackground(void)
 {
+    editSField(SelectedBackgroundFieldMask);
+
+    return &_sfSelectedBackground;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-DefaultComboBoxComponentGeneratorBase::~DefaultComboBoxComponentGeneratorBase(void)
+//! Get the DefaultComboBoxComponentGenerator::_sfFocusedBackground field.
+const SFUnrecLayerPtr *DefaultComboBoxComponentGeneratorBase::getSFFocusedBackground(void) const
 {
+    return &_sfFocusedBackground;
 }
+
+SFUnrecLayerPtr     *DefaultComboBoxComponentGeneratorBase::editSFFocusedBackground(void)
+{
+    editSField(FocusedBackgroundFieldMask);
+
+    return &_sfFocusedBackground;
+}
+
+//! Get the DefaultComboBoxComponentGenerator::_sfSelectedForeground field.
+const SFUnrecLayerPtr *DefaultComboBoxComponentGeneratorBase::getSFSelectedForeground(void) const
+{
+    return &_sfSelectedForeground;
+}
+
+SFUnrecLayerPtr     *DefaultComboBoxComponentGeneratorBase::editSFSelectedForeground(void)
+{
+    editSField(SelectedForegroundFieldMask);
+
+    return &_sfSelectedForeground;
+}
+
+//! Get the DefaultComboBoxComponentGenerator::_sfFocusedForeground field.
+const SFUnrecLayerPtr *DefaultComboBoxComponentGeneratorBase::getSFFocusedForeground(void) const
+{
+    return &_sfFocusedForeground;
+}
+
+SFUnrecLayerPtr     *DefaultComboBoxComponentGeneratorBase::editSFFocusedForeground(void)
+{
+    editSField(FocusedForegroundFieldMask);
+
+    return &_sfFocusedForeground;
+}
+
+//! Get the DefaultComboBoxComponentGenerator::_sfSelectedBorder field.
+const SFUnrecBorderPtr *DefaultComboBoxComponentGeneratorBase::getSFSelectedBorder(void) const
+{
+    return &_sfSelectedBorder;
+}
+
+SFUnrecBorderPtr    *DefaultComboBoxComponentGeneratorBase::editSFSelectedBorder (void)
+{
+    editSField(SelectedBorderFieldMask);
+
+    return &_sfSelectedBorder;
+}
+
+//! Get the DefaultComboBoxComponentGenerator::_sfFocusedBorder field.
+const SFUnrecBorderPtr *DefaultComboBoxComponentGeneratorBase::getSFFocusedBorder(void) const
+{
+    return &_sfFocusedBorder;
+}
+
+SFUnrecBorderPtr    *DefaultComboBoxComponentGeneratorBase::editSFFocusedBorder  (void)
+{
+    editSField(FocusedBorderFieldMask);
+
+    return &_sfFocusedBorder;
+}
+
+SFColor4f *DefaultComboBoxComponentGeneratorBase::editSFSelectedTextColor(void)
+{
+    editSField(SelectedTextColorFieldMask);
+
+    return &_sfSelectedTextColor;
+}
+
+const SFColor4f *DefaultComboBoxComponentGeneratorBase::getSFSelectedTextColor(void) const
+{
+    return &_sfSelectedTextColor;
+}
+
+
+SFColor4f *DefaultComboBoxComponentGeneratorBase::editSFFocusedTextColor(void)
+{
+    editSField(FocusedTextColorFieldMask);
+
+    return &_sfFocusedTextColor;
+}
+
+const SFColor4f *DefaultComboBoxComponentGeneratorBase::getSFFocusedTextColor(void) const
+{
+    return &_sfFocusedTextColor;
+}
+
+
+SFBool *DefaultComboBoxComponentGeneratorBase::editSFFocusedTextColorHasPriority(void)
+{
+    editSField(FocusedTextColorHasPriorityFieldMask);
+
+    return &_sfFocusedTextColorHasPriority;
+}
+
+const SFBool *DefaultComboBoxComponentGeneratorBase::getSFFocusedTextColorHasPriority(void) const
+{
+    return &_sfFocusedTextColorHasPriority;
+}
+
+
+SFBool *DefaultComboBoxComponentGeneratorBase::editSFFocusedBorderHasPriority(void)
+{
+    editSField(FocusedBorderHasPriorityFieldMask);
+
+    return &_sfFocusedBorderHasPriority;
+}
+
+const SFBool *DefaultComboBoxComponentGeneratorBase::getSFFocusedBorderHasPriority(void) const
+{
+    return &_sfFocusedBorderHasPriority;
+}
+
+
+SFBool *DefaultComboBoxComponentGeneratorBase::editSFFocusedBackgroundHasPriority(void)
+{
+    editSField(FocusedBackgroundHasPriorityFieldMask);
+
+    return &_sfFocusedBackgroundHasPriority;
+}
+
+const SFBool *DefaultComboBoxComponentGeneratorBase::getSFFocusedBackgroundHasPriority(void) const
+{
+    return &_sfFocusedBackgroundHasPriority;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultComboBoxComponentGeneratorBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultComboBoxComponentGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -336,68 +660,56 @@ UInt32 DefaultComboBoxComponentGeneratorBase::getBinSize(const BitVector &whichF
     {
         returnValue += _sfDrawObjectPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         returnValue += _sfSelectedBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         returnValue += _sfFocusedBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
     {
         returnValue += _sfSelectedForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
         returnValue += _sfFocusedForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         returnValue += _sfSelectedBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         returnValue += _sfFocusedBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
         returnValue += _sfSelectedTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         returnValue += _sfFocusedTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
     {
         returnValue += _sfFocusedTextColorHasPriority.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
     {
         returnValue += _sfFocusedBorderHasPriority.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
     {
         returnValue += _sfFocusedBackgroundHasPriority.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DefaultComboBoxComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultComboBoxComponentGeneratorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -405,67 +717,54 @@ void DefaultComboBoxComponentGeneratorBase::copyToBin(      BinaryDataHandler &p
     {
         _sfDrawObjectPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         _sfSelectedBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         _sfFocusedBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
     {
         _sfSelectedForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
         _sfFocusedForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         _sfFocusedBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
         _sfSelectedTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         _sfFocusedTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
     {
         _sfFocusedTextColorHasPriority.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
     {
         _sfFocusedBorderHasPriority.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
     {
         _sfFocusedBackgroundHasPriority.copyToBin(pMem);
     }
-
-
 }
 
-void DefaultComboBoxComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultComboBoxComponentGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -473,203 +772,612 @@ void DefaultComboBoxComponentGeneratorBase::copyFromBin(      BinaryDataHandler 
     {
         _sfDrawObjectPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         _sfSelectedBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         _sfFocusedBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
     {
         _sfSelectedForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
         _sfFocusedForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         _sfFocusedBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
         _sfSelectedTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         _sfFocusedTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
     {
         _sfFocusedTextColorHasPriority.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
     {
         _sfFocusedBorderHasPriority.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
     {
         _sfFocusedBackgroundHasPriority.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultComboBoxComponentGeneratorBase::executeSyncImpl(      DefaultComboBoxComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultComboBoxComponentGeneratorTransitPtr DefaultComboBoxComponentGeneratorBase::createLocal(BitVector bFlags)
 {
+    DefaultComboBoxComponentGeneratorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (DrawObjectPrototypeFieldMask & whichField))
-        _sfDrawObjectPrototype.syncWith(pOther->_sfDrawObjectPrototype);
+        fc = dynamic_pointer_cast<DefaultComboBoxComponentGenerator>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
-
-    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
-        _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
-
-    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
-        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
-
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
-
-    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
-        _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
-
-    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
-        _sfSelectedTextColor.syncWith(pOther->_sfSelectedTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
-        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
-        _sfFocusedTextColorHasPriority.syncWith(pOther->_sfFocusedTextColorHasPriority);
-
-    if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
-        _sfFocusedBorderHasPriority.syncWith(pOther->_sfFocusedBorderHasPriority);
-
-    if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
-        _sfFocusedBackgroundHasPriority.syncWith(pOther->_sfFocusedBackgroundHasPriority);
-
-
-}
-#else
-void DefaultComboBoxComponentGeneratorBase::executeSyncImpl(      DefaultComboBoxComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (DrawObjectPrototypeFieldMask & whichField))
-        _sfDrawObjectPrototype.syncWith(pOther->_sfDrawObjectPrototype);
-
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
-
-    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
-        _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
-
-    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
-        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
-
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
-
-    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
-        _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
-
-    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
-        _sfSelectedTextColor.syncWith(pOther->_sfSelectedTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
-        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
-        _sfFocusedTextColorHasPriority.syncWith(pOther->_sfFocusedTextColorHasPriority);
-
-    if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
-        _sfFocusedBorderHasPriority.syncWith(pOther->_sfFocusedBorderHasPriority);
-
-    if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
-        _sfFocusedBackgroundHasPriority.syncWith(pOther->_sfFocusedBackgroundHasPriority);
-
-
-
+    return fc;
 }
 
-void DefaultComboBoxComponentGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultComboBoxComponentGeneratorTransitPtr DefaultComboBoxComponentGeneratorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultComboBoxComponentGeneratorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultComboBoxComponentGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultComboBoxComponentGeneratorTransitPtr DefaultComboBoxComponentGeneratorBase::create(void)
+{
+    DefaultComboBoxComponentGeneratorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultComboBoxComponentGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultComboBoxComponentGenerator *DefaultComboBoxComponentGeneratorBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultComboBoxComponentGenerator *returnValue;
+
+    newPtr<DefaultComboBoxComponentGenerator>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultComboBoxComponentGenerator *DefaultComboBoxComponentGeneratorBase::createEmpty(void)
+{
+    DefaultComboBoxComponentGenerator *returnValue;
+
+    newPtr<DefaultComboBoxComponentGenerator>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultComboBoxComponentGeneratorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultComboBoxComponentGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultComboBoxComponentGenerator *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultComboBoxComponentGeneratorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultComboBoxComponentGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultComboBoxComponentGenerator *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultComboBoxComponentGeneratorBase::shallowCopy(void) const
+{
+    DefaultComboBoxComponentGenerator *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultComboBoxComponentGenerator *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultComboBoxComponentGeneratorBase::DefaultComboBoxComponentGeneratorBase(void) :
+    Inherited(),
+    _sfDrawObjectPrototype    (NULL),
+    _sfSelectedBackground     (NULL),
+    _sfFocusedBackground      (NULL),
+    _sfSelectedForeground     (NULL),
+    _sfFocusedForeground      (NULL),
+    _sfSelectedBorder         (NULL),
+    _sfFocusedBorder          (NULL),
+    _sfSelectedTextColor      (Color4f(0.0,0.0,0.0,1.0)),
+    _sfFocusedTextColor       (Color4f(0.0,0.0,0.0,1.0)),
+    _sfFocusedTextColorHasPriority(bool(true)),
+    _sfFocusedBorderHasPriority(bool(true)),
+    _sfFocusedBackgroundHasPriority(bool(true))
+{
+}
+
+DefaultComboBoxComponentGeneratorBase::DefaultComboBoxComponentGeneratorBase(const DefaultComboBoxComponentGeneratorBase &source) :
+    Inherited(source),
+    _sfDrawObjectPrototype    (NULL),
+    _sfSelectedBackground     (NULL),
+    _sfFocusedBackground      (NULL),
+    _sfSelectedForeground     (NULL),
+    _sfFocusedForeground      (NULL),
+    _sfSelectedBorder         (NULL),
+    _sfFocusedBorder          (NULL),
+    _sfSelectedTextColor      (source._sfSelectedTextColor      ),
+    _sfFocusedTextColor       (source._sfFocusedTextColor       ),
+    _sfFocusedTextColorHasPriority(source._sfFocusedTextColorHasPriority),
+    _sfFocusedBorderHasPriority(source._sfFocusedBorderHasPriority),
+    _sfFocusedBackgroundHasPriority(source._sfFocusedBackgroundHasPriority)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultComboBoxComponentGeneratorBase::~DefaultComboBoxComponentGeneratorBase(void)
+{
+}
+
+void DefaultComboBoxComponentGeneratorBase::onCreate(const DefaultComboBoxComponentGenerator *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DefaultComboBoxComponentGenerator *pThis = static_cast<DefaultComboBoxComponentGenerator *>(this);
+
+        pThis->setDrawObjectPrototype(source->getDrawObjectPrototype());
+
+        pThis->setSelectedBackground(source->getSelectedBackground());
+
+        pThis->setFocusedBackground(source->getFocusedBackground());
+
+        pThis->setSelectedForeground(source->getSelectedForeground());
+
+        pThis->setFocusedForeground(source->getFocusedForeground());
+
+        pThis->setSelectedBorder(source->getSelectedBorder());
+
+        pThis->setFocusedBorder(source->getFocusedBorder());
+    }
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleDrawObjectPrototype (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfDrawObjectPrototype,
+             this->getType().getFieldDesc(DrawObjectPrototypeFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleDrawObjectPrototype(void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfDrawObjectPrototype,
+             this->getType().getFieldDesc(DrawObjectPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultComboBoxComponentGenerator::setDrawObjectPrototype,
+                    static_cast<DefaultComboBoxComponentGenerator *>(this), _1));
+
+    editSField(DrawObjectPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleSelectedBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfSelectedBackground,
+             this->getType().getFieldDesc(SelectedBackgroundFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleSelectedBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfSelectedBackground,
+             this->getType().getFieldDesc(SelectedBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultComboBoxComponentGenerator::setSelectedBackground,
+                    static_cast<DefaultComboBoxComponentGenerator *>(this), _1));
+
+    editSField(SelectedBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleFocusedBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfFocusedBackground,
+             this->getType().getFieldDesc(FocusedBackgroundFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleFocusedBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfFocusedBackground,
+             this->getType().getFieldDesc(FocusedBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultComboBoxComponentGenerator::setFocusedBackground,
+                    static_cast<DefaultComboBoxComponentGenerator *>(this), _1));
+
+    editSField(FocusedBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleSelectedForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfSelectedForeground,
+             this->getType().getFieldDesc(SelectedForegroundFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleSelectedForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfSelectedForeground,
+             this->getType().getFieldDesc(SelectedForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultComboBoxComponentGenerator::setSelectedForeground,
+                    static_cast<DefaultComboBoxComponentGenerator *>(this), _1));
+
+    editSField(SelectedForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleFocusedForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleFocusedForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultComboBoxComponentGenerator::setFocusedForeground,
+                    static_cast<DefaultComboBoxComponentGenerator *>(this), _1));
+
+    editSField(FocusedForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleSelectedBorder  (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfSelectedBorder,
+             this->getType().getFieldDesc(SelectedBorderFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleSelectedBorder (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfSelectedBorder,
+             this->getType().getFieldDesc(SelectedBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultComboBoxComponentGenerator::setSelectedBorder,
+                    static_cast<DefaultComboBoxComponentGenerator *>(this), _1));
+
+    editSField(SelectedBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleFocusedBorder   (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfFocusedBorder,
+             this->getType().getFieldDesc(FocusedBorderFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleFocusedBorder  (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfFocusedBorder,
+             this->getType().getFieldDesc(FocusedBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultComboBoxComponentGenerator::setFocusedBorder,
+                    static_cast<DefaultComboBoxComponentGenerator *>(this), _1));
+
+    editSField(FocusedBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleSelectedTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfSelectedTextColor,
+             this->getType().getFieldDesc(SelectedTextColorFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleSelectedTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfSelectedTextColor,
+             this->getType().getFieldDesc(SelectedTextColorFieldId),
+             this));
+
+
+    editSField(SelectedTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleFocusedTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfFocusedTextColor,
+             this->getType().getFieldDesc(FocusedTextColorFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleFocusedTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfFocusedTextColor,
+             this->getType().getFieldDesc(FocusedTextColorFieldId),
+             this));
+
+
+    editSField(FocusedTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleFocusedTextColorHasPriority (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfFocusedTextColorHasPriority,
+             this->getType().getFieldDesc(FocusedTextColorHasPriorityFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleFocusedTextColorHasPriority(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfFocusedTextColorHasPriority,
+             this->getType().getFieldDesc(FocusedTextColorHasPriorityFieldId),
+             this));
+
+
+    editSField(FocusedTextColorHasPriorityFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleFocusedBorderHasPriority (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfFocusedBorderHasPriority,
+             this->getType().getFieldDesc(FocusedBorderHasPriorityFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleFocusedBorderHasPriority(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfFocusedBorderHasPriority,
+             this->getType().getFieldDesc(FocusedBorderHasPriorityFieldId),
+             this));
+
+
+    editSField(FocusedBorderHasPriorityFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultComboBoxComponentGeneratorBase::getHandleFocusedBackgroundHasPriority (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfFocusedBackgroundHasPriority,
+             this->getType().getFieldDesc(FocusedBackgroundHasPriorityFieldId),
+             const_cast<DefaultComboBoxComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultComboBoxComponentGeneratorBase::editHandleFocusedBackgroundHasPriority(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfFocusedBackgroundHasPriority,
+             this->getType().getFieldDesc(FocusedBackgroundHasPriorityFieldId),
+             this));
+
+
+    editSField(FocusedBackgroundHasPriorityFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultComboBoxComponentGeneratorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultComboBoxComponentGenerator *pThis = static_cast<DefaultComboBoxComponentGenerator *>(this);
+
+    pThis->execSync(static_cast<DefaultComboBoxComponentGenerator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultComboBoxComponentGeneratorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultComboBoxComponentGenerator *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultComboBoxComponentGenerator *>(pRefAspect),
+                  dynamic_cast<const DefaultComboBoxComponentGenerator *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DefaultComboBoxComponentGeneratorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DefaultComboBoxComponentGenerator *>(this)->setDrawObjectPrototype(NULL);
+
+    static_cast<DefaultComboBoxComponentGenerator *>(this)->setSelectedBackground(NULL);
+
+    static_cast<DefaultComboBoxComponentGenerator *>(this)->setFocusedBackground(NULL);
+
+    static_cast<DefaultComboBoxComponentGenerator *>(this)->setSelectedForeground(NULL);
+
+    static_cast<DefaultComboBoxComponentGenerator *>(this)->setFocusedForeground(NULL);
+
+    static_cast<DefaultComboBoxComponentGenerator *>(this)->setSelectedBorder(NULL);
+
+    static_cast<DefaultComboBoxComponentGenerator *>(this)->setFocusedBorder(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultComboBoxComponentGeneratorPtr>::_type("DefaultComboBoxComponentGeneratorPtr", "ComboBoxComponentGeneratorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultComboBoxComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultComboBoxComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTCOMBOBOXCOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTCOMBOBOXCOMPONENTGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTCOMBOBOXCOMPONENTGENERATORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

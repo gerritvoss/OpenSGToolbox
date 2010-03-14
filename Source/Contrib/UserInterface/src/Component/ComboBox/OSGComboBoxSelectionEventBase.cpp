@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMBOBOXSELECTIONEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGComboBoxSelectionEventBase.h"
 #include "OSGComboBoxSelectionEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ComboBoxSelectionEventBase::CurrentIndexFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxSelectionEventBase::CurrentIndexFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ComboBoxSelectionEventBase::PreviousIndexFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxSelectionEventBase::PreviousIndexFieldId);
+/*! \class OSG::ComboBoxSelectionEvent
+    
+ */
 
-const OSG::BitVector ComboBoxSelectionEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Int32           ComboBoxSelectionEventBase::_sfCurrentIndex
     
 */
+
 /*! \var Int32           ComboBoxSelectionEventBase::_sfPreviousIndex
     
 */
 
-//! ComboBoxSelectionEvent description
 
-FieldDescription *ComboBoxSelectionEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ComboBoxSelectionEvent *>::_type("ComboBoxSelectionEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ComboBoxSelectionEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ComboBoxSelectionEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ComboBoxSelectionEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ComboBoxSelectionEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFInt32::getClassType(), 
-                     "CurrentIndex", 
-                     CurrentIndexFieldId, CurrentIndexFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxSelectionEventBase::editSFCurrentIndex)),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "PreviousIndex", 
-                     PreviousIndexFieldId, PreviousIndexFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComboBoxSelectionEventBase::editSFPreviousIndex))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ComboBoxSelectionEventBase::_type(
-    "ComboBoxSelectionEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ComboBoxSelectionEventBase::createEmpty),
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "CurrentIndex",
+        "",
+        CurrentIndexFieldId, CurrentIndexFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBoxSelectionEvent::editHandleCurrentIndex),
+        static_cast<FieldGetMethodSig >(&ComboBoxSelectionEvent::getHandleCurrentIndex));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "PreviousIndex",
+        "",
+        PreviousIndexFieldId, PreviousIndexFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComboBoxSelectionEvent::editHandlePreviousIndex),
+        static_cast<FieldGetMethodSig >(&ComboBoxSelectionEvent::getHandlePreviousIndex));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ComboBoxSelectionEventBase::TypeObject ComboBoxSelectionEventBase::_type(
+    ComboBoxSelectionEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ComboBoxSelectionEventBase::createEmptyLocal),
     ComboBoxSelectionEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    ComboBoxSelectionEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ComboBoxSelectionEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ComboBoxSelectionEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"CurrentIndex\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"-1\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PreviousIndex\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"-1\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ComboBoxSelectionEventBase, ComboBoxSelectionEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ComboBoxSelectionEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ComboBoxSelectionEventBase::getType(void) const 
+FieldContainerType &ComboBoxSelectionEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ComboBoxSelectionEventBase::shallowCopy(void) const 
-{ 
-    ComboBoxSelectionEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ComboBoxSelectionEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ComboBoxSelectionEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(ComboBoxSelectionEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComboBoxSelectionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ComboBoxSelectionEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<ComboBoxSelectionEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void ComboBoxSelectionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ComboBoxSelectionEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ComboBoxSelectionEventBase *) &other, whichField, sInfo);
+    return sizeof(ComboBoxSelectionEvent);
 }
-void ComboBoxSelectionEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFInt32 *ComboBoxSelectionEventBase::editSFCurrentIndex(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(CurrentIndexFieldMask);
+
+    return &_sfCurrentIndex;
 }
 
-void ComboBoxSelectionEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFInt32 *ComboBoxSelectionEventBase::getSFCurrentIndex(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfCurrentIndex;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ComboBoxSelectionEventBase::ComboBoxSelectionEventBase(void) :
-    _sfCurrentIndex           (Int32(-1)), 
-    _sfPreviousIndex          (Int32(-1)), 
-    Inherited() 
+SFInt32 *ComboBoxSelectionEventBase::editSFPreviousIndex(void)
 {
+    editSField(PreviousIndexFieldMask);
+
+    return &_sfPreviousIndex;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ComboBoxSelectionEventBase::ComboBoxSelectionEventBase(const ComboBoxSelectionEventBase &source) :
-    _sfCurrentIndex           (source._sfCurrentIndex           ), 
-    _sfPreviousIndex          (source._sfPreviousIndex          ), 
-    Inherited                 (source)
+const SFInt32 *ComboBoxSelectionEventBase::getSFPreviousIndex(void) const
 {
+    return &_sfPreviousIndex;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ComboBoxSelectionEventBase::~ComboBoxSelectionEventBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ComboBoxSelectionEventBase::getBinSize(const BitVector &whichField)
+UInt32 ComboBoxSelectionEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +259,16 @@ UInt32 ComboBoxSelectionEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfCurrentIndex.getBinSize();
     }
-
     if(FieldBits::NoField != (PreviousIndexFieldMask & whichField))
     {
         returnValue += _sfPreviousIndex.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ComboBoxSelectionEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ComboBoxSelectionEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +276,14 @@ void ComboBoxSelectionEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfCurrentIndex.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PreviousIndexFieldMask & whichField))
     {
         _sfPreviousIndex.copyToBin(pMem);
     }
-
-
 }
 
-void ComboBoxSelectionEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ComboBoxSelectionEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,71 +291,244 @@ void ComboBoxSelectionEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfCurrentIndex.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PreviousIndexFieldMask & whichField))
     {
         _sfPreviousIndex.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComboBoxSelectionEventBase::executeSyncImpl(      ComboBoxSelectionEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ComboBoxSelectionEventTransitPtr ComboBoxSelectionEventBase::createLocal(BitVector bFlags)
 {
+    ComboBoxSelectionEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (CurrentIndexFieldMask & whichField))
-        _sfCurrentIndex.syncWith(pOther->_sfCurrentIndex);
+        fc = dynamic_pointer_cast<ComboBoxSelectionEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (PreviousIndexFieldMask & whichField))
-        _sfPreviousIndex.syncWith(pOther->_sfPreviousIndex);
-
-
-}
-#else
-void ComboBoxSelectionEventBase::executeSyncImpl(      ComboBoxSelectionEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CurrentIndexFieldMask & whichField))
-        _sfCurrentIndex.syncWith(pOther->_sfCurrentIndex);
-
-    if(FieldBits::NoField != (PreviousIndexFieldMask & whichField))
-        _sfPreviousIndex.syncWith(pOther->_sfPreviousIndex);
-
-
-
+    return fc;
 }
 
-void ComboBoxSelectionEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ComboBoxSelectionEventTransitPtr ComboBoxSelectionEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ComboBoxSelectionEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ComboBoxSelectionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ComboBoxSelectionEventTransitPtr ComboBoxSelectionEventBase::create(void)
+{
+    ComboBoxSelectionEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ComboBoxSelectionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ComboBoxSelectionEvent *ComboBoxSelectionEventBase::createEmptyLocal(BitVector bFlags)
+{
+    ComboBoxSelectionEvent *returnValue;
+
+    newPtr<ComboBoxSelectionEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ComboBoxSelectionEvent *ComboBoxSelectionEventBase::createEmpty(void)
+{
+    ComboBoxSelectionEvent *returnValue;
+
+    newPtr<ComboBoxSelectionEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ComboBoxSelectionEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ComboBoxSelectionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComboBoxSelectionEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComboBoxSelectionEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ComboBoxSelectionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComboBoxSelectionEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComboBoxSelectionEventBase::shallowCopy(void) const
+{
+    ComboBoxSelectionEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ComboBoxSelectionEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ComboBoxSelectionEventBase::ComboBoxSelectionEventBase(void) :
+    Inherited(),
+    _sfCurrentIndex           (Int32(-1)),
+    _sfPreviousIndex          (Int32(-1))
+{
+}
+
+ComboBoxSelectionEventBase::ComboBoxSelectionEventBase(const ComboBoxSelectionEventBase &source) :
+    Inherited(source),
+    _sfCurrentIndex           (source._sfCurrentIndex           ),
+    _sfPreviousIndex          (source._sfPreviousIndex          )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ComboBoxSelectionEventBase::~ComboBoxSelectionEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr ComboBoxSelectionEventBase::getHandleCurrentIndex    (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfCurrentIndex,
+             this->getType().getFieldDesc(CurrentIndexFieldId),
+             const_cast<ComboBoxSelectionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxSelectionEventBase::editHandleCurrentIndex   (void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfCurrentIndex,
+             this->getType().getFieldDesc(CurrentIndexFieldId),
+             this));
+
+
+    editSField(CurrentIndexFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComboBoxSelectionEventBase::getHandlePreviousIndex   (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfPreviousIndex,
+             this->getType().getFieldDesc(PreviousIndexFieldId),
+             const_cast<ComboBoxSelectionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComboBoxSelectionEventBase::editHandlePreviousIndex  (void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfPreviousIndex,
+             this->getType().getFieldDesc(PreviousIndexFieldId),
+             this));
+
+
+    editSField(PreviousIndexFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ComboBoxSelectionEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ComboBoxSelectionEvent *pThis = static_cast<ComboBoxSelectionEvent *>(this);
+
+    pThis->execSync(static_cast<ComboBoxSelectionEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ComboBoxSelectionEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ComboBoxSelectionEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ComboBoxSelectionEvent *>(pRefAspect),
+                  dynamic_cast<const ComboBoxSelectionEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ComboBoxSelectionEventPtr>::_type("ComboBoxSelectionEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ComboBoxSelectionEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void ComboBoxSelectionEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

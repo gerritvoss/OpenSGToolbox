@@ -43,9 +43,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGAbstractColorSelectionModel.h"
 
@@ -57,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::AbstractColorSelectionModel
+/*! \class OSG::AbstractColorSelectionModel
 A AbstractColorSelectionModel. 
 */
 
@@ -95,7 +93,7 @@ void AbstractColorSelectionModel::removeChangeListener(ChangeListenerPtr Listene
    }
 }
 
-void AbstractColorSelectionModel::produceStateChanged(const ChangeEventPtr e)
+void AbstractColorSelectionModel::produceStateChanged(const ChangeEventUnrecPtr e)
 {
     ChangeListenerSet ListenerSet(_ChangeListeners);
     for(ChangeListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)

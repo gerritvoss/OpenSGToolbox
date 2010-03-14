@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,184 +50,287 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDERIVEDFIELDCONTAINERCOMBOBOXMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDerivedFieldContainerComboBoxModelBase.h"
 #include "OSGDerivedFieldContainerComboBoxModel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DerivedFieldContainerComboBoxModelBase::DerivedFieldContainerTypesFieldMask = 
-    (TypeTraits<BitVector>::One << DerivedFieldContainerComboBoxModelBase::DerivedFieldContainerTypesFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DerivedFieldContainerComboBoxModelBase::InternalDerivedFieldContainerTypesFieldMask = 
-    (TypeTraits<BitVector>::One << DerivedFieldContainerComboBoxModelBase::InternalDerivedFieldContainerTypesFieldId);
+/*! \class OSG::DerivedFieldContainerComboBoxModel
+    A UI FieldContainerComboBoxModel.
+ */
 
-const OSG::BitVector  DerivedFieldContainerComboBoxModelBase::InternalFieldContainerTypesFieldMask = 
-    (TypeTraits<BitVector>::One << DerivedFieldContainerComboBoxModelBase::InternalFieldContainerTypesFieldId);
-
-const OSG::BitVector  DerivedFieldContainerComboBoxModelBase::IncludeAbstractFieldMask = 
-    (TypeTraits<BitVector>::One << DerivedFieldContainerComboBoxModelBase::IncludeAbstractFieldId);
-
-const OSG::BitVector DerivedFieldContainerComboBoxModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var std::string     DerivedFieldContainerComboBoxModelBase::_mfDerivedFieldContainerTypes
     
 */
+
 /*! \var UInt32          DerivedFieldContainerComboBoxModelBase::_mfInternalDerivedFieldContainerTypes
     
 */
+
 /*! \var UInt32          DerivedFieldContainerComboBoxModelBase::_mfInternalFieldContainerTypes
     
 */
+
 /*! \var bool            DerivedFieldContainerComboBoxModelBase::_sfIncludeAbstract
     
 */
 
-//! DerivedFieldContainerComboBoxModel description
 
-FieldDescription *DerivedFieldContainerComboBoxModelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DerivedFieldContainerComboBoxModel *>::_type("DerivedFieldContainerComboBoxModelPtr", "AbstractComboBoxModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DerivedFieldContainerComboBoxModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DerivedFieldContainerComboBoxModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DerivedFieldContainerComboBoxModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DerivedFieldContainerComboBoxModelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFString::getClassType(), 
-                     "DerivedFieldContainerTypes", 
-                     DerivedFieldContainerTypesFieldId, DerivedFieldContainerTypesFieldMask,
-                     false,
-                     (FieldAccessMethod) &DerivedFieldContainerComboBoxModelBase::getMFDerivedFieldContainerTypes),
-    new FieldDescription(MFUInt32::getClassType(), 
-                     "InternalDerivedFieldContainerTypes", 
-                     InternalDerivedFieldContainerTypesFieldId, InternalDerivedFieldContainerTypesFieldMask,
-                     true,
-                     (FieldAccessMethod) &DerivedFieldContainerComboBoxModelBase::getMFInternalDerivedFieldContainerTypes),
-    new FieldDescription(MFUInt32::getClassType(), 
-                     "InternalFieldContainerTypes", 
-                     InternalFieldContainerTypesFieldId, InternalFieldContainerTypesFieldMask,
-                     true,
-                     (FieldAccessMethod) &DerivedFieldContainerComboBoxModelBase::getMFInternalFieldContainerTypes),
-    new FieldDescription(SFBool::getClassType(), 
-                     "IncludeAbstract", 
-                     IncludeAbstractFieldId, IncludeAbstractFieldMask,
-                     true,
-                     (FieldAccessMethod) &DerivedFieldContainerComboBoxModelBase::getSFIncludeAbstract)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DerivedFieldContainerComboBoxModelBase::_type(
-    "DerivedFieldContainerComboBoxModel",
-    "AbstractComboBoxModel",
-    NULL,
-    (PrototypeCreateF) &DerivedFieldContainerComboBoxModelBase::createEmpty,
+    pDesc = new MFString::Description(
+        MFString::getClassType(),
+        "DerivedFieldContainerTypes",
+        "",
+        DerivedFieldContainerTypesFieldId, DerivedFieldContainerTypesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DerivedFieldContainerComboBoxModel::editHandleDerivedFieldContainerTypes),
+        static_cast<FieldGetMethodSig >(&DerivedFieldContainerComboBoxModel::getHandleDerivedFieldContainerTypes));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUInt32::Description(
+        MFUInt32::getClassType(),
+        "InternalDerivedFieldContainerTypes",
+        "",
+        InternalDerivedFieldContainerTypesFieldId, InternalDerivedFieldContainerTypesFieldMask,
+        true,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DerivedFieldContainerComboBoxModel::editHandleInternalDerivedFieldContainerTypes),
+        static_cast<FieldGetMethodSig >(&DerivedFieldContainerComboBoxModel::getHandleInternalDerivedFieldContainerTypes));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUInt32::Description(
+        MFUInt32::getClassType(),
+        "InternalFieldContainerTypes",
+        "",
+        InternalFieldContainerTypesFieldId, InternalFieldContainerTypesFieldMask,
+        true,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DerivedFieldContainerComboBoxModel::editHandleInternalFieldContainerTypes),
+        static_cast<FieldGetMethodSig >(&DerivedFieldContainerComboBoxModel::getHandleInternalFieldContainerTypes));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "IncludeAbstract",
+        "",
+        IncludeAbstractFieldId, IncludeAbstractFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DerivedFieldContainerComboBoxModel::editHandleIncludeAbstract),
+        static_cast<FieldGetMethodSig >(&DerivedFieldContainerComboBoxModel::getHandleIncludeAbstract));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DerivedFieldContainerComboBoxModelBase::TypeObject DerivedFieldContainerComboBoxModelBase::_type(
+    DerivedFieldContainerComboBoxModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DerivedFieldContainerComboBoxModelBase::createEmptyLocal),
     DerivedFieldContainerComboBoxModel::initMethod,
-    _desc,
-    sizeof(_desc));
+    DerivedFieldContainerComboBoxModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DerivedFieldContainerComboBoxModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DerivedFieldContainerComboBoxModel\"\n"
+    "\tparent=\"AbstractComboBoxModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI FieldContainerComboBoxModel.\n"
+    "\t<Field\n"
+    "\t\tname=\"DerivedFieldContainerTypes\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalDerivedFieldContainerTypes\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalFieldContainerTypes\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"IncludeAbstract\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI FieldContainerComboBoxModel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DerivedFieldContainerComboBoxModelBase, DerivedFieldContainerComboBoxModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DerivedFieldContainerComboBoxModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DerivedFieldContainerComboBoxModelBase::getType(void) const 
+FieldContainerType &DerivedFieldContainerComboBoxModelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DerivedFieldContainerComboBoxModelBase::shallowCopy(void) const 
-{ 
-    DerivedFieldContainerComboBoxModelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DerivedFieldContainerComboBoxModel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DerivedFieldContainerComboBoxModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(DerivedFieldContainerComboBoxModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DerivedFieldContainerComboBoxModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DerivedFieldContainerComboBoxModelBase::getType(void) const
 {
-    this->executeSyncImpl((DerivedFieldContainerComboBoxModelBase *) &other, whichField);
+    return _type;
 }
-#else
-void DerivedFieldContainerComboBoxModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DerivedFieldContainerComboBoxModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DerivedFieldContainerComboBoxModelBase *) &other, whichField, sInfo);
+    return sizeof(DerivedFieldContainerComboBoxModel);
 }
-void DerivedFieldContainerComboBoxModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+MFString *DerivedFieldContainerComboBoxModelBase::editMFDerivedFieldContainerTypes(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editMField(DerivedFieldContainerTypesFieldMask, _mfDerivedFieldContainerTypes);
+
+    return &_mfDerivedFieldContainerTypes;
 }
 
-void DerivedFieldContainerComboBoxModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const MFString *DerivedFieldContainerComboBoxModelBase::getMFDerivedFieldContainerTypes(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfDerivedFieldContainerTypes.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalDerivedFieldContainerTypes.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalFieldContainerTypes.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfDerivedFieldContainerTypes;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DerivedFieldContainerComboBoxModelBase::DerivedFieldContainerComboBoxModelBase(void) :
-    _mfDerivedFieldContainerTypes(), 
-    _mfInternalDerivedFieldContainerTypes(), 
-    _mfInternalFieldContainerTypes(), 
-    _sfIncludeAbstract        (bool(false)), 
-    Inherited() 
+MFUInt32 *DerivedFieldContainerComboBoxModelBase::editMFInternalDerivedFieldContainerTypes(void)
 {
+    editMField(InternalDerivedFieldContainerTypesFieldMask, _mfInternalDerivedFieldContainerTypes);
+
+    return &_mfInternalDerivedFieldContainerTypes;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DerivedFieldContainerComboBoxModelBase::DerivedFieldContainerComboBoxModelBase(const DerivedFieldContainerComboBoxModelBase &source) :
-    _mfDerivedFieldContainerTypes(source._mfDerivedFieldContainerTypes), 
-    _mfInternalDerivedFieldContainerTypes(source._mfInternalDerivedFieldContainerTypes), 
-    _mfInternalFieldContainerTypes(source._mfInternalFieldContainerTypes), 
-    _sfIncludeAbstract        (source._sfIncludeAbstract        ), 
-    Inherited                 (source)
+const MFUInt32 *DerivedFieldContainerComboBoxModelBase::getMFInternalDerivedFieldContainerTypes(void) const
 {
+    return &_mfInternalDerivedFieldContainerTypes;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-DerivedFieldContainerComboBoxModelBase::~DerivedFieldContainerComboBoxModelBase(void)
+MFUInt32 *DerivedFieldContainerComboBoxModelBase::editMFInternalFieldContainerTypes(void)
 {
+    editMField(InternalFieldContainerTypesFieldMask, _mfInternalFieldContainerTypes);
+
+    return &_mfInternalFieldContainerTypes;
 }
+
+const MFUInt32 *DerivedFieldContainerComboBoxModelBase::getMFInternalFieldContainerTypes(void) const
+{
+    return &_mfInternalFieldContainerTypes;
+}
+
+
+SFBool *DerivedFieldContainerComboBoxModelBase::editSFIncludeAbstract(void)
+{
+    editSField(IncludeAbstractFieldMask);
+
+    return &_sfIncludeAbstract;
+}
+
+const SFBool *DerivedFieldContainerComboBoxModelBase::getSFIncludeAbstract(void) const
+{
+    return &_sfIncludeAbstract;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DerivedFieldContainerComboBoxModelBase::getBinSize(const BitVector &whichField)
+UInt32 DerivedFieldContainerComboBoxModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -235,28 +338,24 @@ UInt32 DerivedFieldContainerComboBoxModelBase::getBinSize(const BitVector &which
     {
         returnValue += _mfDerivedFieldContainerTypes.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalDerivedFieldContainerTypesFieldMask & whichField))
     {
         returnValue += _mfInternalDerivedFieldContainerTypes.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalFieldContainerTypesFieldMask & whichField))
     {
         returnValue += _mfInternalFieldContainerTypes.getBinSize();
     }
-
     if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
     {
         returnValue += _sfIncludeAbstract.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DerivedFieldContainerComboBoxModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DerivedFieldContainerComboBoxModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -264,27 +363,22 @@ void DerivedFieldContainerComboBoxModelBase::copyToBin(      BinaryDataHandler &
     {
         _mfDerivedFieldContainerTypes.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalDerivedFieldContainerTypesFieldMask & whichField))
     {
         _mfInternalDerivedFieldContainerTypes.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalFieldContainerTypesFieldMask & whichField))
     {
         _mfInternalFieldContainerTypes.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
     {
         _sfIncludeAbstract.copyToBin(pMem);
     }
-
-
 }
 
-void DerivedFieldContainerComboBoxModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DerivedFieldContainerComboBoxModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -292,124 +386,323 @@ void DerivedFieldContainerComboBoxModelBase::copyFromBin(      BinaryDataHandler
     {
         _mfDerivedFieldContainerTypes.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalDerivedFieldContainerTypesFieldMask & whichField))
     {
         _mfInternalDerivedFieldContainerTypes.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalFieldContainerTypesFieldMask & whichField))
     {
         _mfInternalFieldContainerTypes.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
     {
         _sfIncludeAbstract.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DerivedFieldContainerComboBoxModelBase::executeSyncImpl(      DerivedFieldContainerComboBoxModelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DerivedFieldContainerComboBoxModelTransitPtr DerivedFieldContainerComboBoxModelBase::createLocal(BitVector bFlags)
 {
+    DerivedFieldContainerComboBoxModelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (DerivedFieldContainerTypesFieldMask & whichField))
-        _mfDerivedFieldContainerTypes.syncWith(pOther->_mfDerivedFieldContainerTypes);
+        fc = dynamic_pointer_cast<DerivedFieldContainerComboBoxModel>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InternalDerivedFieldContainerTypesFieldMask & whichField))
-        _mfInternalDerivedFieldContainerTypes.syncWith(pOther->_mfInternalDerivedFieldContainerTypes);
-
-    if(FieldBits::NoField != (InternalFieldContainerTypesFieldMask & whichField))
-        _mfInternalFieldContainerTypes.syncWith(pOther->_mfInternalFieldContainerTypes);
-
-    if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
-        _sfIncludeAbstract.syncWith(pOther->_sfIncludeAbstract);
-
-
-}
-#else
-void DerivedFieldContainerComboBoxModelBase::executeSyncImpl(      DerivedFieldContainerComboBoxModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (IncludeAbstractFieldMask & whichField))
-        _sfIncludeAbstract.syncWith(pOther->_sfIncludeAbstract);
-
-
-    if(FieldBits::NoField != (DerivedFieldContainerTypesFieldMask & whichField))
-        _mfDerivedFieldContainerTypes.syncWith(pOther->_mfDerivedFieldContainerTypes, sInfo);
-
-    if(FieldBits::NoField != (InternalDerivedFieldContainerTypesFieldMask & whichField))
-        _mfInternalDerivedFieldContainerTypes.syncWith(pOther->_mfInternalDerivedFieldContainerTypes, sInfo);
-
-    if(FieldBits::NoField != (InternalFieldContainerTypesFieldMask & whichField))
-        _mfInternalFieldContainerTypes.syncWith(pOther->_mfInternalFieldContainerTypes, sInfo);
-
-
+    return fc;
 }
 
-void DerivedFieldContainerComboBoxModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DerivedFieldContainerComboBoxModelTransitPtr DerivedFieldContainerComboBoxModelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DerivedFieldContainerComboBoxModelTransitPtr fc;
 
-    if(FieldBits::NoField != (DerivedFieldContainerTypesFieldMask & whichField))
-        _mfDerivedFieldContainerTypes.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (InternalDerivedFieldContainerTypesFieldMask & whichField))
-        _mfInternalDerivedFieldContainerTypes.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<DerivedFieldContainerComboBoxModel>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InternalFieldContainerTypesFieldMask & whichField))
-        _mfInternalFieldContainerTypes.beginEdit(uiAspect, uiContainerSize);
+    return fc;
+}
 
+//! create a new instance of the class
+DerivedFieldContainerComboBoxModelTransitPtr DerivedFieldContainerComboBoxModelBase::create(void)
+{
+    DerivedFieldContainerComboBoxModelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DerivedFieldContainerComboBoxModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DerivedFieldContainerComboBoxModel *DerivedFieldContainerComboBoxModelBase::createEmptyLocal(BitVector bFlags)
+{
+    DerivedFieldContainerComboBoxModel *returnValue;
+
+    newPtr<DerivedFieldContainerComboBoxModel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DerivedFieldContainerComboBoxModel *DerivedFieldContainerComboBoxModelBase::createEmpty(void)
+{
+    DerivedFieldContainerComboBoxModel *returnValue;
+
+    newPtr<DerivedFieldContainerComboBoxModel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DerivedFieldContainerComboBoxModelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DerivedFieldContainerComboBoxModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DerivedFieldContainerComboBoxModel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DerivedFieldContainerComboBoxModelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DerivedFieldContainerComboBoxModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DerivedFieldContainerComboBoxModel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DerivedFieldContainerComboBoxModelBase::shallowCopy(void) const
+{
+    DerivedFieldContainerComboBoxModel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DerivedFieldContainerComboBoxModel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DerivedFieldContainerComboBoxModelBase::DerivedFieldContainerComboBoxModelBase(void) :
+    Inherited(),
+    _mfDerivedFieldContainerTypes(),
+    _mfInternalDerivedFieldContainerTypes(),
+    _mfInternalFieldContainerTypes(),
+    _sfIncludeAbstract        (bool(false))
+{
+}
+
+DerivedFieldContainerComboBoxModelBase::DerivedFieldContainerComboBoxModelBase(const DerivedFieldContainerComboBoxModelBase &source) :
+    Inherited(source),
+    _mfDerivedFieldContainerTypes(source._mfDerivedFieldContainerTypes),
+    _mfInternalDerivedFieldContainerTypes(source._mfInternalDerivedFieldContainerTypes),
+    _mfInternalFieldContainerTypes(source._mfInternalFieldContainerTypes),
+    _sfIncludeAbstract        (source._sfIncludeAbstract        )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DerivedFieldContainerComboBoxModelBase::~DerivedFieldContainerComboBoxModelBase(void)
+{
+}
+
+
+GetFieldHandlePtr DerivedFieldContainerComboBoxModelBase::getHandleDerivedFieldContainerTypes (void) const
+{
+    MFString::GetHandlePtr returnValue(
+        new  MFString::GetHandle(
+             &_mfDerivedFieldContainerTypes,
+             this->getType().getFieldDesc(DerivedFieldContainerTypesFieldId),
+             const_cast<DerivedFieldContainerComboBoxModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DerivedFieldContainerComboBoxModelBase::editHandleDerivedFieldContainerTypes(void)
+{
+    MFString::EditHandlePtr returnValue(
+        new  MFString::EditHandle(
+             &_mfDerivedFieldContainerTypes,
+             this->getType().getFieldDesc(DerivedFieldContainerTypesFieldId),
+             this));
+
+
+    editMField(DerivedFieldContainerTypesFieldMask, _mfDerivedFieldContainerTypes);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DerivedFieldContainerComboBoxModelBase::getHandleInternalDerivedFieldContainerTypes (void) const
+{
+    MFUInt32::GetHandlePtr returnValue(
+        new  MFUInt32::GetHandle(
+             &_mfInternalDerivedFieldContainerTypes,
+             this->getType().getFieldDesc(InternalDerivedFieldContainerTypesFieldId),
+             const_cast<DerivedFieldContainerComboBoxModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DerivedFieldContainerComboBoxModelBase::editHandleInternalDerivedFieldContainerTypes(void)
+{
+    MFUInt32::EditHandlePtr returnValue(
+        new  MFUInt32::EditHandle(
+             &_mfInternalDerivedFieldContainerTypes,
+             this->getType().getFieldDesc(InternalDerivedFieldContainerTypesFieldId),
+             this));
+
+
+    editMField(InternalDerivedFieldContainerTypesFieldMask, _mfInternalDerivedFieldContainerTypes);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DerivedFieldContainerComboBoxModelBase::getHandleInternalFieldContainerTypes (void) const
+{
+    MFUInt32::GetHandlePtr returnValue(
+        new  MFUInt32::GetHandle(
+             &_mfInternalFieldContainerTypes,
+             this->getType().getFieldDesc(InternalFieldContainerTypesFieldId),
+             const_cast<DerivedFieldContainerComboBoxModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DerivedFieldContainerComboBoxModelBase::editHandleInternalFieldContainerTypes(void)
+{
+    MFUInt32::EditHandlePtr returnValue(
+        new  MFUInt32::EditHandle(
+             &_mfInternalFieldContainerTypes,
+             this->getType().getFieldDesc(InternalFieldContainerTypesFieldId),
+             this));
+
+
+    editMField(InternalFieldContainerTypesFieldMask, _mfInternalFieldContainerTypes);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DerivedFieldContainerComboBoxModelBase::getHandleIncludeAbstract (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfIncludeAbstract,
+             this->getType().getFieldDesc(IncludeAbstractFieldId),
+             const_cast<DerivedFieldContainerComboBoxModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DerivedFieldContainerComboBoxModelBase::editHandleIncludeAbstract(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfIncludeAbstract,
+             this->getType().getFieldDesc(IncludeAbstractFieldId),
+             this));
+
+
+    editSField(IncludeAbstractFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DerivedFieldContainerComboBoxModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DerivedFieldContainerComboBoxModel *pThis = static_cast<DerivedFieldContainerComboBoxModel *>(this);
+
+    pThis->execSync(static_cast<DerivedFieldContainerComboBoxModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DerivedFieldContainerComboBoxModelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DerivedFieldContainerComboBoxModel *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DerivedFieldContainerComboBoxModel *>(pRefAspect),
+                  dynamic_cast<const DerivedFieldContainerComboBoxModel *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DerivedFieldContainerComboBoxModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfDerivedFieldContainerTypes.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalDerivedFieldContainerTypes.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalFieldContainerTypes.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DerivedFieldContainerComboBoxModelPtr>::_type("DerivedFieldContainerComboBoxModelPtr", "AbstractComboBoxModelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DerivedFieldContainerComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DerivedFieldContainerComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDERIVEDFIELDCONTAINERCOMBOBOXMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDERIVEDFIELDCONTAINERCOMBOBOXMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDERIVEDFIELDCONTAINERCOMBOBOXMODELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

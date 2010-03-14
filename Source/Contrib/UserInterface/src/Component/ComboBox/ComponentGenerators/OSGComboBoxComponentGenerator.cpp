@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGComboBoxComponentGenerator.h"
-#include "Component/ComboBox/OSGComboBox.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ComboBoxComponentGenerator
-A UI ComboBox ComponentGenerator. 
-*/
+// Documentation for this class is emitted in the
+// OSGComboBoxComponentGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGComboBoxComponentGenerator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +62,13 @@ A UI ComboBox ComponentGenerator.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ComboBoxComponentGenerator::initMethod (void)
+void ComboBoxComponentGenerator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,17 +76,18 @@ void ComboBoxComponentGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr ComboBoxComponentGenerator::getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
+ComponentRefPtr ComboBoxComponentGenerator::getComponent(ComponentRefPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
 {
     if(Parent->getType().isDerivedFrom(ComboBox::getClassType()))
     {
-        return getComboBoxComponent(ComboBox::Ptr::dcast(Parent), Value, PrimaryAxisIndex, IsSelected, HasFocus);
+        return getComboBoxComponent(dynamic_pointer_cast<ComboBox>(Parent), Value, PrimaryAxisIndex, IsSelected, HasFocus);
     }
     else
     {
-        return getComboBoxComponent(NullFC, Value, PrimaryAxisIndex, IsSelected, HasFocus);
+        return getComboBoxComponent(NULL, Value, PrimaryAxisIndex, IsSelected, HasFocus);
     }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -110,41 +110,17 @@ ComboBoxComponentGenerator::~ComboBoxComponentGenerator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ComboBoxComponentGenerator::changed(BitVector whichField, UInt32 origin)
+void ComboBoxComponentGenerator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ComboBoxComponentGenerator::dump(      UInt32    , 
+void ComboBoxComponentGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ComboBoxComponentGenerator NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMBOBOXCOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMBOBOXCOMPONENTGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMBOBOXCOMPONENTGENERATORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

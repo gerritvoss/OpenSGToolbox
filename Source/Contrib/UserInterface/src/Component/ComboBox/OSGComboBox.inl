@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,13 +38,7 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "Component/Menu/OSGListGeneratedPopupMenu.h"
-#include "Models/OSGComboBoxModel.h"
 OSG_BEGIN_NAMESPACE
-
 
 inline
 bool ComboBox::isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const
@@ -113,16 +107,15 @@ void ComboBox::hidePopup(void)
 }
 
 inline
-ComboBox::ExpandButtonSelectedListener::ExpandButtonSelectedListener(ComboBoxPtr TheComboBox) :
+ComboBox::ExpandButtonSelectedListener::ExpandButtonSelectedListener(ComboBoxRefPtr TheComboBox) :
    _ComboBox(TheComboBox)
 {
 }
 
 inline
-ComboBox::EditorListener::EditorListener(ComboBoxPtr TheComboBox) :
+ComboBox::EditorListener::EditorListener(ComboBoxRefPtr TheComboBox) :
    _ComboBox(TheComboBox)
 {
 }
 
 OSG_END_NAMESPACE
-

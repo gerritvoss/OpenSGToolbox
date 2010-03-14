@@ -3,18 +3,21 @@
 <FieldContainer
 	name="HSVColorChooserPanel"
 	parent="AbstractColorChooserPanel"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+    systemcomponent="true"
+    parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI RGBColorChooserPanel.
 	<Field
 		name="IncludeAlpha"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

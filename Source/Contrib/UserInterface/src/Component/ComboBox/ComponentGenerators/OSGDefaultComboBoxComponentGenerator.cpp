@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultComboBoxComponentGenerator.h"
-#include "Component/OSGComponent.h"
-#include "Component/Text/OSGTextComponent.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OSGComponent.h"
+#include "OSGTextComponent.h"
+#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultComboBoxComponentGenerator
-A UI Default ComboBox ComponentGenerator. 	
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultComboBoxComponentGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultComboBoxComponentGenerator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +65,13 @@ A UI Default ComboBox ComponentGenerator.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultComboBoxComponentGenerator::initMethod (void)
+void DefaultComboBoxComponentGenerator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,13 +79,13 @@ void DefaultComboBoxComponentGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentRefPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
 	if(Value.empty()){
-		return NullFC;
+		return NULL;
 	}
 
-	ComponentPtr TheComponent = Component::Ptr::dcast(getDrawObjectPrototype()->shallowCopy());
+	ComponentRefPtr TheComponent = dynamic_pointer_cast<Component>(getDrawObjectPrototype()->shallowCopy());
 
 	if(TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
 	{
@@ -100,39 +100,30 @@ ComponentPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxPtr
             //Could not convert to string
         }
 
-        beginEditCP(TheComponent, TextComponent::TextFieldMask);
-			TextComponent::Ptr::dcast(TheComponent)->setText(ValueString);
-		endEditCP(TheComponent, TextComponent::TextFieldMask);
+			dynamic_pointer_cast<TextComponent>(TheComponent)->setText(ValueString);
 
 		if(IsSelected && HasFocus)
 		{
-			beginEditCP(TheComponent, TextComponent::TextColorsFieldMask);
 			if(getFocusedTextColorHasPriority())
 			{
-				TextComponent::Ptr::dcast(TheComponent)->setTextColors(getFocusedTextColor());
+				dynamic_pointer_cast<TextComponent>(TheComponent)->setTextColors(getFocusedTextColor());
 			}
 			else
 			{
-				TextComponent::Ptr::dcast(TheComponent)->setTextColors(getSelectedTextColor());
+				dynamic_pointer_cast<TextComponent>(TheComponent)->setTextColors(getSelectedTextColor());
 			}
-			endEditCP(TheComponent, TextComponent::TextColorsFieldMask);
 		}
 		else if(IsSelected)
 		{
-			beginEditCP(TheComponent, TextComponent::TextColorsFieldMask);
-				TextComponent::Ptr::dcast(TheComponent)->setTextColors(getSelectedTextColor());
-			endEditCP(TheComponent, TextComponent::TextColorsFieldMask);
+				dynamic_pointer_cast<TextComponent>(TheComponent)->setTextColors(getSelectedTextColor());
 		}
 		else if(HasFocus)
 		{
-			beginEditCP(TheComponent, TextComponent::TextColorsFieldMask);
-				TextComponent::Ptr::dcast(TheComponent)->setTextColors(getFocusedTextColor());
-			endEditCP(TheComponent, TextComponent::TextColorsFieldMask);
+				dynamic_pointer_cast<TextComponent>(TheComponent)->setTextColors(getFocusedTextColor());
 		}
 	}
 	if(IsSelected && HasFocus)
 	{
-		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 			if(getFocusedBorderHasPriority())
 			{
 				TheComponent->setBorders(getFocusedBorder());
@@ -151,23 +142,18 @@ ComponentPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxPtr
 				TheComponent->setBackgrounds(getSelectedBackground());
 			    TheComponent->setForegrounds(getSelectedForeground());
 			}
-		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 	}
 	else if(IsSelected)
 	{
-		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 			TheComponent->setBorders(getSelectedBorder());
 			TheComponent->setBackgrounds(getSelectedBackground());
 			TheComponent->setForegrounds(getSelectedForeground());
-		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 	}
 	else if(HasFocus)
 	{
-		beginEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 			TheComponent->setBorders(getFocusedBorder());
 			TheComponent->setBackgrounds(getFocusedBackground());
 			TheComponent->setForegrounds(getFocusedForeground());
-		endEditCP(TheComponent, Component::BordersFieldMask | Component::BackgroundsFieldMask | Component::ForegroundsFieldMask);
 	}
 	return TheComponent;
 }
@@ -194,41 +180,17 @@ DefaultComboBoxComponentGenerator::~DefaultComboBoxComponentGenerator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultComboBoxComponentGenerator::changed(BitVector whichField, UInt32 origin)
+void DefaultComboBoxComponentGenerator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DefaultComboBoxComponentGenerator::dump(      UInt32    , 
+void DefaultComboBoxComponentGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultComboBoxComponentGenerator NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTCOMBOBOXCOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTCOMBOBOXCOMPONENTGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTCOMBOBOXCOMPONENTGENERATORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

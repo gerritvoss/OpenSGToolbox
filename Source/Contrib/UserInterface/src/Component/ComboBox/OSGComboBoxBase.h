@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,96 +58,114 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include "Component/Button/OSGToggleButtonFields.h" // ExpandButton type
-#include "Component/ComboBox/Editors/OSGComboBoxEditorFields.h" // Editor type
-#include "Models/OSGComboBoxModelFields.h" // Model type
-#include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
-#include "Component/OSGComponentFields.h" // ComponentGeneratorSelectedItem type
-#include <OpenSG/OSGBoolFields.h> // Editable type
-#include <OpenSG/OSGUInt32Fields.h> // MaxRowCount type
-#include "Component/Menu/OSGListGeneratedPopupMenuFields.h" // ComboListPopupMenu type
+#include "OSGToggleButtonFields.h"      // ExpandButton type
+#include "OSGComboBoxEditorFields.h"    // Editor type
+#include "OSGComboBoxModelFields.h"     // Model type
+#include "OSGComponentGeneratorFields.h" // CellGenerator type
+#include "OSGComponentFields.h"         // ComponentGeneratorSelectedItem type
+#include "OSGSysFields.h"               // Editable type
+#include "OSGListGeneratedPopupMenuFields.h" // ComboListPopupMenu type
 
 #include "OSGComboBoxFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ComboBox;
-class BinaryDataHandler;
 
 //! \brief ComboBox Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ComboBoxPtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ComboBox);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        ExpandButtonFieldId                   = Inherited::NextFieldId,
-        EditorFieldId                         = ExpandButtonFieldId                   + 1,
-        ModelFieldId                          = EditorFieldId                         + 1,
-        CellGeneratorFieldId                  = ModelFieldId                          + 1,
-        ComponentGeneratorSelectedItemFieldId = CellGeneratorFieldId                  + 1,
-        EditableFieldId                       = ComponentGeneratorSelectedItemFieldId + 1,
-        MaxRowCountFieldId                    = EditableFieldId                       + 1,
-        ComboListPopupMenuFieldId             = MaxRowCountFieldId                    + 1,
-        NextFieldId                           = ComboListPopupMenuFieldId             + 1
+        ExpandButtonFieldId = Inherited::NextFieldId,
+        EditorFieldId = ExpandButtonFieldId + 1,
+        ModelFieldId = EditorFieldId + 1,
+        CellGeneratorFieldId = ModelFieldId + 1,
+        ComponentGeneratorSelectedItemFieldId = CellGeneratorFieldId + 1,
+        EditableFieldId = ComponentGeneratorSelectedItemFieldId + 1,
+        MaxRowCountFieldId = EditableFieldId + 1,
+        ComboListPopupMenuFieldId = MaxRowCountFieldId + 1,
+        NextFieldId = ComboListPopupMenuFieldId + 1
     };
 
-    static const OSG::BitVector ExpandButtonFieldMask;
-    static const OSG::BitVector EditorFieldMask;
-    static const OSG::BitVector ModelFieldMask;
-    static const OSG::BitVector CellGeneratorFieldMask;
-    static const OSG::BitVector ComponentGeneratorSelectedItemFieldMask;
-    static const OSG::BitVector EditableFieldMask;
-    static const OSG::BitVector MaxRowCountFieldMask;
-    static const OSG::BitVector ComboListPopupMenuFieldMask;
-
+    static const OSG::BitVector ExpandButtonFieldMask =
+        (TypeTraits<BitVector>::One << ExpandButtonFieldId);
+    static const OSG::BitVector EditorFieldMask =
+        (TypeTraits<BitVector>::One << EditorFieldId);
+    static const OSG::BitVector ModelFieldMask =
+        (TypeTraits<BitVector>::One << ModelFieldId);
+    static const OSG::BitVector CellGeneratorFieldMask =
+        (TypeTraits<BitVector>::One << CellGeneratorFieldId);
+    static const OSG::BitVector ComponentGeneratorSelectedItemFieldMask =
+        (TypeTraits<BitVector>::One << ComponentGeneratorSelectedItemFieldId);
+    static const OSG::BitVector EditableFieldMask =
+        (TypeTraits<BitVector>::One << EditableFieldId);
+    static const OSG::BitVector MaxRowCountFieldMask =
+        (TypeTraits<BitVector>::One << MaxRowCountFieldId);
+    static const OSG::BitVector ComboListPopupMenuFieldMask =
+        (TypeTraits<BitVector>::One << ComboListPopupMenuFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecToggleButtonPtr SFExpandButtonType;
+    typedef SFUnrecComboBoxEditorPtr SFEditorType;
+    typedef SFUnrecComboBoxModelPtr SFModelType;
+    typedef SFUnrecComponentGeneratorPtr SFCellGeneratorType;
+    typedef SFUnrecComponentPtr SFComponentGeneratorSelectedItemType;
+    typedef SFBool            SFEditableType;
+    typedef SFUInt32          SFMaxRowCountType;
+    typedef SFUnrecListGeneratedPopupMenuPtr SFComboListPopupMenuType;
 
     enum
     {
-        ActionPerformedMethodId = Inherited::NextMethodId,
-        NextMethodId            = ActionPerformedMethodId + 1
+        ActionPerformedMethodId = Inherited::NextProducedMethodId,
+        NextProducedMethodId = ActionPerformedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -156,57 +174,69 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecToggleButtonPtr *getSFExpandButton   (void) const;
+                  SFUnrecToggleButtonPtr *editSFExpandButton   (void);
+            const SFUnrecComboBoxEditorPtr *getSFEditor         (void) const;
+                  SFUnrecComboBoxEditorPtr *editSFEditor         (void);
+            const SFUnrecComboBoxModelPtr *getSFModel          (void) const;
+                  SFUnrecComboBoxModelPtr *editSFModel          (void);
+            const SFUnrecComponentGeneratorPtr *getSFCellGenerator  (void) const;
+                  SFUnrecComponentGeneratorPtr *editSFCellGenerator  (void);
 
-           SFToggleButtonPtr   *editSFExpandButton   (void);
-     const SFToggleButtonPtr   *getSFExpandButton   (void) const;
+                  SFBool              *editSFEditable       (void);
+            const SFBool              *getSFEditable        (void) const;
 
-           SFComboBoxEditorPtr *editSFEditor         (void);
-     const SFComboBoxEditorPtr *getSFEditor         (void) const;
-
-           SFComboBoxModelPtr  *editSFModel          (void);
-     const SFComboBoxModelPtr  *getSFModel          (void) const;
-
-           SFComponentGeneratorPtr *editSFCellGenerator  (void);
-     const SFComponentGeneratorPtr *getSFCellGenerator  (void) const;
-
-           SFBool              *editSFEditable       (void);
-     const SFBool              *getSFEditable       (void) const;
-
-           SFUInt32            *editSFMaxRowCount    (void);
-     const SFUInt32            *getSFMaxRowCount    (void) const;
+                  SFUInt32            *editSFMaxRowCount    (void);
+            const SFUInt32            *getSFMaxRowCount     (void) const;
 
 
-           ToggleButtonPtr     &editExpandButton   (void);
-     const ToggleButtonPtr     &getExpandButton   (void) const;
+                  ToggleButton * getExpandButton   (void) const;
 
-           ComboBoxEditorPtr   &editEditor         (void);
-     const ComboBoxEditorPtr   &getEditor         (void) const;
+                  ComboBoxEditor * getEditor         (void) const;
 
-           ComboBoxModelPtr    &editModel          (void);
-     const ComboBoxModelPtr    &getModel          (void) const;
+                  ComboBoxModel * getModel          (void) const;
 
-           ComponentGeneratorPtr &editCellGenerator  (void);
-     const ComponentGeneratorPtr &getCellGenerator  (void) const;
+                  ComponentGenerator * getCellGenerator  (void) const;
 
+                  bool                &editEditable       (void);
+                  bool                 getEditable        (void) const;
 
-           bool                &editEditable       (void);
-     const bool                &getEditable       (void) const;
-
-           UInt32              &editMaxRowCount    (void);
-     const UInt32              &getMaxRowCount    (void) const;
-
+                  UInt32              &editMaxRowCount    (void);
+                  UInt32               getMaxRowCount     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setExpandButton   ( const ToggleButtonPtr &value );
-     void setEditor         ( const ComboBoxEditorPtr &value );
-     void setModel          ( const ComboBoxModelPtr &value );
-     void setCellGenerator  ( const ComponentGeneratorPtr &value );
-     void setEditable       ( const bool &value );
-     void setMaxRowCount    ( const UInt32 &value );
+            void setExpandButton   (ToggleButton * const value);
+            void setEditor         (ComboBoxEditor * const value);
+            void setModel          (ComboBoxModel * const value);
+            void setCellGenerator  (ComponentGenerator * const value);
+            void setEditable       (const bool value);
+            void setMaxRowCount    (const UInt32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -215,55 +245,56 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ComboBoxPtr      create          (void); 
-    static  ComboBoxPtr      createEmpty     (void); 
+    static  ComboBoxTransitPtr  create          (void);
+    static  ComboBox           *createEmpty     (void);
+
+    static  ComboBoxTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  ComboBox            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ComboBoxTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFToggleButtonPtr   _sfExpandButton;
-    SFComboBoxEditorPtr   _sfEditor;
-    SFComboBoxModelPtr   _sfModel;
-    SFComponentGeneratorPtr   _sfCellGenerator;
-    SFComponentPtr      _sfComponentGeneratorSelectedItem;
-    SFBool              _sfEditable;
-    SFUInt32            _sfMaxRowCount;
-    SFListGeneratedPopupMenuPtr   _sfComboListPopupMenu;
+    SFUnrecToggleButtonPtr _sfExpandButton;
+    SFUnrecComboBoxEditorPtr _sfEditor;
+    SFUnrecComboBoxModelPtr _sfModel;
+    SFUnrecComponentGeneratorPtr _sfCellGenerator;
+    SFUnrecComponentPtr _sfComponentGeneratorSelectedItem;
+    SFBool            _sfEditable;
+    SFUInt32          _sfMaxRowCount;
+    SFUnrecListGeneratedPopupMenuPtr _sfComboListPopupMenu;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -278,92 +309,124 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComboBoxBase(void); 
+    virtual ~ComboBoxBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const ComboBox *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleExpandButton    (void) const;
+    EditFieldHandlePtr editHandleExpandButton   (void);
+    GetFieldHandlePtr  getHandleEditor          (void) const;
+    EditFieldHandlePtr editHandleEditor         (void);
+    GetFieldHandlePtr  getHandleModel           (void) const;
+    EditFieldHandlePtr editHandleModel          (void);
+    GetFieldHandlePtr  getHandleCellGenerator   (void) const;
+    EditFieldHandlePtr editHandleCellGenerator  (void);
+    GetFieldHandlePtr  getHandleComponentGeneratorSelectedItem (void) const;
+    EditFieldHandlePtr editHandleComponentGeneratorSelectedItem(void);
+    GetFieldHandlePtr  getHandleEditable        (void) const;
+    EditFieldHandlePtr editHandleEditable       (void);
+    GetFieldHandlePtr  getHandleMaxRowCount     (void) const;
+    EditFieldHandlePtr editHandleMaxRowCount    (void);
+    GetFieldHandlePtr  getHandleComboListPopupMenu (void) const;
+    EditFieldHandlePtr editHandleComboListPopupMenu(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *editSFComponentGeneratorSelectedItem(void);
-     const SFComponentPtr      *getSFComponentGeneratorSelectedItem(void) const;
-           SFListGeneratedPopupMenuPtr *editSFComboListPopupMenu(void);
-     const SFListGeneratedPopupMenuPtr *getSFComboListPopupMenu(void) const;
+            const SFUnrecComponentPtr *getSFComponentGeneratorSelectedItem (void) const;
+                  SFUnrecComponentPtr *editSFComponentGeneratorSelectedItem(void);
+            const SFUnrecListGeneratedPopupMenuPtr *getSFComboListPopupMenu (void) const;
+                  SFUnrecListGeneratedPopupMenuPtr *editSFComboListPopupMenu(void);
 
-           ComponentPtr        &editComponentGeneratorSelectedItem(void);
-     const ComponentPtr        &getComponentGeneratorSelectedItem(void) const;
-           ListGeneratedPopupMenuPtr &editComboListPopupMenu(void);
-     const ListGeneratedPopupMenuPtr &getComboListPopupMenu(void) const;
+
+                  Component * getComponentGeneratorSelectedItem(void) const;
+
+                  ListGeneratedPopupMenu * getComboListPopupMenu(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setComponentGeneratorSelectedItem(const ComponentPtr &value);
-     void setComboListPopupMenu(const ListGeneratedPopupMenuPtr &value);
+            void setComponentGeneratorSelectedItem(Component * const value);
+            void setComboListPopupMenu(ListGeneratedPopupMenu * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ComboBoxBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ComboBoxBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ComboBoxBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ComboBoxBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ComboBoxBase *ComboBoxBaseP;
-
-typedef osgIF<ComboBoxBase::isNodeCore,
-              CoredNodePtr<ComboBox>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ComboBoxNodePtr;
-
-typedef RefPtr<ComboBoxPtr> ComboBoxRefPtr;
 
 OSG_END_NAMESPACE
 

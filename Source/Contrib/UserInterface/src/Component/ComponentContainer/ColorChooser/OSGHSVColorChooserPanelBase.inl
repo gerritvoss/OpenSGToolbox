@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,73 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &HSVColorChooserPanelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 HSVColorChooserPanelBase::getClassTypeId(void) 
+OSG::UInt32 HSVColorChooserPanelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-HSVColorChooserPanelPtr HSVColorChooserPanelBase::create(void) 
-{
-    HSVColorChooserPanelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = HSVColorChooserPanelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-HSVColorChooserPanelPtr HSVColorChooserPanelBase::createEmpty(void) 
-{ 
-    HSVColorChooserPanelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 HSVColorChooserPanelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the HSVColorChooserPanel::_sfIncludeAlpha field.
-inline
-SFBool *HSVColorChooserPanelBase::getSFIncludeAlpha(void)
-{
-    return &_sfIncludeAlpha;
-}
-
-
 //! Get the value of the HSVColorChooserPanel::_sfIncludeAlpha field.
+
 inline
-bool &HSVColorChooserPanelBase::getIncludeAlpha(void)
+bool &HSVColorChooserPanelBase::editIncludeAlpha(void)
 {
+    editSField(IncludeAlphaFieldMask);
+
     return _sfIncludeAlpha.getValue();
 }
 
 //! Get the value of the HSVColorChooserPanel::_sfIncludeAlpha field.
 inline
-const bool &HSVColorChooserPanelBase::getIncludeAlpha(void) const
+      bool  HSVColorChooserPanelBase::getIncludeAlpha(void) const
 {
     return _sfIncludeAlpha.getValue();
 }
 
 //! Set the value of the HSVColorChooserPanel::_sfIncludeAlpha field.
 inline
-void HSVColorChooserPanelBase::setIncludeAlpha(const bool &value)
+void HSVColorChooserPanelBase::setIncludeAlpha(const bool value)
 {
+    editSField(IncludeAlphaFieldMask);
+
     _sfIncludeAlpha.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void HSVColorChooserPanelBase::execSync (      HSVColorChooserPanelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGHSVCOLORCHOOSERPANELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (IncludeAlphaFieldMask & whichField))
+        _sfIncludeAlpha.syncWith(pFrom->_sfIncludeAlpha);
+}
+#endif
+
+
+inline
+const Char8 *HSVColorChooserPanelBase::getClassname(void)
+{
+    return "HSVColorChooserPanel";
+}
+OSG_GEN_CONTAINERPTR(HSVColorChooserPanel);
+
+OSG_END_NAMESPACE
 

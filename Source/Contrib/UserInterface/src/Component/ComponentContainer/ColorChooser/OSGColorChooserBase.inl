@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,77 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ColorChooserBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ColorChooserBase::getClassTypeId(void) 
+OSG::UInt32 ColorChooserBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ColorChooserPtr ColorChooserBase::create(void) 
-{
-    ColorChooserPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ColorChooserPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ColorChooserPtr ColorChooserBase::createEmpty(void) 
-{ 
-    ColorChooserPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ColorChooserBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ColorChooser::_mfInternalChooserPanels field.
-inline
-MFAbstractColorChooserPanelPtr *ColorChooserBase::getMFInternalChooserPanels(void)
-{
-    return &_mfInternalChooserPanels;
-}
-
-//! Get the ColorChooser::_sfPreviewPanel field.
-inline
-SFComponentPtr *ColorChooserBase::getSFPreviewPanel(void)
-{
-    return &_sfPreviewPanel;
-}
-
 
 //! Get the value of the ColorChooser::_sfPreviewPanel field.
 inline
-ComponentPtr &ColorChooserBase::getPreviewPanel(void)
-{
-    return _sfPreviewPanel.getValue();
-}
-
-//! Get the value of the ColorChooser::_sfPreviewPanel field.
-inline
-const ComponentPtr &ColorChooserBase::getPreviewPanel(void) const
+Component * ColorChooserBase::getPreviewPanel(void) const
 {
     return _sfPreviewPanel.getValue();
 }
 
 //! Set the value of the ColorChooser::_sfPreviewPanel field.
 inline
-void ColorChooserBase::setPreviewPanel(const ComponentPtr &value)
+void ColorChooserBase::setPreviewPanel(Component * const value)
 {
+    editSField(PreviewPanelFieldMask);
+
     _sfPreviewPanel.setValue(value);
 }
 
-
 //! Get the value of the \a index element the ColorChooser::_mfInternalChooserPanels field.
 inline
-AbstractColorChooserPanelPtr &ColorChooserBase::getInternalChooserPanels(const UInt32 index)
+AbstractColorChooserPanel * ColorChooserBase::getInternalChooserPanels(const UInt32 index) const
 {
     return _mfInternalChooserPanels[index];
 }
 
-//! Get the ColorChooser::_mfInternalChooserPanels field.
-inline
-MFAbstractColorChooserPanelPtr &ColorChooserBase::getInternalChooserPanels(void)
-{
-    return _mfInternalChooserPanels;
-}
 
-//! Get the ColorChooser::_mfInternalChooserPanels field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFAbstractColorChooserPanelPtr &ColorChooserBase::getInternalChooserPanels(void) const
+void ColorChooserBase::execSync (      ColorChooserBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfInternalChooserPanels;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (InternalChooserPanelsFieldMask & whichField))
+        _mfInternalChooserPanels.syncWith(pFrom->_mfInternalChooserPanels,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (PreviewPanelFieldMask & whichField))
+        _sfPreviewPanel.syncWith(pFrom->_sfPreviewPanel);
 }
+#endif
+
+
+inline
+const Char8 *ColorChooserBase::getClassname(void)
+{
+    return "ColorChooser";
+}
+OSG_GEN_CONTAINERPTR(ColorChooser);
 
 OSG_END_NAMESPACE
-
-#define OSGCOLORCHOOSERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbstractColorChooserPanel.h"
-#include "OSGColorChooser.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbstractColorChooserPanel
-A UI AbstractColorChooserPanel. 
-*/
+// Documentation for this class is emitted in the
+// OSGAbstractColorChooserPanelBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbstractColorChooserPanel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +62,13 @@ A UI AbstractColorChooserPanel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbstractColorChooserPanel::initMethod (void)
+void AbstractColorChooserPanel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,43 +78,40 @@ void AbstractColorChooserPanel::initMethod (void)
 
 Color4f AbstractColorChooserPanel::getColorFromModel(void) const
 {
-	if(getParentChooser() != NullFC && getParentChooser()->getSelectionModel() != NULL)
-	{
-		return getParentChooser()->getSelectionModel()->getSelectedColor();
-	}
-	else
-	{
-		return Color4f();
-	}
+    if(getParentChooser() != NULL && getParentChooser()->getSelectionModel() != NULL)
+    {
+        return getParentChooser()->getSelectionModel()->getSelectedColor();
+    }
+    else
+    {
+        return Color4f();
+    }
 }
 
 ColorSelectionModelPtr AbstractColorChooserPanel::getColorSelectionModel(void)
 {
-	if(getParentChooser() != NullFC)
-	{
-		return getParentChooser()->getSelectionModel();
-	}
-	else
-	{
-		return NULL;
-	}
+    if(getParentChooser() != NULL)
+    {
+        return getParentChooser()->getSelectionModel();
+    }
+    else
+    {
+        return ColorSelectionModelPtr();
+    }
 }
 
-void AbstractColorChooserPanel::installChooserPanel(ColorChooserPtr enclosingChooser)
+void AbstractColorChooserPanel::installChooserPanel(ColorChooserRefPtr enclosingChooser)
 {
-	beginEditCP(AbstractColorChooserPanelPtr(this), AbstractColorChooserPanel::ParentChooserFieldMask);
-		setParentChooser(enclosingChooser);
-	endEditCP(AbstractColorChooserPanelPtr(this), AbstractColorChooserPanel::ParentChooserFieldMask);
+    setParentChooser(enclosingChooser);
 
-	buildChooser();
+    buildChooser();
 }
 
-void AbstractColorChooserPanel::uninstallChooserPanel(ColorChooserPtr enclosingChooser)
+void AbstractColorChooserPanel::uninstallChooserPanel(ColorChooserRefPtr enclosingChooser)
 {
-	beginEditCP(AbstractColorChooserPanelPtr(this), AbstractColorChooserPanel::ParentChooserFieldMask);
-		setParentChooser(NullFC);
-	endEditCP(AbstractColorChooserPanelPtr(this), AbstractColorChooserPanel::ParentChooserFieldMask);
+    setParentChooser(NULL);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -138,41 +134,17 @@ AbstractColorChooserPanel::~AbstractColorChooserPanel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractColorChooserPanel::changed(BitVector whichField, UInt32 origin)
+void AbstractColorChooserPanel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbstractColorChooserPanel::dump(      UInt32    , 
+void AbstractColorChooserPanel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbstractColorChooserPanel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTCOLORCHOOSERPANELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTCOLORCHOOSERPANELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTCOLORCHOOSERPANELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

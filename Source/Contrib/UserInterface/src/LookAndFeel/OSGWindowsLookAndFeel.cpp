@@ -106,18 +106,18 @@
 
 #include "OSGSlider.h"
 
-//#include "OSGComboBox.h"
-//#include "OSGDefaultComboBoxEditor.h"
-//#include "OSGDefaultComboBoxComponentGenerator.h"
+#include "OSGComboBox.h"
+#include "OSGDefaultComboBoxEditor.h"
+#include "OSGDefaultComboBoxComponentGenerator.h"
 
 //#include "OSGFixedHeightTreeModelLayout.h"
 //#include "OSGDefaultTreeCellEditor.h"
 //#include "OSGDefaultTreeComponentGenerator.h"
 //#include "OSGTree.h"
 
-//#include "OSGColorChooser.h"
-//#include "OSGRGBColorChooserPanel.h"
-//#include "OSGHSVColorChooserPanel.h"
+#include "OSGColorChooser.h"
+#include "OSGRGBColorChooserPanel.h"
+#include "OSGHSVColorChooserPanel.h"
 
 //#include "OSGToolbar.h"
 
@@ -181,14 +181,14 @@ void WindowsLookAndFeel::init(void)
     SeparatorRefPtr WindowsSeparator = Separator::create();
     ProgressBarRefPtr WindowsProgressBar = ProgressBar::create();
     SliderRefPtr WindowsSlider = Slider::create();
-    //DefaultComboBoxComponentGeneratorRefPtr WindowsDefaultComboBoxComponentGenerator = DefaultComboBoxComponentGenerator::create();
-    //ComboBoxRefPtr WindowsComboBox = ComboBox::create();
+    DefaultComboBoxComponentGeneratorRefPtr WindowsDefaultComboBoxComponentGenerator = DefaultComboBoxComponentGenerator::create();
+    ComboBoxRefPtr WindowsComboBox = ComboBox::create();
     //TableHeaderRefPtr WindowsTableHeader = TableHeader::create();
     //TableRefPtr WindowsTable = Table::create();
     //DefaultTreeCellEditorRefPtr WindowsDefaultTreeCellEditor = DefaultTreeCellEditor::create();
     //DefaultTreeComponentGeneratorRefPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::create();
     //TreeRefPtr WindowsTree = Tree::create();
-    //ColorChooserRefPtr WindowsColorChooser = ColorChooser::create();
+    ColorChooserRefPtr WindowsColorChooser = ColorChooser::create();
     MenuItemRefPtr WindowsMenuItem = MenuItem::create();
     ComponentMenuItemRefPtr WindowsComponentMenuItem = ComponentMenuItem::create();
     PopupMenuRefPtr WindowsPopupMenu = PopupMenu::create();
@@ -232,14 +232,14 @@ void WindowsLookAndFeel::init(void)
     pushToPrototypes(WindowsSeparator);
     pushToPrototypes(WindowsProgressBar);
     pushToPrototypes(WindowsSlider);
-    //pushToPrototypes(WindowsDefaultComboBoxComponentGenerator);
-    //pushToPrototypes(WindowsComboBox);
+    pushToPrototypes(WindowsDefaultComboBoxComponentGenerator);
+    pushToPrototypes(WindowsComboBox);
     //pushToPrototypes(WindowsTableHeader);
     //pushToPrototypes(WindowsTable);
     //pushToPrototypes(WindowsDefaultTreeCellEditor);
     //pushToPrototypes(WindowsDefaultTreeComponentGenerator);
     //pushToPrototypes(WindowsTree);
-    //pushToPrototypes(WindowsColorChooser);
+    pushToPrototypes(WindowsColorChooser);
 
     initPrototypes();
     
@@ -3590,117 +3590,117 @@ void WindowsLookAndFeel::init(void)
     WindowsSlider->clearMinorTickDrawObjects();
     WindowsSlider->pushToMinorTickDrawObjects(WindowsSliderMinorTickMarks);
 
-    ///[>************************* ComboBox *****************************
+    //************************** ComboBox *****************************
 
-    ////Expand Button
-    //ToggleButtonRefPtr WindowsComboBoxExpandButton = ToggleButton::create();
-    //WindowsComboBoxExpandButton->setPreferredSize(Vec2f(17,17));
+    //Expand Button
+    ToggleButtonRefPtr WindowsComboBoxExpandButton = ToggleButton::create();
+    WindowsComboBoxExpandButton->setPreferredSize(Vec2f(17,17));
 
-    //WindowsComboBoxExpandButton->setDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
-    //WindowsComboBoxExpandButton->setActiveDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
-    //WindowsComboBoxExpandButton->setFocusedDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
-    //WindowsComboBoxExpandButton->setRolloverDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
-    //WindowsComboBoxExpandButton->setDisabledDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+    WindowsComboBoxExpandButton->setDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+    WindowsComboBoxExpandButton->setActiveDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+    WindowsComboBoxExpandButton->setFocusedDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+    WindowsComboBoxExpandButton->setRolloverDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+    WindowsComboBoxExpandButton->setDisabledDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
 
-    //WindowsComboBoxExpandButton->setBorder(WindowsScrollBarButtonBorder);
-    //WindowsComboBoxExpandButton->setActiveBorder(WindowsScrollBarButtonBorder);
-    //WindowsComboBoxExpandButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
-    //WindowsComboBoxExpandButton->setFocusedBorder(WindowsScrollBarButtonBorder);
-    //WindowsComboBoxExpandButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+    WindowsComboBoxExpandButton->setBorder(WindowsScrollBarButtonBorder);
+    WindowsComboBoxExpandButton->setActiveBorder(WindowsScrollBarButtonBorder);
+    WindowsComboBoxExpandButton->setDisabledBorder(WindowsScrollBarDisabledButtonBorder);
+    WindowsComboBoxExpandButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+    WindowsComboBoxExpandButton->setRolloverBorder(WindowsScrollBarButtonBorder);
 
-    //WindowsComboBoxExpandButton->setBackground(WindowsScrollBarButtonBackground);
-    //WindowsComboBoxExpandButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
-    //WindowsComboBoxExpandButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
-    //WindowsComboBoxExpandButton->setFocusedBackground(WindowsScrollBarButtonBackground);
-    //WindowsComboBoxExpandButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+    WindowsComboBoxExpandButton->setBackground(WindowsScrollBarButtonBackground);
+    WindowsComboBoxExpandButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+    WindowsComboBoxExpandButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+    WindowsComboBoxExpandButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+    WindowsComboBoxExpandButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-    //WindowsComboBoxExpandButton->setActiveOffset(Vec2f(0,0));
+    WindowsComboBoxExpandButton->setActiveOffset(Vec2f(0,0));
 
-    ////Windows ComboBoxBorder
-    //EtchedBorderRefPtr WindowsComboBoxBorder = EtchedBorder::create();
-    //WindowsComboBoxBorder->setWidth(2);
-    //WindowsComboBoxBorder->setRaised(true);
-    //WindowsComboBoxBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
-    //WindowsComboBoxBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
+    //Windows ComboBoxBorder
+    EtchedBorderRefPtr WindowsComboBoxBorder = EtchedBorder::create();
+    WindowsComboBoxBorder->setWidth(2);
+    WindowsComboBoxBorder->setRaised(true);
+    WindowsComboBoxBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+    WindowsComboBoxBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
 
-    ////Windows ComboBoxBackground
-    //ColorLayerRefPtr WindowsComboBoxBackground = ColorLayer::create();
-    //WindowsComboBoxBackground->setColor(Color4f(0.93, 0.91, 0.85, 1.0));
+    //Windows ComboBoxBackground
+    ColorLayerRefPtr WindowsComboBoxBackground = ColorLayer::create();
+    WindowsComboBoxBackground->setColor(Color4f(0.93, 0.91, 0.85, 1.0));
 
-    ////Default ComboBoxEditor
-    ////Windows Default ComboBoxEditor TextField
-    //TextFieldRefPtr WindowsDefaultComboBoxTextField = TextField::create();
-    //WindowsDefaultComboBoxTextField->setAlignment(Vec2f(0.0f,0.5f));
+    //Default ComboBoxEditor
+    //Windows Default ComboBoxEditor TextField
+    TextFieldRefPtr WindowsDefaultComboBoxTextField = TextField::create();
+    WindowsDefaultComboBoxTextField->setAlignment(Vec2f(0.0f,0.5f));
 
-    ////Border
-    //WindowsDefaultComboBoxTextField->setBorder(WindowsEmptyBorder);
-    //WindowsDefaultComboBoxTextField->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsDefaultComboBoxTextField->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsDefaultComboBoxTextField->setDisabledBorder(WindowsEmptyBorder);
+    //Border
+    WindowsDefaultComboBoxTextField->setBorder(WindowsEmptyBorder);
+    WindowsDefaultComboBoxTextField->setRolloverBorder(WindowsEmptyBorder);
+    WindowsDefaultComboBoxTextField->setFocusedBorder(WindowsEmptyBorder);
+    WindowsDefaultComboBoxTextField->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsDefaultComboBoxTextField->setBackground(WindowsEmptyBackground);
-    //WindowsDefaultComboBoxTextField->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsDefaultComboBoxTextField->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsDefaultComboBoxTextField->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsDefaultComboBoxTextField->setBackground(WindowsEmptyBackground);
+    WindowsDefaultComboBoxTextField->setRolloverBackground(WindowsEmptyBackground);
+    WindowsDefaultComboBoxTextField->setFocusedBackground(WindowsEmptyBackground);
+    WindowsDefaultComboBoxTextField->setDisabledBackground(WindowsEmptyBackground);
 
-    //DefaultComboBoxEditorRefPtr WindowsDefaultComboBoxEditor = DefaultComboBoxEditor::create();
-    //WindowsDefaultComboBoxEditor->setEditor(WindowsDefaultComboBoxTextField);
+    DefaultComboBoxEditorRefPtr WindowsDefaultComboBoxEditor = DefaultComboBoxEditor::create();
+    WindowsDefaultComboBoxEditor->setEditor(WindowsDefaultComboBoxTextField);
 
-    ///[>************************* DefaultComboBoxComponentGenerator *****************************
-    //LabelRefPtr WindowsDefaultComboBoxComponentGeneratorComponentPrototype = Label::create();
-    //WindowsDefaultComboBoxComponentGeneratorComponentPrototype->setBorders(WindowsEmptyBorder);
-    //WindowsDefaultComboBoxComponentGeneratorComponentPrototype->setBackgrounds(WindowsEmptyBackground);
+    //************************** DefaultComboBoxComponentGenerator *****************************
+    LabelRefPtr WindowsDefaultComboBoxComponentGeneratorComponentPrototype = Label::create();
+    WindowsDefaultComboBoxComponentGeneratorComponentPrototype->setBorders(WindowsEmptyBorder);
+    WindowsDefaultComboBoxComponentGeneratorComponentPrototype->setBackgrounds(WindowsEmptyBackground);
 
-    //ColorLayerRefPtr WindowsDefaultComboBoxComponentGeneratorSelectedBackground = ColorLayer::create();
-    //WindowsDefaultComboBoxComponentGeneratorSelectedBackground->setColor(Color4f(0.4f,0.4f,1.0f,1.0f));
+    ColorLayerRefPtr WindowsDefaultComboBoxComponentGeneratorSelectedBackground = ColorLayer::create();
+    WindowsDefaultComboBoxComponentGeneratorSelectedBackground->setColor(Color4f(0.4f,0.4f,1.0f,1.0f));
 
-    //LayerRefPtr WindowsDefaultComboBoxComponentGeneratorFocusedBackground = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBackground();
+    LayerRefPtr WindowsDefaultComboBoxComponentGeneratorFocusedBackground = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBackground();
 
-    //BorderRefPtr WindowsDefaultComboBoxComponentGeneratorSelectedBorder = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBorder();
+    BorderRefPtr WindowsDefaultComboBoxComponentGeneratorSelectedBorder = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBorder();
 
-    //BorderRefPtr WindowsDefaultComboBoxComponentGeneratorFocusedBorder = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBorder();
+    BorderRefPtr WindowsDefaultComboBoxComponentGeneratorFocusedBorder = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBorder();
 
-    ////DefaultComboBoxComponentGenerator
-    //WindowsDefaultComboBoxComponentGenerator->setDrawObjectPrototype(WindowsDefaultComboBoxComponentGeneratorComponentPrototype);
-    //WindowsDefaultComboBoxComponentGenerator->setSelectedBackground(WindowsDefaultComboBoxComponentGeneratorSelectedBackground);
-    //WindowsDefaultComboBoxComponentGenerator->setFocusedBackground(WindowsDefaultComboBoxComponentGeneratorFocusedBackground);
-    //WindowsDefaultComboBoxComponentGenerator->setSelectedBorder(WindowsDefaultComboBoxComponentGeneratorSelectedBorder);
-    //WindowsDefaultComboBoxComponentGenerator->setFocusedBorder(WindowsDefaultComboBoxComponentGeneratorFocusedBorder);
-    //WindowsDefaultComboBoxComponentGenerator->setSelectedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
-    //WindowsDefaultComboBoxComponentGenerator->setFocusedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
-    //WindowsDefaultComboBoxComponentGenerator->setFocusedBackgroundHasPriority(false);
-    //WindowsDefaultComboBoxComponentGenerator->setFocusedBorderHasPriority(true);
-    //WindowsDefaultComboBoxComponentGenerator->setFocusedTextColorHasPriority(false);
+    //DefaultComboBoxComponentGenerator
+    WindowsDefaultComboBoxComponentGenerator->setDrawObjectPrototype(WindowsDefaultComboBoxComponentGeneratorComponentPrototype);
+    WindowsDefaultComboBoxComponentGenerator->setSelectedBackground(WindowsDefaultComboBoxComponentGeneratorSelectedBackground);
+    WindowsDefaultComboBoxComponentGenerator->setFocusedBackground(WindowsDefaultComboBoxComponentGeneratorFocusedBackground);
+    WindowsDefaultComboBoxComponentGenerator->setSelectedBorder(WindowsDefaultComboBoxComponentGeneratorSelectedBorder);
+    WindowsDefaultComboBoxComponentGenerator->setFocusedBorder(WindowsDefaultComboBoxComponentGeneratorFocusedBorder);
+    WindowsDefaultComboBoxComponentGenerator->setSelectedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
+    WindowsDefaultComboBoxComponentGenerator->setFocusedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+    WindowsDefaultComboBoxComponentGenerator->setFocusedBackgroundHasPriority(false);
+    WindowsDefaultComboBoxComponentGenerator->setFocusedBorderHasPriority(true);
+    WindowsDefaultComboBoxComponentGenerator->setFocusedTextColorHasPriority(false);
 
-    ////ComboBox
-    //WindowsComboBox->setConstraints(NULL);
-    ////Sizes
-    //WindowsComboBox->setMinSize(Vec2f(0,0));
-    //WindowsComboBox->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsComboBox->setPreferredSize(Vec2f(75,23));
+    //ComboBox
+    WindowsComboBox->setConstraints(NULL);
+    //Sizes
+    WindowsComboBox->setMinSize(Vec2f(0,0));
+    WindowsComboBox->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsComboBox->setPreferredSize(Vec2f(75,23));
 
-    ////Border
-    //WindowsComboBox->setBorder(WindowsTextFieldBorder);
-    //WindowsComboBox->setRolloverBorder(WindowsTextFieldBorder);
-    //WindowsComboBox->setFocusedBorder(WindowsTextFieldBorder);
-    //WindowsComboBox->setDisabledBorder(WindowsTextFieldBorder);
+    //Border
+    WindowsComboBox->setBorder(WindowsTextFieldBorder);
+    WindowsComboBox->setRolloverBorder(WindowsTextFieldBorder);
+    WindowsComboBox->setFocusedBorder(WindowsTextFieldBorder);
+    WindowsComboBox->setDisabledBorder(WindowsTextFieldBorder);
 
-    ////Background
-    //WindowsComboBox->setBackground(WindowsTextFieldBackground);
-    //WindowsComboBox->setRolloverBackground(WindowsTextFieldBackground);
-    //WindowsComboBox->setFocusedBackground(WindowsTextFieldBackground);
-    //WindowsComboBox->setDisabledBackground(WindowsDisabledTextFieldBackground);
+    //Background
+    WindowsComboBox->setBackground(WindowsTextFieldBackground);
+    WindowsComboBox->setRolloverBackground(WindowsTextFieldBackground);
+    WindowsComboBox->setFocusedBackground(WindowsTextFieldBackground);
+    WindowsComboBox->setDisabledBackground(WindowsDisabledTextFieldBackground);
 
-    ////Opacity
-    //WindowsComboBox->setOpacity(1.0);
+    //Opacity
+    WindowsComboBox->setOpacity(1.0);
 
-    ////ComboBox
-    //WindowsComboBox->setExpandButton(WindowsComboBoxExpandButton);
-    //WindowsComboBox->setEditor(WindowsDefaultComboBoxEditor);
-    //WindowsComboBox->setEditable(true);
-    //WindowsComboBox->setMaxRowCount(5);
-    //WindowsComboBox->setCellGenerator(WindowsDefaultComboBoxComponentGenerator);
+    //ComboBox
+    WindowsComboBox->setExpandButton(WindowsComboBoxExpandButton);
+    WindowsComboBox->setEditor(WindowsDefaultComboBoxEditor);
+    WindowsComboBox->setEditable(true);
+    WindowsComboBox->setMaxRowCount(5);
+    WindowsComboBox->setCellGenerator(WindowsDefaultComboBoxComponentGenerator);
 
     ///[>************************* TableHeader *****************************
     ////Windows RotatedComponentBorder
@@ -3959,95 +3959,95 @@ void WindowsLookAndFeel::init(void)
 
 
 
-    ///[>************************* RGBColorChooserPanel *****************************
-    //RGBColorChooserPanelRefPtr WindowsRGBColorChooserPanel = RGBColorChooserPanel::create();
-    //WindowsRGBColorChooserPanel->setEnabled(true);
-    //WindowsRGBColorChooserPanel->setVisible(true);
+    //************************** RGBColorChooserPanel *****************************
+    RGBColorChooserPanelRefPtr WindowsRGBColorChooserPanel = RGBColorChooserPanel::create();
+    WindowsRGBColorChooserPanel->setEnabled(true);
+    WindowsRGBColorChooserPanel->setVisible(true);
 
-    //WindowsRGBColorChooserPanel->setConstraints(NULL);
+    WindowsRGBColorChooserPanel->setConstraints(NULL);
 
-    ////Sizes
-    //WindowsRGBColorChooserPanel->setMinSize(Vec2f(0,0));
-    //WindowsRGBColorChooserPanel->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsRGBColorChooserPanel->setPreferredSize(Vec2f(100,100));
+    //Sizes
+    WindowsRGBColorChooserPanel->setMinSize(Vec2f(0,0));
+    WindowsRGBColorChooserPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsRGBColorChooserPanel->setPreferredSize(Vec2f(100,100));
 
-    ////Border
-    //WindowsRGBColorChooserPanel->setBorder(WindowsEmptyBorder);
-    //WindowsRGBColorChooserPanel->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsRGBColorChooserPanel->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsRGBColorChooserPanel->setDisabledBorder(WindowsEmptyBorder);
+    //Border
+    WindowsRGBColorChooserPanel->setBorder(WindowsEmptyBorder);
+    WindowsRGBColorChooserPanel->setRolloverBorder(WindowsEmptyBorder);
+    WindowsRGBColorChooserPanel->setFocusedBorder(WindowsEmptyBorder);
+    WindowsRGBColorChooserPanel->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsRGBColorChooserPanel->setBackground(WindowsEmptyBackground);
-    //WindowsRGBColorChooserPanel->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsRGBColorChooserPanel->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsRGBColorChooserPanel->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsRGBColorChooserPanel->setBackground(WindowsEmptyBackground);
+    WindowsRGBColorChooserPanel->setRolloverBackground(WindowsEmptyBackground);
+    WindowsRGBColorChooserPanel->setFocusedBackground(WindowsEmptyBackground);
+    WindowsRGBColorChooserPanel->setDisabledBackground(WindowsEmptyBackground);
 
-    ////Opacity
-    //WindowsRGBColorChooserPanel->setOpacity(1.0);
+    //Opacity
+    WindowsRGBColorChooserPanel->setOpacity(1.0);
 
-    //WindowsRGBColorChooserPanel->setIncludeAlpha(true);
+    WindowsRGBColorChooserPanel->setIncludeAlpha(true);
 
-    ///[>************************* HSVColorChooserPanel *****************************
-    //HSVColorChooserPanelRefPtr WindowsHSVColorChooserPanel = HSVColorChooserPanel::create();
-    //WindowsHSVColorChooserPanel->setEnabled(true);
-    //WindowsHSVColorChooserPanel->setVisible(true);
+    //************************** HSVColorChooserPanel *****************************
+    HSVColorChooserPanelRefPtr WindowsHSVColorChooserPanel = HSVColorChooserPanel::create();
+    WindowsHSVColorChooserPanel->setEnabled(true);
+    WindowsHSVColorChooserPanel->setVisible(true);
 
-    //WindowsHSVColorChooserPanel->setConstraints(NULL);
+    WindowsHSVColorChooserPanel->setConstraints(NULL);
 
-    ////Sizes
-    //WindowsHSVColorChooserPanel->setMinSize(Vec2f(0,0));
-    //WindowsHSVColorChooserPanel->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsHSVColorChooserPanel->setPreferredSize(Vec2f(100,100));
+    //Sizes
+    WindowsHSVColorChooserPanel->setMinSize(Vec2f(0,0));
+    WindowsHSVColorChooserPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsHSVColorChooserPanel->setPreferredSize(Vec2f(100,100));
 
-    ////Border
-    //WindowsHSVColorChooserPanel->setBorder(WindowsEmptyBorder);
-    //WindowsHSVColorChooserPanel->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsHSVColorChooserPanel->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsHSVColorChooserPanel->setDisabledBorder(WindowsEmptyBorder);
+    //Border
+    WindowsHSVColorChooserPanel->setBorder(WindowsEmptyBorder);
+    WindowsHSVColorChooserPanel->setRolloverBorder(WindowsEmptyBorder);
+    WindowsHSVColorChooserPanel->setFocusedBorder(WindowsEmptyBorder);
+    WindowsHSVColorChooserPanel->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsHSVColorChooserPanel->setBackground(WindowsEmptyBackground);
-    //WindowsHSVColorChooserPanel->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsHSVColorChooserPanel->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsHSVColorChooserPanel->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsHSVColorChooserPanel->setBackground(WindowsEmptyBackground);
+    WindowsHSVColorChooserPanel->setRolloverBackground(WindowsEmptyBackground);
+    WindowsHSVColorChooserPanel->setFocusedBackground(WindowsEmptyBackground);
+    WindowsHSVColorChooserPanel->setDisabledBackground(WindowsEmptyBackground);
 
-    ////Opacity
-    //WindowsHSVColorChooserPanel->setOpacity(1.0);
+    //Opacity
+    WindowsHSVColorChooserPanel->setOpacity(1.0);
 
-    //WindowsHSVColorChooserPanel->setIncludeAlpha(true);
+    WindowsHSVColorChooserPanel->setIncludeAlpha(true);
 
-    ///[>************************* ColorChooser *****************************
+    //************************** ColorChooser *****************************
 
-    ////Windows WindowsColorChooser
-    //WindowsColorChooser->setEnabled(true);
-    //WindowsColorChooser->setVisible(true);
+    //Windows WindowsColorChooser
+    WindowsColorChooser->setEnabled(true);
+    WindowsColorChooser->setVisible(true);
 
-    //WindowsColorChooser->setConstraints(NULL);
-    ////Sizes
-    //WindowsColorChooser->setMinSize(Vec2f(0,0));
-    //WindowsColorChooser->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsColorChooser->setPreferredSize(Vec2f(300,300));
+    WindowsColorChooser->setConstraints(NULL);
+    //Sizes
+    WindowsColorChooser->setMinSize(Vec2f(0,0));
+    WindowsColorChooser->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsColorChooser->setPreferredSize(Vec2f(300,300));
 
-    ////Border
-    //WindowsColorChooser->setBorder(WindowsEmptyBorder);
-    //WindowsColorChooser->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsColorChooser->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsColorChooser->setDisabledBorder(WindowsEmptyBorder);
+    //Border
+    WindowsColorChooser->setBorder(WindowsEmptyBorder);
+    WindowsColorChooser->setRolloverBorder(WindowsEmptyBorder);
+    WindowsColorChooser->setFocusedBorder(WindowsEmptyBorder);
+    WindowsColorChooser->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsColorChooser->setBackground(WindowsEmptyBackground);
-    //WindowsColorChooser->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsColorChooser->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsColorChooser->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsColorChooser->setBackground(WindowsEmptyBackground);
+    WindowsColorChooser->setRolloverBackground(WindowsEmptyBackground);
+    WindowsColorChooser->setFocusedBackground(WindowsEmptyBackground);
+    WindowsColorChooser->setDisabledBackground(WindowsEmptyBackground);
 
-    ////Opacity
-    //WindowsColorChooser->setOpacity(1.0);
+    //Opacity
+    WindowsColorChooser->setOpacity(1.0);
 
-    ////ColorChooser Values
-    //WindowsColorChooser->addChooserPanel(WindowsRGBColorChooserPanel);
-    //WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
-    //WindowsColorChooser->setPreviewPanel(NULL);
+    //ColorChooser Values
+    WindowsColorChooser->addChooserPanel(WindowsRGBColorChooserPanel);
+    WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
+    WindowsColorChooser->setPreviewPanel(NULL);
 
     initUndefinedPrototypes();
     

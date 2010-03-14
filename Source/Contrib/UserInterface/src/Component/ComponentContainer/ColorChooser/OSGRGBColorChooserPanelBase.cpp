@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,167 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILERGBCOLORCHOOSERPANELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGRGBColorChooserPanelBase.h"
 #include "OSGRGBColorChooserPanel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RGBColorChooserPanelBase::IncludeAlphaFieldMask = 
-    (TypeTraits<BitVector>::One << RGBColorChooserPanelBase::IncludeAlphaFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector RGBColorChooserPanelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::RGBColorChooserPanel
+    A UI RGBColorChooserPanel.
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var bool            RGBColorChooserPanelBase::_sfIncludeAlpha
     
 */
 
-//! RGBColorChooserPanel description
 
-FieldDescription *RGBColorChooserPanelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<RGBColorChooserPanel *>::_type("RGBColorChooserPanelPtr", "AbstractColorChooserPanelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(RGBColorChooserPanel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           RGBColorChooserPanel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           RGBColorChooserPanel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void RGBColorChooserPanelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFBool::getClassType(), 
-                     "IncludeAlpha", 
-                     IncludeAlphaFieldId, IncludeAlphaFieldMask,
-                     false,
-                     (FieldAccessMethod) &RGBColorChooserPanelBase::getSFIncludeAlpha)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType RGBColorChooserPanelBase::_type(
-    "RGBColorChooserPanel",
-    "AbstractColorChooserPanel",
-    NULL,
-    (PrototypeCreateF) &RGBColorChooserPanelBase::createEmpty,
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "IncludeAlpha",
+        "",
+        IncludeAlphaFieldId, IncludeAlphaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RGBColorChooserPanel::editHandleIncludeAlpha),
+        static_cast<FieldGetMethodSig >(&RGBColorChooserPanel::getHandleIncludeAlpha));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+RGBColorChooserPanelBase::TypeObject RGBColorChooserPanelBase::_type(
+    RGBColorChooserPanelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&RGBColorChooserPanelBase::createEmptyLocal),
     RGBColorChooserPanel::initMethod,
-    _desc,
-    sizeof(_desc));
+    RGBColorChooserPanel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&RGBColorChooserPanel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"RGBColorChooserPanel\"\n"
+    "\tparent=\"AbstractColorChooserPanel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI RGBColorChooserPanel.\n"
+    "\t<Field\n"
+    "\t\tname=\"IncludeAlpha\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI RGBColorChooserPanel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(RGBColorChooserPanelBase, RGBColorChooserPanelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &RGBColorChooserPanelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &RGBColorChooserPanelBase::getType(void) const 
+FieldContainerType &RGBColorChooserPanelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr RGBColorChooserPanelBase::shallowCopy(void) const 
-{ 
-    RGBColorChooserPanelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const RGBColorChooserPanel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 RGBColorChooserPanelBase::getContainerSize(void) const 
-{ 
-    return sizeof(RGBColorChooserPanel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RGBColorChooserPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &RGBColorChooserPanelBase::getType(void) const
 {
-    this->executeSyncImpl((RGBColorChooserPanelBase *) &other, whichField);
+    return _type;
 }
-#else
-void RGBColorChooserPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 RGBColorChooserPanelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((RGBColorChooserPanelBase *) &other, whichField, sInfo);
+    return sizeof(RGBColorChooserPanel);
 }
-void RGBColorChooserPanelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFBool *RGBColorChooserPanelBase::editSFIncludeAlpha(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(IncludeAlphaFieldMask);
+
+    return &_sfIncludeAlpha;
 }
 
-void RGBColorChooserPanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFBool *RGBColorChooserPanelBase::getSFIncludeAlpha(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-RGBColorChooserPanelBase::RGBColorChooserPanelBase(void) :
-    _sfIncludeAlpha           (bool(true)), 
-    Inherited() 
-{
+    return &_sfIncludeAlpha;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-RGBColorChooserPanelBase::RGBColorChooserPanelBase(const RGBColorChooserPanelBase &source) :
-    _sfIncludeAlpha           (source._sfIncludeAlpha           ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-RGBColorChooserPanelBase::~RGBColorChooserPanelBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 RGBColorChooserPanelBase::getBinSize(const BitVector &whichField)
+UInt32 RGBColorChooserPanelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +219,11 @@ UInt32 RGBColorChooserPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfIncludeAlpha.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void RGBColorChooserPanelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void RGBColorChooserPanelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +231,10 @@ void RGBColorChooserPanelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfIncludeAlpha.copyToBin(pMem);
     }
-
-
 }
 
-void RGBColorChooserPanelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void RGBColorChooserPanelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +242,213 @@ void RGBColorChooserPanelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfIncludeAlpha.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RGBColorChooserPanelBase::executeSyncImpl(      RGBColorChooserPanelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+RGBColorChooserPanelTransitPtr RGBColorChooserPanelBase::createLocal(BitVector bFlags)
 {
+    RGBColorChooserPanelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (IncludeAlphaFieldMask & whichField))
-        _sfIncludeAlpha.syncWith(pOther->_sfIncludeAlpha);
+        fc = dynamic_pointer_cast<RGBColorChooserPanel>(tmpPtr);
+    }
 
-
-}
-#else
-void RGBColorChooserPanelBase::executeSyncImpl(      RGBColorChooserPanelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (IncludeAlphaFieldMask & whichField))
-        _sfIncludeAlpha.syncWith(pOther->_sfIncludeAlpha);
-
-
-
+    return fc;
 }
 
-void RGBColorChooserPanelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+RGBColorChooserPanelTransitPtr RGBColorChooserPanelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    RGBColorChooserPanelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<RGBColorChooserPanel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+RGBColorChooserPanelTransitPtr RGBColorChooserPanelBase::create(void)
+{
+    RGBColorChooserPanelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<RGBColorChooserPanel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+RGBColorChooserPanel *RGBColorChooserPanelBase::createEmptyLocal(BitVector bFlags)
+{
+    RGBColorChooserPanel *returnValue;
+
+    newPtr<RGBColorChooserPanel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+RGBColorChooserPanel *RGBColorChooserPanelBase::createEmpty(void)
+{
+    RGBColorChooserPanel *returnValue;
+
+    newPtr<RGBColorChooserPanel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr RGBColorChooserPanelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    RGBColorChooserPanel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RGBColorChooserPanel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RGBColorChooserPanelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    RGBColorChooserPanel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RGBColorChooserPanel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RGBColorChooserPanelBase::shallowCopy(void) const
+{
+    RGBColorChooserPanel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const RGBColorChooserPanel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+RGBColorChooserPanelBase::RGBColorChooserPanelBase(void) :
+    Inherited(),
+    _sfIncludeAlpha           (bool(true))
+{
+}
+
+RGBColorChooserPanelBase::RGBColorChooserPanelBase(const RGBColorChooserPanelBase &source) :
+    Inherited(source),
+    _sfIncludeAlpha           (source._sfIncludeAlpha           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+RGBColorChooserPanelBase::~RGBColorChooserPanelBase(void)
+{
+}
+
+
+GetFieldHandlePtr RGBColorChooserPanelBase::getHandleIncludeAlpha    (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfIncludeAlpha,
+             this->getType().getFieldDesc(IncludeAlphaFieldId),
+             const_cast<RGBColorChooserPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RGBColorChooserPanelBase::editHandleIncludeAlpha   (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfIncludeAlpha,
+             this->getType().getFieldDesc(IncludeAlphaFieldId),
+             this));
+
+
+    editSField(IncludeAlphaFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void RGBColorChooserPanelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    RGBColorChooserPanel *pThis = static_cast<RGBColorChooserPanel *>(this);
+
+    pThis->execSync(static_cast<RGBColorChooserPanel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *RGBColorChooserPanelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    RGBColorChooserPanel *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const RGBColorChooserPanel *>(pRefAspect),
+                  dynamic_cast<const RGBColorChooserPanel *>(this));
+
+    return returnValue;
+}
+#endif
+
+void RGBColorChooserPanelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RGBColorChooserPanelPtr>::_type("RGBColorChooserPanelPtr", "AbstractColorChooserPanelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(RGBColorChooserPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RGBColorChooserPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGRGBCOLORCHOOSERPANELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRGBCOLORCHOOSERPANELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGRGBCOLORCHOOSERPANELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

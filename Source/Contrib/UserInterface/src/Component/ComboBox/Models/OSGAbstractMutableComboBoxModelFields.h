@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGMutableComboBoxModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AbstractMutableComboBoxModel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AbstractMutableComboBoxModelPtr
+OSG_GEN_CONTAINERPTR(AbstractMutableComboBoxModel);
 
-typedef FCPtr<MutableComboBoxModelPtr, AbstractMutableComboBoxModel> AbstractMutableComboBoxModelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<AbstractMutableComboBoxModelPtr> : 
-    public FieldTraitsRecurseMapper<AbstractMutableComboBoxModelPtr, true>
+struct FieldTraits<AbstractMutableComboBoxModel *> :
+    public FieldTraitsFCPtrBase<AbstractMutableComboBoxModel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFAbstractMutableComboBoxModelPtr"; }
-    static const char *getMName(void) { return "MFAbstractMutableComboBoxModelPtr"; }
+    typedef FieldTraits<AbstractMutableComboBoxModel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFAbstractMutableComboBoxModelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFAbstractMutableComboBoxModelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AbstractMutableComboBoxModelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<AbstractMutableComboBoxModel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecAbstractMutableComboBoxModelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<AbstractMutableComboBoxModel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecAbstractMutableComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractMutableComboBoxModel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakAbstractMutableComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractMutableComboBoxModel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdAbstractMutableComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractMutableComboBoxModel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecAbstractMutableComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractMutableComboBoxModel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecAbstractMutableComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractMutableComboBoxModel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakAbstractMutableComboBoxModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractMutableComboBoxModel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdAbstractMutableComboBoxModelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractMutableComboBoxModel *,
+                      RecordedRefCountPolicy  > SFRecAbstractMutableComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractMutableComboBoxModel *,
+                      UnrecordedRefCountPolicy> SFUnrecAbstractMutableComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractMutableComboBoxModel *,
+                      WeakRefCountPolicy      > SFWeakAbstractMutableComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractMutableComboBoxModel *,
+                      NoRefCountPolicy        > SFUncountedAbstractMutableComboBoxModelPtr;
 
-typedef SField<AbstractMutableComboBoxModelPtr> SFAbstractMutableComboBoxModelPtr;
-#endif
 
-#ifndef OSG_COMPILEABSTRACTMUTABLECOMBOBOXMODELINST
-OSG_DLLEXPORT_DECL1(SField, AbstractMutableComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractMutableComboBoxModel *,
+                      RecordedRefCountPolicy  > MFRecAbstractMutableComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractMutableComboBoxModel *,
+                      UnrecordedRefCountPolicy> MFUnrecAbstractMutableComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractMutableComboBoxModel *,
+                      WeakRefCountPolicy      > MFWeakAbstractMutableComboBoxModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractMutableComboBoxModel *,
+                      NoRefCountPolicy        > MFUncountedAbstractMutableComboBoxModelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<AbstractMutableComboBoxModelPtr> MFAbstractMutableComboBoxModelPtr;
-#endif
 
-#ifndef OSG_COMPILEABSTRACTMUTABLECOMBOBOXMODELINST
-OSG_DLLEXPORT_DECL1(MField, AbstractMutableComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecAbstractMutableComboBoxModelPtr : 
+    public PointerSField<AbstractMutableComboBoxModel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecAbstractMutableComboBoxModelPtr : 
+    public PointerSField<AbstractMutableComboBoxModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakAbstractMutableComboBoxModelPtr :
+    public PointerSField<AbstractMutableComboBoxModel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedAbstractMutableComboBoxModelPtr :
+    public PointerSField<AbstractMutableComboBoxModel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecAbstractMutableComboBoxModelPtr :
+    public PointerMField<AbstractMutableComboBoxModel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecAbstractMutableComboBoxModelPtr :
+    public PointerMField<AbstractMutableComboBoxModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakAbstractMutableComboBoxModelPtr :
+    public PointerMField<AbstractMutableComboBoxModel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedAbstractMutableComboBoxModelPtr :
+    public PointerMField<AbstractMutableComboBoxModel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGABSTRACTMUTABLECOMBOBOXMODELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGABSTRACTMUTABLECOMBOBOXMODELFIELDS_H_ */

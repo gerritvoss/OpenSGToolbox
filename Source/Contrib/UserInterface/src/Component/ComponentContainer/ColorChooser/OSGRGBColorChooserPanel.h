@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,43 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGRGBColorChooserPanelBase.h"
-#include "Component/Spinner/OSGSpinnerFields.h"
-#include "Component/Slider/OSGSliderFields.h"
-#include "Component/Spinner/OSGBoundedRangeSpinnerModel.h"
-#include "Layer/OSGGradientLayer.h"
+#include "OSGSpinner.h"
+#include "OSGSlider.h"
+#include "OSGBoundedRangeSpinnerModel.h"
+#include "OSGGradientLayer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief RGBColorChooserPanel class. See \ref 
-           PageUserInterfaceRGBColorChooserPanel for a description.
+/*! \brief RGBColorChooserPanel class. See \ref
+           PageContribUserInterfaceRGBColorChooserPanel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING RGBColorChooserPanel : public RGBColorChooserPanelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RGBColorChooserPanel : public RGBColorChooserPanelBase
 {
-  private:
-
-    typedef RGBColorChooserPanelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef RGBColorChooserPanelBase Inherited;
+    typedef RGBColorChooserPanel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -90,6 +90,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RGBColorChooserPanel : public RGBColorChoo
 
     void init(void);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in RGBColorChooserPanelBase.
@@ -106,7 +107,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING RGBColorChooserPanel : public RGBColorChoo
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RGBColorChooserPanel(void); 
+    virtual ~RGBColorChooserPanel(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
@@ -118,32 +126,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING RGBColorChooserPanel : public RGBColorChoo
     BoundedRangeSpinnerModelPtr _BlueModel;
     BoundedRangeSpinnerModelPtr _AlphaModel;
 
-	SpinnerPtr _RedSpinner;
-	SpinnerPtr _GreenSpinner;
-	SpinnerPtr _BlueSpinner;
-	SpinnerPtr _AlphaSpinner;
+	SpinnerRefPtr _RedSpinner;
+	SpinnerRefPtr _GreenSpinner;
+	SpinnerRefPtr _BlueSpinner;
+	SpinnerRefPtr _AlphaSpinner;
 
-	GradientLayerPtr _RedSliderTrackBackground;
-	GradientLayerPtr _GreenSliderTrackBackground;
-	GradientLayerPtr _BlueSliderTrackBackground;
-	GradientLayerPtr _AlphaSliderTrackBackground;
+	GradientLayerRefPtr _RedSliderTrackBackground;
+	GradientLayerRefPtr _GreenSliderTrackBackground;
+	GradientLayerRefPtr _BlueSliderTrackBackground;
+	GradientLayerRefPtr _AlphaSliderTrackBackground;
 
-	SliderPtr _RedSlider;
-	SliderPtr _GreenSlider;
-	SliderPtr _BlueSlider;
-	SliderPtr _AlphaSlider;
+	SliderRefPtr _RedSlider;
+	SliderRefPtr _GreenSlider;
+	SliderRefPtr _BlueSlider;
+	SliderRefPtr _AlphaSlider;
 	
-	class BoundedRangeSpinnerChangeListener : public ChangeListener
-	{
-	public :
-		BoundedRangeSpinnerChangeListener(RGBColorChooserPanelPtr TheRGBColorChooserPanel);
-		
-		virtual void stateChanged(const ChangeEventPtr e);
-	private:
-		RGBColorChooserPanelPtr _RGBColorChooserPanel;
-	};
+    class BoundedRangeSpinnerChangeListener : public ChangeListener
+    {
+      public :
+        BoundedRangeSpinnerChangeListener(RGBColorChooserPanelRefPtr TheRGBColorChooserPanel);
 
-	friend class BoundedRangeSpinnerChangeListener;
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
+      private:
+        RGBColorChooserPanelRefPtr _RGBColorChooserPanel;
+    };
+
+    friend class BoundedRangeSpinnerChangeListener;
 
 	BoundedRangeSpinnerChangeListener _BoundedRangeSpinnerChangeListener;
 
@@ -151,15 +159,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING RGBColorChooserPanel : public RGBColorChoo
 	void attachModelListener(void);
 	void dettachModelListener(void);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class RGBColorChooserPanelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const RGBColorChooserPanel &source);
 };
 
@@ -169,7 +175,5 @@ OSG_END_NAMESPACE
 
 #include "OSGRGBColorChooserPanelBase.inl"
 #include "OSGRGBColorChooserPanel.inl"
-
-#define OSGRGBCOLORCHOOSERPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGRGBCOLORCHOOSERPANEL_H_ */

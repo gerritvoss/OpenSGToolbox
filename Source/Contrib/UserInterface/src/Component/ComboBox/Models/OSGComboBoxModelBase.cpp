@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,136 +50,156 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMBOBOXMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGComboBoxModelBase.h"
 #include "OSGComboBoxModel.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector ComboBoxModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::ComboBoxModel
+    A UI ComboBoxModel.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ComboBoxModel *>::_type("ComboBoxModelPtr", "ListModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ComboBoxModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ComboBoxModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ComboBoxModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ComboBoxModelBase::classDescInserter(TypeObject &oType)
+{
+}
 
 
-FieldContainerType ComboBoxModelBase::_type(
-    "ComboBoxModel",
-    "ListModel",
+ComboBoxModelBase::TypeObject ComboBoxModelBase::_type(
+    ComboBoxModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     ComboBoxModel::initMethod,
-    NULL,
-    0);
+    ComboBoxModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ComboBoxModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ComboBoxModel\"\n"
+    "\tparent=\"ListModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    parentProducer=\"ListModel\"\n"
+    ">\n"
+    "A UI ComboBoxModel.\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"SelectionChanged\"\n"
+    "\t\ttype=\"ComboBoxSelectionEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI ComboBoxModel.\n"
+    );
 
 //! ComboBoxModel Produced Methods
 
 MethodDescription *ComboBoxModelBase::_methodDesc[] =
 {
     new MethodDescription("SelectionChanged", 
+                    "",
                      SelectionChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType ComboBoxModelBase::_producerType(
     "ComboBoxModelProducerType",
     "ListModelProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(ComboBoxModelBase, ComboBoxModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ComboBoxModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ComboBoxModelBase::getType(void) const 
+FieldContainerType &ComboBoxModelBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &ComboBoxModelBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &ComboBoxModelBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-UInt32 ComboBoxModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(ComboBoxModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComboBoxModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 ComboBoxModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<ComboBoxModelBase *>(&other),
-                          whichField);
-}
-#else
-void ComboBoxModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
-{
-    this->executeSyncImpl((ComboBoxModelBase *) &other, whichField, sInfo);
-}
-void ComboBoxModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(ComboBoxModel);
 }
 
-void ComboBoxModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-ComboBoxModelBase::ComboBoxModelBase(void) :
-    Inherited() 
-{
-    _Producer.setType(&_producerType);
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ComboBoxModelBase::ComboBoxModelBase(const ComboBoxModelBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-ComboBoxModelBase::~ComboBoxModelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ComboBoxModelBase::getBinSize(const BitVector &whichField)
+UInt32 ComboBoxModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -187,68 +207,70 @@ UInt32 ComboBoxModelBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void ComboBoxModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ComboBoxModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void ComboBoxModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ComboBoxModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComboBoxModelBase::executeSyncImpl(      ComboBoxModelBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ComboBoxModelBase::ComboBoxModelBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void ComboBoxModelBase::executeSyncImpl(      ComboBoxModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    _Producer.setType(&_producerType);
 }
 
-void ComboBoxModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+ComboBoxModelBase::ComboBoxModelBase(const ComboBoxModelBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+ComboBoxModelBase::~ComboBoxModelBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ComboBoxModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ComboBoxModel *pThis = static_cast<ComboBoxModel *>(this);
+
+    pThis->execSync(static_cast<ComboBoxModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void ComboBoxModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ComboBoxModelPtr>::_type("ComboBoxModelPtr", "ListModelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

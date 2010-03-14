@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DefaultComboBoxEditorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DefaultComboBoxEditorBase::getClassTypeId(void) 
+OSG::UInt32 DefaultComboBoxEditorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DefaultComboBoxEditorPtr DefaultComboBoxEditorBase::create(void) 
-{
-    DefaultComboBoxEditorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DefaultComboBoxEditorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DefaultComboBoxEditorPtr DefaultComboBoxEditorBase::createEmpty(void) 
-{ 
-    DefaultComboBoxEditorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DefaultComboBoxEditorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DefaultComboBoxEditor::_sfEditor field.
-inline
-SFTextFieldPtr *DefaultComboBoxEditorBase::getSFEditor(void)
-{
-    return &_sfEditor;
-}
-
 
 //! Get the value of the DefaultComboBoxEditor::_sfEditor field.
 inline
-TextFieldPtr &DefaultComboBoxEditorBase::getEditor(void)
-{
-    return _sfEditor.getValue();
-}
-
-//! Get the value of the DefaultComboBoxEditor::_sfEditor field.
-inline
-const TextFieldPtr &DefaultComboBoxEditorBase::getEditor(void) const
+TextField * DefaultComboBoxEditorBase::getEditor(void) const
 {
     return _sfEditor.getValue();
 }
 
 //! Set the value of the DefaultComboBoxEditor::_sfEditor field.
 inline
-void DefaultComboBoxEditorBase::setEditor(const TextFieldPtr &value)
+void DefaultComboBoxEditorBase::setEditor(TextField * const value)
 {
+    editSField(EditorFieldMask);
+
     _sfEditor.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DefaultComboBoxEditorBase::execSync (      DefaultComboBoxEditorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGDEFAULTCOMBOBOXEDITORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (EditorFieldMask & whichField))
+        _sfEditor.syncWith(pFrom->_sfEditor);
+}
+#endif
+
+
+inline
+const Char8 *DefaultComboBoxEditorBase::getClassname(void)
+{
+    return "DefaultComboBoxEditor";
+}
+OSG_GEN_CONTAINERPTR(DefaultComboBoxEditor);
+
+OSG_END_NAMESPACE
 

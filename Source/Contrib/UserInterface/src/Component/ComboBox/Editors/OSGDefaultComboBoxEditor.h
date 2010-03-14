@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGDefaultComboBoxEditorBase.h"
-#include "Event/OSGFocusListener.h"
+#include "OSGFocusListener.h"
+#include "OSGTextField.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultComboBoxEditor class. See \ref 
-           PageUserInterfaceDefaultComboBoxEditor for a description.
+/*! \brief DefaultComboBoxEditor class. See \ref
+           PageContribUserInterfaceDefaultComboBoxEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComboBoxEditorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultComboBoxEditor : public DefaultComboBoxEditorBase
 {
-  private:
-
-    typedef DefaultComboBoxEditorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DefaultComboBoxEditorBase Inherited;
+    typedef DefaultComboBoxEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent, 
-                      const BitVector  bvFlags ) const;
+    virtual void dump(      UInt32     uiIndent = 0,
+                      const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
 	//Add an ActionListener.
 	virtual EventConnection addActionListener(ActionListenerPtr Listener);
 	virtual bool isActionListenerAttached(ActionListenerPtr Listener) const;
@@ -89,7 +91,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComb
 	virtual void removeActionListener(ActionListenerPtr Listener);
 
 	//Return the component that should be added to the tree hierarchy for this editor
-	virtual ComponentPtr getEditorComponent(void);
+	virtual ComponentRefPtr getEditorComponent(void);
 
 	//Return the edited item
 	virtual boost::any getItem(void);
@@ -101,6 +103,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComb
 	virtual void setItem(const boost::any& anObject);
 	
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DefaultComboBoxEditorBase.
@@ -117,35 +120,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComb
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultComboBoxEditor(void); 
+    virtual ~DefaultComboBoxEditor(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const DefaultComboBoxEditor *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+
     //Expand Button Action Listener
-	class TextFieldListener :public FocusListener
-	{
-	public:
-		TextFieldListener(DefaultComboBoxEditorPtr TheDefaultComboBoxEditor);
-        virtual void focusGained(const FocusEventPtr e);
-        virtual void focusLost(const FocusEventPtr e);
+    class TextFieldListener :public FocusListener
+    {
+      public:
+        TextFieldListener(DefaultComboBoxEditorRefPtr TheDefaultComboBoxEditor);
+        virtual void focusGained(const FocusEventUnrecPtr e);
+        virtual void focusLost(const FocusEventUnrecPtr e);
 
-	private:
-		DefaultComboBoxEditorPtr _DefaultComboBoxEditor;
-	};
+      private:
+        DefaultComboBoxEditorRefPtr _DefaultComboBoxEditor;
+    };
 
-	friend class TextFieldListener;
+    friend class TextFieldListener;
 
-	TextFieldListener _TextFieldListener;
+    TextFieldListener _TextFieldListener;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DefaultComboBoxEditorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DefaultComboBoxEditor &source);
 };
 
@@ -155,7 +171,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDefaultComboBoxEditorBase.inl"
 #include "OSGDefaultComboBoxEditor.inl"
-
-#define OSGDEFAULTCOMBOBOXEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDEFAULTCOMBOBOXEDITOR_H_ */

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,50 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AbstractColorChooserPanelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AbstractColorChooserPanelBase::getClassTypeId(void) 
+OSG::UInt32 AbstractColorChooserPanelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 AbstractColorChooserPanelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the AbstractColorChooserPanel::_sfParentChooser field.
-inline
-SFColorChooserPtr *AbstractColorChooserPanelBase::getSFParentChooser(void)
-{
-    return &_sfParentChooser;
-}
-
 
 //! Get the value of the AbstractColorChooserPanel::_sfParentChooser field.
 inline
-ColorChooserPtr &AbstractColorChooserPanelBase::getParentChooser(void)
-{
-    return _sfParentChooser.getValue();
-}
-
-//! Get the value of the AbstractColorChooserPanel::_sfParentChooser field.
-inline
-const ColorChooserPtr &AbstractColorChooserPanelBase::getParentChooser(void) const
+ColorChooser * AbstractColorChooserPanelBase::getParentChooser(void) const
 {
     return _sfParentChooser.getValue();
 }
 
 //! Set the value of the AbstractColorChooserPanel::_sfParentChooser field.
 inline
-void AbstractColorChooserPanelBase::setParentChooser(const ColorChooserPtr &value)
+void AbstractColorChooserPanelBase::setParentChooser(ColorChooser * const value)
 {
+    editSField(ParentChooserFieldMask);
+
     _sfParentChooser.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void AbstractColorChooserPanelBase::execSync (      AbstractColorChooserPanelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGABSTRACTCOLORCHOOSERPANELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (ParentChooserFieldMask & whichField))
+        _sfParentChooser.syncWith(pFrom->_sfParentChooser);
+}
+#endif
+
+
+inline
+const Char8 *AbstractColorChooserPanelBase::getClassname(void)
+{
+    return "AbstractColorChooserPanel";
+}
+OSG_GEN_CONTAINERPTR(AbstractColorChooserPanel);
+
+OSG_END_NAMESPACE
 

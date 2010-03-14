@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,120 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTMUTABLECOMBOBOXMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDefaultMutableComboBoxModelBase.h"
 #include "OSGDefaultMutableComboBoxModel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector DefaultMutableComboBoxModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::DefaultMutableComboBoxModel
+    A UI DefaultMutableComboBoxModel.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType DefaultMutableComboBoxModelBase::_type(
-    "DefaultMutableComboBoxModel",
-    "AbstractMutableComboBoxModel",
-    NULL,
-    (PrototypeCreateF) &DefaultMutableComboBoxModelBase::createEmpty,
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultMutableComboBoxModel *>::_type("DefaultMutableComboBoxModelPtr", "AbstractMutableComboBoxModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultMutableComboBoxModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultMutableComboBoxModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultMutableComboBoxModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultMutableComboBoxModelBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+DefaultMutableComboBoxModelBase::TypeObject DefaultMutableComboBoxModelBase::_type(
+    DefaultMutableComboBoxModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultMutableComboBoxModelBase::createEmptyLocal),
     DefaultMutableComboBoxModel::initMethod,
-    NULL,
-    0);
+    DefaultMutableComboBoxModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultMutableComboBoxModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultMutableComboBoxModel\"\n"
+    "\tparent=\"AbstractMutableComboBoxModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI DefaultMutableComboBoxModel.\n"
+    "</FieldContainer>\n",
+    "A UI DefaultMutableComboBoxModel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DefaultMutableComboBoxModelBase, DefaultMutableComboBoxModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultMutableComboBoxModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultMutableComboBoxModelBase::getType(void) const 
+FieldContainerType &DefaultMutableComboBoxModelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultMutableComboBoxModelBase::shallowCopy(void) const 
-{ 
-    DefaultMutableComboBoxModelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultMutableComboBoxModel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultMutableComboBoxModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultMutableComboBoxModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultMutableComboBoxModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultMutableComboBoxModelBase::getType(void) const
 {
-    this->executeSyncImpl((DefaultMutableComboBoxModelBase *) &other, whichField);
+    return _type;
 }
-#else
-void DefaultMutableComboBoxModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultMutableComboBoxModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultMutableComboBoxModelBase *) &other, whichField, sInfo);
-}
-void DefaultMutableComboBoxModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(DefaultMutableComboBoxModel);
 }
 
-void DefaultMutableComboBoxModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-DefaultMutableComboBoxModelBase::DefaultMutableComboBoxModelBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultMutableComboBoxModelBase::DefaultMutableComboBoxModelBase(const DefaultMutableComboBoxModelBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-DefaultMutableComboBoxModelBase::~DefaultMutableComboBoxModelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultMutableComboBoxModelBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultMutableComboBoxModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,88 +176,198 @@ UInt32 DefaultMutableComboBoxModelBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void DefaultMutableComboBoxModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultMutableComboBoxModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void DefaultMutableComboBoxModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultMutableComboBoxModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultMutableComboBoxModelBase::executeSyncImpl(      DefaultMutableComboBoxModelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultMutableComboBoxModelTransitPtr DefaultMutableComboBoxModelBase::createLocal(BitVector bFlags)
 {
+    DefaultMutableComboBoxModelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<DefaultMutableComboBoxModel>(tmpPtr);
+    }
 
-}
-#else
-void DefaultMutableComboBoxModelBase::executeSyncImpl(      DefaultMutableComboBoxModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void DefaultMutableComboBoxModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultMutableComboBoxModelTransitPtr DefaultMutableComboBoxModelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultMutableComboBoxModelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultMutableComboBoxModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultMutableComboBoxModelTransitPtr DefaultMutableComboBoxModelBase::create(void)
+{
+    DefaultMutableComboBoxModelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultMutableComboBoxModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultMutableComboBoxModel *DefaultMutableComboBoxModelBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultMutableComboBoxModel *returnValue;
+
+    newPtr<DefaultMutableComboBoxModel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultMutableComboBoxModel *DefaultMutableComboBoxModelBase::createEmpty(void)
+{
+    DefaultMutableComboBoxModel *returnValue;
+
+    newPtr<DefaultMutableComboBoxModel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultMutableComboBoxModelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultMutableComboBoxModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultMutableComboBoxModel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultMutableComboBoxModelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultMutableComboBoxModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultMutableComboBoxModel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultMutableComboBoxModelBase::shallowCopy(void) const
+{
+    DefaultMutableComboBoxModel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultMutableComboBoxModel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultMutableComboBoxModelBase::DefaultMutableComboBoxModelBase(void) :
+    Inherited()
+{
+}
+
+DefaultMutableComboBoxModelBase::DefaultMutableComboBoxModelBase(const DefaultMutableComboBoxModelBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultMutableComboBoxModelBase::~DefaultMutableComboBoxModelBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultMutableComboBoxModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultMutableComboBoxModel *pThis = static_cast<DefaultMutableComboBoxModel *>(this);
+
+    pThis->execSync(static_cast<DefaultMutableComboBoxModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultMutableComboBoxModelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultMutableComboBoxModel *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultMutableComboBoxModel *>(pRefAspect),
+                  dynamic_cast<const DefaultMutableComboBoxModel *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DefaultMutableComboBoxModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultMutableComboBoxModelPtr>::_type("DefaultMutableComboBoxModelPtr", "AbstractMutableComboBoxModelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultMutableComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultMutableComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTMUTABLECOMBOBOXMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTMUTABLECOMBOBOXMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTMUTABLECOMBOBOXMODELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

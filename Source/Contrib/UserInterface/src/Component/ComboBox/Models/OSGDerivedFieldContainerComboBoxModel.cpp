@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDerivedFieldContainerComboBoxModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DerivedFieldContainerComboBoxModel
-A UI DerivedFieldContainerComboBoxModel. 	
-*/
+// Documentation for this class is emitted in the
+// OSGDerivedFieldContainerComboBoxModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGDerivedFieldContainerComboBoxModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +62,13 @@ A UI DerivedFieldContainerComboBoxModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DerivedFieldContainerComboBoxModel::initMethod (void)
+void DerivedFieldContainerComboBoxModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,81 +78,82 @@ void DerivedFieldContainerComboBoxModel::initMethod (void)
 
 UInt32 DerivedFieldContainerComboBoxModel::getSize(void) const
 {
-	return _FieldList.size();
+    return _FieldList.size();
 }
 
 boost::any DerivedFieldContainerComboBoxModel::getElementAt(UInt32 index) const
 {
-   return _FieldList[index];
+    return _FieldList[index];
 }
 
 boost::any DerivedFieldContainerComboBoxModel::getSelectedItem(void) const
 {
-	if(_SelectedIndex < 0 ||
-	   _SelectedIndex >= _FieldList.size())
-	{
+    if(_SelectedIndex < 0 ||
+       _SelectedIndex >= _FieldList.size())
+    {
         return boost::any();
-	}
-	else
-	{
-		return _FieldList[_SelectedIndex];
-	}
+    }
+    else
+    {
+        return _FieldList[_SelectedIndex];
+    }
 }
 
 Int32 DerivedFieldContainerComboBoxModel::getSelectedItemIndex(void) const
 {
-	return _SelectedIndex;
+    return _SelectedIndex;
 }
 
 void DerivedFieldContainerComboBoxModel::setSelectedItem(const Int32& index)
 {
-	if(getSize() != 0)
-	{
-		Int32 PreviousIndex(_SelectedIndex);
-		_SelectedIndex = index;
+    if(getSize() != 0)
+    {
+        Int32 PreviousIndex(_SelectedIndex);
+        _SelectedIndex = index;
 
-		if(_SelectedIndex != PreviousIndex)
-		{
-			produceSelectionChanged(DerivedFieldContainerComboBoxModelPtr(this), _SelectedIndex, PreviousIndex);
-		}
-	}
+        if(_SelectedIndex != PreviousIndex)
+        {
+            produceSelectionChanged(DerivedFieldContainerComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
+        }
+    }
 }
 
 void DerivedFieldContainerComboBoxModel::setSelectedItem(const boost::any& anObject)
 {
-	if(getSize() != 0)
-	{
-		Int32 PreviousIndex(_SelectedIndex);
+    if(getSize() != 0)
+    {
+        Int32 PreviousIndex(_SelectedIndex);
 
-		UInt32 index(0);
+        UInt32 index(0);
         try
         {
             while(index < _FieldList.size() && 
-                *boost::any_cast<FieldContainerType*>(_FieldList[index]) == *boost::any_cast<FieldContainerType*>(anObject))
-		    {
-			    ++index;
-		    }
+                  *boost::any_cast<FieldContainerType*>(_FieldList[index]) == *boost::any_cast<FieldContainerType*>(anObject))
+            {
+                ++index;
+            }
         }
         catch(boost::bad_any_cast &)
         {
             return;
         }
 
-		if(index < _FieldList.size())
-		{
-			_SelectedIndex = index;
-		}
-		else
-		{
-			_SelectedIndex = -1;
-		}
+        if(index < _FieldList.size())
+        {
+            _SelectedIndex = index;
+        }
+        else
+        {
+            _SelectedIndex = -1;
+        }
 
-		if(_SelectedIndex != PreviousIndex)
-		{
-			produceSelectionChanged(DerivedFieldContainerComboBoxModelPtr(this), _SelectedIndex, PreviousIndex);
-		}
-	}
+        if(_SelectedIndex != PreviousIndex)
+        {
+            produceSelectionChanged(DerivedFieldContainerComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
+        }
+    }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -175,82 +176,58 @@ DerivedFieldContainerComboBoxModel::~DerivedFieldContainerComboBoxModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DerivedFieldContainerComboBoxModel::changed(BitVector whichField, UInt32 origin)
+void DerivedFieldContainerComboBoxModel::changed(ConstFieldMaskArg whichField, 
+                                                 UInt32            origin,
+                                                 BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
+
     if(whichField & DerivedFieldContainerTypesFieldMask)
     {
-        beginEditCP(DerivedFieldContainerComboBoxModelPtr(this), InternalFieldContainerTypesFieldMask);
-            getInternalFieldContainerTypes().clear();
-            for(UInt32 i(0) ; i<getDerivedFieldContainerTypes().size() ; ++i)
+        editMFInternalFieldContainerTypes()->clear();
+        for(UInt32 i(0) ; i<getMFDerivedFieldContainerTypes()->size() ; ++i)
+        {
+            UInt32 NumFieldContainersFound(0);
+            FieldContainerType* DerivedType =
+                FieldContainerFactory::the()->findType(getDerivedFieldContainerTypes(i).c_str());
+            FieldContainerType* FoundType = NULL;
+            if(DerivedType != NULL)
             {
-                UInt32 NumFieldContainersFound(0);
-                FieldContainerType* DerivedType = FieldContainerFactory::the()->findType(getDerivedFieldContainerTypes()[i].c_str());
-                FieldContainerType* FoundType = NULL;
-                if(DerivedType != NULL)
+                for(UInt32 j(0) ; NumFieldContainersFound<FieldContainerFactory::the()->getNumTypes(); ++j)
                 {
-                    for(UInt32 j(0) ; NumFieldContainersFound<FieldContainerFactory::the()->getNumTypes(); ++j)
+                    FoundType = FieldContainerFactory::the()->findType(j);
+                    if(FoundType != NULL)
                     {
-                        FoundType = FieldContainerFactory::the()->findType(j);
-                        if(FoundType != NULL)
+                        if(FoundType->isDerivedFrom(*DerivedType)  && (getIncludeAbstract() || !FoundType->isAbstract()))
                         {
-                            if(FoundType->isDerivedFrom(*DerivedType)  && (getIncludeAbstract() || !FoundType->isAbstract()))
-                            {
-                                getInternalFieldContainerTypes().push_back(FoundType->getId());
-                            }
-                            ++NumFieldContainersFound;
+                            editMFInternalFieldContainerTypes()->push_back(FoundType->getId());
                         }
+                        ++NumFieldContainersFound;
                     }
                 }
             }
-        endEditCP(DerivedFieldContainerComboBoxModelPtr(this), InternalFieldContainerTypesFieldMask);
+        }
     }
-    
+
     if(whichField & InternalFieldContainerTypesFieldMask)
     {
         UInt32 PreListSize(_FieldList.size());
         _FieldList.clear();
 
-        for(UInt32 i(0) ; i<getInternalFieldContainerTypes().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFDerivedFieldContainerTypes()->size() ; ++i)
         {
-            _FieldList.push_back(boost::any(FieldContainerFactory::the()->findType(getInternalFieldContainerTypes()[i])));
+            _FieldList.push_back(boost::any(FieldContainerFactory::the()->findType(getInternalFieldContainerTypes(i))));
         }
 
-        produceListDataContentsChanged(DerivedFieldContainerComboBoxModelPtr(this), 0, osgMax<UInt32>(PreListSize,_FieldList.size()));
+        produceListDataContentsChanged(DerivedFieldContainerComboBoxModelRefPtr(this), 0, osgMax<UInt32>(PreListSize,_FieldList.size()));
         setSelectedItem(-1);
     }
 }
 
-void DerivedFieldContainerComboBoxModel::dump(      UInt32    , 
+void DerivedFieldContainerComboBoxModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DerivedFieldContainerComboBoxModel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDERIVEDFIELDCONTAINERCOMBOBOXMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDERIVEDFIELDCONTAINERCOMBOBOXMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDERIVEDFIELDCONTAINERCOMBOBOXMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

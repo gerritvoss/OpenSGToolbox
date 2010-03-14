@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultMutableComboBoxModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultMutableComboBoxModel
-A UI DefaultMutableComboBoxModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultMutableComboBoxModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultMutableComboBoxModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,15 +62,19 @@ A UI DefaultMutableComboBoxModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultMutableComboBoxModel::initMethod (void)
+void DefaultMutableComboBoxModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
 
 UInt32 DefaultMutableComboBoxModel::getSize(void) const
 {
@@ -114,7 +113,7 @@ void DefaultMutableComboBoxModel::setSelectedItem(const Int32& index)
 
 		if(_SelectedIndex != PreviousIndex)
 		{
-			produceSelectionChanged(DefaultMutableComboBoxModelPtr(this), _SelectedIndex, PreviousIndex);
+			produceSelectionChanged(DefaultMutableComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
 		}
 	}
 }
@@ -143,7 +142,7 @@ void DefaultMutableComboBoxModel::setSelectedItem(const boost::any& anObject)
 
 		if(_SelectedIndex != PreviousIndex)
 		{
-			produceSelectionChanged(DefaultMutableComboBoxModelPtr(this), _SelectedIndex, PreviousIndex);
+			produceSelectionChanged(DefaultMutableComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
 		}
 	}
     */
@@ -152,7 +151,7 @@ void DefaultMutableComboBoxModel::setSelectedItem(const boost::any& anObject)
 void DefaultMutableComboBoxModel::addElement(const boost::any& anObject)
 {
 	_FieldList.push_back(anObject);
-	produceListDataIntervalAdded(DefaultMutableComboBoxModelPtr(this),_FieldList.size()-1,_FieldList.size()-1);
+	produceListDataIntervalAdded(DefaultMutableComboBoxModelRefPtr(this),_FieldList.size()-1,_FieldList.size()-1);
 }
 
 void DefaultMutableComboBoxModel::insertElementAt(const boost::any& anObject, const UInt32& index)
@@ -160,7 +159,7 @@ void DefaultMutableComboBoxModel::insertElementAt(const boost::any& anObject, co
 	if(index < _FieldList.size())
 	{
 		_FieldList.insert(_FieldList.begin()+index, anObject);
-		produceListDataIntervalAdded(DefaultMutableComboBoxModelPtr(this),index,index);
+		produceListDataIntervalAdded(DefaultMutableComboBoxModelRefPtr(this),index,index);
 	}
 	else
 	{
@@ -172,7 +171,7 @@ void DefaultMutableComboBoxModel::removeAllElements(void)
 {
 	UInt32 Size(_FieldList.size());
 	_FieldList.clear();
-	produceListDataIntervalRemoved(DefaultMutableComboBoxModelPtr(this),0,Size-1);
+	produceListDataIntervalRemoved(DefaultMutableComboBoxModelRefPtr(this),0,Size-1);
 }
 
 void DefaultMutableComboBoxModel::removeElement(const boost::any& anObject)
@@ -184,7 +183,7 @@ void DefaultMutableComboBoxModel::removeElement(const boost::any& anObject)
 	{
 		UInt32 Index(SearchItor - _FieldList.begin());
 		_FieldList.erase(SearchItor);
-		produceListDataIntervalRemoved(DefaultMutableComboBoxModelPtr(this),Index,Index);
+		produceListDataIntervalRemoved(DefaultMutableComboBoxModelRefPtr(this),Index,Index);
 	}*/
 
 
@@ -195,9 +194,10 @@ void DefaultMutableComboBoxModel::removeElementAt(const UInt32& index)
 	if(index < _FieldList.size())
 	{
 		_FieldList.erase(_FieldList.begin()+index);
-		produceListDataIntervalRemoved(DefaultMutableComboBoxModelPtr(this),index,index);
+		produceListDataIntervalRemoved(DefaultMutableComboBoxModelRefPtr(this),index,index);
 	}
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -206,13 +206,13 @@ void DefaultMutableComboBoxModel::removeElementAt(const UInt32& index)
 
 DefaultMutableComboBoxModel::DefaultMutableComboBoxModel(void) :
     Inherited(),
-		_SelectedIndex(-1)
+    _SelectedIndex(-1)
 {
 }
 
 DefaultMutableComboBoxModel::DefaultMutableComboBoxModel(const DefaultMutableComboBoxModel &source) :
     Inherited(source),
-		_SelectedIndex(source._SelectedIndex)
+    _SelectedIndex(source._SelectedIndex)
 {
 }
 
@@ -222,41 +222,17 @@ DefaultMutableComboBoxModel::~DefaultMutableComboBoxModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultMutableComboBoxModel::changed(BitVector whichField, UInt32 origin)
+void DefaultMutableComboBoxModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DefaultMutableComboBoxModel::dump(      UInt32    , 
+void DefaultMutableComboBoxModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultMutableComboBoxModel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTMUTABLECOMBOBOXMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTMUTABLECOMBOBOXMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTMUTABLECOMBOBOXMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

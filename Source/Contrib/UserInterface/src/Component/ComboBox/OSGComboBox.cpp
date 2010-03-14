@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,36 +40,31 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGComboBox.h"
-#include "Models/OSGMutableComboBoxModel.h"
-#include "Component/Menu/OSGListGeneratedPopupMenu.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "Component/Button/OSGToggleButton.h"
-#include "Component/ComboBox/Editors/OSGComboBoxEditor.h"
-#include "Component/Menu/OSGMenuItem.h"
-#include "Component/Text/OSGTextField.h"
-#include "Component/ComboBox/ComponentGenerators/OSGComboBoxComponentGenerator.h"
-#include "Util/OSGUIDrawUtils.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OSGMutableComboBoxModel.h"
+#include "OSGListGeneratedPopupMenu.h"
+#include "OSGInternalWindow.h"
+#include "OSGToggleButton.h"
+#include "OSGComboBoxEditor.h"
+#include "OSGMenuItem.h"
+#include "OSGTextField.h"
+#include "OSGComboBoxComponentGenerator.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGStringUtils.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ComboBox
-A UI ComboBox 	
-*/
+// Documentation for this class is emitted in the
+// OSGComboBoxBase.cpp file.
+// To modify it, please change the .fcd file (OSGComboBox.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -79,8 +74,13 @@ A UI ComboBox
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ComboBox::initMethod (void)
+void ComboBox::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -90,182 +90,177 @@ void ComboBox::initMethod (void)
 
 EventConnection ComboBox::addPopupMenuListener(PopupMenuListenerPtr Listener)
 {
-	return getComboListPopupMenu()->addPopupMenuListener(Listener);
+    return getComboListPopupMenu()->addPopupMenuListener(Listener);
 }
 
 EventConnection ComboBox::addActionListener(ActionListenerPtr Listener)
 {
-   _ActionListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&ComboBox::isActionListenerAttached, this, Listener),
-       boost::bind(&ComboBox::removeActionListener, this, Listener));
+    _ActionListeners.insert(Listener);
+    return EventConnection(
+                           boost::bind(&ComboBox::isActionListenerAttached, this, Listener),
+                           boost::bind(&ComboBox::removeActionListener, this, Listener));
 }
 
 void ComboBox::setEmptyDescText(const std::string& text)
 {
-    if(getEditor() != NullFC &&
-       getEditor()->getEditorComponent() != NullFC &&
+    if(getEditor() != NULL &&
+       getEditor()->getEditorComponent() != NULL &&
        getEditor()->getEditorComponent()->getType().isDerivedFrom(TextField::getClassType()))
     {
-        beginEditCP(getEditor()->getEditorComponent());
-            TextField::Ptr::dcast(getEditor()->getEditorComponent())->setEmptyDescText(text);
-        endEditCP(getEditor()->getEditorComponent());
+        dynamic_pointer_cast<TextField>(getEditor()->getEditorComponent())->setEmptyDescText(text);
     }
 }
 
 void ComboBox::updateLayout(void)
 {
-	Pnt2f BorderTopLeft, BorderBottomRight;
-	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+    Pnt2f BorderTopLeft, BorderBottomRight;
+    getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
-	//Place the Expand button on the Left
-	beginEditCP(getExpandButton(), PositionFieldMask | SizeFieldMask);
-		getExpandButton()->setSize(getExpandButton()->getPreferredSize());
-		
+    if(getExpandButton() != NULL)
+    {
+        //Place the Expand button on the Left
+        getExpandButton()->setSize(getExpandButton()->getPreferredSize());
+
         getExpandButton()->setPosition(calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), getExpandButton()->getSize(),0.5, 1.0));
-	endEditCP(getExpandButton(), PositionFieldMask | SizeFieldMask);
+    }
 
-	//Editor
-	if(getEditable() && getEditor() != NullFC && getEditor()->getEditorComponent() != NullFC)
-	{
-		beginEditCP(getEditor()->getEditorComponent(), PositionFieldMask | SizeFieldMask);
-			getEditor()->getEditorComponent()->setSize(Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
-			getEditor()->getEditorComponent()->setPosition(Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
-		endEditCP(getEditor()->getEditorComponent(), PositionFieldMask | SizeFieldMask);
-	}
+    //Editor
+    if(getEditable() && getEditor() != NULL && getEditor()->getEditorComponent() != NULL)
+    {
+        getEditor()->getEditorComponent()->setSize(Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
+        getEditor()->getEditorComponent()->setPosition(Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
+    }
 
-	//Selected Item Component
-	if(!getEditable() && getComponentGeneratorSelectedItem() != NullFC)
-	{
-		beginEditCP(getComponentGeneratorSelectedItem(), PositionFieldMask | SizeFieldMask);
-			getComponentGeneratorSelectedItem()->setSize(Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
-			getComponentGeneratorSelectedItem()->setPosition(Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
-		endEditCP(getComponentGeneratorSelectedItem(), PositionFieldMask | SizeFieldMask);
-	}
+    //Selected Item Component
+    if(!getEditable() && getComponentGeneratorSelectedItem() != NULL)
+    {
+        getComponentGeneratorSelectedItem()->setSize(Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
+        getComponentGeneratorSelectedItem()->setPosition(Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
+    }
 }
 
-void ComboBox::actionPerformed(const ActionEventPtr e)
+void ComboBox::actionPerformed(const ActionEventUnrecPtr e)
 {
-	//Called by the MenuItems in my popupMenu
+    //Called by the MenuItems in my popupMenu
 
-	//Need to determine the index of this MenuItem
-	UInt32 i(0);
-	while(i<getComboListPopupMenu()->getNumItems() && 
-		getComboListPopupMenu()->getItem(i) != MenuItem::Ptr::dcast(e->getSource()))
-	{
-		++i;
-	}
+    //Need to determine the index of this MenuItem
+    UInt32 i(0);
+    while(i<getComboListPopupMenu()->getNumItems() && 
+          getComboListPopupMenu()->getItem(i) != dynamic_cast<MenuItem*>(e->getSource()))
+    {
+        ++i;
+    }
 
-	if(i < getComboListPopupMenu()->getNumItems())
-	{
-		getModel()->setSelectedItem(i);
-		if(getEditable() && getEditor() != NullFC && getEditor()->getEditorComponent() != NullFC)
-		{
-			getEditor()->selectAll();
-			getEditor()->getEditorComponent()->takeFocus();
-		}
-		if(!getEditable() && getComponentGeneratorSelectedItem() != NullFC)
-		{
-			getComponentGeneratorSelectedItem()->takeFocus();
-		}
-	}
+    if(i < getComboListPopupMenu()->getNumItems())
+    {
+        getModel()->setSelectedItem(i);
+        if(getEditable() && getEditor() != NULL && getEditor()->getEditorComponent() != NULL)
+        {
+            getEditor()->selectAll();
+            getEditor()->getEditorComponent()->takeFocus();
+        }
+        if(!getEditable() && getComponentGeneratorSelectedItem() != NULL)
+        {
+            getComponentGeneratorSelectedItem()->takeFocus();
+        }
+    }
 }
 
-void ComboBox::contentsChanged(const ListDataEventPtr e)
+void ComboBox::contentsChanged(const ListDataEventUnrecPtr e)
 {
-	updateListFromModel();
+    updateListFromModel();
 }
 
-void ComboBox::intervalAdded(const ListDataEventPtr e)
+void ComboBox::intervalAdded(const ListDataEventUnrecPtr e)
 {
-	//TODO:Implement
-	updateListFromModel();
+    //TODO:Implement
+    updateListFromModel();
 }
 
-void ComboBox::intervalRemoved(const ListDataEventPtr e)
+void ComboBox::intervalRemoved(const ListDataEventUnrecPtr e)
 {
-	//TODO:Implement
-	updateListFromModel();
+    //TODO:Implement
+    updateListFromModel();
 }
 
-void ComboBox::selectionChanged(const ComboBoxSelectionEventPtr e)
+void ComboBox::selectionChanged(const ComboBoxSelectionEventUnrecPtr e)
 {
-	//Update the Selected Item Component
-	updateSelectedItemComponent();
+    //Update the Selected Item Component
+    updateSelectedItemComponent();
 }
 
 void ComboBox::removeActionListener(ActionListenerPtr Listener)
 {
-   ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
-   if(EraseIter != _ActionListeners.end())
-   {
-      _ActionListeners.erase(EraseIter);
-   }
+    ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
+    if(EraseIter != _ActionListeners.end())
+    {
+        _ActionListeners.erase(EraseIter);
+    }
 }
 
 
 void ComboBox::addItem(const boost::any& anObject)
 {
-	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
-	{
-		MutableComboBoxModel::Ptr::dcast(getModel())->addElement(anObject);
-	}
+    if(getModel() != NULL && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
+    {
+        dynamic_cast<MutableComboBoxModel*>(getModel())->addElement(anObject);
+    }
 }
 
-void ComboBox::configureEditor(ComboBoxEditorPtr anEditor, const boost::any& anItem)
+void ComboBox::configureEditor(ComboBoxEditorRefPtr anEditor, const boost::any& anItem)
 {
-	//TODO:Implement
+    //TODO:Implement
 }
 
 std::string ComboBox::getActionCommand(void) const
 {
-	//TODO:Implement
-	return std::string("");
+    //TODO:Implement
+    return std::string("");
 }
 
 void ComboBox::insertItemAt(const boost::any& anObject, const UInt32& index)
 {
-	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
-	{
-		MutableComboBoxModel::Ptr::dcast(getModel())->insertElementAt(anObject, index);
-	}
+    if(getModel() != NULL && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
+    {
+        dynamic_cast<MutableComboBoxModel*>(getModel())->insertElementAt(anObject, index);
+    }
 }
 
 void ComboBox::removeAllItems(void)
 {
-	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
-	{
-		MutableComboBoxModel::Ptr::dcast(getModel())->removeAllElements();
-	}
+    if(getModel() != NULL && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
+    {
+        dynamic_cast<MutableComboBoxModel*>(getModel())->removeAllElements();
+    }
 }
 
 void ComboBox::removeItem(const boost::any& anObject)
 {
-	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
-	{
-		MutableComboBoxModel::Ptr::dcast(getModel())->removeElement(anObject);
-	}
+    if(getModel() != NULL && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
+    {
+        dynamic_cast<MutableComboBoxModel*>(getModel())->removeElement(anObject);
+    }
 }
 
 void ComboBox::removeItemAt(const UInt32& anIndex)
 {
-	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
-	{
-		MutableComboBoxModel::Ptr::dcast(getModel())->removeElementAt(anIndex);
-	}
+    if(getModel() != NULL && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
+    {
+        dynamic_cast<MutableComboBoxModel*>(getModel())->removeElementAt(anIndex);
+    }
 }
 
 bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
 {
-	UInt32 i(1);
-	boost::any ModelElement;
+    UInt32 i(1);
+    boost::any ModelElement;
     std::string TheText;
 
     bool ExitLoop(false);
-	while(i<getModel()->getSize()  && !ExitLoop)
-	{
-		//Get The first character of this item
-		ModelElement = getModel()->getElementAt((getModel()->getSelectedItemIndex() + i) % getModel()->getSize());
+    while(i<getModel()->getSize()  && !ExitLoop)
+    {
+        //Get The first character of this item
+        ModelElement = getModel()->getElementAt((getModel()->getSelectedItemIndex() + i) % getModel()->getSize());
 
         try
         {
@@ -275,169 +270,161 @@ bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
         {
             //Could not convert to string
         }
-        
-		if(TheText.size() > 0 &&
-		   (TheText[0] == KeyEvent::getCharFromKey(TheKey, 0) ||
-		   TheText[0] == KeyEvent::getCharFromKey(TheKey, KeyEvent::KEY_MODIFIER_CAPS_LOCK)))
-		{
-		    ExitLoop = true;
-		}
-		else
-		{
-		    ++i;
-		}
-	}
 
-	if(ExitLoop)
-	{
-	    getModel()->setSelectedItem((getModel()->getSelectedItemIndex() + i) % getModel()->getSize());
-	}
+        if(TheText.size() > 0 &&
+           (TheText[0] == KeyEvent::getCharFromKey(TheKey, 0) ||
+            TheText[0] == KeyEvent::getCharFromKey(TheKey, KeyEvent::KEY_MODIFIER_CAPS_LOCK)))
+        {
+            ExitLoop = true;
+        }
+        else
+        {
+            ++i;
+        }
+    }
 
-	return false;
+    if(ExitLoop)
+    {
+        getModel()->setSelectedItem((getModel()->getSelectedItemIndex() + i) % getModel()->getSize());
+    }
+
+    return false;
 }
 
 void ComboBox::setActionCommand(std::string aCommand)
 {
-	//TODO:Implement
+    //TODO:Implement
 }
 
 void ComboBox::setPopupVisible(bool v)
 {
-	if(v)
-	{
-		showPopup();
-	}
-	else
-	{
-		hidePopup();
-	}
+    if(v)
+    {
+        showPopup();
+    }
+    else
+    {
+        hidePopup();
+    }
 }
 
 void ComboBox::showPopup(void)
 {
-	Pnt2f BorderTopLeft, BorderBottomRight;
-	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+    Pnt2f BorderTopLeft, BorderBottomRight;
+    getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
-    beginEditCP(getComboListPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
-       getComboListPopupMenu()->setInvoker(ComponentPtr(this));
-       getComboListPopupMenu()->setVisible(true);
-       getComboListPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentPtr(this)));
-	   getComboListPopupMenu()->setSelection(getModel()->getSelectedItemIndex());
-    endEditCP(getComboListPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
-    
-    beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
-        getParentWindow()->getActivePopupMenus().push_back(getComboListPopupMenu());
-    endEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
+    getComboListPopupMenu()->setInvoker(ComponentRefPtr(this));
+    getComboListPopupMenu()->setVisible(true);
+    getComboListPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentRefPtr(this)));
+    getComboListPopupMenu()->setSelection(getModel()->getSelectedItemIndex());
+
+    getParentWindow()->pushToActivePopupMenus(getComboListPopupMenu());
 }
 
 void ComboBox::updateListFromModel(void)
 {
-	//Update the PopupMenu
-	//for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
-	//{
-	//	MenuItem::Ptr::dcast(getComboListPopupMenu()->getItem(i))->removeActionListener(this);
-	//}
+    //Update the PopupMenu
+    //for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
+    //{
+    //	dynamic_pointer_cast<MenuItem>(getComboListPopupMenu()->getItem(i))->removeActionListener(this);
+    //}
 
-	//Update the Selected Item Component
-	updateSelectedItemComponent();
+    //Update the Selected Item Component
+    updateSelectedItemComponent();
 }
 
 void ComboBox::updateSelectedItemComponent(void)
 {
-	//Update the Editor
-	if(getEditable() && getEditor() != NullFC && getModel()->getSelectedItemIndex() >=0 )
-	{
-		getEditor()->setItem(getModel()->getElementAt(getModel()->getSelectedItemIndex()));
-	}
+    //Update the Editor
+    if(getEditable() && getEditor() != NULL && getModel()->getSelectedItemIndex() >=0 )
+    {
+        getEditor()->setItem(getModel()->getElementAt(getModel()->getSelectedItemIndex()));
+    }
 
-	//Update the Selected Item Component
-	if( !getEditable() )
-	{
-		updateComponentGeneratorSelectedItem();
-	}
+    //Update the Selected Item Component
+    if( !getEditable() )
+    {
+        updateComponentGeneratorSelectedItem();
+    }
 }
 
 void ComboBox::configurePropertiesFromAction(Action a)
 {
-	//TODO:Implement
+    //TODO:Implement
 }
 
-void ComboBox::produceActionPerformed(const ActionEventPtr e)
+void ComboBox::produceActionPerformed(const ActionEventUnrecPtr e)
 {
-	ActionListenerSet Liseners(_ActionListeners);
+    ActionListenerSet Liseners(_ActionListeners);
     for(ActionListenerSetConstItor SetItor(Liseners.begin()) ; SetItor != Liseners.end() ; ++SetItor)
     {
-	    (*SetItor)->actionPerformed(e);
+        (*SetItor)->actionPerformed(e);
     }
     _Producer.produceEvent(ActionPerformedMethodId,e);
 }
 
-void ComboBox::keyTyped(const KeyEventPtr e)
+void ComboBox::keyTyped(const KeyEventUnrecPtr e)
 {
-	if(e->getKey() == KeyEvent::KEY_UP)
-	{
-		if(getModel()->getSelectedItemIndex() > 0)
-		{
-			getModel()->setSelectedItem(getModel()->getSelectedItemIndex() - 1);
-		}
-	}
-	else if(e->getKey() == KeyEvent::KEY_DOWN)
-	{
-		if(getModel()->getSelectedItemIndex() < getModel()->getSize()-1)
-		{
-			getModel()->setSelectedItem(getModel()->getSelectedItemIndex() + 1);
-		}
-	}
-	else if(!getEditable() && e->getKeyChar() != 0)
-	{
-		selectWithKey(static_cast<KeyEvent::Key>(e->getKey()));
-	}
-	else
-	{
-		Inherited::keyTyped(e);
-	}
+    if(e->getKey() == KeyEvent::KEY_UP)
+    {
+        if(getModel()->getSelectedItemIndex() > 0)
+        {
+            getModel()->setSelectedItem(getModel()->getSelectedItemIndex() - 1);
+        }
+    }
+    else if(e->getKey() == KeyEvent::KEY_DOWN)
+    {
+        if(getModel()->getSelectedItemIndex() < getModel()->getSize()-1)
+        {
+            getModel()->setSelectedItem(getModel()->getSelectedItemIndex() + 1);
+        }
+    }
+    else if(!getEditable() && e->getKeyChar() != 0)
+    {
+        selectWithKey(static_cast<KeyEvent::Key>(e->getKey()));
+    }
+    else
+    {
+        Inherited::keyTyped(e);
+    }
 }
 
-void ComboBox::mouseClicked(const MouseEventPtr e)
+void ComboBox::mouseClicked(const MouseEventUnrecPtr e)
 {
-	if(getEnabled() && !getEditable() && !getExpandButton()->isContained(e->getLocation(), true))
-	{
-		beginEditCP(getExpandButton(), ToggleButton::SelectedFieldMask);
-			getExpandButton()->setSelected(true);
-		endEditCP(getExpandButton(), ToggleButton::SelectedFieldMask);
-	}
-	else
-	{
-		Inherited::mouseClicked(e);
-	}
+    if(getEnabled() && !getEditable() && !getExpandButton()->isContained(e->getLocation(), true))
+    {
+        getExpandButton()->setSelected(true);
+    }
+    else
+    {
+        Inherited::mouseClicked(e);
+    }
 }
 
 void ComboBox::updateComponentGeneratorSelectedItem(void)
 {
-	if(!getEditable() && getCellGenerator() != NullFC && getModel() != NullFC)
-	{
-		beginEditCP(ComboBoxPtr(this), ComponentGeneratorSelectedItemFieldMask);
-			if(getCellGenerator()->getType().isDerivedFrom(ComboBoxComponentGenerator::getClassType()))
-			{
-				setComponentGeneratorSelectedItem(ComboBoxComponentGenerator::Ptr::dcast(getCellGenerator())->getComboBoxComponent(ComboBoxPtr(this), getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), false, false));
-			}
-			else
-			{
-				setComponentGeneratorSelectedItem(getCellGenerator()->getComponent(ComboBoxPtr(this), getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), 0, false, false));
-			}
-		endEditCP(ComboBoxPtr(this), ComponentGeneratorSelectedItemFieldMask);
-	}
+    if(!getEditable() && getCellGenerator() != NULL && getModel() != NULL)
+    {
+        if(getCellGenerator()->getType().isDerivedFrom(ComboBoxComponentGenerator::getClassType()))
+        {
+            setComponentGeneratorSelectedItem(dynamic_cast<ComboBoxComponentGenerator*>(getCellGenerator())->getComboBoxComponent(ComboBoxRefPtr(this), getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), false, false));
+        }
+        else
+        {
+            setComponentGeneratorSelectedItem(getCellGenerator()->getComponent(ComboBoxRefPtr(this), getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), 0, false, false));
+        }
+    }
 }
 
 void ComboBox::updateSelectionFromEditor(void)
 {
-    if(getEditable() && getEditor() != NullFC)
+    if(getEditable() && getEditor() != NULL)
     {
         const boost::any& EditorItem = getEditor()->getItem();
 
-	    std::string EditorString;
-	    std::string ModelItemString;
-	    bool ExitLoop(false);
+        std::string EditorString;
+        std::string ModelItemString;
+        bool ExitLoop(false);
         for(UInt32 i(0) ; i<getModel()->getSize() && !ExitLoop ; ++i)
         {
             try
@@ -461,49 +448,56 @@ void ComboBox::updateSelectionFromEditor(void)
 
 void ComboBox::attachMenuItems(void)
 {
-	for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
-	{
-		getComboListPopupMenu()->getItem(i)->addActionListener(this);
-	}
+    for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
+    {
+        getComboListPopupMenu()->getItem(i)->addActionListener(this);
+    }
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void ComboBox::onCreate(const ComboBox * Id)
+{
+	Inherited::onCreate(Id);
+    
+    ListGeneratedPopupMenuUnrecPtr TheMenu(ListGeneratedPopupMenu::create());
+    setComboListPopupMenu(TheMenu);
+	
+    if(Id != NULL)
+    {
+        if(Id->getExpandButton() != NULL)
+        {
+            FieldContainerUnrecPtr FCCopy(Id->getExpandButton()->shallowCopy());
+            setExpandButton(dynamic_pointer_cast<ToggleButton>(FCCopy));
+        }
+        if(Id->getEditor() != NULL)
+        {
+            FieldContainerUnrecPtr FCCopy(Id->getEditor()->shallowCopy());
+            setEditor(dynamic_pointer_cast<ComboBoxEditor>(FCCopy));
+        }
+    }
+}
+
+void ComboBox::onDestroy()
+{
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 ComboBox::ComboBox(void) :
     Inherited(),
-		_ExpandButtonSelectedListener(ComboBoxPtr(this)),
-		_EditorListener(ComboBoxPtr(this))
+		_ExpandButtonSelectedListener(this),
+		_EditorListener(this)
 {
-	beginEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
-		setComboListPopupMenu(ListGeneratedPopupMenu::create());
-	endEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
 }
 
 ComboBox::ComboBox(const ComboBox &source) :
     Inherited(source),
-		_ExpandButtonSelectedListener(ComboBoxPtr(this)),
-		_EditorListener(ComboBoxPtr(this))
+		_ExpandButtonSelectedListener(this),
+		_EditorListener(this)
 {
-	beginEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
-		setComboListPopupMenu(ListGeneratedPopupMenu::create());
-	endEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
-	
-    if(getExpandButton() != NullFC)
-    {
-        beginEditCP(ComboBoxPtr(this), ExpandButtonFieldMask);
-			setExpandButton(ToggleButton::Ptr::dcast(getExpandButton()->shallowCopy()));
-        endEditCP(ComboBoxPtr(this), ExpandButtonFieldMask);
-    }
-    if(getEditor() != NullFC)
-    {
-        beginEditCP(ComboBoxPtr(this), EditorFieldMask);
-			setEditor(ComboBoxEditor::Ptr::dcast(getEditor()->shallowCopy()));
-        endEditCP(ComboBoxPtr(this), EditorFieldMask);
-    }
 }
 
 ComboBox::~ComboBox(void)
@@ -512,136 +506,119 @@ ComboBox::~ComboBox(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ComboBox::changed(BitVector whichField, UInt32 origin)
+void ComboBox::changed(ConstFieldMaskArg whichField, 
+                       UInt32            origin,
+                       BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
-	if( (whichField & EditableFieldMask))
-	{
-		updateComponentGeneratorSelectedItem();
-	}
+    if( (whichField & EditableFieldMask))
+    {
+        updateComponentGeneratorSelectedItem();
+    }
 
-	if((whichField & ExpandButtonFieldMask) &&
-		getExpandButton() != NullFC)
-	{
-		getExpandButton()->addButtonSelectedListener(&_ExpandButtonSelectedListener);
-		getComboListPopupMenu()->addPopupMenuListener(&_ExpandButtonSelectedListener);
-	}
-	
+    if((whichField & ExpandButtonFieldMask) &&
+       getExpandButton() != NULL)
+    {
+        getExpandButton()->addButtonSelectedListener(&_ExpandButtonSelectedListener);
+        getComboListPopupMenu()->addPopupMenuListener(&_ExpandButtonSelectedListener);
+    }
+
     if( (whichField & ExpandButtonFieldMask) ||
         (whichField & EditorFieldMask) ||
         (whichField & EditableFieldMask) ||
         (whichField & ComponentGeneratorSelectedItemFieldMask))
     {
-        beginEditCP(ComboBoxPtr(this), ChildrenFieldMask);
-            getChildren().clear();
-			if(getExpandButton() != NullFC)
-			{
-                beginEditCP(getExpandButton(), Component::EnabledFieldMask);
-                    getExpandButton()->setEnabled(getEnabled());
-                endEditCP(getExpandButton(), Component::EnabledFieldMask);
-				getChildren().push_back(getExpandButton());
-			}
-			if(getEditable() && getEditor() != NullFC && getEditor()->getEditorComponent() != NullFC)
-			{
-                beginEditCP(getEditor()->getEditorComponent(), Component::EnabledFieldMask);
-                    getEditor()->getEditorComponent()->setEnabled(getEnabled());
-                endEditCP(getEditor()->getEditorComponent(), Component::EnabledFieldMask);
-				getChildren().push_back(getEditor()->getEditorComponent());
-			}
-			if(!getEditable() && getComponentGeneratorSelectedItem() != NullFC)
-			{
-                beginEditCP(getComponentGeneratorSelectedItem(), Component::EnabledFieldMask);
-                    getComponentGeneratorSelectedItem()->setEnabled(getEnabled());
-                endEditCP(getComponentGeneratorSelectedItem(), Component::EnabledFieldMask);
-				getChildren().push_back(getComponentGeneratorSelectedItem());
-			}
-        endEditCP(ComboBoxPtr(this), ChildrenFieldMask);
+        clearChildren();
+        if(getExpandButton() != NULL)
+        {
+            getExpandButton()->setEnabled(getEnabled());
+            pushToChildren(getExpandButton());
+        }
+        if(getEditable() && getEditor() != NULL && getEditor()->getEditorComponent() != NULL)
+        {
+            getEditor()->getEditorComponent()->setEnabled(getEnabled());
+            pushToChildren(getEditor()->getEditorComponent());
+        }
+        if(!getEditable() && getComponentGeneratorSelectedItem() != NULL)
+        {
+            getComponentGeneratorSelectedItem()->setEnabled(getEnabled());
+            pushToChildren(getComponentGeneratorSelectedItem());
+        }
     }
-    
-    if( (whichField & EditorFieldMask) && getEditor() != NullFC)
+
+    if( (whichField & EditorFieldMask) && getEditor() != NULL)
     {
         getEditor()->addActionListener(&_EditorListener);
     }
 
-	if(whichField & ModelFieldMask)
-	{
-		if(getModel() != NullFC)
-		{
-			beginEditCP(getComboListPopupMenu(), ListGeneratedPopupMenu::ModelFieldMask);
-				getComboListPopupMenu()->setModel(getModel());
-			endEditCP(getComboListPopupMenu(), ListGeneratedPopupMenu::ModelFieldMask);
+    if(whichField & ModelFieldMask)
+    {
+        if(getModel() != NULL)
+        {
+            getComboListPopupMenu()->setModel(getModel());
 
-			getModel()->addListDataListener(this);
-			getModel()->addSelectionListener(this);
-			updateListFromModel();
-		}
-	}
+            getModel()->addListDataListener(this);
+            getModel()->addSelectionListener(this);
+            updateListFromModel();
+        }
+    }
 
-	if(((whichField & CellGeneratorFieldMask) ||
-		(whichField & ComboListPopupMenuFieldMask)) &&
-		getCellGenerator() != NullFC)
-	{
-		beginEditCP(getComboListPopupMenu(), ListGeneratedPopupMenu::CellGeneratorFieldMask);
-			getComboListPopupMenu()->setCellGenerator(getCellGenerator());
-		endEditCP(getComboListPopupMenu(), ListGeneratedPopupMenu::CellGeneratorFieldMask);
-	}
+    if(((whichField & CellGeneratorFieldMask) ||
+        (whichField & ComboListPopupMenuFieldMask)) &&
+       getCellGenerator() != NULL)
+    {
+        getComboListPopupMenu()->setCellGenerator(getCellGenerator());
+    }
 }
 
-void ComboBox::dump(      UInt32    , 
-                         const BitVector ) const
+void ComboBox::dump(      UInt32    ,
+                          const BitVector ) const
 {
     SLOG << "Dump ComboBox NI" << std::endl;
 }
 
-void ComboBox::ExpandButtonSelectedListener::buttonSelected(const ButtonSelectedEventPtr e)
+void ComboBox::ExpandButtonSelectedListener::buttonSelected(const ButtonSelectedEventUnrecPtr e)
 {
-	_ComboBox->setPopupVisible(true);
+    _ComboBox->setPopupVisible(true);
 }
 
-void ComboBox::ExpandButtonSelectedListener::buttonDeselected(const ButtonSelectedEventPtr e)
+void ComboBox::ExpandButtonSelectedListener::buttonDeselected(const ButtonSelectedEventUnrecPtr e)
 {
-	_ComboBox->setPopupVisible(false);
+    _ComboBox->setPopupVisible(false);
 }
 
-void ComboBox::ExpandButtonSelectedListener::popupMenuCanceled(const PopupMenuEventPtr e)
+void ComboBox::ExpandButtonSelectedListener::popupMenuCanceled(const PopupMenuEventUnrecPtr e)
 {
-	if(_ComboBox->getExpandButton()->getSelected())
-	{
-		beginEditCP(_ComboBox->getExpandButton(), ToggleButton::SelectedFieldMask);
-			_ComboBox->getExpandButton()->setSelected(false);
-		endEditCP(_ComboBox->getExpandButton(), ToggleButton::SelectedFieldMask);
-	}
+    if(_ComboBox->getExpandButton()->getSelected())
+    {
+        _ComboBox->getExpandButton()->setSelected(false);
+    }
 }
 
-void ComboBox::ExpandButtonSelectedListener::popupMenuWillBecomeInvisible(const PopupMenuEventPtr e)
+void ComboBox::ExpandButtonSelectedListener::popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e)
 {
-	if(_ComboBox->getExpandButton()->getSelected())
-	{
-		beginEditCP(_ComboBox->getExpandButton(), ToggleButton::SelectedFieldMask);
-			_ComboBox->getExpandButton()->setSelected(false);
-		endEditCP(_ComboBox->getExpandButton(), ToggleButton::SelectedFieldMask);
-	}
+    if(_ComboBox->getExpandButton()->getSelected())
+    {
+        _ComboBox->getExpandButton()->setSelected(false);
+    }
 }
-void ComboBox::ExpandButtonSelectedListener::popupMenuWillBecomeVisible(const PopupMenuEventPtr e)
+void ComboBox::ExpandButtonSelectedListener::popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e)
 {
-	if(!_ComboBox->getExpandButton()->getSelected())
-	{
-		beginEditCP(_ComboBox->getExpandButton(), ToggleButton::SelectedFieldMask);
-			_ComboBox->getExpandButton()->setSelected(true);
-		endEditCP(_ComboBox->getExpandButton(), ToggleButton::SelectedFieldMask);
-	}
+    if(!_ComboBox->getExpandButton()->getSelected())
+    {
+        _ComboBox->getExpandButton()->setSelected(true);
+    }
 }
 
-void ComboBox::ExpandButtonSelectedListener::popupMenuContentsChanged(const PopupMenuEventPtr e)
+void ComboBox::ExpandButtonSelectedListener::popupMenuContentsChanged(const PopupMenuEventUnrecPtr e)
 {
-	_ComboBox->attachMenuItems();
+    _ComboBox->attachMenuItems();
 }
 
-void ComboBox::EditorListener::actionPerformed(const ActionEventPtr e)
+void ComboBox::EditorListener::actionPerformed(const ActionEventUnrecPtr e)
 {
     _ComboBox->updateSelectionFromEditor();
 }
 
 OSG_END_NAMESPACE
-

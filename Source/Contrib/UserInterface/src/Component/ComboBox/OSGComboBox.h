@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,49 +42,55 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGComboBoxBase.h"
-
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include "Component/List/OSGListDataListener.h"
-#include "Event/OSGPopupMenuListener.h"
-#include "Event/OSGActionListener.h"
-#include "Event/OSGButtonSelectedListener.h"
+#include "OSGToggleButton.h"
+#include "OSGComboBoxModel.h"
+#include "OSGComboBoxEditor.h"
+#include "OSGComponentGenerator.h"
+#include "OSGListGeneratedPopupMenu.h"
+#include "OSGMouseAdapter.h"
+#include "OSGListDataListener.h"
+#include "OSGPopupMenuListener.h"
+#include "OSGActionListener.h"
+#include "OSGButtonSelectedListener.h"
 #include "OSGComboBoxSelectionListener.h"
+#include "OSGKeyEvent.h"
 #include <boost/any.hpp>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ComboBox class. See \ref 
-           PageUserInterfaceComboBox for a description.
+/*! \brief ComboBox class. See \ref
+           PageContribUserInterfaceComboBox for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public ActionListener, public ListDataListener, public ComboBoxSelectionListener
-{
-  private:
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public ActionListener, public ListDataListener, public ComboBoxSelectionListener
 
-    typedef ComboBoxBase Inherited;
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ComboBoxBase Inherited;
+    typedef ComboBox     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -92,19 +98,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
     virtual void updateLayout(void);
 
 	//This method is public as an implementation side effect.
-	virtual void actionPerformed(const ActionEventPtr e);
+	virtual void actionPerformed(const ActionEventUnrecPtr e);
 
 	//This method is public as an implementation side effect.
-	virtual void contentsChanged(const ListDataEventPtr e);
+	virtual void contentsChanged(const ListDataEventUnrecPtr e);
 
 	//This method is public as an implementation side effect.
-	virtual void intervalAdded(const ListDataEventPtr e);
+	virtual void intervalAdded(const ListDataEventUnrecPtr e);
 
 	//This method is public as an implementation side effect.
-	virtual void intervalRemoved(const ListDataEventPtr e);
+	virtual void intervalRemoved(const ListDataEventUnrecPtr e);
 
 	//This protected method is implementation specific.
-    virtual void selectionChanged(const ComboBoxSelectionEventPtr e);
+    virtual void selectionChanged(const ComboBoxSelectionEventUnrecPtr e);
 
 	//Adds an ItemListener.
 	//EventConnection addItemListener(ItemListenerPtr aListener);
@@ -131,7 +137,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	void addItem(const boost::any& anObject);
 
 	//Initializes the editor with the specified item.
-	void configureEditor(ComboBoxEditorPtr anEditor, const boost::any& anItem);
+	void configureEditor(ComboBoxEditorRefPtr anEditor, const boost::any& anItem);
 
 	//Returns the action command that is included in the event sent to action listeners.
 	std::string getActionCommand(void) const;
@@ -198,10 +204,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	//Causes the combo box to display its popup window.
 	void showPopup(void);
 	
-	virtual void keyTyped(const KeyEventPtr e);
-    virtual void mouseClicked(const MouseEventPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
+    virtual void mouseClicked(const MouseEventUnrecPtr e);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ComboBoxBase.
@@ -218,13 +225,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComboBox(void); 
+    virtual ~ComboBox(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const ComboBox *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
 
 	//Factory method which sets the ActionEvent source's properties according to values from the Action instance.
 	void configurePropertiesFromAction(Action a);
-
 
 	//Factory method which creates the PropertyChangeListener used to update the ActionEvent source as properties change on its Action instance.
 	//PropertyChangeListener createActionPropertyChangeListener(Action a);
@@ -233,7 +253,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	//JComboBox.KeySelectionManager createDefaultKeySelectionManager();
 
 	//Notifies all listeners that have registered interest for notification on this event type.
-    void produceActionPerformed(const ActionEventPtr e);
+    void produceActionPerformed(const ActionEventUnrecPtr e);
 
 	//Notifies all listeners that have registered interest for notification on this event type.
 	//void produceItemStateChanged(ItemEvent e);
@@ -245,35 +265,35 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
     ActionListenerSet       _ActionListeners;
 
     //Expand Button Action Listener
-	class ExpandButtonSelectedListener : public ButtonSelectedListener, public PopupMenuListener
-	{
-	public:
-		ExpandButtonSelectedListener(ComboBoxPtr TheComboBox);
-		virtual void buttonSelected(const ButtonSelectedEventPtr e);
-		virtual void buttonDeselected(const ButtonSelectedEventPtr e);
+    class ExpandButtonSelectedListener : public ButtonSelectedListener, public PopupMenuListener
+    {
+      public:
+        ExpandButtonSelectedListener(ComboBoxRefPtr TheComboBox);
+        virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e);
+        virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e);
 
-		virtual void popupMenuCanceled(const PopupMenuEventPtr e);
-		virtual void popupMenuWillBecomeInvisible(const PopupMenuEventPtr e);
-		virtual void popupMenuWillBecomeVisible(const PopupMenuEventPtr e);
-		virtual void popupMenuContentsChanged(const PopupMenuEventPtr e);
-	private:
-		ComboBoxPtr _ComboBox;
-	};
+        virtual void popupMenuCanceled(const PopupMenuEventUnrecPtr e);
+        virtual void popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e);
+        virtual void popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e);
+        virtual void popupMenuContentsChanged(const PopupMenuEventUnrecPtr e);
+      private:
+        ComboBoxRefPtr _ComboBox;
+    };
 
 	friend class ExpandButtonSelectedListener;
 
-	ExpandButtonSelectedListener _ExpandButtonSelectedListener;
-	
+    ExpandButtonSelectedListener _ExpandButtonSelectedListener;
+
     //Editor Listener
-	class EditorListener : public ActionListener
-	{
-	public:
-		EditorListener(ComboBoxPtr TheComboBox);
-		
-	    virtual void actionPerformed(const ActionEventPtr e);
-	private:
-		ComboBoxPtr _ComboBox;
-	};
+    class EditorListener : public ActionListener
+    {
+      public:
+        EditorListener(ComboBoxRefPtr TheComboBox);
+
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
+      private:
+        ComboBoxRefPtr _ComboBox;
+    };
 
 	friend class EditorListener;
 
@@ -287,15 +307,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	void attachMenuItems(void);
 
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ComboBoxBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ComboBox &source);
 };
 

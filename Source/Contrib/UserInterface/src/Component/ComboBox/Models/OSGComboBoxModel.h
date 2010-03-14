@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,46 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGComboBoxModelBase.h"
-#include "Component/ComboBox/OSGComboBoxSelectionListener.h"
+#include "OSGComboBoxSelectionListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ComboBoxModel class. See \ref 
-           PageUserInterfaceComboBoxModel for a description.
+/*! \brief ComboBoxModel class. See \ref
+           PageContribUserInterfaceComboBoxModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxModel : public ComboBoxModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxModel : public ComboBoxModelBase
 {
-  private:
-
-    typedef ComboBoxModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ComboBoxModelBase Inherited;
+    typedef ComboBoxModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
 	//Returns the selected item
     virtual boost::any getSelectedItem(void) const = 0;
 
@@ -99,6 +100,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxModel : public ComboBoxModelBase
 	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l) = 0;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ComboBoxModelBase.
@@ -115,20 +117,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxModel : public ComboBoxModelBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComboBoxModel(void); 
+    virtual ~ComboBoxModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ComboBoxModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ComboBoxModel &source);
 };
 

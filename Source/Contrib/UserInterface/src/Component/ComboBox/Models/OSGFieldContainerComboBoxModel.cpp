@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGFieldContainerFactory.h>
+#include <OSGConfig.h>
 
 #include "OSGFieldContainerComboBoxModel.h"
+#include "OSGFieldContainerFactory.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::FieldContainerComboBoxModel
-A UI FieldContainerComboBoxModel. 	
-*/
+// Documentation for this class is emitted in the
+// OSGFieldContainerComboBoxModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGFieldContainerComboBoxModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +63,13 @@ A UI FieldContainerComboBoxModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void FieldContainerComboBoxModel::initMethod (void)
+void FieldContainerComboBoxModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -114,7 +114,7 @@ void FieldContainerComboBoxModel::setSelectedItem(const Int32& index)
 
 		if(_SelectedIndex != PreviousIndex)
 		{
-			produceSelectionChanged(FieldContainerComboBoxModelPtr(this), _SelectedIndex, PreviousIndex);
+			produceSelectionChanged(FieldContainerComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
 		}
 	}
 }
@@ -150,10 +150,11 @@ void FieldContainerComboBoxModel::setSelectedItem(const boost::any& anObject)
 
 		if(_SelectedIndex != PreviousIndex)
 		{
-			produceSelectionChanged(FieldContainerComboBoxModelPtr(this), _SelectedIndex, PreviousIndex);
+			produceSelectionChanged(FieldContainerComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
 		}
 	}
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -176,60 +177,35 @@ FieldContainerComboBoxModel::~FieldContainerComboBoxModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void FieldContainerComboBoxModel::changed(BitVector whichField, UInt32 origin)
+void FieldContainerComboBoxModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
+    
     if(whichField & FieldContainerTypesFieldMask)
     {
         UInt32 PreListSize(_FieldList.size());
         _FieldList.clear();
-        for(UInt32 i(0) ; i<getFieldContainerTypes().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFFieldContainerTypes()->size() ; ++i)
         {
-            FieldContainerType* FoundType = FieldContainerFactory::the()->findType(getFieldContainerTypes()[i].c_str());
+            FieldContainerType* FoundType =
+                FieldContainerFactory::the()->findType(getFieldContainerTypes(i).c_str());
             if(FoundType != NULL && (getIncludeAbstract() || !FoundType->isAbstract()))
             {
 
                 _FieldList.push_back(boost::any(FoundType));
             }
         }
-        produceListDataContentsChanged(FieldContainerComboBoxModelPtr(this), 0, osgMax<UInt32>(PreListSize,_FieldList.size()));
+        produceListDataContentsChanged(FieldContainerComboBoxModelRefPtr(this), 0, osgMax<UInt32>(PreListSize,_FieldList.size()));
         setSelectedItem(-1);
     }
 }
 
-
-
-void FieldContainerComboBoxModel::dump(      UInt32    , 
+void FieldContainerComboBoxModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump FieldContainerComboBoxModel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGFIELDCONTAINERCOMBOBOXMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGFIELDCONTAINERCOMBOBOXMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGFIELDCONTAINERCOMBOBOXMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

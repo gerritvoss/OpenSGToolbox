@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,53 +42,55 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGColorChooserBase.h"
 #include "OSGColorSelectionModel.h"
 #include "OSGAbstractColorChooserPanelFields.h"
-#include "Component/Container/OSGTabPanelFields.h"
-#include "Component/Text/OSGLabelFields.h"
-#include "Layer/OSGColorLayerFields.h"
+#include "OSGTabPanel.h"
+#include "OSGLabel.h"
+#include "OSGColorLayer.h"
+#include "OSGBorder.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ColorChooser class. See \ref 
-           PageUserInterfaceColorChooser for a description.
+/*! \brief ColorChooser class. See \ref
+           PageContribUserInterfaceColorChooser for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ColorChooser : public ColorChooserBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooser : public ColorChooserBase
 {
-  private:
-
-    typedef ColorChooserBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ColorChooserBase Inherited;
+    typedef ColorChooser     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	typedef std::vector<AbstractColorChooserPanelPtr> ColorChooserPanelVector;
+
+	typedef std::vector<AbstractColorChooserPanelRefPtr> ColorChooserPanelVector;
 
     virtual void updateLayout(void);
 
 	//Adds a color chooser panel to the color chooser.
-	void addChooserPanel(AbstractColorChooserPanelPtr panel);
+	void addChooserPanel(AbstractColorChooserPanelRefPtr panel);
 
 	//Returns the specified color panels.
 	ColorChooserPanelVector getChooserPanels(void) const;
@@ -100,7 +102,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ColorChooser : public ColorChooserBase
 	ColorSelectionModelPtr getSelectionModel(void);
 
 	//Removes the Color4f Panel specified.
-	AbstractColorChooserPanelPtr removeChooserPanel(AbstractColorChooserPanelPtr panel);
+	AbstractColorChooserPanelRefPtr removeChooserPanel(AbstractColorChooserPanelRefPtr panel);
 
 	//Specifies the Color4f Panels used to choose a color value.
 	void setChooserPanels(ColorChooserPanelVector panels);
@@ -112,6 +114,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ColorChooser : public ColorChooserBase
 	void setSelectionModel(ColorSelectionModelPtr newModel);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ColorChooserBase.
@@ -128,44 +131,56 @@ class OSG_USERINTERFACELIB_DLLMAPPING ColorChooser : public ColorChooserBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ColorChooser(void); 
+    virtual ~ColorChooser(void);
 
     /*! \}                                                                 */
-    ColorSelectionModelPtr _SelectionModel;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const ColorChooser *Id = NULL);
+	void onDestroy();
 	
-	class ColorSelectedChangeListener : public ChangeListener
-	{
-	public :
-		ColorSelectedChangeListener(ColorChooserPtr TheColorChooser);
-		
-		virtual void stateChanged(const ChangeEventPtr e);
-	private:
-		ColorChooserPtr _ColorChooser;
-	};
+	/*! \}                                                                 */
+    ColorSelectionModelPtr _SelectionModel;
 
-	friend class ColorSelectedChangeListener;
+    class ColorSelectedChangeListener : public ChangeListener
+    {
+      public :
+        ColorSelectedChangeListener(ColorChooserRefPtr TheColorChooser);
 
-	ColorSelectedChangeListener _ColorSelectedChangeListener;
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
+      private:
+        ColorChooserRefPtr _ColorChooser;
+    };
 
-	TabPanelPtr _LayoutTabPanel;
+    friend class ColorSelectedChangeListener;
 
-	void updateChoosers(void);
+    ColorSelectedChangeListener _ColorSelectedChangeListener;
+
+    TabPanelRefPtr _LayoutTabPanel;
+
+    void updateChoosers(void);
     void updateChildren(void);
 
-	void createDefaultPanel(void);
+    void createDefaultPanel(void);
 
-	LabelPtr _DefaultPreviewPanel;
-	ColorLayerPtr _DefaultPreviewPanelBackground;
+    LabelRefPtr _DefaultPreviewPanel;
+    ColorLayerRefPtr _DefaultPreviewPanelBackground;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ColorChooserBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ColorChooser &source);
 };
 
@@ -173,9 +188,8 @@ typedef ColorChooser *ColorChooserP;
 
 OSG_END_NAMESPACE
 
+#include "OSGAbstractColorChooserPanel.h"
 #include "OSGColorChooserBase.inl"
 #include "OSGColorChooser.inl"
-
-#define OSGCOLORCHOOSER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGCOLORCHOOSER_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,43 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGHSVColorChooserPanelBase.h"
-#include "Component/Spinner/OSGSpinnerFields.h"
-#include "Component/Slider/OSGSliderFields.h"
-#include "Component/Spinner/OSGBoundedRangeSpinnerModel.h"
-#include "Layer/OSGGradientLayer.h"
+#include "OSGSpinner.h"
+#include "OSGSlider.h"
+#include "OSGBoundedRangeSpinnerModel.h"
+#include "OSGGradientLayer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief HSVColorChooserPanel class. See \ref 
-           PageUserInterfaceHSVColorChooserPanel for a description.
+/*! \brief HSVColorChooserPanel class. See \ref
+           PageContribUserInterfaceHSVColorChooserPanel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING HSVColorChooserPanel : public HSVColorChooserPanelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING HSVColorChooserPanel : public HSVColorChooserPanelBase
 {
-  private:
-
-    typedef HSVColorChooserPanelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef HSVColorChooserPanelBase Inherited;
+    typedef HSVColorChooserPanel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -88,6 +88,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING HSVColorChooserPanel : public HSVColorChoo
 	virtual void updateChooser(void);
     void init(void);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in HSVColorChooserPanelBase.
@@ -104,10 +105,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING HSVColorChooserPanel : public HSVColorChoo
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~HSVColorChooserPanel(void); 
+    virtual ~HSVColorChooserPanel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     
 	//Builds a new chooser panel.
 	virtual void buildChooser(void);
@@ -117,32 +124,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING HSVColorChooserPanel : public HSVColorChoo
     BoundedRangeSpinnerModelPtr _ValueModel;
     BoundedRangeSpinnerModelPtr _AlphaModel;
 
-	SpinnerPtr _HueSpinner;
-	SpinnerPtr _SaturationSpinner;
-	SpinnerPtr _ValueSpinner;
-	SpinnerPtr _AlphaSpinner;
+	SpinnerRefPtr _HueSpinner;
+	SpinnerRefPtr _SaturationSpinner;
+	SpinnerRefPtr _ValueSpinner;
+	SpinnerRefPtr _AlphaSpinner;
 
-	GradientLayerPtr _HueSliderTrackBackground;
-	GradientLayerPtr _SaturationSliderTrackBackground;
-	GradientLayerPtr _ValueSliderTrackBackground;
-	GradientLayerPtr _AlphaSliderTrackBackground;
+	GradientLayerRefPtr _HueSliderTrackBackground;
+	GradientLayerRefPtr _SaturationSliderTrackBackground;
+	GradientLayerRefPtr _ValueSliderTrackBackground;
+	GradientLayerRefPtr _AlphaSliderTrackBackground;
 
-	SliderPtr _HueSlider;
-	SliderPtr _SaturationSlider;
-	SliderPtr _ValueSlider;
-	SliderPtr _AlphaSlider;
+	SliderRefPtr _HueSlider;
+	SliderRefPtr _SaturationSlider;
+	SliderRefPtr _ValueSlider;
+	SliderRefPtr _AlphaSlider;
 	
-	class BoundedRangeSpinnerChangeListener : public ChangeListener
-	{
-	public :
-		BoundedRangeSpinnerChangeListener(HSVColorChooserPanelPtr TheHSVColorChooserPanel);
-		
-		virtual void stateChanged(const ChangeEventPtr e);
-	private:
-		HSVColorChooserPanelPtr _HSVColorChooserPanel;
-	};
+    class BoundedRangeSpinnerChangeListener : public ChangeListener
+    {
+      public :
+        BoundedRangeSpinnerChangeListener(HSVColorChooserPanelRefPtr TheHSVColorChooserPanel);
 
-	friend class BoundedRangeSpinnerChangeListener;
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
+      private:
+        HSVColorChooserPanelRefPtr _HSVColorChooserPanel;
+    };
+
+    friend class BoundedRangeSpinnerChangeListener;
 
 	BoundedRangeSpinnerChangeListener _BoundedRangeSpinnerChangeListener;
 
@@ -150,15 +157,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING HSVColorChooserPanel : public HSVColorChoo
 	void attachModelListener(void);
 	void dettachModelListener(void);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class HSVColorChooserPanelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const HSVColorChooserPanel &source);
 };
 
@@ -168,7 +173,5 @@ OSG_END_NAMESPACE
 
 #include "OSGHSVColorChooserPanelBase.inl"
 #include "OSGHSVColorChooserPanel.inl"
-
-#define OSGHSVCOLORCHOOSERPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGHSVCOLORCHOOSERPANEL_H_ */

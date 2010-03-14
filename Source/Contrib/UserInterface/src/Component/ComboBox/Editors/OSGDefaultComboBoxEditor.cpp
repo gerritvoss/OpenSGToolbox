@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,28 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultComboBoxEditor.h"
-#include "Component/Text/OSGTextField.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
-
-#include <boost/bind.hpp>
+#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultComboBoxEditor
-A UI DefaultComboBoxEditor. 	
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultComboBoxEditorBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultComboBoxEditor.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -71,8 +63,13 @@ A UI DefaultComboBoxEditor.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultComboBoxEditor::initMethod (void)
+void DefaultComboBoxEditor::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -82,7 +79,7 @@ void DefaultComboBoxEditor::initMethod (void)
 
 EventConnection DefaultComboBoxEditor::addActionListener(ActionListenerPtr Listener)
 {
-	if(getEditor() != NullFC)
+	if(getEditor() != NULL)
 	{
 		return getEditor()->addActionListener(Listener);
 	}
@@ -91,7 +88,7 @@ EventConnection DefaultComboBoxEditor::addActionListener(ActionListenerPtr Liste
 
 void DefaultComboBoxEditor::removeActionListener(ActionListenerPtr Listener)
 {
-	if(getEditor() != NullFC)
+	if(getEditor() != NULL)
 	{
 		getEditor()->removeActionListener(Listener);
 	}
@@ -99,13 +96,13 @@ void DefaultComboBoxEditor::removeActionListener(ActionListenerPtr Listener)
 
 bool DefaultComboBoxEditor::isActionListenerAttached(ActionListenerPtr Listener) const
 {
-	if(getEditor() != NullFC)
+	if(getEditor() != NULL)
 	{
 		return getEditor()->isActionListenerAttached(Listener);
 	}
 }
 
-ComponentPtr DefaultComboBoxEditor::getEditorComponent(void)
+ComponentRefPtr DefaultComboBoxEditor::getEditorComponent(void)
 {
 	return getEditor();
 }
@@ -118,7 +115,7 @@ boost::any DefaultComboBoxEditor::getItem(void)
 void DefaultComboBoxEditor::selectAll(void)
 {
 	//TODO: Implement
-	if(getEditor() != NullFC)
+	if(getEditor() != NULL)
 	{
 		getEditor()->selectAll();
 	}
@@ -136,32 +133,40 @@ void DefaultComboBoxEditor::setItem(const boost::any& anObject)
     {
         //Could not convert to string
     }
-	beginEditCP(getEditor(), TextField::TextFieldMask);
-		getEditor()->setText(TheText);
-	endEditCP(getEditor(), TextField::TextFieldMask);
+    getEditor()->setText(TheText);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void DefaultComboBoxEditor::onCreate(const DefaultComboBoxEditor * Id)
+{
+	Inherited::onCreate(Id);
+
+    if(Id != NULL && Id->getEditor() != NULL)
+    {
+        FieldContainerUnrecPtr FCCopy(Id->getEditor()->shallowCopy());
+        setEditor(dynamic_pointer_cast<TextField>(FCCopy));
+    }
+}
+
+void DefaultComboBoxEditor::onDestroy()
+{
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
 DefaultComboBoxEditor::DefaultComboBoxEditor(void) :
     Inherited(),
-    _TextFieldListener(DefaultComboBoxEditorPtr(this))
+    _TextFieldListener(this)
 {
 }
 
 DefaultComboBoxEditor::DefaultComboBoxEditor(const DefaultComboBoxEditor &source) :
     Inherited(source),
-    _TextFieldListener(DefaultComboBoxEditorPtr(this))
+    _TextFieldListener(this)
 {
-    if(getEditor() != NullFC)
-    {
-        beginEditCP(DefaultComboBoxEditorPtr(this), EditorFieldMask);
-			setEditor(TextField::Ptr::dcast(getEditor()->shallowCopy()));
-        endEditCP(DefaultComboBoxEditorPtr(this), EditorFieldMask);
-    }
 }
 
 DefaultComboBoxEditor::~DefaultComboBoxEditor(void)
@@ -170,56 +175,33 @@ DefaultComboBoxEditor::~DefaultComboBoxEditor(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultComboBoxEditor::changed(BitVector whichField, UInt32 origin)
+void DefaultComboBoxEditor::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
-	if((whichField & EditorFieldMask) && getEditor() != NullFC)
+	if((whichField & EditorFieldMask) && getEditor() != NULL)
 	{
 		getEditor()->addFocusListener(&_TextFieldListener);
 	}
 }
 
-void DefaultComboBoxEditor::dump(      UInt32    , 
+void DefaultComboBoxEditor::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultComboBoxEditor NI" << std::endl;
 }
 
-void DefaultComboBoxEditor::TextFieldListener::focusGained(const FocusEventPtr e)
+void DefaultComboBoxEditor::TextFieldListener::focusGained(const FocusEventUnrecPtr e)
 {
 	//TODO: Implement
 	_DefaultComboBoxEditor->selectAll();
 }
 
-void DefaultComboBoxEditor::TextFieldListener::focusLost(const FocusEventPtr e)
+void DefaultComboBoxEditor::TextFieldListener::focusLost(const FocusEventUnrecPtr e)
 {
 	//TODO: Implement
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTCOMBOBOXEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTCOMBOBOXEDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTCOMBOBOXEDITORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

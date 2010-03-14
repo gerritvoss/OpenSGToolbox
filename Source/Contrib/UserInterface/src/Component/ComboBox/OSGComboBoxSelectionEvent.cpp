@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGComboBoxSelectionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ComboBoxSelectionEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGComboBoxSelectionEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGComboBoxSelectionEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,23 +62,28 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ComboBoxSelectionEvent::initMethod (void)
+void ComboBoxSelectionEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-ComboBoxSelectionEventPtr ComboBoxSelectionEvent::create(  FieldContainerPtr Source,
-                                                           Time TimeStamp,
-                                                           Int32 CurrentIndex,
-                                                           Int32 PreviousIndex)
+ComboBoxSelectionEventTransitPtr ComboBoxSelectionEvent::create(FieldContainerRefPtr Source,
+                                                                Time TimeStamp,
+                                                                Int32 CurrentIndex,
+                                                                Int32 PreviousIndex)
 {
-    ComboBoxSelectionEventPtr TheEvent = ComboBoxSelectionEvent::createEmpty();
+    ComboBoxSelectionEvent* TheEvent = ComboBoxSelectionEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setCurrentIndex(CurrentIndex);
     TheEvent->setPreviousIndex(PreviousIndex);
 
-    return TheEvent;
+    return ComboBoxSelectionEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -112,17 +112,17 @@ ComboBoxSelectionEvent::~ComboBoxSelectionEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ComboBoxSelectionEvent::changed(BitVector whichField, UInt32 origin)
+void ComboBoxSelectionEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ComboBoxSelectionEvent::dump(      UInt32    , 
+void ComboBoxSelectionEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ComboBoxSelectionEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,133 +50,168 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEABSTRACTCOLORCHOOSERPANELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGColorChooser.h"            // ParentChooser Class
 
 #include "OSGAbstractColorChooserPanelBase.h"
 #include "OSGAbstractColorChooserPanel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AbstractColorChooserPanelBase::ParentChooserFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractColorChooserPanelBase::ParentChooserFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector AbstractColorChooserPanelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::AbstractColorChooserPanel
+    A UI AbstractColorChooserPanel.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var ColorChooserPtr AbstractColorChooserPanelBase::_sfParentChooser
+/*! \var ColorChooser *  AbstractColorChooserPanelBase::_sfParentChooser
     
 */
 
-//! AbstractColorChooserPanel description
 
-FieldDescription *AbstractColorChooserPanelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AbstractColorChooserPanel *>::_type("AbstractColorChooserPanelPtr", "PanelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AbstractColorChooserPanel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AbstractColorChooserPanel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AbstractColorChooserPanel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AbstractColorChooserPanelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFColorChooserPtr::getClassType(), 
-                     "ParentChooser", 
-                     ParentChooserFieldId, ParentChooserFieldMask,
-                     false,
-                     (FieldAccessMethod) &AbstractColorChooserPanelBase::getSFParentChooser)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AbstractColorChooserPanelBase::_type(
-    "AbstractColorChooserPanel",
-    "Panel",
+    pDesc = new SFUnrecColorChooserPtr::Description(
+        SFUnrecColorChooserPtr::getClassType(),
+        "ParentChooser",
+        "",
+        ParentChooserFieldId, ParentChooserFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractColorChooserPanel::editHandleParentChooser),
+        static_cast<FieldGetMethodSig >(&AbstractColorChooserPanel::getHandleParentChooser));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+AbstractColorChooserPanelBase::TypeObject AbstractColorChooserPanelBase::_type(
+    AbstractColorChooserPanelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     AbstractColorChooserPanel::initMethod,
-    _desc,
-    sizeof(_desc));
+    AbstractColorChooserPanel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AbstractColorChooserPanel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AbstractColorChooserPanel\"\n"
+    "\tparent=\"Panel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    >\n"
+    "    A UI AbstractColorChooserPanel.\n"
+    "    <Field\n"
+    "        name=\"ParentChooser\"\n"
+    "        type=\"ColorChooser\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "</FieldContainer>\n",
+    "A UI AbstractColorChooserPanel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(AbstractColorChooserPanelBase, AbstractColorChooserPanelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AbstractColorChooserPanelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AbstractColorChooserPanelBase::getType(void) const 
+FieldContainerType &AbstractColorChooserPanelBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 AbstractColorChooserPanelBase::getContainerSize(void) const 
-{ 
-    return sizeof(AbstractColorChooserPanel); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractColorChooserPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AbstractColorChooserPanelBase::getType(void) const
 {
-    this->executeSyncImpl((AbstractColorChooserPanelBase *) &other, whichField);
+    return _type;
 }
-#else
-void AbstractColorChooserPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AbstractColorChooserPanelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AbstractColorChooserPanelBase *) &other, whichField, sInfo);
+    return sizeof(AbstractColorChooserPanel);
 }
-void AbstractColorChooserPanelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the AbstractColorChooserPanel::_sfParentChooser field.
+const SFUnrecColorChooserPtr *AbstractColorChooserPanelBase::getSFParentChooser(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfParentChooser;
 }
 
-void AbstractColorChooserPanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecColorChooserPtr *AbstractColorChooserPanelBase::editSFParentChooser  (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ParentChooserFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AbstractColorChooserPanelBase::AbstractColorChooserPanelBase(void) :
-    _sfParentChooser          (ColorChooserPtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfParentChooser;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-AbstractColorChooserPanelBase::AbstractColorChooserPanelBase(const AbstractColorChooserPanelBase &source) :
-    _sfParentChooser          (source._sfParentChooser          ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-AbstractColorChooserPanelBase::~AbstractColorChooserPanelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AbstractColorChooserPanelBase::getBinSize(const BitVector &whichField)
+UInt32 AbstractColorChooserPanelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -185,12 +220,11 @@ UInt32 AbstractColorChooserPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfParentChooser.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AbstractColorChooserPanelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AbstractColorChooserPanelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -198,12 +232,10 @@ void AbstractColorChooserPanelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfParentChooser.copyToBin(pMem);
     }
-
-
 }
 
-void AbstractColorChooserPanelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AbstractColorChooserPanelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -211,82 +243,100 @@ void AbstractColorChooserPanelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfParentChooser.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractColorChooserPanelBase::executeSyncImpl(      AbstractColorChooserPanelBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AbstractColorChooserPanelBase::AbstractColorChooserPanelBase(void) :
+    Inherited(),
+    _sfParentChooser          (NULL)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (ParentChooserFieldMask & whichField))
-        _sfParentChooser.syncWith(pOther->_sfParentChooser);
-
-
-}
-#else
-void AbstractColorChooserPanelBase::executeSyncImpl(      AbstractColorChooserPanelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ParentChooserFieldMask & whichField))
-        _sfParentChooser.syncWith(pOther->_sfParentChooser);
-
-
-
 }
 
-void AbstractColorChooserPanelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+AbstractColorChooserPanelBase::AbstractColorChooserPanelBase(const AbstractColorChooserPanelBase &source) :
+    Inherited(source),
+    _sfParentChooser          (NULL)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+AbstractColorChooserPanelBase::~AbstractColorChooserPanelBase(void)
+{
+}
+
+void AbstractColorChooserPanelBase::onCreate(const AbstractColorChooserPanel *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        AbstractColorChooserPanel *pThis = static_cast<AbstractColorChooserPanel *>(this);
+
+        pThis->setParentChooser(source->getParentChooser());
+    }
+}
+
+GetFieldHandlePtr AbstractColorChooserPanelBase::getHandleParentChooser   (void) const
+{
+    SFUnrecColorChooserPtr::GetHandlePtr returnValue(
+        new  SFUnrecColorChooserPtr::GetHandle(
+             &_sfParentChooser,
+             this->getType().getFieldDesc(ParentChooserFieldId),
+             const_cast<AbstractColorChooserPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractColorChooserPanelBase::editHandleParentChooser  (void)
+{
+    SFUnrecColorChooserPtr::EditHandlePtr returnValue(
+        new  SFUnrecColorChooserPtr::EditHandle(
+             &_sfParentChooser,
+             this->getType().getFieldDesc(ParentChooserFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&AbstractColorChooserPanel::setParentChooser,
+                    static_cast<AbstractColorChooserPanel *>(this), _1));
+
+    editSField(ParentChooserFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AbstractColorChooserPanelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AbstractColorChooserPanel *pThis = static_cast<AbstractColorChooserPanel *>(this);
+
+    pThis->execSync(static_cast<AbstractColorChooserPanel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void AbstractColorChooserPanelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<AbstractColorChooserPanel *>(this)->setParentChooser(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AbstractColorChooserPanelPtr>::_type("AbstractColorChooserPanelPtr", "PanelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AbstractColorChooserPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AbstractColorChooserPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTCOLORCHOOSERPANELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTCOLORCHOOSERPANELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTCOLORCHOOSERPANELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

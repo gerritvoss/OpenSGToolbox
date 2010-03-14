@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,167 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEHSVCOLORCHOOSERPANELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGHSVColorChooserPanelBase.h"
 #include "OSGHSVColorChooserPanel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  HSVColorChooserPanelBase::IncludeAlphaFieldMask = 
-    (TypeTraits<BitVector>::One << HSVColorChooserPanelBase::IncludeAlphaFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector HSVColorChooserPanelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::HSVColorChooserPanel
+    A UI RGBColorChooserPanel.
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var bool            HSVColorChooserPanelBase::_sfIncludeAlpha
     
 */
 
-//! HSVColorChooserPanel description
 
-FieldDescription *HSVColorChooserPanelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<HSVColorChooserPanel *>::_type("HSVColorChooserPanelPtr", "AbstractColorChooserPanelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(HSVColorChooserPanel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           HSVColorChooserPanel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           HSVColorChooserPanel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void HSVColorChooserPanelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFBool::getClassType(), 
-                     "IncludeAlpha", 
-                     IncludeAlphaFieldId, IncludeAlphaFieldMask,
-                     false,
-                     (FieldAccessMethod) &HSVColorChooserPanelBase::getSFIncludeAlpha)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType HSVColorChooserPanelBase::_type(
-    "HSVColorChooserPanel",
-    "AbstractColorChooserPanel",
-    NULL,
-    (PrototypeCreateF) &HSVColorChooserPanelBase::createEmpty,
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "IncludeAlpha",
+        "",
+        IncludeAlphaFieldId, IncludeAlphaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&HSVColorChooserPanel::editHandleIncludeAlpha),
+        static_cast<FieldGetMethodSig >(&HSVColorChooserPanel::getHandleIncludeAlpha));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+HSVColorChooserPanelBase::TypeObject HSVColorChooserPanelBase::_type(
+    HSVColorChooserPanelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&HSVColorChooserPanelBase::createEmptyLocal),
     HSVColorChooserPanel::initMethod,
-    _desc,
-    sizeof(_desc));
+    HSVColorChooserPanel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&HSVColorChooserPanel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"HSVColorChooserPanel\"\n"
+    "\tparent=\"AbstractColorChooserPanel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI RGBColorChooserPanel.\n"
+    "\t<Field\n"
+    "\t\tname=\"IncludeAlpha\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI RGBColorChooserPanel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(HSVColorChooserPanelBase, HSVColorChooserPanelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &HSVColorChooserPanelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &HSVColorChooserPanelBase::getType(void) const 
+FieldContainerType &HSVColorChooserPanelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr HSVColorChooserPanelBase::shallowCopy(void) const 
-{ 
-    HSVColorChooserPanelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const HSVColorChooserPanel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 HSVColorChooserPanelBase::getContainerSize(void) const 
-{ 
-    return sizeof(HSVColorChooserPanel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void HSVColorChooserPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &HSVColorChooserPanelBase::getType(void) const
 {
-    this->executeSyncImpl((HSVColorChooserPanelBase *) &other, whichField);
+    return _type;
 }
-#else
-void HSVColorChooserPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 HSVColorChooserPanelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((HSVColorChooserPanelBase *) &other, whichField, sInfo);
+    return sizeof(HSVColorChooserPanel);
 }
-void HSVColorChooserPanelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFBool *HSVColorChooserPanelBase::editSFIncludeAlpha(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(IncludeAlphaFieldMask);
+
+    return &_sfIncludeAlpha;
 }
 
-void HSVColorChooserPanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFBool *HSVColorChooserPanelBase::getSFIncludeAlpha(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-HSVColorChooserPanelBase::HSVColorChooserPanelBase(void) :
-    _sfIncludeAlpha           (bool(true)), 
-    Inherited() 
-{
+    return &_sfIncludeAlpha;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-HSVColorChooserPanelBase::HSVColorChooserPanelBase(const HSVColorChooserPanelBase &source) :
-    _sfIncludeAlpha           (source._sfIncludeAlpha           ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-HSVColorChooserPanelBase::~HSVColorChooserPanelBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 HSVColorChooserPanelBase::getBinSize(const BitVector &whichField)
+UInt32 HSVColorChooserPanelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +219,11 @@ UInt32 HSVColorChooserPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfIncludeAlpha.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void HSVColorChooserPanelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void HSVColorChooserPanelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +231,10 @@ void HSVColorChooserPanelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfIncludeAlpha.copyToBin(pMem);
     }
-
-
 }
 
-void HSVColorChooserPanelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void HSVColorChooserPanelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +242,213 @@ void HSVColorChooserPanelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfIncludeAlpha.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void HSVColorChooserPanelBase::executeSyncImpl(      HSVColorChooserPanelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+HSVColorChooserPanelTransitPtr HSVColorChooserPanelBase::createLocal(BitVector bFlags)
 {
+    HSVColorChooserPanelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (IncludeAlphaFieldMask & whichField))
-        _sfIncludeAlpha.syncWith(pOther->_sfIncludeAlpha);
+        fc = dynamic_pointer_cast<HSVColorChooserPanel>(tmpPtr);
+    }
 
-
-}
-#else
-void HSVColorChooserPanelBase::executeSyncImpl(      HSVColorChooserPanelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (IncludeAlphaFieldMask & whichField))
-        _sfIncludeAlpha.syncWith(pOther->_sfIncludeAlpha);
-
-
-
+    return fc;
 }
 
-void HSVColorChooserPanelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+HSVColorChooserPanelTransitPtr HSVColorChooserPanelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    HSVColorChooserPanelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<HSVColorChooserPanel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+HSVColorChooserPanelTransitPtr HSVColorChooserPanelBase::create(void)
+{
+    HSVColorChooserPanelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<HSVColorChooserPanel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+HSVColorChooserPanel *HSVColorChooserPanelBase::createEmptyLocal(BitVector bFlags)
+{
+    HSVColorChooserPanel *returnValue;
+
+    newPtr<HSVColorChooserPanel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+HSVColorChooserPanel *HSVColorChooserPanelBase::createEmpty(void)
+{
+    HSVColorChooserPanel *returnValue;
+
+    newPtr<HSVColorChooserPanel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr HSVColorChooserPanelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    HSVColorChooserPanel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const HSVColorChooserPanel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr HSVColorChooserPanelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    HSVColorChooserPanel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const HSVColorChooserPanel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr HSVColorChooserPanelBase::shallowCopy(void) const
+{
+    HSVColorChooserPanel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const HSVColorChooserPanel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+HSVColorChooserPanelBase::HSVColorChooserPanelBase(void) :
+    Inherited(),
+    _sfIncludeAlpha           (bool(true))
+{
+}
+
+HSVColorChooserPanelBase::HSVColorChooserPanelBase(const HSVColorChooserPanelBase &source) :
+    Inherited(source),
+    _sfIncludeAlpha           (source._sfIncludeAlpha           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+HSVColorChooserPanelBase::~HSVColorChooserPanelBase(void)
+{
+}
+
+
+GetFieldHandlePtr HSVColorChooserPanelBase::getHandleIncludeAlpha    (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfIncludeAlpha,
+             this->getType().getFieldDesc(IncludeAlphaFieldId),
+             const_cast<HSVColorChooserPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr HSVColorChooserPanelBase::editHandleIncludeAlpha   (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfIncludeAlpha,
+             this->getType().getFieldDesc(IncludeAlphaFieldId),
+             this));
+
+
+    editSField(IncludeAlphaFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void HSVColorChooserPanelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    HSVColorChooserPanel *pThis = static_cast<HSVColorChooserPanel *>(this);
+
+    pThis->execSync(static_cast<HSVColorChooserPanel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *HSVColorChooserPanelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    HSVColorChooserPanel *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const HSVColorChooserPanel *>(pRefAspect),
+                  dynamic_cast<const HSVColorChooserPanel *>(this));
+
+    return returnValue;
+}
+#endif
+
+void HSVColorChooserPanelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<HSVColorChooserPanelPtr>::_type("HSVColorChooserPanelPtr", "AbstractColorChooserPanelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(HSVColorChooserPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(HSVColorChooserPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGHSVCOLORCHOOSERPANELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGHSVCOLORCHOOSERPANELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGHSVCOLORCHOOSERPANELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-
