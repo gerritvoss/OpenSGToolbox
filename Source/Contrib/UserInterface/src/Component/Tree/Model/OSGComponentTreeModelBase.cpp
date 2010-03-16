@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,168 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMPONENTTREEMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // InternalRootComponent Class
 
 #include "OSGComponentTreeModelBase.h"
 #include "OSGComponentTreeModel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ComponentTreeModelBase::InternalRootComponentFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentTreeModelBase::InternalRootComponentFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector ComponentTreeModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::ComponentTreeModel
+    A UI ComponentTreeModel.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var ComponentPtr    ComponentTreeModelBase::_sfInternalRootComponent
+/*! \var Component *     ComponentTreeModelBase::_sfInternalRootComponent
     
 */
 
-//! ComponentTreeModel description
 
-FieldDescription *ComponentTreeModelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ComponentTreeModel *>::_type("ComponentTreeModelPtr", "AbstractTreeModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ComponentTreeModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ComponentTreeModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ComponentTreeModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ComponentTreeModelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "InternalRootComponent", 
-                     InternalRootComponentFieldId, InternalRootComponentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentTreeModelBase::editSFInternalRootComponent))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ComponentTreeModelBase::_type(
-    "ComponentTreeModel",
-    "AbstractTreeModel",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ComponentTreeModelBase::createEmpty),
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "InternalRootComponent",
+        "",
+        InternalRootComponentFieldId, InternalRootComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComponentTreeModel::editHandleInternalRootComponent),
+        static_cast<FieldGetMethodSig >(&ComponentTreeModel::getHandleInternalRootComponent));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ComponentTreeModelBase::TypeObject ComponentTreeModelBase::_type(
+    ComponentTreeModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ComponentTreeModelBase::createEmptyLocal),
     ComponentTreeModel::initMethod,
-    _desc,
-    sizeof(_desc));
+    ComponentTreeModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ComponentTreeModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ComponentTreeModel\"\n"
+    "\tparent=\"AbstractTreeModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI ComponentTreeModel.\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalRootComponent\"\n"
+    "\t\ttype=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI ComponentTreeModel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ComponentTreeModelBase, ComponentTreeModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ComponentTreeModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ComponentTreeModelBase::getType(void) const 
+FieldContainerType &ComponentTreeModelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ComponentTreeModelBase::shallowCopy(void) const 
-{ 
-    ComponentTreeModelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ComponentTreeModel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ComponentTreeModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(ComponentTreeModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ComponentTreeModelBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<ComponentTreeModelBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void ComponentTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ComponentTreeModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ComponentTreeModelBase *) &other, whichField, sInfo);
+    return sizeof(ComponentTreeModel);
 }
-void ComponentTreeModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ComponentTreeModel::_sfInternalRootComponent field.
+const SFUnrecComponentPtr *ComponentTreeModelBase::getSFInternalRootComponent(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfInternalRootComponent;
 }
 
-void ComponentTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecComponentPtr *ComponentTreeModelBase::editSFInternalRootComponent(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(InternalRootComponentFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ComponentTreeModelBase::ComponentTreeModelBase(void) :
-    _sfInternalRootComponent  (ComponentPtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfInternalRootComponent;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-ComponentTreeModelBase::ComponentTreeModelBase(const ComponentTreeModelBase &source) :
-    _sfInternalRootComponent  (source._sfInternalRootComponent  ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-ComponentTreeModelBase::~ComponentTreeModelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ComponentTreeModelBase::getBinSize(const BitVector &whichField)
+UInt32 ComponentTreeModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +220,11 @@ UInt32 ComponentTreeModelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInternalRootComponent.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ComponentTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ComponentTreeModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +232,10 @@ void ComponentTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfInternalRootComponent.copyToBin(pMem);
     }
-
-
 }
 
-void ComponentTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ComponentTreeModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,62 +243,229 @@ void ComponentTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfInternalRootComponent.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentTreeModelBase::executeSyncImpl(      ComponentTreeModelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ComponentTreeModelTransitPtr ComponentTreeModelBase::createLocal(BitVector bFlags)
 {
+    ComponentTreeModelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (InternalRootComponentFieldMask & whichField))
-        _sfInternalRootComponent.syncWith(pOther->_sfInternalRootComponent);
+        fc = dynamic_pointer_cast<ComponentTreeModel>(tmpPtr);
+    }
 
-
-}
-#else
-void ComponentTreeModelBase::executeSyncImpl(      ComponentTreeModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (InternalRootComponentFieldMask & whichField))
-        _sfInternalRootComponent.syncWith(pOther->_sfInternalRootComponent);
-
-
-
+    return fc;
 }
 
-void ComponentTreeModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ComponentTreeModelTransitPtr ComponentTreeModelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ComponentTreeModelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ComponentTreeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ComponentTreeModelTransitPtr ComponentTreeModelBase::create(void)
+{
+    ComponentTreeModelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ComponentTreeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ComponentTreeModel *ComponentTreeModelBase::createEmptyLocal(BitVector bFlags)
+{
+    ComponentTreeModel *returnValue;
+
+    newPtr<ComponentTreeModel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ComponentTreeModel *ComponentTreeModelBase::createEmpty(void)
+{
+    ComponentTreeModel *returnValue;
+
+    newPtr<ComponentTreeModel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ComponentTreeModelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ComponentTreeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComponentTreeModel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComponentTreeModelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ComponentTreeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComponentTreeModel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComponentTreeModelBase::shallowCopy(void) const
+{
+    ComponentTreeModel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ComponentTreeModel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ComponentTreeModelBase::ComponentTreeModelBase(void) :
+    Inherited(),
+    _sfInternalRootComponent  (NULL)
+{
+}
+
+ComponentTreeModelBase::ComponentTreeModelBase(const ComponentTreeModelBase &source) :
+    Inherited(source),
+    _sfInternalRootComponent  (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ComponentTreeModelBase::~ComponentTreeModelBase(void)
+{
+}
+
+void ComponentTreeModelBase::onCreate(const ComponentTreeModel *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ComponentTreeModel *pThis = static_cast<ComponentTreeModel *>(this);
+
+        pThis->setInternalRootComponent(source->getInternalRootComponent());
+    }
+}
+
+GetFieldHandlePtr ComponentTreeModelBase::getHandleInternalRootComponent (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfInternalRootComponent,
+             this->getType().getFieldDesc(InternalRootComponentFieldId),
+             const_cast<ComponentTreeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentTreeModelBase::editHandleInternalRootComponent(void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfInternalRootComponent,
+             this->getType().getFieldDesc(InternalRootComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComponentTreeModel::setInternalRootComponent,
+                    static_cast<ComponentTreeModel *>(this), _1));
+
+    editSField(InternalRootComponentFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ComponentTreeModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ComponentTreeModel *pThis = static_cast<ComponentTreeModel *>(this);
+
+    pThis->execSync(static_cast<ComponentTreeModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ComponentTreeModelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ComponentTreeModel *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ComponentTreeModel *>(pRefAspect),
+                  dynamic_cast<const ComponentTreeModel *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ComponentTreeModelPtr>::_type("ComponentTreeModelPtr", "AbstractTreeModelPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ComponentTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ComponentTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void ComponentTreeModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ComponentTreeModel *>(this)->setInternalRootComponent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

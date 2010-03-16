@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,99 +58,107 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGTreeModelLayout.h" // Parent
 
-#include <OpenSG/OSGBoolFields.h> // RootVisibleInternal type
-#include <OpenSG/OSGReal32Fields.h> // RowHeightInternal type
-#include <OpenSG/OSGReal32Fields.h> // DepthOffsetInternal type
+#include "OSGSysFields.h"               // RootVisibleInternal type
 
 #include "OSGAbstractTreeModelLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AbstractTreeModelLayout;
-class BinaryDataHandler;
 
 //! \brief AbstractTreeModelLayout Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayoutBase : public TreeModelLayout
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayoutBase : public TreeModelLayout
 {
-  private:
-
-    typedef TreeModelLayout    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef AbstractTreeModelLayoutPtr  Ptr;
+    typedef TreeModelLayout Inherited;
+    typedef TreeModelLayout ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(AbstractTreeModelLayout);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         RootVisibleInternalFieldId = Inherited::NextFieldId,
-        RowHeightInternalFieldId   = RootVisibleInternalFieldId + 1,
-        DepthOffsetInternalFieldId = RowHeightInternalFieldId   + 1,
-        NextFieldId                = DepthOffsetInternalFieldId + 1
+        RowHeightInternalFieldId = RootVisibleInternalFieldId + 1,
+        DepthOffsetInternalFieldId = RowHeightInternalFieldId + 1,
+        NextFieldId = DepthOffsetInternalFieldId + 1
     };
 
-    static const OSG::BitVector RootVisibleInternalFieldMask;
-    static const OSG::BitVector RowHeightInternalFieldMask;
-    static const OSG::BitVector DepthOffsetInternalFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector RootVisibleInternalFieldMask =
+        (TypeTraits<BitVector>::One << RootVisibleInternalFieldId);
+    static const OSG::BitVector RowHeightInternalFieldMask =
+        (TypeTraits<BitVector>::One << RowHeightInternalFieldId);
+    static const OSG::BitVector DepthOffsetInternalFieldMask =
+        (TypeTraits<BitVector>::One << DepthOffsetInternalFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFBool            SFRootVisibleInternalType;
+    typedef SFReal32          SFRowHeightInternalType;
+    typedef SFReal32          SFDepthOffsetInternalType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFBool              _sfRootVisibleInternal;
-    SFReal32            _sfRowHeightInternal;
-    SFReal32            _sfDepthOffsetInternal;
+    SFBool            _sfRootVisibleInternal;
+    SFReal32          _sfRowHeightInternal;
+    SFReal32          _sfDepthOffsetInternal;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -165,94 +173,117 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayoutBase : public TreeM
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractTreeModelLayoutBase(void); 
+    virtual ~AbstractTreeModelLayoutBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleRootVisibleInternal (void) const;
+    EditFieldHandlePtr editHandleRootVisibleInternal(void);
+    GetFieldHandlePtr  getHandleRowHeightInternal (void) const;
+    EditFieldHandlePtr editHandleRowHeightInternal(void);
+    GetFieldHandlePtr  getHandleDepthOffsetInternal (void) const;
+    EditFieldHandlePtr editHandleDepthOffsetInternal(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFRootVisibleInternal(void);
-           SFReal32            *getSFRowHeightInternal(void);
-           SFReal32            *getSFDepthOffsetInternal(void);
 
-           bool                &getRootVisibleInternal(void);
-     const bool                &getRootVisibleInternal(void) const;
-           Real32              &getRowHeightInternal(void);
-     const Real32              &getRowHeightInternal(void) const;
-           Real32              &getDepthOffsetInternal(void);
-     const Real32              &getDepthOffsetInternal(void) const;
+                  SFBool              *editSFRootVisibleInternal(void);
+            const SFBool              *getSFRootVisibleInternal (void) const;
+
+                  SFReal32            *editSFRowHeightInternal(void);
+            const SFReal32            *getSFRowHeightInternal (void) const;
+
+                  SFReal32            *editSFDepthOffsetInternal(void);
+            const SFReal32            *getSFDepthOffsetInternal (void) const;
+
+
+                  bool                &editRootVisibleInternal(void);
+                  bool                 getRootVisibleInternal (void) const;
+
+                  Real32              &editRowHeightInternal(void);
+                  Real32               getRowHeightInternal (void) const;
+
+                  Real32              &editDepthOffsetInternal(void);
+                  Real32               getDepthOffsetInternal (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRootVisibleInternal(const bool &value);
-     void setRowHeightInternal(const Real32 &value);
-     void setDepthOffsetInternal(const Real32 &value);
+            void setRootVisibleInternal(const bool value);
+            void setRowHeightInternal(const Real32 value);
+            void setDepthOffsetInternal(const Real32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      AbstractTreeModelLayoutBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      AbstractTreeModelLayoutBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      AbstractTreeModelLayoutBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const AbstractTreeModelLayoutBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef AbstractTreeModelLayoutBase *AbstractTreeModelLayoutBaseP;
 
-typedef osgIF<AbstractTreeModelLayoutBase::isNodeCore,
-              CoredNodePtr<AbstractTreeModelLayout>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet AbstractTreeModelLayoutNodePtr;
-
-typedef RefPtr<AbstractTreeModelLayoutPtr> AbstractTreeModelLayoutRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGABSTRACTTREEMODELLAYOUTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGABSTRACTTREEMODELLAYOUTBASE_H_ */

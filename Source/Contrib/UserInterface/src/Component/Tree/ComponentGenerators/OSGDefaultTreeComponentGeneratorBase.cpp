@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,311 +50,687 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTTREECOMPONENTGENERATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIDrawObjectCanvas.h"      // ExpandedDrawObjectPrototype Class
+#include "OSGLabel.h"                   // NodeLabelPrototype Class
+#include "OSGPanel.h"                   // NodePanelPrototype Class
+#include "OSGLayer.h"                   // SelectedBackground Class
+#include "OSGBorder.h"                  // SelectedBorder Class
 
 #include "OSGDefaultTreeComponentGeneratorBase.h"
 #include "OSGDefaultTreeComponentGenerator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::ExpandedDrawObjectPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::ExpandedDrawObjectPrototypeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::NotExpandedDrawObjectPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::NotExpandedDrawObjectPrototypeFieldId);
+/*! \class OSG::DefaultTreeComponentGenerator
+    A UI Default Tree ComponentGenerator.
+ */
 
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::LeafDrawObjectPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::LeafDrawObjectPrototypeFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::NonLeafDrawObjectPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::NonLeafDrawObjectPrototypeFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::ExpandedNonLeafDrawObjectPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::ExpandedNonLeafDrawObjectPrototypeFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::NodeLabelPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::NodeLabelPrototypeFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::NodePanelPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::NodePanelPrototypeFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::SelectedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::SelectedBackgroundFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::NonSelectedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::NonSelectedBackgroundFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::SelectedForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::SelectedForegroundFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::NonSelectedForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::NonSelectedForegroundFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::SelectedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::SelectedBorderFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::SelectedTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::SelectedTextColorFieldId);
-
-const OSG::BitVector  DefaultTreeComponentGeneratorBase::NonSelectedTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::NonSelectedTextColorFieldId);
-
-const OSG::BitVector DefaultTreeComponentGeneratorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var UIDrawObjectCanvasPtr DefaultTreeComponentGeneratorBase::_sfExpandedDrawObjectPrototype
+/*! \var UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::_sfExpandedDrawObjectPrototype
     
 */
-/*! \var UIDrawObjectCanvasPtr DefaultTreeComponentGeneratorBase::_sfNotExpandedDrawObjectPrototype
+
+/*! \var UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::_sfNotExpandedDrawObjectPrototype
     
 */
-/*! \var UIDrawObjectCanvasPtr DefaultTreeComponentGeneratorBase::_sfLeafDrawObjectPrototype
+
+/*! \var UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::_sfLeafDrawObjectPrototype
     
 */
-/*! \var UIDrawObjectCanvasPtr DefaultTreeComponentGeneratorBase::_sfNonLeafDrawObjectPrototype
+
+/*! \var UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::_sfNonLeafDrawObjectPrototype
     
 */
-/*! \var UIDrawObjectCanvasPtr DefaultTreeComponentGeneratorBase::_sfExpandedNonLeafDrawObjectPrototype
+
+/*! \var UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::_sfExpandedNonLeafDrawObjectPrototype
     
 */
-/*! \var LabelPtr        DefaultTreeComponentGeneratorBase::_sfNodeLabelPrototype
+
+/*! \var Label *         DefaultTreeComponentGeneratorBase::_sfNodeLabelPrototype
     
 */
-/*! \var PanelPtr        DefaultTreeComponentGeneratorBase::_sfNodePanelPrototype
+
+/*! \var Panel *         DefaultTreeComponentGeneratorBase::_sfNodePanelPrototype
     
 */
-/*! \var LayerPtr        DefaultTreeComponentGeneratorBase::_sfSelectedBackground
+
+/*! \var Layer *         DefaultTreeComponentGeneratorBase::_sfSelectedBackground
     
 */
-/*! \var LayerPtr        DefaultTreeComponentGeneratorBase::_sfNonSelectedBackground
+
+/*! \var Layer *         DefaultTreeComponentGeneratorBase::_sfNonSelectedBackground
     
 */
-/*! \var LayerPtr        DefaultTreeComponentGeneratorBase::_sfSelectedForeground
+
+/*! \var Layer *         DefaultTreeComponentGeneratorBase::_sfSelectedForeground
     
 */
-/*! \var LayerPtr        DefaultTreeComponentGeneratorBase::_sfNonSelectedForeground
+
+/*! \var Layer *         DefaultTreeComponentGeneratorBase::_sfNonSelectedForeground
     
 */
-/*! \var BorderPtr       DefaultTreeComponentGeneratorBase::_sfSelectedBorder
+
+/*! \var Border *        DefaultTreeComponentGeneratorBase::_sfSelectedBorder
     
 */
+
 /*! \var Color4f         DefaultTreeComponentGeneratorBase::_sfSelectedTextColor
     
 */
+
 /*! \var Color4f         DefaultTreeComponentGeneratorBase::_sfNonSelectedTextColor
     
 */
 
-//! DefaultTreeComponentGenerator description
 
-FieldDescription *DefaultTreeComponentGeneratorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultTreeComponentGenerator *>::_type("DefaultTreeComponentGeneratorPtr", "TreeComponentGeneratorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultTreeComponentGenerator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultTreeComponentGenerator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultTreeComponentGenerator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ExpandedDrawObjectPrototype", 
-                     ExpandedDrawObjectPrototypeFieldId, ExpandedDrawObjectPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFExpandedDrawObjectPrototype),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "NotExpandedDrawObjectPrototype", 
-                     NotExpandedDrawObjectPrototypeFieldId, NotExpandedDrawObjectPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFNotExpandedDrawObjectPrototype),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "LeafDrawObjectPrototype", 
-                     LeafDrawObjectPrototypeFieldId, LeafDrawObjectPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFLeafDrawObjectPrototype),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "NonLeafDrawObjectPrototype", 
-                     NonLeafDrawObjectPrototypeFieldId, NonLeafDrawObjectPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFNonLeafDrawObjectPrototype),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ExpandedNonLeafDrawObjectPrototype", 
-                     ExpandedNonLeafDrawObjectPrototypeFieldId, ExpandedNonLeafDrawObjectPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFExpandedNonLeafDrawObjectPrototype),
-    new FieldDescription(SFLabelPtr::getClassType(), 
-                     "NodeLabelPrototype", 
-                     NodeLabelPrototypeFieldId, NodeLabelPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFNodeLabelPrototype),
-    new FieldDescription(SFPanelPtr::getClassType(), 
-                     "NodePanelPrototype", 
-                     NodePanelPrototypeFieldId, NodePanelPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFNodePanelPrototype),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "SelectedBackground", 
-                     SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFSelectedBackground),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "NonSelectedBackground", 
-                     NonSelectedBackgroundFieldId, NonSelectedBackgroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFNonSelectedBackground),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "SelectedForeground", 
-                     SelectedForegroundFieldId, SelectedForegroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFSelectedForeground),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "NonSelectedForeground", 
-                     NonSelectedForegroundFieldId, NonSelectedForegroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFNonSelectedForeground),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "SelectedBorder", 
-                     SelectedBorderFieldId, SelectedBorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFSelectedBorder),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "SelectedTextColor", 
-                     SelectedTextColorFieldId, SelectedTextColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFSelectedTextColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "NonSelectedTextColor", 
-                     NonSelectedTextColorFieldId, NonSelectedTextColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFNonSelectedTextColor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DefaultTreeComponentGeneratorBase::_type(
-    "DefaultTreeComponentGenerator",
-    "TreeComponentGenerator",
-    NULL,
-    (PrototypeCreateF) &DefaultTreeComponentGeneratorBase::createEmpty,
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "ExpandedDrawObjectPrototype",
+        "",
+        ExpandedDrawObjectPrototypeFieldId, ExpandedDrawObjectPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleExpandedDrawObjectPrototype),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleExpandedDrawObjectPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "NotExpandedDrawObjectPrototype",
+        "",
+        NotExpandedDrawObjectPrototypeFieldId, NotExpandedDrawObjectPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleNotExpandedDrawObjectPrototype),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNotExpandedDrawObjectPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "LeafDrawObjectPrototype",
+        "",
+        LeafDrawObjectPrototypeFieldId, LeafDrawObjectPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleLeafDrawObjectPrototype),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleLeafDrawObjectPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "NonLeafDrawObjectPrototype",
+        "",
+        NonLeafDrawObjectPrototypeFieldId, NonLeafDrawObjectPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleNonLeafDrawObjectPrototype),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNonLeafDrawObjectPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "ExpandedNonLeafDrawObjectPrototype",
+        "",
+        ExpandedNonLeafDrawObjectPrototypeFieldId, ExpandedNonLeafDrawObjectPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleExpandedNonLeafDrawObjectPrototype),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleExpandedNonLeafDrawObjectPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLabelPtr::Description(
+        SFUnrecLabelPtr::getClassType(),
+        "NodeLabelPrototype",
+        "",
+        NodeLabelPrototypeFieldId, NodeLabelPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleNodeLabelPrototype),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNodeLabelPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecPanelPtr::Description(
+        SFUnrecPanelPtr::getClassType(),
+        "NodePanelPrototype",
+        "",
+        NodePanelPrototypeFieldId, NodePanelPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleNodePanelPrototype),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNodePanelPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "SelectedBackground",
+        "",
+        SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleSelectedBackground),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleSelectedBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "NonSelectedBackground",
+        "",
+        NonSelectedBackgroundFieldId, NonSelectedBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleNonSelectedBackground),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNonSelectedBackground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "SelectedForeground",
+        "",
+        SelectedForegroundFieldId, SelectedForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleSelectedForeground),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleSelectedForeground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "NonSelectedForeground",
+        "",
+        NonSelectedForegroundFieldId, NonSelectedForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleNonSelectedForeground),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNonSelectedForeground));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "SelectedBorder",
+        "",
+        SelectedBorderFieldId, SelectedBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleSelectedBorder),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleSelectedBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "SelectedTextColor",
+        "",
+        SelectedTextColorFieldId, SelectedTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleSelectedTextColor),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleSelectedTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "NonSelectedTextColor",
+        "",
+        NonSelectedTextColorFieldId, NonSelectedTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleNonSelectedTextColor),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNonSelectedTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DefaultTreeComponentGeneratorBase::TypeObject DefaultTreeComponentGeneratorBase::_type(
+    DefaultTreeComponentGeneratorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultTreeComponentGeneratorBase::createEmptyLocal),
     DefaultTreeComponentGenerator::initMethod,
-    _desc,
-    sizeof(_desc));
+    DefaultTreeComponentGenerator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultTreeComponentGenerator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultTreeComponentGenerator\"\n"
+    "\tparent=\"TreeComponentGenerator\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Default Tree ComponentGenerator.\n"
+    "\t<Field\n"
+    "\t\tname=\"ExpandedDrawObjectPrototype\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NotExpandedDrawObjectPrototype\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LeafDrawObjectPrototype\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NonLeafDrawObjectPrototype\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ExpandedNonLeafDrawObjectPrototype\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NodeLabelPrototype\"\n"
+    "\t\ttype=\"Label\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NodePanelPrototype\"\n"
+    "\t\ttype=\"Panel\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NonSelectedBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NonSelectedForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NonSelectedTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Default Tree ComponentGenerator.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DefaultTreeComponentGeneratorBase, DefaultTreeComponentGeneratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultTreeComponentGeneratorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultTreeComponentGeneratorBase::getType(void) const 
+FieldContainerType &DefaultTreeComponentGeneratorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultTreeComponentGeneratorBase::shallowCopy(void) const 
-{ 
-    DefaultTreeComponentGeneratorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultTreeComponentGenerator *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultTreeComponentGeneratorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultTreeComponentGenerator); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTreeComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultTreeComponentGeneratorBase::getType(void) const
 {
-    this->executeSyncImpl((DefaultTreeComponentGeneratorBase *) &other, whichField);
+    return _type;
 }
-#else
-void DefaultTreeComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultTreeComponentGeneratorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultTreeComponentGeneratorBase *) &other, whichField, sInfo);
+    return sizeof(DefaultTreeComponentGenerator);
 }
-void DefaultTreeComponentGeneratorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the DefaultTreeComponentGenerator::_sfExpandedDrawObjectPrototype field.
+const SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFExpandedDrawObjectPrototype(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfExpandedDrawObjectPrototype;
 }
 
-void DefaultTreeComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::editSFExpandedDrawObjectPrototype(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ExpandedDrawObjectPrototypeFieldMask);
 
+    return &_sfExpandedDrawObjectPrototype;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DefaultTreeComponentGeneratorBase::DefaultTreeComponentGeneratorBase(void) :
-    _sfExpandedDrawObjectPrototype(UIDrawObjectCanvasPtr(NullFC)), 
-    _sfNotExpandedDrawObjectPrototype(UIDrawObjectCanvasPtr(NullFC)), 
-    _sfLeafDrawObjectPrototype(UIDrawObjectCanvasPtr(NullFC)), 
-    _sfNonLeafDrawObjectPrototype(UIDrawObjectCanvasPtr(NullFC)), 
-    _sfExpandedNonLeafDrawObjectPrototype(UIDrawObjectCanvasPtr(NullFC)), 
-    _sfNodeLabelPrototype     (LabelPtr(NullFC)), 
-    _sfNodePanelPrototype     (PanelPtr(NullFC)), 
-    _sfSelectedBackground     (LayerPtr(NullFC)), 
-    _sfNonSelectedBackground  (LayerPtr(NullFC)), 
-    _sfSelectedForeground     (LayerPtr(NullFC)), 
-    _sfNonSelectedForeground  (LayerPtr(NullFC)), 
-    _sfSelectedBorder         (BorderPtr(NullFC)), 
-    _sfSelectedTextColor      (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfNonSelectedTextColor   (Color4f(0.0,0.0,0.0,1.0)), 
-    Inherited() 
+//! Get the DefaultTreeComponentGenerator::_sfNotExpandedDrawObjectPrototype field.
+const SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFNotExpandedDrawObjectPrototype(void) const
 {
+    return &_sfNotExpandedDrawObjectPrototype;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultTreeComponentGeneratorBase::DefaultTreeComponentGeneratorBase(const DefaultTreeComponentGeneratorBase &source) :
-    _sfExpandedDrawObjectPrototype(source._sfExpandedDrawObjectPrototype), 
-    _sfNotExpandedDrawObjectPrototype(source._sfNotExpandedDrawObjectPrototype), 
-    _sfLeafDrawObjectPrototype(source._sfLeafDrawObjectPrototype), 
-    _sfNonLeafDrawObjectPrototype(source._sfNonLeafDrawObjectPrototype), 
-    _sfExpandedNonLeafDrawObjectPrototype(source._sfExpandedNonLeafDrawObjectPrototype), 
-    _sfNodeLabelPrototype     (source._sfNodeLabelPrototype     ), 
-    _sfNodePanelPrototype     (source._sfNodePanelPrototype     ), 
-    _sfSelectedBackground     (source._sfSelectedBackground     ), 
-    _sfNonSelectedBackground  (source._sfNonSelectedBackground  ), 
-    _sfSelectedForeground     (source._sfSelectedForeground     ), 
-    _sfNonSelectedForeground  (source._sfNonSelectedForeground  ), 
-    _sfSelectedBorder         (source._sfSelectedBorder         ), 
-    _sfSelectedTextColor      (source._sfSelectedTextColor      ), 
-    _sfNonSelectedTextColor   (source._sfNonSelectedTextColor   ), 
-    Inherited                 (source)
+SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::editSFNotExpandedDrawObjectPrototype(void)
 {
+    editSField(NotExpandedDrawObjectPrototypeFieldMask);
+
+    return &_sfNotExpandedDrawObjectPrototype;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-DefaultTreeComponentGeneratorBase::~DefaultTreeComponentGeneratorBase(void)
+//! Get the DefaultTreeComponentGenerator::_sfLeafDrawObjectPrototype field.
+const SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFLeafDrawObjectPrototype(void) const
 {
+    return &_sfLeafDrawObjectPrototype;
 }
+
+SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::editSFLeafDrawObjectPrototype(void)
+{
+    editSField(LeafDrawObjectPrototypeFieldMask);
+
+    return &_sfLeafDrawObjectPrototype;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfNonLeafDrawObjectPrototype field.
+const SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFNonLeafDrawObjectPrototype(void) const
+{
+    return &_sfNonLeafDrawObjectPrototype;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::editSFNonLeafDrawObjectPrototype(void)
+{
+    editSField(NonLeafDrawObjectPrototypeFieldMask);
+
+    return &_sfNonLeafDrawObjectPrototype;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfExpandedNonLeafDrawObjectPrototype field.
+const SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFExpandedNonLeafDrawObjectPrototype(void) const
+{
+    return &_sfExpandedNonLeafDrawObjectPrototype;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::editSFExpandedNonLeafDrawObjectPrototype(void)
+{
+    editSField(ExpandedNonLeafDrawObjectPrototypeFieldMask);
+
+    return &_sfExpandedNonLeafDrawObjectPrototype;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfNodeLabelPrototype field.
+const SFUnrecLabelPtr *DefaultTreeComponentGeneratorBase::getSFNodeLabelPrototype(void) const
+{
+    return &_sfNodeLabelPrototype;
+}
+
+SFUnrecLabelPtr     *DefaultTreeComponentGeneratorBase::editSFNodeLabelPrototype(void)
+{
+    editSField(NodeLabelPrototypeFieldMask);
+
+    return &_sfNodeLabelPrototype;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfNodePanelPrototype field.
+const SFUnrecPanelPtr *DefaultTreeComponentGeneratorBase::getSFNodePanelPrototype(void) const
+{
+    return &_sfNodePanelPrototype;
+}
+
+SFUnrecPanelPtr     *DefaultTreeComponentGeneratorBase::editSFNodePanelPrototype(void)
+{
+    editSField(NodePanelPrototypeFieldMask);
+
+    return &_sfNodePanelPrototype;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfSelectedBackground field.
+const SFUnrecLayerPtr *DefaultTreeComponentGeneratorBase::getSFSelectedBackground(void) const
+{
+    return &_sfSelectedBackground;
+}
+
+SFUnrecLayerPtr     *DefaultTreeComponentGeneratorBase::editSFSelectedBackground(void)
+{
+    editSField(SelectedBackgroundFieldMask);
+
+    return &_sfSelectedBackground;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfNonSelectedBackground field.
+const SFUnrecLayerPtr *DefaultTreeComponentGeneratorBase::getSFNonSelectedBackground(void) const
+{
+    return &_sfNonSelectedBackground;
+}
+
+SFUnrecLayerPtr     *DefaultTreeComponentGeneratorBase::editSFNonSelectedBackground(void)
+{
+    editSField(NonSelectedBackgroundFieldMask);
+
+    return &_sfNonSelectedBackground;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfSelectedForeground field.
+const SFUnrecLayerPtr *DefaultTreeComponentGeneratorBase::getSFSelectedForeground(void) const
+{
+    return &_sfSelectedForeground;
+}
+
+SFUnrecLayerPtr     *DefaultTreeComponentGeneratorBase::editSFSelectedForeground(void)
+{
+    editSField(SelectedForegroundFieldMask);
+
+    return &_sfSelectedForeground;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfNonSelectedForeground field.
+const SFUnrecLayerPtr *DefaultTreeComponentGeneratorBase::getSFNonSelectedForeground(void) const
+{
+    return &_sfNonSelectedForeground;
+}
+
+SFUnrecLayerPtr     *DefaultTreeComponentGeneratorBase::editSFNonSelectedForeground(void)
+{
+    editSField(NonSelectedForegroundFieldMask);
+
+    return &_sfNonSelectedForeground;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfSelectedBorder field.
+const SFUnrecBorderPtr *DefaultTreeComponentGeneratorBase::getSFSelectedBorder(void) const
+{
+    return &_sfSelectedBorder;
+}
+
+SFUnrecBorderPtr    *DefaultTreeComponentGeneratorBase::editSFSelectedBorder (void)
+{
+    editSField(SelectedBorderFieldMask);
+
+    return &_sfSelectedBorder;
+}
+
+SFColor4f *DefaultTreeComponentGeneratorBase::editSFSelectedTextColor(void)
+{
+    editSField(SelectedTextColorFieldMask);
+
+    return &_sfSelectedTextColor;
+}
+
+const SFColor4f *DefaultTreeComponentGeneratorBase::getSFSelectedTextColor(void) const
+{
+    return &_sfSelectedTextColor;
+}
+
+
+SFColor4f *DefaultTreeComponentGeneratorBase::editSFNonSelectedTextColor(void)
+{
+    editSField(NonSelectedTextColorFieldMask);
+
+    return &_sfNonSelectedTextColor;
+}
+
+const SFColor4f *DefaultTreeComponentGeneratorBase::getSFNonSelectedTextColor(void) const
+{
+    return &_sfNonSelectedTextColor;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultTreeComponentGeneratorBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultTreeComponentGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -362,78 +738,64 @@ UInt32 DefaultTreeComponentGeneratorBase::getBinSize(const BitVector &whichField
     {
         returnValue += _sfExpandedDrawObjectPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (NotExpandedDrawObjectPrototypeFieldMask & whichField))
     {
         returnValue += _sfNotExpandedDrawObjectPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (LeafDrawObjectPrototypeFieldMask & whichField))
     {
         returnValue += _sfLeafDrawObjectPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (NonLeafDrawObjectPrototypeFieldMask & whichField))
     {
         returnValue += _sfNonLeafDrawObjectPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (ExpandedNonLeafDrawObjectPrototypeFieldMask & whichField))
     {
         returnValue += _sfExpandedNonLeafDrawObjectPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (NodeLabelPrototypeFieldMask & whichField))
     {
         returnValue += _sfNodeLabelPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
     {
         returnValue += _sfNodePanelPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         returnValue += _sfSelectedBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (NonSelectedBackgroundFieldMask & whichField))
     {
         returnValue += _sfNonSelectedBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
     {
         returnValue += _sfSelectedForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (NonSelectedForegroundFieldMask & whichField))
     {
         returnValue += _sfNonSelectedForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         returnValue += _sfSelectedBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
         returnValue += _sfSelectedTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (NonSelectedTextColorFieldMask & whichField))
     {
         returnValue += _sfNonSelectedTextColor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DefaultTreeComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultTreeComponentGeneratorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -441,77 +803,62 @@ void DefaultTreeComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfExpandedDrawObjectPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NotExpandedDrawObjectPrototypeFieldMask & whichField))
     {
         _sfNotExpandedDrawObjectPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LeafDrawObjectPrototypeFieldMask & whichField))
     {
         _sfLeafDrawObjectPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NonLeafDrawObjectPrototypeFieldMask & whichField))
     {
         _sfNonLeafDrawObjectPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ExpandedNonLeafDrawObjectPrototypeFieldMask & whichField))
     {
         _sfExpandedNonLeafDrawObjectPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NodeLabelPrototypeFieldMask & whichField))
     {
         _sfNodeLabelPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
     {
         _sfNodePanelPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         _sfSelectedBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NonSelectedBackgroundFieldMask & whichField))
     {
         _sfNonSelectedBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
     {
         _sfSelectedForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NonSelectedForegroundFieldMask & whichField))
     {
         _sfNonSelectedForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
         _sfSelectedTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NonSelectedTextColorFieldMask & whichField))
     {
         _sfNonSelectedTextColor.copyToBin(pMem);
     }
-
-
 }
 
-void DefaultTreeComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultTreeComponentGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -519,225 +866,709 @@ void DefaultTreeComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMe
     {
         _sfExpandedDrawObjectPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NotExpandedDrawObjectPrototypeFieldMask & whichField))
     {
         _sfNotExpandedDrawObjectPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LeafDrawObjectPrototypeFieldMask & whichField))
     {
         _sfLeafDrawObjectPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NonLeafDrawObjectPrototypeFieldMask & whichField))
     {
         _sfNonLeafDrawObjectPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ExpandedNonLeafDrawObjectPrototypeFieldMask & whichField))
     {
         _sfExpandedNonLeafDrawObjectPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NodeLabelPrototypeFieldMask & whichField))
     {
         _sfNodeLabelPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
     {
         _sfNodePanelPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         _sfSelectedBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NonSelectedBackgroundFieldMask & whichField))
     {
         _sfNonSelectedBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
     {
         _sfSelectedForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NonSelectedForegroundFieldMask & whichField))
     {
         _sfNonSelectedForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
         _sfSelectedTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NonSelectedTextColorFieldMask & whichField))
     {
         _sfNonSelectedTextColor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTreeComponentGeneratorBase::executeSyncImpl(      DefaultTreeComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultTreeComponentGeneratorTransitPtr DefaultTreeComponentGeneratorBase::createLocal(BitVector bFlags)
 {
+    DefaultTreeComponentGeneratorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ExpandedDrawObjectPrototypeFieldMask & whichField))
-        _sfExpandedDrawObjectPrototype.syncWith(pOther->_sfExpandedDrawObjectPrototype);
+        fc = dynamic_pointer_cast<DefaultTreeComponentGenerator>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (NotExpandedDrawObjectPrototypeFieldMask & whichField))
-        _sfNotExpandedDrawObjectPrototype.syncWith(pOther->_sfNotExpandedDrawObjectPrototype);
-
-    if(FieldBits::NoField != (LeafDrawObjectPrototypeFieldMask & whichField))
-        _sfLeafDrawObjectPrototype.syncWith(pOther->_sfLeafDrawObjectPrototype);
-
-    if(FieldBits::NoField != (NonLeafDrawObjectPrototypeFieldMask & whichField))
-        _sfNonLeafDrawObjectPrototype.syncWith(pOther->_sfNonLeafDrawObjectPrototype);
-
-    if(FieldBits::NoField != (ExpandedNonLeafDrawObjectPrototypeFieldMask & whichField))
-        _sfExpandedNonLeafDrawObjectPrototype.syncWith(pOther->_sfExpandedNonLeafDrawObjectPrototype);
-
-    if(FieldBits::NoField != (NodeLabelPrototypeFieldMask & whichField))
-        _sfNodeLabelPrototype.syncWith(pOther->_sfNodeLabelPrototype);
-
-    if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
-        _sfNodePanelPrototype.syncWith(pOther->_sfNodePanelPrototype);
-
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
-
-    if(FieldBits::NoField != (NonSelectedBackgroundFieldMask & whichField))
-        _sfNonSelectedBackground.syncWith(pOther->_sfNonSelectedBackground);
-
-    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
-        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
-
-    if(FieldBits::NoField != (NonSelectedForegroundFieldMask & whichField))
-        _sfNonSelectedForeground.syncWith(pOther->_sfNonSelectedForeground);
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
-
-    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
-        _sfSelectedTextColor.syncWith(pOther->_sfSelectedTextColor);
-
-    if(FieldBits::NoField != (NonSelectedTextColorFieldMask & whichField))
-        _sfNonSelectedTextColor.syncWith(pOther->_sfNonSelectedTextColor);
-
-
-}
-#else
-void DefaultTreeComponentGeneratorBase::executeSyncImpl(      DefaultTreeComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ExpandedDrawObjectPrototypeFieldMask & whichField))
-        _sfExpandedDrawObjectPrototype.syncWith(pOther->_sfExpandedDrawObjectPrototype);
-
-    if(FieldBits::NoField != (NotExpandedDrawObjectPrototypeFieldMask & whichField))
-        _sfNotExpandedDrawObjectPrototype.syncWith(pOther->_sfNotExpandedDrawObjectPrototype);
-
-    if(FieldBits::NoField != (LeafDrawObjectPrototypeFieldMask & whichField))
-        _sfLeafDrawObjectPrototype.syncWith(pOther->_sfLeafDrawObjectPrototype);
-
-    if(FieldBits::NoField != (NonLeafDrawObjectPrototypeFieldMask & whichField))
-        _sfNonLeafDrawObjectPrototype.syncWith(pOther->_sfNonLeafDrawObjectPrototype);
-
-    if(FieldBits::NoField != (ExpandedNonLeafDrawObjectPrototypeFieldMask & whichField))
-        _sfExpandedNonLeafDrawObjectPrototype.syncWith(pOther->_sfExpandedNonLeafDrawObjectPrototype);
-
-    if(FieldBits::NoField != (NodeLabelPrototypeFieldMask & whichField))
-        _sfNodeLabelPrototype.syncWith(pOther->_sfNodeLabelPrototype);
-
-    if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
-        _sfNodePanelPrototype.syncWith(pOther->_sfNodePanelPrototype);
-
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
-
-    if(FieldBits::NoField != (NonSelectedBackgroundFieldMask & whichField))
-        _sfNonSelectedBackground.syncWith(pOther->_sfNonSelectedBackground);
-
-    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
-        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
-
-    if(FieldBits::NoField != (NonSelectedForegroundFieldMask & whichField))
-        _sfNonSelectedForeground.syncWith(pOther->_sfNonSelectedForeground);
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
-
-    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
-        _sfSelectedTextColor.syncWith(pOther->_sfSelectedTextColor);
-
-    if(FieldBits::NoField != (NonSelectedTextColorFieldMask & whichField))
-        _sfNonSelectedTextColor.syncWith(pOther->_sfNonSelectedTextColor);
-
-
-
+    return fc;
 }
 
-void DefaultTreeComponentGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultTreeComponentGeneratorTransitPtr DefaultTreeComponentGeneratorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultTreeComponentGeneratorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultTreeComponentGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultTreeComponentGeneratorTransitPtr DefaultTreeComponentGeneratorBase::create(void)
+{
+    DefaultTreeComponentGeneratorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultTreeComponentGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultTreeComponentGenerator *DefaultTreeComponentGeneratorBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultTreeComponentGenerator *returnValue;
+
+    newPtr<DefaultTreeComponentGenerator>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultTreeComponentGenerator *DefaultTreeComponentGeneratorBase::createEmpty(void)
+{
+    DefaultTreeComponentGenerator *returnValue;
+
+    newPtr<DefaultTreeComponentGenerator>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultTreeComponentGeneratorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultTreeComponentGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTreeComponentGenerator *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTreeComponentGeneratorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultTreeComponentGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTreeComponentGenerator *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTreeComponentGeneratorBase::shallowCopy(void) const
+{
+    DefaultTreeComponentGenerator *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultTreeComponentGenerator *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultTreeComponentGeneratorBase::DefaultTreeComponentGeneratorBase(void) :
+    Inherited(),
+    _sfExpandedDrawObjectPrototype(NULL),
+    _sfNotExpandedDrawObjectPrototype(NULL),
+    _sfLeafDrawObjectPrototype(NULL),
+    _sfNonLeafDrawObjectPrototype(NULL),
+    _sfExpandedNonLeafDrawObjectPrototype(NULL),
+    _sfNodeLabelPrototype     (NULL),
+    _sfNodePanelPrototype     (NULL),
+    _sfSelectedBackground     (NULL),
+    _sfNonSelectedBackground  (NULL),
+    _sfSelectedForeground     (NULL),
+    _sfNonSelectedForeground  (NULL),
+    _sfSelectedBorder         (NULL),
+    _sfSelectedTextColor      (Color4f(0.0,0.0,0.0,1.0)),
+    _sfNonSelectedTextColor   (Color4f(0.0,0.0,0.0,1.0))
+{
+}
+
+DefaultTreeComponentGeneratorBase::DefaultTreeComponentGeneratorBase(const DefaultTreeComponentGeneratorBase &source) :
+    Inherited(source),
+    _sfExpandedDrawObjectPrototype(NULL),
+    _sfNotExpandedDrawObjectPrototype(NULL),
+    _sfLeafDrawObjectPrototype(NULL),
+    _sfNonLeafDrawObjectPrototype(NULL),
+    _sfExpandedNonLeafDrawObjectPrototype(NULL),
+    _sfNodeLabelPrototype     (NULL),
+    _sfNodePanelPrototype     (NULL),
+    _sfSelectedBackground     (NULL),
+    _sfNonSelectedBackground  (NULL),
+    _sfSelectedForeground     (NULL),
+    _sfNonSelectedForeground  (NULL),
+    _sfSelectedBorder         (NULL),
+    _sfSelectedTextColor      (source._sfSelectedTextColor      ),
+    _sfNonSelectedTextColor   (source._sfNonSelectedTextColor   )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultTreeComponentGeneratorBase::~DefaultTreeComponentGeneratorBase(void)
+{
+}
+
+void DefaultTreeComponentGeneratorBase::onCreate(const DefaultTreeComponentGenerator *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DefaultTreeComponentGenerator *pThis = static_cast<DefaultTreeComponentGenerator *>(this);
+
+        pThis->setExpandedDrawObjectPrototype(source->getExpandedDrawObjectPrototype());
+
+        pThis->setNotExpandedDrawObjectPrototype(source->getNotExpandedDrawObjectPrototype());
+
+        pThis->setLeafDrawObjectPrototype(source->getLeafDrawObjectPrototype());
+
+        pThis->setNonLeafDrawObjectPrototype(source->getNonLeafDrawObjectPrototype());
+
+        pThis->setExpandedNonLeafDrawObjectPrototype(source->getExpandedNonLeafDrawObjectPrototype());
+
+        pThis->setNodeLabelPrototype(source->getNodeLabelPrototype());
+
+        pThis->setNodePanelPrototype(source->getNodePanelPrototype());
+
+        pThis->setSelectedBackground(source->getSelectedBackground());
+
+        pThis->setNonSelectedBackground(source->getNonSelectedBackground());
+
+        pThis->setSelectedForeground(source->getSelectedForeground());
+
+        pThis->setNonSelectedForeground(source->getNonSelectedForeground());
+
+        pThis->setSelectedBorder(source->getSelectedBorder());
+    }
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleExpandedDrawObjectPrototype (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfExpandedDrawObjectPrototype,
+             this->getType().getFieldDesc(ExpandedDrawObjectPrototypeFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleExpandedDrawObjectPrototype(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfExpandedDrawObjectPrototype,
+             this->getType().getFieldDesc(ExpandedDrawObjectPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setExpandedDrawObjectPrototype,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(ExpandedDrawObjectPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleNotExpandedDrawObjectPrototype (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfNotExpandedDrawObjectPrototype,
+             this->getType().getFieldDesc(NotExpandedDrawObjectPrototypeFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleNotExpandedDrawObjectPrototype(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfNotExpandedDrawObjectPrototype,
+             this->getType().getFieldDesc(NotExpandedDrawObjectPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setNotExpandedDrawObjectPrototype,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(NotExpandedDrawObjectPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleLeafDrawObjectPrototype (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfLeafDrawObjectPrototype,
+             this->getType().getFieldDesc(LeafDrawObjectPrototypeFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleLeafDrawObjectPrototype(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfLeafDrawObjectPrototype,
+             this->getType().getFieldDesc(LeafDrawObjectPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setLeafDrawObjectPrototype,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(LeafDrawObjectPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleNonLeafDrawObjectPrototype (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfNonLeafDrawObjectPrototype,
+             this->getType().getFieldDesc(NonLeafDrawObjectPrototypeFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleNonLeafDrawObjectPrototype(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfNonLeafDrawObjectPrototype,
+             this->getType().getFieldDesc(NonLeafDrawObjectPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setNonLeafDrawObjectPrototype,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(NonLeafDrawObjectPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleExpandedNonLeafDrawObjectPrototype (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfExpandedNonLeafDrawObjectPrototype,
+             this->getType().getFieldDesc(ExpandedNonLeafDrawObjectPrototypeFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleExpandedNonLeafDrawObjectPrototype(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfExpandedNonLeafDrawObjectPrototype,
+             this->getType().getFieldDesc(ExpandedNonLeafDrawObjectPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setExpandedNonLeafDrawObjectPrototype,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(ExpandedNonLeafDrawObjectPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleNodeLabelPrototype (void) const
+{
+    SFUnrecLabelPtr::GetHandlePtr returnValue(
+        new  SFUnrecLabelPtr::GetHandle(
+             &_sfNodeLabelPrototype,
+             this->getType().getFieldDesc(NodeLabelPrototypeFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleNodeLabelPrototype(void)
+{
+    SFUnrecLabelPtr::EditHandlePtr returnValue(
+        new  SFUnrecLabelPtr::EditHandle(
+             &_sfNodeLabelPrototype,
+             this->getType().getFieldDesc(NodeLabelPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setNodeLabelPrototype,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(NodeLabelPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleNodePanelPrototype (void) const
+{
+    SFUnrecPanelPtr::GetHandlePtr returnValue(
+        new  SFUnrecPanelPtr::GetHandle(
+             &_sfNodePanelPrototype,
+             this->getType().getFieldDesc(NodePanelPrototypeFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleNodePanelPrototype(void)
+{
+    SFUnrecPanelPtr::EditHandlePtr returnValue(
+        new  SFUnrecPanelPtr::EditHandle(
+             &_sfNodePanelPrototype,
+             this->getType().getFieldDesc(NodePanelPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setNodePanelPrototype,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(NodePanelPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleSelectedBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfSelectedBackground,
+             this->getType().getFieldDesc(SelectedBackgroundFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleSelectedBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfSelectedBackground,
+             this->getType().getFieldDesc(SelectedBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setSelectedBackground,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(SelectedBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleNonSelectedBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfNonSelectedBackground,
+             this->getType().getFieldDesc(NonSelectedBackgroundFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleNonSelectedBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfNonSelectedBackground,
+             this->getType().getFieldDesc(NonSelectedBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setNonSelectedBackground,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(NonSelectedBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleSelectedForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfSelectedForeground,
+             this->getType().getFieldDesc(SelectedForegroundFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleSelectedForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfSelectedForeground,
+             this->getType().getFieldDesc(SelectedForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setSelectedForeground,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(SelectedForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleNonSelectedForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfNonSelectedForeground,
+             this->getType().getFieldDesc(NonSelectedForegroundFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleNonSelectedForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfNonSelectedForeground,
+             this->getType().getFieldDesc(NonSelectedForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setNonSelectedForeground,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(NonSelectedForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleSelectedBorder  (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfSelectedBorder,
+             this->getType().getFieldDesc(SelectedBorderFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleSelectedBorder (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfSelectedBorder,
+             this->getType().getFieldDesc(SelectedBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setSelectedBorder,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(SelectedBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleSelectedTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfSelectedTextColor,
+             this->getType().getFieldDesc(SelectedTextColorFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleSelectedTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfSelectedTextColor,
+             this->getType().getFieldDesc(SelectedTextColorFieldId),
+             this));
+
+
+    editSField(SelectedTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleNonSelectedTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfNonSelectedTextColor,
+             this->getType().getFieldDesc(NonSelectedTextColorFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleNonSelectedTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfNonSelectedTextColor,
+             this->getType().getFieldDesc(NonSelectedTextColorFieldId),
+             this));
+
+
+    editSField(NonSelectedTextColorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultTreeComponentGeneratorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultTreeComponentGenerator *pThis = static_cast<DefaultTreeComponentGenerator *>(this);
+
+    pThis->execSync(static_cast<DefaultTreeComponentGenerator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultTreeComponentGeneratorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultTreeComponentGenerator *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultTreeComponentGenerator *>(pRefAspect),
+                  dynamic_cast<const DefaultTreeComponentGenerator *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DefaultTreeComponentGeneratorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setExpandedDrawObjectPrototype(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setNotExpandedDrawObjectPrototype(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setLeafDrawObjectPrototype(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setNonLeafDrawObjectPrototype(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setExpandedNonLeafDrawObjectPrototype(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setNodeLabelPrototype(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setNodePanelPrototype(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setSelectedBackground(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setNonSelectedBackground(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setSelectedForeground(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setNonSelectedForeground(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setSelectedBorder(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultTreeComponentGeneratorPtr>::_type("DefaultTreeComponentGeneratorPtr", "TreeComponentGeneratorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultTreeComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultTreeComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTTREECOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTTREECOMPONENTGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTTREECOMPONENTGENERATORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

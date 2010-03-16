@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,24 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSceneGraphTreeModel.h"
-#include <OpenSG/OSGSimpleAttachments.h>
-#include <OpenSG/OSGNodeCore.h>
+#include "OSGNameAttachment.h"
+#include "OSGNodeCore.h"
 
 #include "OSGSceneGraphTreeModel.h"
-#include "Component/Tree/OSGTreePath.h"
+#include "OSGTreePath.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SceneGraphTreeModel
-A UI SceneGraphTreeModel.  	
-*/
+// Documentation for this class is emitted in the
+// OSGSceneGraphTreeModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGSceneGraphTreeModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,20 +67,26 @@ A UI SceneGraphTreeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SceneGraphTreeModel::initMethod (void)
+void SceneGraphTreeModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
 boost::any SceneGraphTreeModel::getChild(const boost::any& parent, const UInt32& index) const
 {
     try
     {
-		NodePtr TheNode = boost::any_cast<NodePtr>(parent);
-        if(TheNode != NullFC &&
+        NodeRefPtr TheNode = boost::any_cast<NodeRefPtr>(parent);
+        if(TheNode != NULL &&
            TheNode->getNChildren() > index)
         {
             return boost::any(TheNode->getChild(index));
@@ -105,10 +106,10 @@ boost::any SceneGraphTreeModel::getParent(const boost::any& node) const
 {
     try
     {
-        NodePtr TheNode = boost::any_cast<NodePtr>(node);
-        if(TheNode != NullFC &&
-            TheNode != getInternalRoot() &&
-            TheNode->getParent() != NullFC)
+        NodeRefPtr TheNode = boost::any_cast<NodeRefPtr>(node);
+        if(TheNode != NULL &&
+           TheNode != getInternalRoot() &&
+           TheNode->getParent() != NULL)
         {
             return boost::any(TheNode->getParent());
         }
@@ -123,8 +124,8 @@ UInt32 SceneGraphTreeModel::getChildCount(const boost::any& parent) const
 {
     try
     {
-        NodePtr TheNode = boost::any_cast<NodePtr>(parent);
-        if(TheNode != NullFC)
+        NodeRefPtr TheNode = boost::any_cast<NodeRefPtr>(parent);
+        if(TheNode != NULL)
         {
             return TheNode->getNChildren();
         }
@@ -143,10 +144,10 @@ UInt32 SceneGraphTreeModel::getIndexOfChild(const boost::any& parent, const boos
 {
     try
     {
-        NodePtr ParentNode = boost::any_cast<NodePtr>(parent);
-        NodePtr ChildNode = boost::any_cast<NodePtr>(child);
-        if(ParentNode != NullFC &&
-           ChildNode  != NullFC)
+        NodeRefPtr ParentNode = boost::any_cast<NodeRefPtr>(parent);
+        NodeRefPtr ChildNode = boost::any_cast<NodeRefPtr>(child);
+        if(ParentNode != NULL &&
+           ChildNode  != NULL)
         {
             return ParentNode->findChild(ChildNode);
         }
@@ -175,25 +176,19 @@ void SceneGraphTreeModel::valueForPathChanged(TreePath path, const boost::any& n
 {
     try
     {
-        NodePtr NewNode = boost::any_cast<NodePtr>(newValue);
-        NodePtr OldNode = boost::any_cast<NodePtr>(path.getLastPathComponent());
-        if(NewNode != NullFC &&
-           OldNode  != NullFC &&
-		   NewNode != OldNode &&
-		   OldNode->getParent() != NullFC)
+        NodeRefPtr NewNode = boost::any_cast<NodeRefPtr>(newValue);
+        NodeRefPtr OldNode = boost::any_cast<NodeRefPtr>(path.getLastPathComponent());
+        if(NewNode != NULL &&
+           OldNode  != NULL &&
+           NewNode != OldNode &&
+           OldNode->getParent() != NULL)
         {
-			NodePtr ParentNode(OldNode->getParent());
-			beginEditCP(ParentNode, Node::ChildrenFieldMask);
-				if(ParentNode->replaceChildBy(OldNode, NewNode))
-				{
-					endEditCP(ParentNode, Node::ChildrenFieldMask);
-					UInt32 ChildIndex(ParentNode->findChild(NewNode));
-					produceTreeStructureChanged(path.getParentPath(),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, newValue));
-				}
-				else
-				{
-					endEditNotChangedCP(ParentNode, Node::ChildrenFieldMask);
-				}
+            NodeRefPtr ParentNode(OldNode->getParent());
+            if(ParentNode->replaceChildBy(OldNode, NewNode))
+            {
+                UInt32 ChildIndex(ParentNode->findChild(NewNode));
+                produceTreeStructureChanged(path.getParentPath(),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, newValue));
+            }
         }
     }
     catch(boost::bad_any_cast &)
@@ -201,14 +196,12 @@ void SceneGraphTreeModel::valueForPathChanged(TreePath path, const boost::any& n
     }
 }
 
-void SceneGraphTreeModel::setRoot(NodePtr root)
+void SceneGraphTreeModel::setRoot(NodeRefPtr root)
 {
-    beginEditCP(SceneGraphTreeModelPtr(this), InternalRootFieldMask);
-        setInternalRoot(root);
-    endEditCP(SceneGraphTreeModelPtr(this), InternalRootFieldMask);
+    setInternalRoot(root);
 }
 
-NodePtr SceneGraphTreeModel::getRootNode(void) const
+NodeRefPtr SceneGraphTreeModel::getRootNode(void) const
 {
     return getInternalRoot();
 }
@@ -218,8 +211,8 @@ bool SceneGraphTreeModel::isEqual(const boost::any& left, const boost::any& righ
 {
     try
     {
-        NodePtr LeftNode = boost::any_cast<NodePtr>(left);
-        NodePtr RightNode = boost::any_cast<NodePtr>(right);
+        NodeRefPtr LeftNode = boost::any_cast<NodeRefPtr>(left);
+        NodeRefPtr RightNode = boost::any_cast<NodeRefPtr>(right);
 
         return LeftNode == RightNode;
     }
@@ -228,6 +221,7 @@ bool SceneGraphTreeModel::isEqual(const boost::any& left, const boost::any& righ
         return false;
     }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -250,9 +244,11 @@ SceneGraphTreeModel::~SceneGraphTreeModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SceneGraphTreeModel::changed(BitVector whichField, UInt32 origin)
+void SceneGraphTreeModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & InternalRootFieldMask)
     {
@@ -260,12 +256,10 @@ void SceneGraphTreeModel::changed(BitVector whichField, UInt32 origin)
     }
 }
 
-void SceneGraphTreeModel::dump(      UInt32    , 
+void SceneGraphTreeModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SceneGraphTreeModel NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

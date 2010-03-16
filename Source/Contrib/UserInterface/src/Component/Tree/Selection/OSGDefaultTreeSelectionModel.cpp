@@ -45,7 +45,7 @@
 
 #define OSG_COMPILEUSERINTERFACELIB
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGDefaultTreeSelectionModel.h"
 #include "OSGTreeSelectionListener.h"
@@ -56,7 +56,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultTreeSelectionModel
+/*! \class OSG::DefaultTreeSelectionModel
 A DefaultTreeSelectionModel. 
 */
 
@@ -251,7 +251,7 @@ Int32 DefaultTreeSelectionModel::getMinSelectionRow(void) const
 	return _MinSelectionIndex; //Returns the smallest value obtained from the TreeRowMapper for the current set of selected TreePaths.
 }
 
-TreeRowMapperPtr DefaultTreeSelectionModel::getRowMapper(void) const
+TreeRowMapperRefPtr DefaultTreeSelectionModel::getRowMapper(void) const
 {
 	return _TreeRowMapper; // returns the current row from TreeRowMapper
 }
@@ -376,7 +376,7 @@ void DefaultTreeSelectionModel::removeSelectionPaths(std::vector<TreePath> paths
 	// Not sure what this function does
 //}
 
-void DefaultTreeSelectionModel::setRowMapper(TreeRowMapperPtr newMapper)
+void DefaultTreeSelectionModel::setRowMapper(TreeRowMapperRefPtr newMapper)
 {
     _TreeRowMapper = newMapper;
 }
@@ -660,20 +660,6 @@ DefaultTreeSelectionModel::DefaultTreeSelectionModel(void) : _SelectionMode(SING
 
 /*----------------------------- class specific ----------------------------*/
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,99 +55,73 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &FileSystemTreeModelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 FileSystemTreeModelBase::getClassTypeId(void) 
+OSG::UInt32 FileSystemTreeModelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-FileSystemTreeModelPtr FileSystemTreeModelBase::create(void) 
-{
-    FileSystemTreeModelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = FileSystemTreeModelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-FileSystemTreeModelPtr FileSystemTreeModelBase::createEmpty(void) 
-{ 
-    FileSystemTreeModelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 FileSystemTreeModelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the FileSystemTreeModel::_sfInternalRoot field.
-inline
-const SFPath *FileSystemTreeModelBase::getSFInternalRoot(void) const
-{
-    return &_sfInternalRoot;
-}
-
-//! Get the FileSystemTreeModel::_sfInternalRoot field.
-inline
-SFPath *FileSystemTreeModelBase::editSFInternalRoot(void)
-{
-    return &_sfInternalRoot;
-}
-
-#ifndef OSG_2_PREP
-//! Get the FileSystemTreeModel::_sfInternalRoot field.
-inline
-SFPath *FileSystemTreeModelBase::getSFInternalRoot(void)
-{
-    return &_sfInternalRoot;
-}
-#endif
-
-
 //! Get the value of the FileSystemTreeModel::_sfInternalRoot field.
+
 inline
-Path &FileSystemTreeModelBase::editInternalRoot(void)
+BoostPath &FileSystemTreeModelBase::editInternalRoot(void)
 {
+    editSField(InternalRootFieldMask);
+
     return _sfInternalRoot.getValue();
 }
 
 //! Get the value of the FileSystemTreeModel::_sfInternalRoot field.
 inline
-const Path &FileSystemTreeModelBase::getInternalRoot(void) const
+const BoostPath &FileSystemTreeModelBase::getInternalRoot(void) const
 {
     return _sfInternalRoot.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the FileSystemTreeModel::_sfInternalRoot field.
-inline
-Path &FileSystemTreeModelBase::getInternalRoot(void)
-{
-    return _sfInternalRoot.getValue();
-}
-#endif
 
 //! Set the value of the FileSystemTreeModel::_sfInternalRoot field.
 inline
-void FileSystemTreeModelBase::setInternalRoot(const Path &value)
+void FileSystemTreeModelBase::setInternalRoot(const BoostPath &value)
 {
+    editSField(InternalRootFieldMask);
+
     _sfInternalRoot.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void FileSystemTreeModelBase::execSync (      FileSystemTreeModelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (InternalRootFieldMask & whichField))
+        _sfInternalRoot.syncWith(pFrom->_sfInternalRoot);
+}
+#endif
+
+
+inline
+const Char8 *FileSystemTreeModelBase::getClassname(void)
+{
+    return "FileSystemTreeModel";
+}
+OSG_GEN_CONTAINERPTR(FileSystemTreeModel);
 
 OSG_END_NAMESPACE
 

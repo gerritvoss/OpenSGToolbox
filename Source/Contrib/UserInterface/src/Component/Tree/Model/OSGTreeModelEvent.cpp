@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTreeModelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TreeModelEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGTreeModelEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGTreeModelEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,17 +62,22 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TreeModelEvent::initMethod (void)
+void TreeModelEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-TreeModelEventPtr TreeModelEvent::create(  FieldContainerPtr Source,
+TreeModelEventTransitPtr TreeModelEvent::create(  FieldContainerRefPtr Source,
                                            Time TimeStamp,
                                            const TreePath& ThePath,
                                            const std::vector<UInt32>& childIndices,
                                            const std::vector<boost::any>& children)
 {
-    TreeModelEventPtr TheEvent = TreeModelEvent::createEmpty();
+    TreeModelEvent* TheEvent = TreeModelEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
@@ -85,20 +85,20 @@ TreeModelEventPtr TreeModelEvent::create(  FieldContainerPtr Source,
     TheEvent->_Path     = ThePath;
     TheEvent->_Children = children;
 
-    return TheEvent;
+    return TreeModelEventTransitPtr(TheEvent);
 }
 
-TreeModelEventPtr TreeModelEvent::create(  FieldContainerPtr Source,
+TreeModelEventTransitPtr TreeModelEvent::create(  FieldContainerRefPtr Source,
                                            Time TimeStamp,
                                            const TreePath& ThePath)
 {
-    TreeModelEventPtr TheEvent = TreeModelEvent::createEmpty();
+    TreeModelEvent* TheEvent = TreeModelEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->_Path     = ThePath;
 
-    return TheEvent;
+    return TreeModelEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -127,17 +127,17 @@ TreeModelEvent::~TreeModelEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TreeModelEvent::changed(BitVector whichField, UInt32 origin)
+void TreeModelEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TreeModelEvent::dump(      UInt32    , 
+void TreeModelEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TreeModelEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

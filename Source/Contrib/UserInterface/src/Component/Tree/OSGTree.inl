@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -37,10 +37,6 @@
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
-
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -309,22 +305,21 @@ void Tree::setRootVisible(bool Visible)
 }
 
 inline
-Tree::ModelListener::ModelListener(TreePtr TheTree) :
+Tree::ModelListener::ModelListener(TreeRefPtr TheTree) :
 _Tree(TheTree)
 {
 }
 
 inline
-Tree::SelectionListener::SelectionListener(TreePtr TheTree) :
+Tree::SelectionListener::SelectionListener(TreeRefPtr TheTree) :
 _Tree(TheTree)
 {
 }
 
 inline
-Tree::ModelLayoutListener::ModelLayoutListener(TreePtr TheTree) :
+Tree::ModelLayoutListener::ModelLayoutListener(TreeRefPtr TheTree) :
 _Tree(TheTree)
 {
 }
 
 OSG_END_NAMESPACE
-

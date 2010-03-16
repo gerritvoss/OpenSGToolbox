@@ -35,7 +35,7 @@
 #include "OSGContribUserInterfaceDef.h"
 
 #include "OSGEventListener.h"
-#include "OSGFocusEvent.h"
+#include "OSGFocusEventFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -51,5 +51,7 @@ public:
 typedef FocusListener* FocusListenerPtr;
 
 OSG_END_NAMESPACE
+
+#include "OSGFocusEvent.h"
 
 #endif /* _OSGFOCUSLISTENER_H_ */

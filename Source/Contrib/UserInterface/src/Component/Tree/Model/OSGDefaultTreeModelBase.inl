@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,115 +55,92 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DefaultTreeModelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DefaultTreeModelBase::getClassTypeId(void) 
+OSG::UInt32 DefaultTreeModelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DefaultTreeModelPtr DefaultTreeModelBase::create(void) 
-{
-    DefaultTreeModelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DefaultTreeModelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DefaultTreeModelPtr DefaultTreeModelBase::createEmpty(void) 
-{ 
-    DefaultTreeModelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DefaultTreeModelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DefaultTreeModel::_sfInternalRoot field.
-inline
-const SFModelTreeNodePtr *DefaultTreeModelBase::getSFInternalRoot(void) const
-{
-    return &_sfInternalRoot;
-}
-
-//! Get the DefaultTreeModel::_sfInternalRoot field.
-inline
-SFModelTreeNodePtr *DefaultTreeModelBase::editSFInternalRoot(void)
-{
-    return &_sfInternalRoot;
-}
-
-//! Get the DefaultTreeModel::_sfAskAllowsChildren field.
-inline
-const SFBool *DefaultTreeModelBase::getSFAskAllowsChildren(void) const
-{
-    return &_sfAskAllowsChildren;
-}
-
-//! Get the DefaultTreeModel::_sfAskAllowsChildren field.
-inline
-SFBool *DefaultTreeModelBase::editSFAskAllowsChildren(void)
-{
-    return &_sfAskAllowsChildren;
-}
-
 
 //! Get the value of the DefaultTreeModel::_sfInternalRoot field.
 inline
-ModelTreeNodePtr &DefaultTreeModelBase::editInternalRoot(void)
-{
-    return _sfInternalRoot.getValue();
-}
-
-//! Get the value of the DefaultTreeModel::_sfInternalRoot field.
-inline
-const ModelTreeNodePtr &DefaultTreeModelBase::getInternalRoot(void) const
+ModelTreeNode * DefaultTreeModelBase::getInternalRoot(void) const
 {
     return _sfInternalRoot.getValue();
 }
 
 //! Set the value of the DefaultTreeModel::_sfInternalRoot field.
 inline
-void DefaultTreeModelBase::setInternalRoot(const ModelTreeNodePtr &value)
+void DefaultTreeModelBase::setInternalRoot(ModelTreeNode * const value)
 {
+    editSField(InternalRootFieldMask);
+
     _sfInternalRoot.setValue(value);
 }
-
 //! Get the value of the DefaultTreeModel::_sfAskAllowsChildren field.
+
 inline
 bool &DefaultTreeModelBase::editAskAllowsChildren(void)
 {
+    editSField(AskAllowsChildrenFieldMask);
+
     return _sfAskAllowsChildren.getValue();
 }
 
 //! Get the value of the DefaultTreeModel::_sfAskAllowsChildren field.
 inline
-const bool &DefaultTreeModelBase::getAskAllowsChildren(void) const
+      bool  DefaultTreeModelBase::getAskAllowsChildren(void) const
 {
     return _sfAskAllowsChildren.getValue();
 }
 
 //! Set the value of the DefaultTreeModel::_sfAskAllowsChildren field.
 inline
-void DefaultTreeModelBase::setAskAllowsChildren(const bool &value)
+void DefaultTreeModelBase::setAskAllowsChildren(const bool value)
 {
+    editSField(AskAllowsChildrenFieldMask);
+
     _sfAskAllowsChildren.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DefaultTreeModelBase::execSync (      DefaultTreeModelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (InternalRootFieldMask & whichField))
+        _sfInternalRoot.syncWith(pFrom->_sfInternalRoot);
+
+    if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
+        _sfAskAllowsChildren.syncWith(pFrom->_sfAskAllowsChildren);
+}
+#endif
+
+
+inline
+const Char8 *DefaultTreeModelBase::getClassname(void)
+{
+    return "DefaultTreeModel";
+}
+OSG_GEN_CONTAINERPTR(DefaultTreeModel);
+
 OSG_END_NAMESPACE
+

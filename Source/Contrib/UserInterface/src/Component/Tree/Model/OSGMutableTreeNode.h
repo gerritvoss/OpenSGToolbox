@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,59 +42,60 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGMutableTreeNodeBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MutableTreeNode class. See \ref 
-           PageUserInterfaceMutableTreeNode for a description.
+/*! \brief MutableTreeNode class. See \ref
+           PageContribUserInterfaceMutableTreeNode for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING MutableTreeNode : public MutableTreeNodeBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MutableTreeNode : public MutableTreeNodeBase
 {
-  private:
-
-    typedef MutableTreeNodeBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef MutableTreeNodeBase Inherited;
+    typedef MutableTreeNode     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 	
 	//Adds child to the receiver at index.
-	virtual void insert(MutableTreeNodePtr child, const UInt32& index) = 0;
+	virtual void insert(MutableTreeNodeRefPtr child, const UInt32& index) = 0;
 
 	//Removes the child at index from the receiver.
 	virtual void remove(const UInt32& index) = 0;
 
 	//Removes node from the receiver.
-	virtual void remove(MutableTreeNodePtr node) = 0;
+	virtual void remove(MutableTreeNodeRefPtr node) = 0;
 
 	//Removes the receiver from its parent.
 	virtual void removeFromParent(void) = 0;
 
 	//Sets the parent of the receiver to newParent.
-	virtual void setParent(MutableTreeNodePtr newParent) = 0;
+	virtual void setParent(MutableTreeNodeRefPtr newParent) = 0;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in MutableTreeNodeBase.
@@ -111,20 +112,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING MutableTreeNode : public MutableTreeNodeBa
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MutableTreeNode(void); 
+    virtual ~MutableTreeNode(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class MutableTreeNodeBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const MutableTreeNode &source);
 };
 
@@ -134,7 +139,5 @@ OSG_END_NAMESPACE
 
 #include "OSGMutableTreeNodeBase.inl"
 #include "OSGMutableTreeNode.inl"
-
-#define OSGMUTABLETREENODE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMUTABLETREENODE_H_ */

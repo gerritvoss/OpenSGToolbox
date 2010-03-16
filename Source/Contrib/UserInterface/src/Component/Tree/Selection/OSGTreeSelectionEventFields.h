@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class TreeSelectionEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TreeSelectionEventPtr
+OSG_GEN_CONTAINERPTR(TreeSelectionEvent);
 
-typedef FCPtr<EventPtr, TreeSelectionEvent> TreeSelectionEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TreeSelectionEventPtr> : 
-    public FieldTraitsRecurseMapper<TreeSelectionEventPtr, true>
+struct FieldTraits<TreeSelectionEvent *> :
+    public FieldTraitsFCPtrBase<TreeSelectionEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTreeSelectionEventPtr"; }
+    typedef FieldTraits<TreeSelectionEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTreeSelectionEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTreeSelectionEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TreeSelectionEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TreeSelectionEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTreeSelectionEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TreeSelectionEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTreeSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeSelectionEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTreeSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeSelectionEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTreeSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeSelectionEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTreeSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeSelectionEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTreeSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeSelectionEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTreeSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeSelectionEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTreeSelectionEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeSelectionEvent *,
+                      RecordedRefCountPolicy  > SFRecTreeSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeSelectionEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecTreeSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeSelectionEvent *,
+                      WeakRefCountPolicy      > SFWeakTreeSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeSelectionEvent *,
+                      NoRefCountPolicy        > SFUncountedTreeSelectionEventPtr;
 
-typedef SField<TreeSelectionEventPtr> SFTreeSelectionEventPtr;
-#endif
 
-#ifndef OSG_COMPILETREESELECTIONEVENTINST
-OSG_DLLEXPORT_DECL1(SField, TreeSelectionEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeSelectionEvent *,
+                      RecordedRefCountPolicy  > MFRecTreeSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeSelectionEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecTreeSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeSelectionEvent *,
+                      WeakRefCountPolicy      > MFWeakTreeSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeSelectionEvent *,
+                      NoRefCountPolicy        > MFUncountedTreeSelectionEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTreeSelectionEventPtr : 
+    public PointerSField<TreeSelectionEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTreeSelectionEventPtr : 
+    public PointerSField<TreeSelectionEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTreeSelectionEventPtr :
+    public PointerSField<TreeSelectionEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTreeSelectionEventPtr :
+    public PointerSField<TreeSelectionEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTreeSelectionEventPtr :
+    public PointerMField<TreeSelectionEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTreeSelectionEventPtr :
+    public PointerMField<TreeSelectionEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTreeSelectionEventPtr :
+    public PointerMField<TreeSelectionEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTreeSelectionEventPtr :
+    public PointerMField<TreeSelectionEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

@@ -1,29 +1,29 @@
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify Root management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general Root file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-#include <OpenSG/Toolbox/OSGFCFileHandler.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
+#include "OSGToggleButton.h"
+#include "OSGFCFileHandler.h"
 
 #include <sstream>
 
@@ -32,50 +32,50 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 //Tree Headers
-#include <OpenSG/UserInterface/OSGTree.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGComponentTreeModel.h>
-#include <OpenSG/UserInterface/OSGFixedHeightTreeModelLayout.h>
-#include <OpenSG/UserInterface/OSGDefaultTreeComponentGenerator.h>
-#include <OpenSG/OSGSimpleAttachments.h>
+#include "OSGTree.h"
+#include "OSGLabel.h"
+#include "OSGLayers.h"
+#include "OSGFlowLayout.h"
+#include "OSGComponentTreeModel.h"
+#include "OSGFixedHeightTreeModelLayout.h"
+#include "OSGDefaultTreeComponentGenerator.h"
+#include "OSGNameAttachment.h"
 
-#include <OpenSG/UserInterface/OSGScrollPanel.h>
-#include <OpenSG/OSGSimpleAttachments.h>
+#include "OSGScrollPanel.h"
+#include "OSGNameAttachment.h"
 
 // Create a class to allow for the use of the Escape
 // key to exit
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-            TutorialWindowEventProducer->closeWindow();
-       }
-   }
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            TutorialWindow->closeWindow();
+        }
+    }
 
-   virtual void keyReleased(const KeyEventPtr e)
-   {
-   }
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
 
-   virtual void keyTyped(const KeyEventPtr e)
-   {
-   }
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
-ComponentTreeModelPtr TheTreeModel;
-TreePtr TheTree;
+ComponentTreeModelRefPtr TheTreeModel;
+TreeRefPtr TheTree;
 
 class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
 {
@@ -83,73 +83,73 @@ class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
   public:
     typedef          DefaultTreeComponentGenerator Inherited;
     typedef          ComponentTreeItemGenerator Self;
-	typedef          FCPtr<Inherited::Ptr,  Self      > PtrType;
+    typedef          FCRefPtr<Inherited::RefPtr,  Self      > PtrType;
 
-	OSG_FIELD_CONTAINER_DECL(PtrType)
-	
-	virtual ComponentPtr getTreeComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
-    {
-        std::string LabelText("");
-        try
+    OSG_FIELD_CONTAINER_DECL(PtrType)
+
+        virtual ComponentRefPtr getTreeComponent(TreeRefPtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
         {
-            ComponentPtr TheComponent = boost::any_cast<ComponentPtr>(Value);
-            if(TheComponent != NullFC)
+            std::string LabelText("");
+            try
             {
-                const Char8* CompName = getName(TheComponent);
-                if(CompName != NULL)
+                ComponentRefPtr TheComponent = boost::any_cast<ComponentRefPtr>(Value);
+                if(TheComponent != NULL)
                 {
-                    LabelText = CompName;
-                }
-                else
-                {
-                    LabelText = std::string("Unnamed ") + TheComponent->getType().getCName();
+                    const Char8* CompName = getName(TheComponent);
+                    if(CompName != NULL)
+                    {
+                        LabelText = CompName;
+                    }
+                    else
+                    {
+                        LabelText = std::string("Unnamed ") + TheComponent->getType().getCName();
+                    }
                 }
             }
+            catch (boost::bad_any_cast &)
+            {
+            }
+
+            return getTreeComponentText(Parent,LabelText,IsSelected,Expanded,Leaf,Row,HasFocus);
         }
-        catch (boost::bad_any_cast &)
-        {
-        }
-
-        return getTreeComponentText(Parent,LabelText,IsSelected,Expanded,Leaf,Row,HasFocus);
-    }
 
 
-protected:
+  protected:
 
-	static FieldContainerType  _type;
+    static FieldContainerType  _type;
 
-	ComponentTreeItemGenerator(void) : Inherited()
+    ComponentTreeItemGenerator(void) : Inherited()
     {
     }
 
-	ComponentTreeItemGenerator(const ComponentTreeItemGenerator& source) : Inherited(source)
+    ComponentTreeItemGenerator(const ComponentTreeItemGenerator& source) : Inherited(source)
     {
     }
 
     virtual ~ComponentTreeItemGenerator(void)
     {
     }
-private:
-	friend class FieldContainer;
+  private:
+    friend class FieldContainer;
 
     ComponentTreeItemGenerator &operator =(const ComponentTreeItemGenerator &source)
-	{
-		return *this;
-	}
+    {
+        return *this;
+    }
 };
 
 FieldContainerType ComponentTreeItemGenerator::_type("ComponentTreeItemGenerator",
-                                     "DefaultTreeComponentGenerator",
-                                      NULL,
-                                      (PrototypeCreateF) &ComponentTreeItemGenerator::createEmpty,
-                                      NULL,
-									  NULL,
-                                      0);
+                                                     "DefaultTreeComponentGenerator",
+                                                     NULL,
+                                                     (PrototypeCreateF) &ComponentTreeItemGenerator::createEmpty,
+                                                     NULL,
+                                                     NULL,
+                                                     0);
 
-OSG_FIELD_CONTAINER_INL_DEF(ComponentTreeItemGenerator::Self, ComponentTreeItemGenerator::PtrType)
+    OSG_FIELD_CONTAINER_INL_DEF(ComponentTreeItemGenerator::Self, ComponentTreeItemGenerator::PtrType)
 OSG_FIELD_CONTAINER_DEF(ComponentTreeItemGenerator::Self, ComponentTreeItemGenerator::PtrType)
 
-typedef ComponentTreeItemGenerator::PtrType ComponentTreeItemGeneratorPtr;
+    typedef ComponentTreeItemGenerator::PtrType ComponentTreeItemGeneratorRefPtr;
 
 int main(int argc, char **argv)
 {
@@ -157,162 +157,142 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
-	NodePtr Root(NullFC);
+    NodeRefPtr Root(NULL);
     if(argc == 2)
     {
-		Root = SceneFileHandler::the().read(argv[1]);
-	}
+        Root = SceneFileHandler::the()->read(argv[1]);
+    }
 
-	if(Root == NullFC)
-	{
-		// Make Torus Node (creates Torus in background of Root)
-		NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    if(Root == NULL)
+    {
+        // Make Torus Node (creates Torus in background of Root)
+        NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-		NodePtr TorusNode = Node::create();
-		beginEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-			TorusNode->setCore(osg::Transform::create());
-			TorusNode->addChild(TorusGeometryNode);
-		endEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        NodeRefPtr TorusNode = Node::create();
+        TorusNode->setCore(OSG::Transform::create());
+        TorusNode->addChild(TorusGeometryNode);
 
-		NodePtr SphereGeometryNode = makeSphere(2,1.0f);
-		NodePtr BoxGeometryNode = makeBox(1.0,1.0,1.0,1,1,1);
+        NodeRefPtr SphereGeometryNode = makeSphere(2,1.0f);
+        NodeRefPtr BoxGeometryNode = makeBox(1.0,1.0,1.0,1,1,1);
 
-		// Make Main Scene Node and add the Torus
-		Root = osg::Node::create();
-		beginEditCP(Root, Node::CoreFieldMask | Node::ChildrenFieldMask);
-			Root->setCore(osg::Group::create());
-			Root->addChild(TorusNode);
-			Root->addChild(SphereGeometryNode);
-			Root->addChild(BoxGeometryNode);
-		endEditCP(Root, Node::CoreFieldMask | Node::ChildrenFieldMask);
-	}
+        // Make Main Scene Node and add the Torus
+        Root = OSG::Node::create();
+        Root->setCore(OSG::Group::create());
+        Root->addChild(TorusNode);
+        Root->addChild(SphereGeometryNode);
+        Root->addChild(BoxGeometryNode);
+    }
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	ComponentTreeItemGeneratorPtr TheGenerator = ComponentTreeItemGenerator::create();
+    ComponentTreeItemGeneratorRefPtr TheGenerator = ComponentTreeItemGenerator::create();
 
     //Create the Tree
     TheTree = Tree::create();
 
-    beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
-        TheTree->setPreferredSize(Vec2f(100, 500));
-        TheTree->setCellGenerator(TheGenerator);
-    endEditCP(TheTree, Tree::PreferredSizeFieldMask);
+    TheTree->setPreferredSize(Vec2f(100, 500));
+    TheTree->setCellGenerator(TheGenerator);
     setName(TheTree, std::string("TheTree"));
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
-    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2s(350,300));
-        //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
+    ExampleScrollPanel->setPreferredSize(Vec2s(350,300));
+    //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     ExampleScrollPanel->setViewComponent(TheTree);
     setName(ExampleScrollPanel, std::string("ExampleScrollPanel"));
-    
+
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
 
     //Import InternalWindow(s) from XML file
-	std::vector<InternalWindowPtr> StoreWindows;
+    std::vector<InternalWindowRefPtr> StoreWindows;
 
-	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/55ComponentTree.xml"));
-	
-	//Store each window found in the XML in the vector
-	FCFileType::FCPtrStore::iterator Itor;
-	for(Itor = NewContainers.begin(); Itor != NewContainers.end(); ++Itor)
-	{
-		if( (*Itor)->getType() == (InternalWindow::getClassType()))
-		{
-			StoreWindows.push_back(InternalWindow::Ptr::dcast(*Itor));
-		}
-	}
+    FCFileType::FCPtrStore NewContainers;
+    NewContainers = FCFileHandler::the()->read(Path("./Data/55ComponentTree.xml"));
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    //Store each window found in the XML in the vector
+    FCFileType::FCPtrStore::iterator Itor;
+    for(Itor = NewContainers.begin(); Itor != NewContainers.end(); ++Itor)
+    {
+        if( (*Itor)->getType() == (InternalWindow::getClassType()))
+        {
+            StoreWindows.push_back(dynamic_pointer_cast<InternalWindow>(*Itor));
+        }
+    }
+
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    MainInternalWindow->pushToChildren(ExampleScrollPanel);
+    MainInternalWindow->setLayout(MainInternalWindowLayout);
+    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
+    MainInternalWindow->setDrawTitlebar(false);
+    MainInternalWindow->setResizable(false);
     setName(MainInternalWindow, std::string("MainInternalWindow"));
 
     //Tree Model
     TheTreeModel = ComponentTreeModel::create();
     TheTreeModel->setRoot(StoreWindows.back());
 
-    beginEditCP(TheTree, Tree::ModelFieldMask);
-        TheTree->setModel(TheTreeModel);
-    endEditCP(TheTree, Tree::ModelFieldMask);
+    TheTree->setModel(TheTreeModel);
     TheTree->setRootVisible(true);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-        TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+    TutorialDrawingSurface->setGraphics(TutorialGraphics);
+    TutorialDrawingSurface->setEventProducer(TutorialWindow);
+
+    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     TutorialDrawingSurface->openWindow(StoreWindows.back());
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(Root);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
-            WinSize,
-            "54ComponentTree");
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
+                               WinSize,
+                               "54ComponentTree");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

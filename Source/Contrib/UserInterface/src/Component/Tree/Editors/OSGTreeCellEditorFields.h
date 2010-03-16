@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Editors/OSGAbstractCellEditorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TreeCellEditor;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TreeCellEditorPtr
+OSG_GEN_CONTAINERPTR(TreeCellEditor);
 
-typedef FCPtr<AbstractCellEditorPtr, TreeCellEditor> TreeCellEditorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TreeCellEditorPtr> : 
-    public FieldTraitsRecurseMapper<TreeCellEditorPtr, true>
+struct FieldTraits<TreeCellEditor *> :
+    public FieldTraitsFCPtrBase<TreeCellEditor *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTreeCellEditorPtr"; }
-    static const char *getMName(void) { return "MFTreeCellEditorPtr"; }
+    typedef FieldTraits<TreeCellEditor *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTreeCellEditorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTreeCellEditorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TreeCellEditorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TreeCellEditor *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTreeCellEditorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TreeCellEditor *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTreeCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeCellEditor *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTreeCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeCellEditor *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTreeCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeCellEditor *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTreeCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeCellEditor *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTreeCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeCellEditor *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTreeCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeCellEditor *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTreeCellEditorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeCellEditor *,
+                      RecordedRefCountPolicy  > SFRecTreeCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeCellEditor *,
+                      UnrecordedRefCountPolicy> SFUnrecTreeCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeCellEditor *,
+                      WeakRefCountPolicy      > SFWeakTreeCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeCellEditor *,
+                      NoRefCountPolicy        > SFUncountedTreeCellEditorPtr;
 
-typedef SField<TreeCellEditorPtr> SFTreeCellEditorPtr;
-#endif
 
-#ifndef OSG_COMPILETREECELLEDITORINST
-OSG_DLLEXPORT_DECL1(SField, TreeCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeCellEditor *,
+                      RecordedRefCountPolicy  > MFRecTreeCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeCellEditor *,
+                      UnrecordedRefCountPolicy> MFUnrecTreeCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeCellEditor *,
+                      WeakRefCountPolicy      > MFWeakTreeCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeCellEditor *,
+                      NoRefCountPolicy        > MFUncountedTreeCellEditorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TreeCellEditorPtr> MFTreeCellEditorPtr;
-#endif
 
-#ifndef OSG_COMPILETREECELLEDITORINST
-OSG_DLLEXPORT_DECL1(MField, TreeCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTreeCellEditorPtr : 
+    public PointerSField<TreeCellEditor *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTreeCellEditorPtr : 
+    public PointerSField<TreeCellEditor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTreeCellEditorPtr :
+    public PointerSField<TreeCellEditor *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTreeCellEditorPtr :
+    public PointerSField<TreeCellEditor *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTreeCellEditorPtr :
+    public PointerMField<TreeCellEditor *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTreeCellEditorPtr :
+    public PointerMField<TreeCellEditor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTreeCellEditorPtr :
+    public PointerMField<TreeCellEditor *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTreeCellEditorPtr :
+    public PointerMField<TreeCellEditor *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGTREECELLEDITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTREECELLEDITORFIELDS_H_ */

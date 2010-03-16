@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,80 +58,80 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGAbstractTreeModel.h" // Parent
 
-#include <OpenSG/OSGNodeFields.h> // InternalRoot type
+#include "OSGNodeFields.h"              // InternalRoot type
 
 #include "OSGSceneGraphTreeModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class SceneGraphTreeModel;
-class BinaryDataHandler;
 
 //! \brief SceneGraphTreeModel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModelBase : public AbstractTreeModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SceneGraphTreeModelBase : public AbstractTreeModel
 {
-  private:
-
-    typedef AbstractTreeModel    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SceneGraphTreeModelPtr  Ptr;
+    typedef AbstractTreeModel Inherited;
+    typedef AbstractTreeModel ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(SceneGraphTreeModel);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         InternalRootFieldId = Inherited::NextFieldId,
-        NextFieldId         = InternalRootFieldId + 1
+        NextFieldId = InternalRootFieldId + 1
     };
 
-    static const OSG::BitVector InternalRootFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector InternalRootFieldMask =
+        (TypeTraits<BitVector>::One << InternalRootFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecNodePtr    SFInternalRootType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -139,26 +139,43 @@ class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModelBase : public AbstractT
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SceneGraphTreeModelPtr      create          (void); 
-    static  SceneGraphTreeModelPtr      createEmpty     (void); 
+    static  SceneGraphTreeModelTransitPtr  create          (void);
+    static  SceneGraphTreeModel           *createEmpty     (void);
+
+    static  SceneGraphTreeModelTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  SceneGraphTreeModel            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  SceneGraphTreeModelTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFNodePtr           _sfInternalRoot;
+    SFUnrecNodePtr    _sfInternalRoot;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -173,90 +190,102 @@ class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModelBase : public AbstractT
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SceneGraphTreeModelBase(void); 
+    virtual ~SceneGraphTreeModelBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const SceneGraphTreeModel *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleInternalRoot    (void) const;
+    EditFieldHandlePtr editHandleInternalRoot   (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFNodePtr           *editSFInternalRoot   (void);
-     const SFNodePtr           *getSFInternalRoot   (void) const;
-#ifndef OSG_2_PREP
-           SFNodePtr           *getSFInternalRoot   (void);
-#endif
+            const SFUnrecNodePtr      *getSFInternalRoot    (void) const;
+                  SFUnrecNodePtr      *editSFInternalRoot   (void);
 
-           NodePtr             &editInternalRoot   (void);
-     const NodePtr             &getInternalRoot   (void) const;
-#ifndef OSG_2_PREP
-           NodePtr             &getInternalRoot   (void);
-#endif
+
+                  Node * getInternalRoot   (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setInternalRoot   (const NodePtr &value);
+            void setInternalRoot   (Node * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SceneGraphTreeModelBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      SceneGraphTreeModelBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      SceneGraphTreeModelBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SceneGraphTreeModelBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef SceneGraphTreeModelBase *SceneGraphTreeModelBaseP;
-
-typedef osgIF<SceneGraphTreeModelBase::isNodeCore,
-              CoredNodePtr<SceneGraphTreeModel>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SceneGraphTreeModelNodePtr;
-
-typedef RefPtr<SceneGraphTreeModelPtr> SceneGraphTreeModelRefPtr;
 
 OSG_END_NAMESPACE
 

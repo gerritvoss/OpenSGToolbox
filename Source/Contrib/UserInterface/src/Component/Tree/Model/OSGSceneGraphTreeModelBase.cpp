@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,168 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESCENEGRAPHTREEMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGNode.h"                    // InternalRoot Class
 
 #include "OSGSceneGraphTreeModelBase.h"
 #include "OSGSceneGraphTreeModel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SceneGraphTreeModelBase::InternalRootFieldMask = 
-    (TypeTraits<BitVector>::One << SceneGraphTreeModelBase::InternalRootFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector SceneGraphTreeModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::SceneGraphTreeModel
+    A UI SceneGraphTreeModel.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var NodePtr         SceneGraphTreeModelBase::_sfInternalRoot
+/*! \var Node *          SceneGraphTreeModelBase::_sfInternalRoot
     
 */
 
-//! SceneGraphTreeModel description
 
-FieldDescription *SceneGraphTreeModelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SceneGraphTreeModel *>::_type("SceneGraphTreeModelPtr", "AbstractTreeModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SceneGraphTreeModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SceneGraphTreeModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           SceneGraphTreeModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SceneGraphTreeModelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "InternalRoot", 
-                     InternalRootFieldId, InternalRootFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SceneGraphTreeModelBase::editSFInternalRoot))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SceneGraphTreeModelBase::_type(
-    "SceneGraphTreeModel",
-    "AbstractTreeModel",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&SceneGraphTreeModelBase::createEmpty),
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "InternalRoot",
+        "",
+        InternalRootFieldId, InternalRootFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SceneGraphTreeModel::editHandleInternalRoot),
+        static_cast<FieldGetMethodSig >(&SceneGraphTreeModel::getHandleInternalRoot));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+SceneGraphTreeModelBase::TypeObject SceneGraphTreeModelBase::_type(
+    SceneGraphTreeModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SceneGraphTreeModelBase::createEmptyLocal),
     SceneGraphTreeModel::initMethod,
-    _desc,
-    sizeof(_desc));
+    SceneGraphTreeModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SceneGraphTreeModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SceneGraphTreeModel\"\n"
+    "\tparent=\"AbstractTreeModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI SceneGraphTreeModel.\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalRoot\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI SceneGraphTreeModel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SceneGraphTreeModelBase, SceneGraphTreeModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SceneGraphTreeModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SceneGraphTreeModelBase::getType(void) const 
+FieldContainerType &SceneGraphTreeModelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SceneGraphTreeModelBase::shallowCopy(void) const 
-{ 
-    SceneGraphTreeModelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SceneGraphTreeModel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SceneGraphTreeModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(SceneGraphTreeModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SceneGraphTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SceneGraphTreeModelBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<SceneGraphTreeModelBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void SceneGraphTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SceneGraphTreeModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SceneGraphTreeModelBase *) &other, whichField, sInfo);
+    return sizeof(SceneGraphTreeModel);
 }
-void SceneGraphTreeModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the SceneGraphTreeModel::_sfInternalRoot field.
+const SFUnrecNodePtr *SceneGraphTreeModelBase::getSFInternalRoot(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfInternalRoot;
 }
 
-void SceneGraphTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecNodePtr      *SceneGraphTreeModelBase::editSFInternalRoot   (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(InternalRootFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SceneGraphTreeModelBase::SceneGraphTreeModelBase(void) :
-    _sfInternalRoot           (NodePtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfInternalRoot;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-SceneGraphTreeModelBase::SceneGraphTreeModelBase(const SceneGraphTreeModelBase &source) :
-    _sfInternalRoot           (source._sfInternalRoot           ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-SceneGraphTreeModelBase::~SceneGraphTreeModelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SceneGraphTreeModelBase::getBinSize(const BitVector &whichField)
+UInt32 SceneGraphTreeModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +220,11 @@ UInt32 SceneGraphTreeModelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInternalRoot.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SceneGraphTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SceneGraphTreeModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +232,10 @@ void SceneGraphTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfInternalRoot.copyToBin(pMem);
     }
-
-
 }
 
-void SceneGraphTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SceneGraphTreeModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,62 +243,229 @@ void SceneGraphTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfInternalRoot.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SceneGraphTreeModelBase::executeSyncImpl(      SceneGraphTreeModelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SceneGraphTreeModelTransitPtr SceneGraphTreeModelBase::createLocal(BitVector bFlags)
 {
+    SceneGraphTreeModelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (InternalRootFieldMask & whichField))
-        _sfInternalRoot.syncWith(pOther->_sfInternalRoot);
+        fc = dynamic_pointer_cast<SceneGraphTreeModel>(tmpPtr);
+    }
 
-
-}
-#else
-void SceneGraphTreeModelBase::executeSyncImpl(      SceneGraphTreeModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (InternalRootFieldMask & whichField))
-        _sfInternalRoot.syncWith(pOther->_sfInternalRoot);
-
-
-
+    return fc;
 }
 
-void SceneGraphTreeModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SceneGraphTreeModelTransitPtr SceneGraphTreeModelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SceneGraphTreeModelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<SceneGraphTreeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+SceneGraphTreeModelTransitPtr SceneGraphTreeModelBase::create(void)
+{
+    SceneGraphTreeModelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SceneGraphTreeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SceneGraphTreeModel *SceneGraphTreeModelBase::createEmptyLocal(BitVector bFlags)
+{
+    SceneGraphTreeModel *returnValue;
+
+    newPtr<SceneGraphTreeModel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SceneGraphTreeModel *SceneGraphTreeModelBase::createEmpty(void)
+{
+    SceneGraphTreeModel *returnValue;
+
+    newPtr<SceneGraphTreeModel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SceneGraphTreeModelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SceneGraphTreeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SceneGraphTreeModel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SceneGraphTreeModelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SceneGraphTreeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SceneGraphTreeModel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SceneGraphTreeModelBase::shallowCopy(void) const
+{
+    SceneGraphTreeModel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SceneGraphTreeModel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SceneGraphTreeModelBase::SceneGraphTreeModelBase(void) :
+    Inherited(),
+    _sfInternalRoot           (NULL)
+{
+}
+
+SceneGraphTreeModelBase::SceneGraphTreeModelBase(const SceneGraphTreeModelBase &source) :
+    Inherited(source),
+    _sfInternalRoot           (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SceneGraphTreeModelBase::~SceneGraphTreeModelBase(void)
+{
+}
+
+void SceneGraphTreeModelBase::onCreate(const SceneGraphTreeModel *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        SceneGraphTreeModel *pThis = static_cast<SceneGraphTreeModel *>(this);
+
+        pThis->setInternalRoot(source->getInternalRoot());
+    }
+}
+
+GetFieldHandlePtr SceneGraphTreeModelBase::getHandleInternalRoot    (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfInternalRoot,
+             this->getType().getFieldDesc(InternalRootFieldId),
+             const_cast<SceneGraphTreeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SceneGraphTreeModelBase::editHandleInternalRoot   (void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfInternalRoot,
+             this->getType().getFieldDesc(InternalRootFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SceneGraphTreeModel::setInternalRoot,
+                    static_cast<SceneGraphTreeModel *>(this), _1));
+
+    editSField(InternalRootFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SceneGraphTreeModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SceneGraphTreeModel *pThis = static_cast<SceneGraphTreeModel *>(this);
+
+    pThis->execSync(static_cast<SceneGraphTreeModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SceneGraphTreeModelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SceneGraphTreeModel *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SceneGraphTreeModel *>(pRefAspect),
+                  dynamic_cast<const SceneGraphTreeModel *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SceneGraphTreeModelPtr>::_type("SceneGraphTreeModelPtr", "AbstractTreeModelPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SceneGraphTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SceneGraphTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void SceneGraphTreeModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<SceneGraphTreeModel *>(this)->setInternalRoot(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,49 +42,69 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTreeComponentGeneratorBase.h"
-#include "Component/Tree/OSGTreeFields.h"
+#include "OSGTreeFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeComponentGenerator class. See \ref 
-           PageUserInterfaceTreeComponentGenerator for a description.
+/*! \brief TreeComponentGenerator class. See \ref
+           PageContribUserInterfaceTreeComponentGenerator for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeComponentGenerator : public TreeComponentGeneratorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeComponentGenerator : public TreeComponentGeneratorBase
 {
-  private:
-
-    typedef TreeComponentGeneratorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeComponentGeneratorBase Inherited;
+    typedef TreeComponentGenerator     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual ComponentPtr getTreeExpandedComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus) = 0;
+
+    virtual ComponentRefPtr getTreeExpandedComponent(TreeRefPtr Parent,
+                                                     const boost::any& Value,
+                                                     bool IsSelected,
+                                                     bool Expanded,
+                                                     bool Leaf,
+                                                     UInt32 Row,
+                                                     bool HasFocus) = 0;
     
-	virtual ComponentPtr getTreeComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus) = 0;
+	virtual ComponentRefPtr getTreeComponent(TreeRefPtr Parent,
+                                             const boost::any& Value,
+                                             bool IsSelected,
+                                             bool Expanded,
+                                             bool Leaf,
+                                             UInt32 Row,
+                                             bool HasFocus) = 0;
     
-	virtual ComponentPtr getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
+	virtual ComponentRefPtr getComponent(ComponentRefPtr Parent,
+                                         const boost::any& Value,
+                                         Int32 PrimaryAxisIndex,
+                                         Int32 SecondaryAxisIndex,
+                                         bool IsSelected,
+                                         bool HasFocus);
+    
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TreeComponentGeneratorBase.
@@ -101,20 +121,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeComponentGenerator : public TreeCompon
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeComponentGenerator(void); 
+    virtual ~TreeComponentGenerator(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TreeComponentGeneratorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TreeComponentGenerator &source);
 };
 
@@ -124,7 +148,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTreeComponentGeneratorBase.inl"
 #include "OSGTreeComponentGenerator.inl"
-
-#define OSGTREECOMPONENTGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTREECOMPONENTGENERATOR_H_ */

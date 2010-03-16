@@ -42,11 +42,11 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGAbstractTreeSelectionModel.h"
-#include "Component/Tree/OSGTreeRowMapper.h"
+#include "OSGTreeRowMapper.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultTreeSelectionModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public AbstractTreeSelectionModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeSelectionModel : public AbstractTreeSelectionModel
 {
     /*==========================  PUBLIC  =================================*/
   public:
@@ -103,7 +103,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 	virtual Int32 getMinSelectionRow(void) const;
 
 	//Returns the TreeRowMapper instance that is able to map a TreePath to a row.
-	virtual TreeRowMapperPtr getRowMapper(void) const;
+	virtual TreeRowMapperRefPtr getRowMapper(void) const;
 
 	//Returns the number of paths that are selected.
 	virtual UInt32 getSelectionCount(void) const;
@@ -143,7 +143,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 	//virtual void resetRowSelection(void);
 
 	//Sets the TreeRowMapper instance.
-	virtual void setRowMapper(TreeRowMapperPtr newMapper);
+	virtual void setRowMapper(TreeRowMapperRefPtr newMapper);
 
 	//Sets the selection model, which must be one of SINGLE_TREE_SELECTION, CONTIGUOUS_TREE_SELECTION or DISCONTIGUOUS_TREE_SELECTION.
 	virtual void setSelectionMode(const UInt32& mode);
@@ -179,7 +179,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
     Int32 	_MinSelectionIndex;
     bool 	_ValueIsAdjusting;
 
-    TreeRowMapperPtr _TreeRowMapper;
+    TreeRowMapperRefPtr _TreeRowMapper;
     TreePathPtr _TreePath;
 
     /*==========================  PRIVATE  ================================*/
@@ -189,7 +189,5 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 typedef DefaultTreeSelectionModel *DefaultTreeSelectionModelPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTTREESELECTIONMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDEFAULTTREESELECTIONMODEL_H_ */

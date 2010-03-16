@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,40 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGAbstractTreeModelLayoutBase.h"
-
 #include <set>
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractTreeModelLayout class. See \ref 
-           PageUserInterfaceAbstractTreeModelLayout for a description.
+/*! \brief AbstractTreeModelLayout class. See \ref
+           PageContribUserInterfaceAbstractTreeModelLayout for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractTreeModelLayoutBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public AbstractTreeModelLayoutBase
 {
-  private:
-
-    typedef AbstractTreeModelLayoutBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AbstractTreeModelLayoutBase Inherited;
+    typedef AbstractTreeModelLayout     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -102,7 +99,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 	virtual bool areChildrenVisible(const TreePath& path) const;
 
 	//Returns the TreeModel that is providing the data.
-	virtual TreeModelPtr getModel(void) const;
+	virtual TreeModelRefPtr getModel(void) const;
 
 	//Returns the object that renders nodes in the tree, and which is responsible for calculating the dimensions of individual nodes.
 	//virtual AbstractLayoutCache.NodeDimensions getNodeDimensions(void) const;
@@ -135,7 +132,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 	virtual void setVisible(const TreePath& path);
 
 	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelPtr newModel);
+	virtual void setModel(TreeModelRefPtr newModel);
 
 	//Sets the renderer that is responsible for drawing nodes in the tree and which is threfore responsible for calculating the dimensions of individual nodes.
 	//virtual void setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
@@ -164,6 +161,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
     //Fills VisibleDecendents will all of the TreePaths to nodes that are visible decendents of Path
     virtual void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AbstractTreeModelLayoutBase.
@@ -180,51 +178,65 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractTreeModelLayout(void); 
+    virtual ~AbstractTreeModelLayout(void);
 
     /*! \}                                                                 */
-    //Returns, by reference in placeIn, the size needed to represent value.
-	virtual void getNodeDimensions(Pnt2f& TopLeft, Pnt2f& BottomRight, const boost::any& value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    //Returns, by reference in placeIn, the size needed to represent value.
+	virtual void getNodeDimensions(Pnt2f& TopLeft,
+                                   Pnt2f& BottomRight,
+                                   const boost::any& value,
+                                   const UInt32& row,
+                                   const UInt32& depth,
+                                   bool expanded,
+                                   Pnt2f TopLeftPlaceIn,
+                                   Pnt2f BottomRightPlaceIn);
 
     //Object responsible for getting the size of a node.
     //AbstractLayoutCache.NodeDimensions nodeDimensions;
 
     //Model providing information.
-    TreeModelPtr _TreeModel;
+    TreeModelRefPtr _TreeModel;
 
     //Selection model.
     TreeSelectionModelPtr _TreeSelectionModel;
-    
+
     typedef std::set<TreePath, TreePath::BreadthFirstFunctional> TreePathSet;
     typedef TreePathSet::iterator TreePathSetItor;
     typedef TreePathSet::const_iterator TreePathSetConstItor;
 
     TreePathSet _ExpandedPathSet;
     TreePathSet _VisiblePathSet;
-    
-	class ModelListener : public TreeModelListener
-	{
-	public :
-		ModelListener(AbstractTreeModelLayoutPtr TheAbstractTreeModelLayout);
-		
-        virtual void treeNodesChanged(const TreeModelEventPtr e);
-        virtual void treeNodesInserted(const TreeModelEventPtr e);
-        virtual void treeNodesWillBeRemoved(const TreeModelEventPtr e);
-        virtual void treeNodesRemoved(const TreeModelEventPtr e);
-        virtual void treeStructureChanged(const TreeModelEventPtr e);
-	protected :
-		AbstractTreeModelLayoutPtr _AbstractTreeModelLayout;
-	};
 
-	friend class ModelListener;
+    class ModelListener : public TreeModelListener
+    {
+      public :
+        ModelListener(AbstractTreeModelLayoutRefPtr TheAbstractTreeModelLayout);
 
-	ModelListener _ModelListener;
+        virtual void treeNodesChanged(const TreeModelEventUnrecPtr e);
+        virtual void treeNodesInserted(const TreeModelEventUnrecPtr e);
+        virtual void treeNodesWillBeRemoved(const TreeModelEventUnrecPtr e);
+        virtual void treeNodesRemoved(const TreeModelEventUnrecPtr e);
+        virtual void treeStructureChanged(const TreeModelEventUnrecPtr e);
+      protected :
+        AbstractTreeModelLayoutRefPtr _AbstractTreeModelLayout;
+    };
 
-	typedef std::set<TreeModelLayoutListenerPtr> TreeModelLayoutListenerSet;
+    friend class ModelListener;
+
+    ModelListener _ModelListener;
+
+    typedef std::set<TreeModelLayoutListenerPtr> TreeModelLayoutListenerSet;
     typedef TreeModelLayoutListenerSet::iterator TreeModelLayoutListenerSetItor;
     typedef TreeModelLayoutListenerSet::const_iterator TreeModelLayoutListenerSetConstItor;
-	
+
     TreeModelLayoutListenerSet       _TreeModelLayoutListeners;
 
     void produceTreeCollapsed(const TreePath& Path);
@@ -232,34 +244,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
     void produceTreeWillCollapse(const TreePath& Path);
     void produceTreeWillExpand(const TreePath& Path);
 
-	bool _VetoPathExpantion;
-	bool _VetoPathCollapse;
+    bool _VetoPathExpantion;
+    bool _VetoPathCollapse;
 
     void insertVisiblePath(const TreePath& Path);
     void removeVisiblePath(const TreePath& Path);
     void removeExpandedPath(const TreePath& Path);
-    
-    typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
-	typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
-	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
-	TreeModelListenerSet _ModelListeners;
 
-	void produceTreeNodesChanged(const TreeModelEventPtr e);
-	void produceTreeNodesInserted(const TreeModelEventPtr e);
-	void produceTreeNodesWillBeRemoved(const TreeModelEventPtr e);
-	void produceTreeNodesRemoved(const TreeModelEventPtr e);
-	void produceTreeStructureChanged(const TreeModelEventPtr e);
+    typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
+    typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
+    typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
+    TreeModelListenerSet _ModelListeners;
+
+    void produceTreeNodesChanged(const TreeModelEventUnrecPtr e);
+    void produceTreeNodesInserted(const TreeModelEventUnrecPtr e);
+    void produceTreeNodesWillBeRemoved(const TreeModelEventUnrecPtr e);
+    void produceTreeNodesRemoved(const TreeModelEventUnrecPtr e);
+	void produceTreeStructureChanged(const TreeModelEventUnrecPtr e);
 
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AbstractTreeModelLayoutBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AbstractTreeModelLayout &source);
 };
 
@@ -269,7 +279,5 @@ OSG_END_NAMESPACE
 
 #include "OSGAbstractTreeModelLayoutBase.inl"
 #include "OSGAbstractTreeModelLayout.inl"
-
-#define OSGABSTRACTTREEMODELLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGABSTRACTTREEMODELLAYOUT_H_ */

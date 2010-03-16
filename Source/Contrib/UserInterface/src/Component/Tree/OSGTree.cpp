@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,38 +40,33 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTree.h"
-#include "Component/Tree/Model/OSGTreeModelEvent.h"
-#include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
-#include "Component/Tree/ModelLayout/OSGFixedHeightTreeModelLayout.h"
-#include "Component/Tree/Selection/OSGDefaultTreeSelectionModel.h"
-#include "Component/Container/OSGUIViewport.h"
+#include "OSGTreeModelEvent.h"
+#include "OSGTreeModelLayout.h"
+#include "OSGFixedHeightTreeModelLayout.h"
+#include "OSGDefaultTreeSelectionModel.h"
+#include "OSGUIViewport.h"
 
-#include "Component/Tree/ComponentGenerators/OSGDefaultTreeComponentGenerator.h"
-#include "Component/Scroll/OSGScrollBar.h"
-#include "Util/OSGUIDrawUtils.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include "OSGDefaultTreeComponentGenerator.h"
+#include "OSGScrollBar.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGWindowEventProducer.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Tree
-A UI Tree. 	
-*/
+// Documentation for this class is emitted in the
+// OSGTreeBase.cpp file.
+// To modify it, please change the .fcd file (OSGTree.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -81,8 +76,13 @@ A UI Tree.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Tree::initMethod (void)
+void Tree::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -90,9 +90,9 @@ void Tree::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Tree::mousePressed(const MouseEventPtr e)
+void Tree::mousePressed(const MouseEventUnrecPtr e)
 {
-    Pnt2f PointInCompSpace(DrawingSurfaceToComponent(e->getLocation(),ComponentPtr(this)));
+    Pnt2f PointInCompSpace(DrawingSurfaceToComponent(e->getLocation(),ComponentRefPtr(this)));
 
     //Determine the row the mouse is located
     Int32 Row = getRowForLocation(PointInCompSpace);
@@ -101,7 +101,7 @@ void Tree::mousePressed(const MouseEventPtr e)
     {
         for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
         {
-            if((_DrawnRows[i]._ExpandedComponent != NullFC &&
+            if((_DrawnRows[i]._ExpandedComponent != NULL &&
                 _DrawnRows[i]._Row == Row &&
                 _DrawnRows[i]._ExpandedComponent->isContained(e->getLocation()))
                ||
@@ -120,9 +120,9 @@ void Tree::mousePressed(const MouseEventPtr e)
                 return;
             }
         }
-		if(getParentWindow() != NullFC &&
-		   getParentWindow()->getDrawingSurface() != NullFC &&
-		   getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+		if(getParentWindow() != NULL &&
+		   getParentWindow()->getDrawingSurface() != NULL &&
+		   getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 		{
 			if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 			{
@@ -149,10 +149,10 @@ void Tree::mousePressed(const MouseEventPtr e)
 			}
 		}
     }
-	Container::mousePressed(e);
+	ComponentContainer::mousePressed(e);
 }
 
-void Tree::keyTyped(const KeyEventPtr e)
+void Tree::keyTyped(const KeyEventUnrecPtr e)
 {
 	switch(e->getKey())
 	{
@@ -279,7 +279,7 @@ void Tree::keyTyped(const KeyEventPtr e)
 	Component::keyTyped(e);
 }
 
-void Tree::focusLost(const FocusEventPtr e)
+void Tree::focusLost(const FocusEventUnrecPtr e)
 {
 	//getSelectionModel()->clearSelection();
 }
@@ -326,7 +326,7 @@ TreePath Tree::getAnchorSelectionPath(void) const
 TreePath Tree::getClosestPathForLocation(const Pnt2f& Loc) const
 {
     //TODO:Implement
-    if(getModelLayout() != NullFC)
+    if(getModelLayout() != NULL)
     {
         return getModelLayout()->getPathClosestTo(Loc);
     }
@@ -338,7 +338,7 @@ TreePath Tree::getClosestPathForLocation(const Pnt2f& Loc) const
 
 Int32 Tree::getClosestRowForLocation(const Pnt2f& Loc) const
 {
-    if(getModelLayout() != NullFC)
+    if(getModelLayout() != NULL)
     {
         return getModelLayout()->getRowForPath(getClosestPathForLocation(Loc));
     }
@@ -358,7 +358,7 @@ TreePath Tree::getEditingPath(void) const
 
 TreePath Tree::getPathForLocation(const Pnt2f& Loc) const
 {
-    if(getModelLayout() != NullFC)
+    if(getModelLayout() != NULL)
     {
         return getModelLayout()->getPathClosestTo(Loc);
     }
@@ -370,7 +370,7 @@ TreePath Tree::getPathForLocation(const Pnt2f& Loc) const
 
 Int32 Tree::getRowForLocation(const Pnt2f& Loc) const
 {
-    if(getModelLayout() != NullFC)
+    if(getModelLayout() != NULL)
     {
         return getModelLayout()->getRowForPath(getClosestPathForLocation(Loc));
     }
@@ -496,7 +496,7 @@ void Tree::setSelectionModel(TreeSelectionModelPtr selectionModel)
     if(_SelectionModel != NULL)
     {
         _SelectionModel->addTreeSelectionListener(&_SelectionListener);
-        if(getModelLayout() != NullFC)
+        if(getModelLayout() != NULL)
         {
             _SelectionModel->setRowMapper(getModelLayout());
         }
@@ -580,7 +580,7 @@ bool Tree::getScrollableWidthMinTracksViewport(void)
 
 Int32 Tree::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-    if(orientation == ScrollBar::VERTICAL_ORIENTATION && getModelLayout() != NullFC)
+    if(orientation == ScrollBar::VERTICAL_ORIENTATION && getModelLayout() != NULL)
     {
         return getModelLayout()->getRowHeight();
     }
@@ -602,10 +602,10 @@ void Tree::clearToggledPaths(void)
 
 
 
-TreeModelPtr Tree::getDefaultTreeModel(void)
+TreeModelRefPtr Tree::getDefaultTreeModel(void)
 {
     //TODO:Implement
-    return NullFC;
+    return NULL;
 }
 
 std::vector<TreePath> Tree::getDescendantToggledPaths(const TreePath& parent)
@@ -679,18 +679,18 @@ void Tree::setExpandedState(const TreePath& path, bool state)
 
 bool Tree::isParentAViewport(void) const
 {
-    return (getParentContainer() != NullFC) && (getParentContainer()->getType() == UIViewport::getClassType());
+    return (getParentContainer() != NULL) && (getParentContainer()->getType() == UIViewport::getClassType());
 }
 
-UIViewportPtr Tree::getParentViewport(void) const
+UIViewportRefPtr Tree::getParentViewport(void) const
 {
     if(isParentAViewport())
     {
-        return UIViewport::Ptr::dcast(getParentContainer());
+        return dynamic_cast<UIViewport*>(getParentContainer());
     }
     else
     {
-        return NullFC;
+        return NULL;
     }
 }
 
@@ -845,7 +845,7 @@ void Tree::updateRowsDrawn(void)
 
 Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
 {
-    if(getCellGenerator() != NullFC)
+    if(getCellGenerator() != NULL)
     {
         TreePath NodePath(getModelLayout()->getPathForRow(Row));
         bool Selected;
@@ -860,13 +860,13 @@ Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
         }
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
-            return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
-                                      TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
+            return TreeRowComponents( dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeExpandedComponent(TreeRefPtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
+                                      dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeComponent(TreeRefPtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
                 Row);
         }
         else
         {
-            return TreeRowComponents(NullFC, getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false),Row);
+            return TreeRowComponents(NULL, getCellGenerator()->getComponent(TreeRefPtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false),Row);
         }
     }
     else
@@ -887,20 +887,18 @@ void Tree::updateDrawnRow(const UInt32& Row)
 
 void Tree::updateChildren(void)
 {
-    beginEditCP(TreePtr(this), ChildrenFieldMask);
-        getChildren().clear();
+        clearChildren();
         for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
         {
-            if(_DrawnRows[i]._ExpandedComponent != NullFC)
+            if(_DrawnRows[i]._ExpandedComponent != NULL)
             {
-                getChildren().push_back(_DrawnRows[i]._ExpandedComponent);
+                pushToChildren(_DrawnRows[i]._ExpandedComponent);
             }
         }
         for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
         {
-            getChildren().push_back(_DrawnRows[i]._ValueComponent);
+            pushToChildren(_DrawnRows[i]._ValueComponent);
         }
-    endEditCP(TreePtr(this), ChildrenFieldMask);
 }
 
 void Tree::updateLayout(void)
@@ -909,17 +907,13 @@ void Tree::updateLayout(void)
     for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
     {
         Pnt2f RowTopLeft((getPathForRow(_TopDrawnRow+i).getDepth()-1) * getModelLayout()->getDepthOffset(), getModelLayout()->getRowHeight()*(i+_TopDrawnRow));
-        if(_DrawnRows[i]._ExpandedComponent != NullFC)
+        if(_DrawnRows[i]._ExpandedComponent != NULL)
         {
-            beginEditCP(_DrawnRows[i]._ExpandedComponent, Component::PositionFieldMask | Component::SizeFieldMask);
                 _DrawnRows[i]._ExpandedComponent->setSize(_DrawnRows[i]._ExpandedComponent->getRequestedSize());
 		        _DrawnRows[i]._ExpandedComponent->setPosition(RowTopLeft-Vec2f(_DrawnRows[i]._ExpandedComponent->getSize().x()+ 2.0f, -0.5f*(getModelLayout()->getRowHeight()-_DrawnRows[i]._ExpandedComponent->getSize().y())));
-            endEditCP(_DrawnRows[i]._ExpandedComponent, Component::PositionFieldMask | Component::SizeFieldMask);
         }
-        beginEditCP(_DrawnRows[i]._ValueComponent, Component::PositionFieldMask | Component::SizeFieldMask);
             _DrawnRows[i]._ValueComponent->setPosition(RowTopLeft);
             _DrawnRows[i]._ValueComponent->setSize(Vec2f(getSize().x()-_DrawnRows[i]._ValueComponent->getPosition().x(), getModelLayout()->getRowHeight()));
-        endEditCP(_DrawnRows[i]._ValueComponent, Component::PositionFieldMask | Component::SizeFieldMask);
     }
 }
 
@@ -935,8 +929,7 @@ void Tree::getDrawnRows(Int32& Beginning, Int32& End) const
 
 void Tree::updatePreferredSize(void)
 {
-    beginEditCP(TreePtr(this), PreferredSizeFieldMask);
-        if(getModelLayout() != NullFC)
+        if(getModelLayout() != NULL)
         {
             setPreferredSize(Vec2f(getPreferredSize().x(), getModelLayout()->getRowCount()* getModelLayout()->getRowHeight()));
         }
@@ -944,7 +937,6 @@ void Tree::updatePreferredSize(void)
         {
             setPreferredSize(Vec2f(0,0));
         }
-    endEditCP(TreePtr(this), PreferredSizeFieldMask);
 }
 
 void Tree::updateExpandedPath(const TreePath& Path)
@@ -993,108 +985,133 @@ void Tree::updateCollapsedPath(const TreePath& Path)
         getSelectionModel()->addSelectionPath(Path);
     }
 }
+void Tree::setModel          (TreeModel * const value)
+{
+    Inherited::setModel(value);
+    
+    //Set the model used by the ModelLayout
+    if(getModelLayout() != NULL)
+    {
+        getModelLayout()->setModel(getModel());
+    }
+
+    updateEntireTree();
+}
+
+void Tree::setModelLayout    (TreeModelLayout * const value)
+{
+    if(getModelLayout() != NULL)
+    {
+        getModelLayout()->removeTreeModelLayoutListener(&_ModelLayoutListener);
+    }
+
+    Inherited::setModelLayout(value);
+
+    if(getModelLayout() != NULL)
+    {
+        //Set the model used by the ModelLayout
+        getModelLayout()->setModel(getModel());
+        getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
+        _SelectionModel->setRowMapper(getModelLayout());
+    }
+    updateEntireTree();
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void Tree::onCreate(const Tree * Id)
+{
+	Inherited::onCreate(Id);
+
+    if(GlobalSystemState == Startup)
+    {
+        return;
+    }
+
+    if(Id != NULL &&
+       getModelLayout() != NULL)
+    {
+        FieldContainerUnrecPtr FCCopy(Id->getModelLayout()->shallowCopy());
+        setModelLayout(dynamic_pointer_cast<TreeModelLayout>(FCCopy));
+    }
+    else
+    {
+        FixedHeightTreeModelLayoutUnrecPtr TheModelLayout(FixedHeightTreeModelLayout::create());
+        setModelLayout(TheModelLayout);
+    }
+    getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
+    getModelLayout()->addTreeModelListener(&_ModelListener);
+
+    if(_SelectionModel != NULL)
+    {
+        _SelectionModel->addTreeSelectionListener(&_SelectionListener);
+        if(getModelLayout() != NULL)
+        {
+            _SelectionModel->setRowMapper(getModelLayout());
+        }
+    }
+}
+
+void Tree::onDestroy()
+{
+    if(_SelectionModel != NULL)
+    {
+        delete _SelectionModel;
+    }
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
 Tree::Tree(void) :
     Inherited(),
         _SelectionModel(new DefaultTreeSelectionModel()),
-        _ModelListener(TreePtr(this)),
-        _SelectionListener(TreePtr(this)),
-		_ModelLayoutListener(TreePtr(this)),
+        _ModelListener(this),
+        _SelectionListener(this),
+		_ModelLayoutListener(this),
         _TopDrawnRow(-1),
         _BottomDrawnRow(-1)
 {
-    if(_SelectionModel != NULL)
-    {
-        _SelectionModel->addTreeSelectionListener(&_SelectionListener);
-        if(getModelLayout() != NullFC)
-        {
-            _SelectionModel->setRowMapper(getModelLayout());
-        }
-    }
 }
 
 Tree::Tree(const Tree &source) :
     Inherited(source),
         _SelectionModel(new DefaultTreeSelectionModel()),
-        _ModelListener(TreePtr(this)),
-        _SelectionListener(TreePtr(this)),
-		_ModelLayoutListener(TreePtr(this)),
+        _ModelListener(this),
+        _SelectionListener(this),
+		_ModelLayoutListener(this),
         _TopDrawnRow(-1),
         _BottomDrawnRow(-1)
 {
-	beginEditCP(TreePtr(this), ModelLayoutFieldMask);
-    if(getModelLayout() != NullFC)
-    {
-			setModelLayout(TreeModelLayout::Ptr::dcast(getModelLayout()->shallowCopy()));
-    }
-	else
-	{
-			setModelLayout(FixedHeightTreeModelLayout::create());
-	}
-    endEditCP(TreePtr(this), ModelLayoutFieldMask);
-	getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
-    getModelLayout()->addTreeModelListener(&_ModelListener);
-    if(_SelectionModel != NULL)
-    {
-        _SelectionModel->addTreeSelectionListener(&_SelectionListener);
-        if(getModelLayout() != NullFC)
-        {
-            _SelectionModel->setRowMapper(getModelLayout());
-        }
-    }
 }
 
 Tree::~Tree(void)
 {
-    delete _SelectionModel;
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Tree::changed(BitVector whichField, UInt32 origin)
+void Tree::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
-    if((whichField & ModelLayoutFieldMask) &&
-        getModelLayout() != NullFC)
-    {
-        //Set the model used by the ModelLayout
-        getModelLayout()->setModel(getModel());
-		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
-        _SelectionModel->setRowMapper(getModelLayout());
-        updateEntireTree();
-    }
     
     if(whichField & Tree::ClipBoundsFieldMask)
     {
         updateRowsDrawn();
     }
-    
-    if(whichField & ModelFieldMask)
-    {
-        //Set the model used by the ModelLayout
-        if(getModelLayout() != NullFC)
-        {
-            getModelLayout()->setModel(getModel());
-        }
-
-        updateEntireTree();
-    }
 }
 
-void Tree::dump(      UInt32    , 
+void Tree::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Tree NI" << std::endl;
 }
 
-void Tree::ModelListener::treeNodesChanged(const TreeModelEventPtr e)
+void Tree::ModelListener::treeNodesChanged(const TreeModelEventUnrecPtr e)
 {
     Int32 Row(-1);
     for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
@@ -1107,7 +1124,7 @@ void Tree::ModelListener::treeNodesChanged(const TreeModelEventPtr e)
     }
 }
 
-void Tree::ModelListener::treeNodesInserted(const TreeModelEventPtr e)
+void Tree::ModelListener::treeNodesInserted(const TreeModelEventUnrecPtr e)
 {
     Int32 InsertedRow(-1);
     for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
@@ -1120,7 +1137,7 @@ void Tree::ModelListener::treeNodesInserted(const TreeModelEventPtr e)
     }
 }
 
-void Tree::ModelListener::treeNodesWillBeRemoved(const TreeModelEventPtr e)
+void Tree::ModelListener::treeNodesWillBeRemoved(const TreeModelEventUnrecPtr e)
 {
     _RomovedNodeRows.clear();
     Int32 RemovedRow(-1);
@@ -1158,7 +1175,7 @@ void Tree::ModelListener::treeNodesWillBeRemoved(const TreeModelEventPtr e)
     _Tree->removeSelectionRows(RemovedSelectionRows);
 }
 
-void Tree::ModelListener::treeNodesRemoved(const TreeModelEventPtr e)
+void Tree::ModelListener::treeNodesRemoved(const TreeModelEventUnrecPtr e)
 {
     Int32 RemovedRow(-1);
     for(std::set<Int32>::iterator Itor(_RomovedNodeRows.begin()) ; Itor != _RomovedNodeRows.end(); ++Itor)
@@ -1171,13 +1188,13 @@ void Tree::ModelListener::treeNodesRemoved(const TreeModelEventPtr e)
     _RomovedNodeRows.clear();
 }
 
-void Tree::ModelListener::treeStructureChanged(const TreeModelEventPtr e)
+void Tree::ModelListener::treeStructureChanged(const TreeModelEventUnrecPtr e)
 {
     //TODO: Implement
     _Tree->updatePreferredSize();
 }
 
-void Tree::SelectionListener::selectionAdded(const TreeSelectionEventPtr e)
+void Tree::SelectionListener::selectionAdded(const TreeSelectionEventUnrecPtr e)
 {
     for(UInt32 i(0) ; i<e->getMFElementsChanged()->size() ; ++i)
     {
@@ -1190,7 +1207,7 @@ void Tree::SelectionListener::selectionAdded(const TreeSelectionEventPtr e)
     }
 }
 
-void Tree::SelectionListener::selectionRemoved(const TreeSelectionEventPtr e)
+void Tree::SelectionListener::selectionRemoved(const TreeSelectionEventUnrecPtr e)
 {
     for(UInt32 i(0) ; i<e->getMFElementsChanged()->size() ; ++i)
     {
@@ -1203,33 +1220,32 @@ void Tree::SelectionListener::selectionRemoved(const TreeSelectionEventPtr e)
     }
 }
 
-void Tree::ModelLayoutListener::treeCollapsed(const TreeModelLayoutEventPtr e)
+void Tree::ModelLayoutListener::treeCollapsed(const TreeModelLayoutEventUnrecPtr e)
 {
     _Tree->updateCollapsedPath(e->getPath());
 }
 
-void Tree::ModelLayoutListener::treeExpanded(const TreeModelLayoutEventPtr e)
+void Tree::ModelLayoutListener::treeExpanded(const TreeModelLayoutEventUnrecPtr e)
 {
     _Tree->updateExpandedPath(e->getPath());
 }
 
-void Tree::ModelLayoutListener::treeWillCollapse(const TreeModelLayoutEventPtr e)
+void Tree::ModelLayoutListener::treeWillCollapse(const TreeModelLayoutEventUnrecPtr e)
 {
     //TODO: Implement
 }
 
-void Tree::ModelLayoutListener::treeWillExpand(const TreeModelLayoutEventPtr e)
+void Tree::ModelLayoutListener::treeWillExpand(const TreeModelLayoutEventUnrecPtr e)
 {
     //TODO: Implement
 }
 
-Tree::TreeRowComponents::TreeRowComponents(void) :  _ExpandedComponent(NullFC), _ValueComponent(NullFC), _Row(-1)
+Tree::TreeRowComponents::TreeRowComponents(void) :  _ExpandedComponent(NULL), _ValueComponent(NULL), _Row(-1)
 {
 }
 
-Tree::TreeRowComponents::TreeRowComponents(ComponentPtr ExpandedComponent, ComponentPtr ValueComponent, Int32 Row) :  _ExpandedComponent(ExpandedComponent), _ValueComponent(ValueComponent), _Row(Row)
+Tree::TreeRowComponents::TreeRowComponents(ComponentRefPtr ExpandedComponent, ComponentRefPtr ValueComponent, Int32 Row) :  _ExpandedComponent(ExpandedComponent), _ValueComponent(ValueComponent), _Row(Row)
 {
 }
 
 OSG_END_NAMESPACE
-

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,17 +38,12 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
-DefaultTreeCellEditor::DefaultTextFieldEditorListener::DefaultTextFieldEditorListener(DefaultTreeCellEditorPtr TheDefaultTreeCellEditor) :
+DefaultTreeCellEditor::DefaultTextFieldEditorListener::DefaultTextFieldEditorListener(DefaultTreeCellEditorRefPtr TheDefaultTreeCellEditor) :
 _DefaultTreeCellEditor(TheDefaultTreeCellEditor)
 {
 }
 
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTTREECELLEDITOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

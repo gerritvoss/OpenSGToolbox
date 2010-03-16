@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,286 +50,618 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETREEINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGTreeModel.h"               // Model Class
+#include "OSGCellEditor.h"              // CellEditor Class
+#include "OSGComponentGenerator.h"      // CellGenerator Class
+#include "OSGTreeModelLayout.h"         // ModelLayout Class
 
 #include "OSGTreeBase.h"
 #include "OSGTree.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TreeBase::ModelFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::ModelFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TreeBase::EditableFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::EditableFieldId);
+/*! \class OSG::Tree
+    A UI Tree.
+ */
 
-const OSG::BitVector  TreeBase::ExpandsSelectedPathsFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::ExpandsSelectedPathsFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  TreeBase::InvokesStopCellEditingFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::InvokesStopCellEditingFieldId);
-
-const OSG::BitVector  TreeBase::RowHeightFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::RowHeightFieldId);
-
-const OSG::BitVector  TreeBase::ScrollsOnExpandFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::ScrollsOnExpandFieldId);
-
-const OSG::BitVector  TreeBase::ShowsRootHandlesFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::ShowsRootHandlesFieldId);
-
-const OSG::BitVector  TreeBase::ToggleClickCountFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::ToggleClickCountFieldId);
-
-const OSG::BitVector  TreeBase::VisibleRowCountFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::VisibleRowCountFieldId);
-
-const OSG::BitVector  TreeBase::CellEditorFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::CellEditorFieldId);
-
-const OSG::BitVector  TreeBase::CellGeneratorFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::CellGeneratorFieldId);
-
-const OSG::BitVector  TreeBase::ModelLayoutFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::ModelLayoutFieldId);
-
-const OSG::BitVector TreeBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var TreeModelPtr    TreeBase::_sfModel
+/*! \var TreeModel *     TreeBase::_sfModel
     
 */
+
 /*! \var bool            TreeBase::_sfEditable
     Is the tree editable
 */
+
 /*! \var bool            TreeBase::_sfExpandsSelectedPaths
     True if selection changes result in the parent path being expanded
 */
+
 /*! \var bool            TreeBase::_sfInvokesStopCellEditing
     If true, when editing is to be stopped by way of selection changing, data in tree changing or other means stopCellEditing  is invoked, and changes are saved.
 */
+
 /*! \var UInt32          TreeBase::_sfRowHeight
     Height to use for each display row.
 */
+
 /*! \var bool            TreeBase::_sfScrollsOnExpand
     If true, when a node is expanded, as many of the descendants are scrolled to be visible.
 */
+
 /*! \var bool            TreeBase::_sfShowsRootHandles
     True if handles are displayed at the topmost level of the tree.
 */
+
 /*! \var UInt32          TreeBase::_sfToggleClickCount
     Number of mouse clicks before a node is expanded.
 */
+
 /*! \var UInt32          TreeBase::_sfVisibleRowCount
     Number of rows to make visible at one time.
 */
-/*! \var CellEditorPtr   TreeBase::_sfCellEditor
-    
-*/
-/*! \var ComponentGeneratorPtr TreeBase::_sfCellGenerator
-    
-*/
-/*! \var TreeModelLayoutPtr TreeBase::_sfModelLayout
+
+/*! \var CellEditor *    TreeBase::_sfCellEditor
     
 */
 
-//! Tree description
+/*! \var ComponentGenerator * TreeBase::_sfCellGenerator
+    
+*/
 
-FieldDescription *TreeBase::_desc[] = 
+/*! \var TreeModelLayout * TreeBase::_sfModelLayout
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Tree *>::_type("TreePtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Tree *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Tree *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Tree *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TreeBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFTreeModelPtr::getClassType(), 
-                     "Model", 
-                     ModelFieldId, ModelFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFModel)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Editable", 
-                     EditableFieldId, EditableFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFEditable)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ExpandsSelectedPaths", 
-                     ExpandsSelectedPathsFieldId, ExpandsSelectedPathsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFExpandsSelectedPaths)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "InvokesStopCellEditing", 
-                     InvokesStopCellEditingFieldId, InvokesStopCellEditingFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFInvokesStopCellEditing)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "RowHeight", 
-                     RowHeightFieldId, RowHeightFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFRowHeight)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ScrollsOnExpand", 
-                     ScrollsOnExpandFieldId, ScrollsOnExpandFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFScrollsOnExpand)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ShowsRootHandles", 
-                     ShowsRootHandlesFieldId, ShowsRootHandlesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFShowsRootHandles)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ToggleClickCount", 
-                     ToggleClickCountFieldId, ToggleClickCountFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFToggleClickCount)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "VisibleRowCount", 
-                     VisibleRowCountFieldId, VisibleRowCountFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFVisibleRowCount)),
-    new FieldDescription(SFCellEditorPtr::getClassType(), 
-                     "CellEditor", 
-                     CellEditorFieldId, CellEditorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFCellEditor)),
-    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
-                     "CellGenerator", 
-                     CellGeneratorFieldId, CellGeneratorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFCellGenerator)),
-    new FieldDescription(SFTreeModelLayoutPtr::getClassType(), 
-                     "ModelLayout", 
-                     ModelLayoutFieldId, ModelLayoutFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFModelLayout))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TreeBase::_type(
-    "Tree",
-    "Container",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TreeBase::createEmpty),
+    pDesc = new SFUnrecTreeModelPtr::Description(
+        SFUnrecTreeModelPtr::getClassType(),
+        "Model",
+        "",
+        ModelFieldId, ModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleModel),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleModel));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Editable",
+        "Is the tree editable\n",
+        EditableFieldId, EditableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleEditable),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleEditable));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ExpandsSelectedPaths",
+        "True if selection changes result in the parent path being expanded\n",
+        ExpandsSelectedPathsFieldId, ExpandsSelectedPathsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleExpandsSelectedPaths),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleExpandsSelectedPaths));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "InvokesStopCellEditing",
+        "If true, when editing is to be stopped by way of selection changing, data in tree changing or other means stopCellEditing  is invoked, and changes are saved.\n",
+        InvokesStopCellEditingFieldId, InvokesStopCellEditingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleInvokesStopCellEditing),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleInvokesStopCellEditing));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "RowHeight",
+        "Height to use for each display row.\n",
+        RowHeightFieldId, RowHeightFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleRowHeight),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleRowHeight));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ScrollsOnExpand",
+        "If true, when a node is expanded, as many of the descendants are scrolled to be visible.\n",
+        ScrollsOnExpandFieldId, ScrollsOnExpandFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleScrollsOnExpand),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleScrollsOnExpand));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ShowsRootHandles",
+        "True if handles are displayed at the topmost level of the tree.\n",
+        ShowsRootHandlesFieldId, ShowsRootHandlesFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleShowsRootHandles),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleShowsRootHandles));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ToggleClickCount",
+        "Number of mouse clicks before a node is expanded.\n",
+        ToggleClickCountFieldId, ToggleClickCountFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleToggleClickCount),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleToggleClickCount));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "VisibleRowCount",
+        "Number of rows to make visible at one time.\n",
+        VisibleRowCountFieldId, VisibleRowCountFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleVisibleRowCount),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleVisibleRowCount));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecCellEditorPtr::Description(
+        SFUnrecCellEditorPtr::getClassType(),
+        "CellEditor",
+        "",
+        CellEditorFieldId, CellEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleCellEditor),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleCellEditor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecComponentGeneratorPtr::Description(
+        SFUnrecComponentGeneratorPtr::getClassType(),
+        "CellGenerator",
+        "",
+        CellGeneratorFieldId, CellGeneratorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleCellGenerator),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleCellGenerator));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecTreeModelLayoutPtr::Description(
+        SFUnrecTreeModelLayoutPtr::getClassType(),
+        "ModelLayout",
+        "",
+        ModelLayoutFieldId, ModelLayoutFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleModelLayout),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleModelLayout));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+TreeBase::TypeObject TreeBase::_type(
+    TreeBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TreeBase::createEmptyLocal),
     Tree::initMethod,
-    _desc,
-    sizeof(_desc));
+    Tree::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Tree::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"Tree\"\n"
+    "    parent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    >\n"
+    "    A UI Tree.\n"
+    "    <Field\n"
+    "        name=\"Model\"\n"
+    "        type=\"TreeModel\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Editable\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"false\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Is the tree editable\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ExpandsSelectedPaths\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"false\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        True if selection changes result in the parent path being expanded\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"InvokesStopCellEditing\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"false\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        If true, when editing is to be stopped by way of selection changing, data in tree changing or other means stopCellEditing  is invoked, and changes are saved.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"RowHeight\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"false\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Height to use for each display row.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ScrollsOnExpand\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        If true, when a node is expanded, as many of the descendants are scrolled to be visible.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ShowsRootHandles\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        True if handles are displayed at the topmost level of the tree.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ToggleClickCount\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"2\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Number of mouse clicks before a node is expanded.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"VisibleRowCount\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"10\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Number of rows to make visible at one time.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"CellEditor\"\n"
+    "        type=\"CellEditor\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"CellGenerator\"\n"
+    "        type=\"ComponentGenerator\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ModelLayout\"\n"
+    "        type=\"TreeModelLayout\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Tree.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TreeBase, TreePtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TreeBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TreeBase::getType(void) const 
+FieldContainerType &TreeBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TreeBase::shallowCopy(void) const 
-{ 
-    TreePtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Tree *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TreeBase::getContainerSize(void) const 
-{ 
-    return sizeof(Tree); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TreeBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<TreeBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void TreeBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TreeBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TreeBase *) &other, whichField, sInfo);
+    return sizeof(Tree);
 }
-void TreeBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Tree::_sfModel field.
+const SFUnrecTreeModelPtr *TreeBase::getSFModel(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfModel;
 }
 
-void TreeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecTreeModelPtr *TreeBase::editSFModel          (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ModelFieldMask);
 
+    return &_sfModel;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TreeBase::TreeBase(void) :
-    _sfModel                  (), 
-    _sfEditable               (bool(false)), 
-    _sfExpandsSelectedPaths   (bool(false)), 
-    _sfInvokesStopCellEditing (bool(false)), 
-    _sfRowHeight              (UInt32(false)), 
-    _sfScrollsOnExpand        (bool(true)), 
-    _sfShowsRootHandles       (bool(true)), 
-    _sfToggleClickCount       (UInt32(2)), 
-    _sfVisibleRowCount        (UInt32(10)), 
-    _sfCellEditor             (CellEditorPtr(NullFC)), 
-    _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
-    _sfModelLayout            (TreeModelLayoutPtr(NullFC)), 
-    Inherited() 
+SFBool *TreeBase::editSFEditable(void)
 {
+    editSField(EditableFieldMask);
+
+    return &_sfEditable;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TreeBase::TreeBase(const TreeBase &source) :
-    _sfModel                  (source._sfModel                  ), 
-    _sfEditable               (source._sfEditable               ), 
-    _sfExpandsSelectedPaths   (source._sfExpandsSelectedPaths   ), 
-    _sfInvokesStopCellEditing (source._sfInvokesStopCellEditing ), 
-    _sfRowHeight              (source._sfRowHeight              ), 
-    _sfScrollsOnExpand        (source._sfScrollsOnExpand        ), 
-    _sfShowsRootHandles       (source._sfShowsRootHandles       ), 
-    _sfToggleClickCount       (source._sfToggleClickCount       ), 
-    _sfVisibleRowCount        (source._sfVisibleRowCount        ), 
-    _sfCellEditor             (source._sfCellEditor             ), 
-    _sfCellGenerator          (source._sfCellGenerator          ), 
-    _sfModelLayout            (source._sfModelLayout            ), 
-    Inherited                 (source)
+const SFBool *TreeBase::getSFEditable(void) const
 {
+    return &_sfEditable;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-TreeBase::~TreeBase(void)
+SFBool *TreeBase::editSFExpandsSelectedPaths(void)
 {
+    editSField(ExpandsSelectedPathsFieldMask);
+
+    return &_sfExpandsSelectedPaths;
 }
+
+const SFBool *TreeBase::getSFExpandsSelectedPaths(void) const
+{
+    return &_sfExpandsSelectedPaths;
+}
+
+
+SFBool *TreeBase::editSFInvokesStopCellEditing(void)
+{
+    editSField(InvokesStopCellEditingFieldMask);
+
+    return &_sfInvokesStopCellEditing;
+}
+
+const SFBool *TreeBase::getSFInvokesStopCellEditing(void) const
+{
+    return &_sfInvokesStopCellEditing;
+}
+
+
+SFUInt32 *TreeBase::editSFRowHeight(void)
+{
+    editSField(RowHeightFieldMask);
+
+    return &_sfRowHeight;
+}
+
+const SFUInt32 *TreeBase::getSFRowHeight(void) const
+{
+    return &_sfRowHeight;
+}
+
+
+SFBool *TreeBase::editSFScrollsOnExpand(void)
+{
+    editSField(ScrollsOnExpandFieldMask);
+
+    return &_sfScrollsOnExpand;
+}
+
+const SFBool *TreeBase::getSFScrollsOnExpand(void) const
+{
+    return &_sfScrollsOnExpand;
+}
+
+
+SFBool *TreeBase::editSFShowsRootHandles(void)
+{
+    editSField(ShowsRootHandlesFieldMask);
+
+    return &_sfShowsRootHandles;
+}
+
+const SFBool *TreeBase::getSFShowsRootHandles(void) const
+{
+    return &_sfShowsRootHandles;
+}
+
+
+SFUInt32 *TreeBase::editSFToggleClickCount(void)
+{
+    editSField(ToggleClickCountFieldMask);
+
+    return &_sfToggleClickCount;
+}
+
+const SFUInt32 *TreeBase::getSFToggleClickCount(void) const
+{
+    return &_sfToggleClickCount;
+}
+
+
+SFUInt32 *TreeBase::editSFVisibleRowCount(void)
+{
+    editSField(VisibleRowCountFieldMask);
+
+    return &_sfVisibleRowCount;
+}
+
+const SFUInt32 *TreeBase::getSFVisibleRowCount(void) const
+{
+    return &_sfVisibleRowCount;
+}
+
+
+//! Get the Tree::_sfCellEditor field.
+const SFUnrecCellEditorPtr *TreeBase::getSFCellEditor(void) const
+{
+    return &_sfCellEditor;
+}
+
+SFUnrecCellEditorPtr *TreeBase::editSFCellEditor     (void)
+{
+    editSField(CellEditorFieldMask);
+
+    return &_sfCellEditor;
+}
+
+//! Get the Tree::_sfCellGenerator field.
+const SFUnrecComponentGeneratorPtr *TreeBase::getSFCellGenerator(void) const
+{
+    return &_sfCellGenerator;
+}
+
+SFUnrecComponentGeneratorPtr *TreeBase::editSFCellGenerator  (void)
+{
+    editSField(CellGeneratorFieldMask);
+
+    return &_sfCellGenerator;
+}
+
+//! Get the Tree::_sfModelLayout field.
+const SFUnrecTreeModelLayoutPtr *TreeBase::getSFModelLayout(void) const
+{
+    return &_sfModelLayout;
+}
+
+SFUnrecTreeModelLayoutPtr *TreeBase::editSFModelLayout    (void)
+{
+    editSField(ModelLayoutFieldMask);
+
+    return &_sfModelLayout;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TreeBase::getBinSize(const BitVector &whichField)
+UInt32 TreeBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -337,68 +669,56 @@ UInt32 TreeBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfModel.getBinSize();
     }
-
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         returnValue += _sfEditable.getBinSize();
     }
-
     if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
     {
         returnValue += _sfExpandsSelectedPaths.getBinSize();
     }
-
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
     {
         returnValue += _sfInvokesStopCellEditing.getBinSize();
     }
-
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
     {
         returnValue += _sfRowHeight.getBinSize();
     }
-
     if(FieldBits::NoField != (ScrollsOnExpandFieldMask & whichField))
     {
         returnValue += _sfScrollsOnExpand.getBinSize();
     }
-
     if(FieldBits::NoField != (ShowsRootHandlesFieldMask & whichField))
     {
         returnValue += _sfShowsRootHandles.getBinSize();
     }
-
     if(FieldBits::NoField != (ToggleClickCountFieldMask & whichField))
     {
         returnValue += _sfToggleClickCount.getBinSize();
     }
-
     if(FieldBits::NoField != (VisibleRowCountFieldMask & whichField))
     {
         returnValue += _sfVisibleRowCount.getBinSize();
     }
-
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
     {
         returnValue += _sfCellEditor.getBinSize();
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         returnValue += _sfCellGenerator.getBinSize();
     }
-
     if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
     {
         returnValue += _sfModelLayout.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TreeBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TreeBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -406,67 +726,54 @@ void TreeBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         _sfEditable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
     {
         _sfExpandsSelectedPaths.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
     {
         _sfInvokesStopCellEditing.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
     {
         _sfRowHeight.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ScrollsOnExpandFieldMask & whichField))
     {
         _sfScrollsOnExpand.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ShowsRootHandlesFieldMask & whichField))
     {
         _sfShowsRootHandles.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ToggleClickCountFieldMask & whichField))
     {
         _sfToggleClickCount.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VisibleRowCountFieldMask & whichField))
     {
         _sfVisibleRowCount.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
     {
         _sfCellEditor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
     {
         _sfModelLayout.copyToBin(pMem);
     }
-
-
 }
 
-void TreeBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TreeBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -474,183 +781,591 @@ void TreeBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         _sfEditable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
     {
         _sfExpandsSelectedPaths.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
     {
         _sfInvokesStopCellEditing.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
     {
         _sfRowHeight.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ScrollsOnExpandFieldMask & whichField))
     {
         _sfScrollsOnExpand.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ShowsRootHandlesFieldMask & whichField))
     {
         _sfShowsRootHandles.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ToggleClickCountFieldMask & whichField))
     {
         _sfToggleClickCount.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VisibleRowCountFieldMask & whichField))
     {
         _sfVisibleRowCount.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
     {
         _sfCellEditor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
     {
         _sfModelLayout.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeBase::executeSyncImpl(      TreeBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TreeTransitPtr TreeBase::createLocal(BitVector bFlags)
 {
+    TreeTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
+        fc = dynamic_pointer_cast<Tree>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (EditableFieldMask & whichField))
-        _sfEditable.syncWith(pOther->_sfEditable);
-
-    if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
-        _sfExpandsSelectedPaths.syncWith(pOther->_sfExpandsSelectedPaths);
-
-    if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
-        _sfInvokesStopCellEditing.syncWith(pOther->_sfInvokesStopCellEditing);
-
-    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
-        _sfRowHeight.syncWith(pOther->_sfRowHeight);
-
-    if(FieldBits::NoField != (ScrollsOnExpandFieldMask & whichField))
-        _sfScrollsOnExpand.syncWith(pOther->_sfScrollsOnExpand);
-
-    if(FieldBits::NoField != (ShowsRootHandlesFieldMask & whichField))
-        _sfShowsRootHandles.syncWith(pOther->_sfShowsRootHandles);
-
-    if(FieldBits::NoField != (ToggleClickCountFieldMask & whichField))
-        _sfToggleClickCount.syncWith(pOther->_sfToggleClickCount);
-
-    if(FieldBits::NoField != (VisibleRowCountFieldMask & whichField))
-        _sfVisibleRowCount.syncWith(pOther->_sfVisibleRowCount);
-
-    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
-        _sfCellEditor.syncWith(pOther->_sfCellEditor);
-
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-    if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
-        _sfModelLayout.syncWith(pOther->_sfModelLayout);
-
-
-}
-#else
-void TreeBase::executeSyncImpl(      TreeBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
-
-    if(FieldBits::NoField != (EditableFieldMask & whichField))
-        _sfEditable.syncWith(pOther->_sfEditable);
-
-    if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
-        _sfExpandsSelectedPaths.syncWith(pOther->_sfExpandsSelectedPaths);
-
-    if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
-        _sfInvokesStopCellEditing.syncWith(pOther->_sfInvokesStopCellEditing);
-
-    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
-        _sfRowHeight.syncWith(pOther->_sfRowHeight);
-
-    if(FieldBits::NoField != (ScrollsOnExpandFieldMask & whichField))
-        _sfScrollsOnExpand.syncWith(pOther->_sfScrollsOnExpand);
-
-    if(FieldBits::NoField != (ShowsRootHandlesFieldMask & whichField))
-        _sfShowsRootHandles.syncWith(pOther->_sfShowsRootHandles);
-
-    if(FieldBits::NoField != (ToggleClickCountFieldMask & whichField))
-        _sfToggleClickCount.syncWith(pOther->_sfToggleClickCount);
-
-    if(FieldBits::NoField != (VisibleRowCountFieldMask & whichField))
-        _sfVisibleRowCount.syncWith(pOther->_sfVisibleRowCount);
-
-    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
-        _sfCellEditor.syncWith(pOther->_sfCellEditor);
-
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-    if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
-        _sfModelLayout.syncWith(pOther->_sfModelLayout);
-
-
-
+    return fc;
 }
 
-void TreeBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TreeTransitPtr TreeBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TreeTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Tree>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TreeTransitPtr TreeBase::create(void)
+{
+    TreeTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Tree>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Tree *TreeBase::createEmptyLocal(BitVector bFlags)
+{
+    Tree *returnValue;
+
+    newPtr<Tree>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Tree *TreeBase::createEmpty(void)
+{
+    Tree *returnValue;
+
+    newPtr<Tree>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TreeBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Tree *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Tree *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TreeBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Tree *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Tree *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TreeBase::shallowCopy(void) const
+{
+    Tree *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Tree *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TreeBase::TreeBase(void) :
+    Inherited(),
+    _sfModel                  (NULL),
+    _sfEditable               (bool(false)),
+    _sfExpandsSelectedPaths   (bool(false)),
+    _sfInvokesStopCellEditing (bool(false)),
+    _sfRowHeight              (UInt32(false)),
+    _sfScrollsOnExpand        (bool(true)),
+    _sfShowsRootHandles       (bool(true)),
+    _sfToggleClickCount       (UInt32(2)),
+    _sfVisibleRowCount        (UInt32(10)),
+    _sfCellEditor             (NULL),
+    _sfCellGenerator          (NULL),
+    _sfModelLayout            (NULL)
+{
+}
+
+TreeBase::TreeBase(const TreeBase &source) :
+    Inherited(source),
+    _sfModel                  (NULL),
+    _sfEditable               (source._sfEditable               ),
+    _sfExpandsSelectedPaths   (source._sfExpandsSelectedPaths   ),
+    _sfInvokesStopCellEditing (source._sfInvokesStopCellEditing ),
+    _sfRowHeight              (source._sfRowHeight              ),
+    _sfScrollsOnExpand        (source._sfScrollsOnExpand        ),
+    _sfShowsRootHandles       (source._sfShowsRootHandles       ),
+    _sfToggleClickCount       (source._sfToggleClickCount       ),
+    _sfVisibleRowCount        (source._sfVisibleRowCount        ),
+    _sfCellEditor             (NULL),
+    _sfCellGenerator          (NULL),
+    _sfModelLayout            (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TreeBase::~TreeBase(void)
+{
+}
+
+void TreeBase::onCreate(const Tree *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Tree *pThis = static_cast<Tree *>(this);
+
+        pThis->setModel(source->getModel());
+
+        pThis->setCellEditor(source->getCellEditor());
+
+        pThis->setCellGenerator(source->getCellGenerator());
+
+        pThis->setModelLayout(source->getModelLayout());
+    }
+}
+
+GetFieldHandlePtr TreeBase::getHandleModel           (void) const
+{
+    SFUnrecTreeModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecTreeModelPtr::GetHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleModel          (void)
+{
+    SFUnrecTreeModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecTreeModelPtr::EditHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Tree::setModel,
+                    static_cast<Tree *>(this), _1));
+
+    editSField(ModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleEditable        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfEditable,
+             this->getType().getFieldDesc(EditableFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleEditable       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfEditable,
+             this->getType().getFieldDesc(EditableFieldId),
+             this));
+
+
+    editSField(EditableFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleExpandsSelectedPaths (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfExpandsSelectedPaths,
+             this->getType().getFieldDesc(ExpandsSelectedPathsFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleExpandsSelectedPaths(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfExpandsSelectedPaths,
+             this->getType().getFieldDesc(ExpandsSelectedPathsFieldId),
+             this));
+
+
+    editSField(ExpandsSelectedPathsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleInvokesStopCellEditing (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfInvokesStopCellEditing,
+             this->getType().getFieldDesc(InvokesStopCellEditingFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleInvokesStopCellEditing(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfInvokesStopCellEditing,
+             this->getType().getFieldDesc(InvokesStopCellEditingFieldId),
+             this));
+
+
+    editSField(InvokesStopCellEditingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleRowHeight       (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfRowHeight,
+             this->getType().getFieldDesc(RowHeightFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleRowHeight      (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfRowHeight,
+             this->getType().getFieldDesc(RowHeightFieldId),
+             this));
+
+
+    editSField(RowHeightFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleScrollsOnExpand (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfScrollsOnExpand,
+             this->getType().getFieldDesc(ScrollsOnExpandFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleScrollsOnExpand(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfScrollsOnExpand,
+             this->getType().getFieldDesc(ScrollsOnExpandFieldId),
+             this));
+
+
+    editSField(ScrollsOnExpandFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleShowsRootHandles (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfShowsRootHandles,
+             this->getType().getFieldDesc(ShowsRootHandlesFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleShowsRootHandles(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfShowsRootHandles,
+             this->getType().getFieldDesc(ShowsRootHandlesFieldId),
+             this));
+
+
+    editSField(ShowsRootHandlesFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleToggleClickCount (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfToggleClickCount,
+             this->getType().getFieldDesc(ToggleClickCountFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleToggleClickCount(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfToggleClickCount,
+             this->getType().getFieldDesc(ToggleClickCountFieldId),
+             this));
+
+
+    editSField(ToggleClickCountFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleVisibleRowCount (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfVisibleRowCount,
+             this->getType().getFieldDesc(VisibleRowCountFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleVisibleRowCount(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfVisibleRowCount,
+             this->getType().getFieldDesc(VisibleRowCountFieldId),
+             this));
+
+
+    editSField(VisibleRowCountFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleCellEditor      (void) const
+{
+    SFUnrecCellEditorPtr::GetHandlePtr returnValue(
+        new  SFUnrecCellEditorPtr::GetHandle(
+             &_sfCellEditor,
+             this->getType().getFieldDesc(CellEditorFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleCellEditor     (void)
+{
+    SFUnrecCellEditorPtr::EditHandlePtr returnValue(
+        new  SFUnrecCellEditorPtr::EditHandle(
+             &_sfCellEditor,
+             this->getType().getFieldDesc(CellEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Tree::setCellEditor,
+                    static_cast<Tree *>(this), _1));
+
+    editSField(CellEditorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleCellGenerator   (void) const
+{
+    SFUnrecComponentGeneratorPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::GetHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleCellGenerator  (void)
+{
+    SFUnrecComponentGeneratorPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::EditHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Tree::setCellGenerator,
+                    static_cast<Tree *>(this), _1));
+
+    editSField(CellGeneratorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeBase::getHandleModelLayout     (void) const
+{
+    SFUnrecTreeModelLayoutPtr::GetHandlePtr returnValue(
+        new  SFUnrecTreeModelLayoutPtr::GetHandle(
+             &_sfModelLayout,
+             this->getType().getFieldDesc(ModelLayoutFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleModelLayout    (void)
+{
+    SFUnrecTreeModelLayoutPtr::EditHandlePtr returnValue(
+        new  SFUnrecTreeModelLayoutPtr::EditHandle(
+             &_sfModelLayout,
+             this->getType().getFieldDesc(ModelLayoutFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Tree::setModelLayout,
+                    static_cast<Tree *>(this), _1));
+
+    editSField(ModelLayoutFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TreeBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Tree *pThis = static_cast<Tree *>(this);
+
+    pThis->execSync(static_cast<Tree *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TreeBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Tree *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Tree *>(pRefAspect),
+                  dynamic_cast<const Tree *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TreePtr>::_type("TreePtr", "ContainerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TreePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TreePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void TreeBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Tree *>(this)->setModel(NULL);
+
+    static_cast<Tree *>(this)->setCellEditor(NULL);
+
+    static_cast<Tree *>(this)->setCellGenerator(NULL);
+
+    static_cast<Tree *>(this)->setModelLayout(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

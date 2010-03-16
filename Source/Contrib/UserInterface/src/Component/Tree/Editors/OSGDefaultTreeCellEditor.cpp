@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGFieldFactory.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultTreeCellEditor.h"
-#include "Component/Text/OSGTextField.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OSGTree.h"
+#include "OSGTextField.h"
+#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultTreeCellEditor
-A UI Default Tree Cell Editor.  	
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultTreeCellEditorBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultTreeCellEditor.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +65,13 @@ A UI Default Tree Cell Editor.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultTreeCellEditor::initMethod (void)
+void DefaultTreeCellEditor::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,59 +79,55 @@ void DefaultTreeCellEditor::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTreeCellEditor::getTreeCellEditorComponent(TreePtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row)
+ComponentRefPtr DefaultTreeCellEditor::getTreeCellEditorComponent(TreeRefPtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row)
 {
     _EditingValue = Value;
 
-	if(_EditingValue.empty()){
-		return NullFC;
-	}
+    if(_EditingValue.empty()){
+        return NULL;
+    }
 
     if(_EditingValue.type() == typeid(std::string))
     {
         //Use String Text Field As Editing Component
-	    beginEditCP(getDefaultStringEditor(), TextField::TextFieldMask | TextField::CaretPositionFieldMask);
-		    std::string tempString;
-            try
-            {
-                tempString = lexical_cast(_EditingValue);
-            }
-            catch (boost::bad_lexical_cast &)
-            {
-                //Could not convert to string
-            }
-		    getDefaultStringEditor()->setText(tempString);
-		    getDefaultStringEditor()->selectAll();
-		    getDefaultStringEditor()->setCaretPosition(getDefaultStringEditor()->getText().size());
-	    endEditCP(getDefaultStringEditor(), TextField::TextFieldMask | TextField::CaretPositionFieldMask);
+        std::string tempString;
+        try
+        {
+            tempString = lexical_cast(_EditingValue);
+        }
+        catch (boost::bad_lexical_cast &)
+        {
+            //Could not convert to string
+        }
+        getDefaultStringEditor()->setText(tempString);
+        getDefaultStringEditor()->selectAll();
+        getDefaultStringEditor()->setCaretPosition(getDefaultStringEditor()->getText().size());
 
         getDefaultStringEditor()->addActionListener(&_DefaultTextFieldEditorListener);
         getDefaultStringEditor()->addFocusListener(&_DefaultTextFieldEditorListener);
         getDefaultStringEditor()->addKeyListener(&_DefaultTextFieldEditorListener);
 
-	    return getDefaultStringEditor();
+        return getDefaultStringEditor();
     }
     else
     {
         //Use Default Text Field As Editing Component
-	    beginEditCP(getDefaultEditor(), TextField::TextFieldMask | TextField::CaretPositionFieldMask);
-		    std::string tempString;
-		    getDefaultEditor()->setText(tempString);
-		    getDefaultEditor()->selectAll();
-		    getDefaultEditor()->setCaretPosition(getDefaultEditor()->getText().size());
-	    endEditCP(getDefaultEditor(), TextField::TextFieldMask | TextField::CaretPositionFieldMask);
+        std::string tempString;
+        getDefaultEditor()->setText(tempString);
+        getDefaultEditor()->selectAll();
+        getDefaultEditor()->setCaretPosition(getDefaultEditor()->getText().size());
 
         getDefaultEditor()->addActionListener(&_DefaultTextFieldEditorListener);
         getDefaultEditor()->addFocusListener(&_DefaultTextFieldEditorListener);
         getDefaultEditor()->addKeyListener(&_DefaultTextFieldEditorListener);
 
-	    return getDefaultEditor();
+        return getDefaultEditor();
     }
 }
 
-ComponentPtr DefaultTreeCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
+ComponentRefPtr DefaultTreeCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
 {
-    return getTreeCellEditorComponent(NullFC, Value, IsSelected, false, 0);
+    return getTreeCellEditorComponent(NULL, Value, IsSelected, false, 0);
 }
 
 void DefaultTreeCellEditor::cancelCellEditing(void)
@@ -165,11 +161,11 @@ boost::any DefaultTreeCellEditor::getCellEditorValue(void) const
     return _EditingValue;
 }
 
-bool DefaultTreeCellEditor::isCellEditable(const EventPtr anEvent) const
+bool DefaultTreeCellEditor::isCellEditable(const EventUnrecPtr anEvent) const
 {
     if(/*anEvent.getType() != MouseEvent::getClassType() ||*/
        (anEvent->getType().isDerivedFrom(MouseEvent::getClassType()) &&
-       MouseEventPtr::dcast(anEvent)->getClickCount() >= getClickCountToStart()))
+        dynamic_pointer_cast<MouseEvent>(anEvent)->getClickCount() >= getClickCountToStart()))
     {
         return Inherited::isCellEditable(anEvent);
     }
@@ -179,7 +175,7 @@ bool DefaultTreeCellEditor::isCellEditable(const EventPtr anEvent) const
     }
 }
 
-bool DefaultTreeCellEditor::shouldSelectCell(const EventPtr anEvent) const
+bool DefaultTreeCellEditor::shouldSelectCell(const EventUnrecPtr anEvent) const
 {
     return Inherited::shouldSelectCell(anEvent);
 }
@@ -202,7 +198,7 @@ bool DefaultTreeCellEditor::stopCellEditing(void)
     return Inherited::stopCellEditing();
 }
 
-ComponentPtr DefaultTreeCellEditor::getComponent(void) const
+ComponentRefPtr DefaultTreeCellEditor::getComponent(void) const
 {
     if(_EditingValue.type() == typeid(std::string))
     {
@@ -222,15 +218,16 @@ ComponentPtr DefaultTreeCellEditor::getComponent(void) const
 
 DefaultTreeCellEditor::DefaultTreeCellEditor(void) :
     Inherited(),
-        _DefaultTextFieldEditorListener(DefaultTreeCellEditorPtr(this)),
+        _DefaultTextFieldEditorListener(this),
         _EditingValue(new SFString())
 {
 }
 
 DefaultTreeCellEditor::DefaultTreeCellEditor(const DefaultTreeCellEditor &source) :
     Inherited(source),
-        _DefaultTextFieldEditorListener(DefaultTreeCellEditorPtr(this)),
+        _DefaultTextFieldEditorListener(this),
         _EditingValue(new SFString())
+
 {
 }
 
@@ -240,34 +237,35 @@ DefaultTreeCellEditor::~DefaultTreeCellEditor(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultTreeCellEditor::changed(BitVector whichField, UInt32 origin)
+void DefaultTreeCellEditor::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DefaultTreeCellEditor::dump(      UInt32    , 
+void DefaultTreeCellEditor::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultTreeCellEditor NI" << std::endl;
 }
 
-
-void DefaultTreeCellEditor::DefaultTextFieldEditorListener::actionPerformed(const ActionEventPtr e)
+void DefaultTreeCellEditor::DefaultTextFieldEditorListener::actionPerformed(const ActionEventUnrecPtr e)
 {
     _DefaultTreeCellEditor->stopCellEditing();
 }
 
-void DefaultTreeCellEditor::DefaultTextFieldEditorListener::focusGained(const FocusEventPtr e)
+void DefaultTreeCellEditor::DefaultTextFieldEditorListener::focusGained(const FocusEventUnrecPtr e)
 {
 	//Do nothing
 }
 
-void DefaultTreeCellEditor::DefaultTextFieldEditorListener::focusLost(const FocusEventPtr e)
+void DefaultTreeCellEditor::DefaultTextFieldEditorListener::focusLost(const FocusEventUnrecPtr e)
 {
     _DefaultTreeCellEditor->stopCellEditing();
 }
 
-void DefaultTreeCellEditor::DefaultTextFieldEditorListener::keyPressed(const KeyEventPtr e)
+void DefaultTreeCellEditor::DefaultTextFieldEditorListener::keyPressed(const KeyEventUnrecPtr e)
 {
 	if(e->getKey() == KeyEvent::KEY_ESCAPE ||
 		e->getKey() == KeyEvent::KEY_CANCEL)
@@ -276,29 +274,4 @@ void DefaultTreeCellEditor::DefaultTextFieldEditorListener::keyPressed(const Key
 	}
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTTREECELLEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTTREECELLEDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTTREECELLEDITORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTreeSelectionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TreeSelectionEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGTreeSelectionEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGTreeSelectionEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,30 +62,36 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TreeSelectionEvent::initMethod (void)
+void TreeSelectionEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-TreeSelectionEventPtr TreeSelectionEvent::create(  FieldContainerPtr Source,
-                                                   Time TimeStamp,
-                                                   const std::vector<NumberRange>& ElementsChanged,
-                                                   Int32 NewLeadSelectionPath,
-                                                   Int32 OldLeadSelectionPath)
+TreeSelectionEventTransitPtr TreeSelectionEvent::create(  FieldContainerRefPtr Source,
+                                                          Time TimeStamp,
+                                                          const std::vector<NumberRange>& ElementsChanged,
+                                                          Int32 NewLeadSelectionPath,
+                                                          Int32 OldLeadSelectionPath)
 {
-    TreeSelectionEventPtr TheEvent = TreeSelectionEvent::createEmpty();
+    TreeSelectionEvent* TheEvent = TreeSelectionEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setNewLeadSelectionPath(NewLeadSelectionPath);
     TheEvent->setOldLeadSelectionPath(OldLeadSelectionPath);
-    TheEvent->getElementsChanged().resize(ElementsChanged.size());
+    TheEvent->editMFElementsChanged()->resize(ElementsChanged.size());
     for(UInt32 i(0) ; i<ElementsChanged.size() ; ++i)
     {
-        TheEvent->editElementsChanged(i) = Vec2s(ElementsChanged[i].getMin(), ElementsChanged[i].getMax());
+        (*TheEvent->editMFElementsChanged())[i] = Vec2s(ElementsChanged[i].getMin(), ElementsChanged[i].getMax());
     }
 
-    return TheEvent;
+    return TreeSelectionEventTransitPtr(TheEvent);
 }
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -118,17 +119,17 @@ TreeSelectionEvent::~TreeSelectionEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TreeSelectionEvent::changed(BitVector whichField, UInt32 origin)
+void TreeSelectionEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TreeSelectionEvent::dump(      UInt32    , 
+void TreeSelectionEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TreeSelectionEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

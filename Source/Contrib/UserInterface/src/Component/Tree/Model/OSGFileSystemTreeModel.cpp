@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGFileSystemTreeModel.h"
 #include <boost/filesystem/operations.hpp>
-#include "Component/Tree/OSGTreePath.h"
+#include "OSGTreePath.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::FileSystemTreeModel
-A UI FileSystemTreeModel.  	
-*/
+// Documentation for this class is emitted in the
+// OSGFileSystemTreeModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGFileSystemTreeModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,33 +64,39 @@ A UI FileSystemTreeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void FileSystemTreeModel::initMethod (void)
+void FileSystemTreeModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
 boost::any FileSystemTreeModel::getChild(const boost::any& parent, const UInt32& index) const
 {
     try
     {
-		Path ThePath = boost::any_cast<Path>(parent);
+        BoostPath ThePath = boost::any_cast<BoostPath>(parent);
 
         if(!ThePath.empty() &&
-			boost::filesystem::exists(ThePath))
+           boost::filesystem::exists(ThePath))
         {
-			boost::filesystem::directory_iterator end_iter;
-			UInt32 Count(0);
-			for ( boost::filesystem::directory_iterator dir_itr( ThePath ); dir_itr != end_iter; ++dir_itr )
-			{
-				if(Count == index)
-				{
-					return boost::any(dir_itr->path());
-				}
-				++Count;
-			}
+            boost::filesystem::directory_iterator end_iter;
+            UInt32 Count(0);
+            for ( boost::filesystem::directory_iterator dir_itr( ThePath ); dir_itr != end_iter; ++dir_itr )
+            {
+                if(Count == index)
+                {
+                    return boost::any(dir_itr->path());
+                }
+                ++Count;
+            }
         }
         return boost::any();
     }
@@ -109,10 +110,10 @@ boost::any FileSystemTreeModel::getParent(const boost::any& node) const
 {
     try
     {
-		Path ThePath = boost::any_cast<Path>(node);
+        BoostPath ThePath = boost::any_cast<BoostPath>(node);
 
         if(!ThePath.empty() || 
-            boost::filesystem::equivalent(ThePath, getInternalRoot()))
+           boost::filesystem::equivalent(ThePath, getInternalRoot()))
         {
             return boost::any(ThePath.parent_path());
         }
@@ -128,17 +129,17 @@ UInt32 FileSystemTreeModel::getChildCount(const boost::any& parent) const
 {
     try
     {
-		Path ThePath = boost::any_cast<Path>(parent);
+        BoostPath ThePath = boost::any_cast<BoostPath>(parent);
 
-		UInt32 Count(0);
+        UInt32 Count(0);
         if(!ThePath.empty() &&
-			boost::filesystem::exists(ThePath))
+           boost::filesystem::exists(ThePath))
         {
-			boost::filesystem::directory_iterator end_iter;
-			for ( boost::filesystem::directory_iterator dir_itr( ThePath ); dir_itr != end_iter; ++dir_itr )
-			{
-				++Count;
-			}
+            boost::filesystem::directory_iterator end_iter;
+            for ( boost::filesystem::directory_iterator dir_itr( ThePath ); dir_itr != end_iter; ++dir_itr )
+            {
+                ++Count;
+            }
         }
         return Count;
     }
@@ -152,29 +153,29 @@ UInt32 FileSystemTreeModel::getIndexOfChild(const boost::any& parent, const boos
 {
     try
     {
-		Path ParentPath = boost::any_cast<Path>(parent);
-		Path ChildPath = boost::any_cast<Path>(child);
+        BoostPath ParentPath = boost::any_cast<BoostPath>(parent);
+        BoostPath ChildPath = boost::any_cast<BoostPath>(child);
 
         if(!ParentPath.empty() &&
-			boost::filesystem::exists(ParentPath))
+           boost::filesystem::exists(ParentPath))
         {
-			boost::filesystem::directory_iterator end_iter;
-			UInt32 Count(0);
-			for ( boost::filesystem::directory_iterator dir_itr( ParentPath ); dir_itr != end_iter; ++dir_itr )
-			{
+            boost::filesystem::directory_iterator end_iter;
+            UInt32 Count(0);
+            for ( boost::filesystem::directory_iterator dir_itr( ParentPath ); dir_itr != end_iter; ++dir_itr )
+            {
                 try
                 {
-				    if(boost::filesystem::equivalent(dir_itr->path(), ChildPath))
-				    {
-					    return Count;
-				    }
+                    if(boost::filesystem::equivalent(dir_itr->path(), ChildPath))
+                    {
+                        return Count;
+                    }
                 }
                 catch(boost::filesystem::filesystem_error &)
                 {
-					    return Count;
+                    return Count;
                 }
-				++Count;
-			}
+                ++Count;
+            }
         }
         return 0;
     }
@@ -193,9 +194,9 @@ bool FileSystemTreeModel::isLeaf(const boost::any& node) const
 {
     try
     {
-		Path ThePath = boost::any_cast<Path>(node);
+        BoostPath ThePath = boost::any_cast<BoostPath>(node);
 
-		return !boost::filesystem::is_directory(ThePath);
+        return !boost::filesystem::is_directory(ThePath);
     }
     catch(boost::bad_any_cast &)
     {
@@ -207,8 +208,8 @@ bool FileSystemTreeModel::isEqual(const boost::any& left, const boost::any& righ
 {
     try
     {
-		Path LeftPath = boost::any_cast<Path>(left);
-		Path RightPath = boost::any_cast<Path>(right);
+        BoostPath LeftPath = boost::any_cast<BoostPath>(left);
+        BoostPath RightPath = boost::any_cast<BoostPath>(right);
 
         return boost::filesystem::equivalent(LeftPath, RightPath);
     }
@@ -220,17 +221,15 @@ bool FileSystemTreeModel::isEqual(const boost::any& left, const boost::any& righ
 
 void FileSystemTreeModel::valueForPathChanged(TreePath path, const boost::any& newValue)
 {
-	//Do Nothing
+    //Do Nothing
 }
 
-void FileSystemTreeModel::setRoot(const Path& root)
+void FileSystemTreeModel::setRoot(const BoostPath& root)
 {
-    beginEditCP(FileSystemTreeModelPtr(this), InternalRootFieldMask);
-        setInternalRoot(root);
-    endEditCP(FileSystemTreeModelPtr(this), InternalRootFieldMask);
+    setInternalRoot(root);
 }
 
-const Path& FileSystemTreeModel::getRootPath(void) const
+const BoostPath& FileSystemTreeModel::getRootPath(void) const
 {
     return getInternalRoot();
 }
@@ -257,21 +256,22 @@ FileSystemTreeModel::~FileSystemTreeModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void FileSystemTreeModel::changed(BitVector whichField, UInt32 origin)
+void FileSystemTreeModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
+
     if(whichField & InternalRootFieldMask)
     {
         produceTreeStructureChanged(getPath(getInternalRoot()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getInternalRoot())));
     }
 }
 
-void FileSystemTreeModel::dump(      UInt32    , 
+void FileSystemTreeModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump FileSystemTreeModel NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

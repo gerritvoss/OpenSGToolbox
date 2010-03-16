@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,168 +50,249 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTTREECELLEDITORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGTextField.h"               // DefaultEditor Class
 
 #include "OSGDefaultTreeCellEditorBase.h"
 #include "OSGDefaultTreeCellEditor.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DefaultTreeCellEditorBase::ClickCountToStartFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeCellEditorBase::ClickCountToStartFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultTreeCellEditorBase::DefaultEditorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeCellEditorBase::DefaultEditorFieldId);
+/*! \class OSG::DefaultTreeCellEditor
+    A UI Default Tree Cell Editor.
+ */
 
-const OSG::BitVector  DefaultTreeCellEditorBase::DefaultStringEditorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeCellEditorBase::DefaultStringEditorFieldId);
-
-const OSG::BitVector DefaultTreeCellEditorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          DefaultTreeCellEditorBase::_sfClickCountToStart
     
 */
-/*! \var TextFieldPtr    DefaultTreeCellEditorBase::_sfDefaultEditor
-    
-*/
-/*! \var TextFieldPtr    DefaultTreeCellEditorBase::_sfDefaultStringEditor
+
+/*! \var TextField *     DefaultTreeCellEditorBase::_sfDefaultEditor
     
 */
 
-//! DefaultTreeCellEditor description
+/*! \var TextField *     DefaultTreeCellEditorBase::_sfDefaultStringEditor
+    
+*/
 
-FieldDescription *DefaultTreeCellEditorBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultTreeCellEditor *>::_type("DefaultTreeCellEditorPtr", "TreeCellEditorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultTreeCellEditor *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultTreeCellEditor *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultTreeCellEditor *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultTreeCellEditorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ClickCountToStart", 
-                     ClickCountToStartFieldId, ClickCountToStartFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeCellEditorBase::getSFClickCountToStart),
-    new FieldDescription(SFTextFieldPtr::getClassType(), 
-                     "DefaultEditor", 
-                     DefaultEditorFieldId, DefaultEditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeCellEditorBase::getSFDefaultEditor),
-    new FieldDescription(SFTextFieldPtr::getClassType(), 
-                     "DefaultStringEditor", 
-                     DefaultStringEditorFieldId, DefaultStringEditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTreeCellEditorBase::getSFDefaultStringEditor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DefaultTreeCellEditorBase::_type(
-    "DefaultTreeCellEditor",
-    "TreeCellEditor",
-    NULL,
-    (PrototypeCreateF) &DefaultTreeCellEditorBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ClickCountToStart",
+        "",
+        ClickCountToStartFieldId, ClickCountToStartFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeCellEditor::editHandleClickCountToStart),
+        static_cast<FieldGetMethodSig >(&DefaultTreeCellEditor::getHandleClickCountToStart));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecTextFieldPtr::Description(
+        SFUnrecTextFieldPtr::getClassType(),
+        "DefaultEditor",
+        "",
+        DefaultEditorFieldId, DefaultEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeCellEditor::editHandleDefaultEditor),
+        static_cast<FieldGetMethodSig >(&DefaultTreeCellEditor::getHandleDefaultEditor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecTextFieldPtr::Description(
+        SFUnrecTextFieldPtr::getClassType(),
+        "DefaultStringEditor",
+        "",
+        DefaultStringEditorFieldId, DefaultStringEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeCellEditor::editHandleDefaultStringEditor),
+        static_cast<FieldGetMethodSig >(&DefaultTreeCellEditor::getHandleDefaultStringEditor));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DefaultTreeCellEditorBase::TypeObject DefaultTreeCellEditorBase::_type(
+    DefaultTreeCellEditorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultTreeCellEditorBase::createEmptyLocal),
     DefaultTreeCellEditor::initMethod,
-    _desc,
-    sizeof(_desc));
+    DefaultTreeCellEditor::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultTreeCellEditor::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultTreeCellEditor\"\n"
+    "\tparent=\"TreeCellEditor\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Default Tree Cell Editor.\n"
+    "\n"
+    "\t<Field\n"
+    "\t\tname=\"ClickCountToStart\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"3\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DefaultEditor\"\n"
+    "\t\ttype=\"TextField\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DefaultStringEditor\"\n"
+    "\t\ttype=\"TextField\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Default Tree Cell Editor.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DefaultTreeCellEditorBase, DefaultTreeCellEditorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultTreeCellEditorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultTreeCellEditorBase::getType(void) const 
+FieldContainerType &DefaultTreeCellEditorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultTreeCellEditorBase::shallowCopy(void) const 
-{ 
-    DefaultTreeCellEditorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultTreeCellEditor *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultTreeCellEditorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultTreeCellEditor); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTreeCellEditorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultTreeCellEditorBase::getType(void) const
 {
-    this->executeSyncImpl((DefaultTreeCellEditorBase *) &other, whichField);
+    return _type;
 }
-#else
-void DefaultTreeCellEditorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultTreeCellEditorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultTreeCellEditorBase *) &other, whichField, sInfo);
+    return sizeof(DefaultTreeCellEditor);
 }
-void DefaultTreeCellEditorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *DefaultTreeCellEditorBase::editSFClickCountToStart(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ClickCountToStartFieldMask);
+
+    return &_sfClickCountToStart;
 }
 
-void DefaultTreeCellEditorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *DefaultTreeCellEditorBase::getSFClickCountToStart(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfClickCountToStart;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DefaultTreeCellEditorBase::DefaultTreeCellEditorBase(void) :
-    _sfClickCountToStart      (UInt32(3)), 
-    _sfDefaultEditor          (TextFieldPtr(NullFC)), 
-    _sfDefaultStringEditor    (TextFieldPtr(NullFC)), 
-    Inherited() 
+//! Get the DefaultTreeCellEditor::_sfDefaultEditor field.
+const SFUnrecTextFieldPtr *DefaultTreeCellEditorBase::getSFDefaultEditor(void) const
 {
+    return &_sfDefaultEditor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultTreeCellEditorBase::DefaultTreeCellEditorBase(const DefaultTreeCellEditorBase &source) :
-    _sfClickCountToStart      (source._sfClickCountToStart      ), 
-    _sfDefaultEditor          (source._sfDefaultEditor          ), 
-    _sfDefaultStringEditor    (source._sfDefaultStringEditor    ), 
-    Inherited                 (source)
+SFUnrecTextFieldPtr *DefaultTreeCellEditorBase::editSFDefaultEditor  (void)
 {
+    editSField(DefaultEditorFieldMask);
+
+    return &_sfDefaultEditor;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-DefaultTreeCellEditorBase::~DefaultTreeCellEditorBase(void)
+//! Get the DefaultTreeCellEditor::_sfDefaultStringEditor field.
+const SFUnrecTextFieldPtr *DefaultTreeCellEditorBase::getSFDefaultStringEditor(void) const
 {
+    return &_sfDefaultStringEditor;
 }
+
+SFUnrecTextFieldPtr *DefaultTreeCellEditorBase::editSFDefaultStringEditor(void)
+{
+    editSField(DefaultStringEditorFieldMask);
+
+    return &_sfDefaultStringEditor;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultTreeCellEditorBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultTreeCellEditorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -219,23 +300,20 @@ UInt32 DefaultTreeCellEditorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfClickCountToStart.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
     {
         returnValue += _sfDefaultEditor.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
     {
         returnValue += _sfDefaultStringEditor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DefaultTreeCellEditorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultTreeCellEditorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -243,22 +321,18 @@ void DefaultTreeCellEditorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfClickCountToStart.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
     {
         _sfDefaultEditor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
     {
         _sfDefaultStringEditor.copyToBin(pMem);
     }
-
-
 }
 
-void DefaultTreeCellEditorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultTreeCellEditorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -266,104 +340,298 @@ void DefaultTreeCellEditorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfClickCountToStart.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
     {
         _sfDefaultEditor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
     {
         _sfDefaultStringEditor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTreeCellEditorBase::executeSyncImpl(      DefaultTreeCellEditorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultTreeCellEditorTransitPtr DefaultTreeCellEditorBase::createLocal(BitVector bFlags)
 {
+    DefaultTreeCellEditorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ClickCountToStartFieldMask & whichField))
-        _sfClickCountToStart.syncWith(pOther->_sfClickCountToStart);
+        fc = dynamic_pointer_cast<DefaultTreeCellEditor>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
-        _sfDefaultEditor.syncWith(pOther->_sfDefaultEditor);
-
-    if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
-        _sfDefaultStringEditor.syncWith(pOther->_sfDefaultStringEditor);
-
-
-}
-#else
-void DefaultTreeCellEditorBase::executeSyncImpl(      DefaultTreeCellEditorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ClickCountToStartFieldMask & whichField))
-        _sfClickCountToStart.syncWith(pOther->_sfClickCountToStart);
-
-    if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
-        _sfDefaultEditor.syncWith(pOther->_sfDefaultEditor);
-
-    if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
-        _sfDefaultStringEditor.syncWith(pOther->_sfDefaultStringEditor);
-
-
-
+    return fc;
 }
 
-void DefaultTreeCellEditorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultTreeCellEditorTransitPtr DefaultTreeCellEditorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultTreeCellEditorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultTreeCellEditor>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultTreeCellEditorTransitPtr DefaultTreeCellEditorBase::create(void)
+{
+    DefaultTreeCellEditorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultTreeCellEditor>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultTreeCellEditor *DefaultTreeCellEditorBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultTreeCellEditor *returnValue;
+
+    newPtr<DefaultTreeCellEditor>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultTreeCellEditor *DefaultTreeCellEditorBase::createEmpty(void)
+{
+    DefaultTreeCellEditor *returnValue;
+
+    newPtr<DefaultTreeCellEditor>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultTreeCellEditorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultTreeCellEditor *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTreeCellEditor *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTreeCellEditorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultTreeCellEditor *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTreeCellEditor *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTreeCellEditorBase::shallowCopy(void) const
+{
+    DefaultTreeCellEditor *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultTreeCellEditor *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultTreeCellEditorBase::DefaultTreeCellEditorBase(void) :
+    Inherited(),
+    _sfClickCountToStart      (UInt32(3)),
+    _sfDefaultEditor          (NULL),
+    _sfDefaultStringEditor    (NULL)
+{
+}
+
+DefaultTreeCellEditorBase::DefaultTreeCellEditorBase(const DefaultTreeCellEditorBase &source) :
+    Inherited(source),
+    _sfClickCountToStart      (source._sfClickCountToStart      ),
+    _sfDefaultEditor          (NULL),
+    _sfDefaultStringEditor    (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultTreeCellEditorBase::~DefaultTreeCellEditorBase(void)
+{
+}
+
+void DefaultTreeCellEditorBase::onCreate(const DefaultTreeCellEditor *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DefaultTreeCellEditor *pThis = static_cast<DefaultTreeCellEditor *>(this);
+
+        pThis->setDefaultEditor(source->getDefaultEditor());
+
+        pThis->setDefaultStringEditor(source->getDefaultStringEditor());
+    }
+}
+
+GetFieldHandlePtr DefaultTreeCellEditorBase::getHandleClickCountToStart (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfClickCountToStart,
+             this->getType().getFieldDesc(ClickCountToStartFieldId),
+             const_cast<DefaultTreeCellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeCellEditorBase::editHandleClickCountToStart(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfClickCountToStart,
+             this->getType().getFieldDesc(ClickCountToStartFieldId),
+             this));
+
+
+    editSField(ClickCountToStartFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeCellEditorBase::getHandleDefaultEditor   (void) const
+{
+    SFUnrecTextFieldPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::GetHandle(
+             &_sfDefaultEditor,
+             this->getType().getFieldDesc(DefaultEditorFieldId),
+             const_cast<DefaultTreeCellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeCellEditorBase::editHandleDefaultEditor  (void)
+{
+    SFUnrecTextFieldPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::EditHandle(
+             &_sfDefaultEditor,
+             this->getType().getFieldDesc(DefaultEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeCellEditor::setDefaultEditor,
+                    static_cast<DefaultTreeCellEditor *>(this), _1));
+
+    editSField(DefaultEditorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeCellEditorBase::getHandleDefaultStringEditor (void) const
+{
+    SFUnrecTextFieldPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::GetHandle(
+             &_sfDefaultStringEditor,
+             this->getType().getFieldDesc(DefaultStringEditorFieldId),
+             const_cast<DefaultTreeCellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeCellEditorBase::editHandleDefaultStringEditor(void)
+{
+    SFUnrecTextFieldPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::EditHandle(
+             &_sfDefaultStringEditor,
+             this->getType().getFieldDesc(DefaultStringEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeCellEditor::setDefaultStringEditor,
+                    static_cast<DefaultTreeCellEditor *>(this), _1));
+
+    editSField(DefaultStringEditorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultTreeCellEditorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultTreeCellEditor *pThis = static_cast<DefaultTreeCellEditor *>(this);
+
+    pThis->execSync(static_cast<DefaultTreeCellEditor *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultTreeCellEditorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultTreeCellEditor *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultTreeCellEditor *>(pRefAspect),
+                  dynamic_cast<const DefaultTreeCellEditor *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DefaultTreeCellEditorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DefaultTreeCellEditor *>(this)->setDefaultEditor(NULL);
+
+    static_cast<DefaultTreeCellEditor *>(this)->setDefaultStringEditor(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultTreeCellEditorPtr>::_type("DefaultTreeCellEditorPtr", "TreeCellEditorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultTreeCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultTreeCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTTREECELLEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTTREECELLEDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTTREECELLEDITORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

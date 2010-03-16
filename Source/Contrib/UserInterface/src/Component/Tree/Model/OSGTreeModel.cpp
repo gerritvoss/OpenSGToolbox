@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTreeModel.h"
-#include "Component/Tree/OSGTreePath.h"
+#include "OSGTreePath.h"
 #include <deque>
-#include <OpenSG/OSGBaseFunctions.h>
+#include "OSGBaseFunctions.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TreeModel
-A UI TreeModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGTreeModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGTreeModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +65,13 @@ A UI TreeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TreeModel::initMethod (void)
+void TreeModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -90,7 +90,7 @@ TreePath TreeModel::getPath(const boost::any& node) const
         RecNode = getParent(RecNode);
     }
 
-    return TreePath(PathVector, TreeModelPtr(this));
+    return TreePath(PathVector, TreeModelRefPtr(const_cast<TreeModel*>(this)));
 }
 
 bool TreeModel::depthFirstLessThan(const boost::any& left, const boost::any& right) const
@@ -154,17 +154,17 @@ TreeModel::~TreeModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TreeModel::changed(BitVector whichField, UInt32 origin)
+void TreeModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TreeModel::dump(      UInt32    , 
+void TreeModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TreeModel NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

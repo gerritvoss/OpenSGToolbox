@@ -56,7 +56,7 @@
 #include "OSGMenuButton.h"
 #include "OSGLabel.h"
 #include "OSGInternalWindow.h"
-//#include "OSGDialogWindow.h"
+#include "OSGDialogWindow.h"
 #include "OSGTitlebar.h"
 #include "OSGPanel.h"
 #include "OSGSplitPanel.h"
@@ -110,10 +110,10 @@
 #include "OSGDefaultComboBoxEditor.h"
 #include "OSGDefaultComboBoxComponentGenerator.h"
 
-//#include "OSGFixedHeightTreeModelLayout.h"
-//#include "OSGDefaultTreeCellEditor.h"
-//#include "OSGDefaultTreeComponentGenerator.h"
-//#include "OSGTree.h"
+#include "OSGFixedHeightTreeModelLayout.h"
+#include "OSGDefaultTreeCellEditor.h"
+#include "OSGDefaultTreeComponentGenerator.h"
+#include "OSGTree.h"
 
 #include "OSGColorChooser.h"
 #include "OSGRGBColorChooserPanel.h"
@@ -156,7 +156,7 @@ void WindowsLookAndFeel::init(void)
     ButtonRefPtr WindowsButton = Button::create();
     LabelRefPtr WindowsLabel = Label::create();
     InternalWindowRefPtr WindowsInternalWindow = InternalWindow::create();
-    //DialogWindowRefPtr WindowsDialogWindow = DialogWindow::create();
+    DialogWindowRefPtr WindowsDialogWindow = DialogWindow::create();
     PanelRefPtr WindowsPanel = Panel::create();
     //ToolbarRefPtr WindowsToolbar = Toolbar::create();
     SplitPanelRefPtr WindowsSplitPanel = SplitPanel::create();
@@ -185,9 +185,9 @@ void WindowsLookAndFeel::init(void)
     ComboBoxRefPtr WindowsComboBox = ComboBox::create();
     //TableHeaderRefPtr WindowsTableHeader = TableHeader::create();
     //TableRefPtr WindowsTable = Table::create();
-    //DefaultTreeCellEditorRefPtr WindowsDefaultTreeCellEditor = DefaultTreeCellEditor::create();
-    //DefaultTreeComponentGeneratorRefPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::create();
-    //TreeRefPtr WindowsTree = Tree::create();
+    DefaultTreeCellEditorRefPtr WindowsDefaultTreeCellEditor = DefaultTreeCellEditor::create();
+    DefaultTreeComponentGeneratorRefPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::create();
+    TreeRefPtr WindowsTree = Tree::create();
     ColorChooserRefPtr WindowsColorChooser = ColorChooser::create();
     MenuItemRefPtr WindowsMenuItem = MenuItem::create();
     ComponentMenuItemRefPtr WindowsComponentMenuItem = ComponentMenuItem::create();
@@ -201,7 +201,7 @@ void WindowsLookAndFeel::init(void)
     pushToPrototypes(WindowsMenuButton);
     pushToPrototypes(WindowsLabel);
     pushToPrototypes(WindowsInternalWindow);
-    //pushToPrototypes(WindowsDialogWindow);
+    pushToPrototypes(WindowsDialogWindow);
     pushToPrototypes(WindowsPanel);
     //pushToPrototypes(WindowsToolbar);
     pushToPrototypes(WindowsSplitPanel);
@@ -236,9 +236,9 @@ void WindowsLookAndFeel::init(void)
     pushToPrototypes(WindowsComboBox);
     //pushToPrototypes(WindowsTableHeader);
     //pushToPrototypes(WindowsTable);
-    //pushToPrototypes(WindowsDefaultTreeCellEditor);
-    //pushToPrototypes(WindowsDefaultTreeComponentGenerator);
-    //pushToPrototypes(WindowsTree);
+    pushToPrototypes(WindowsDefaultTreeCellEditor);
+    pushToPrototypes(WindowsDefaultTreeComponentGenerator);
+    pushToPrototypes(WindowsTree);
     pushToPrototypes(WindowsColorChooser);
 
     initPrototypes();
@@ -833,86 +833,86 @@ void WindowsLookAndFeel::init(void)
     
 
 
-    ///[>************************* DialogWindow *****************************
-    ////Titlebar
-    //TitlebarRefPtr WindowsDialogWindowTitlebar = Titlebar::create();
-    //WindowsDialogWindowTitlebar->setEnabled(true);
-    //WindowsDialogWindowTitlebar->setVisible(true);
+    //************************** DialogWindow *****************************
+    //Titlebar
+    TitlebarRefPtr WindowsDialogWindowTitlebar = Titlebar::create();
+    WindowsDialogWindowTitlebar->setEnabled(true);
+    WindowsDialogWindowTitlebar->setVisible(true);
 
-    //WindowsDialogWindowTitlebar->setConstraints(NULL);
-    ////Sizes
-    //WindowsDialogWindowTitlebar->setMinSize(Vec2f(0,0));
-    //WindowsDialogWindowTitlebar->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsDialogWindowTitlebar->setPreferredSize(Vec2f(1, 23));
+    WindowsDialogWindowTitlebar->setConstraints(NULL);
+    //Sizes
+    WindowsDialogWindowTitlebar->setMinSize(Vec2f(0,0));
+    WindowsDialogWindowTitlebar->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsDialogWindowTitlebar->setPreferredSize(Vec2f(1, 23));
 
-    ////Border
-    //WindowsDialogWindowTitlebar->setBorder(WindowsEmptyBorder);
-    //WindowsDialogWindowTitlebar->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsDialogWindowTitlebar->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsDialogWindowTitlebar->setDisabledBorder(WindowsEmptyBorder);
+    //Border
+    WindowsDialogWindowTitlebar->setBorder(WindowsEmptyBorder);
+    WindowsDialogWindowTitlebar->setRolloverBorder(WindowsEmptyBorder);
+    WindowsDialogWindowTitlebar->setFocusedBorder(WindowsEmptyBorder);
+    WindowsDialogWindowTitlebar->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsDialogWindowTitlebar->setBackground(WIndowsInternalWindowTitlebarBackground);
-    //WindowsDialogWindowTitlebar->setRolloverBackground(WIndowsInternalWindowTitlebarBackground);
-    //WindowsDialogWindowTitlebar->setFocusedBackground(WIndowsInternalWindowTitlebarBackground);
-    //WindowsDialogWindowTitlebar->setDisabledBackground(WindowsInternalWindowTitlebarDisabledBackground);
+    //Background
+    WindowsDialogWindowTitlebar->setBackground(WIndowsInternalWindowTitlebarBackground);
+    WindowsDialogWindowTitlebar->setRolloverBackground(WIndowsInternalWindowTitlebarBackground);
+    WindowsDialogWindowTitlebar->setFocusedBackground(WIndowsInternalWindowTitlebarBackground);
+    WindowsDialogWindowTitlebar->setDisabledBackground(WindowsInternalWindowTitlebarDisabledBackground);
 
-    ////Opacity
-    //WindowsDialogWindowTitlebar->setOpacity(1.0);
+    //Opacity
+    WindowsDialogWindowTitlebar->setOpacity(1.0);
 
-    ////InternalWindow
-    //WindowsDialogWindowTitlebar->setIconifyButton(WindowsInternalWindowTitlebarIconifyButton);
-    //WindowsDialogWindowTitlebar->setMaximizeButton(WindowsInternalWindowTitlebarMaximizeButton);
-    //WindowsDialogWindowTitlebar->setCloseButton(WindowsInternalWindowTitlebarCloseButton);
-    //WindowsDialogWindowTitlebar->setTitleLabel(WindowsInternalWindowTitlebarTitleLabel);
-    //WindowsDialogWindowTitlebar->setFrameIcon(NULL);
-    //WindowsDialogWindowTitlebar->setDrawClose(true);
-    //WindowsDialogWindowTitlebar->setDrawMaximize(false);
-    //WindowsDialogWindowTitlebar->setDrawIconify(false);
+    //InternalWindow
+    WindowsDialogWindowTitlebar->setIconifyButton(WindowsInternalWindowTitlebarIconifyButton);
+    WindowsDialogWindowTitlebar->setMaximizeButton(WindowsInternalWindowTitlebarMaximizeButton);
+    WindowsDialogWindowTitlebar->setCloseButton(WindowsInternalWindowTitlebarCloseButton);
+    WindowsDialogWindowTitlebar->setTitleLabel(WindowsInternalWindowTitlebarTitleLabel);
+    WindowsDialogWindowTitlebar->setFrameIcon(NULL);
+    WindowsDialogWindowTitlebar->setDrawClose(true);
+    WindowsDialogWindowTitlebar->setDrawMaximize(false);
+    WindowsDialogWindowTitlebar->setDrawIconify(false);
 
 
-    ////Windows DialogWindow
-    //WindowsDialogWindow->setEnabled(true);
-    //WindowsDialogWindow->setVisible(true);
+    //Windows DialogWindow
+    WindowsDialogWindow->setEnabled(true);
+    WindowsDialogWindow->setVisible(true);
 
-    //WindowsDialogWindow->setConstraints(NULL);
-    ////Sizes
-    //WindowsDialogWindow->setMinSize(Vec2f(50,50));
-    //WindowsDialogWindow->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsDialogWindow->setPreferredSize(Vec2f(280,140));
+    WindowsDialogWindow->setConstraints(NULL);
+    //Sizes
+    WindowsDialogWindow->setMinSize(Vec2f(50,50));
+    WindowsDialogWindow->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsDialogWindow->setPreferredSize(Vec2f(280,140));
 
-    ////Border
-    //WindowsDialogWindow->setBorder(WindowsInternalWindowUnfocusedBorder);
-    //WindowsDialogWindow->setRolloverBorder(WindowsInternalWindowUnfocusedBorder);
-    //WindowsDialogWindow->setFocusedBorder(WindowsInternalWindowFocusedBorder);
-    //WindowsDialogWindow->setDisabledBorder(WindowsInternalWindowUnfocusedBorder);
+    //Border
+    WindowsDialogWindow->setBorder(WindowsInternalWindowUnfocusedBorder);
+    WindowsDialogWindow->setRolloverBorder(WindowsInternalWindowUnfocusedBorder);
+    WindowsDialogWindow->setFocusedBorder(WindowsInternalWindowFocusedBorder);
+    WindowsDialogWindow->setDisabledBorder(WindowsInternalWindowUnfocusedBorder);
 
-    ////Background
-    //WindowsDialogWindow->setBackground(WindowsInternalWindowBackground);
-    //WindowsDialogWindow->setRolloverBackground(WindowsInternalWindowBackground);
-    //WindowsDialogWindow->setFocusedBackground(WindowsInternalWindowBackground);
-    //WindowsDialogWindow->setDisabledBackground(WindowsInternalWindowBackground);
+    //Background
+    WindowsDialogWindow->setBackground(WindowsInternalWindowBackground);
+    WindowsDialogWindow->setRolloverBackground(WindowsInternalWindowBackground);
+    WindowsDialogWindow->setFocusedBackground(WindowsInternalWindowBackground);
+    WindowsDialogWindow->setDisabledBackground(WindowsInternalWindowBackground);
 
-    ////Opacity
-    //WindowsDialogWindow->setOpacity(1.0);
+    //Opacity
+    WindowsDialogWindow->setOpacity(1.0);
 
-    ////AbstractWindow
-    //WindowsDialogWindow->setDrawingSurface(NULL);
-    //WindowsDialogWindow->setClosable(true);
-    //WindowsDialogWindow->setIconable(false);
-    //WindowsDialogWindow->setMaximizable(false);
-    //WindowsDialogWindow->setResizable(false);
-    //WindowsDialogWindow->setTitle(std::string(""));
-    //WindowsDialogWindow->setDesktopIcon(NULL);
-    //WindowsDialogWindow->setAllwaysOnTop(false);
-    //WindowsDialogWindow->setDrawTitlebar(true);
-    //WindowsDialogWindow->setDrawDecorations(true);
-    //WindowsDialogWindow->setAlignmentInDrawingSurface(Vec2f(-1.0f,-1.0f));
-    //WindowsDialogWindow->setScalingInDrawingSurface(Vec2f(-1.0f,-1.0f));
-    //WindowsDialogWindow->setResizeModifyCursorWidth(4);
+    //AbstractWindow
+    WindowsDialogWindow->setDrawingSurface(NULL);
+    WindowsDialogWindow->setClosable(true);
+    WindowsDialogWindow->setIconable(false);
+    WindowsDialogWindow->setMaximizable(false);
+    WindowsDialogWindow->setResizable(false);
+    WindowsDialogWindow->setTitle(std::string(""));
+    WindowsDialogWindow->setDesktopIcon(NULL);
+    WindowsDialogWindow->setAllwaysOnTop(false);
+    WindowsDialogWindow->setDrawTitlebar(true);
+    WindowsDialogWindow->setDrawDecorations(true);
+    WindowsDialogWindow->setAlignmentInDrawingSurface(Vec2f(-1.0f,-1.0f));
+    WindowsDialogWindow->setScalingInDrawingSurface(Vec2f(-1.0f,-1.0f));
+    WindowsDialogWindow->setResizeModifyCursorWidth(4);
 
-    ////DialogWindow
-    //WindowsDialogWindow->setTitlebar(WindowsDialogWindowTitlebar);
+    //DialogWindow
+    WindowsDialogWindow->setTitlebar(WindowsDialogWindowTitlebar);
 
 
     //************************** Panel *****************************
@@ -3796,166 +3796,166 @@ void WindowsLookAndFeel::init(void)
     //WindowsTable->setDefaultRenderer(typeid(Real32), TableCellRendererRefPtr(new DefaultReal32TableCellRenderer()));
 
 
-    ///[>************************* DefaultTreeEditor *****************************
+    //************************** DefaultTreeEditor *****************************
 
-    ////DefaultTreeCellEditor
-    //WindowsDefaultTreeCellEditor->setClickCountToStart(3);
-    //WindowsDefaultTreeCellEditor->setDefaultEditor(WindowsTextField);
-    //WindowsDefaultTreeCellEditor->setDefaultStringEditor(WindowsTextField);
+    //DefaultTreeCellEditor
+    WindowsDefaultTreeCellEditor->setClickCountToStart(3);
+    WindowsDefaultTreeCellEditor->setDefaultEditor(WindowsTextField);
+    WindowsDefaultTreeCellEditor->setDefaultStringEditor(WindowsTextField);
 
-    ///[>************************* DefaultTreeComponentGenerator *****************************
-    //LineBorderRefPtr WindowsTreeComponentExpandingBorder = LineBorder::create();
-    //WindowsTreeComponentExpandingBorder->setWidth(1.0);
-    //WindowsTreeComponentExpandingBorder->setColor(Color4f(0.545, 0.545, 0.835, 1.0));
+    //************************** DefaultTreeComponentGenerator *****************************
+    LineBorderRefPtr WindowsTreeComponentExpandingBorder = LineBorder::create();
+    WindowsTreeComponentExpandingBorder->setWidth(1.0);
+    WindowsTreeComponentExpandingBorder->setColor(Color4f(0.545, 0.545, 0.835, 1.0));
 
-    //GradientLayerRefPtr WindowsTreeComponentExpandingBackground = GradientLayer::create();
-    //WindowsTreeComponentExpandingBackground->editMFColors()->push_back(Color4f(1.0, 1.0, 1.0, 1.0));
-    //WindowsTreeComponentExpandingBackground->editMFStops()->push_back(0.0);
-    //WindowsTreeComponentExpandingBackground->editMFColors()->push_back(Color4f(.75, .75, .75, 1.0));
-    //WindowsTreeComponentExpandingBackground->editMFStops()->push_back(1.0);
-    //WindowsTreeComponentExpandingBackground->setStartPosition(Vec2f(0.0f,0.0f));
-    //WindowsTreeComponentExpandingBackground->setEndPosition(Vec2f(0.0f,1.0f));
+    GradientLayerRefPtr WindowsTreeComponentExpandingBackground = GradientLayer::create();
+    WindowsTreeComponentExpandingBackground->editMFColors()->push_back(Color4f(1.0, 1.0, 1.0, 1.0));
+    WindowsTreeComponentExpandingBackground->editMFStops()->push_back(0.0);
+    WindowsTreeComponentExpandingBackground->editMFColors()->push_back(Color4f(.75, .75, .75, 1.0));
+    WindowsTreeComponentExpandingBackground->editMFStops()->push_back(1.0);
+    WindowsTreeComponentExpandingBackground->setStartPosition(Vec2f(0.0f,0.0f));
+    WindowsTreeComponentExpandingBackground->setEndPosition(Vec2f(0.0f,1.0f));
 
-    ////Expanded Draw Object
-    //RectUIDrawObjectRefPtr ExpanedDrawObject = RectUIDrawObject::create();
-    //ExpanedDrawObject->setTopLeft(Pnt2f(2,4));
-    //ExpanedDrawObject->setBottomRight(Pnt2f(7,5));
-    //ExpanedDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
-    //ExpanedDrawObject->setOpacity(1.0);
+    //Expanded Draw Object
+    RectUIDrawObjectRefPtr ExpanedDrawObject = RectUIDrawObject::create();
+    ExpanedDrawObject->setTopLeft(Pnt2f(2,4));
+    ExpanedDrawObject->setBottomRight(Pnt2f(7,5));
+    ExpanedDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
+    ExpanedDrawObject->setOpacity(1.0);
 
-    //UIDrawObjectCanvasRefPtr WindowsExpandedDrawObject = UIDrawObjectCanvas::create();
-    ////Border
-    //WindowsExpandedDrawObject->setBorders(WindowsTreeComponentExpandingBorder);
+    UIDrawObjectCanvasRefPtr WindowsExpandedDrawObject = UIDrawObjectCanvas::create();
+    //Border
+    WindowsExpandedDrawObject->setBorders(WindowsTreeComponentExpandingBorder);
 
-    ////Background
-    //WindowsExpandedDrawObject->setBackgrounds(WindowsTreeComponentExpandingBackground);
+    //Background
+    WindowsExpandedDrawObject->setBackgrounds(WindowsTreeComponentExpandingBackground);
 
-    //WindowsExpandedDrawObject->setPreferredSize(Vec2f(9.0f,9.0f));
-    //WindowsExpandedDrawObject->setMaxSize(Vec2f(9.0f,9.0f));
-    //WindowsExpandedDrawObject->setMinSize(Vec2f(9.0f,9.0f));
+    WindowsExpandedDrawObject->setPreferredSize(Vec2f(9.0f,9.0f));
+    WindowsExpandedDrawObject->setMaxSize(Vec2f(9.0f,9.0f));
+    WindowsExpandedDrawObject->setMinSize(Vec2f(9.0f,9.0f));
 
-    //WindowsExpandedDrawObject->pushToDrawObjects(ExpanedDrawObject);
-    //WindowsExpandedDrawObject->setUsePreferredSizeAsRequested(true);
+    WindowsExpandedDrawObject->pushToDrawObjects(ExpanedDrawObject);
+    WindowsExpandedDrawObject->setUsePreferredSizeAsRequested(true);
 
-    //RectUIDrawObjectRefPtr NotExpanedDrawObject = RectUIDrawObject::create();
-    //NotExpanedDrawObject->setTopLeft(Pnt2f(4,2));
-    //NotExpanedDrawObject->setBottomRight(Pnt2f(5,7));
-    //NotExpanedDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
-    //NotExpanedDrawObject->setOpacity(1.0);
+    RectUIDrawObjectRefPtr NotExpanedDrawObject = RectUIDrawObject::create();
+    NotExpanedDrawObject->setTopLeft(Pnt2f(4,2));
+    NotExpanedDrawObject->setBottomRight(Pnt2f(5,7));
+    NotExpanedDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
+    NotExpanedDrawObject->setOpacity(1.0);
 
-    //UIDrawObjectCanvasRefPtr WindowsNotExpandedDrawObjectPrototype = UIDrawObjectCanvas::create();
-    ////Border
-    //WindowsNotExpandedDrawObjectPrototype->setBorders(WindowsTreeComponentExpandingBorder);
+    UIDrawObjectCanvasRefPtr WindowsNotExpandedDrawObjectPrototype = UIDrawObjectCanvas::create();
+    //Border
+    WindowsNotExpandedDrawObjectPrototype->setBorders(WindowsTreeComponentExpandingBorder);
 
-    ////Background
-    //WindowsNotExpandedDrawObjectPrototype->setBackgrounds(WindowsTreeComponentExpandingBackground);
+    //Background
+    WindowsNotExpandedDrawObjectPrototype->setBackgrounds(WindowsTreeComponentExpandingBackground);
 
-    //WindowsNotExpandedDrawObjectPrototype->setPreferredSize(Vec2f(9.0f,9.0f));
-    //WindowsNotExpandedDrawObjectPrototype->setMaxSize(Vec2f(9.0f,9.0f));
-    //WindowsNotExpandedDrawObjectPrototype->setMinSize(Vec2f(9.0f,9.0f));
-    //WindowsNotExpandedDrawObjectPrototype->pushToDrawObjects(ExpanedDrawObject);
-    //WindowsNotExpandedDrawObjectPrototype->pushToDrawObjects(NotExpanedDrawObject);
-    //WindowsNotExpandedDrawObjectPrototype->setUsePreferredSizeAsRequested(true);
+    WindowsNotExpandedDrawObjectPrototype->setPreferredSize(Vec2f(9.0f,9.0f));
+    WindowsNotExpandedDrawObjectPrototype->setMaxSize(Vec2f(9.0f,9.0f));
+    WindowsNotExpandedDrawObjectPrototype->setMinSize(Vec2f(9.0f,9.0f));
+    WindowsNotExpandedDrawObjectPrototype->pushToDrawObjects(ExpanedDrawObject);
+    WindowsNotExpandedDrawObjectPrototype->pushToDrawObjects(NotExpanedDrawObject);
+    WindowsNotExpandedDrawObjectPrototype->setUsePreferredSizeAsRequested(true);
 
-    //UIDrawObjectCanvasRefPtr WindowsLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
+    UIDrawObjectCanvasRefPtr WindowsLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
 
-    //UIDrawObjectCanvasRefPtr WindowsNonLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
+    UIDrawObjectCanvasRefPtr WindowsNonLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
 
-    //UIDrawObjectCanvasRefPtr WindowsExpandedNonLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
+    UIDrawObjectCanvasRefPtr WindowsExpandedNonLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
 
-    ////LabelRefPtr WindowsDefaultTreeComponentGeneratorNodeLabelPrototype = Label::create();
-    //LabelRefPtr WindowsDefaultTreeComponentGeneratorNodeLabelPrototype = WindowsDefaultListComponentGeneratorComponentPrototype;
+    //LabelRefPtr WindowsDefaultTreeComponentGeneratorNodeLabelPrototype = Label::create();
+    LabelRefPtr WindowsDefaultTreeComponentGeneratorNodeLabelPrototype = WindowsDefaultListComponentGeneratorComponentPrototype;
 
-    ////ColorLayerRefPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = ColorLayer::create();
-    //LayerRefPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = WindowsDefaultListComponentGeneratorSelectedBackground;
+    //ColorLayerRefPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = ColorLayer::create();
+    LayerRefPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = WindowsDefaultListComponentGeneratorSelectedBackground;
 
-    ////ColorLayerRefPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = ColorLayer::create();
-    //LayerRefPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = WindowsEmptyBackground;
+    //ColorLayerRefPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = ColorLayer::create();
+    LayerRefPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = WindowsEmptyBackground;
 
-    ////LineBorderRefPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = LineBorder::create();
-    //BorderRefPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = WindowsDefaultListComponentGeneratorSelectedBorder;
+    //LineBorderRefPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = LineBorder::create();
+    BorderRefPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = WindowsDefaultListComponentGeneratorSelectedBorder;
 
-    //PanelRefPtr WindowsDefaultTreeComponentGeneratorPanelPrototype = Panel::create();
-    ////Border
-    //WindowsDefaultTreeComponentGeneratorPanelPrototype->setBorder(WindowsEmptyBorder);
-    //WindowsDefaultTreeComponentGeneratorPanelPrototype->setRolloverBorder(WindowsEmptyBorder);
-    //WindowsDefaultTreeComponentGeneratorPanelPrototype->setFocusedBorder(WindowsEmptyBorder);
-    //WindowsDefaultTreeComponentGeneratorPanelPrototype->setDisabledBorder(WindowsEmptyBorder);
+    PanelRefPtr WindowsDefaultTreeComponentGeneratorPanelPrototype = Panel::create();
+    //Border
+    WindowsDefaultTreeComponentGeneratorPanelPrototype->setBorder(WindowsEmptyBorder);
+    WindowsDefaultTreeComponentGeneratorPanelPrototype->setRolloverBorder(WindowsEmptyBorder);
+    WindowsDefaultTreeComponentGeneratorPanelPrototype->setFocusedBorder(WindowsEmptyBorder);
+    WindowsDefaultTreeComponentGeneratorPanelPrototype->setDisabledBorder(WindowsEmptyBorder);
 
-    ////Background
-    //WindowsDefaultTreeComponentGeneratorPanelPrototype->setBackground(WindowsEmptyBackground);
-    //WindowsDefaultTreeComponentGeneratorPanelPrototype->setRolloverBackground(WindowsEmptyBackground);
-    //WindowsDefaultTreeComponentGeneratorPanelPrototype->setFocusedBackground(WindowsEmptyBackground);
-    //WindowsDefaultTreeComponentGeneratorPanelPrototype->setDisabledBackground(WindowsEmptyBackground);
+    //Background
+    WindowsDefaultTreeComponentGeneratorPanelPrototype->setBackground(WindowsEmptyBackground);
+    WindowsDefaultTreeComponentGeneratorPanelPrototype->setRolloverBackground(WindowsEmptyBackground);
+    WindowsDefaultTreeComponentGeneratorPanelPrototype->setFocusedBackground(WindowsEmptyBackground);
+    WindowsDefaultTreeComponentGeneratorPanelPrototype->setDisabledBackground(WindowsEmptyBackground);
 
 
 
-    ////DefaultTreeComponentGenerator
-    //WindowsDefaultTreeComponentGenerator->setExpandedDrawObjectPrototype(WindowsExpandedDrawObject);
-    //WindowsDefaultTreeComponentGenerator->setNotExpandedDrawObjectPrototype(WindowsNotExpandedDrawObjectPrototype);
-    //WindowsDefaultTreeComponentGenerator->setLeafDrawObjectPrototype(WindowsLeafDrawObjectPrototype);
-    //WindowsDefaultTreeComponentGenerator->setNonLeafDrawObjectPrototype(WindowsNonLeafDrawObjectPrototype);
-    //WindowsDefaultTreeComponentGenerator->setExpandedNonLeafDrawObjectPrototype(WindowsExpandedNonLeafDrawObjectPrototype);
-    //WindowsDefaultTreeComponentGenerator->setNodeLabelPrototype(WindowsDefaultTreeComponentGeneratorNodeLabelPrototype);
-    //WindowsDefaultTreeComponentGenerator->setSelectedBackground(WindowsDefaultTreeComponentGeneratorSelectedBackground);
-    //WindowsDefaultTreeComponentGenerator->setNonSelectedBackground(WindowsDefaultTreeComponentGeneratorNonSelectedBackground);
-    //WindowsDefaultTreeComponentGenerator->setSelectedBorder(WindowsDefaultTreeComponentGeneratorSelectedBorder);
-    //WindowsDefaultTreeComponentGenerator->setSelectedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
-    //WindowsDefaultTreeComponentGenerator->setNonSelectedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
-    //WindowsDefaultTreeComponentGenerator->setNodePanelPrototype(WindowsDefaultTreeComponentGeneratorPanelPrototype);
+    //DefaultTreeComponentGenerator
+    WindowsDefaultTreeComponentGenerator->setExpandedDrawObjectPrototype(WindowsExpandedDrawObject);
+    WindowsDefaultTreeComponentGenerator->setNotExpandedDrawObjectPrototype(WindowsNotExpandedDrawObjectPrototype);
+    WindowsDefaultTreeComponentGenerator->setLeafDrawObjectPrototype(WindowsLeafDrawObjectPrototype);
+    WindowsDefaultTreeComponentGenerator->setNonLeafDrawObjectPrototype(WindowsNonLeafDrawObjectPrototype);
+    WindowsDefaultTreeComponentGenerator->setExpandedNonLeafDrawObjectPrototype(WindowsExpandedNonLeafDrawObjectPrototype);
+    WindowsDefaultTreeComponentGenerator->setNodeLabelPrototype(WindowsDefaultTreeComponentGeneratorNodeLabelPrototype);
+    WindowsDefaultTreeComponentGenerator->setSelectedBackground(WindowsDefaultTreeComponentGeneratorSelectedBackground);
+    WindowsDefaultTreeComponentGenerator->setNonSelectedBackground(WindowsDefaultTreeComponentGeneratorNonSelectedBackground);
+    WindowsDefaultTreeComponentGenerator->setSelectedBorder(WindowsDefaultTreeComponentGeneratorSelectedBorder);
+    WindowsDefaultTreeComponentGenerator->setSelectedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
+    WindowsDefaultTreeComponentGenerator->setNonSelectedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+    WindowsDefaultTreeComponentGenerator->setNodePanelPrototype(WindowsDefaultTreeComponentGeneratorPanelPrototype);
 
-    ////DefaultTreeLayout
-    //TreeModelLayoutRefPtr WindowsDefaultTreeModelLayout = FixedHeightTreeModelLayout::create();
-    //WindowsDefaultTreeModelLayout->setRootVisible(false);
-    //WindowsDefaultTreeModelLayout->setRowHeight(20);
+    //DefaultTreeLayout
+    TreeModelLayoutRefPtr WindowsDefaultTreeModelLayout = FixedHeightTreeModelLayout::create();
+    WindowsDefaultTreeModelLayout->setRootVisible(false);
+    WindowsDefaultTreeModelLayout->setRowHeight(20);
 
-    ///[>************************* Tree *****************************
-    ////Windows RotatedComponentBorder
-    //LineBorderRefPtr WindowsTreeBorder = LineBorder::create();
-    //WindowsTreeBorder->setWidth(1);
-    //WindowsTreeBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+    //************************** Tree *****************************
+    //Windows RotatedComponentBorder
+    LineBorderRefPtr WindowsTreeBorder = LineBorder::create();
+    WindowsTreeBorder->setWidth(1);
+    WindowsTreeBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
 
-    ////Windows RotatedComponentBackground
-    //ColorLayerRefPtr WindowsTreeBackground = ColorLayer::create();
-    //WindowsTreeBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+    //Windows RotatedComponentBackground
+    ColorLayerRefPtr WindowsTreeBackground = ColorLayer::create();
+    WindowsTreeBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 
-    ////Windows WindowsTree
-    //WindowsTree->setEnabled(true);
-    //WindowsTree->setVisible(true);
+    //Windows WindowsTree
+    WindowsTree->setEnabled(true);
+    WindowsTree->setVisible(true);
 
-    //WindowsTree->setConstraints(NULL);
-    ////Sizes
-    //WindowsTree->setMinSize(Vec2f(0,0));
-    //WindowsTree->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsTree->setPreferredSize(Vec2f(100,100));
+    WindowsTree->setConstraints(NULL);
+    //Sizes
+    WindowsTree->setMinSize(Vec2f(0,0));
+    WindowsTree->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsTree->setPreferredSize(Vec2f(100,100));
 
-    ////Border
-    //WindowsTree->setBorder(WindowsTreeBorder);
-    //WindowsTree->setRolloverBorder(WindowsTreeBorder);
-    //WindowsTree->setFocusedBorder(WindowsTreeBorder);
-    //WindowsTree->setDisabledBorder(WindowsTreeBorder);
+    //Border
+    WindowsTree->setBorder(WindowsTreeBorder);
+    WindowsTree->setRolloverBorder(WindowsTreeBorder);
+    WindowsTree->setFocusedBorder(WindowsTreeBorder);
+    WindowsTree->setDisabledBorder(WindowsTreeBorder);
 
-    ////Background
-    //WindowsTree->setBackground(WindowsTreeBackground);
-    //WindowsTree->setRolloverBackground(WindowsTreeBackground);
-    //WindowsTree->setFocusedBackground(WindowsTreeBackground);
-    //WindowsTree->setDisabledBackground(WindowsTreeBackground);
+    //Background
+    WindowsTree->setBackground(WindowsTreeBackground);
+    WindowsTree->setRolloverBackground(WindowsTreeBackground);
+    WindowsTree->setFocusedBackground(WindowsTreeBackground);
+    WindowsTree->setDisabledBackground(WindowsTreeBackground);
 
-    ////Opacity
-    //WindowsTree->setOpacity(1.0);
+    //Opacity
+    WindowsTree->setOpacity(1.0);
 
-    ////Tree Values
-    //WindowsTree->setEditable(false);
-    //WindowsTree->setExpandsSelectedPaths(true);
-    //WindowsTree->setInvokesStopCellEditing(true);
-    //WindowsTree->setRowHeight(13);
-    //WindowsTree->setScrollsOnExpand(false);
-    //WindowsTree->setShowsRootHandles(true);
-    //WindowsTree->setToggleClickCount(2);
-    //WindowsTree->setVisibleRowCount(10);
-    //WindowsTree->setCellEditor(WindowsDefaultTreeCellEditor);
-    //WindowsTree->setCellGenerator(WindowsDefaultTreeComponentGenerator);
-    //WindowsTree->setModelLayout(WindowsDefaultTreeModelLayout);
+    //Tree Values
+    WindowsTree->setEditable(false);
+    WindowsTree->setExpandsSelectedPaths(true);
+    WindowsTree->setInvokesStopCellEditing(true);
+    WindowsTree->setRowHeight(13);
+    WindowsTree->setScrollsOnExpand(false);
+    WindowsTree->setShowsRootHandles(true);
+    WindowsTree->setToggleClickCount(2);
+    WindowsTree->setVisibleRowCount(10);
+    WindowsTree->setCellEditor(WindowsDefaultTreeCellEditor);
+    WindowsTree->setCellGenerator(WindowsDefaultTreeComponentGenerator);
+    WindowsTree->setModelLayout(WindowsDefaultTreeModelLayout);
 
 
 

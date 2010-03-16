@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,80 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ComponentTreeModelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ComponentTreeModelBase::getClassTypeId(void) 
+OSG::UInt32 ComponentTreeModelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ComponentTreeModelPtr ComponentTreeModelBase::create(void) 
-{
-    ComponentTreeModelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ComponentTreeModelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ComponentTreeModelPtr ComponentTreeModelBase::createEmpty(void) 
-{ 
-    ComponentTreeModelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ComponentTreeModelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ComponentTreeModel::_sfInternalRootComponent field.
-inline
-const SFComponentPtr *ComponentTreeModelBase::getSFInternalRootComponent(void) const
-{
-    return &_sfInternalRootComponent;
-}
-
-//! Get the ComponentTreeModel::_sfInternalRootComponent field.
-inline
-SFComponentPtr *ComponentTreeModelBase::editSFInternalRootComponent(void)
-{
-    return &_sfInternalRootComponent;
-}
-
 
 //! Get the value of the ComponentTreeModel::_sfInternalRootComponent field.
 inline
-ComponentPtr &ComponentTreeModelBase::editInternalRootComponent(void)
-{
-    return _sfInternalRootComponent.getValue();
-}
-
-//! Get the value of the ComponentTreeModel::_sfInternalRootComponent field.
-inline
-const ComponentPtr &ComponentTreeModelBase::getInternalRootComponent(void) const
+Component * ComponentTreeModelBase::getInternalRootComponent(void) const
 {
     return _sfInternalRootComponent.getValue();
 }
 
 //! Set the value of the ComponentTreeModel::_sfInternalRootComponent field.
 inline
-void ComponentTreeModelBase::setInternalRootComponent(const ComponentPtr &value)
+void ComponentTreeModelBase::setInternalRootComponent(Component * const value)
 {
+    editSField(InternalRootComponentFieldMask);
+
     _sfInternalRootComponent.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ComponentTreeModelBase::execSync (      ComponentTreeModelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (InternalRootComponentFieldMask & whichField))
+        _sfInternalRootComponent.syncWith(pFrom->_sfInternalRootComponent);
+}
+#endif
+
+
+inline
+const Char8 *ComponentTreeModelBase::getClassname(void)
+{
+    return "ComponentTreeModel";
+}
+OSG_GEN_CONTAINERPTR(ComponentTreeModel);
+
 OSG_END_NAMESPACE
+

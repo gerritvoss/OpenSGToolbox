@@ -38,7 +38,7 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -123,13 +123,13 @@ TreePath::TreePath(const TreePath& p) :
 }
 
 inline
-TreePath::TreePath(const PathVectorType& path, TreeModelPtr theModel) :
+TreePath::TreePath(const PathVectorType& path, TreeModelRefPtr theModel) :
   _Path(path), _Model(theModel)
 {
 }
 
 inline
-TreePath::TreePath(const std::deque<boost::any>& path, TreeModelPtr theModel) :
+TreePath::TreePath(const std::deque<boost::any>& path, TreeModelRefPtr theModel) :
   _Path(path.begin(), path.end()), _Model(theModel)
 {
 }
@@ -145,7 +145,7 @@ TreePath::TreePath(const TreePath& p, UInt32 len) : _Model(p._Model)
 
 inline
 TreePath::TreePath(void) :
-  _Path(), _Model(NullFC)
+  _Path(), _Model(NULL)
 {
 }
 

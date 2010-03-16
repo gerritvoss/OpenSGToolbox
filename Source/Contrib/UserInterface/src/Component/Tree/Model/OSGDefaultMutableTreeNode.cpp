@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultMutableTreeNode.h"
+#include "OSGMutableTreeNode.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultMutableTreeNode
-A UI Default Mutable Tree Node. 
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultMutableTreeNodeBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultMutableTreeNode.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +63,13 @@ A UI Default Mutable Tree Node.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultMutableTreeNode::initMethod (void)
+void DefaultMutableTreeNode::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -76,424 +77,402 @@ void DefaultMutableTreeNode::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
 bool DefaultMutableTreeNode::getAllowsChildren(void) const
 {
-	return getAllowsChildrenInternal();
+    return getAllowsChildrenInternal();
 }
 
-ModelTreeNodePtr DefaultMutableTreeNode::getChildAt(const UInt32& childIndex) const
+ModelTreeNodeRefPtr DefaultMutableTreeNode::getChildAt(const UInt32& childIndex) const
 {
-	if(childIndex > getChildrenInternal().size())
-	{
-		return NullFC;
-	}
-	else
-	{
-		return getChildrenInternal()[childIndex];
-	}
+    if(childIndex > getMFChildrenInternal()->size())
+    {
+        return NULL;
+    }
+    else
+    {
+        return getChildrenInternal(childIndex);
+    }
 }
 
 UInt32 DefaultMutableTreeNode::getChildCount(void) const
 {
-	return getChildrenInternal().size();
+    return getMFChildrenInternal()->size();
 }
 
-Int32 DefaultMutableTreeNode::getIndex(ModelTreeNodePtr node) const
+Int32 DefaultMutableTreeNode::getIndex(ModelTreeNodeRefPtr node) const
 {
-	for(Int32 i(0) ; i<getChildrenInternal().size() ; ++i)
-	{
-		if(getChildrenInternal()[i] == node)
-		{
-			return i;
-		}
-	}
+    for(Int32 i(0) ; i<getMFChildrenInternal()->size() ; ++i)
+    {
+        if(getChildrenInternal(i) == node)
+        {
+            return i;
+        }
+    }
 
-	return -1;
+    return -1;
 }
 
-ModelTreeNodePtr DefaultMutableTreeNode::getParent(void) const
+ModelTreeNodeRefPtr DefaultMutableTreeNode::getParent(void) const
 {
-	return getParentInternal();
+    return getParentInternal();
 }
 
 bool DefaultMutableTreeNode::isLeaf(void) const
 {
-	return !getAllowsChildrenInternal() || getChildrenInternal().size() == 0;
+    return !getAllowsChildrenInternal() || getMFChildrenInternal()->size() == 0;
 }
 
-void DefaultMutableTreeNode::insert(MutableTreeNodePtr child, const UInt32& index)
+void DefaultMutableTreeNode::insert(MutableTreeNodeRefPtr child, const UInt32& index)
 {
-	if(index <= getChildrenInternal().size())
-	{
-		MFMutableTreeNodePtr::iterator InsertPos(getChildrenInternal().begin());
-		InsertPos += index;
+    if(index <= getMFChildrenInternal()->size())
+    {
+        MFChildrenInternalType::iterator InsertPos(editMFChildrenInternal()->begin());
+        InsertPos += index;
 
-		//Remove the Child from the old parent
-		child->removeFromParent();
+        //Remove the Child from the old parent
+        child->removeFromParent();
 
-		//Add the Child
-		beginEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
-			getChildrenInternal().insert(InsertPos, child);
-		endEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
+        //Add the Child
+        editMFChildrenInternal()->insert(InsertPos, child);
 
-		//Set the Childs Parent
-		child->setParent(MutableTreeNodePtr(this));
-	}
+        //Set the Childs Parent
+        child->setParent(this);
+    }
 }
 
 void DefaultMutableTreeNode::remove(const UInt32& index)
 {
-	if(index < getChildrenInternal().size())
-	{
-		MFMutableTreeNodePtr::iterator RemovePos(getChildrenInternal().begin());
-		RemovePos += index;
-
-		beginEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
-			getChildrenInternal().erase(RemovePos);
-		endEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
-	}
+    if(index < getMFChildrenInternal()->size())
+    {
+        removeFromChildrenInternal(index);
+    }
 }
 
-void DefaultMutableTreeNode::remove(MutableTreeNodePtr node)
+void DefaultMutableTreeNode::remove(MutableTreeNodeRefPtr node)
 {
-	MFMutableTreeNodePtr::iterator RemovePos(getChildrenInternal().find(node));
-	if(RemovePos != getChildrenInternal().end())
-	{
-		beginEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
-			getChildrenInternal().erase(RemovePos);
-		endEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
-	}
+    removeObjFromChildrenInternal(node);
 }
 
 void DefaultMutableTreeNode::removeFromParent(void)
 {
-	if(getParentInternal() != NullFC)
-	{
-		getParentInternal()->remove(MutableTreeNodePtr(this));
-	}
+    if(getParentInternal() != NULL)
+    {
+        getParentInternal()->remove(MutableTreeNodeRefPtr(this));
+    }
 }
 
-void DefaultMutableTreeNode::setParent(MutableTreeNodePtr newParent)
+void DefaultMutableTreeNode::setParent(MutableTreeNodeRefPtr newParent)
 {
-	beginEditCP(DefaultMutableTreeNodePtr(this), ParentInternalFieldMask);
-		setParentInternal(newParent);
-	endEditCP(DefaultMutableTreeNodePtr(this), ParentInternalFieldMask);
+    setParentInternal(newParent);
 }
 
 void DefaultMutableTreeNode::setUserObject(const boost::any& object)
 {
-	_UserObject = object;
+    _UserObject = object;
 }
 
-void DefaultMutableTreeNode::add(MutableTreeNodePtr newChild)
+void DefaultMutableTreeNode::add(MutableTreeNodeRefPtr newChild)
 {
-	insert(newChild, getChildrenInternal().size()-1);
+    insert(newChild, getMFChildrenInternal()->size()-1);
 }
 
-MutableTreeNodePtr DefaultMutableTreeNode::getChildAfter(MutableTreeNodePtr aChild) const
+MutableTreeNodeRefPtr DefaultMutableTreeNode::getChildAfter(MutableTreeNodeRefPtr aChild) const
 {
-	MFMutableTreeNodePtr::const_iterator ChildPos(getChildrenInternal().find(aChild));
-	if(ChildPos == getChildrenInternal().end())
-	{
-		return NullFC;
-	}
-	else
-	{
-		MFMutableTreeNodePtr::const_iterator NextChildPos(ChildPos);
-		++NextChildPos;
-		if(NextChildPos == getChildrenInternal().end())
-		{
-			return NullFC;
-		}
-		else
-		{
-			return (*NextChildPos);
-		}
-	}
+    UInt32 i(0);
+    for( ; i<getMFChildrenInternal()->size() ; ++i)
+    {
+        if(getChildrenInternal(i) == aChild &&
+           i+1 != getMFChildrenInternal()->size())
+        {
+            return getChildrenInternal(i+1);
+        }
+    }
+
+    return NULL;
 }
 
-MutableTreeNodePtr DefaultMutableTreeNode::getChildBefore(MutableTreeNodePtr aChild) const
+MutableTreeNodeRefPtr DefaultMutableTreeNode::getChildBefore(MutableTreeNodeRefPtr aChild) const
 {
-	MFMutableTreeNodePtr::const_iterator ChildPos(getChildrenInternal().find(aChild));
-	if(ChildPos == getChildrenInternal().end())
-	{
-		return NullFC;
-	}
-	else
-	{
-		if(ChildPos == getChildrenInternal().begin())
-		{
-			return NullFC;
-		}
-		else
-		{
-			++ChildPos;
-			return (*ChildPos);
-		}
-	}
+    UInt32 i(1);
+    for( ; i<getMFChildrenInternal()->size() ; ++i)
+    {
+        if(getChildrenInternal(i) == aChild)
+        {
+            return getChildrenInternal(i-1);
+        }
+    }
+
+    return NULL;
 }
 
 UInt32 DefaultMutableTreeNode::getHeight(void) const
 {
-	UInt32 Max(0);
-	for(UInt32 i(0) ; i<getChildrenInternal().size() ; ++i)
-	{
-		Max = osgMax(Max, DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->getHeight());
-	}
-	return Max+1;
+    UInt32 Max(0);
+    for(UInt32 i(0) ; i<getMFChildrenInternal()->size() ; ++i)
+    {
+        Max = osgMax(Max, dynamic_cast<DefaultMutableTreeNode*>(getChildrenInternal(i))->getHeight());
+    }
+    return Max+1;
 }
 
-MutableTreeNodePtr DefaultMutableTreeNode::getFirstChild(void) const
+MutableTreeNodeRefPtr DefaultMutableTreeNode::getFirstChild(void) const
 {
-	if(getChildrenInternal().size() > 0)
-	{
-		return getChildrenInternal().front();
-	}
-	else
-	{
-		return NullFC;
-	}
+    if(getMFChildrenInternal()->size() > 0)
+    {
+        return getMFChildrenInternal()->front();
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
-DefaultMutableTreeNodePtr DefaultMutableTreeNode::getFirstLeaf(void) const
+DefaultMutableTreeNodeRefPtr DefaultMutableTreeNode::getFirstLeaf(void) const
 {
-	DefaultMutableTreeNodePtr Child(DefaultMutableTreeNodePtr(this));
-	while(!Child->isLeaf())
-	{
-		Child = DefaultMutableTreeNode::Ptr::dcast(Child->getChildrenInternal().front());
-	}
-	return Child;
+    const DefaultMutableTreeNode* Child(this);
+    while(!Child->isLeaf())
+    {
+        Child =
+            dynamic_cast<const DefaultMutableTreeNode*>(Child->getMFChildrenInternal()->front());
+    }
+    return const_cast<DefaultMutableTreeNode*>(Child);
 }
 
-MutableTreeNodePtr DefaultMutableTreeNode::getLastChild(void) const
+MutableTreeNodeRefPtr DefaultMutableTreeNode::getLastChild(void) const
 {
-	if(getChildrenInternal().size() > 0)
-	{
-		return getChildrenInternal().back();
-	}
-	else
-	{
-		return NullFC;
-	}
+    if(getMFChildrenInternal()->size() > 0)
+    {
+        return getMFChildrenInternal()->back();
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
-DefaultMutableTreeNodePtr DefaultMutableTreeNode::getLastLeaf(void) const
+DefaultMutableTreeNodeRefPtr DefaultMutableTreeNode::getLastLeaf(void) const
 {
-	DefaultMutableTreeNodePtr Child(DefaultMutableTreeNodePtr(this));
-	while(!Child->isLeaf())
-	{
-		Child = DefaultMutableTreeNode::Ptr::dcast(Child->getChildrenInternal().back());
-	}
-	return Child;
+    const DefaultMutableTreeNode* Child(this);
+    while(!Child->isLeaf())
+    {
+        Child =
+            dynamic_cast<DefaultMutableTreeNode*>(Child->getMFChildrenInternal()->back());
+    }
+    return const_cast<DefaultMutableTreeNode*>(Child);
 }
 
 UInt32 DefaultMutableTreeNode::getLeafCount(void) const
 {
-	UInt32 Count(0);
-	for(UInt32 i(0) ; i<getChildrenInternal().size() ; ++i)
-	{
-		if(DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->isLeaf())
-		{
-			++Count;
-		}
-		else
-		{
-			Count += DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->getLeafCount();
-		}
-	}
-	return Count;
+    UInt32 Count(0);
+    for(UInt32 i(0) ; i<getMFChildrenInternal()->size() ; ++i)
+    {
+        if(dynamic_cast<DefaultMutableTreeNode*>(getChildrenInternal(i))->isLeaf())
+        {
+            ++Count;
+        }
+        else
+        {
+            Count += dynamic_cast<DefaultMutableTreeNode*>(getChildrenInternal(i))->getLeafCount();
+        }
+    }
+    return Count;
 }
 
 UInt32 DefaultMutableTreeNode::getDepth(void) const
 {
-	ModelTreeNodePtr ParentNode(getParent());
-	UInt32 Depth(0);
-	while(ParentNode != NullFC)
-	{
-		ParentNode = ParentNode->getParent();
-		++Depth;
-	}
-
-	return Depth;
-}
-
-DefaultMutableTreeNodePtr DefaultMutableTreeNode::getNextLeaf(void) const
-{
-    DefaultMutableTreeNodePtr ParentNode(this);
-    while(ParentNode->getParentInternal() != NullFC && ParentNode->getNextSibling() == NullFC)
+    ModelTreeNodeRefPtr ParentNode(getParent());
+    UInt32 Depth(0);
+    while(ParentNode != NULL)
     {
-        ParentNode = DefaultMutableTreeNode::Ptr::dcast(ParentNode->getParentInternal());
+        ParentNode = ParentNode->getParent();
+        ++Depth;
     }
 
-    if(ParentNode->getParentInternal() != NullFC)
+    return Depth;
+}
+
+DefaultMutableTreeNodeRefPtr DefaultMutableTreeNode::getNextLeaf(void) const
+{
+    const DefaultMutableTreeNode* ParentNode(this);
+    while(ParentNode->getParentInternal() != NULL && ParentNode->getNextSibling() == NULL)
+    {
+        ParentNode = dynamic_cast<const DefaultMutableTreeNode*>(ParentNode->getParentInternal());
+    }
+
+    if(ParentNode->getParentInternal() != NULL)
     {
         return ParentNode->getNextSibling()->getFirstLeaf();
     }
     else
     {
-	    return NullFC;
+        return NULL;
     }
 }
 
-DefaultMutableTreeNodePtr DefaultMutableTreeNode::getNextNode(void) const
+DefaultMutableTreeNodeRefPtr DefaultMutableTreeNode::getNextNode(void) const
 {
-	if(getChildrenInternal().size() != 0)
-	{
-		return DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal().front());
-	}
-	else
-	{
-		DefaultMutableTreeNodePtr ParentNode(DefaultMutableTreeNodePtr(this));
-		DefaultMutableTreeNodePtr NextSibling;
-		while(ParentNode != NullFC)
-		{
-			NextSibling = ParentNode->getNextSibling();
-			if(NextSibling != NullFC)
-			{
-				return NextSibling;
-			}
-			ParentNode = DefaultMutableTreeNode::Ptr::dcast(ParentNode->getParentInternal());
-		}
-	}
-
-	return NullFC;
-}
-
-DefaultMutableTreeNodePtr DefaultMutableTreeNode::getNextSibling(void) const
-{
-	if(getParentInternal() != NullFC)
-	{
-		return DefaultMutableTreeNode::Ptr::dcast(getParentInternal()->getChildAt(getParentInternal()->getIndex(DefaultMutableTreeNodePtr(this))+1));
-	}
-	else
-	{
-		return NullFC;
-	}
-}
-
-std::vector<MutableTreeNodePtr> DefaultMutableTreeNode::getPath(void) const
-{
-	std::vector<MutableTreeNodePtr> Path;
-
-	MutableTreeNodePtr Node(MutableTreeNodePtr(this));
-	while(Node != NullFC)
-	{
-		Path.push_back(Node);
-		Node = MutableTreeNode::Ptr::dcast(Node->getParent());
-	}
-
-	std::reverse(Path.begin(), Path.end());
-
-	return Path;
-}
-
-DefaultMutableTreeNodePtr DefaultMutableTreeNode::getPreviousLeaf(void) const
-{
-    DefaultMutableTreeNodePtr ParentNode(this);
-    while(ParentNode->getParentInternal() != NullFC && ParentNode->getPreviousSibling() == NullFC)
+    if(getMFChildrenInternal()->size() != 0)
     {
-        ParentNode = DefaultMutableTreeNode::Ptr::dcast(ParentNode->getParentInternal());
+        return const_cast<DefaultMutableTreeNode*>(dynamic_cast<const
+            DefaultMutableTreeNode*>(getMFChildrenInternal()->front()));
+    }
+    else
+    {
+        const DefaultMutableTreeNode* ParentNode(this);
+        const DefaultMutableTreeNode* NextSibling;
+        while(ParentNode != NULL)
+        {
+            NextSibling = ParentNode->getNextSibling();
+            if(NextSibling != NULL)
+            {
+                return const_cast<DefaultMutableTreeNode*>(NextSibling);
+            }
+            ParentNode = dynamic_cast<const DefaultMutableTreeNode*>(ParentNode->getParentInternal());
+        }
     }
 
-    if(ParentNode->getParentInternal() != NullFC)
+    return NULL;
+}
+
+DefaultMutableTreeNodeRefPtr DefaultMutableTreeNode::getNextSibling(void) const
+{
+    if(getParentInternal() != NULL)
+    {
+        return
+            dynamic_pointer_cast<DefaultMutableTreeNode>(getParentInternal()->getChildAt(getParentInternal()->getIndex(MutableTreeNodeRefPtr(const_cast<DefaultMutableTreeNode*>(this))+1)));
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+std::vector<MutableTreeNodeRefPtr> DefaultMutableTreeNode::getPath(void) const
+{
+    std::vector<MutableTreeNodeRefPtr> Path;
+
+    const MutableTreeNode* Node(this);
+    while(Node != NULL)
+    {
+        Path.push_back(const_cast<MutableTreeNode*>(Node));
+        Node = dynamic_cast<const MutableTreeNode*>(Node->getParent().get());
+    }
+
+    std::reverse(Path.begin(), Path.end());
+
+    return Path;
+}
+
+DefaultMutableTreeNodeRefPtr DefaultMutableTreeNode::getPreviousLeaf(void) const
+{
+    const DefaultMutableTreeNode* ParentNode(this);
+    while(ParentNode->getParentInternal() != NULL && ParentNode->getPreviousSibling() == NULL)
+    {
+        ParentNode = dynamic_cast<const DefaultMutableTreeNode*>(ParentNode->getParentInternal());
+    }
+
+    if(ParentNode->getParentInternal() != NULL)
     {
         return ParentNode->getPreviousSibling()->getLastLeaf();
     }
     else
     {
-	    return NullFC;
+        return NULL;
     }
 }
 
-DefaultMutableTreeNodePtr DefaultMutableTreeNode::getPreviousNode(void) const
+DefaultMutableTreeNodeRefPtr DefaultMutableTreeNode::getPreviousNode(void) const
 {
-    if(getParentInternal() != NullFC)
+    if(getParentInternal() != NULL)
     {
-        if(DefaultMutableTreeNode::Ptr::dcast(getParentInternal())->getFirstChild() == DefaultMutableTreeNodePtr(this))
+        if(dynamic_cast<const
+           DefaultMutableTreeNode*>(getParentInternal())->getFirstChild().get() == this)
         {
-            return DefaultMutableTreeNode::Ptr::dcast(getParentInternal());
+            return const_cast<DefaultMutableTreeNode*>(dynamic_cast<const
+                                                       DefaultMutableTreeNode*>(getParentInternal()));
         }
         else
         {
-            DefaultMutableTreeNodePtr RightMostNode(getPreviousSibling());
+            const DefaultMutableTreeNode* RightMostNode(getPreviousSibling());
             while(!RightMostNode->isLeaf())
             {
-                RightMostNode = DefaultMutableTreeNode::Ptr::dcast(RightMostNode->getChildrenInternal().back());
+                RightMostNode =
+                    dynamic_cast<const DefaultMutableTreeNode*>(RightMostNode->getMFChildrenInternal()->back());
             }
-            return RightMostNode;
+            return const_cast<DefaultMutableTreeNode*>(RightMostNode);
         }
     }
     else
     {
-	    return NullFC;
+        return NULL;
     }
 }
 
-DefaultMutableTreeNodePtr DefaultMutableTreeNode::getPreviousSibling(void) const
+DefaultMutableTreeNodeRefPtr DefaultMutableTreeNode::getPreviousSibling(void) const
 {
-	if(getParentInternal() != NullFC)
-	{
-		Int32 MyIndex(getParentInternal()->getIndex(DefaultMutableTreeNodePtr(this)));
-		if(MyIndex < 1)
-		{
-			return NullFC;
-		}
-		else
-		{
-			return DefaultMutableTreeNode::Ptr::dcast(getParentInternal()->getChildAt(MyIndex-1));
-		}
-	}
-	else
-	{
-		return NullFC;
-	}
+    if(getParentInternal() != NULL)
+    {
+        Int32
+            MyIndex(getParentInternal()->getIndex(DefaultMutableTreeNodeRefPtr(const_cast<DefaultMutableTreeNode*>(this))));
+        if(MyIndex < 1)
+        {
+            return NULL;
+        }
+        else
+        {
+            return dynamic_pointer_cast<DefaultMutableTreeNode>(getParentInternal()->getChildAt(MyIndex-1));
+        }
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
-MutableTreeNodePtr DefaultMutableTreeNode::getRoot(void) const
+MutableTreeNodeRefPtr DefaultMutableTreeNode::getRoot(void) const
 {
-	ModelTreeNodePtr ParentNode(getParent());
-	while(ParentNode != NullFC)
-	{
-		ParentNode = ParentNode->getParent();
-	}
+    ModelTreeNodeRefPtr ParentNode(getParent());
+    while(ParentNode != NULL)
+    {
+        ParentNode = ParentNode->getParent();
+    }
 
-	return MutableTreeNode::Ptr::dcast(ParentNode);
+    return dynamic_pointer_cast<MutableTreeNode>(ParentNode);
 }
 
-MutableTreeNodePtr DefaultMutableTreeNode::getSharedAncestor(DefaultMutableTreeNodePtr aNode) const
+MutableTreeNodeRefPtr DefaultMutableTreeNode::getSharedAncestor(DefaultMutableTreeNodeRefPtr aNode) const
 {
-	if(DefaultMutableTreeNodePtr(this) == aNode)
-	{
-		return aNode;
-	}
+    if(this == aNode)
+    {
+        return aNode;
+    }
 
-	std::vector<MutableTreeNodePtr> MyPathToRoot(getPath()),
-		OtherNodePathToRoot(aNode->getPath());
+    std::vector<MutableTreeNodeRefPtr> MyPathToRoot(getPath()),
+        OtherNodePathToRoot(aNode->getPath());
 
-	UInt32 Index(0);
-	while(Index < MyPathToRoot.size() && Index < OtherNodePathToRoot.size() &&
-		  MyPathToRoot[Index] == OtherNodePathToRoot[Index])
-	{
-		++Index;
-	}
+    UInt32 Index(0);
+    while(Index < MyPathToRoot.size() && Index < OtherNodePathToRoot.size() &&
+          MyPathToRoot[Index] == OtherNodePathToRoot[Index])
+    {
+        ++Index;
+    }
 
-	if(Index != MyPathToRoot.size() && Index != OtherNodePathToRoot.size())
-	{
-		return MyPathToRoot[Index-1];
-	}
-	else
-	{
-		return NullFC;
-	}
+    if(Index != MyPathToRoot.size() && Index != OtherNodePathToRoot.size())
+    {
+        return MyPathToRoot[Index-1];
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 UInt32 DefaultMutableTreeNode::getSiblingCount(void) const
 {
-	if(getParentInternal() != NullFC)
-	{
-		return getParentInternal()->getChildCount() - 1;
-	}
+    if(getParentInternal() != NULL)
+    {
+        return getParentInternal()->getChildCount() - 1;
+    }
     else
     {
         return 0;
@@ -502,154 +481,153 @@ UInt32 DefaultMutableTreeNode::getSiblingCount(void) const
 
 boost::any DefaultMutableTreeNode::getUserObject(void) const
 {
-	return _UserObject;
+    return _UserObject;
 }
 
 std::vector<boost::any> DefaultMutableTreeNode::getUserObjectPath(void) const
 {
-	std::vector<boost::any> UserObjectPath;
+    std::vector<boost::any> UserObjectPath;
 
-	DefaultMutableTreeNodePtr Node(DefaultMutableTreeNodePtr(this));
-	while(Node != NullFC)
-	{
-		UserObjectPath.push_back(Node->getUserObject());
-		Node = DefaultMutableTreeNode::Ptr::dcast(Node->getParent());
-	}
+    const DefaultMutableTreeNode* Node(this);
+    while(Node != NULL)
+    {
+        UserObjectPath.push_back(Node->getUserObject());
+        Node = dynamic_cast<const
+            DefaultMutableTreeNode*>(Node->getParent().get());
+    }
 
-	std::reverse(UserObjectPath.begin(), UserObjectPath.end());
+    std::reverse(UserObjectPath.begin(), UserObjectPath.end());
 
-	return UserObjectPath;
+    return UserObjectPath;
 }
 
-bool DefaultMutableTreeNode::isNodeAncestor(MutableTreeNodePtr anotherNode) const
+bool DefaultMutableTreeNode::isNodeAncestor(MutableTreeNodeRefPtr anotherNode) const
 {
-	std::vector<MutableTreeNodePtr> MyPathToRoot(getPath());
-	for(UInt32 i(0) ; i<MyPathToRoot.size() ; ++i)
-	{
-		if(MyPathToRoot[i] == anotherNode)
-		{
-			return true;
-		}
-	}
+    std::vector<MutableTreeNodeRefPtr> MyPathToRoot(getPath());
+    for(UInt32 i(0) ; i<MyPathToRoot.size() ; ++i)
+    {
+        if(MyPathToRoot[i] == anotherNode)
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
-bool DefaultMutableTreeNode::isNodeChild(MutableTreeNodePtr aNode) const
+bool DefaultMutableTreeNode::isNodeChild(MutableTreeNodeRefPtr aNode) const
 {
-	for(UInt32 i(0) ; i<getChildrenInternal().size() ; ++i)
-	{
-		if(getChildrenInternal()[i] == aNode)
-		{
-			return true;
-		}
-	}
-	return false;
+    for(UInt32 i(0) ; i<getMFChildrenInternal()->size() ; ++i)
+    {
+        if(getChildrenInternal(i) == aNode)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
-bool DefaultMutableTreeNode::isNodeDescendant(DefaultMutableTreeNodePtr anotherNode) const
+bool DefaultMutableTreeNode::isNodeDescendant(DefaultMutableTreeNodeRefPtr anotherNode) const
 {
-	if(DefaultMutableTreeNodePtr(this) == anotherNode)
-	{
-		return anotherNode;
-	}
+    if(this == anotherNode)
+    {
+        return anotherNode;
+    }
 
-	for(UInt32 i(0) ; i<getChildrenInternal().size() ; ++i)
-	{
-		if(DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->isNodeDescendant(anotherNode))
-		{
-			return true;
-		}
-	}
+    for(UInt32 i(0) ; i<getMFChildrenInternal()->size() ; ++i)
+    {
+        if(dynamic_cast<DefaultMutableTreeNode*>(getChildrenInternal(i))->isNodeDescendant(anotherNode))
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
-bool DefaultMutableTreeNode::isNodeRelated(DefaultMutableTreeNodePtr aNode) const
+bool DefaultMutableTreeNode::isNodeRelated(DefaultMutableTreeNodeRefPtr aNode) const
 {
-	return getRoot() == aNode->getRoot();
+    return getRoot() == aNode->getRoot();
 }
 
-bool DefaultMutableTreeNode::isNodeSibling(MutableTreeNodePtr anotherNode) const
+bool DefaultMutableTreeNode::isNodeSibling(MutableTreeNodeRefPtr anotherNode) const
 {
-	if(getParentInternal() != NullFC)
-	{
-		for(UInt32 i(0) ; i<DefaultMutableTreeNode::Ptr::dcast(getParentInternal())->getChildrenInternal().size() ; ++i)
-		{
-			if(DefaultMutableTreeNode::Ptr::dcast(getParentInternal())->getChildrenInternal()[i] == anotherNode)
-			{
-				return true;
-			}
-		}
-	}
+    if(getParentInternal() != NULL)
+    {
+        for(UInt32 i(0) ; i<dynamic_cast<DefaultMutableTreeNode*>(getParentInternal())->getMFChildrenInternal()->size() ; ++i)
+        {
+            if(dynamic_cast<const DefaultMutableTreeNode*>(getParentInternal())->getChildrenInternal(i) == anotherNode)
+            {
+                return true;
+            }
+        }
+    }
 
-	return false;
+    return false;
 }
 
 bool DefaultMutableTreeNode::isRoot(void) const
 {
-	return getParent() != NullFC;
+    return getParent() != NULL;
 }
 
 void DefaultMutableTreeNode::removeAllChildren(void)
 {
-	beginEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
-		getChildrenInternal().clear();
-	endEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
+    clearChildrenInternal();
 }
 
-void DefaultMutableTreeNode::heightFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const
+void DefaultMutableTreeNode::heightFirst(std::vector<DefaultMutableTreeNodeRefPtr>& Result) const
 {
     //Call the postorder traversal
     postorder(Result);
 }
 
-void DefaultMutableTreeNode::postorder(std::vector<DefaultMutableTreeNodePtr>& Result) const
+void DefaultMutableTreeNode::postorder(std::vector<DefaultMutableTreeNodeRefPtr>& Result) const
 {
     if(!isLeaf())
     {
-        for(UInt32 i(0) ; i<getChildrenInternal().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildrenInternal()->size() ; ++i)
         {
-            DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->postorder(Result);
+            dynamic_cast<DefaultMutableTreeNode*>(getChildrenInternal(i))->postorder(Result);
         }
     }
 
     //Push Myself on the Vector
-    Result.push_back(DefaultMutableTreeNodePtr(this));
+    Result.push_back(DefaultMutableTreeNodeRefPtr(const_cast<DefaultMutableTreeNode*>(this)));
 }
 
-void DefaultMutableTreeNode::preorder(std::vector<DefaultMutableTreeNodePtr>& Result) const
+void DefaultMutableTreeNode::preorder(std::vector<DefaultMutableTreeNodeRefPtr>& Result) const
 {
     //Push Myself on the Vector
-    Result.push_back(DefaultMutableTreeNodePtr(this));
+    Result.push_back(DefaultMutableTreeNodeRefPtr(const_cast<DefaultMutableTreeNode*>(this)));
 
     if(!isLeaf())
     {
-        for(UInt32 i(0) ; i<getChildrenInternal().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildrenInternal()->size() ; ++i)
         {
-            DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->preorder(Result);
+            dynamic_cast<DefaultMutableTreeNode*>(getChildrenInternal(i))->preorder(Result);
         }
     }
 }
 
-void DefaultMutableTreeNode::breadthFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const
+void DefaultMutableTreeNode::breadthFirst(std::vector<DefaultMutableTreeNodeRefPtr>& Result) const
 {
     //Push Myself on the Vector
-    Result.push_back(DefaultMutableTreeNodePtr(this));
+    Result.push_back(DefaultMutableTreeNodeRefPtr(const_cast<DefaultMutableTreeNode*>(this)));
 
-    
-    std::vector<ModelTreeNodePtr> CurrentDepthNodes;
-    std::vector<ModelTreeNodePtr> NextDepthNodes(getChildren());
+
+    std::vector<ModelTreeNodeRefPtr> CurrentDepthNodes;
+    std::vector<ModelTreeNodeRefPtr> NextDepthNodes(getChildren());
     while(NextDepthNodes.size() != 0)
     {
         for(UInt32 i(0) ; i<NextDepthNodes.size() ; ++i)
         {
-            Result.push_back(DefaultMutableTreeNode::Ptr::dcast(NextDepthNodes[i]));
+            Result.push_back(dynamic_pointer_cast<DefaultMutableTreeNode>(NextDepthNodes[i]));
         }
-        
+
         CurrentDepthNodes = NextDepthNodes;
         NextDepthNodes.clear();
-        std::vector<ModelTreeNodePtr> Children;
+        std::vector<ModelTreeNodeRefPtr> Children;
         for(UInt32 i(0) ; i<CurrentDepthNodes.size() ; ++i)
         {
             Children = CurrentDepthNodes[i]->getChildren();
@@ -680,41 +658,17 @@ DefaultMutableTreeNode::~DefaultMutableTreeNode(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultMutableTreeNode::changed(BitVector whichField, UInt32 origin)
+void DefaultMutableTreeNode::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DefaultMutableTreeNode::dump(      UInt32    , 
+void DefaultMutableTreeNode::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultMutableTreeNode NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTMUTABLETREENODEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTMUTABLETREENODEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTMUTABLETREENODEFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

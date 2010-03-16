@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,111 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETREEROWMAPPERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTreeRowMapperBase.h"
 #include "OSGTreeRowMapper.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector TreeRowMapperBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::TreeRowMapper
+    A UI Tree Row Mapper.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType TreeRowMapperBase::_type(
-    "TreeRowMapper",
-    "FieldContainer",
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TreeRowMapper *>::_type("TreeRowMapperPtr", "FieldContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TreeRowMapper *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TreeRowMapper *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TreeRowMapper *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TreeRowMapperBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+TreeRowMapperBase::TypeObject TreeRowMapperBase::_type(
+    TreeRowMapperBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     TreeRowMapper::initMethod,
-    NULL,
-    0);
+    TreeRowMapper::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TreeRowMapper::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TreeRowMapper\"\n"
+    "\tparent=\"FieldContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Tree Row Mapper.\n"
+    "</FieldContainer>\n",
+    "A UI Tree Row Mapper.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TreeRowMapperBase, TreeRowMapperPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TreeRowMapperBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TreeRowMapperBase::getType(void) const 
+FieldContainerType &TreeRowMapperBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 TreeRowMapperBase::getContainerSize(void) const 
-{ 
-    return sizeof(TreeRowMapper); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeRowMapperBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TreeRowMapperBase::getType(void) const
 {
-    this->executeSyncImpl((TreeRowMapperBase *) &other, whichField);
+    return _type;
 }
-#else
-void TreeRowMapperBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TreeRowMapperBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TreeRowMapperBase *) &other, whichField, sInfo);
-}
-void TreeRowMapperBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(TreeRowMapper);
 }
 
-void TreeRowMapperBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-TreeRowMapperBase::TreeRowMapperBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TreeRowMapperBase::TreeRowMapperBase(const TreeRowMapperBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-TreeRowMapperBase::~TreeRowMapperBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TreeRowMapperBase::getBinSize(const BitVector &whichField)
+UInt32 TreeRowMapperBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -162,88 +176,69 @@ UInt32 TreeRowMapperBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void TreeRowMapperBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TreeRowMapperBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void TreeRowMapperBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TreeRowMapperBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeRowMapperBase::executeSyncImpl(      TreeRowMapperBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TreeRowMapperBase::TreeRowMapperBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void TreeRowMapperBase::executeSyncImpl(      TreeRowMapperBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void TreeRowMapperBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+TreeRowMapperBase::TreeRowMapperBase(const TreeRowMapperBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+TreeRowMapperBase::~TreeRowMapperBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TreeRowMapperBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TreeRowMapper *pThis = static_cast<TreeRowMapper *>(this);
+
+    pThis->execSync(static_cast<TreeRowMapper *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void TreeRowMapperBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TreeRowMapperPtr>::_type("TreeRowMapperPtr", "FieldContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TreeRowMapperPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TreeRowMapperPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTREEROWMAPPERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTREEROWMAPPERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTREEROWMAPPERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

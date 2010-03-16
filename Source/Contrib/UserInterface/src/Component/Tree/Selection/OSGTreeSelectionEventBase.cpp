@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,170 +50,248 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETREESELECTIONEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTreeSelectionEventBase.h"
 #include "OSGTreeSelectionEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TreeSelectionEventBase::NewLeadSelectionPathFieldMask = 
-    (TypeTraits<BitVector>::One << TreeSelectionEventBase::NewLeadSelectionPathFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TreeSelectionEventBase::OldLeadSelectionPathFieldMask = 
-    (TypeTraits<BitVector>::One << TreeSelectionEventBase::OldLeadSelectionPathFieldId);
+/*! \class OSG::TreeSelectionEvent
+    
+ */
 
-const OSG::BitVector  TreeSelectionEventBase::ElementsChangedFieldMask = 
-    (TypeTraits<BitVector>::One << TreeSelectionEventBase::ElementsChangedFieldId);
-
-const OSG::BitVector TreeSelectionEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Int32           TreeSelectionEventBase::_sfNewLeadSelectionPath
     
 */
+
 /*! \var Int32           TreeSelectionEventBase::_sfOldLeadSelectionPath
     
 */
+
 /*! \var Vec2s           TreeSelectionEventBase::_mfElementsChanged
     
 */
 
-//! TreeSelectionEvent description
 
-FieldDescription *TreeSelectionEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TreeSelectionEvent *>::_type("TreeSelectionEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TreeSelectionEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TreeSelectionEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TreeSelectionEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TreeSelectionEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFInt32::getClassType(), 
-                     "NewLeadSelectionPath", 
-                     NewLeadSelectionPathFieldId, NewLeadSelectionPathFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeSelectionEventBase::editSFNewLeadSelectionPath)),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "OldLeadSelectionPath", 
-                     OldLeadSelectionPathFieldId, OldLeadSelectionPathFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeSelectionEventBase::editSFOldLeadSelectionPath)),
-    new FieldDescription(MFVec2s::getClassType(), 
-                     "ElementsChanged", 
-                     ElementsChangedFieldId, ElementsChangedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeSelectionEventBase::editMFElementsChanged))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TreeSelectionEventBase::_type(
-    "TreeSelectionEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TreeSelectionEventBase::createEmpty),
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "NewLeadSelectionPath",
+        "",
+        NewLeadSelectionPathFieldId, NewLeadSelectionPathFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TreeSelectionEvent::editHandleNewLeadSelectionPath),
+        static_cast<FieldGetMethodSig >(&TreeSelectionEvent::getHandleNewLeadSelectionPath));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "OldLeadSelectionPath",
+        "",
+        OldLeadSelectionPathFieldId, OldLeadSelectionPathFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TreeSelectionEvent::editHandleOldLeadSelectionPath),
+        static_cast<FieldGetMethodSig >(&TreeSelectionEvent::getHandleOldLeadSelectionPath));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFVec2s::Description(
+        MFVec2s::getClassType(),
+        "ElementsChanged",
+        "",
+        ElementsChangedFieldId, ElementsChangedFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TreeSelectionEvent::editHandleElementsChanged),
+        static_cast<FieldGetMethodSig >(&TreeSelectionEvent::getHandleElementsChanged));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+TreeSelectionEventBase::TypeObject TreeSelectionEventBase::_type(
+    TreeSelectionEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TreeSelectionEventBase::createEmptyLocal),
     TreeSelectionEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    TreeSelectionEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TreeSelectionEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TreeSelectionEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"NewLeadSelectionPath\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"-1\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"OldLeadSelectionPath\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"-1\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ElementsChanged\"\n"
+    "\t\ttype=\"Vec2s\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TreeSelectionEventBase, TreeSelectionEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TreeSelectionEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TreeSelectionEventBase::getType(void) const 
+FieldContainerType &TreeSelectionEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TreeSelectionEventBase::shallowCopy(void) const 
-{ 
-    TreeSelectionEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TreeSelectionEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TreeSelectionEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(TreeSelectionEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeSelectionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TreeSelectionEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<TreeSelectionEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void TreeSelectionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TreeSelectionEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TreeSelectionEventBase *) &other, whichField, sInfo);
+    return sizeof(TreeSelectionEvent);
 }
-void TreeSelectionEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFInt32 *TreeSelectionEventBase::editSFNewLeadSelectionPath(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(NewLeadSelectionPathFieldMask);
+
+    return &_sfNewLeadSelectionPath;
 }
 
-void TreeSelectionEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFInt32 *TreeSelectionEventBase::getSFNewLeadSelectionPath(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfElementsChanged.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfNewLeadSelectionPath;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TreeSelectionEventBase::TreeSelectionEventBase(void) :
-    _sfNewLeadSelectionPath   (Int32(-1)), 
-    _sfOldLeadSelectionPath   (Int32(-1)), 
-    _mfElementsChanged        (), 
-    Inherited() 
+SFInt32 *TreeSelectionEventBase::editSFOldLeadSelectionPath(void)
 {
+    editSField(OldLeadSelectionPathFieldMask);
+
+    return &_sfOldLeadSelectionPath;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TreeSelectionEventBase::TreeSelectionEventBase(const TreeSelectionEventBase &source) :
-    _sfNewLeadSelectionPath   (source._sfNewLeadSelectionPath   ), 
-    _sfOldLeadSelectionPath   (source._sfOldLeadSelectionPath   ), 
-    _mfElementsChanged        (source._mfElementsChanged        ), 
-    Inherited                 (source)
+const SFInt32 *TreeSelectionEventBase::getSFOldLeadSelectionPath(void) const
 {
+    return &_sfOldLeadSelectionPath;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-TreeSelectionEventBase::~TreeSelectionEventBase(void)
+MFVec2s *TreeSelectionEventBase::editMFElementsChanged(void)
 {
+    editMField(ElementsChangedFieldMask, _mfElementsChanged);
+
+    return &_mfElementsChanged;
 }
+
+const MFVec2s *TreeSelectionEventBase::getMFElementsChanged(void) const
+{
+    return &_mfElementsChanged;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TreeSelectionEventBase::getBinSize(const BitVector &whichField)
+UInt32 TreeSelectionEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -221,23 +299,20 @@ UInt32 TreeSelectionEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfNewLeadSelectionPath.getBinSize();
     }
-
     if(FieldBits::NoField != (OldLeadSelectionPathFieldMask & whichField))
     {
         returnValue += _sfOldLeadSelectionPath.getBinSize();
     }
-
     if(FieldBits::NoField != (ElementsChangedFieldMask & whichField))
     {
         returnValue += _mfElementsChanged.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TreeSelectionEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TreeSelectionEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -245,22 +320,18 @@ void TreeSelectionEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfNewLeadSelectionPath.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OldLeadSelectionPathFieldMask & whichField))
     {
         _sfOldLeadSelectionPath.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ElementsChangedFieldMask & whichField))
     {
         _mfElementsChanged.copyToBin(pMem);
     }
-
-
 }
 
-void TreeSelectionEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TreeSelectionEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -268,85 +339,284 @@ void TreeSelectionEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfNewLeadSelectionPath.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OldLeadSelectionPathFieldMask & whichField))
     {
         _sfOldLeadSelectionPath.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ElementsChangedFieldMask & whichField))
     {
         _mfElementsChanged.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeSelectionEventBase::executeSyncImpl(      TreeSelectionEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TreeSelectionEventTransitPtr TreeSelectionEventBase::createLocal(BitVector bFlags)
 {
+    TreeSelectionEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (NewLeadSelectionPathFieldMask & whichField))
-        _sfNewLeadSelectionPath.syncWith(pOther->_sfNewLeadSelectionPath);
+        fc = dynamic_pointer_cast<TreeSelectionEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (OldLeadSelectionPathFieldMask & whichField))
-        _sfOldLeadSelectionPath.syncWith(pOther->_sfOldLeadSelectionPath);
-
-    if(FieldBits::NoField != (ElementsChangedFieldMask & whichField))
-        _mfElementsChanged.syncWith(pOther->_mfElementsChanged);
-
-
-}
-#else
-void TreeSelectionEventBase::executeSyncImpl(      TreeSelectionEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (NewLeadSelectionPathFieldMask & whichField))
-        _sfNewLeadSelectionPath.syncWith(pOther->_sfNewLeadSelectionPath);
-
-    if(FieldBits::NoField != (OldLeadSelectionPathFieldMask & whichField))
-        _sfOldLeadSelectionPath.syncWith(pOther->_sfOldLeadSelectionPath);
-
-
-    if(FieldBits::NoField != (ElementsChangedFieldMask & whichField))
-        _mfElementsChanged.syncWith(pOther->_mfElementsChanged, sInfo);
-
-
+    return fc;
 }
 
-void TreeSelectionEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TreeSelectionEventTransitPtr TreeSelectionEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TreeSelectionEventTransitPtr fc;
 
-    if(FieldBits::NoField != (ElementsChangedFieldMask & whichField))
-        _mfElementsChanged.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<TreeSelectionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TreeSelectionEventTransitPtr TreeSelectionEventBase::create(void)
+{
+    TreeSelectionEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TreeSelectionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TreeSelectionEvent *TreeSelectionEventBase::createEmptyLocal(BitVector bFlags)
+{
+    TreeSelectionEvent *returnValue;
+
+    newPtr<TreeSelectionEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TreeSelectionEvent *TreeSelectionEventBase::createEmpty(void)
+{
+    TreeSelectionEvent *returnValue;
+
+    newPtr<TreeSelectionEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TreeSelectionEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TreeSelectionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TreeSelectionEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TreeSelectionEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TreeSelectionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TreeSelectionEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TreeSelectionEventBase::shallowCopy(void) const
+{
+    TreeSelectionEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TreeSelectionEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TreeSelectionEventBase::TreeSelectionEventBase(void) :
+    Inherited(),
+    _sfNewLeadSelectionPath   (Int32(-1)),
+    _sfOldLeadSelectionPath   (Int32(-1)),
+    _mfElementsChanged        ()
+{
+}
+
+TreeSelectionEventBase::TreeSelectionEventBase(const TreeSelectionEventBase &source) :
+    Inherited(source),
+    _sfNewLeadSelectionPath   (source._sfNewLeadSelectionPath   ),
+    _sfOldLeadSelectionPath   (source._sfOldLeadSelectionPath   ),
+    _mfElementsChanged        (source._mfElementsChanged        )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TreeSelectionEventBase::~TreeSelectionEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr TreeSelectionEventBase::getHandleNewLeadSelectionPath (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfNewLeadSelectionPath,
+             this->getType().getFieldDesc(NewLeadSelectionPathFieldId),
+             const_cast<TreeSelectionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeSelectionEventBase::editHandleNewLeadSelectionPath(void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfNewLeadSelectionPath,
+             this->getType().getFieldDesc(NewLeadSelectionPathFieldId),
+             this));
+
+
+    editSField(NewLeadSelectionPathFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeSelectionEventBase::getHandleOldLeadSelectionPath (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfOldLeadSelectionPath,
+             this->getType().getFieldDesc(OldLeadSelectionPathFieldId),
+             const_cast<TreeSelectionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeSelectionEventBase::editHandleOldLeadSelectionPath(void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfOldLeadSelectionPath,
+             this->getType().getFieldDesc(OldLeadSelectionPathFieldId),
+             this));
+
+
+    editSField(OldLeadSelectionPathFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TreeSelectionEventBase::getHandleElementsChanged (void) const
+{
+    MFVec2s::GetHandlePtr returnValue(
+        new  MFVec2s::GetHandle(
+             &_mfElementsChanged,
+             this->getType().getFieldDesc(ElementsChangedFieldId),
+             const_cast<TreeSelectionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeSelectionEventBase::editHandleElementsChanged(void)
+{
+    MFVec2s::EditHandlePtr returnValue(
+        new  MFVec2s::EditHandle(
+             &_mfElementsChanged,
+             this->getType().getFieldDesc(ElementsChangedFieldId),
+             this));
+
+
+    editMField(ElementsChangedFieldMask, _mfElementsChanged);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TreeSelectionEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TreeSelectionEvent *pThis = static_cast<TreeSelectionEvent *>(this);
+
+    pThis->execSync(static_cast<TreeSelectionEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TreeSelectionEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TreeSelectionEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TreeSelectionEvent *>(pRefAspect),
+                  dynamic_cast<const TreeSelectionEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TreeSelectionEventPtr>::_type("TreeSelectionEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TreeSelectionEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void TreeSelectionEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfElementsChanged.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-

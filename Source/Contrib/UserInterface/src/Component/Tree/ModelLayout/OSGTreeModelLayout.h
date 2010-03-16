@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG UserInterface UserInterface                    *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTreeModelLayoutBase.h"
-#include "Component/Tree/OSGTreePath.h"
-#include "Component/Tree/Model/OSGTreeModel.h"
-#include "Component/Tree/Model/OSGTreeModelListener.h"
-#include "Component/Tree/Selection/OSGTreeSelectionModel.h"
+#include "OSGTreePath.h"
+#include "OSGTreeModel.h"
+#include "OSGTreeModelListener.h"
+#include "OSGTreeSelectionModel.h"
 #include "OSGTreeModelLayoutListener.h"
-#include <OpenSG/OSGVector.h>
+#include "OSGVector.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeModelLayout class. See \ref 
-           PageUserInterfaceTreeModelLayout for a description.
+/*! \brief TreeModelLayout class. See \ref
+           PageContribUserInterfaceTreeModelLayout for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelLayout : public TreeModelLayoutBase
 {
-  private:
-
-    typedef TreeModelLayoutBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeModelLayoutBase Inherited;
+    typedef TreeModelLayout     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -109,7 +109,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	virtual bool areChildrenVisible(const TreePath& path) const = 0;
 
 	//Returns the TreeModel that is providing the data.
-	virtual TreeModelPtr getModel(void) const = 0;
+	virtual TreeModelRefPtr getModel(void) const = 0;
 
 	//Returns the object that renders nodes in the tree, and which is responsible for calculating the dimensions of individual nodes.
 	//virtual AbstractLayoutCache.NodeDimensions getNodeDimensions(void) const = 0;
@@ -167,7 +167,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	virtual void setVisible(const TreePath& path) = 0;
 
 	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelPtr newModel) = 0;
+	virtual void setModel(TreeModelRefPtr newModel) = 0;
 
 	//Sets the renderer that is responsible for drawing nodes in the tree and which is threfore responsible for calculating the dimensions of individual nodes.
 	//virtual void setNodeDimensions(AbstractLayoutCache.NodeDimensions nd) = 0;
@@ -196,6 +196,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
     //Fills VisibleDecendents will all of the TreePaths to nodes that are visible decendents of Path
     virtual void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TreeModelLayoutBase.
@@ -212,20 +213,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeModelLayout(void); 
+    virtual ~TreeModelLayout(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TreeModelLayoutBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TreeModelLayout &source);
 };
 

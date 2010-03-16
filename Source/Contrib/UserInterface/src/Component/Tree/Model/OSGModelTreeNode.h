@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,63 +42,63 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGModelTreeNodeBase.h"
-#include "Component/Tree/OSGTreePath.h"
+#include "OSGTreePath.h"
 #include <boost/any.hpp>
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ModelTreeNode class. See \ref 
-           PageUserInterfaceModelTreeNode for a description.
+/*! \brief ModelTreeNode class. See \ref
+           PageContribUserInterfaceModelTreeNode for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ModelTreeNode : public ModelTreeNodeBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ModelTreeNode : public ModelTreeNodeBase
 {
-  private:
-
-    typedef ModelTreeNodeBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ModelTreeNodeBase Inherited;
+    typedef ModelTreeNode     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 	
 	//Returns the children of the receiver as a Vector.
-    virtual std::vector<ModelTreeNodePtr> getChildren(void) const;
+    virtual std::vector<ModelTreeNodeRefPtr> getChildren(void) const;
 
 	//Returns true if the receiver allows children.
 	virtual bool getAllowsChildren(void) const = 0;
 
 	//Returns the child ModelTreeNode at index childIndex.
-	virtual ModelTreeNodePtr getChildAt(const UInt32& childIndex) const = 0;
+	virtual ModelTreeNodeRefPtr getChildAt(const UInt32& childIndex) const = 0;
 
 	//Returns the number of children ModelTreeNodes the receiver contains.
 	virtual UInt32 getChildCount(void) const = 0;
 
 	//Returns the index of node in the receivers children.
-	virtual Int32 getIndex(ModelTreeNodePtr node) const = 0;
+	virtual Int32 getIndex(ModelTreeNodeRefPtr node) const = 0;
 
 	//Returns the parent ModelTreeNode of the receiver.
-	virtual ModelTreeNodePtr getParent(void) const = 0;
+	virtual ModelTreeNodeRefPtr getParent(void) const = 0;
 
 	//Returns true if the receiver is a leaf.
 	virtual bool isLeaf(void) const = 0;
@@ -109,6 +109,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ModelTreeNode : public ModelTreeNodeBase
 	//Returns this node's user object.
 	virtual boost::any getUserObject(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ModelTreeNodeBase.
@@ -125,20 +126,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ModelTreeNode : public ModelTreeNodeBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ModelTreeNode(void); 
+    virtual ~ModelTreeNode(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ModelTreeNodeBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ModelTreeNode &source);
 };
 
@@ -148,7 +153,5 @@ OSG_END_NAMESPACE
 
 #include "OSGModelTreeNodeBase.inl"
 #include "OSGModelTreeNode.inl"
-
-#define OSGMODELTREENODE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMODELTREENODE_H_ */

@@ -46,6 +46,31 @@
 #include <OSGConfig.h>
 
 #include "OSGDialogWindow.h"
+#include "OSGComponentContainer.h"
+#include "OSGDefaultMutableComboBoxModel.h"
+#include "OSGPanel.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGFlowLayout.h"
+#include "OSGLayoutSpring.h"
+#include "OSGSpringLayout.h"
+#include "OSGSpringLayoutConstraints.h"
+#include "OSGImageComponent.h"
+#include "OSGEmptyBorder.h"
+#include "OSGLineBorder.h"
+#include "OSGEmptyLayer.h"
+#include "OSGDialogWindow.h"
+#include "OSGActionListener.h"
+
+#include "OSGSpinner.h"
+
+#include "OSGBorderLayout.h"
+#include "OSGBorderLayoutConstraints.h"
+
+#include "OSGColorChooser.h"
+#include "OSGBorderLayout.h"
+#include "OSGBorderLayoutConstraints.h"
+
+#include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,6 +100,405 @@ void DialogWindow::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void DialogWindow::close(UInt32 intOption, std::string strInput)
+{
+    _VetoWindowClose = false;
+
+    produceDialogWindowClosing(intOption,strInput);
+    produceWindowClosing();
+
+    if(!_VetoWindowClose && getDrawingSurface() != NULL)
+    {
+        getDrawingSurface()->closeWindow(DialogWindowRefPtr(this));
+        produceDialogWindowClosed(intOption,strInput);
+        produceWindowClosed();
+    }
+}
+
+void DialogWindow::produceDialogWindowClosing(UInt32 intOption, std::string strInput)
+{
+    const DialogWindowEventUnrecPtr TheEvent = DialogWindowEvent::create( this,getSystemTime(),intOption,strInput);
+    for(DialogWindowListenerSetConstItor SetItor(_DialogWindowListeners.begin()) ; SetItor != _DialogWindowListeners.end() ; ++SetItor)
+    {
+        (*SetItor)->dialogClosing(TheEvent);
+    }
+    _Producer.produceEvent(DialogWindowClosingMethodId,TheEvent);
+}
+
+void DialogWindow::produceDialogWindowClosed(UInt32 intOption, std::string strInput)
+{
+    const DialogWindowEventUnrecPtr TheEvent = DialogWindowEvent::create( this,getSystemTime(),intOption,strInput);
+    for(DialogWindowListenerSetConstItor SetItor(_DialogWindowListeners.begin()) ; SetItor != _DialogWindowListeners.end() ; ++SetItor)
+    {
+        (*SetItor)->dialogClosed(TheEvent);
+    }
+    _Producer.produceEvent(DialogWindowClosedMethodId,TheEvent);
+}
+
+EventConnection DialogWindow::addDialogWindowListener(DialogWindowListenerPtr Listener)
+{
+    _DialogWindowListeners.insert(Listener);
+    return EventConnection(
+                           boost::bind(&DialogWindow::isDialogWindowListenerAttached, this, Listener),
+                           boost::bind(&DialogWindow::removeDialogWindowListener, this, Listener));
+}
+
+EventConnection DialogWindow::addEventListener(EventListenerPtr Listener)
+{
+    _EventListeners.insert(Listener);
+    return EventConnection(
+                           boost::bind(&DialogWindow::isEventListenerAttached, this, Listener),
+                           boost::bind(&DialogWindow::removeEventListener, this, Listener));
+}
+
+void DialogWindow::removeEventListener(EventListenerPtr Listener)
+{
+    EventListenerSetItor EraseIter(_EventListeners.find(Listener));
+    if(EraseIter != _EventListeners.end())
+    {
+        _EventListeners.erase(EraseIter);
+    }
+}
+
+void DialogWindow::removeDialogWindowListener(DialogWindowListenerPtr Listener)
+{
+    DialogWindowListenerSetItor EraseIter(_DialogWindowListeners.find(Listener));
+    if(EraseIter != _DialogWindowListeners.end())
+    {
+        _DialogWindowListeners.erase(EraseIter);
+    }
+}
+
+DialogWindowRefPtr DialogWindow::createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText, const std::string& CancelBtnText)
+{
+    int DialogHeight = 175;
+    DialogWindowRefPtr TheDialog = DialogWindow::create();
+
+    ImageComponentRefPtr TheIcon = ImageComponent::create();
+    LineBorderRefPtr TempIconBorder = OSG::LineBorder::create();
+    TheIcon->setPreferredSize(Vec2f(45,45));
+    TheIcon->setBorders(TempIconBorder);
+
+    // Create Panel for input
+    PanelRefPtr InputPanel = OSG::Panel::createEmpty();
+    FlowLayoutRefPtr InputPanelLayout = OSG::FlowLayout::create();
+    InputPanel->setLayout(InputPanelLayout);
+    InputPanel->setPreferredSize(Vec2f(450,75));
+
+    ButtonRefPtr InputButton;
+    switch (Type) {
+        case INPUT_TEXT:
+            TheDialog->_InputTextField = OSG::TextField::create();
+            TheDialog->_InputTextField->setText(InputValues[0]);
+            TheDialog->_InputTextField->setPreferredSize(Vec2f(200,25));
+            InputPanel->pushToChildren(TheDialog->_InputTextField);
+            break;
+        case INPUT_BTNS:	
+            DialogHeight = 150;
+            for (std::vector<std::string>::const_iterator it = InputValues.begin(); it!=InputValues.end(); ++it)
+            {
+                InputButton = OSG::Button::create();
+                InputButton->setText(*it);
+                InputButton->setMinSize(InputButton->getPreferredSize());
+                InputButton->setPreferredSize(InputButton->getRequestedSize());
+                InputButtonListener* InputListener = new InputButtonListener(TheDialog);
+                InputButton->addActionListener(InputListener);
+                InputPanel->pushToChildren(InputButton);
+            }				
+            break;
+        case INPUT_COMBO:
+        default:
+            TheDialog->_InputComboBox = OSG::ComboBox::create();
+            DefaultMutableComboBoxModelRefPtr _InputComboBoxModel;
+            _InputComboBoxModel = DefaultMutableComboBoxModel::create();
+
+            for (std::vector<std::string>::const_iterator it = InputValues.begin(); it!=InputValues.end(); ++it)
+            {
+                _InputComboBoxModel->addElement(boost::any(std::string(*it)));
+            }
+
+            TheDialog->_InputComboBox->setPreferredSize(Vec2f(150, 23));
+            TheDialog->_InputComboBox->setModel(_InputComboBoxModel);
+            TheDialog->_InputComboBox->setSelectedIndex(0);
+
+            InputPanel->pushToChildren(TheDialog->_InputComboBox);
+            break;
+    }
+
+    FlowLayoutRefPtr MessagePanelBottomLayout;
+    PanelRefPtr MessageButtonPanel;
+    ButtonRefPtr ConfirmationButton;
+    ButtonRefPtr CancelButton;
+
+
+    if(Type != INPUT_BTNS)
+    {
+        ConfirmationButton = OSG::Button::create();
+        //Confirm Button
+        ConfirmationButton->setText(ConfirmBtnText);
+        ConfirmationButton->setMinSize(ConfirmationButton->getPreferredSize());
+        ConfirmationButton->setPreferredSize(ConfirmationButton->getRequestedSize());
+
+        ActionListener* ConfirmListener;
+
+        if(Type == INPUT_TEXT)
+            ConfirmListener = new TextButtonListener(TheDialog);
+        else
+            ConfirmListener = new ComboButtonListener(TheDialog);
+
+        ConfirmationButton->addActionListener(ConfirmListener);
+    }
+
+    if(showCancel)
+    {
+        CancelButton = OSG::Button::create();
+        //Cancel Button
+        CancelButton->setText(CancelBtnText);
+        CancelButton->setMinSize(CancelButton->getPreferredSize());
+        CancelButton->setPreferredSize(CancelButton->getRequestedSize());
+
+        //Attach listener to the Cancel button
+        CancelButtonListener* CancelListener = new CancelButtonListener(TheDialog);
+        CancelButton->addActionListener(CancelListener);
+    }
+
+    // Create Panel for top half of SplitPanel
+    TextAreaRefPtr MessagePanelText = createTransparentTextArea(Message);
+
+    //If the type of input is buttons and showCancel is true, just push the cancel button onto the input panel
+    if(Type == INPUT_BTNS && showCancel)
+    {
+        InputPanel->pushToChildren(CancelButton);
+    }
+    else if(Type != INPUT_BTNS)
+    {
+        // Create Panel for bottom half of SplitPanel
+        MessageButtonPanel = OSG::Panel::createEmpty();
+        MessagePanelBottomLayout = OSG::FlowLayout::create();
+        MessageButtonPanel->pushToChildren(ConfirmationButton);
+        if(showCancel) 
+            MessageButtonPanel->pushToChildren(CancelButton);
+        MessageButtonPanel->setLayout(MessagePanelBottomLayout);
+        MessageButtonPanel->setPreferredSize(Vec2f(450,75));
+    } 
+
+    // Create SplitPanel itself
+    PanelRefPtr MessagePanel = OSG::Panel::createEmpty();
+    SpringLayoutRefPtr MessagePanelLayout = SpringLayout::create();
+    MessagePanel->pushToChildren(MessagePanelText);
+    MessagePanel->pushToChildren(TheIcon);
+    MessagePanel->pushToChildren(InputPanel);
+    if(Type != INPUT_BTNS)
+        MessagePanel->pushToChildren(MessageButtonPanel);
+    MessagePanel->setLayout(MessagePanelLayout);
+
+
+    //MessagePanelLayout
+    //Icon
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheIcon, 10, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, TheIcon, LayoutSpring::width(TheIcon));
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheIcon, 10, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, TheIcon, LayoutSpring::height(TheIcon));
+
+    //Message
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 10, SpringLayoutConstraints::EAST_EDGE, TheIcon);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText, 20, SpringLayoutConstraints::NORTH_EDGE, InputPanel);
+
+    //Input Panel
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, InputPanel, 0, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, InputPanel, 0, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+
+    if(Type != INPUT_BTNS)
+    {
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, InputPanel, 40, SpringLayoutConstraints::NORTH_EDGE, MessageButtonPanel);
+        //Button Panel
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, MessageButtonPanel, LayoutSpring::height(MessageButtonPanel));
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, 20, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
+    }
+    else
+    {
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, InputPanel, 20, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
+    }
+
+    //Internals Layout and constraints
+    BorderLayoutConstraintsRefPtr MessagePanelConstraints = BorderLayoutConstraints::create();
+    MessagePanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+
+    MessagePanel->setConstraints(MessagePanelConstraints);
+
+    BorderLayoutRefPtr DialogLayout = BorderLayout::create();
+
+    //Create the Dialog box
+    TheDialog->setLayout(DialogLayout);
+    TheDialog->setPreferredSize(Vec2f(350,DialogHeight));
+    TheDialog->pushToChildren(MessagePanel);
+    TheDialog->setTitle(Title);
+
+    return TheDialog;
+}
+
+DialogWindowRefPtr DialogWindow::createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText, const std::string& CancelBtnText)
+{
+    ImageComponentRefPtr TheIcon = ImageComponent::create();
+    LineBorderRefPtr TempIconBorder = OSG::LineBorder::create();
+    TheIcon->setPreferredSize(Vec2f(45,45));
+    TheIcon->setBorders(TempIconBorder);
+
+    ButtonRefPtr ConfirmationButton = OSG::Button::create();
+    ButtonRefPtr CancelButton;
+
+    //Confirm Button
+    ConfirmationButton->setText(ConfirmBtnText);
+    ConfirmationButton->setMinSize(ConfirmationButton->getPreferredSize());
+    ConfirmationButton->setPreferredSize(ConfirmationButton->getRequestedSize());
+
+    if(showCancel)
+    {
+        //Cancel Button
+        CancelButton = OSG::Button::create();
+        CancelButton->setText(CancelBtnText);
+        CancelButton->setMinSize(CancelButton->getPreferredSize());
+        CancelButton->setPreferredSize(CancelButton->getRequestedSize());
+    }
+
+    // Create Panel for top half of SplitPanel
+    TextAreaRefPtr MessagePanelText = createTransparentTextArea(Message);
+
+    // Create Panel for bottom half of SplitPanel
+    PanelRefPtr MessageButtonPanel = OSG::Panel::createEmpty();
+    FlowLayoutRefPtr MessagePanelBottomLayout = OSG::FlowLayout::create();
+    MessageButtonPanel->pushToChildren(ConfirmationButton);
+    if(showCancel) 
+        MessageButtonPanel->pushToChildren(CancelButton);
+    MessageButtonPanel->setLayout(MessagePanelBottomLayout);
+    MessageButtonPanel->setPreferredSize(Vec2f(450,75));
+
+    // Create SplitPanel itself
+    PanelRefPtr MessagePanel = OSG::Panel::createEmpty();
+    SpringLayoutRefPtr MessagePanelLayout = SpringLayout::create();
+    MessagePanel->pushToChildren(MessagePanelText);
+    MessagePanel->pushToChildren(TheIcon);
+    MessagePanel->pushToChildren(MessageButtonPanel);
+    MessagePanel->setLayout(MessagePanelLayout);
+
+
+    //MessagePanelLayout
+    //Icon
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheIcon, 10, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, TheIcon, LayoutSpring::width(TheIcon));
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheIcon, 10, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, TheIcon, LayoutSpring::height(TheIcon));
+
+    //Message
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 10, SpringLayoutConstraints::EAST_EDGE, TheIcon);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText, -30, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
+
+    //Button Panel
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, 20, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
+
+    //Internals Layout and constraints
+    BorderLayoutConstraintsRefPtr MessagePanelConstraints = BorderLayoutConstraints::create();
+    MessagePanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+
+    MessagePanel->setConstraints(MessagePanelConstraints);
+
+    BorderLayoutRefPtr DialogLayout = BorderLayout::create();
+
+    //Create the Dialog box
+    DialogWindowRefPtr TheDialog = DialogWindow::create();
+    TheDialog->setLayout(DialogLayout);
+    TheDialog->setPreferredSize(Vec2f(350,150));
+    TheDialog->pushToChildren(MessagePanel);
+    TheDialog->setTitle(Title);
+
+    //Attach listener to the Confirm button
+    ConfirmButtonListener* ConfirmListener = new ConfirmButtonListener(TheDialog);
+    ConfirmationButton->addActionListener(ConfirmListener);
+
+    if(showCancel)
+    {
+        //Attach listener to the Cancel button
+        CancelButtonListener* CancelListener = new CancelButtonListener(TheDialog);
+        CancelButton->addActionListener(CancelListener);
+    }
+
+    return TheDialog;
+}
+
+DialogWindow::ConfirmButtonListener::ConfirmButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+{
+    _DialogWindow->addEventListener(this);
+}
+
+void DialogWindow::ConfirmButtonListener::actionPerformed(const ActionEventUnrecPtr e)
+{
+    _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_OK,"");
+}
+
+DialogWindow::CancelButtonListener::CancelButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+{
+    _DialogWindow->addEventListener(this);
+}
+
+void DialogWindow::CancelButtonListener::actionPerformed(const ActionEventUnrecPtr e)
+{
+    _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_CANCEL,"");
+}
+
+DialogWindow::InputButtonListener::InputButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+{
+    _DialogWindow->addEventListener(this);
+}
+
+void DialogWindow::InputButtonListener::actionPerformed(const ActionEventUnrecPtr e)
+{
+    _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_OK,dynamic_cast<Button*>(e->getSource())->getText());
+}
+
+
+DialogWindow::ComboButtonListener::ComboButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+{
+    _DialogWindow->addEventListener(this);
+}
+
+void DialogWindow::ComboButtonListener::actionPerformed(const ActionEventUnrecPtr e)
+{
+    _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_OK,boost::any_cast<std::string> (_DialogWindow->_InputComboBox->getSelectedItem()));
+}
+
+DialogWindow::TextButtonListener::TextButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+{
+    _DialogWindow->addEventListener(this);
+}
+
+void DialogWindow::TextButtonListener::actionPerformed(const ActionEventUnrecPtr e)
+{
+    _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_OK,_DialogWindow->_InputTextField->getText());
+}
+
+TextAreaRefPtr DialogWindow::createTransparentTextArea(const std::string& Message)
+{
+    TextAreaRefPtr TransparentTextArea = OSG::TextArea::create();
+    EmptyLayerRefPtr TransparentTextAreaBackground = OSG::EmptyLayer::create();
+    EmptyBorderRefPtr TransparentTextAreaBorder = OSG::EmptyBorder::create();
+
+    TransparentTextArea->setBorders(TransparentTextAreaBorder);
+    TransparentTextArea->setBackgrounds(TransparentTextAreaBackground);
+    TransparentTextArea->setWrapStyleWord(true);
+    TransparentTextArea->setText(Message);
+    TransparentTextArea->setEditable(false);
+
+    return TransparentTextArea;
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

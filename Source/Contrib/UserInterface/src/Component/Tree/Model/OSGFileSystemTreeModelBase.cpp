@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,167 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEFILESYSTEMTREEMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGFileSystemTreeModelBase.h"
 #include "OSGFileSystemTreeModel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  FileSystemTreeModelBase::InternalRootFieldMask = 
-    (TypeTraits<BitVector>::One << FileSystemTreeModelBase::InternalRootFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector FileSystemTreeModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::FileSystemTreeModel
+    A UI FileSystemTreeModel.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var Path            FileSystemTreeModelBase::_sfInternalRoot
+/*! \var BoostPath       FileSystemTreeModelBase::_sfInternalRoot
     
 */
 
-//! FileSystemTreeModel description
 
-FieldDescription *FileSystemTreeModelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<FileSystemTreeModel *>::_type("FileSystemTreeModelPtr", "AbstractTreeModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(FileSystemTreeModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           FileSystemTreeModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           FileSystemTreeModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void FileSystemTreeModelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPath::getClassType(), 
-                     "InternalRoot", 
-                     InternalRootFieldId, InternalRootFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&FileSystemTreeModelBase::editSFInternalRoot))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType FileSystemTreeModelBase::_type(
-    "FileSystemTreeModel",
-    "AbstractTreeModel",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&FileSystemTreeModelBase::createEmpty),
+    pDesc = new SFBoostPath::Description(
+        SFBoostPath::getClassType(),
+        "InternalRoot",
+        "",
+        InternalRootFieldId, InternalRootFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&FileSystemTreeModel::editHandleInternalRoot),
+        static_cast<FieldGetMethodSig >(&FileSystemTreeModel::getHandleInternalRoot));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+FileSystemTreeModelBase::TypeObject FileSystemTreeModelBase::_type(
+    FileSystemTreeModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&FileSystemTreeModelBase::createEmptyLocal),
     FileSystemTreeModel::initMethod,
-    _desc,
-    sizeof(_desc));
+    FileSystemTreeModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&FileSystemTreeModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"FileSystemTreeModel\"\n"
+    "\tparent=\"AbstractTreeModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI FileSystemTreeModel.\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalRoot\"\n"
+    "\t\ttype=\"BoostPath\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI FileSystemTreeModel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(FileSystemTreeModelBase, FileSystemTreeModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &FileSystemTreeModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &FileSystemTreeModelBase::getType(void) const 
+FieldContainerType &FileSystemTreeModelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr FileSystemTreeModelBase::shallowCopy(void) const 
-{ 
-    FileSystemTreeModelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const FileSystemTreeModel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 FileSystemTreeModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(FileSystemTreeModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void FileSystemTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &FileSystemTreeModelBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<FileSystemTreeModelBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void FileSystemTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 FileSystemTreeModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((FileSystemTreeModelBase *) &other, whichField, sInfo);
+    return sizeof(FileSystemTreeModel);
 }
-void FileSystemTreeModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFBoostPath *FileSystemTreeModelBase::editSFInternalRoot(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(InternalRootFieldMask);
+
+    return &_sfInternalRoot;
 }
 
-void FileSystemTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFBoostPath *FileSystemTreeModelBase::getSFInternalRoot(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-FileSystemTreeModelBase::FileSystemTreeModelBase(void) :
-    _sfInternalRoot           (), 
-    Inherited() 
-{
+    return &_sfInternalRoot;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-FileSystemTreeModelBase::FileSystemTreeModelBase(const FileSystemTreeModelBase &source) :
-    _sfInternalRoot           (source._sfInternalRoot           ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-FileSystemTreeModelBase::~FileSystemTreeModelBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 FileSystemTreeModelBase::getBinSize(const BitVector &whichField)
+UInt32 FileSystemTreeModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +219,11 @@ UInt32 FileSystemTreeModelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInternalRoot.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void FileSystemTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void FileSystemTreeModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +231,10 @@ void FileSystemTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfInternalRoot.copyToBin(pMem);
     }
-
-
 }
 
-void FileSystemTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void FileSystemTreeModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,62 +242,213 @@ void FileSystemTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfInternalRoot.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void FileSystemTreeModelBase::executeSyncImpl(      FileSystemTreeModelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+FileSystemTreeModelTransitPtr FileSystemTreeModelBase::createLocal(BitVector bFlags)
 {
+    FileSystemTreeModelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (InternalRootFieldMask & whichField))
-        _sfInternalRoot.syncWith(pOther->_sfInternalRoot);
+        fc = dynamic_pointer_cast<FileSystemTreeModel>(tmpPtr);
+    }
 
-
-}
-#else
-void FileSystemTreeModelBase::executeSyncImpl(      FileSystemTreeModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (InternalRootFieldMask & whichField))
-        _sfInternalRoot.syncWith(pOther->_sfInternalRoot);
-
-
-
+    return fc;
 }
 
-void FileSystemTreeModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+FileSystemTreeModelTransitPtr FileSystemTreeModelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    FileSystemTreeModelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<FileSystemTreeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+FileSystemTreeModelTransitPtr FileSystemTreeModelBase::create(void)
+{
+    FileSystemTreeModelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<FileSystemTreeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+FileSystemTreeModel *FileSystemTreeModelBase::createEmptyLocal(BitVector bFlags)
+{
+    FileSystemTreeModel *returnValue;
+
+    newPtr<FileSystemTreeModel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+FileSystemTreeModel *FileSystemTreeModelBase::createEmpty(void)
+{
+    FileSystemTreeModel *returnValue;
+
+    newPtr<FileSystemTreeModel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr FileSystemTreeModelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    FileSystemTreeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const FileSystemTreeModel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr FileSystemTreeModelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    FileSystemTreeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const FileSystemTreeModel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr FileSystemTreeModelBase::shallowCopy(void) const
+{
+    FileSystemTreeModel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const FileSystemTreeModel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+FileSystemTreeModelBase::FileSystemTreeModelBase(void) :
+    Inherited(),
+    _sfInternalRoot           ()
+{
+}
+
+FileSystemTreeModelBase::FileSystemTreeModelBase(const FileSystemTreeModelBase &source) :
+    Inherited(source),
+    _sfInternalRoot           (source._sfInternalRoot           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+FileSystemTreeModelBase::~FileSystemTreeModelBase(void)
+{
+}
+
+
+GetFieldHandlePtr FileSystemTreeModelBase::getHandleInternalRoot    (void) const
+{
+    SFBoostPath::GetHandlePtr returnValue(
+        new  SFBoostPath::GetHandle(
+             &_sfInternalRoot,
+             this->getType().getFieldDesc(InternalRootFieldId),
+             const_cast<FileSystemTreeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr FileSystemTreeModelBase::editHandleInternalRoot   (void)
+{
+    SFBoostPath::EditHandlePtr returnValue(
+        new  SFBoostPath::EditHandle(
+             &_sfInternalRoot,
+             this->getType().getFieldDesc(InternalRootFieldId),
+             this));
+
+
+    editSField(InternalRootFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void FileSystemTreeModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    FileSystemTreeModel *pThis = static_cast<FileSystemTreeModel *>(this);
+
+    pThis->execSync(static_cast<FileSystemTreeModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *FileSystemTreeModelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    FileSystemTreeModel *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const FileSystemTreeModel *>(pRefAspect),
+                  dynamic_cast<const FileSystemTreeModel *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<FileSystemTreeModelPtr>::_type("FileSystemTreeModelPtr", "AbstractTreeModelPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(FileSystemTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(FileSystemTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void FileSystemTreeModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

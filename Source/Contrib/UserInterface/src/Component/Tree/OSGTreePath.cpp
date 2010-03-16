@@ -45,11 +45,11 @@
 
 #define OSG_COMPILEUSERINTERFACELIB
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGTreePath.h"
-#include <OpenSG/OSGBaseFunctions.h>
-#include "Component/Tree/Model/OSGTreeModel.h"
+#include "OSGBaseFunctions.h"
+#include "OSGTreeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,7 +57,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::TreePath
+/*! \class OSG::TreePath
 A TreePath. 
 */
 

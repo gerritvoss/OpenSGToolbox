@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultTreeModel.h"
 #include "OSGTreeModelListener.h"
-#include "Component/Tree/Model/OSGDefaultMutableTreeNode.h"
+#include "OSGDefaultMutableTreeNode.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultTreeModel
-A UI DefaultTreeModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultTreeModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultTreeModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +64,13 @@ A UI DefaultTreeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultTreeModel::initMethod (void)
+void DefaultTreeModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,17 +78,17 @@ void DefaultTreeModel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ModelTreeNodePtr DefaultTreeModel::getNodeForPath(const TreePath& ThePath) const
+ModelTreeNodeRefPtr DefaultTreeModel::getNodeForPath(const TreePath& ThePath) const
 {
     try
     {
-        ModelTreeNodePtr TheNode = boost::any_cast<ModelTreeNodePtr>(ThePath.getLastPathComponent());
-        
+        ModelTreeNodeRefPtr TheNode = boost::any_cast<ModelTreeNodeRefPtr>(ThePath.getLastPathComponent());
+
         return TheNode;
     }
     catch(boost::bad_any_cast &)
     {
-        return NullFC;
+        return NULL;
     }
 }
 
@@ -96,12 +96,12 @@ boost::any DefaultTreeModel::getChild(const boost::any& parent, const UInt32& in
 {
     try
     {
-        ModelTreeNodePtr ParentNode = boost::any_cast<ModelTreeNodePtr>(parent);
-        if(ParentNode != NullFC &&
+        ModelTreeNodeRefPtr ParentNode = boost::any_cast<ModelTreeNodeRefPtr>(parent);
+        if(ParentNode != NULL &&
            index < ParentNode->getChildCount())
         {
-            ModelTreeNodePtr ChildNode = ParentNode->getChildAt(index);
-            if(ChildNode != NullFC)
+            ModelTreeNodeRefPtr ChildNode = ParentNode->getChildAt(index);
+            if(ChildNode != NULL)
             {
                 return boost::any(ChildNode);
             }
@@ -113,15 +113,15 @@ boost::any DefaultTreeModel::getChild(const boost::any& parent, const UInt32& in
     return boost::any();
 }
 
-    
+
 boost::any DefaultTreeModel::getParent(const boost::any& node) const
 {
     try
     {
-        ModelTreeNodePtr Node = boost::any_cast<ModelTreeNodePtr>(node);
-        if(Node != NullFC &&
+        ModelTreeNodeRefPtr Node = boost::any_cast<ModelTreeNodeRefPtr>(node);
+        if(Node != NULL &&
            Node != getInternalRoot()  &&
-           Node->getParent() != NullFC)
+           Node->getParent() != NULL)
         {
             return boost::any(Node->getParent());
         }
@@ -136,8 +136,8 @@ UInt32 DefaultTreeModel::getChildCount(const boost::any& parent) const
 {
     try
     {
-        ModelTreeNodePtr ParentNode = boost::any_cast<ModelTreeNodePtr>(parent);
-        if(ParentNode != NullFC)
+        ModelTreeNodeRefPtr ParentNode = boost::any_cast<ModelTreeNodeRefPtr>(parent);
+        if(ParentNode != NULL)
         {
             return ParentNode->getChildCount();
         }
@@ -152,10 +152,10 @@ UInt32 DefaultTreeModel::getIndexOfChild(const boost::any& parent, const boost::
 {
     try
     {
-        ModelTreeNodePtr ParentNode = boost::any_cast<ModelTreeNodePtr>(parent);
-        ModelTreeNodePtr ChildNode = boost::any_cast<ModelTreeNodePtr>(child);
-        if(ParentNode != NullFC &&
-           ChildNode != NullFC)
+        ModelTreeNodeRefPtr ParentNode = boost::any_cast<ModelTreeNodeRefPtr>(parent);
+        ModelTreeNodeRefPtr ChildNode = boost::any_cast<ModelTreeNodeRefPtr>(child);
+        if(ParentNode != NULL &&
+           ChildNode != NULL)
         {
             Int32 Index = ParentNode->getIndex(ChildNode);
             if(Index > 0)
@@ -172,7 +172,7 @@ UInt32 DefaultTreeModel::getIndexOfChild(const boost::any& parent, const boost::
 
 boost::any DefaultTreeModel::getRoot(void) const
 {
-    if(getInternalRoot() != NullFC)
+    if(getInternalRoot() != NULL)
     {
         return boost::any(getInternalRoot());
     }
@@ -186,8 +186,8 @@ bool DefaultTreeModel::isLeaf(const boost::any& node) const
 {
     try
     {
-        ModelTreeNodePtr TheNode = boost::any_cast<ModelTreeNodePtr>(node);
-        if(TheNode != NullFC)
+        ModelTreeNodeRefPtr TheNode = boost::any_cast<ModelTreeNodeRefPtr>(node);
+        if(TheNode != NULL)
         {
             return (TheNode->getChildCount() == 0) || (getAskAllowsChildren() && !TheNode->getAllowsChildren());
         }
@@ -207,85 +207,83 @@ void DefaultTreeModel::valueForPathChanged(TreePath path, const boost::any& newV
 
 
 
-void DefaultTreeModel::insertNodeInto(MutableTreeNodePtr newChild, MutableTreeNodePtr parent, const UInt32& index)
+void DefaultTreeModel::insertNodeInto(MutableTreeNodeRefPtr newChild, MutableTreeNodeRefPtr parent, const UInt32& index)
 {
     parent->insert(newChild, index);
 
     std::vector<UInt32> Indices;
     Indices.push_back(index);
     nodesWereInserted(parent, Indices);
-	if(parent->getChildCount() == 1)
-	{
-		nodeChanged(parent);
-	}
+    if(parent->getChildCount() == 1)
+    {
+        nodeChanged(parent);
+    }
 }
 
-void DefaultTreeModel::nodeChanged(ModelTreeNodePtr node)
+void DefaultTreeModel::nodeChanged(ModelTreeNodeRefPtr node)
 {
-	if(node->getParent() != NullFC)
-	{
-		std::vector<UInt32> childIndices;
-		childIndices.push_back(node->getParent()->getIndex(node));
-		nodesChanged(node->getParent(), childIndices);
-	}
+    if(node->getParent() != NULL)
+    {
+        std::vector<UInt32> childIndices;
+        childIndices.push_back(node->getParent()->getIndex(node));
+        nodesChanged(node->getParent(), childIndices);
+    }
 }
 
-void DefaultTreeModel::nodesChanged(ModelTreeNodePtr node, std::vector<UInt32> childIndices)
+void DefaultTreeModel::nodesChanged(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices)
 {
     std::vector<boost::any> ChildUserObjects;
 
     for(UInt32 i(0) ; i< childIndices.size() ; ++i)
     {
-        ChildUserObjects.push_back(ModelTreeNode::Ptr::dcast(node->getChildAt(childIndices[i])));
+        ChildUserObjects.push_back(dynamic_pointer_cast<ModelTreeNode>(node->getChildAt(childIndices[i])));
     }
 
     produceTreeNodesChanged(getPath(boost::any(node)), childIndices, ChildUserObjects);
 }
 
-void DefaultTreeModel::nodeStructureChanged(ModelTreeNodePtr node)
+void DefaultTreeModel::nodeStructureChanged(ModelTreeNodeRefPtr node)
 {
     //TODO:Implement
     //produceTreeStructureChanged();
 }
 
-void DefaultTreeModel::nodesWereInserted(ModelTreeNodePtr node, std::vector<UInt32> childIndices)
+void DefaultTreeModel::nodesWereInserted(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices)
 {
     std::vector<boost::any> InstertedChildUserObjects;
 
     for(UInt32 i(0) ; i< childIndices.size() ; ++i)
     {
-        InstertedChildUserObjects.push_back(ModelTreeNode::Ptr::dcast(node->getChildAt(childIndices[i])));
+        InstertedChildUserObjects.push_back(dynamic_pointer_cast<ModelTreeNode>(node->getChildAt(childIndices[i])));
     }
     produceTreeNodesInserted(getPath(boost::any(node)), childIndices, InstertedChildUserObjects);
 }
 
-void DefaultTreeModel::removeNodeFromParent(MutableTreeNodePtr node)
+void DefaultTreeModel::removeNodeFromParent(MutableTreeNodeRefPtr node)
 {
-    ModelTreeNodePtr Parent = node->getParent();
+    ModelTreeNodeRefPtr Parent = node->getParent();
 
     std::vector<UInt32> ChildIndicies;
     ChildIndicies.push_back(Parent->getIndex(node));
-    
+
     std::vector<boost::any> Children;
-    Children.push_back(ModelTreeNode::Ptr::dcast(node));
+    Children.push_back(dynamic_pointer_cast<ModelTreeNode>(node));
 
     produceTreeNodesWillBeRemoved(getPath(boost::any(Parent)), ChildIndicies, Children);
     node->removeFromParent();
     produceTreeNodesRemoved(getPath(boost::any(Parent)), ChildIndicies, Children);
-	if(Parent->getChildCount() == 0)
-	{
-		nodeChanged(Parent);
-	}
+    if(Parent->getChildCount() == 0)
+    {
+        nodeChanged(Parent);
+    }
 }
 
-void DefaultTreeModel::setRoot(ModelTreeNodePtr root)
+void DefaultTreeModel::setRoot(ModelTreeNodeRefPtr root)
 {
-    beginEditCP(DefaultTreeModelPtr(this), InternalRootFieldMask);
-        setInternalRoot(root);
-    endEditCP(DefaultTreeModelPtr(this), InternalRootFieldMask);
+    setInternalRoot(root);
 }
 
-ModelTreeNodePtr DefaultTreeModel::getRootNode(void) const
+ModelTreeNodeRefPtr DefaultTreeModel::getRootNode(void) const
 {
     return getInternalRoot();
 }
@@ -312,9 +310,11 @@ DefaultTreeModel::~DefaultTreeModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultTreeModel::changed(BitVector whichField, UInt32 origin)
+void DefaultTreeModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & InternalRootFieldMask)
     {
@@ -322,12 +322,10 @@ void DefaultTreeModel::changed(BitVector whichField, UInt32 origin)
     }
 }
 
-void DefaultTreeModel::dump(      UInt32    , 
+void DefaultTreeModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultTreeModel NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

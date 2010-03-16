@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "ComponentGenerators/OSGComponentGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TreeComponentGenerator;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TreeComponentGeneratorPtr
+OSG_GEN_CONTAINERPTR(TreeComponentGenerator);
 
-typedef FCPtr<ComponentGeneratorPtr, TreeComponentGenerator> TreeComponentGeneratorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TreeComponentGeneratorPtr> : 
-    public FieldTraitsRecurseMapper<TreeComponentGeneratorPtr, true>
+struct FieldTraits<TreeComponentGenerator *> :
+    public FieldTraitsFCPtrBase<TreeComponentGenerator *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTreeComponentGeneratorPtr"; }
-    static const char *getMName(void) { return "MFTreeComponentGeneratorPtr"; }
+    typedef FieldTraits<TreeComponentGenerator *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTreeComponentGeneratorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTreeComponentGeneratorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TreeComponentGeneratorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TreeComponentGenerator *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTreeComponentGeneratorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TreeComponentGenerator *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTreeComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeComponentGenerator *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTreeComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeComponentGenerator *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTreeComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeComponentGenerator *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTreeComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeComponentGenerator *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTreeComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeComponentGenerator *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTreeComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeComponentGenerator *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTreeComponentGeneratorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeComponentGenerator *,
+                      RecordedRefCountPolicy  > SFRecTreeComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeComponentGenerator *,
+                      UnrecordedRefCountPolicy> SFUnrecTreeComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeComponentGenerator *,
+                      WeakRefCountPolicy      > SFWeakTreeComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeComponentGenerator *,
+                      NoRefCountPolicy        > SFUncountedTreeComponentGeneratorPtr;
 
-typedef SField<TreeComponentGeneratorPtr> SFTreeComponentGeneratorPtr;
-#endif
 
-#ifndef OSG_COMPILETREECOMPONENTGENERATORINST
-OSG_DLLEXPORT_DECL1(SField, TreeComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeComponentGenerator *,
+                      RecordedRefCountPolicy  > MFRecTreeComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeComponentGenerator *,
+                      UnrecordedRefCountPolicy> MFUnrecTreeComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeComponentGenerator *,
+                      WeakRefCountPolicy      > MFWeakTreeComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeComponentGenerator *,
+                      NoRefCountPolicy        > MFUncountedTreeComponentGeneratorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TreeComponentGeneratorPtr> MFTreeComponentGeneratorPtr;
-#endif
 
-#ifndef OSG_COMPILETREECOMPONENTGENERATORINST
-OSG_DLLEXPORT_DECL1(MField, TreeComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTreeComponentGeneratorPtr : 
+    public PointerSField<TreeComponentGenerator *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTreeComponentGeneratorPtr : 
+    public PointerSField<TreeComponentGenerator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTreeComponentGeneratorPtr :
+    public PointerSField<TreeComponentGenerator *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTreeComponentGeneratorPtr :
+    public PointerSField<TreeComponentGenerator *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTreeComponentGeneratorPtr :
+    public PointerMField<TreeComponentGenerator *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTreeComponentGeneratorPtr :
+    public PointerMField<TreeComponentGenerator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTreeComponentGeneratorPtr :
+    public PointerMField<TreeComponentGenerator *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTreeComponentGeneratorPtr :
+    public PointerMField<TreeComponentGenerator *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGTREECOMPONENTGENERATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTREECOMPONENTGENERATORFIELDS_H_ */

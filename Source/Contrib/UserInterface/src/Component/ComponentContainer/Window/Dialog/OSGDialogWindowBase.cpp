@@ -200,7 +200,7 @@ DialogWindowBase::TypeObject DialogWindowBase::_type(
     Inherited::getClassname(),
     "NULL",
     0,
-    NULL,
+    reinterpret_cast<PrototypeCreateF>(&DialogWindowBase::createEmptyLocal),
     DialogWindow::initMethod,
     DialogWindow::exitMethod,
     reinterpret_cast<InitalInsertDescFunc>(&DialogWindow::classDescInserter),
@@ -213,7 +213,7 @@ DialogWindowBase::TypeObject DialogWindowBase::_type(
     "\tparent=\"InternalWindow\"\n"
     "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
-    "    structure=\"abstract\"\n"
+    "    structure=\"concrete\"\n"
     "    systemcomponent=\"true\"\n"
     "    parentsystemcomponent=\"true\"\n"
     "    decoratable=\"false\"\n"
@@ -488,6 +488,122 @@ void DialogWindowBase::copyFromBin(BinaryDataHandler &pMem,
     }
 }
 
+//! create a new instance of the class
+DialogWindowTransitPtr DialogWindowBase::createLocal(BitVector bFlags)
+{
+    DialogWindowTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
+
+        fc = dynamic_pointer_cast<DialogWindow>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class, copy the container flags
+DialogWindowTransitPtr DialogWindowBase::createDependent(BitVector bFlags)
+{
+    DialogWindowTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DialogWindow>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DialogWindowTransitPtr DialogWindowBase::create(void)
+{
+    DialogWindowTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DialogWindow>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DialogWindow *DialogWindowBase::createEmptyLocal(BitVector bFlags)
+{
+    DialogWindow *returnValue;
+
+    newPtr<DialogWindow>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DialogWindow *DialogWindowBase::createEmpty(void)
+{
+    DialogWindow *returnValue;
+
+    newPtr<DialogWindow>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DialogWindowBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DialogWindow *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DialogWindow *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DialogWindowBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DialogWindow *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DialogWindow *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DialogWindowBase::shallowCopy(void) const
+{
+    DialogWindow *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DialogWindow *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
 
 
 
@@ -690,6 +806,19 @@ void DialogWindowBase::execSyncV(      FieldContainer    &oFrom,
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DialogWindowBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DialogWindow *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DialogWindow *>(pRefAspect),
+                  dynamic_cast<const DialogWindow *>(this));
+
+    return returnValue;
+}
+#endif
 
 void DialogWindowBase::resolveLinks(void)
 {

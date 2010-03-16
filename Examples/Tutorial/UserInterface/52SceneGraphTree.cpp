@@ -9,73 +9,73 @@
 // the Button causes it to appear pressed
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify Root management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general Root file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGTreeSelectionListener.h>
-#include <OpenSG/Toolbox/OSGGeometryUtils.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
+#include "OSGPanel.h"
+#include "OSGLabel.h"
+#include "OSGTreeSelectionListener.h"
+//#include "OSGGeometryUtils.h"
 
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
 //Tree Headers
-#include <OpenSG/UserInterface/OSGTree.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGBorderLayout.h>
-#include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
-#include <OpenSG/UserInterface/OSGSceneGraphTreeModel.h>
-#include <OpenSG/UserInterface/OSGFileSystemTreeModel.h>
-#include <OpenSG/UserInterface/OSGFixedHeightTreeModelLayout.h>
-#include <OpenSG/UserInterface/OSGGridLayout.h>
+#include "OSGTree.h"
+#include "OSGLayers.h"
+#include "OSGFlowLayout.h"
+#include "OSGBorderLayout.h"
+#include "OSGBorderLayoutConstraints.h"
+#include "OSGSceneGraphTreeModel.h"
+#include "OSGFileSystemTreeModel.h"
+#include "OSGFixedHeightTreeModelLayout.h"
+#include "OSGGridLayout.h"
 
-#include <OpenSG/UserInterface/OSGScrollPanel.h>
-#include <OpenSG/OSGSimpleAttachments.h>
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGScrollPanel.h"
+#include "OSGNameAttachment.h"
+#include "OSGSceneFileHandler.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
-SceneGraphTreeModelPtr TheTreeModel;
-FileSystemTreeModelPtr TheFileSystemTreeModel;
-TreePtr TheTree;
-NodePtr SelectedNode = NullFC;
+SceneGraphTreeModelRefPtr TheTreeModel;
+FileSystemTreeModelRefPtr TheFileSystemTreeModel;
+TreeRefPtr TheTree;
+NodeRefPtr SelectedNode = NULL;
 
-LabelPtr NodeNameValueLabel;
-LabelPtr NodeCoreTypeValueLabel;
-LabelPtr NodeMinValueLabel;
-LabelPtr NodeMaxValueLabel;
-LabelPtr NodeCenterValueLabel;
-LabelPtr NodeTriCountValueLabel;
-LabelPtr NodeTravMaskValueLabel;
-LabelPtr NodeOcclusionMaskValueLabel;
-LabelPtr NodeActiveValueLabel;
+LabelRefPtr NodeNameValueLabel;
+LabelRefPtr NodeCoreTypeValueLabel;
+LabelRefPtr NodeMinValueLabel;
+LabelRefPtr NodeMaxValueLabel;
+LabelRefPtr NodeCenterValueLabel;
+LabelRefPtr NodeTriCountValueLabel;
+LabelRefPtr NodeTravMaskValueLabel;
+LabelRefPtr NodeOcclusionMaskValueLabel;
+LabelRefPtr NodeActiveValueLabel;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -87,47 +87,47 @@ void selectedNodeChanged(void);
 // key to exit
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-            TutorialWindowEventProducer->closeWindow();
-       }
-   }
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            TutorialWindow->closeWindow();
+        }
+    }
 
-   virtual void keyReleased(const KeyEventPtr e)
-   {
-   }
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
 
-   virtual void keyTyped(const KeyEventPtr e)
-   {
-   }
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
 class TutorialTreeSelectionListener : public TreeSelectionListener
 {
-public:
+  public:
     //Called whenever elements are added to the selection
-    virtual void selectionAdded(const TreeSelectionEventPtr e)
+    virtual void selectionAdded(const TreeSelectionEventUnrecPtr e)
     {
         //Get the selected Node
         try
         {
-            SelectedNode = boost::any_cast<NodePtr>(TheTree->getLastSelectedPathComponent());
+            SelectedNode = boost::any_cast<NodeRefPtr>(TheTree->getLastSelectedPathComponent());
         }
         catch (boost::bad_any_cast &)
         {
-            SelectedNode = NullFC;
+            SelectedNode = NULL;
         }
         selectedNodeChanged();
     }
 
     //Called whenever elements are removed to the selection
-    virtual void selectionRemoved(const TreeSelectionEventPtr e)
+    virtual void selectionRemoved(const TreeSelectionEventUnrecPtr e)
     {
-        SelectedNode = NullFC;
+        SelectedNode = NULL;
         selectedNodeChanged();
     }
 };
@@ -138,64 +138,42 @@ void selectedNodeChanged(void)
 
 
     //Update Details Panel
-    if(SelectedNode == NullFC)
+    if(SelectedNode == NULL)
     {
-        beginEditCP(NodeNameValueLabel, Label::TextFieldMask);
-            NodeNameValueLabel->setText("");
-        endEditCP(NodeNameValueLabel, Label::TextFieldMask);
+        NodeNameValueLabel->setText("");
 
-        beginEditCP(NodeCoreTypeValueLabel, Label::TextFieldMask);
-            NodeCoreTypeValueLabel->setText("");
-        endEditCP(NodeCoreTypeValueLabel, Label::TextFieldMask);
+        NodeCoreTypeValueLabel->setText("");
 
-        beginEditCP(NodeMinValueLabel, Label::TextFieldMask);
-            NodeMinValueLabel->setText("");
-        endEditCP(NodeMinValueLabel, Label::TextFieldMask);
+        NodeMinValueLabel->setText("");
 
-        beginEditCP(NodeMaxValueLabel, Label::TextFieldMask);
-            NodeMaxValueLabel->setText("");
-        endEditCP(NodeMaxValueLabel, Label::TextFieldMask);
+        NodeMaxValueLabel->setText("");
 
-        beginEditCP(NodeCenterValueLabel, Label::TextFieldMask);
-            NodeCenterValueLabel->setText("");
-        endEditCP(NodeCenterValueLabel, Label::TextFieldMask);
+        NodeCenterValueLabel->setText("");
 
-        beginEditCP(NodeTriCountValueLabel, Label::TextFieldMask);
-            NodeTriCountValueLabel->setText("");
-        endEditCP(NodeTriCountValueLabel, Label::TextFieldMask);
+        NodeTriCountValueLabel->setText("");
 
-        beginEditCP(NodeTravMaskValueLabel, Label::TextFieldMask);
-            NodeTravMaskValueLabel->setText("");
-        endEditCP(NodeTravMaskValueLabel, Label::TextFieldMask);
+        NodeTravMaskValueLabel->setText("");
 
-        beginEditCP(NodeOcclusionMaskValueLabel, Label::TextFieldMask);
-            NodeOcclusionMaskValueLabel->setText("");
-        endEditCP(NodeOcclusionMaskValueLabel, Label::TextFieldMask);
+        NodeOcclusionMaskValueLabel->setText("");
 
-        beginEditCP(NodeActiveValueLabel, Label::TextFieldMask);
-            NodeActiveValueLabel->setText("");
-        endEditCP(NodeActiveValueLabel, Label::TextFieldMask);
+        NodeActiveValueLabel->setText("");
 
     }
     else
     {
         const Char8 *NodeName = getName(SelectedNode);
-        beginEditCP(NodeNameValueLabel, Label::TextFieldMask);
-            if(NodeName == NULL)
-            {
-                NodeNameValueLabel->setText("Unnamed Node");
-            }
-            else
-            {
-                NodeNameValueLabel->setText(NodeName);
-            }
-        endEditCP(NodeNameValueLabel, Label::TextFieldMask);
+        if(NodeName == NULL)
+        {
+            NodeNameValueLabel->setText("Unnamed Node");
+        }
+        else
+        {
+            NodeNameValueLabel->setText(NodeName);
+        }
 
-        beginEditCP(NodeCoreTypeValueLabel, Label::TextFieldMask);
-            NodeCoreTypeValueLabel->setText(SelectedNode->getCore()->getType().getCName());
-        endEditCP(NodeCoreTypeValueLabel, Label::TextFieldMask);
+        NodeCoreTypeValueLabel->setText(SelectedNode->getCore()->getType().getCName());
 
-        DynamicVolume DyVol;
+        BoxVolume DyVol;
         SelectedNode->getWorldVolume(DyVol);
         Pnt3f Min,Max,Center;
         DyVol.getBounds(Min,Max);
@@ -204,37 +182,23 @@ void selectedNodeChanged(void)
         std::string TempText("");
 
         TempText = boost::lexical_cast<std::string>(Min.x()) + ", " +boost::lexical_cast<std::string>(Min.x()) + ", " + boost::lexical_cast<std::string>(Min.x());
-        beginEditCP(NodeMinValueLabel, Label::TextFieldMask);
-            NodeMinValueLabel->setText(TempText);
-        endEditCP(NodeMinValueLabel, Label::TextFieldMask);
+        NodeMinValueLabel->setText(TempText);
 
         TempText = boost::lexical_cast<std::string>(Max.x()) + ", " +boost::lexical_cast<std::string>(Max.x()) + ", " + boost::lexical_cast<std::string>(Max.x());
-        beginEditCP(NodeMaxValueLabel, Label::TextFieldMask);
-            NodeMaxValueLabel->setText(TempText);
-        endEditCP(NodeMaxValueLabel, Label::TextFieldMask);
+        NodeMaxValueLabel->setText(TempText);
 
         TempText = boost::lexical_cast<std::string>(Center.x()) + ", " +boost::lexical_cast<std::string>(Center.x()) + ", " + boost::lexical_cast<std::string>(Center.x());
-        beginEditCP(NodeCenterValueLabel, Label::TextFieldMask);
-            NodeCenterValueLabel->setText(TempText);
-        endEditCP(NodeCenterValueLabel, Label::TextFieldMask);
+        NodeCenterValueLabel->setText(TempText);
 
-        GeometryPrimitivesCounter PrimCounter;
-        PrimCounter(SelectedNode);
-        beginEditCP(NodeTriCountValueLabel, Label::TextFieldMask);
-            NodeTriCountValueLabel->setText(boost::lexical_cast<std::string>(PrimCounter.getTriCount()));
-        endEditCP(NodeTriCountValueLabel, Label::TextFieldMask);
+        //GeometryPrimitivesCounter PrimCounter;
+        //PrimCounter(SelectedNode);
+        //NodeTriCountValueLabel->setText(boost::lexical_cast<std::string>(PrimCounter.getTriCount()));
 
-        beginEditCP(NodeTravMaskValueLabel, Label::TextFieldMask);
-            NodeTravMaskValueLabel->setText(boost::lexical_cast<std::string>(SelectedNode->getTravMask()));
-        endEditCP(NodeTravMaskValueLabel, Label::TextFieldMask);
+        //NodeTravMaskValueLabel->setText(boost::lexical_cast<std::string>(SelectedNode->getTravMask()));
 
-        beginEditCP(NodeOcclusionMaskValueLabel, Label::TextFieldMask);
-            NodeOcclusionMaskValueLabel->setText(boost::lexical_cast<std::string>(SelectedNode->getOcclusionMask()));
-        endEditCP(NodeOcclusionMaskValueLabel, Label::TextFieldMask);
+        //NodeOcclusionMaskValueLabel->setText(boost::lexical_cast<std::string>(SelectedNode->getOcclusionMask()));
 
-        beginEditCP(NodeActiveValueLabel, Label::TextFieldMask);
-            NodeActiveValueLabel->setText(boost::lexical_cast<std::string>(SelectedNode->getActive()));
-        endEditCP(NodeActiveValueLabel, Label::TextFieldMask);
+        //NodeActiveValueLabel->setText(boost::lexical_cast<std::string>(SelectedNode->getActive()));
     }
 
 
@@ -246,52 +210,48 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
-	NodePtr Root(NullFC);
+    NodeRefPtr Root(NULL);
     if(argc == 2)
     {
-		Root = SceneFileHandler::the().read(argv[1]);
-	}
+        Root = SceneFileHandler::the()->read(argv[1]);
+    }
 
-	if(Root == NullFC)
-	{
-		// Make Torus Node (creates Torus in background of Root)
-		NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
-		setName(TorusGeometryNode, std::string("Torus"));
+    if(Root == NULL)
+    {
+        // Make Torus Node (creates Torus in background of Root)
+        NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        setName(TorusGeometryNode, std::string("Torus"));
 
-		NodePtr TorusNode = Node::create();
-		beginEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-			TorusNode->setCore(osg::Transform::create());
-			TorusNode->addChild(TorusGeometryNode);
-		endEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-		setName(TorusNode, std::string("Torus Transform"));
+        NodeRefPtr TorusNode = Node::create();
+        TorusNode->setCore(OSG::Transform::create());
+        TorusNode->addChild(TorusGeometryNode);
+        setName(TorusNode, std::string("Torus Transform"));
 
-		NodePtr SphereGeometryNode = makeSphere(2,1.0f);
-		setName(SphereGeometryNode, std::string("Sphere"));
-		NodePtr BoxGeometryNode = makeBox(1.0,1.0,1.0,1,1,1);
-		setName(BoxGeometryNode, std::string("Box"));
+        NodeRefPtr SphereGeometryNode = makeSphere(2,1.0f);
+        setName(SphereGeometryNode, std::string("Sphere"));
+        NodeRefPtr BoxGeometryNode = makeBox(1.0,1.0,1.0,1,1,1);
+        setName(BoxGeometryNode, std::string("Box"));
 
-		// Make Main Scene Node and add the Torus
-		Root = osg::Node::create();
-		beginEditCP(Root, Node::CoreFieldMask | Node::ChildrenFieldMask);
-			Root->setCore(osg::Group::create());
-			Root->addChild(TorusNode);
-			Root->addChild(SphereGeometryNode);
-			Root->addChild(BoxGeometryNode);
-		endEditCP(Root, Node::CoreFieldMask | Node::ChildrenFieldMask);
-		setName(Root, std::string("Root"));
-	}
+        // Make Main Scene Node and add the Torus
+        Root = OSG::Node::create();
+        Root->setCore(OSG::Group::create());
+        Root->addChild(TorusNode);
+        Root->addChild(SphereGeometryNode);
+        Root->addChild(BoxGeometryNode);
+        setName(Root, std::string("Root"));
+    }
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -302,240 +262,180 @@ int main(int argc, char **argv)
 
     TheFileSystemTreeModel = FileSystemTreeModel::create();
     //TheFileSystemTreeModel->setRoot(Path("C:\\"));
-    TheFileSystemTreeModel->setRoot(Path("/"));
-    
+    TheFileSystemTreeModel->setRoot(BoostPath("/"));
+
     //Create the Tree
     TheTree = Tree::create();
 
-    beginEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
-        TheTree->setPreferredSize(Vec2f(100, 500));
-        TheTree->setModel(TheTreeModel);
-        //TheTree->setModel(TheFileSystemTreeModel);
-    endEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
+    TheTree->setPreferredSize(Vec2f(100, 500));
+    TheTree->setModel(TheTreeModel);
+    //TheTree->setModel(TheFileSystemTreeModel);
     TutorialTreeSelectionListener  TheTutorialTreeSelectionListener;
     TheTree->getSelectionModel()->addTreeSelectionListener(&TheTutorialTreeSelectionListener);
 
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    BorderLayoutConstraintsPtr SceneTreeConstraints = osg::BorderLayoutConstraints::create();
-    beginEditCP(SceneTreeConstraints, BorderLayoutConstraints::RegionFieldMask);
-        SceneTreeConstraints->setRegion(BorderLayoutConstraints::BORDER_WEST);
-    endEditCP(SceneTreeConstraints, BorderLayoutConstraints::RegionFieldMask);
+    BorderLayoutConstraintsRefPtr SceneTreeConstraints = OSG::BorderLayoutConstraints::create();
+    SceneTreeConstraints->setRegion(BorderLayoutConstraints::BORDER_WEST);
 
-    ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
-    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | ScrollPanel::ConstraintsFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2s(350,300));
-        ExampleScrollPanel->setConstraints(SceneTreeConstraints);
-        //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | ScrollPanel::ConstraintsFieldMask);
+    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
+    ExampleScrollPanel->setPreferredSize(Vec2f(350,300));
+    ExampleScrollPanel->setConstraints(SceneTreeConstraints);
+    //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     ExampleScrollPanel->setViewComponent(TheTree);
-    
+
     //Details Panel Labels
-    LabelPtr NodeNameLabel = Label::create();
-    beginEditCP(NodeNameLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-        NodeNameLabel->setText("Name");
-        NodeNameLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
-    endEditCP(NodeNameLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+    LabelRefPtr NodeNameLabel = Label::create();
+    NodeNameLabel->setText("Name");
+    NodeNameLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     NodeNameValueLabel = Label::create();
-    beginEditCP(NodeNameValueLabel, Label::PreferredSizeFieldMask);
-        NodeNameValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
-    endEditCP(NodeNameValueLabel, Label::PreferredSizeFieldMask);
+    NodeNameValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
 
-    LabelPtr NodeCoreTypeLabel = Label::create();
-    beginEditCP(NodeCoreTypeLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-        NodeCoreTypeLabel->setText("Core Type");
-        NodeCoreTypeLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
-    endEditCP(NodeCoreTypeLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+    LabelRefPtr NodeCoreTypeLabel = Label::create();
+    NodeCoreTypeLabel->setText("Core Type");
+    NodeCoreTypeLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     NodeCoreTypeValueLabel = Label::create();
-    beginEditCP(NodeCoreTypeValueLabel, Label::PreferredSizeFieldMask);
-        NodeCoreTypeValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
-    endEditCP(NodeCoreTypeValueLabel, Label::PreferredSizeFieldMask);
+    NodeCoreTypeValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
 
-    LabelPtr NodeMinLabel = Label::create();
-    beginEditCP(NodeMinLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-        NodeMinLabel->setText("Min");
-        NodeMinLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
-    endEditCP(NodeMinLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+    LabelRefPtr NodeMinLabel = Label::create();
+    NodeMinLabel->setText("Min");
+    NodeMinLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     NodeMinValueLabel = Label::create();
-    beginEditCP(NodeMinValueLabel, Label::PreferredSizeFieldMask);
-        NodeMinValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
-    endEditCP(NodeMinValueLabel, Label::PreferredSizeFieldMask);
+    NodeMinValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
 
-    LabelPtr NodeMaxLabel = Label::create();
-    beginEditCP(NodeMaxLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-        NodeMaxLabel->setText("Max");
-        NodeMaxLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
-    endEditCP(NodeMaxLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+    LabelRefPtr NodeMaxLabel = Label::create();
+    NodeMaxLabel->setText("Max");
+    NodeMaxLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     NodeMaxValueLabel = Label::create();
-    beginEditCP(NodeMaxValueLabel, Label::PreferredSizeFieldMask);
-        NodeMaxValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
-    endEditCP(NodeMaxValueLabel, Label::PreferredSizeFieldMask);
+    NodeMaxValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
 
-    LabelPtr NodeCenterLabel = Label::create();
-    beginEditCP(NodeCenterLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-        NodeCenterLabel->setText("Center");
-        NodeCenterLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
-    endEditCP(NodeCenterLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+    LabelRefPtr NodeCenterLabel = Label::create();
+    NodeCenterLabel->setText("Center");
+    NodeCenterLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     NodeCenterValueLabel = Label::create();
-    beginEditCP(NodeCenterValueLabel, Label::PreferredSizeFieldMask);
-        NodeCenterValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
-    endEditCP(NodeCenterValueLabel, Label::PreferredSizeFieldMask);
+    NodeCenterValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
 
-    LabelPtr NodeTriCountLabel = Label::create();
-    beginEditCP(NodeTriCountLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-        NodeTriCountLabel->setText("TriCount");
-        NodeTriCountLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
-    endEditCP(NodeTriCountLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+    LabelRefPtr NodeTriCountLabel = Label::create();
+    NodeTriCountLabel->setText("TriCount");
+    NodeTriCountLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     NodeTriCountValueLabel = Label::create();
-    beginEditCP(NodeTriCountValueLabel, Label::PreferredSizeFieldMask);
-        NodeTriCountValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
-    endEditCP(NodeTriCountValueLabel, Label::PreferredSizeFieldMask);
+    NodeTriCountValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
 
-    LabelPtr NodeTravMaskLabel = Label::create();
-    beginEditCP(NodeTravMaskLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-        NodeTravMaskLabel->setText("Traversal Mask");
-        NodeTravMaskLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
-    endEditCP(NodeTravMaskLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+    LabelRefPtr NodeTravMaskLabel = Label::create();
+    NodeTravMaskLabel->setText("Traversal Mask");
+    NodeTravMaskLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     NodeTravMaskValueLabel = Label::create();
-    beginEditCP(NodeTravMaskValueLabel, Label::PreferredSizeFieldMask);
-        NodeTravMaskValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
-    endEditCP(NodeTravMaskValueLabel, Label::PreferredSizeFieldMask);
+    NodeTravMaskValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
 
-    LabelPtr NodeOcclusionMaskLabel = Label::create();
-    beginEditCP(NodeOcclusionMaskLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-        NodeOcclusionMaskLabel->setText("Occlusion Mask");
-        NodeOcclusionMaskLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
-    endEditCP(NodeOcclusionMaskLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+    LabelRefPtr NodeOcclusionMaskLabel = Label::create();
+    NodeOcclusionMaskLabel->setText("Occlusion Mask");
+    NodeOcclusionMaskLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     NodeOcclusionMaskValueLabel = Label::create();
-    beginEditCP(NodeOcclusionMaskValueLabel, Label::PreferredSizeFieldMask);
-        NodeOcclusionMaskValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
-    endEditCP(NodeOcclusionMaskValueLabel, Label::PreferredSizeFieldMask);
+    NodeOcclusionMaskValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
 
-    LabelPtr NodeActiveLabel = Label::create();
-    beginEditCP(NodeActiveLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-        NodeActiveLabel->setText("Active");
-        NodeActiveLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
-    endEditCP(NodeActiveLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+    LabelRefPtr NodeActiveLabel = Label::create();
+    NodeActiveLabel->setText("Active");
+    NodeActiveLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     NodeActiveValueLabel = Label::create();
-    beginEditCP(NodeActiveValueLabel, Label::PreferredSizeFieldMask);
-        NodeActiveValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
-    endEditCP(NodeActiveValueLabel, Label::PreferredSizeFieldMask);
+    NodeActiveValueLabel->setPreferredSize(Vec2f(300.0f, 20.0f));
     //Details Panel
-    BorderLayoutConstraintsPtr NodeDetailPanelConstraints = osg::BorderLayoutConstraints::create();
-    beginEditCP(NodeDetailPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
-        NodeDetailPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
-    endEditCP(NodeDetailPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+    BorderLayoutConstraintsRefPtr NodeDetailPanelConstraints = OSG::BorderLayoutConstraints::create();
+    NodeDetailPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
 
-    GridLayoutPtr NodeDetailPanelLayout = osg::GridLayout::create();
+    GridLayoutRefPtr NodeDetailPanelLayout = OSG::GridLayout::create();
 
-    beginEditCP(NodeDetailPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask | 
-		GridLayout::HorizontalGapFieldMask | GridLayout::VerticalGapFieldMask);
-        NodeDetailPanelLayout->setRows(9);
-        NodeDetailPanelLayout->setColumns(2);
-        NodeDetailPanelLayout->setHorizontalGap(2);
-        NodeDetailPanelLayout->setVerticalGap(2);
-    endEditCP(NodeDetailPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask | 
-		GridLayout::HorizontalGapFieldMask | GridLayout::VerticalGapFieldMask);
+    NodeDetailPanelLayout->setRows(9);
+    NodeDetailPanelLayout->setColumns(2);
+    NodeDetailPanelLayout->setHorizontalGap(2);
+    NodeDetailPanelLayout->setVerticalGap(2);
 
-    PanelPtr NodeDetailPanel = Panel::create();
-    beginEditCP(NodeDetailPanel, Panel::ConstraintsFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask | Panel::LayoutFieldMask);
-        NodeDetailPanel->setConstraints(NodeDetailPanelConstraints);
-        NodeDetailPanel->setPreferredSize(Vec2f(100.0f, 200.0f));
-        NodeDetailPanel->setLayout(NodeDetailPanelLayout);
-        NodeDetailPanel->getChildren().push_back(NodeNameLabel);
-        NodeDetailPanel->getChildren().push_back(NodeNameValueLabel);
-        NodeDetailPanel->getChildren().push_back(NodeCoreTypeLabel);
-        NodeDetailPanel->getChildren().push_back(NodeCoreTypeValueLabel);
-        NodeDetailPanel->getChildren().push_back(NodeMinLabel);
-        NodeDetailPanel->getChildren().push_back(NodeMinValueLabel);
-        NodeDetailPanel->getChildren().push_back(NodeMaxLabel);
-        NodeDetailPanel->getChildren().push_back(NodeMaxValueLabel);
-        NodeDetailPanel->getChildren().push_back(NodeCenterLabel);
-        NodeDetailPanel->getChildren().push_back(NodeCenterValueLabel);
-        NodeDetailPanel->getChildren().push_back(NodeTriCountLabel);
-        NodeDetailPanel->getChildren().push_back(NodeTriCountValueLabel);
-        NodeDetailPanel->getChildren().push_back(NodeTravMaskLabel);
-        NodeDetailPanel->getChildren().push_back(NodeTravMaskValueLabel);
-        NodeDetailPanel->getChildren().push_back(NodeOcclusionMaskLabel);
-        NodeDetailPanel->getChildren().push_back(NodeOcclusionMaskValueLabel);
-        NodeDetailPanel->getChildren().push_back(NodeActiveLabel);
-        NodeDetailPanel->getChildren().push_back(NodeActiveValueLabel);
-    endEditCP(NodeDetailPanel, Panel::ConstraintsFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask | Panel::LayoutFieldMask);
+    PanelRefPtr NodeDetailPanel = Panel::create();
+    NodeDetailPanel->setConstraints(NodeDetailPanelConstraints);
+    NodeDetailPanel->setPreferredSize(Vec2f(100.0f, 200.0f));
+    NodeDetailPanel->setLayout(NodeDetailPanelLayout);
+    NodeDetailPanel->pushToChildren(NodeNameLabel);
+    NodeDetailPanel->pushToChildren(NodeNameValueLabel);
+    NodeDetailPanel->pushToChildren(NodeCoreTypeLabel);
+    NodeDetailPanel->pushToChildren(NodeCoreTypeValueLabel);
+    NodeDetailPanel->pushToChildren(NodeMinLabel);
+    NodeDetailPanel->pushToChildren(NodeMinValueLabel);
+    NodeDetailPanel->pushToChildren(NodeMaxLabel);
+    NodeDetailPanel->pushToChildren(NodeMaxValueLabel);
+    NodeDetailPanel->pushToChildren(NodeCenterLabel);
+    NodeDetailPanel->pushToChildren(NodeCenterValueLabel);
+    NodeDetailPanel->pushToChildren(NodeTriCountLabel);
+    NodeDetailPanel->pushToChildren(NodeTriCountValueLabel);
+    NodeDetailPanel->pushToChildren(NodeTravMaskLabel);
+    NodeDetailPanel->pushToChildren(NodeTravMaskValueLabel);
+    NodeDetailPanel->pushToChildren(NodeOcclusionMaskLabel);
+    NodeDetailPanel->pushToChildren(NodeOcclusionMaskValueLabel);
+    NodeDetailPanel->pushToChildren(NodeActiveLabel);
+    NodeDetailPanel->pushToChildren(NodeActiveValueLabel);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    LayoutPtr MainInternalWindowLayout = osg::BorderLayout::create();
+    LayoutRefPtr MainInternalWindowLayout = OSG::BorderLayout::create();
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
-       MainInternalWindow->getChildren().push_back(NodeDetailPanel);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(NullFC);
-       MainInternalWindow->setBorders(NullFC);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.0f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(1.0,1.0));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    MainInternalWindow->pushToChildren(ExampleScrollPanel);
+    MainInternalWindow->pushToChildren(NodeDetailPanel);
+    MainInternalWindow->setLayout(MainInternalWindowLayout);
+    MainInternalWindow->setBackgrounds(NULL);
+    MainInternalWindow->setBorders(NULL);
+    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.0f,0.5f));
+    MainInternalWindow->setScalingInDrawingSurface(Vec2f(1.0,1.0));
+    MainInternalWindow->setDrawTitlebar(false);
+    MainInternalWindow->setResizable(false);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-        TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+    TutorialDrawingSurface->setGraphics(TutorialGraphics);
+    TutorialDrawingSurface->setEventProducer(TutorialWindow);
+
+    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
+    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(Root);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
-            WinSize,
-            "52SceneGraphTree");
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
+                               WinSize,
+                               "52SceneGraphTree");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

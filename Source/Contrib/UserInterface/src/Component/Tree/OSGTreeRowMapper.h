@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,41 +42,41 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTreeRowMapperBase.h"
-#include "Component/Tree/OSGTreePath.h"
+#include "OSGTreePath.h"
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeRowMapper class. See \ref 
-           PageUserInterfaceTreeRowMapper for a description.
+/*! \brief TreeRowMapper class. See \ref
+           PageContribUserInterfaceTreeRowMapper for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeRowMapper : public TreeRowMapperBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeRowMapper : public TreeRowMapperBase
 {
-  private:
-
-    typedef TreeRowMapperBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeRowMapperBase Inherited;
+    typedef TreeRowMapper     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -90,6 +90,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeRowMapper : public TreeRowMapperBase
 	virtual TreePath getPathForRow(const UInt32& row) const = 0;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TreeRowMapperBase.
@@ -106,20 +107,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeRowMapper : public TreeRowMapperBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeRowMapper(void); 
+    virtual ~TreeRowMapper(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TreeRowMapperBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TreeRowMapper &source);
 };
 
@@ -129,7 +134,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTreeRowMapperBase.inl"
 #include "OSGTreeRowMapper.inl"
-
-#define OSGTREEROWMAPPER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTREEROWMAPPER_H_ */

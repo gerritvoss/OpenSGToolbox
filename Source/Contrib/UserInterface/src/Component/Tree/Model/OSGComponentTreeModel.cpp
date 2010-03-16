@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#ifndef OSG_COMPILEUSERINTERFACELIB
-#define OSG_COMPILEUSERINTERFACELIB
-#endif
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGComponentTreeModel.h"
-#include "Component/OSGComponent.h"
-#include "Component/Container/OSGContainer.h"
-#include "Component/Tree/OSGTreePath.h"
+#include "OSGComponent.h"
+#include "OSGComponentContainer.h"
+#include "OSGTreePath.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ComponentTreeModel
-A UI ComponentTreeModel.  	
-*/
+// Documentation for this class is emitted in the
+// OSGComponentTreeModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGComponentTreeModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,8 +65,13 @@ A UI ComponentTreeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ComponentTreeModel::initMethod (void)
+void ComponentTreeModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -81,19 +79,15 @@ void ComponentTreeModel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
 boost::any ComponentTreeModel::getChild(const boost::any& parent, const UInt32& index) const
 {
     try
     {
-		ContainerPtr TheContainer = ContainerPtr::dcast(boost::any_cast<ComponentPtr>(parent));
-        if(TheContainer != NullFC &&
-           TheContainer->getChildren().size() > index)
+		ComponentContainerRefPtr TheContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(parent));
+        if(TheContainer != NULL &&
+           TheContainer->getMFChildren()->size() > index)
         {
-            return boost::any(TheContainer->getChildren(index));
+            return boost::any(ComponentRefPtr(TheContainer->getChildren(index)));
         }
         else
         {
@@ -110,12 +104,12 @@ boost::any ComponentTreeModel::getParent(const boost::any& node) const
 {
     try
     {
-        ComponentPtr TheComponent = boost::any_cast<ComponentPtr>(node);
-        if(TheComponent != NullFC &&
+        ComponentRefPtr TheComponent = boost::any_cast<ComponentWeakPtr>(node);
+        if(TheComponent != NULL &&
             TheComponent != getInternalRootComponent() &&
-            TheComponent->getParentContainer() != NullFC)
+            TheComponent->getParentContainer() != NULL)
         {
-            return boost::any(ComponentPtr::dcast(TheComponent->getParentContainer()));
+            return boost::any(ComponentRefPtr(dynamic_cast<Component*>(TheComponent->getParentContainer())));
         }
     }
     catch(boost::bad_any_cast &)
@@ -128,10 +122,10 @@ UInt32 ComponentTreeModel::getChildCount(const boost::any& parent) const
 {
     try
     {
-		ContainerPtr TheContainer = ContainerPtr::dcast(boost::any_cast<ComponentPtr>(parent));
-        if(TheContainer != NullFC)
+		ComponentContainerRefPtr TheContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(parent));
+        if(TheContainer != NULL)
         {
-            return TheContainer->getChildren().getSize();
+            return TheContainer->getMFChildren()->getSize();
         }
         else
         {
@@ -148,10 +142,10 @@ UInt32 ComponentTreeModel::getIndexOfChild(const boost::any& parent, const boost
 {
     try
     {
-        ContainerPtr ParentContainer = ContainerPtr::dcast(boost::any_cast<ComponentPtr>(parent));
-        ComponentPtr ChildComponent = boost::any_cast<ComponentPtr>(child);
-        if(ParentContainer != NullFC &&
-           ChildComponent  != NullFC)
+        ComponentContainerRefPtr ParentContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(parent));
+        ComponentRefPtr ChildComponent = boost::any_cast<ComponentWeakPtr>(child);
+        if(ParentContainer != NULL &&
+           ChildComponent  != NULL)
         {
             return ParentContainer->getChildIndex(ChildComponent);
         }
@@ -168,15 +162,15 @@ UInt32 ComponentTreeModel::getIndexOfChild(const boost::any& parent, const boost
 
 boost::any ComponentTreeModel::getRoot(void) const
 {
-    return boost::any(getInternalRootComponent());
+    return boost::any(ComponentRefPtr(getInternalRootComponent()));
 }
 
 bool ComponentTreeModel::isLeaf(const boost::any& node) const
 {
     try
     {
-		ContainerPtr TheContainer = ContainerPtr::dcast(boost::any_cast<ComponentPtr>(node));
-        return TheContainer == NullFC;
+		ComponentContainerRefPtr TheContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(node));
+        return TheContainer == NULL;
     }
     catch(boost::bad_any_cast &)
     {
@@ -188,20 +182,18 @@ void ComponentTreeModel::valueForPathChanged(TreePath path, const boost::any& ne
 {
     try
     {
-        ComponentPtr NewComponent = boost::any_cast<ComponentPtr>(newValue);
-        ComponentPtr OldComponent = boost::any_cast<ComponentPtr>(path.getLastPathComponent());
-        if(NewComponent != NullFC &&
-           OldComponent  != NullFC &&
+        ComponentRefPtr NewComponent = boost::any_cast<ComponentWeakPtr>(newValue);
+        ComponentRefPtr OldComponent = boost::any_cast<ComponentWeakPtr>(path.getLastPathComponent());
+        if(NewComponent != NULL &&
+           OldComponent  != NULL &&
            NewComponent != OldComponent &&
-           OldComponent->getParentContainer() != NullFC)
+           OldComponent->getParentContainer() != NULL)
         {
-            ContainerPtr ParentContainer(OldComponent->getParentContainer());
+            ComponentContainerRefPtr ParentContainer(OldComponent->getParentContainer());
             Int32 ChildIndex(ParentContainer->getChildIndex(OldComponent));
             if(ChildIndex >= 0)
             {
-                beginEditCP(ParentContainer, Container::ChildrenFieldMask);
-                    ParentContainer->getChildren()[ChildIndex] = NewComponent;
-                endEditCP(ParentContainer, Container::ChildrenFieldMask);
+                (*ParentContainer->editMFChildren())[ChildIndex] = NewComponent;
                 produceTreeStructureChanged(path.getParentPath(),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, newValue));
             }
         }
@@ -211,11 +203,9 @@ void ComponentTreeModel::valueForPathChanged(TreePath path, const boost::any& ne
     }
 }
 
-void ComponentTreeModel::setRoot(ComponentPtr root)
+void ComponentTreeModel::setRoot(ComponentRefPtr root)
 {
-    beginEditCP(ComponentTreeModelPtr(this), InternalRootComponentFieldMask);
-        setInternalRootComponent(root);
-    endEditCP(ComponentTreeModelPtr(this), InternalRootComponentFieldMask);
+    setInternalRootComponent(root);
 }
 
 
@@ -223,8 +213,8 @@ bool ComponentTreeModel::isEqual(const boost::any& left, const boost::any& right
 {
     try
     {
-        ComponentPtr LeftComponent = boost::any_cast<ComponentPtr>(left);
-        ComponentPtr RightComponent = boost::any_cast<ComponentPtr>(right);
+        ComponentRefPtr LeftComponent = boost::any_cast<ComponentWeakPtr>(left);
+        ComponentRefPtr RightComponent = boost::any_cast<ComponentWeakPtr>(right);
 
         return LeftComponent == RightComponent;
     }
@@ -233,6 +223,11 @@ bool ComponentTreeModel::isEqual(const boost::any& left, const boost::any& right
         return false;
     }
 }
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
 /*----------------------- constructors & destructors ----------------------*/
 
 ComponentTreeModel::ComponentTreeModel(void) :
@@ -251,9 +246,11 @@ ComponentTreeModel::~ComponentTreeModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ComponentTreeModel::changed(BitVector whichField, UInt32 origin)
+void ComponentTreeModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & InternalRootComponentFieldMask)
     {
@@ -261,12 +258,10 @@ void ComponentTreeModel::changed(BitVector whichField, UInt32 origin)
     }
 }
 
-void ComponentTreeModel::dump(      UInt32    , 
+void ComponentTreeModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ComponentTreeModel NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

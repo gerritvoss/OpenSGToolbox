@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,41 +42,44 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGComponentTreeModelBase.h"
+#include "OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ComponentTreeModel class. See \ref 
-           PageUserInterfaceComponentTreeModel for a description.
+/*! \brief ComponentTreeModel class. See \ref
+           PageContribUserInterfaceComponentTreeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComponentTreeModel : public ComponentTreeModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentTreeModel : public ComponentTreeModelBase
 {
-  private:
-
-    typedef ComponentTreeModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ComponentTreeModelBase Inherited;
+    typedef ComponentTreeModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
 	//Returns the child of parent at index index in the parent's child array.
 	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const;
 
@@ -99,14 +102,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentTreeModel : public ComponentTreeM
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
 
     //Sets the root to root.
-    void setRoot(ComponentPtr root);
+    void setRoot(ComponentRefPtr root);
 
-    //Get the NodePtr to the Root Node
-    ComponentPtr getRootComponent(void) const;
+    //Get the NodeRefPtr to the Root Node
+    ComponentRefPtr getRootComponent(void) const;
 
     //Returns true if these objects represent the same node in the tree
     virtual bool isEqual(const boost::any& left, const boost::any& right) const;
+    
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ComponentTreeModelBase.
@@ -123,20 +128,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentTreeModel : public ComponentTreeM
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComponentTreeModel(void); 
+    virtual ~ComponentTreeModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ComponentTreeModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ComponentTreeModel &source);
 };
 

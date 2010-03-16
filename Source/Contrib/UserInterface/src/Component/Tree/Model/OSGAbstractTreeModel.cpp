@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,12 +40,10 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbstractTreeModel.h"
 #include "OSGTreeModelListener.h"
@@ -55,13 +53,10 @@
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbstractTreeModel
-A UI AbstractTreeModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGAbstractTreeModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbstractTreeModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -71,8 +66,13 @@ A UI AbstractTreeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbstractTreeModel::initMethod (void)
+void AbstractTreeModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -108,7 +108,7 @@ void AbstractTreeModel::removeTreeModelListener(TreeModelListenerPtr l)
 
 void AbstractTreeModel::produceTreeNodesChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -119,7 +119,7 @@ void AbstractTreeModel::produceTreeNodesChanged(TreePath Parent, const std::vect
 
 void AbstractTreeModel::produceTreeNodesInserted(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -130,7 +130,7 @@ void AbstractTreeModel::produceTreeNodesInserted(TreePath Parent, const std::vec
 
 void AbstractTreeModel::produceTreeNodesWillBeRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -141,7 +141,7 @@ void AbstractTreeModel::produceTreeNodesWillBeRemoved(TreePath Parent, const std
 
 void AbstractTreeModel::produceTreeNodesRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -152,7 +152,7 @@ void AbstractTreeModel::produceTreeNodesRemoved(TreePath Parent, const std::vect
 
 void AbstractTreeModel::produceTreeStructureChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -179,17 +179,17 @@ AbstractTreeModel::~AbstractTreeModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractTreeModel::changed(BitVector whichField, UInt32 origin)
+void AbstractTreeModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbstractTreeModel::dump(      UInt32    , 
+void AbstractTreeModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbstractTreeModel NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

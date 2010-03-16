@@ -45,7 +45,7 @@
 
 #define OSG_COMPILEUSERINTERFACELIB
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGAbstractTreeSelectionModel.h"
 #include "OSGTreeSelectionListener.h"
@@ -58,7 +58,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::AbstractTreeSelectionModel
+/*! \class OSG::AbstractTreeSelectionModel
 A AbstractTreeSelectionModel. 
 */
 
@@ -128,7 +128,7 @@ void AbstractTreeSelectionModel::removeChangeListener(ChangeListenerPtr listener
 
 void AbstractTreeSelectionModel::produceSelectionAdded(const std::vector<NumberRange>& ElementsAdded, Int32 NewLeadSelectionPath, Int32 OldLeadSelectionPath)
 {
-    const TreeSelectionEventPtr TheEvent = TreeSelectionEvent::create(NullFC, getSystemTime(), ElementsAdded, NewLeadSelectionPath, OldLeadSelectionPath);
+    const TreeSelectionEventUnrecPtr TheEvent = TreeSelectionEvent::create(NULL, getSystemTime(), ElementsAdded, NewLeadSelectionPath, OldLeadSelectionPath);
 	TreeSelectionListenerSet ModelListenerSet(_SelectionListeners);
 	for(TreeSelectionListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
 	{
@@ -138,28 +138,13 @@ void AbstractTreeSelectionModel::produceSelectionAdded(const std::vector<NumberR
 
 void AbstractTreeSelectionModel::produceSelectionRemoved(const std::vector<NumberRange>& ElementsRemoved, Int32 NewLeadSelectionPath, Int32 OldLeadSelectionPath)
 {
-    const TreeSelectionEventPtr TheEvent = TreeSelectionEvent::create(NullFC, getSystemTime(), ElementsRemoved, NewLeadSelectionPath, OldLeadSelectionPath);
+    const TreeSelectionEventUnrecPtr TheEvent = TreeSelectionEvent::create(NULL, getSystemTime(), ElementsRemoved, NewLeadSelectionPath, OldLeadSelectionPath);
 	TreeSelectionListenerSet ModelListenerSet(_SelectionListeners);
 	for(TreeSelectionListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
 	{
 		(*SetItor)->selectionRemoved(TheEvent);
 	}
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

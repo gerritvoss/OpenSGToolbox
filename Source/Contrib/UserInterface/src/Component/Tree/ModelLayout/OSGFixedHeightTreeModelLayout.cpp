@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGFixedHeightTreeModelLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::FixedHeightTreeModelLayout
-A UI Fixed Height Tree Model Layout. 
-*/
+// Documentation for this class is emitted in the
+// OSGFixedHeightTreeModelLayoutBase.cpp file.
+// To modify it, please change the .fcd file (OSGFixedHeightTreeModelLayout.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +62,13 @@ A UI Fixed Height Tree Model Layout.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void FixedHeightTreeModelLayout::initMethod (void)
+void FixedHeightTreeModelLayout::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -227,7 +227,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
     }
 }
 
-void FixedHeightTreeModelLayout::setModel(TreeModelPtr newModel)
+void FixedHeightTreeModelLayout::setModel(TreeModelRefPtr newModel)
 {
 	//TODO:Implement
     AbstractTreeModelLayout::setModel(newModel);
@@ -269,41 +269,17 @@ FixedHeightTreeModelLayout::~FixedHeightTreeModelLayout(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void FixedHeightTreeModelLayout::changed(BitVector whichField, UInt32 origin)
+void FixedHeightTreeModelLayout::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void FixedHeightTreeModelLayout::dump(      UInt32    , 
+void FixedHeightTreeModelLayout::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump FixedHeightTreeModelLayout NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGFIXEDHEIGHTTREEMODELLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGFIXEDHEIGHTTREEMODELLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGFIXEDHEIGHTTREEMODELLAYOUTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

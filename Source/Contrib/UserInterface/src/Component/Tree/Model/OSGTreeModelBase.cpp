@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,167 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETREEMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTreeModelBase.h"
 #include "OSGTreeModel.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TreeModelBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << TreeModelBase::EventProducerFieldId);
-const OSG::BitVector TreeModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::TreeModel
+    A UI TreeModel.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
-//! TreeModel description
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldDescription *TreeModelBase::_desc[] = 
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TreeModel *>::_type("TreeModelPtr", "FieldContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TreeModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TreeModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TreeModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TreeModelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&TreeModelBase::editSFEventProducer))
-};
+    FieldDescriptionBase *pDesc = NULL;
+
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&TreeModel::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&TreeModel::invalidGetField));
+
+    oType.addInitialDesc(pDesc);
+}
 
 
-FieldContainerType TreeModelBase::_type(
-    "TreeModel",
-    "FieldContainer",
+TreeModelBase::TypeObject TreeModelBase::_type(
+    TreeModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     TreeModel::initMethod,
-    _desc,
-    sizeof(_desc));
+    TreeModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TreeModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TreeModel\"\n"
+    "\tparent=\"FieldContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI TreeModel.\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"TreeNodesChanged\"\n"
+    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"TreeNodesInserted\"\n"
+    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"TreeNodesRemoved\"\n"
+    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"TreeNodesWillBeRemoved\"\n"
+    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"TreeStructureChanged\"\n"
+    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI TreeModel.\n"
+    );
 
 //! TreeModel Produced Methods
 
 MethodDescription *TreeModelBase::_methodDesc[] =
 {
     new MethodDescription("TreeNodesChanged", 
+                    "",
                      TreeNodesChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("TreeNodesInserted", 
+                    "",
                      TreeNodesInsertedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("TreeNodesRemoved", 
+                    "",
                      TreeNodesRemovedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("TreeNodesWillBeRemoved", 
+                    "",
                      TreeNodesWillBeRemovedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("TreeStructureChanged", 
+                    "",
                      TreeStructureChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType TreeModelBase::_producerType(
     "TreeModelProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(TreeModelBase, TreeModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TreeModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TreeModelBase::getType(void) const 
+FieldContainerType &TreeModelBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &TreeModelBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &TreeModelBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-UInt32 TreeModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(TreeModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 TreeModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<TreeModelBase *>(&other),
-                          whichField);
-}
-#else
-void TreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
-{
-    this->executeSyncImpl((TreeModelBase *) &other, whichField, sInfo);
-}
-void TreeModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(TreeModel);
 }
 
-void TreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-TreeModelBase::TreeModelBase(void) :
-    _Producer(&getProducerType()),
-    _sfEventProducer(&_Producer),
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TreeModelBase::TreeModelBase(const TreeModelBase &source) :
-    _Producer(&source.getProducerType()),
-    _sfEventProducer(&_Producer),
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-TreeModelBase::~TreeModelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TreeModelBase::getBinSize(const BitVector &whichField)
+UInt32 TreeModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -219,12 +260,11 @@ UInt32 TreeModelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfEventProducer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TreeModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TreeModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -232,12 +272,10 @@ void TreeModelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfEventProducer.copyToBin(pMem);
     }
-
-
 }
 
-void TreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TreeModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -245,59 +283,61 @@ void TreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfEventProducer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeModelBase::executeSyncImpl(      TreeModelBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TreeModelBase::TreeModelBase(void) :
+    _Producer(&getProducerType()),
+    Inherited(),
+    _sfEventProducer(&_Producer)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
-
-}
-#else
-void TreeModelBase::executeSyncImpl(      TreeModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void TreeModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+TreeModelBase::TreeModelBase(const TreeModelBase &source) :
+    _Producer(&source.getProducerType()),
+    Inherited(source),
+    _sfEventProducer(&_Producer)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+TreeModelBase::~TreeModelBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TreeModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TreeModel *pThis = static_cast<TreeModel *>(this);
+
+    pThis->execSync(static_cast<TreeModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void TreeModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TreeModelPtr>::_type("TreeModelPtr", "FieldContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

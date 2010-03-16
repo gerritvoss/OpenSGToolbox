@@ -3,133 +3,136 @@
 <FieldContainer
 	name="DefaultTreeComponentGenerator"
 	parent="TreeComponentGenerator"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Default Tree ComponentGenerator.
 	<Field
 		name="ExpandedDrawObjectPrototype"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="NotExpandedDrawObjectPrototype"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="LeafDrawObjectPrototype"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="NonLeafDrawObjectPrototype"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="ExpandedNonLeafDrawObjectPrototype"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="NodeLabelPrototype"
-		type="LabelPtr"
+		type="Label"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Component/Text/OSGLabelFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="NodePanelPrototype"
-		type="PanelPtr"
+		type="Panel"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Component/Container/OSGPanelFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectedBackground"
-		type="LayerPtr"
+		type="Layer"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="NonSelectedBackground"
-		type="LayerPtr"
+		type="Layer"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectedForeground"
-		type="LayerPtr"
+		type="Layer"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="NonSelectedForeground"
-		type="LayerPtr"
+		type="Layer"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectedBorder"
-		type="BorderPtr"
+		type="Border"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorderFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectedTextColor"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -139,6 +142,7 @@ A UI Default Tree ComponentGenerator.
 	<Field
 		name="NonSelectedTextColor"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,111 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETREECELLEDITORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTreeCellEditorBase.h"
 #include "OSGTreeCellEditor.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector TreeCellEditorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::TreeCellEditor
+    A UI Tree Cell Editor.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType TreeCellEditorBase::_type(
-    "TreeCellEditor",
-    "AbstractCellEditor",
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TreeCellEditor *>::_type("TreeCellEditorPtr", "AbstractCellEditorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TreeCellEditor *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TreeCellEditor *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TreeCellEditor *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TreeCellEditorBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+TreeCellEditorBase::TypeObject TreeCellEditorBase::_type(
+    TreeCellEditorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     TreeCellEditor::initMethod,
-    NULL,
-    0);
+    TreeCellEditor::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TreeCellEditor::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TreeCellEditor\"\n"
+    "\tparent=\"AbstractCellEditor\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Tree Cell Editor.\n"
+    "</FieldContainer>\n",
+    "A UI Tree Cell Editor.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TreeCellEditorBase, TreeCellEditorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TreeCellEditorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TreeCellEditorBase::getType(void) const 
+FieldContainerType &TreeCellEditorBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 TreeCellEditorBase::getContainerSize(void) const 
-{ 
-    return sizeof(TreeCellEditor); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeCellEditorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TreeCellEditorBase::getType(void) const
 {
-    this->executeSyncImpl((TreeCellEditorBase *) &other, whichField);
+    return _type;
 }
-#else
-void TreeCellEditorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TreeCellEditorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TreeCellEditorBase *) &other, whichField, sInfo);
-}
-void TreeCellEditorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(TreeCellEditor);
 }
 
-void TreeCellEditorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-TreeCellEditorBase::TreeCellEditorBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TreeCellEditorBase::TreeCellEditorBase(const TreeCellEditorBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-TreeCellEditorBase::~TreeCellEditorBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TreeCellEditorBase::getBinSize(const BitVector &whichField)
+UInt32 TreeCellEditorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -162,88 +176,69 @@ UInt32 TreeCellEditorBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void TreeCellEditorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TreeCellEditorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void TreeCellEditorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TreeCellEditorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeCellEditorBase::executeSyncImpl(      TreeCellEditorBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TreeCellEditorBase::TreeCellEditorBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void TreeCellEditorBase::executeSyncImpl(      TreeCellEditorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void TreeCellEditorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+TreeCellEditorBase::TreeCellEditorBase(const TreeCellEditorBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+TreeCellEditorBase::~TreeCellEditorBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TreeCellEditorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TreeCellEditor *pThis = static_cast<TreeCellEditor *>(this);
+
+    pThis->execSync(static_cast<TreeCellEditor *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void TreeCellEditorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TreeCellEditorPtr>::_type("TreeCellEditorPtr", "AbstractCellEditorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TreeCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TreeCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTREECELLEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTREECELLEDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTREECELLEDITORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

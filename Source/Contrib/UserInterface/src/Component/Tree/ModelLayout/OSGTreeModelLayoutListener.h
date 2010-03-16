@@ -31,31 +31,31 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGTreeModelLayoutEvent.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelLayoutListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
 public:
 
     //Called whenever an item in the tree has been collapsed.
-    virtual void treeCollapsed(const TreeModelLayoutEventPtr event) = 0;
+    virtual void treeCollapsed(const TreeModelLayoutEventUnrecPtr event) = 0;
 
     //Called whenever an item in the tree has been expanded.
-    virtual void treeExpanded(const TreeModelLayoutEventPtr event) = 0;
+    virtual void treeExpanded(const TreeModelLayoutEventUnrecPtr event) = 0;
 
     //Invoked whenever a node in the tree is about to be collapsed.
-    virtual void treeWillCollapse(const TreeModelLayoutEventPtr event) = 0;
+    virtual void treeWillCollapse(const TreeModelLayoutEventUnrecPtr event) = 0;
 
     //Invoked whenever a node in the tree is about to be expanded.
-    virtual void treeWillExpand(const TreeModelLayoutEventPtr event) = 0;
+    virtual void treeWillExpand(const TreeModelLayoutEventUnrecPtr event) = 0;
 };
 
 typedef TreeModelLayoutListener* TreeModelLayoutListenerPtr;

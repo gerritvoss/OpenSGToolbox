@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,132 +55,105 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DefaultMutableTreeNodeBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DefaultMutableTreeNodeBase::getClassTypeId(void) 
+OSG::UInt32 DefaultMutableTreeNodeBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DefaultMutableTreeNodePtr DefaultMutableTreeNodeBase::create(void) 
-{
-    DefaultMutableTreeNodePtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DefaultMutableTreeNodePtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DefaultMutableTreeNodePtr DefaultMutableTreeNodeBase::createEmpty(void) 
-{ 
-    DefaultMutableTreeNodePtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DefaultMutableTreeNodeBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DefaultMutableTreeNode::_sfAllowsChildrenInternal field.
-inline
-SFBool *DefaultMutableTreeNodeBase::getSFAllowsChildrenInternal(void)
-{
-    return &_sfAllowsChildrenInternal;
-}
-
-//! Get the DefaultMutableTreeNode::_mfChildrenInternal field.
-inline
-MFMutableTreeNodePtr *DefaultMutableTreeNodeBase::getMFChildrenInternal(void)
-{
-    return &_mfChildrenInternal;
-}
-
-//! Get the DefaultMutableTreeNode::_sfParentInternal field.
-inline
-SFMutableTreeNodePtr *DefaultMutableTreeNodeBase::getSFParentInternal(void)
-{
-    return &_sfParentInternal;
-}
-
-
 //! Get the value of the DefaultMutableTreeNode::_sfAllowsChildrenInternal field.
+
 inline
-bool &DefaultMutableTreeNodeBase::getAllowsChildrenInternal(void)
+bool &DefaultMutableTreeNodeBase::editAllowsChildrenInternal(void)
 {
+    editSField(AllowsChildrenInternalFieldMask);
+
     return _sfAllowsChildrenInternal.getValue();
 }
 
 //! Get the value of the DefaultMutableTreeNode::_sfAllowsChildrenInternal field.
 inline
-const bool &DefaultMutableTreeNodeBase::getAllowsChildrenInternal(void) const
+      bool  DefaultMutableTreeNodeBase::getAllowsChildrenInternal(void) const
 {
     return _sfAllowsChildrenInternal.getValue();
 }
 
 //! Set the value of the DefaultMutableTreeNode::_sfAllowsChildrenInternal field.
 inline
-void DefaultMutableTreeNodeBase::setAllowsChildrenInternal(const bool &value)
+void DefaultMutableTreeNodeBase::setAllowsChildrenInternal(const bool value)
 {
+    editSField(AllowsChildrenInternalFieldMask);
+
     _sfAllowsChildrenInternal.setValue(value);
 }
 
 //! Get the value of the DefaultMutableTreeNode::_sfParentInternal field.
 inline
-MutableTreeNodePtr &DefaultMutableTreeNodeBase::getParentInternal(void)
-{
-    return _sfParentInternal.getValue();
-}
-
-//! Get the value of the DefaultMutableTreeNode::_sfParentInternal field.
-inline
-const MutableTreeNodePtr &DefaultMutableTreeNodeBase::getParentInternal(void) const
+MutableTreeNode * DefaultMutableTreeNodeBase::getParentInternal(void) const
 {
     return _sfParentInternal.getValue();
 }
 
 //! Set the value of the DefaultMutableTreeNode::_sfParentInternal field.
 inline
-void DefaultMutableTreeNodeBase::setParentInternal(const MutableTreeNodePtr &value)
+void DefaultMutableTreeNodeBase::setParentInternal(MutableTreeNode * const value)
 {
+    editSField(ParentInternalFieldMask);
+
     _sfParentInternal.setValue(value);
 }
 
-
 //! Get the value of the \a index element the DefaultMutableTreeNode::_mfChildrenInternal field.
 inline
-MutableTreeNodePtr &DefaultMutableTreeNodeBase::getChildrenInternal(const UInt32 index)
+MutableTreeNode * DefaultMutableTreeNodeBase::getChildrenInternal(const UInt32 index) const
 {
     return _mfChildrenInternal[index];
 }
 
-//! Get the DefaultMutableTreeNode::_mfChildrenInternal field.
-inline
-MFMutableTreeNodePtr &DefaultMutableTreeNodeBase::getChildrenInternal(void)
-{
-    return _mfChildrenInternal;
-}
 
-//! Get the DefaultMutableTreeNode::_mfChildrenInternal field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFMutableTreeNodePtr &DefaultMutableTreeNodeBase::getChildrenInternal(void) const
+void DefaultMutableTreeNodeBase::execSync (      DefaultMutableTreeNodeBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfChildrenInternal;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (AllowsChildrenInternalFieldMask & whichField))
+        _sfAllowsChildrenInternal.syncWith(pFrom->_sfAllowsChildrenInternal);
+
+    if(FieldBits::NoField != (ChildrenInternalFieldMask & whichField))
+        _mfChildrenInternal.syncWith(pFrom->_mfChildrenInternal,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (ParentInternalFieldMask & whichField))
+        _sfParentInternal.syncWith(pFrom->_sfParentInternal);
 }
+#endif
+
+
+inline
+const Char8 *DefaultMutableTreeNodeBase::getClassname(void)
+{
+    return "DefaultMutableTreeNode";
+}
+OSG_GEN_CONTAINERPTR(DefaultMutableTreeNode);
 
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTMUTABLETREENODEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

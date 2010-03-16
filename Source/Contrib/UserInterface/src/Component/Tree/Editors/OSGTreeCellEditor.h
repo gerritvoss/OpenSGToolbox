@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,45 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTreeCellEditorBase.h"
-
 #include <Component/Tree/OSGTreeFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeCellEditor class. See \ref 
-           PageUserInterfaceTreeCellEditor for a description.
+/*! \brief TreeCellEditor class. See \ref
+           PageContribUserInterfaceTreeCellEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeCellEditor : public TreeCellEditorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeCellEditor : public TreeCellEditorBase
 {
-  private:
-
-    typedef TreeCellEditorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeCellEditorBase Inherited;
+    typedef TreeCellEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TreeCellEditorBase.
@@ -97,21 +97,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeCellEditor : public TreeCellEditorBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeCellEditor(void); 
+    virtual ~TreeCellEditor(void);
 
     /*! \}                                                                 */
-	virtual ComponentPtr getTreeCellEditorComponent(TreePtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row) = 0;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+	virtual ComponentRefPtr getTreeCellEditorComponent(TreeRefPtr TheTree,
+                                                       const boost::any& Value,
+                                                       bool IsSelected,
+                                                       bool IsExpanded,
+                                                       UInt32 row) = 0;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TreeCellEditorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TreeCellEditor &source);
 };
 
@@ -121,7 +131,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTreeCellEditorBase.inl"
 #include "OSGTreeCellEditor.inl"
-
-#define OSGTREECELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTREECELLEDITOR_H_ */

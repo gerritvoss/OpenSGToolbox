@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,59 +42,61 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGTreeModelEventBase.h"
-#include "Component/Tree/OSGTreePath.h"
+#include "OSGTreePath.h"
 #include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeModelEvent class. See \ref 
-           PageUserInterfaceTreeModelEvent for a description.
+/*! \brief TreeModelEvent class. See \ref
+           PageContribUserInterfaceTreeModelEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelEvent : public TreeModelEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelEvent : public TreeModelEventBase
 {
-  private:
-
-    typedef TreeModelEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeModelEventBase Inherited;
+    typedef TreeModelEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  TreeModelEventPtr      create(  FieldContainerPtr Source,
-                                            Time TimeStamp,
-                                            const TreePath&,
-                                            const std::vector<UInt32>& childIndices,
-                                            const std::vector<boost::any>& children); 
+    static  TreeModelEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                   Time TimeStamp,
+                                                   const TreePath&,
+                                                   const std::vector<UInt32>& childIndices,
+                                                   const std::vector<boost::any>& children); 
 
-    static  TreeModelEventPtr      create(  FieldContainerPtr Source,
-                                            Time TimeStamp,
-                                            const TreePath&); 
+    static  TreeModelEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                   Time TimeStamp,
+                                                   const TreePath&); 
 
     const std::vector<boost::any>& getChildren(void) const;
     
 	const TreePath& getPath(void) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TreeModelEventBase.
@@ -111,23 +113,28 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelEvent : public TreeModelEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeModelEvent(void); 
+    virtual ~TreeModelEvent(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
     TreePath _Path;
     std::vector<boost::any> _Children;
     
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TreeModelEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TreeModelEvent &source);
 };
 

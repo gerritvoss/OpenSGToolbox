@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,400 +55,223 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DefaultTreeComponentGeneratorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DefaultTreeComponentGeneratorBase::getClassTypeId(void) 
+OSG::UInt32 DefaultTreeComponentGeneratorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DefaultTreeComponentGeneratorPtr DefaultTreeComponentGeneratorBase::create(void) 
-{
-    DefaultTreeComponentGeneratorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DefaultTreeComponentGeneratorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DefaultTreeComponentGeneratorPtr DefaultTreeComponentGeneratorBase::createEmpty(void) 
-{ 
-    DefaultTreeComponentGeneratorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DefaultTreeComponentGeneratorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DefaultTreeComponentGenerator::_sfExpandedDrawObjectPrototype field.
-inline
-SFUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFExpandedDrawObjectPrototype(void)
-{
-    return &_sfExpandedDrawObjectPrototype;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfNotExpandedDrawObjectPrototype field.
-inline
-SFUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFNotExpandedDrawObjectPrototype(void)
-{
-    return &_sfNotExpandedDrawObjectPrototype;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfLeafDrawObjectPrototype field.
-inline
-SFUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFLeafDrawObjectPrototype(void)
-{
-    return &_sfLeafDrawObjectPrototype;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfNonLeafDrawObjectPrototype field.
-inline
-SFUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFNonLeafDrawObjectPrototype(void)
-{
-    return &_sfNonLeafDrawObjectPrototype;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfExpandedNonLeafDrawObjectPrototype field.
-inline
-SFUIDrawObjectCanvasPtr *DefaultTreeComponentGeneratorBase::getSFExpandedNonLeafDrawObjectPrototype(void)
-{
-    return &_sfExpandedNonLeafDrawObjectPrototype;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfNodeLabelPrototype field.
-inline
-SFLabelPtr *DefaultTreeComponentGeneratorBase::getSFNodeLabelPrototype(void)
-{
-    return &_sfNodeLabelPrototype;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfNodePanelPrototype field.
-inline
-SFPanelPtr *DefaultTreeComponentGeneratorBase::getSFNodePanelPrototype(void)
-{
-    return &_sfNodePanelPrototype;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfSelectedBackground field.
-inline
-SFLayerPtr *DefaultTreeComponentGeneratorBase::getSFSelectedBackground(void)
-{
-    return &_sfSelectedBackground;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfNonSelectedBackground field.
-inline
-SFLayerPtr *DefaultTreeComponentGeneratorBase::getSFNonSelectedBackground(void)
-{
-    return &_sfNonSelectedBackground;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfSelectedForeground field.
-inline
-SFLayerPtr *DefaultTreeComponentGeneratorBase::getSFSelectedForeground(void)
-{
-    return &_sfSelectedForeground;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfNonSelectedForeground field.
-inline
-SFLayerPtr *DefaultTreeComponentGeneratorBase::getSFNonSelectedForeground(void)
-{
-    return &_sfNonSelectedForeground;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfSelectedBorder field.
-inline
-SFBorderPtr *DefaultTreeComponentGeneratorBase::getSFSelectedBorder(void)
-{
-    return &_sfSelectedBorder;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfSelectedTextColor field.
-inline
-SFColor4f *DefaultTreeComponentGeneratorBase::getSFSelectedTextColor(void)
-{
-    return &_sfSelectedTextColor;
-}
-
-//! Get the DefaultTreeComponentGenerator::_sfNonSelectedTextColor field.
-inline
-SFColor4f *DefaultTreeComponentGeneratorBase::getSFNonSelectedTextColor(void)
-{
-    return &_sfNonSelectedTextColor;
-}
-
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfExpandedDrawObjectPrototype field.
 inline
-UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getExpandedDrawObjectPrototype(void)
-{
-    return _sfExpandedDrawObjectPrototype.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfExpandedDrawObjectPrototype field.
-inline
-const UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getExpandedDrawObjectPrototype(void) const
+UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::getExpandedDrawObjectPrototype(void) const
 {
     return _sfExpandedDrawObjectPrototype.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfExpandedDrawObjectPrototype field.
 inline
-void DefaultTreeComponentGeneratorBase::setExpandedDrawObjectPrototype(const UIDrawObjectCanvasPtr &value)
+void DefaultTreeComponentGeneratorBase::setExpandedDrawObjectPrototype(UIDrawObjectCanvas * const value)
 {
+    editSField(ExpandedDrawObjectPrototypeFieldMask);
+
     _sfExpandedDrawObjectPrototype.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfNotExpandedDrawObjectPrototype field.
 inline
-UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getNotExpandedDrawObjectPrototype(void)
-{
-    return _sfNotExpandedDrawObjectPrototype.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfNotExpandedDrawObjectPrototype field.
-inline
-const UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getNotExpandedDrawObjectPrototype(void) const
+UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::getNotExpandedDrawObjectPrototype(void) const
 {
     return _sfNotExpandedDrawObjectPrototype.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfNotExpandedDrawObjectPrototype field.
 inline
-void DefaultTreeComponentGeneratorBase::setNotExpandedDrawObjectPrototype(const UIDrawObjectCanvasPtr &value)
+void DefaultTreeComponentGeneratorBase::setNotExpandedDrawObjectPrototype(UIDrawObjectCanvas * const value)
 {
+    editSField(NotExpandedDrawObjectPrototypeFieldMask);
+
     _sfNotExpandedDrawObjectPrototype.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfLeafDrawObjectPrototype field.
 inline
-UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getLeafDrawObjectPrototype(void)
-{
-    return _sfLeafDrawObjectPrototype.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfLeafDrawObjectPrototype field.
-inline
-const UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getLeafDrawObjectPrototype(void) const
+UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::getLeafDrawObjectPrototype(void) const
 {
     return _sfLeafDrawObjectPrototype.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfLeafDrawObjectPrototype field.
 inline
-void DefaultTreeComponentGeneratorBase::setLeafDrawObjectPrototype(const UIDrawObjectCanvasPtr &value)
+void DefaultTreeComponentGeneratorBase::setLeafDrawObjectPrototype(UIDrawObjectCanvas * const value)
 {
+    editSField(LeafDrawObjectPrototypeFieldMask);
+
     _sfLeafDrawObjectPrototype.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfNonLeafDrawObjectPrototype field.
 inline
-UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getNonLeafDrawObjectPrototype(void)
-{
-    return _sfNonLeafDrawObjectPrototype.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfNonLeafDrawObjectPrototype field.
-inline
-const UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getNonLeafDrawObjectPrototype(void) const
+UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::getNonLeafDrawObjectPrototype(void) const
 {
     return _sfNonLeafDrawObjectPrototype.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfNonLeafDrawObjectPrototype field.
 inline
-void DefaultTreeComponentGeneratorBase::setNonLeafDrawObjectPrototype(const UIDrawObjectCanvasPtr &value)
+void DefaultTreeComponentGeneratorBase::setNonLeafDrawObjectPrototype(UIDrawObjectCanvas * const value)
 {
+    editSField(NonLeafDrawObjectPrototypeFieldMask);
+
     _sfNonLeafDrawObjectPrototype.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfExpandedNonLeafDrawObjectPrototype field.
 inline
-UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getExpandedNonLeafDrawObjectPrototype(void)
-{
-    return _sfExpandedNonLeafDrawObjectPrototype.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfExpandedNonLeafDrawObjectPrototype field.
-inline
-const UIDrawObjectCanvasPtr &DefaultTreeComponentGeneratorBase::getExpandedNonLeafDrawObjectPrototype(void) const
+UIDrawObjectCanvas * DefaultTreeComponentGeneratorBase::getExpandedNonLeafDrawObjectPrototype(void) const
 {
     return _sfExpandedNonLeafDrawObjectPrototype.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfExpandedNonLeafDrawObjectPrototype field.
 inline
-void DefaultTreeComponentGeneratorBase::setExpandedNonLeafDrawObjectPrototype(const UIDrawObjectCanvasPtr &value)
+void DefaultTreeComponentGeneratorBase::setExpandedNonLeafDrawObjectPrototype(UIDrawObjectCanvas * const value)
 {
+    editSField(ExpandedNonLeafDrawObjectPrototypeFieldMask);
+
     _sfExpandedNonLeafDrawObjectPrototype.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfNodeLabelPrototype field.
 inline
-LabelPtr &DefaultTreeComponentGeneratorBase::getNodeLabelPrototype(void)
-{
-    return _sfNodeLabelPrototype.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfNodeLabelPrototype field.
-inline
-const LabelPtr &DefaultTreeComponentGeneratorBase::getNodeLabelPrototype(void) const
+Label * DefaultTreeComponentGeneratorBase::getNodeLabelPrototype(void) const
 {
     return _sfNodeLabelPrototype.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfNodeLabelPrototype field.
 inline
-void DefaultTreeComponentGeneratorBase::setNodeLabelPrototype(const LabelPtr &value)
+void DefaultTreeComponentGeneratorBase::setNodeLabelPrototype(Label * const value)
 {
+    editSField(NodeLabelPrototypeFieldMask);
+
     _sfNodeLabelPrototype.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfNodePanelPrototype field.
 inline
-PanelPtr &DefaultTreeComponentGeneratorBase::getNodePanelPrototype(void)
-{
-    return _sfNodePanelPrototype.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfNodePanelPrototype field.
-inline
-const PanelPtr &DefaultTreeComponentGeneratorBase::getNodePanelPrototype(void) const
+Panel * DefaultTreeComponentGeneratorBase::getNodePanelPrototype(void) const
 {
     return _sfNodePanelPrototype.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfNodePanelPrototype field.
 inline
-void DefaultTreeComponentGeneratorBase::setNodePanelPrototype(const PanelPtr &value)
+void DefaultTreeComponentGeneratorBase::setNodePanelPrototype(Panel * const value)
 {
+    editSField(NodePanelPrototypeFieldMask);
+
     _sfNodePanelPrototype.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfSelectedBackground field.
 inline
-LayerPtr &DefaultTreeComponentGeneratorBase::getSelectedBackground(void)
-{
-    return _sfSelectedBackground.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfSelectedBackground field.
-inline
-const LayerPtr &DefaultTreeComponentGeneratorBase::getSelectedBackground(void) const
+Layer * DefaultTreeComponentGeneratorBase::getSelectedBackground(void) const
 {
     return _sfSelectedBackground.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfSelectedBackground field.
 inline
-void DefaultTreeComponentGeneratorBase::setSelectedBackground(const LayerPtr &value)
+void DefaultTreeComponentGeneratorBase::setSelectedBackground(Layer * const value)
 {
+    editSField(SelectedBackgroundFieldMask);
+
     _sfSelectedBackground.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfNonSelectedBackground field.
 inline
-LayerPtr &DefaultTreeComponentGeneratorBase::getNonSelectedBackground(void)
-{
-    return _sfNonSelectedBackground.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfNonSelectedBackground field.
-inline
-const LayerPtr &DefaultTreeComponentGeneratorBase::getNonSelectedBackground(void) const
+Layer * DefaultTreeComponentGeneratorBase::getNonSelectedBackground(void) const
 {
     return _sfNonSelectedBackground.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfNonSelectedBackground field.
 inline
-void DefaultTreeComponentGeneratorBase::setNonSelectedBackground(const LayerPtr &value)
+void DefaultTreeComponentGeneratorBase::setNonSelectedBackground(Layer * const value)
 {
+    editSField(NonSelectedBackgroundFieldMask);
+
     _sfNonSelectedBackground.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfSelectedForeground field.
 inline
-LayerPtr &DefaultTreeComponentGeneratorBase::getSelectedForeground(void)
-{
-    return _sfSelectedForeground.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfSelectedForeground field.
-inline
-const LayerPtr &DefaultTreeComponentGeneratorBase::getSelectedForeground(void) const
+Layer * DefaultTreeComponentGeneratorBase::getSelectedForeground(void) const
 {
     return _sfSelectedForeground.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfSelectedForeground field.
 inline
-void DefaultTreeComponentGeneratorBase::setSelectedForeground(const LayerPtr &value)
+void DefaultTreeComponentGeneratorBase::setSelectedForeground(Layer * const value)
 {
+    editSField(SelectedForegroundFieldMask);
+
     _sfSelectedForeground.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfNonSelectedForeground field.
 inline
-LayerPtr &DefaultTreeComponentGeneratorBase::getNonSelectedForeground(void)
-{
-    return _sfNonSelectedForeground.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfNonSelectedForeground field.
-inline
-const LayerPtr &DefaultTreeComponentGeneratorBase::getNonSelectedForeground(void) const
+Layer * DefaultTreeComponentGeneratorBase::getNonSelectedForeground(void) const
 {
     return _sfNonSelectedForeground.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfNonSelectedForeground field.
 inline
-void DefaultTreeComponentGeneratorBase::setNonSelectedForeground(const LayerPtr &value)
+void DefaultTreeComponentGeneratorBase::setNonSelectedForeground(Layer * const value)
 {
+    editSField(NonSelectedForegroundFieldMask);
+
     _sfNonSelectedForeground.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfSelectedBorder field.
 inline
-BorderPtr &DefaultTreeComponentGeneratorBase::getSelectedBorder(void)
-{
-    return _sfSelectedBorder.getValue();
-}
-
-//! Get the value of the DefaultTreeComponentGenerator::_sfSelectedBorder field.
-inline
-const BorderPtr &DefaultTreeComponentGeneratorBase::getSelectedBorder(void) const
+Border * DefaultTreeComponentGeneratorBase::getSelectedBorder(void) const
 {
     return _sfSelectedBorder.getValue();
 }
 
 //! Set the value of the DefaultTreeComponentGenerator::_sfSelectedBorder field.
 inline
-void DefaultTreeComponentGeneratorBase::setSelectedBorder(const BorderPtr &value)
+void DefaultTreeComponentGeneratorBase::setSelectedBorder(Border * const value)
 {
+    editSField(SelectedBorderFieldMask);
+
     _sfSelectedBorder.setValue(value);
 }
-
 //! Get the value of the DefaultTreeComponentGenerator::_sfSelectedTextColor field.
+
 inline
-Color4f &DefaultTreeComponentGeneratorBase::getSelectedTextColor(void)
+Color4f &DefaultTreeComponentGeneratorBase::editSelectedTextColor(void)
 {
+    editSField(SelectedTextColorFieldMask);
+
     return _sfSelectedTextColor.getValue();
 }
 
@@ -465,13 +286,17 @@ const Color4f &DefaultTreeComponentGeneratorBase::getSelectedTextColor(void) con
 inline
 void DefaultTreeComponentGeneratorBase::setSelectedTextColor(const Color4f &value)
 {
+    editSField(SelectedTextColorFieldMask);
+
     _sfSelectedTextColor.setValue(value);
 }
-
 //! Get the value of the DefaultTreeComponentGenerator::_sfNonSelectedTextColor field.
+
 inline
-Color4f &DefaultTreeComponentGeneratorBase::getNonSelectedTextColor(void)
+Color4f &DefaultTreeComponentGeneratorBase::editNonSelectedTextColor(void)
 {
+    editSField(NonSelectedTextColorFieldMask);
+
     return _sfNonSelectedTextColor.getValue();
 }
 
@@ -486,11 +311,73 @@ const Color4f &DefaultTreeComponentGeneratorBase::getNonSelectedTextColor(void) 
 inline
 void DefaultTreeComponentGeneratorBase::setNonSelectedTextColor(const Color4f &value)
 {
+    editSField(NonSelectedTextColorFieldMask);
+
     _sfNonSelectedTextColor.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DefaultTreeComponentGeneratorBase::execSync (      DefaultTreeComponentGeneratorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGDEFAULTTREECOMPONENTGENERATORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (ExpandedDrawObjectPrototypeFieldMask & whichField))
+        _sfExpandedDrawObjectPrototype.syncWith(pFrom->_sfExpandedDrawObjectPrototype);
+
+    if(FieldBits::NoField != (NotExpandedDrawObjectPrototypeFieldMask & whichField))
+        _sfNotExpandedDrawObjectPrototype.syncWith(pFrom->_sfNotExpandedDrawObjectPrototype);
+
+    if(FieldBits::NoField != (LeafDrawObjectPrototypeFieldMask & whichField))
+        _sfLeafDrawObjectPrototype.syncWith(pFrom->_sfLeafDrawObjectPrototype);
+
+    if(FieldBits::NoField != (NonLeafDrawObjectPrototypeFieldMask & whichField))
+        _sfNonLeafDrawObjectPrototype.syncWith(pFrom->_sfNonLeafDrawObjectPrototype);
+
+    if(FieldBits::NoField != (ExpandedNonLeafDrawObjectPrototypeFieldMask & whichField))
+        _sfExpandedNonLeafDrawObjectPrototype.syncWith(pFrom->_sfExpandedNonLeafDrawObjectPrototype);
+
+    if(FieldBits::NoField != (NodeLabelPrototypeFieldMask & whichField))
+        _sfNodeLabelPrototype.syncWith(pFrom->_sfNodeLabelPrototype);
+
+    if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
+        _sfNodePanelPrototype.syncWith(pFrom->_sfNodePanelPrototype);
+
+    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
+        _sfSelectedBackground.syncWith(pFrom->_sfSelectedBackground);
+
+    if(FieldBits::NoField != (NonSelectedBackgroundFieldMask & whichField))
+        _sfNonSelectedBackground.syncWith(pFrom->_sfNonSelectedBackground);
+
+    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
+        _sfSelectedForeground.syncWith(pFrom->_sfSelectedForeground);
+
+    if(FieldBits::NoField != (NonSelectedForegroundFieldMask & whichField))
+        _sfNonSelectedForeground.syncWith(pFrom->_sfNonSelectedForeground);
+
+    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
+        _sfSelectedBorder.syncWith(pFrom->_sfSelectedBorder);
+
+    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
+        _sfSelectedTextColor.syncWith(pFrom->_sfSelectedTextColor);
+
+    if(FieldBits::NoField != (NonSelectedTextColorFieldMask & whichField))
+        _sfNonSelectedTextColor.syncWith(pFrom->_sfNonSelectedTextColor);
+}
+#endif
+
+
+inline
+const Char8 *DefaultTreeComponentGeneratorBase::getClassname(void)
+{
+    return "DefaultTreeComponentGenerator";
+}
+OSG_GEN_CONTAINERPTR(DefaultTreeComponentGenerator);
+
+OSG_END_NAMESPACE
 

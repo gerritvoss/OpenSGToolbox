@@ -3,18 +3,21 @@
 <FieldContainer
 	name="DefaultMutableTreeNode"
 	parent="MutableTreeNode"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Default Mutable Tree Node.
 	<Field
 		name="AllowsChildrenInternal"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -23,20 +26,20 @@ A UI Default Mutable Tree Node.
 	</Field>
 	<Field
 		name="ChildrenInternal"
-		type="MutableTreeNodePtr"
+		type="MutableTreeNode"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Component/Tree/Model/OSGMutableTreeNodeFields.h"
 		access="protected"
 	>
 	</Field>
 	<Field
 		name="ParentInternal"
-		type="MutableTreeNodePtr"
+		type="MutableTreeNode"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Tree/Model/OSGMutableTreeNodeFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="protected"
 	>
 	</Field>

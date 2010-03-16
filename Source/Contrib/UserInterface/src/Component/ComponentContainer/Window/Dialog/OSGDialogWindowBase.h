@@ -227,6 +227,33 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowBase : public InternalWind
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  DialogWindowTransitPtr  create          (void);
+    static  DialogWindow           *createEmpty     (void);
+
+    static  DialogWindowTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DialogWindow            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DialogWindowTransitPtr  createDependent  (BitVector bFlags);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -312,6 +339,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowBase : public InternalWind
     /*---------------------------------------------------------------------*/
     /*! \name                     Aspect Create                            */
     /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

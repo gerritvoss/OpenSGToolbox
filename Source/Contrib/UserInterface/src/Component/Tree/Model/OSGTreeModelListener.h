@@ -31,34 +31,34 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGTreeModelEventFields.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
 public:
 
 	//Invoked after a node (or a set of siblings) has changed in some way.
-	virtual void treeNodesChanged(const TreeModelEventPtr e) = 0;
+	virtual void treeNodesChanged(const TreeModelEventUnrecPtr e) = 0;
 
 	//Invoked after nodes have been inserted into the tree.
-	virtual void treeNodesInserted(const TreeModelEventPtr e) = 0;
+	virtual void treeNodesInserted(const TreeModelEventUnrecPtr e) = 0;
 
 	//Invoked after nodes have been removed from the tree.
-	virtual void treeNodesRemoved(const TreeModelEventPtr e) = 0;
+	virtual void treeNodesRemoved(const TreeModelEventUnrecPtr e) = 0;
 
 	//Invoked before nodes have been removed from the tree.
-	virtual void treeNodesWillBeRemoved(const TreeModelEventPtr e) = 0;
+	virtual void treeNodesWillBeRemoved(const TreeModelEventUnrecPtr e) = 0;
 
 	//Invoked after the tree has drastically changed structure from a given node down.
-	virtual void treeStructureChanged(const TreeModelEventPtr e) = 0;
+	virtual void treeStructureChanged(const TreeModelEventUnrecPtr e) = 0;
 };
 
 typedef TreeModelListener* TreeModelListenerPtr;

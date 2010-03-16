@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class TreeModelLayoutEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TreeModelLayoutEventPtr
+OSG_GEN_CONTAINERPTR(TreeModelLayoutEvent);
 
-typedef FCPtr<EventPtr, TreeModelLayoutEvent> TreeModelLayoutEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TreeModelLayoutEventPtr> : 
-    public FieldTraitsRecurseMapper<TreeModelLayoutEventPtr, true>
+struct FieldTraits<TreeModelLayoutEvent *> :
+    public FieldTraitsFCPtrBase<TreeModelLayoutEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTreeModelLayoutEventPtr"; }
+    typedef FieldTraits<TreeModelLayoutEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTreeModelLayoutEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTreeModelLayoutEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TreeModelLayoutEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TreeModelLayoutEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTreeModelLayoutEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TreeModelLayoutEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTreeModelLayoutEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeModelLayoutEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTreeModelLayoutEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeModelLayoutEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTreeModelLayoutEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeModelLayoutEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTreeModelLayoutEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeModelLayoutEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTreeModelLayoutEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeModelLayoutEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTreeModelLayoutEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeModelLayoutEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTreeModelLayoutEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeModelLayoutEvent *,
+                      RecordedRefCountPolicy  > SFRecTreeModelLayoutEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeModelLayoutEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecTreeModelLayoutEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeModelLayoutEvent *,
+                      WeakRefCountPolicy      > SFWeakTreeModelLayoutEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeModelLayoutEvent *,
+                      NoRefCountPolicy        > SFUncountedTreeModelLayoutEventPtr;
 
-typedef SField<TreeModelLayoutEventPtr> SFTreeModelLayoutEventPtr;
-#endif
 
-#ifndef OSG_COMPILETREEMODELLAYOUTEVENTINST
-OSG_DLLEXPORT_DECL1(SField, TreeModelLayoutEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeModelLayoutEvent *,
+                      RecordedRefCountPolicy  > MFRecTreeModelLayoutEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeModelLayoutEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecTreeModelLayoutEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeModelLayoutEvent *,
+                      WeakRefCountPolicy      > MFWeakTreeModelLayoutEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeModelLayoutEvent *,
+                      NoRefCountPolicy        > MFUncountedTreeModelLayoutEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTreeModelLayoutEventPtr : 
+    public PointerSField<TreeModelLayoutEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTreeModelLayoutEventPtr : 
+    public PointerSField<TreeModelLayoutEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTreeModelLayoutEventPtr :
+    public PointerSField<TreeModelLayoutEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTreeModelLayoutEventPtr :
+    public PointerSField<TreeModelLayoutEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTreeModelLayoutEventPtr :
+    public PointerMField<TreeModelLayoutEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTreeModelLayoutEventPtr :
+    public PointerMField<TreeModelLayoutEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTreeModelLayoutEventPtr :
+    public PointerMField<TreeModelLayoutEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTreeModelLayoutEventPtr :
+    public PointerMField<TreeModelLayoutEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

@@ -42,13 +42,13 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGTreeSelectionModel.h"
 #include <set>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,7 +56,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceAbstractTreeSelectionModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeSelectionModel : public TreeSelectionModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeSelectionModel : public TreeSelectionModel
 {
     /*==========================  PUBLIC  =================================*/
   public:
@@ -96,7 +96,5 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeSelectionModel : public TreeSe
 typedef AbstractTreeSelectionModel *AbstractTreeSelectionModelPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGABSTRACTTREESELECTIONMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGABSTRACTTREESELECTIONMODEL_H_ */

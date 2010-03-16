@@ -3,59 +3,60 @@
 <FieldContainer
 	name="TreeModelLayout"
 	parent="TreeRowMapper"
-    parentHeader="Component/Tree/OSGTreeRowMapper"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Tree Model Layout.
 	<ProducedMethod
 		name="TreeCollapsed"
-		producedEventType="TreeModelLayoutEventPtr"
+		type="TreeModelLayoutEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="TreeExpanded"
-		producedEventType="TreeModelLayoutEventPtr"
+		type="TreeModelLayoutEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="TreeWillCollapse"
-		producedEventType="TreeModelLayoutEventPtr"
+		type="TreeModelLayoutEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="TreeWillExpand"
-		producedEventType="TreeModelLayoutEventPtr"
+		type="TreeModelLayoutEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="TreeNodesChanged"
-		producedEventType="TreeModelEventPtr"
+		type="TreeModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="TreeNodesInserted"
-		producedEventType="TreeModelEventPtr"
+		type="TreeModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="TreeNodesRemoved"
-		producedEventType="TreeModelEventPtr"
+		type="TreeModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="TreeNodesWillBeRemoved"
-		producedEventType="TreeModelEventPtr"
+		type="TreeModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="TreeStructureChanged"
-		producedEventType="TreeModelEventPtr"
+		type="TreeModelEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

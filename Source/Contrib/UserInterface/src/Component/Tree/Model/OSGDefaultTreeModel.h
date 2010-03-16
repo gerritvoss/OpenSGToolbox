@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,39 +42,41 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGDefaultTreeModelBase.h"
-#include "Component/Tree/Model/OSGDefaultMutableTreeNodeFields.h"
+#include "OSGDefaultMutableTreeNodeFields.h"
+#include "OSGMutableTreeNodeFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultTreeModel class. See \ref 
-           PageUserInterfaceDefaultTreeModel for a description.
+/*! \brief DefaultTreeModel class. See \ref
+           PageContribUserInterfaceDefaultTreeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public DefaultTreeModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeModel : public DefaultTreeModelBase
 {
-  private:
-
-    typedef DefaultTreeModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DefaultTreeModelBase Inherited;
+    typedef DefaultTreeModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -100,44 +102,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public DefaultTreeModel
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
 
     //Builds the parents of node up to and including the root node, where the original node is the last element in the returned array.
-    std::vector<MutableTreeNodePtr> getPathToRoot(ModelTreeNodePtr aNode);
+    std::vector<MutableTreeNodeRefPtr> getPathToRoot(ModelTreeNodeRefPtr aNode);
 
     //Invoked this to insert newChild at location index in parents children.
-    void insertNodeInto(MutableTreeNodePtr newChild, MutableTreeNodePtr parent, const UInt32& index);
+    void insertNodeInto(MutableTreeNodeRefPtr newChild, MutableTreeNodeRefPtr parent, const UInt32& index);
 
     //Invoke this method after you've changed how node is to be represented in the tree.
-    void nodeChanged(ModelTreeNodePtr node);
+    void nodeChanged(ModelTreeNodeRefPtr node);
 
     //Invoke this method after you've changed how the children identified by childIndicies are to be represented in the tree.
-    void nodesChanged(ModelTreeNodePtr node, std::vector<UInt32> childIndices);
+    void nodesChanged(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices);
 
     //Invoke this method if you've totally changed the children of node and its childrens children...
-    void nodeStructureChanged(ModelTreeNodePtr node);
+    void nodeStructureChanged(ModelTreeNodeRefPtr node);
 
     //Invoke this method after you've inserted some TreeNodes into node.
-    void nodesWereInserted(ModelTreeNodePtr node, std::vector<UInt32> childIndices);
+    void nodesWereInserted(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices);
 
     //Invoke this method after you've removed some TreeNodes from node.
-    void nodesWereRemoved(ModelTreeNodePtr node, std::vector<UInt32> childIndices, std::vector<boost::any> removedChildren);
+    void nodesWereRemoved(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices, std::vector<boost::any> removedChildren);
 
     //Invoke this method if you've modified the TreeNodes upon which this model depends.
     void reload(void);
 
     //Invoke this method if you've modified the TreeNodes upon which this model depends.
-    void reload(ModelTreeNodePtr node);
+    void reload(ModelTreeNodeRefPtr node);
 
     //Message this to remove node from its parent.
-    void removeNodeFromParent(MutableTreeNodePtr node);
+    void removeNodeFromParent(MutableTreeNodeRefPtr node);
 
     //Sets the root to root.
-    void setRoot(ModelTreeNodePtr root);
+    void setRoot(ModelTreeNodeRefPtr root);
 
-    //Get the ModelTreeNodePtr to the Root Node
-    ModelTreeNodePtr getRootNode(void) const;
+    //Get the ModelTreeNodeRefPtr to the Root Node
+    ModelTreeNodeRefPtr getRootNode(void) const;
     
     //Get the Node for the given path
-    ModelTreeNodePtr getNodeForPath(const TreePath& ThePath) const;
+    ModelTreeNodeRefPtr getNodeForPath(const TreePath& ThePath) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DefaultTreeModelBase.
@@ -154,20 +157,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public DefaultTreeModel
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultTreeModel(void); 
+    virtual ~DefaultTreeModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DefaultTreeModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DefaultTreeModel &source);
 };
 
@@ -175,6 +182,7 @@ typedef DefaultTreeModel *DefaultTreeModelP;
 
 OSG_END_NAMESPACE
 
+#include "OSGModelTreeNode.h"
 #include "OSGDefaultTreeModelBase.inl"
 #include "OSGDefaultTreeModel.inl"
 

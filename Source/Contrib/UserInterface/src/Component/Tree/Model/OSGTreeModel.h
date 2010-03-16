@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,46 +42,44 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGTreeModelBase.h"
 #include <boost/any.hpp>
-#include <OpenSG/OSGBaseTypes.h>
-
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGBaseTypes.h"
+#include "OSGEventConnection.h"
+#include "OSGTreeModelListener.h"
+#include "OSGTreePath.h"
 
 OSG_BEGIN_NAMESPACE
-class TreeModelListener;
-class TreePath;
-typedef TreeModelListener* TreeModelListenerPtr;
 
-/*! \brief TreeModel class. See \ref 
-           PageUserInterfaceTreeModel for a description.
+/*! \brief TreeModel class. See \ref
+           PageContribUserInterfaceTreeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModel : public TreeModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModel : public TreeModelBase
 {
-  private:
-
-    typedef TreeModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeModelBase Inherited;
+    typedef TreeModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -129,6 +127,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModel : public TreeModelBase
 	//Messaged when the user has altered the value for the item identified by path to newValue.
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue) = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TreeModelBase.
@@ -145,20 +144,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModel : public TreeModelBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeModel(void); 
+    virtual ~TreeModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TreeModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TreeModel &source);
 };
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTreeModelLayoutEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TreeModelLayoutEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGTreeModelLayoutEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGTreeModelLayoutEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,21 +62,26 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TreeModelLayoutEvent::initMethod (void)
+void TreeModelLayoutEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-TreeModelLayoutEventPtr TreeModelLayoutEvent::create(  FieldContainerPtr Source,
-                                                       Time TimeStamp,
-                                                       const TreePath& path)
+TreeModelLayoutEventTransitPtr TreeModelLayoutEvent::create(  FieldContainerRefPtr Source,
+                                                              Time TimeStamp,
+                                                              const TreePath& path)
 {
-    TreeModelLayoutEventPtr TheEvent = TreeModelLayoutEvent::createEmpty();
+    TreeModelLayoutEvent* TheEvent = TreeModelLayoutEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->_Path = path;
 
-    return TheEvent;
+    return TreeModelLayoutEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -110,17 +110,17 @@ TreeModelLayoutEvent::~TreeModelLayoutEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TreeModelLayoutEvent::changed(BitVector whichField, UInt32 origin)
+void TreeModelLayoutEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TreeModelLayoutEvent::dump(      UInt32    , 
+void TreeModelLayoutEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TreeModelLayoutEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

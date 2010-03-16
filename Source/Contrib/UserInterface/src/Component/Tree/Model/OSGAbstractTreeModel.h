@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,42 +42,40 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGAbstractTreeModelBase.h"
 #include <set>
-#include <vector>
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractTreeModel class. See \ref 
-           PageUserInterfaceAbstractTreeModel for a description.
+/*! \brief AbstractTreeModel class. See \ref
+           PageContribUserInterfaceAbstractTreeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public AbstractTreeModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModel : public AbstractTreeModelBase
 {
-  private:
-
-    typedef AbstractTreeModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AbstractTreeModelBase Inherited;
+    typedef AbstractTreeModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -88,6 +86,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public AbstractTreeMod
 	//Removes a listener previously added with addTreeModelListener.
 	virtual void removeTreeModelListener(TreeModelListenerPtr l);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AbstractTreeModelBase.
@@ -104,9 +103,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public AbstractTreeMod
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractTreeModel(void); 
+    virtual ~AbstractTreeModel(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
 	typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
 	typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
 	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
@@ -119,15 +126,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public AbstractTreeMod
 	void produceTreeStructureChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AbstractTreeModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AbstractTreeModel &source);
 };
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,80 +42,78 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGDefaultMutableTreeNodeBase.h"
-
-#include <vector>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultMutableTreeNode class. See \ref 
-           PageUserInterfaceDefaultMutableTreeNode for a description.
+/*! \brief DefaultMutableTreeNode class. See \ref
+           PageContribUserInterfaceDefaultMutableTreeNode for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMutableTreeNodeBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNode : public DefaultMutableTreeNodeBase
 {
-  private:
-
-    typedef DefaultMutableTreeNodeBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DefaultMutableTreeNodeBase Inherited;
+    typedef DefaultMutableTreeNode     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent, 
-                      const BitVector  bvFlags ) const;
+    virtual void dump(      UInt32     uiIndent = 0,
+                      const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	
 
 	//Returns true if the receiver allows children.
 	virtual bool getAllowsChildren(void) const;
 
 	//Returns the child TreeNode at index childIndex.
-	virtual ModelTreeNodePtr getChildAt(const UInt32& childIndex) const;
+	virtual ModelTreeNodeRefPtr getChildAt(const UInt32& childIndex) const;
 
 	//Returns the number of children TreeNodes the receiver contains.
 	virtual UInt32 getChildCount(void) const;
 
 	//Returns the index of node in the receivers children.
-	virtual Int32 getIndex(ModelTreeNodePtr node) const;
+	virtual Int32 getIndex(ModelTreeNodeRefPtr node) const;
 
 	//Returns the parent TreeNode of the receiver.
-	virtual ModelTreeNodePtr getParent(void) const;
+	virtual ModelTreeNodeRefPtr getParent(void) const;
 
 	//Returns true if the receiver is a leaf.
 	virtual bool isLeaf(void) const;
 
 	//Adds child to the receiver at index.
-	virtual void insert(MutableTreeNodePtr child, const UInt32& index);
+	virtual void insert(MutableTreeNodeRefPtr child, const UInt32& index);
     
 	//Adds child to the receiver as the last child
-	virtual void insert(MutableTreeNodePtr child);
+	virtual void insert(MutableTreeNodeRefPtr child);
 
 	//Removes the child at index from the receiver.
 	virtual void remove(const UInt32& index);
 
 	//Removes node from the receiver.
-	virtual void remove(MutableTreeNodePtr node);
+	virtual void remove(MutableTreeNodeRefPtr node);
 
 	//Removes the receiver from its parent.
 	virtual void removeFromParent(void);
 
 	//Sets the parent of the receiver to newParent.
-	virtual void setParent(MutableTreeNodePtr newParent);
+	virtual void setParent(MutableTreeNodeRefPtr newParent);
 
 	//Resets the user object of the receiver to object.
 	virtual void setUserObject(const boost::any& object);
@@ -123,34 +121,34 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	
 	
 	//Removes newChild from its parent and makes it a child of this node by adding it to the end of this node's child array.
-	void add(MutableTreeNodePtr newChild);
+	void add(MutableTreeNodeRefPtr newChild);
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in breadth-first order.
-    void breadthFirst(std::vector<DefaultMutableTreeNodePtr>& Result)const;
+    void breadthFirst(std::vector<DefaultMutableTreeNodeRefPtr>& Result)const;
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in height-first order.
-    void heightFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const;
+    void heightFirst(std::vector<DefaultMutableTreeNodeRefPtr>& Result) const;
 
 	//Returns the child in this node's child array that immediately follows aChild, which must be a child of this node.
-	MutableTreeNodePtr getChildAfter(MutableTreeNodePtr aChild) const;
+	MutableTreeNodeRefPtr getChildAfter(MutableTreeNodeRefPtr aChild) const;
 
 	//Returns the child in this node's child array that immediately precedes aChild, which must be a child of this node.
-	MutableTreeNodePtr getChildBefore(MutableTreeNodePtr aChild) const;
+	MutableTreeNodeRefPtr getChildBefore(MutableTreeNodeRefPtr aChild) const;
 
 	//Returns the height of the tree rooted at this node -- the longest distance from this node to a leaf.
 	UInt32 getHeight(void) const;
 
 	//Returns this node's first child.
-	MutableTreeNodePtr getFirstChild(void) const;
+	MutableTreeNodeRefPtr getFirstChild(void) const;
 
 	//Finds and returns the first leaf that is a descendant of this node -- either this node or its first child's first leaf.
-	DefaultMutableTreeNodePtr getFirstLeaf(void) const;
+	DefaultMutableTreeNodeRefPtr getFirstLeaf(void) const;
 
 	//Returns this node's last child.
-	MutableTreeNodePtr getLastChild(void) const;
+	MutableTreeNodeRefPtr getLastChild(void) const;
 
 	//Finds and returns the last leaf that is a descendant of this node -- either this node or its last child's last leaf.
-	DefaultMutableTreeNodePtr getLastLeaf(void) const;
+	DefaultMutableTreeNodeRefPtr getLastLeaf(void) const;
 
 	//Returns the total number of leaves that are descendants of this node.
 	UInt32 getLeafCount(void) const;
@@ -159,31 +157,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	UInt32 getDepth(void) const;
 
 	//Returns the leaf after this node or null if this node is the last leaf in the tree.
-	DefaultMutableTreeNodePtr getNextLeaf(void) const;
+	DefaultMutableTreeNodeRefPtr getNextLeaf(void) const;
 
 	//Returns the node that follows this node in a preorder traversal of this node's tree.
-	DefaultMutableTreeNodePtr getNextNode(void) const;
+	DefaultMutableTreeNodeRefPtr getNextNode(void) const;
 
 	//Returns the next sibling of this node in the parent's children array.
-	DefaultMutableTreeNodePtr getNextSibling(void) const;
+	DefaultMutableTreeNodeRefPtr getNextSibling(void) const;
 
 	//Returns the path from the root, to get to this node.
-	std::vector<MutableTreeNodePtr> getPath(void) const;
+	std::vector<MutableTreeNodeRefPtr> getPath(void) const;
 
 	//Returns the leaf before this node or null if this node is the first leaf in the tree.
-	DefaultMutableTreeNodePtr getPreviousLeaf(void) const;
+	DefaultMutableTreeNodeRefPtr getPreviousLeaf(void) const;
 
 	//Returns the node that precedes this node in a preorder traversal of this node's tree.
-	DefaultMutableTreeNodePtr getPreviousNode(void) const;
+	DefaultMutableTreeNodeRefPtr getPreviousNode(void) const;
 
 	//Returns the previous sibling of this node in the parent's children array.
-	DefaultMutableTreeNodePtr getPreviousSibling(void) const;
+	DefaultMutableTreeNodeRefPtr getPreviousSibling(void) const;
 
 	//Returns the root of the tree that contains this node.
-	MutableTreeNodePtr getRoot(void) const;
+	MutableTreeNodeRefPtr getRoot(void) const;
 
 	//Returns the nearest common ancestor to this node and aNode.
-	MutableTreeNodePtr getSharedAncestor(DefaultMutableTreeNodePtr aNode) const;
+	MutableTreeNodeRefPtr getSharedAncestor(DefaultMutableTreeNodeRefPtr aNode) const;
 
 	//Returns the number of siblings of this node.
 	UInt32 getSiblingCount(void) const;
@@ -195,36 +193,36 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	std::vector<boost::any> getUserObjectPath(void) const;
 
 	//Returns true if anotherNode is an ancestor of this node -- if it is this node, this node's parent, or an ancestor of this node's parent.
-	bool isNodeAncestor(MutableTreeNodePtr anotherNode) const;
+	bool isNodeAncestor(MutableTreeNodeRefPtr anotherNode) const;
 
 	//Returns true if aNode is a child of this node.
-	bool isNodeChild(MutableTreeNodePtr aNode) const;
+	bool isNodeChild(MutableTreeNodeRefPtr aNode) const;
 
 	//Returns true if anotherNode is a descendant of this node -- if it is this node, one of this node's children, or a descendant of one of this node's children.
-	bool isNodeDescendant(DefaultMutableTreeNodePtr anotherNode) const;
+	bool isNodeDescendant(DefaultMutableTreeNodeRefPtr anotherNode) const;
 
 	//Returns true if and only if aNode is in the same tree as this node.
-	bool isNodeRelated(DefaultMutableTreeNodePtr aNode) const;
+	bool isNodeRelated(DefaultMutableTreeNodeRefPtr aNode) const;
 
 	//Returns true if anotherNode is a sibling of (has the same parent as) this node.
-	bool isNodeSibling(MutableTreeNodePtr anotherNode) const;
+	bool isNodeSibling(MutableTreeNodeRefPtr anotherNode) const;
 
 	//Returns true if this node is the root of the tree.
 	bool isRoot(void) const;
 
 	//Creates and returns an enumeration that follows the path from ancestor to this node.
-	//Enumeration pathFromAncestorEnumeration(MutableTreeNodePtr ancestor) const;
+	//Enumeration pathFromAncestorEnumeration(MutableTreeNodeRefPtr ancestor) const;
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in postorder.
-	void postorder(std::vector<DefaultMutableTreeNodePtr>& Result) const;
+	void postorder(std::vector<DefaultMutableTreeNodeRefPtr>& Result) const;
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in preorder.
-	void preorder(std::vector<DefaultMutableTreeNodePtr>& Result) const;
+	void preorder(std::vector<DefaultMutableTreeNodeRefPtr>& Result) const;
 
 	//Removes all of this node's children, setting their parents to null.
 	void removeAllChildren(void);
-
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DefaultMutableTreeNodeBase.
@@ -241,22 +239,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultMutableTreeNode(void); 
+    virtual ~DefaultMutableTreeNode(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 
 	boost::any _UserObject;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DefaultMutableTreeNodeBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DefaultMutableTreeNode &source);
 };
 
@@ -266,7 +269,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDefaultMutableTreeNodeBase.inl"
 #include "OSGDefaultMutableTreeNode.inl"
-
-#define OSGDEFAULTMUTABLETREENODE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDEFAULTMUTABLETREENODE_H_ */

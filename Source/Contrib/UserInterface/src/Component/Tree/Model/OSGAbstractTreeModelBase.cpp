@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,112 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEABSTRACTTREEMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGAbstractTreeModelBase.h"
 #include "OSGAbstractTreeModel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector AbstractTreeModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::AbstractTreeModel
+    A UI AbstractTreeModel.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType AbstractTreeModelBase::_type(
-    "AbstractTreeModel",
-    "TreeModel",
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AbstractTreeModel *>::_type("AbstractTreeModelPtr", "TreeModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AbstractTreeModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AbstractTreeModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AbstractTreeModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AbstractTreeModelBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+AbstractTreeModelBase::TypeObject AbstractTreeModelBase::_type(
+    AbstractTreeModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     AbstractTreeModel::initMethod,
-    NULL,
-    0);
+    AbstractTreeModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AbstractTreeModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AbstractTreeModel\"\n"
+    "\tparent=\"TreeModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI AbstractTreeModel.\n"
+    "</FieldContainer>\n",
+    "A UI AbstractTreeModel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(AbstractTreeModelBase, AbstractTreeModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AbstractTreeModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AbstractTreeModelBase::getType(void) const 
+FieldContainerType &AbstractTreeModelBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 AbstractTreeModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(AbstractTreeModel); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AbstractTreeModelBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<AbstractTreeModelBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void AbstractTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AbstractTreeModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AbstractTreeModelBase *) &other, whichField, sInfo);
-}
-void AbstractTreeModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(AbstractTreeModel);
 }
 
-void AbstractTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-AbstractTreeModelBase::AbstractTreeModelBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-AbstractTreeModelBase::AbstractTreeModelBase(const AbstractTreeModelBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-AbstractTreeModelBase::~AbstractTreeModelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AbstractTreeModelBase::getBinSize(const BitVector &whichField)
+UInt32 AbstractTreeModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -163,68 +176,69 @@ UInt32 AbstractTreeModelBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void AbstractTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AbstractTreeModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void AbstractTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AbstractTreeModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractTreeModelBase::executeSyncImpl(      AbstractTreeModelBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AbstractTreeModelBase::AbstractTreeModelBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void AbstractTreeModelBase::executeSyncImpl(      AbstractTreeModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void AbstractTreeModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+AbstractTreeModelBase::AbstractTreeModelBase(const AbstractTreeModelBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+AbstractTreeModelBase::~AbstractTreeModelBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AbstractTreeModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AbstractTreeModel *pThis = static_cast<AbstractTreeModel *>(this);
+
+    pThis->execSync(static_cast<AbstractTreeModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void AbstractTreeModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AbstractTreeModelPtr>::_type("AbstractTreeModelPtr", "TreeModelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AbstractTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AbstractTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

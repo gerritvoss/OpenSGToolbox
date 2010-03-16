@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class TreeRowMapper;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TreeRowMapperPtr
+OSG_GEN_CONTAINERPTR(TreeRowMapper);
 
-typedef FCPtr<FieldContainerPtr, TreeRowMapper> TreeRowMapperPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TreeRowMapperPtr> : 
-    public FieldTraitsRecurseMapper<TreeRowMapperPtr, true>
+struct FieldTraits<TreeRowMapper *> :
+    public FieldTraitsFCPtrBase<TreeRowMapper *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTreeRowMapperPtr"; }
-    static const char *getMName(void) { return "MFTreeRowMapperPtr"; }
+    typedef FieldTraits<TreeRowMapper *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTreeRowMapperPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTreeRowMapperPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TreeRowMapperPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TreeRowMapper *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTreeRowMapperPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TreeRowMapper *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTreeRowMapperPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeRowMapper *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTreeRowMapperPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeRowMapper *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTreeRowMapperPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeRowMapper *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTreeRowMapperPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeRowMapper *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTreeRowMapperPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeRowMapper *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTreeRowMapperPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TreeRowMapper *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTreeRowMapperPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeRowMapper *,
+                      RecordedRefCountPolicy  > SFRecTreeRowMapperPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeRowMapper *,
+                      UnrecordedRefCountPolicy> SFUnrecTreeRowMapperPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeRowMapper *,
+                      WeakRefCountPolicy      > SFWeakTreeRowMapperPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TreeRowMapper *,
+                      NoRefCountPolicy        > SFUncountedTreeRowMapperPtr;
 
-typedef SField<TreeRowMapperPtr> SFTreeRowMapperPtr;
-#endif
 
-#ifndef OSG_COMPILETREEROWMAPPERINST
-OSG_DLLEXPORT_DECL1(SField, TreeRowMapperPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeRowMapper *,
+                      RecordedRefCountPolicy  > MFRecTreeRowMapperPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeRowMapper *,
+                      UnrecordedRefCountPolicy> MFUnrecTreeRowMapperPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeRowMapper *,
+                      WeakRefCountPolicy      > MFWeakTreeRowMapperPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TreeRowMapper *,
+                      NoRefCountPolicy        > MFUncountedTreeRowMapperPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TreeRowMapperPtr> MFTreeRowMapperPtr;
-#endif
 
-#ifndef OSG_COMPILETREEROWMAPPERINST
-OSG_DLLEXPORT_DECL1(MField, TreeRowMapperPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTreeRowMapperPtr : 
+    public PointerSField<TreeRowMapper *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTreeRowMapperPtr : 
+    public PointerSField<TreeRowMapper *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTreeRowMapperPtr :
+    public PointerSField<TreeRowMapper *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTreeRowMapperPtr :
+    public PointerSField<TreeRowMapper *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTreeRowMapperPtr :
+    public PointerMField<TreeRowMapper *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTreeRowMapperPtr :
+    public PointerMField<TreeRowMapper *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTreeRowMapperPtr :
+    public PointerMField<TreeRowMapper *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTreeRowMapperPtr :
+    public PointerMField<TreeRowMapper *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGTREEROWMAPPERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTREEROWMAPPERFIELDS_H_ */

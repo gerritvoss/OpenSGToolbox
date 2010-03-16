@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,48 +42,49 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGDefaultTreeCellEditorBase.h"
-#include "Event/OSGActionListener.h"
-#include "Event/OSGFocusListener.h"
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGActionListener.h"
+#include "OSGFocusListener.h"
+#include "OSGKeyAdapter.h"
+#include "OSGTextField.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultTreeCellEditor class. See \ref 
-           PageUserInterfaceDefaultTreeCellEditor for a description.
+/*! \brief DefaultTreeCellEditor class. See \ref
+           PageContribUserInterfaceDefaultTreeCellEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditor : public DefaultTreeCellEditorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeCellEditor : public DefaultTreeCellEditorBase
 {
-  private:
-
-    typedef DefaultTreeCellEditorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DefaultTreeCellEditorBase Inherited;
+    typedef DefaultTreeCellEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual ComponentPtr getTreeCellEditorComponent(TreePtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row);
+	virtual ComponentRefPtr getTreeCellEditorComponent(TreeRefPtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row);
     
-    virtual ComponentPtr getCellEditor(const boost::any& Value, bool IsSelected);
+    virtual ComponentRefPtr getCellEditor(const boost::any& Value, bool IsSelected);
     
     //Tells the editor to cancel editing and not accept any partially edited value.
     virtual void cancelCellEditing(void);
@@ -92,18 +93,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditor : public DefaultTree
     virtual boost::any getCellEditorValue(void) const;
 
     //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const EventPtr anEvent) const;
+    virtual bool isCellEditable(const EventUnrecPtr anEvent) const;
 
     //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const EventPtr anEvent) const;
+    virtual bool shouldSelectCell(const EventUnrecPtr anEvent) const;
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void);
 
     //Returns a reference to the editor component.
-    ComponentPtr getComponent(void) const;
-
+    ComponentRefPtr getComponent(void) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DefaultTreeCellEditorBase.
@@ -120,22 +121,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditor : public DefaultTree
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultTreeCellEditor(void); 
+    virtual ~DefaultTreeCellEditor(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 
-	class DefaultTextFieldEditorListener : public ActionListener,public FocusListener,public KeyAdapter
-	{
-	public :
-		DefaultTextFieldEditorListener(DefaultTreeCellEditorPtr TheDefaultTreeCellEditor);
-		
-        virtual void actionPerformed(const ActionEventPtr e);
-        virtual void focusGained(const FocusEventPtr e);
-        virtual void focusLost(const FocusEventPtr e);
-        virtual void keyPressed(const KeyEventPtr e);
-	protected :
-		DefaultTreeCellEditorPtr _DefaultTreeCellEditor;
-	};
+    class DefaultTextFieldEditorListener : public ActionListener,public FocusListener,public KeyAdapter
+    {
+      public :
+        DefaultTextFieldEditorListener(DefaultTreeCellEditorRefPtr TheDefaultTreeCellEditor);
+
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
+        virtual void focusGained(const FocusEventUnrecPtr e);
+        virtual void focusLost(const FocusEventUnrecPtr e);
+        virtual void keyPressed(const KeyEventUnrecPtr e);
+      protected :
+        DefaultTreeCellEditorRefPtr _DefaultTreeCellEditor;
+    };
 
 	friend class DefaultTextFieldEditorListener;
 
@@ -144,15 +152,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditor : public DefaultTree
     mutable boost::any _EditingValue;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DefaultTreeCellEditorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DefaultTreeCellEditor &source);
 };
 
@@ -162,7 +168,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDefaultTreeCellEditorBase.inl"
 #include "OSGDefaultTreeCellEditor.inl"
-
-#define OSGDEFAULTTREECELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDEFAULTTREECELLEDITOR_H_ */

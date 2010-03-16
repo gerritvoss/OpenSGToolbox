@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTTREEMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGModelTreeNode.h"           // InternalRoot Class
 
 #include "OSGDefaultTreeModelBase.h"
 #include "OSGDefaultTreeModel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DefaultTreeModelBase::InternalRootFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeModelBase::InternalRootFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultTreeModelBase::AskAllowsChildrenFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeModelBase::AskAllowsChildrenFieldId);
+/*! \class OSG::DefaultTreeModel
+    A UI DefaultTreeModel.
+ */
 
-const OSG::BitVector DefaultTreeModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var ModelTreeNodePtr DefaultTreeModelBase::_sfInternalRoot
+/*! \var ModelTreeNode * DefaultTreeModelBase::_sfInternalRoot
     
 */
+
 /*! \var bool            DefaultTreeModelBase::_sfAskAllowsChildren
     
 */
 
-//! DefaultTreeModel description
 
-FieldDescription *DefaultTreeModelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultTreeModel *>::_type("DefaultTreeModelPtr", "AbstractTreeModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultTreeModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultTreeModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultTreeModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultTreeModelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFModelTreeNodePtr::getClassType(), 
-                     "InternalRoot", 
-                     InternalRootFieldId, InternalRootFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DefaultTreeModelBase::editSFInternalRoot)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "AskAllowsChildren", 
-                     AskAllowsChildrenFieldId, AskAllowsChildrenFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DefaultTreeModelBase::editSFAskAllowsChildren))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DefaultTreeModelBase::_type(
-    "DefaultTreeModel",
-    "AbstractTreeModel",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&DefaultTreeModelBase::createEmpty),
+    pDesc = new SFUnrecModelTreeNodePtr::Description(
+        SFUnrecModelTreeNodePtr::getClassType(),
+        "InternalRoot",
+        "",
+        InternalRootFieldId, InternalRootFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeModel::editHandleInternalRoot),
+        static_cast<FieldGetMethodSig >(&DefaultTreeModel::getHandleInternalRoot));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "AskAllowsChildren",
+        "",
+        AskAllowsChildrenFieldId, AskAllowsChildrenFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeModel::editHandleAskAllowsChildren),
+        static_cast<FieldGetMethodSig >(&DefaultTreeModel::getHandleAskAllowsChildren));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DefaultTreeModelBase::TypeObject DefaultTreeModelBase::_type(
+    DefaultTreeModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultTreeModelBase::createEmptyLocal),
     DefaultTreeModel::initMethod,
-    _desc,
-    sizeof(_desc));
+    DefaultTreeModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultTreeModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultTreeModel\"\n"
+    "\tparent=\"AbstractTreeModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI DefaultTreeModel.\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalRoot\"\n"
+    "\t\ttype=\"ModelTreeNode\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AskAllowsChildren\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI DefaultTreeModel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DefaultTreeModelBase, DefaultTreeModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultTreeModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultTreeModelBase::getType(void) const 
+FieldContainerType &DefaultTreeModelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultTreeModelBase::shallowCopy(void) const 
-{ 
-    DefaultTreeModelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultTreeModel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultTreeModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultTreeModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultTreeModelBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<DefaultTreeModelBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void DefaultTreeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultTreeModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultTreeModelBase *) &other, whichField, sInfo);
+    return sizeof(DefaultTreeModel);
 }
-void DefaultTreeModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the DefaultTreeModel::_sfInternalRoot field.
+const SFUnrecModelTreeNodePtr *DefaultTreeModelBase::getSFInternalRoot(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfInternalRoot;
 }
 
-void DefaultTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecModelTreeNodePtr *DefaultTreeModelBase::editSFInternalRoot   (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(InternalRootFieldMask);
 
+    return &_sfInternalRoot;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DefaultTreeModelBase::DefaultTreeModelBase(void) :
-    _sfInternalRoot           (ModelTreeNodePtr(NullFC)), 
-    _sfAskAllowsChildren      (bool(true)), 
-    Inherited() 
+SFBool *DefaultTreeModelBase::editSFAskAllowsChildren(void)
 {
+    editSField(AskAllowsChildrenFieldMask);
+
+    return &_sfAskAllowsChildren;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultTreeModelBase::DefaultTreeModelBase(const DefaultTreeModelBase &source) :
-    _sfInternalRoot           (source._sfInternalRoot           ), 
-    _sfAskAllowsChildren      (source._sfAskAllowsChildren      ), 
-    Inherited                 (source)
+const SFBool *DefaultTreeModelBase::getSFAskAllowsChildren(void) const
 {
+    return &_sfAskAllowsChildren;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-DefaultTreeModelBase::~DefaultTreeModelBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultTreeModelBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultTreeModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +259,16 @@ UInt32 DefaultTreeModelBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfInternalRoot.getBinSize();
     }
-
     if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
     {
         returnValue += _sfAskAllowsChildren.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DefaultTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultTreeModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +276,14 @@ void DefaultTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfInternalRoot.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
     {
         _sfAskAllowsChildren.copyToBin(pMem);
     }
-
-
 }
 
-void DefaultTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultTreeModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,73 +291,260 @@ void DefaultTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfInternalRoot.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
     {
         _sfAskAllowsChildren.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTreeModelBase::executeSyncImpl(      DefaultTreeModelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultTreeModelTransitPtr DefaultTreeModelBase::createLocal(BitVector bFlags)
 {
+    DefaultTreeModelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (InternalRootFieldMask & whichField))
-        _sfInternalRoot.syncWith(pOther->_sfInternalRoot);
+        fc = dynamic_pointer_cast<DefaultTreeModel>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
-        _sfAskAllowsChildren.syncWith(pOther->_sfAskAllowsChildren);
-
-
-}
-#else
-void DefaultTreeModelBase::executeSyncImpl(      DefaultTreeModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (InternalRootFieldMask & whichField))
-        _sfInternalRoot.syncWith(pOther->_sfInternalRoot);
-
-    if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
-        _sfAskAllowsChildren.syncWith(pOther->_sfAskAllowsChildren);
-
-
-
+    return fc;
 }
 
-void DefaultTreeModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultTreeModelTransitPtr DefaultTreeModelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultTreeModelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultTreeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultTreeModelTransitPtr DefaultTreeModelBase::create(void)
+{
+    DefaultTreeModelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultTreeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultTreeModel *DefaultTreeModelBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultTreeModel *returnValue;
+
+    newPtr<DefaultTreeModel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultTreeModel *DefaultTreeModelBase::createEmpty(void)
+{
+    DefaultTreeModel *returnValue;
+
+    newPtr<DefaultTreeModel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultTreeModelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultTreeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTreeModel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTreeModelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultTreeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTreeModel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTreeModelBase::shallowCopy(void) const
+{
+    DefaultTreeModel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultTreeModel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultTreeModelBase::DefaultTreeModelBase(void) :
+    Inherited(),
+    _sfInternalRoot           (NULL),
+    _sfAskAllowsChildren      (bool(true))
+{
+}
+
+DefaultTreeModelBase::DefaultTreeModelBase(const DefaultTreeModelBase &source) :
+    Inherited(source),
+    _sfInternalRoot           (NULL),
+    _sfAskAllowsChildren      (source._sfAskAllowsChildren      )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultTreeModelBase::~DefaultTreeModelBase(void)
+{
+}
+
+void DefaultTreeModelBase::onCreate(const DefaultTreeModel *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DefaultTreeModel *pThis = static_cast<DefaultTreeModel *>(this);
+
+        pThis->setInternalRoot(source->getInternalRoot());
+    }
+}
+
+GetFieldHandlePtr DefaultTreeModelBase::getHandleInternalRoot    (void) const
+{
+    SFUnrecModelTreeNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecModelTreeNodePtr::GetHandle(
+             &_sfInternalRoot,
+             this->getType().getFieldDesc(InternalRootFieldId),
+             const_cast<DefaultTreeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeModelBase::editHandleInternalRoot   (void)
+{
+    SFUnrecModelTreeNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecModelTreeNodePtr::EditHandle(
+             &_sfInternalRoot,
+             this->getType().getFieldDesc(InternalRootFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeModel::setInternalRoot,
+                    static_cast<DefaultTreeModel *>(this), _1));
+
+    editSField(InternalRootFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeModelBase::getHandleAskAllowsChildren (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfAskAllowsChildren,
+             this->getType().getFieldDesc(AskAllowsChildrenFieldId),
+             const_cast<DefaultTreeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeModelBase::editHandleAskAllowsChildren(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfAskAllowsChildren,
+             this->getType().getFieldDesc(AskAllowsChildrenFieldId),
+             this));
+
+
+    editSField(AskAllowsChildrenFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultTreeModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultTreeModel *pThis = static_cast<DefaultTreeModel *>(this);
+
+    pThis->execSync(static_cast<DefaultTreeModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultTreeModelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultTreeModel *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultTreeModel *>(pRefAspect),
+                  dynamic_cast<const DefaultTreeModel *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultTreeModelPtr>::_type("DefaultTreeModelPtr", "AbstractTreeModelPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void DefaultTreeModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DefaultTreeModel *>(this)->setInternalRoot(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

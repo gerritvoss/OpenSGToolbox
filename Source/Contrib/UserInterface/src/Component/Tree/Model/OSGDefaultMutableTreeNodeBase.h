@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,86 +58,89 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGMutableTreeNode.h" // Parent
 
-#include <OpenSG/OSGBoolFields.h> // AllowsChildrenInternal type
-#include "Component/Tree/Model/OSGMutableTreeNodeFields.h" // ChildrenInternal type
-#include "Component/Tree/Model/OSGMutableTreeNodeFields.h" // ParentInternal type
+#include "OSGSysFields.h"               // AllowsChildrenInternal type
+#include "OSGMutableTreeNodeFields.h"   // ChildrenInternal type
 
 #include "OSGDefaultMutableTreeNodeFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DefaultMutableTreeNode;
-class BinaryDataHandler;
 
 //! \brief DefaultMutableTreeNode Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNodeBase : public MutableTreeNode
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNodeBase : public MutableTreeNode
 {
-  private:
-
-    typedef MutableTreeNode    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DefaultMutableTreeNodePtr  Ptr;
+    typedef MutableTreeNode Inherited;
+    typedef MutableTreeNode ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DefaultMutableTreeNode);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         AllowsChildrenInternalFieldId = Inherited::NextFieldId,
-        ChildrenInternalFieldId       = AllowsChildrenInternalFieldId + 1,
-        ParentInternalFieldId         = ChildrenInternalFieldId       + 1,
-        NextFieldId                   = ParentInternalFieldId         + 1
+        ChildrenInternalFieldId = AllowsChildrenInternalFieldId + 1,
+        ParentInternalFieldId = ChildrenInternalFieldId + 1,
+        NextFieldId = ParentInternalFieldId + 1
     };
 
-    static const OSG::BitVector AllowsChildrenInternalFieldMask;
-    static const OSG::BitVector ChildrenInternalFieldMask;
-    static const OSG::BitVector ParentInternalFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector AllowsChildrenInternalFieldMask =
+        (TypeTraits<BitVector>::One << AllowsChildrenInternalFieldId);
+    static const OSG::BitVector ChildrenInternalFieldMask =
+        (TypeTraits<BitVector>::One << ChildrenInternalFieldId);
+    static const OSG::BitVector ParentInternalFieldMask =
+        (TypeTraits<BitVector>::One << ParentInternalFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFBool            SFAllowsChildrenInternalType;
+    typedef MFUnrecMutableTreeNodePtr MFChildrenInternalType;
+    typedef SFUnrecMutableTreeNodePtr SFParentInternalType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -145,28 +148,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNodeBase : public Mutabl
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DefaultMutableTreeNodePtr      create          (void); 
-    static  DefaultMutableTreeNodePtr      createEmpty     (void); 
+    static  DefaultMutableTreeNodeTransitPtr  create          (void);
+    static  DefaultMutableTreeNode           *createEmpty     (void);
+
+    static  DefaultMutableTreeNodeTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DefaultMutableTreeNode            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DefaultMutableTreeNodeTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFBool              _sfAllowsChildrenInternal;
-    MFMutableTreeNodePtr   _mfChildrenInternal;
-    SFMutableTreeNodePtr   _sfParentInternal;
+    SFBool            _sfAllowsChildrenInternal;
+    MFUnrecMutableTreeNodePtr _mfChildrenInternal;
+    SFUnrecMutableTreeNodePtr _sfParentInternal;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -181,94 +201,124 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNodeBase : public Mutabl
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultMutableTreeNodeBase(void); 
+    virtual ~DefaultMutableTreeNodeBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const DefaultMutableTreeNode *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleAllowsChildrenInternal (void) const;
+    EditFieldHandlePtr editHandleAllowsChildrenInternal(void);
+    GetFieldHandlePtr  getHandleChildrenInternal (void) const;
+    EditFieldHandlePtr editHandleChildrenInternal(void);
+    GetFieldHandlePtr  getHandleParentInternal  (void) const;
+    EditFieldHandlePtr editHandleParentInternal (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFAllowsChildrenInternal(void);
-           MFMutableTreeNodePtr *getMFChildrenInternal(void);
-           SFMutableTreeNodePtr *getSFParentInternal (void);
 
-           bool                &getAllowsChildrenInternal(void);
-     const bool                &getAllowsChildrenInternal(void) const;
-           MutableTreeNodePtr  &getParentInternal (void);
-     const MutableTreeNodePtr  &getParentInternal (void) const;
-           MutableTreeNodePtr  &getChildrenInternal(UInt32 index);
-           MFMutableTreeNodePtr &getChildrenInternal(void);
-     const MFMutableTreeNodePtr &getChildrenInternal(void) const;
+                  SFBool              *editSFAllowsChildrenInternal(void);
+            const SFBool              *getSFAllowsChildrenInternal (void) const;
+            const MFUnrecMutableTreeNodePtr *getMFChildrenInternal (void) const;
+                  MFUnrecMutableTreeNodePtr *editMFChildrenInternal(void);
+            const SFUnrecMutableTreeNodePtr *getSFParentInternal  (void) const;
+                  SFUnrecMutableTreeNodePtr *editSFParentInternal (void);
+
+
+                  bool                &editAllowsChildrenInternal(void);
+                  bool                 getAllowsChildrenInternal (void) const;
+
+                  MutableTreeNode * getChildrenInternal(const UInt32 index) const;
+
+                  MutableTreeNode * getParentInternal (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setAllowsChildrenInternal(const bool &value);
-     void setParentInternal (const MutableTreeNodePtr &value);
+            void setAllowsChildrenInternal(const bool value);
+            void setParentInternal (MutableTreeNode * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToChildrenInternal           (MutableTreeNode * const value   );
+    void assignChildrenInternal           (const MFUnrecMutableTreeNodePtr &value);
+    void removeFromChildrenInternal (UInt32                uiIndex );
+    void removeObjFromChildrenInternal(MutableTreeNode * const value   );
+    void clearChildrenInternal            (void                          );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DefaultMutableTreeNodeBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DefaultMutableTreeNodeBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DefaultMutableTreeNodeBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DefaultMutableTreeNodeBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DefaultMutableTreeNodeBase *DefaultMutableTreeNodeBaseP;
 
-typedef osgIF<DefaultMutableTreeNodeBase::isNodeCore,
-              CoredNodePtr<DefaultMutableTreeNode>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DefaultMutableTreeNodeNodePtr;
-
-typedef RefPtr<DefaultMutableTreeNodePtr> DefaultMutableTreeNodeRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTMUTABLETREENODEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDEFAULTMUTABLETREENODEBASE_H_ */

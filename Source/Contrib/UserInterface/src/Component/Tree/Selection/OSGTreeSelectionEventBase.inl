@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,136 +55,73 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TreeSelectionEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TreeSelectionEventBase::getClassTypeId(void) 
+OSG::UInt32 TreeSelectionEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TreeSelectionEventPtr TreeSelectionEventBase::create(void) 
-{
-    TreeSelectionEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TreeSelectionEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TreeSelectionEventPtr TreeSelectionEventBase::createEmpty(void) 
-{ 
-    TreeSelectionEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TreeSelectionEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TreeSelectionEvent::_sfNewLeadSelectionPath field.
-inline
-const SFInt32 *TreeSelectionEventBase::getSFNewLeadSelectionPath(void) const
-{
-    return &_sfNewLeadSelectionPath;
-}
-
-//! Get the TreeSelectionEvent::_sfNewLeadSelectionPath field.
-inline
-SFInt32 *TreeSelectionEventBase::editSFNewLeadSelectionPath(void)
-{
-    return &_sfNewLeadSelectionPath;
-}
-
-//! Get the TreeSelectionEvent::_sfOldLeadSelectionPath field.
-inline
-const SFInt32 *TreeSelectionEventBase::getSFOldLeadSelectionPath(void) const
-{
-    return &_sfOldLeadSelectionPath;
-}
-
-//! Get the TreeSelectionEvent::_sfOldLeadSelectionPath field.
-inline
-SFInt32 *TreeSelectionEventBase::editSFOldLeadSelectionPath(void)
-{
-    return &_sfOldLeadSelectionPath;
-}
-
-//! Get the TreeSelectionEvent::_mfElementsChanged field.
-inline
-const MFVec2s *TreeSelectionEventBase::getMFElementsChanged(void) const
-{
-    return &_mfElementsChanged;
-}
-
-//! Get the TreeSelectionEvent::_mfElementsChanged field.
-inline
-MFVec2s *TreeSelectionEventBase::editMFElementsChanged(void)
-{
-    return &_mfElementsChanged;
-}
-
-
 //! Get the value of the TreeSelectionEvent::_sfNewLeadSelectionPath field.
+
 inline
 Int32 &TreeSelectionEventBase::editNewLeadSelectionPath(void)
 {
+    editSField(NewLeadSelectionPathFieldMask);
+
     return _sfNewLeadSelectionPath.getValue();
 }
 
 //! Get the value of the TreeSelectionEvent::_sfNewLeadSelectionPath field.
 inline
-const Int32 &TreeSelectionEventBase::getNewLeadSelectionPath(void) const
+      Int32  TreeSelectionEventBase::getNewLeadSelectionPath(void) const
 {
     return _sfNewLeadSelectionPath.getValue();
 }
 
 //! Set the value of the TreeSelectionEvent::_sfNewLeadSelectionPath field.
 inline
-void TreeSelectionEventBase::setNewLeadSelectionPath(const Int32 &value)
+void TreeSelectionEventBase::setNewLeadSelectionPath(const Int32 value)
 {
+    editSField(NewLeadSelectionPathFieldMask);
+
     _sfNewLeadSelectionPath.setValue(value);
 }
-
 //! Get the value of the TreeSelectionEvent::_sfOldLeadSelectionPath field.
+
 inline
 Int32 &TreeSelectionEventBase::editOldLeadSelectionPath(void)
 {
+    editSField(OldLeadSelectionPathFieldMask);
+
     return _sfOldLeadSelectionPath.getValue();
 }
 
 //! Get the value of the TreeSelectionEvent::_sfOldLeadSelectionPath field.
 inline
-const Int32 &TreeSelectionEventBase::getOldLeadSelectionPath(void) const
+      Int32  TreeSelectionEventBase::getOldLeadSelectionPath(void) const
 {
     return _sfOldLeadSelectionPath.getValue();
 }
 
 //! Set the value of the TreeSelectionEvent::_sfOldLeadSelectionPath field.
 inline
-void TreeSelectionEventBase::setOldLeadSelectionPath(const Int32 &value)
+void TreeSelectionEventBase::setOldLeadSelectionPath(const Int32 value)
 {
+    editSField(OldLeadSelectionPathFieldMask);
+
     _sfOldLeadSelectionPath.setValue(value);
-}
-
-
-//! Get the value of the \a index element the TreeSelectionEvent::_mfElementsChanged field.
-inline
-Vec2s &TreeSelectionEventBase::editElementsChanged(const UInt32 index)
-{
-    return _mfElementsChanged[index];
 }
 
 //! Get the value of the \a index element the TreeSelectionEvent::_mfElementsChanged field.
@@ -196,21 +131,47 @@ const Vec2s &TreeSelectionEventBase::getElementsChanged(const UInt32 index) cons
     return _mfElementsChanged[index];
 }
 
-#ifndef OSG_2_PREP
-//! Get the TreeSelectionEvent::_mfElementsChanged field.
 inline
-MFVec2s &TreeSelectionEventBase::getElementsChanged(void)
+Vec2s &TreeSelectionEventBase::editElementsChanged(const UInt32 index)
 {
-    return _mfElementsChanged;
+    editMField(ElementsChangedFieldMask, _mfElementsChanged);
+
+    return _mfElementsChanged[index];
 }
 
-//! Get the TreeSelectionEvent::_mfElementsChanged field.
-inline
-const MFVec2s &TreeSelectionEventBase::getElementsChanged(void) const
-{
-    return _mfElementsChanged;
-}
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TreeSelectionEventBase::execSync (      TreeSelectionEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (NewLeadSelectionPathFieldMask & whichField))
+        _sfNewLeadSelectionPath.syncWith(pFrom->_sfNewLeadSelectionPath);
+
+    if(FieldBits::NoField != (OldLeadSelectionPathFieldMask & whichField))
+        _sfOldLeadSelectionPath.syncWith(pFrom->_sfOldLeadSelectionPath);
+
+    if(FieldBits::NoField != (ElementsChangedFieldMask & whichField))
+        _mfElementsChanged.syncWith(pFrom->_mfElementsChanged,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+}
 #endif
+
+
+inline
+const Char8 *TreeSelectionEventBase::getClassname(void)
+{
+    return "TreeSelectionEvent";
+}
+OSG_GEN_CONTAINERPTR(TreeSelectionEvent);
+
 OSG_END_NAMESPACE
 

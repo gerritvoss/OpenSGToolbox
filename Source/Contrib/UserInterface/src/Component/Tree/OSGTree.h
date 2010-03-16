@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,56 +42,57 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTreeBase.h"
-#include "Component/Tree/Model/OSGTreeModelListener.h"
-#include "Component/Tree/Selection/OSGTreeSelectionModel.h"
-#include "Component/Tree/Selection/OSGTreeSelectionListener.h"
-#include "Component/Tree/ModelLayout/OSGTreeModelLayoutListener.h"
-#include "Component/Container/OSGUIViewportFields.h"
+#include "OSGTreeModelListener.h"
+#include "OSGTreeSelectionModel.h"
+#include "OSGTreeSelectionListener.h"
+#include "OSGTreeModelLayoutListener.h"
+#include "OSGUIViewportFields.h"
+#include "OSGComponentGenerator.h"
 
 #include <set>
 #include <deque>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Tree class. See \ref 
-           PageUserInterfaceTree for a description.
+/*! \brief Tree class. See \ref
+           PageContribUserInterfaceTree for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
 {
-  private:
-
-    typedef TreeBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeBase Inherited;
+    typedef Tree     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
     
-    virtual void mousePressed(const MouseEventPtr e);
-	virtual void keyTyped(const KeyEventPtr e);
-	virtual void focusLost(const FocusEventPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
+	virtual void focusLost(const FocusEventUnrecPtr e);
 
     EventConnection addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
 	bool isTreeModelLayoutListenerAttached(TreeModelLayoutListenerPtr Listener) const;
@@ -366,7 +367,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     
     virtual void updateLayout(void);
 
+    void setModel          (TreeModel * const value);
+    void setModelLayout    (TreeModelLayout * const value);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TreeBase.
@@ -383,82 +388,96 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Tree(void); 
+    virtual ~Tree(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const Tree *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
 
     TreeSelectionModelPtr _SelectionModel;
-    
-	class ModelListener : public TreeModelListener
-	{
-	public :
-		ModelListener(TreePtr TheTree);
-		
-	    virtual void treeNodesChanged(const TreeModelEventPtr e);
 
-	    virtual void treeNodesInserted(const TreeModelEventPtr e);
+    class ModelListener : public TreeModelListener
+    {
+      public :
+        ModelListener(TreeRefPtr TheTree);
 
-	    virtual void treeNodesWillBeRemoved(const TreeModelEventPtr e);
+        virtual void treeNodesChanged(const TreeModelEventUnrecPtr e);
 
-	    virtual void treeNodesRemoved(const TreeModelEventPtr e);
+        virtual void treeNodesInserted(const TreeModelEventUnrecPtr e);
 
-	    virtual void treeStructureChanged(const TreeModelEventPtr e);
-	protected :
-		TreePtr _Tree;
+        virtual void treeNodesWillBeRemoved(const TreeModelEventUnrecPtr e);
+
+        virtual void treeNodesRemoved(const TreeModelEventUnrecPtr e);
+
+        virtual void treeStructureChanged(const TreeModelEventUnrecPtr e);
+      protected :
+        TreeRefPtr _Tree;
         std::set<Int32> _RomovedNodeRows;
-	};
+    };
 
-	friend class ModelListener;
+    friend class ModelListener;
 
-	ModelListener _ModelListener;
-    
-	class SelectionListener : public TreeSelectionListener
-	{
-	public :
-		SelectionListener(TreePtr TheTree);
-		
+    ModelListener _ModelListener;
+
+    class SelectionListener : public TreeSelectionListener
+    {
+      public :
+        SelectionListener(TreeRefPtr TheTree);
+
         //Called whenever elements are added to the selection
-	    virtual void selectionAdded(const TreeSelectionEventPtr e);
+        virtual void selectionAdded(const TreeSelectionEventUnrecPtr e);
         //Called whenever elements are removed to the selection
-	    virtual void selectionRemoved(const TreeSelectionEventPtr e);
-	protected :
-		TreePtr _Tree;
-	};
+        virtual void selectionRemoved(const TreeSelectionEventUnrecPtr e);
+      protected :
+        TreeRefPtr _Tree;
+    };
 
-	friend class SelectionListener;
+    friend class SelectionListener;
 
-	SelectionListener _SelectionListener;
+    SelectionListener _SelectionListener;
 
-	class ModelLayoutListener : public TreeModelLayoutListener
-	{
-	public :
-		ModelLayoutListener(TreePtr TheTree);
-		
-		//Called whenever an item in the tree has been collapsed.
-		virtual void treeCollapsed(const TreeModelLayoutEventPtr e);
+    class ModelLayoutListener : public TreeModelLayoutListener
+    {
+      public :
+        ModelLayoutListener(TreeRefPtr TheTree);
 
-		//Called whenever an item in the tree has been expanded.
-		virtual void treeExpanded(const TreeModelLayoutEventPtr e);
+        //Called whenever an item in the tree has been collapsed.
+        virtual void treeCollapsed(const TreeModelLayoutEventUnrecPtr e);
 
-		//Invoked whenever a node in the tree is about to be collapsed.
-		virtual void treeWillCollapse(const TreeModelLayoutEventPtr e);
+        //Called whenever an item in the tree has been expanded.
+        virtual void treeExpanded(const TreeModelLayoutEventUnrecPtr e);
 
-		//Invoked whenever a node in the tree is about to be expanded.
-		virtual void treeWillExpand(const TreeModelLayoutEventPtr e);
+        //Invoked whenever a node in the tree is about to be collapsed.
+        virtual void treeWillCollapse(const TreeModelLayoutEventUnrecPtr e);
 
-	protected :
-		TreePtr _Tree;
-	};
+        //Invoked whenever a node in the tree is about to be expanded.
+        virtual void treeWillExpand(const TreeModelLayoutEventUnrecPtr e);
 
-	friend class ModelLayoutListener;
+      protected :
+        TreeRefPtr _Tree;
+    };
 
-	ModelLayoutListener _ModelLayoutListener;
+    friend class ModelLayoutListener;
+
+    ModelLayoutListener _ModelLayoutListener;
 
     //Clears the cache of toggled tree paths.
     void clearToggledPaths(void);
 
     //Returns a TreeModel wrapping the specified object.
-    //static TreeModelPtr createTreeModel(Object value);
+    //static TreeModelRefPtr createTreeModel(Object value);
 
     //Creates and returns an instance of TreeModelHandler.
     //TreeModelListenerPtr createTreeModelListener(void);
@@ -467,7 +486,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     //void fireValueChanged(TreeSelectionEvent e);
 
     //Creates and returns a sample TreeModel.
-    static TreeModelPtr getDefaultTreeModel(void);
+    static TreeModelRefPtr getDefaultTreeModel(void);
 
     //Returns an Enumeration of TreePaths that have been expanded that are descendants of parent.
     std::vector<TreePath> getDescendantToggledPaths(const TreePath& parent);
@@ -486,7 +505,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     bool isParentAViewport(void) const;
 
-    UIViewportPtr getParentViewport(void) const;
+    UIViewportRefPtr getParentViewport(void) const;
 
     //Some non-structural properties of a path has changed.  So update
     //how the row for this path is drawn
@@ -500,7 +519,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     //These new rows may have been inserted through an Insertion event from the model
     //or an expantion event from the ModelLayout
     void updateInsertedRows(const UInt32& Begining, const UInt32& NumInsertedRows);
-    
+
     //Updates the drawn representation of the tree in response to removed rows
     //These rows may have been removed through a Removal event from the model
     //or a collapse event from the ModelLayout
@@ -511,14 +530,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     void updateExpandedPath(const TreePath& Path);
     void updateCollapsedPath(const TreePath& Path);
     void updateChildren(void);
-    
+
     void updateRowsDrawn(void);
 
     struct TreeRowComponents
     {
         TreeRowComponents(void);
-        TreeRowComponents(ComponentPtr ExpandedComponent, ComponentPtr ValueComponent, Int32 Row);
-        ComponentPtr _ExpandedComponent, _ValueComponent;
+        TreeRowComponents(ComponentRefPtr ExpandedComponent, ComponentRefPtr ValueComponent, Int32 Row);
+        ComponentRefPtr _ExpandedComponent, _ValueComponent;
         Int32 _Row;
     };
 
@@ -527,7 +546,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     void updatePreferredSize(void);
 
     void getDrawnRows(Int32& Beginning, Int32& End) const;
-    
+
     Int32 _TopDrawnRow,
           _BottomDrawnRow;
 
@@ -535,15 +554,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     std::deque<TreeRowComponents> _DrawnRows;
 
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TreeBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Tree &source);
 };
 
@@ -551,6 +568,8 @@ typedef Tree *TreeP;
 
 OSG_END_NAMESPACE
 
+#include "OSGTreeModelLayout.h"
+#include "OSGCellEditor.h"
 #include "OSGTreeBase.inl"
 #include "OSGTree.inl"
 

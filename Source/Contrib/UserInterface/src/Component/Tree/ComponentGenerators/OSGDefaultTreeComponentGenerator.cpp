@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,33 +40,29 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultTreeComponentGenerator.h"
-#include "Component/Tree/OSGTree.h"
-#include "Component/Tree/Model/OSGModelTreeNode.h"
-#include "Component/Text/OSGLabel.h"
-#include "Component/OSGComponent.h"
+#include "OSGDefaultTreeComponentGenerator.h"
+#include "OSGTree.h"
+#include "OSGModelTreeNode.h"
+#include "OSGLabel.h"
+#include "OSGComponent.h"
 
-#include "Component/Container/OSGPanel.h"
-#include "Layout/OSGBoxLayout.h"
-#include "Border/OSGEmptyBorder.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OSGPanel.h"
+#include "OSGBoxLayout.h"
+#include "OSGEmptyBorder.h"
+#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultTreeComponentGenerator
-A UI Default Tree ComponentGenerator. 	
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultTreeComponentGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultTreeComponentGenerator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -76,8 +72,13 @@ A UI Default Tree ComponentGenerator.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultTreeComponentGenerator::initMethod (void)
+void DefaultTreeComponentGenerator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -85,13 +86,13 @@ void DefaultTreeComponentGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponent(TreeRefPtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
     boost::any ValueToUse;
     try
     {
-        ModelTreeNodePtr TheNode = boost::any_cast<ModelTreeNodePtr>(Value);
-        if(TheNode != NullFC)
+        ModelTreeNodeRefPtr TheNode = boost::any_cast<ModelTreeNodeRefPtr>(Value);
+        if(TheNode != NULL)
         {
             ValueToUse = TheNode->getUserObject();
         }
@@ -102,17 +103,15 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, con
     }
     catch (boost::bad_any_cast &)
     {
-        //Could not convert to ModelTreeNodePtr
+        //Could not convert to ModelTreeNodeRefPtr
         ValueToUse = Value;
     }
 
     //Setup the layout
-    /*BoxLayoutPtr TheLayout = BoxLayout::create();
-    beginEditCP(TheLayout, BoxLayout::OrientationFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
+    /*BoxLayoutRefPtr TheLayout = BoxLayout::create();
 		TheLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
         TheLayout->setComponentAlignment(0.5f);
         TheLayout->setMinorAxisAlignment(0.5f);
-    endEditCP(TheLayout, BoxLayout::OrientationFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
 */
     //Get the text for the label
     std::string LabelText("");
@@ -128,10 +127,9 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, con
     return getTreeComponentText(Parent, LabelText, IsSelected, Expanded, Leaf, Row, HasFocus);
 }
 
-ComponentPtr DefaultTreeComponentGenerator::getTreeComponentText(TreePtr Parent, const std::string& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponentText(TreeRefPtr Parent, const std::string& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
-    LabelPtr TheLabel = Label::Ptr::dcast(getNodeLabelPrototype()->shallowCopy());
-    beginEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+    LabelRefPtr TheLabel = dynamic_pointer_cast<Label>(getNodeLabelPrototype()->shallowCopy());
         if(IsSelected)
         {
             TheLabel->setTextColors(getSelectedTextColor());
@@ -145,37 +143,34 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponentText(TreePtr Parent,
             TheLabel->setBorders(EmptyBorder::create());
         }
         TheLabel->setText(Value);
-    endEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
     //Create the panel, set its children and layout
-    /*PanelPtr ThePanel = Panel::Ptr::dcast(getNodePanelPrototype()->shallowCopy());
+    /*PanelRefPtr ThePanel = dynamic_pointer_cast<Panel>(getNodePanelPrototype()->shallowCopy());
 
 
-    beginEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
         ThePanel->setLayout(TheLayout);
-        ThePanel->getChildren().push_back(TheLabel);
-    endEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);*/
+        ThePanel->pushToChildren(TheLabel);*/
 
     return TheLabel;
 }
 
-ComponentPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+ComponentRefPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(TreeRefPtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
     //If node is not a leaf expanded
     if(!Leaf)
     {
-        UIDrawObjectCanvasPtr ExpandedCanvas;
+        UIDrawObjectCanvasRefPtr ExpandedCanvas;
         if(Expanded)
         {
-            ExpandedCanvas = UIDrawObjectCanvas::Ptr::dcast(getExpandedDrawObjectPrototype()->shallowCopy());
+            ExpandedCanvas = dynamic_pointer_cast<UIDrawObjectCanvas>(getExpandedDrawObjectPrototype()->shallowCopy());
         }
         else
         {
-            ExpandedCanvas = UIDrawObjectCanvas::Ptr::dcast(getNotExpandedDrawObjectPrototype()->shallowCopy());
+            ExpandedCanvas = dynamic_pointer_cast<UIDrawObjectCanvas>(getNotExpandedDrawObjectPrototype()->shallowCopy());
         }
         return ExpandedCanvas;
     }
-    return NullFC;
+    return NULL;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -200,41 +195,17 @@ DefaultTreeComponentGenerator::~DefaultTreeComponentGenerator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultTreeComponentGenerator::changed(BitVector whichField, UInt32 origin)
+void DefaultTreeComponentGenerator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DefaultTreeComponentGenerator::dump(      UInt32    , 
+void DefaultTreeComponentGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultTreeComponentGenerator NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTTREECOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTTREECOMPONENTGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTTREECOMPONENTGENERATORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

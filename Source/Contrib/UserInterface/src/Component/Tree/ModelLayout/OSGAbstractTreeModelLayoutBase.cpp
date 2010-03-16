@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,159 +50,246 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEABSTRACTTREEMODELLAYOUTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGAbstractTreeModelLayoutBase.h"
 #include "OSGAbstractTreeModelLayout.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AbstractTreeModelLayoutBase::RootVisibleInternalFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractTreeModelLayoutBase::RootVisibleInternalFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  AbstractTreeModelLayoutBase::RowHeightInternalFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractTreeModelLayoutBase::RowHeightInternalFieldId);
+/*! \class OSG::AbstractTreeModelLayout
+    A UI Abstract Tree Model Layout.
+ */
 
-const OSG::BitVector  AbstractTreeModelLayoutBase::DepthOffsetInternalFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractTreeModelLayoutBase::DepthOffsetInternalFieldId);
-
-const OSG::BitVector AbstractTreeModelLayoutBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var bool            AbstractTreeModelLayoutBase::_sfRootVisibleInternal
     Is the tree model root visible.
 */
+
 /*! \var Real32          AbstractTreeModelLayoutBase::_sfRowHeightInternal
     The Row Height.
 */
+
 /*! \var Real32          AbstractTreeModelLayoutBase::_sfDepthOffsetInternal
     The Depth Offset.
 */
 
-//! AbstractTreeModelLayout description
 
-FieldDescription *AbstractTreeModelLayoutBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AbstractTreeModelLayout *>::_type("AbstractTreeModelLayoutPtr", "TreeModelLayoutPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AbstractTreeModelLayout *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AbstractTreeModelLayout *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AbstractTreeModelLayout *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AbstractTreeModelLayoutBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFBool::getClassType(), 
-                     "RootVisibleInternal", 
-                     RootVisibleInternalFieldId, RootVisibleInternalFieldMask,
-                     false,
-                     (FieldAccessMethod) &AbstractTreeModelLayoutBase::getSFRootVisibleInternal),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "RowHeightInternal", 
-                     RowHeightInternalFieldId, RowHeightInternalFieldMask,
-                     false,
-                     (FieldAccessMethod) &AbstractTreeModelLayoutBase::getSFRowHeightInternal),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "DepthOffsetInternal", 
-                     DepthOffsetInternalFieldId, DepthOffsetInternalFieldMask,
-                     false,
-                     (FieldAccessMethod) &AbstractTreeModelLayoutBase::getSFDepthOffsetInternal)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AbstractTreeModelLayoutBase::_type(
-    "AbstractTreeModelLayout",
-    "TreeModelLayout",
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "RootVisibleInternal",
+        "Is the tree model root visible.\n",
+        RootVisibleInternalFieldId, RootVisibleInternalFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractTreeModelLayout::editHandleRootVisibleInternal),
+        static_cast<FieldGetMethodSig >(&AbstractTreeModelLayout::getHandleRootVisibleInternal));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "RowHeightInternal",
+        "The Row Height.\n",
+        RowHeightInternalFieldId, RowHeightInternalFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractTreeModelLayout::editHandleRowHeightInternal),
+        static_cast<FieldGetMethodSig >(&AbstractTreeModelLayout::getHandleRowHeightInternal));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "DepthOffsetInternal",
+        "The Depth Offset.\n",
+        DepthOffsetInternalFieldId, DepthOffsetInternalFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractTreeModelLayout::editHandleDepthOffsetInternal),
+        static_cast<FieldGetMethodSig >(&AbstractTreeModelLayout::getHandleDepthOffsetInternal));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+AbstractTreeModelLayoutBase::TypeObject AbstractTreeModelLayoutBase::_type(
+    AbstractTreeModelLayoutBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     AbstractTreeModelLayout::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(AbstractTreeModelLayoutBase, AbstractTreeModelLayoutPtr)
+    AbstractTreeModelLayout::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AbstractTreeModelLayout::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"AbstractTreeModelLayout\"\n"
+    "\tparent=\"TreeModelLayout\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    >\n"
+    "    A UI Abstract Tree Model Layout.\n"
+    "    <Field\n"
+    "        name=\"RootVisibleInternal\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"false\"\n"
+    "        access=\"protected\"\n"
+    "        >\n"
+    "        Is the tree model root visible.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"RowHeightInternal\"\n"
+    "        type=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"13.0\"\n"
+    "        access=\"protected\"\n"
+    "        >\n"
+    "        The Row Height.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DepthOffsetInternal\"\n"
+    "        type=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"15.0\"\n"
+    "        access=\"protected\"\n"
+    "        >\n"
+    "        The Depth Offset.\n"
+    "    </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Abstract Tree Model Layout.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AbstractTreeModelLayoutBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AbstractTreeModelLayoutBase::getType(void) const 
+FieldContainerType &AbstractTreeModelLayoutBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 AbstractTreeModelLayoutBase::getContainerSize(void) const 
-{ 
-    return sizeof(AbstractTreeModelLayout); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractTreeModelLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AbstractTreeModelLayoutBase::getType(void) const
 {
-    this->executeSyncImpl((AbstractTreeModelLayoutBase *) &other, whichField);
+    return _type;
 }
-#else
-void AbstractTreeModelLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AbstractTreeModelLayoutBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AbstractTreeModelLayoutBase *) &other, whichField, sInfo);
+    return sizeof(AbstractTreeModelLayout);
 }
-void AbstractTreeModelLayoutBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFBool *AbstractTreeModelLayoutBase::editSFRootVisibleInternal(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(RootVisibleInternalFieldMask);
+
+    return &_sfRootVisibleInternal;
 }
 
-void AbstractTreeModelLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFBool *AbstractTreeModelLayoutBase::getSFRootVisibleInternal(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfRootVisibleInternal;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(void) :
-    _sfRootVisibleInternal    (bool(false)), 
-    _sfRowHeightInternal      (Real32(13.0)), 
-    _sfDepthOffsetInternal    (Real32(15.0)), 
-    Inherited() 
+SFReal32 *AbstractTreeModelLayoutBase::editSFRowHeightInternal(void)
 {
+    editSField(RowHeightInternalFieldMask);
+
+    return &_sfRowHeightInternal;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(const AbstractTreeModelLayoutBase &source) :
-    _sfRootVisibleInternal    (source._sfRootVisibleInternal    ), 
-    _sfRowHeightInternal      (source._sfRowHeightInternal      ), 
-    _sfDepthOffsetInternal    (source._sfDepthOffsetInternal    ), 
-    Inherited                 (source)
+const SFReal32 *AbstractTreeModelLayoutBase::getSFRowHeightInternal(void) const
 {
+    return &_sfRowHeightInternal;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-AbstractTreeModelLayoutBase::~AbstractTreeModelLayoutBase(void)
+SFReal32 *AbstractTreeModelLayoutBase::editSFDepthOffsetInternal(void)
 {
+    editSField(DepthOffsetInternalFieldMask);
+
+    return &_sfDepthOffsetInternal;
 }
+
+const SFReal32 *AbstractTreeModelLayoutBase::getSFDepthOffsetInternal(void) const
+{
+    return &_sfDepthOffsetInternal;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AbstractTreeModelLayoutBase::getBinSize(const BitVector &whichField)
+UInt32 AbstractTreeModelLayoutBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -210,23 +297,20 @@ UInt32 AbstractTreeModelLayoutBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfRootVisibleInternal.getBinSize();
     }
-
     if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
     {
         returnValue += _sfRowHeightInternal.getBinSize();
     }
-
     if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
     {
         returnValue += _sfDepthOffsetInternal.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AbstractTreeModelLayoutBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AbstractTreeModelLayoutBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -234,22 +318,18 @@ void AbstractTreeModelLayoutBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfRootVisibleInternal.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
     {
         _sfRowHeightInternal.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
     {
         _sfDepthOffsetInternal.copyToBin(pMem);
     }
-
-
 }
 
-void AbstractTreeModelLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AbstractTreeModelLayoutBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -257,104 +337,146 @@ void AbstractTreeModelLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfRootVisibleInternal.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
     {
         _sfRowHeightInternal.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
     {
         _sfDepthOffsetInternal.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractTreeModelLayoutBase::executeSyncImpl(      AbstractTreeModelLayoutBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(void) :
+    Inherited(),
+    _sfRootVisibleInternal    (bool(false)),
+    _sfRowHeightInternal      (Real32(13.0)),
+    _sfDepthOffsetInternal    (Real32(15.0))
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (RootVisibleInternalFieldMask & whichField))
-        _sfRootVisibleInternal.syncWith(pOther->_sfRootVisibleInternal);
-
-    if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
-        _sfRowHeightInternal.syncWith(pOther->_sfRowHeightInternal);
-
-    if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
-        _sfDepthOffsetInternal.syncWith(pOther->_sfDepthOffsetInternal);
-
-
-}
-#else
-void AbstractTreeModelLayoutBase::executeSyncImpl(      AbstractTreeModelLayoutBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (RootVisibleInternalFieldMask & whichField))
-        _sfRootVisibleInternal.syncWith(pOther->_sfRootVisibleInternal);
-
-    if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
-        _sfRowHeightInternal.syncWith(pOther->_sfRowHeightInternal);
-
-    if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
-        _sfDepthOffsetInternal.syncWith(pOther->_sfDepthOffsetInternal);
-
-
-
 }
 
-void AbstractTreeModelLayoutBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(const AbstractTreeModelLayoutBase &source) :
+    Inherited(source),
+    _sfRootVisibleInternal    (source._sfRootVisibleInternal    ),
+    _sfRowHeightInternal      (source._sfRowHeightInternal      ),
+    _sfDepthOffsetInternal    (source._sfDepthOffsetInternal    )
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+AbstractTreeModelLayoutBase::~AbstractTreeModelLayoutBase(void)
+{
+}
+
+
+GetFieldHandlePtr AbstractTreeModelLayoutBase::getHandleRootVisibleInternal (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfRootVisibleInternal,
+             this->getType().getFieldDesc(RootVisibleInternalFieldId),
+             const_cast<AbstractTreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractTreeModelLayoutBase::editHandleRootVisibleInternal(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfRootVisibleInternal,
+             this->getType().getFieldDesc(RootVisibleInternalFieldId),
+             this));
+
+
+    editSField(RootVisibleInternalFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractTreeModelLayoutBase::getHandleRowHeightInternal (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfRowHeightInternal,
+             this->getType().getFieldDesc(RowHeightInternalFieldId),
+             const_cast<AbstractTreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractTreeModelLayoutBase::editHandleRowHeightInternal(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfRowHeightInternal,
+             this->getType().getFieldDesc(RowHeightInternalFieldId),
+             this));
+
+
+    editSField(RowHeightInternalFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractTreeModelLayoutBase::getHandleDepthOffsetInternal (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfDepthOffsetInternal,
+             this->getType().getFieldDesc(DepthOffsetInternalFieldId),
+             const_cast<AbstractTreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractTreeModelLayoutBase::editHandleDepthOffsetInternal(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfDepthOffsetInternal,
+             this->getType().getFieldDesc(DepthOffsetInternalFieldId),
+             this));
+
+
+    editSField(DepthOffsetInternalFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AbstractTreeModelLayoutBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AbstractTreeModelLayout *pThis = static_cast<AbstractTreeModelLayout *>(this);
+
+    pThis->execSync(static_cast<AbstractTreeModelLayout *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void AbstractTreeModelLayoutBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AbstractTreeModelLayoutPtr>::_type("AbstractTreeModelLayoutPtr", "TreeModelLayoutPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AbstractTreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AbstractTreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTTREEMODELLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTTREEMODELLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTTREEMODELLAYOUTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

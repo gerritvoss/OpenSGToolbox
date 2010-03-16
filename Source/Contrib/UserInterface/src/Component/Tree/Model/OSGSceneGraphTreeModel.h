@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,39 +42,40 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGSceneGraphTreeModelBase.h"
-#include <OpenSG/Toolbox/OSGPathType.h>
+#include "OSGNode.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SceneGraphTreeModel class. See \ref 
-           PageUserInterfaceSceneGraphTreeModel for a description.
+/*! \brief SceneGraphTreeModel class. See \ref
+           PageContribUserInterfaceSceneGraphTreeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModel : public SceneGraphTreeModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SceneGraphTreeModel : public SceneGraphTreeModelBase
 {
-  private:
-
-    typedef SceneGraphTreeModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SceneGraphTreeModelBase Inherited;
+    typedef SceneGraphTreeModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -100,15 +101,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModel : public SceneGraphTre
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
 
     //Sets the root to root.
-    void setRoot(NodePtr root);
+    void setRoot(NodeRefPtr root);
 
-    //Get the NodePtr to the Root Node
-    NodePtr getRootNode(void) const;
+    //Get the NodeRefPtr to the Root Node
+    NodeRefPtr getRootNode(void) const;
 
     //Returns true if these objects represent the same node in the tree
     virtual bool isEqual(const boost::any& left, const boost::any& right) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SceneGraphTreeModelBase.
@@ -125,20 +127,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModel : public SceneGraphTre
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SceneGraphTreeModel(void); 
+    virtual ~SceneGraphTreeModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SceneGraphTreeModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SceneGraphTreeModel &source);
 };
 

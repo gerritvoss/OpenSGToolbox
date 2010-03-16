@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,90 +55,67 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TreeModelEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TreeModelEventBase::getClassTypeId(void) 
+OSG::UInt32 TreeModelEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TreeModelEventPtr TreeModelEventBase::create(void) 
-{
-    TreeModelEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TreeModelEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TreeModelEventPtr TreeModelEventBase::createEmpty(void) 
-{ 
-    TreeModelEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TreeModelEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TreeModelEvent::_mfChildIndices field.
-inline
-const MFUInt32 *TreeModelEventBase::getMFChildIndices(void) const
-{
-    return &_mfChildIndices;
-}
-
-//! Get the TreeModelEvent::_mfChildIndices field.
-inline
-MFUInt32 *TreeModelEventBase::editMFChildIndices(void)
-{
-    return &_mfChildIndices;
-}
-
-
 
 //! Get the value of the \a index element the TreeModelEvent::_mfChildIndices field.
+inline
+      UInt32  TreeModelEventBase::getChildIndices(const UInt32 index) const
+{
+    return _mfChildIndices[index];
+}
+
 inline
 UInt32 &TreeModelEventBase::editChildIndices(const UInt32 index)
 {
+    editMField(ChildIndicesFieldMask, _mfChildIndices);
+
     return _mfChildIndices[index];
 }
 
-//! Get the value of the \a index element the TreeModelEvent::_mfChildIndices field.
-inline
-const UInt32 &TreeModelEventBase::getChildIndices(const UInt32 index) const
-{
-    return _mfChildIndices[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the TreeModelEvent::_mfChildIndices field.
-inline
-MFUInt32 &TreeModelEventBase::getChildIndices(void)
-{
-    return _mfChildIndices;
-}
 
-//! Get the TreeModelEvent::_mfChildIndices field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFUInt32 &TreeModelEventBase::getChildIndices(void) const
+void TreeModelEventBase::execSync (      TreeModelEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfChildIndices;
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
+    if(FieldBits::NoField != (ChildIndicesFieldMask & whichField))
+        _mfChildIndices.syncWith(pFrom->_mfChildIndices,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+}
 #endif
+
+
+inline
+const Char8 *TreeModelEventBase::getClassname(void)
+{
+    return "TreeModelEvent";
+}
+OSG_GEN_CONTAINERPTR(TreeModelEvent);
+
 OSG_END_NAMESPACE
 

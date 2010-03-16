@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,42 +42,43 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGVariableHeightTreeModelLayoutBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief VariableHeightTreeModelLayout class. See \ref 
-           PageUserInterfaceVariableHeightTreeModelLayout for a description.
+/*! \brief VariableHeightTreeModelLayout class. See \ref
+           PageContribUserInterfaceVariableHeightTreeModelLayout for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public VariableHeightTreeModelLayoutBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING VariableHeightTreeModelLayout : public VariableHeightTreeModelLayoutBase
 {
-  private:
-
-    typedef VariableHeightTreeModelLayoutBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef VariableHeightTreeModelLayoutBase Inherited;
+    typedef VariableHeightTreeModelLayout     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
 	//Returns a rectangle giving the bounds needed to draw path.
 	virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, TreePath path, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn) const;
 
@@ -121,7 +122,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public Var
 	virtual void setExpanded(const TreePath& path, bool Expand);
 
 	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelPtr newModel);
+	virtual void setModel(TreeModelRefPtr newModel);
 	
 	//Sets the renderer that is responsible for drawing nodes in the tree and which is threfore responsible for calculating the dimensions of individual nodes.
 	//virtual void setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
@@ -133,6 +134,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public Var
 	virtual void setRowHeight(const Real32& rowHeight);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in VariableHeightTreeModelLayoutBase.
@@ -149,20 +151,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public Var
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~VariableHeightTreeModelLayout(void); 
+    virtual ~VariableHeightTreeModelLayout(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class VariableHeightTreeModelLayoutBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const VariableHeightTreeModelLayout &source);
 };
 
@@ -172,7 +178,5 @@ OSG_END_NAMESPACE
 
 #include "OSGVariableHeightTreeModelLayoutBase.inl"
 #include "OSGVariableHeightTreeModelLayout.inl"
-
-#define OSGVARIABLEHEIGHTTREEMODELLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGVARIABLEHEIGHTTREEMODELLAYOUT_H_ */

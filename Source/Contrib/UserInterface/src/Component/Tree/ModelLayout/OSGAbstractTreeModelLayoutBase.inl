@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,106 +55,129 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AbstractTreeModelLayoutBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AbstractTreeModelLayoutBase::getClassTypeId(void) 
+OSG::UInt32 AbstractTreeModelLayoutBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 AbstractTreeModelLayoutBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the AbstractTreeModelLayout::_sfRootVisibleInternal field.
-inline
-SFBool *AbstractTreeModelLayoutBase::getSFRootVisibleInternal(void)
-{
-    return &_sfRootVisibleInternal;
-}
-
-//! Get the AbstractTreeModelLayout::_sfRowHeightInternal field.
-inline
-SFReal32 *AbstractTreeModelLayoutBase::getSFRowHeightInternal(void)
-{
-    return &_sfRowHeightInternal;
-}
-
-//! Get the AbstractTreeModelLayout::_sfDepthOffsetInternal field.
-inline
-SFReal32 *AbstractTreeModelLayoutBase::getSFDepthOffsetInternal(void)
-{
-    return &_sfDepthOffsetInternal;
-}
-
-
 //! Get the value of the AbstractTreeModelLayout::_sfRootVisibleInternal field.
+
 inline
-bool &AbstractTreeModelLayoutBase::getRootVisibleInternal(void)
+bool &AbstractTreeModelLayoutBase::editRootVisibleInternal(void)
 {
+    editSField(RootVisibleInternalFieldMask);
+
     return _sfRootVisibleInternal.getValue();
 }
 
 //! Get the value of the AbstractTreeModelLayout::_sfRootVisibleInternal field.
 inline
-const bool &AbstractTreeModelLayoutBase::getRootVisibleInternal(void) const
+      bool  AbstractTreeModelLayoutBase::getRootVisibleInternal(void) const
 {
     return _sfRootVisibleInternal.getValue();
 }
 
 //! Set the value of the AbstractTreeModelLayout::_sfRootVisibleInternal field.
 inline
-void AbstractTreeModelLayoutBase::setRootVisibleInternal(const bool &value)
+void AbstractTreeModelLayoutBase::setRootVisibleInternal(const bool value)
 {
+    editSField(RootVisibleInternalFieldMask);
+
     _sfRootVisibleInternal.setValue(value);
 }
-
 //! Get the value of the AbstractTreeModelLayout::_sfRowHeightInternal field.
+
 inline
-Real32 &AbstractTreeModelLayoutBase::getRowHeightInternal(void)
+Real32 &AbstractTreeModelLayoutBase::editRowHeightInternal(void)
 {
+    editSField(RowHeightInternalFieldMask);
+
     return _sfRowHeightInternal.getValue();
 }
 
 //! Get the value of the AbstractTreeModelLayout::_sfRowHeightInternal field.
 inline
-const Real32 &AbstractTreeModelLayoutBase::getRowHeightInternal(void) const
+      Real32  AbstractTreeModelLayoutBase::getRowHeightInternal(void) const
 {
     return _sfRowHeightInternal.getValue();
 }
 
 //! Set the value of the AbstractTreeModelLayout::_sfRowHeightInternal field.
 inline
-void AbstractTreeModelLayoutBase::setRowHeightInternal(const Real32 &value)
+void AbstractTreeModelLayoutBase::setRowHeightInternal(const Real32 value)
 {
+    editSField(RowHeightInternalFieldMask);
+
     _sfRowHeightInternal.setValue(value);
 }
-
 //! Get the value of the AbstractTreeModelLayout::_sfDepthOffsetInternal field.
+
 inline
-Real32 &AbstractTreeModelLayoutBase::getDepthOffsetInternal(void)
+Real32 &AbstractTreeModelLayoutBase::editDepthOffsetInternal(void)
 {
+    editSField(DepthOffsetInternalFieldMask);
+
     return _sfDepthOffsetInternal.getValue();
 }
 
 //! Get the value of the AbstractTreeModelLayout::_sfDepthOffsetInternal field.
 inline
-const Real32 &AbstractTreeModelLayoutBase::getDepthOffsetInternal(void) const
+      Real32  AbstractTreeModelLayoutBase::getDepthOffsetInternal(void) const
 {
     return _sfDepthOffsetInternal.getValue();
 }
 
 //! Set the value of the AbstractTreeModelLayout::_sfDepthOffsetInternal field.
 inline
-void AbstractTreeModelLayoutBase::setDepthOffsetInternal(const Real32 &value)
+void AbstractTreeModelLayoutBase::setDepthOffsetInternal(const Real32 value)
 {
+    editSField(DepthOffsetInternalFieldMask);
+
     _sfDepthOffsetInternal.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void AbstractTreeModelLayoutBase::execSync (      AbstractTreeModelLayoutBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGABSTRACTTREEMODELLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (RootVisibleInternalFieldMask & whichField))
+        _sfRootVisibleInternal.syncWith(pFrom->_sfRootVisibleInternal);
+
+    if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
+        _sfRowHeightInternal.syncWith(pFrom->_sfRowHeightInternal);
+
+    if(FieldBits::NoField != (DepthOffsetInternalFieldMask & whichField))
+        _sfDepthOffsetInternal.syncWith(pFrom->_sfDepthOffsetInternal);
+}
+#endif
+
+
+inline
+const Char8 *AbstractTreeModelLayoutBase::getClassname(void)
+{
+    return "AbstractTreeModelLayout";
+}
+OSG_GEN_CONTAINERPTR(AbstractTreeModelLayout);
+
+OSG_END_NAMESPACE
 

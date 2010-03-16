@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGModelTreeNodeFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class MutableTreeNode;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MutableTreeNodePtr
+OSG_GEN_CONTAINERPTR(MutableTreeNode);
 
-typedef FCPtr<ModelTreeNodePtr, MutableTreeNode> MutableTreeNodePtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<MutableTreeNodePtr> : 
-    public FieldTraitsRecurseMapper<MutableTreeNodePtr, true>
+struct FieldTraits<MutableTreeNode *> :
+    public FieldTraitsFCPtrBase<MutableTreeNode *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFMutableTreeNodePtr"; }
-    static const char *getMName(void) { return "MFMutableTreeNodePtr"; }
+    typedef FieldTraits<MutableTreeNode *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFMutableTreeNodePtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFMutableTreeNodePtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MutableTreeNodePtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<MutableTreeNode *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecMutableTreeNodePtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<MutableTreeNode *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecMutableTreeNodePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MutableTreeNode *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakMutableTreeNodePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MutableTreeNode *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdMutableTreeNodePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MutableTreeNode *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecMutableTreeNodePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MutableTreeNode *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecMutableTreeNodePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MutableTreeNode *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakMutableTreeNodePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MutableTreeNode *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdMutableTreeNodePtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MutableTreeNode *,
+                      RecordedRefCountPolicy  > SFRecMutableTreeNodePtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MutableTreeNode *,
+                      UnrecordedRefCountPolicy> SFUnrecMutableTreeNodePtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MutableTreeNode *,
+                      WeakRefCountPolicy      > SFWeakMutableTreeNodePtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MutableTreeNode *,
+                      NoRefCountPolicy        > SFUncountedMutableTreeNodePtr;
 
-typedef SField<MutableTreeNodePtr> SFMutableTreeNodePtr;
-#endif
 
-#ifndef OSG_COMPILEMUTABLETREENODEINST
-OSG_DLLEXPORT_DECL1(SField, MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MutableTreeNode *,
+                      RecordedRefCountPolicy  > MFRecMutableTreeNodePtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MutableTreeNode *,
+                      UnrecordedRefCountPolicy> MFUnrecMutableTreeNodePtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MutableTreeNode *,
+                      WeakRefCountPolicy      > MFWeakMutableTreeNodePtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MutableTreeNode *,
+                      NoRefCountPolicy        > MFUncountedMutableTreeNodePtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MutableTreeNodePtr> MFMutableTreeNodePtr;
-#endif
 
-#ifndef OSG_COMPILEMUTABLETREENODEINST
-OSG_DLLEXPORT_DECL1(MField, MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecMutableTreeNodePtr : 
+    public PointerSField<MutableTreeNode *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecMutableTreeNodePtr : 
+    public PointerSField<MutableTreeNode *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakMutableTreeNodePtr :
+    public PointerSField<MutableTreeNode *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedMutableTreeNodePtr :
+    public PointerSField<MutableTreeNode *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecMutableTreeNodePtr :
+    public PointerMField<MutableTreeNode *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecMutableTreeNodePtr :
+    public PointerMField<MutableTreeNode *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakMutableTreeNodePtr :
+    public PointerMField<MutableTreeNode *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedMutableTreeNodePtr :
+    public PointerMField<MutableTreeNode *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGMUTABLETREENODEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGMUTABLETREENODEFIELDS_H_ */

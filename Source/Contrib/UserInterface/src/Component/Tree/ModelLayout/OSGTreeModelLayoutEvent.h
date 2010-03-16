@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,50 +42,52 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGTreeModelLayoutEventBase.h"
-#include "Component/Tree/OSGTreePath.h"
+#include "OSGTreePath.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeModelLayoutEvent class. See \ref 
-           PageUserInterfaceTreeModelLayoutEvent for a description.
+/*! \brief TreeModelLayoutEvent class. See \ref
+           PageContribUserInterfaceTreeModelLayoutEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutEvent : public TreeModelLayoutEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelLayoutEvent : public TreeModelLayoutEventBase
 {
-  private:
-
-    typedef TreeModelLayoutEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeModelLayoutEventBase Inherited;
+    typedef TreeModelLayoutEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  TreeModelLayoutEventPtr      create(  FieldContainerPtr Source,
-                                                  Time TimeStamp,
-                                                  const TreePath& path); 
+    static  TreeModelLayoutEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                         Time TimeStamp,
+                                                         const TreePath& path); 
 
 	const TreePath& getPath(void) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TreeModelLayoutEventBase.
@@ -102,22 +104,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutEvent : public TreeModelLay
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeModelLayoutEvent(void); 
+    virtual ~TreeModelLayoutEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    TreePath _Path;
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TreeModelLayoutEventBase;
 
-    TreePath _Path;
-
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TreeModelLayoutEvent &source);
 };
 

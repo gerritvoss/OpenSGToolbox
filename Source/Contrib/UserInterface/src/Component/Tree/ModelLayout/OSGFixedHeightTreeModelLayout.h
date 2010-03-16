@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,42 +42,43 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGFixedHeightTreeModelLayoutBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FixedHeightTreeModelLayout class. See \ref 
-           PageUserInterfaceFixedHeightTreeModelLayout for a description.
+/*! \brief FixedHeightTreeModelLayout class. See \ref
+           PageContribUserInterfaceFixedHeightTreeModelLayout for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING FixedHeightTreeModelLayout : public FixedHeightTreeModelLayoutBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FixedHeightTreeModelLayout : public FixedHeightTreeModelLayoutBase
 {
-  private:
-
-    typedef FixedHeightTreeModelLayoutBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef FixedHeightTreeModelLayoutBase Inherited;
+    typedef FixedHeightTreeModelLayout     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
 	//Returns a rectangle giving the bounds needed to draw path.
 	virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, TreePath path, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn) const;
 
@@ -115,7 +116,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FixedHeightTreeModelLayout : public FixedH
 	virtual void setExpanded(const TreePath& path, bool Expand);
     
 	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelPtr newModel);
+	virtual void setModel(TreeModelRefPtr newModel);
 	
 	//Determines whether or not the root node from the TreeModel is visible.
 	virtual void setRootVisible(bool rootVisible);
@@ -123,6 +124,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FixedHeightTreeModelLayout : public FixedH
 	//Sets the height of each cell.
 	virtual void setRowHeight(const UInt32& rowHeight);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in FixedHeightTreeModelLayoutBase.
@@ -139,22 +141,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING FixedHeightTreeModelLayout : public FixedH
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FixedHeightTreeModelLayout(void); 
+    virtual ~FixedHeightTreeModelLayout(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
       
     UInt32 getRowCount(const TreePath& Path) const;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class FixedHeightTreeModelLayoutBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const FixedHeightTreeModelLayout &source);
 };
 
@@ -164,7 +171,5 @@ OSG_END_NAMESPACE
 
 #include "OSGFixedHeightTreeModelLayoutBase.inl"
 #include "OSGFixedHeightTreeModelLayout.inl"
-
-#define OSGFIXEDHEIGHTTREEMODELLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGFIXEDHEIGHTTREEMODELLAYOUT_H_ */

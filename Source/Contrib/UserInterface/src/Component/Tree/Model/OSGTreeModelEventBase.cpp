@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,144 +50,167 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETREEMODELEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTreeModelEventBase.h"
 #include "OSGTreeModelEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TreeModelEventBase::ChildIndicesFieldMask = 
-    (TypeTraits<BitVector>::One << TreeModelEventBase::ChildIndicesFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector TreeModelEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::TreeModelEvent
+    
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          TreeModelEventBase::_mfChildIndices
     
 */
 
-//! TreeModelEvent description
 
-FieldDescription *TreeModelEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TreeModelEvent *>::_type("TreeModelEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TreeModelEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TreeModelEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TreeModelEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TreeModelEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFUInt32::getClassType(), 
-                     "ChildIndices", 
-                     ChildIndicesFieldId, ChildIndicesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TreeModelEventBase::editMFChildIndices))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TreeModelEventBase::_type(
-    "TreeModelEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TreeModelEventBase::createEmpty),
+    pDesc = new MFUInt32::Description(
+        MFUInt32::getClassType(),
+        "ChildIndices",
+        "",
+        ChildIndicesFieldId, ChildIndicesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TreeModelEvent::editHandleChildIndices),
+        static_cast<FieldGetMethodSig >(&TreeModelEvent::getHandleChildIndices));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+TreeModelEventBase::TypeObject TreeModelEventBase::_type(
+    TreeModelEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TreeModelEventBase::createEmptyLocal),
     TreeModelEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    TreeModelEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TreeModelEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TreeModelEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"ChildIndices\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TreeModelEventBase, TreeModelEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TreeModelEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TreeModelEventBase::getType(void) const 
+FieldContainerType &TreeModelEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TreeModelEventBase::shallowCopy(void) const 
-{ 
-    TreeModelEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TreeModelEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TreeModelEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(TreeModelEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeModelEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TreeModelEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<TreeModelEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void TreeModelEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TreeModelEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TreeModelEventBase *) &other, whichField, sInfo);
+    return sizeof(TreeModelEvent);
 }
-void TreeModelEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+MFUInt32 *TreeModelEventBase::editMFChildIndices(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editMField(ChildIndicesFieldMask, _mfChildIndices);
+
+    return &_mfChildIndices;
 }
 
-void TreeModelEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const MFUInt32 *TreeModelEventBase::getMFChildIndices(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfChildIndices.terminateShare(uiAspect, this->getContainerSize());
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TreeModelEventBase::TreeModelEventBase(void) :
-    _mfChildIndices           (UInt32(0)), 
-    Inherited() 
-{
+    return &_mfChildIndices;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-TreeModelEventBase::TreeModelEventBase(const TreeModelEventBase &source) :
-    _mfChildIndices           (source._mfChildIndices           ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-TreeModelEventBase::~TreeModelEventBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TreeModelEventBase::getBinSize(const BitVector &whichField)
+UInt32 TreeModelEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -196,12 +219,11 @@ UInt32 TreeModelEventBase::getBinSize(const BitVector &whichField)
         returnValue += _mfChildIndices.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TreeModelEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TreeModelEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -209,12 +231,10 @@ void TreeModelEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfChildIndices.copyToBin(pMem);
     }
-
-
 }
 
-void TreeModelEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TreeModelEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -222,63 +242,222 @@ void TreeModelEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfChildIndices.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeModelEventBase::executeSyncImpl(      TreeModelEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TreeModelEventTransitPtr TreeModelEventBase::createLocal(BitVector bFlags)
 {
+    TreeModelEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ChildIndicesFieldMask & whichField))
-        _mfChildIndices.syncWith(pOther->_mfChildIndices);
+        fc = dynamic_pointer_cast<TreeModelEvent>(tmpPtr);
+    }
 
-
-}
-#else
-void TreeModelEventBase::executeSyncImpl(      TreeModelEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-    if(FieldBits::NoField != (ChildIndicesFieldMask & whichField))
-        _mfChildIndices.syncWith(pOther->_mfChildIndices, sInfo);
-
-
+    return fc;
 }
 
-void TreeModelEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TreeModelEventTransitPtr TreeModelEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TreeModelEventTransitPtr fc;
 
-    if(FieldBits::NoField != (ChildIndicesFieldMask & whichField))
-        _mfChildIndices.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<TreeModelEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TreeModelEventTransitPtr TreeModelEventBase::create(void)
+{
+    TreeModelEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TreeModelEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TreeModelEvent *TreeModelEventBase::createEmptyLocal(BitVector bFlags)
+{
+    TreeModelEvent *returnValue;
+
+    newPtr<TreeModelEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TreeModelEvent *TreeModelEventBase::createEmpty(void)
+{
+    TreeModelEvent *returnValue;
+
+    newPtr<TreeModelEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TreeModelEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TreeModelEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TreeModelEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TreeModelEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TreeModelEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TreeModelEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TreeModelEventBase::shallowCopy(void) const
+{
+    TreeModelEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TreeModelEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TreeModelEventBase::TreeModelEventBase(void) :
+    Inherited(),
+    _mfChildIndices           (UInt32(0))
+{
+}
+
+TreeModelEventBase::TreeModelEventBase(const TreeModelEventBase &source) :
+    Inherited(source),
+    _mfChildIndices           (source._mfChildIndices           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TreeModelEventBase::~TreeModelEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr TreeModelEventBase::getHandleChildIndices    (void) const
+{
+    MFUInt32::GetHandlePtr returnValue(
+        new  MFUInt32::GetHandle(
+             &_mfChildIndices,
+             this->getType().getFieldDesc(ChildIndicesFieldId),
+             const_cast<TreeModelEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeModelEventBase::editHandleChildIndices   (void)
+{
+    MFUInt32::EditHandlePtr returnValue(
+        new  MFUInt32::EditHandle(
+             &_mfChildIndices,
+             this->getType().getFieldDesc(ChildIndicesFieldId),
+             this));
+
+
+    editMField(ChildIndicesFieldMask, _mfChildIndices);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TreeModelEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TreeModelEvent *pThis = static_cast<TreeModelEvent *>(this);
+
+    pThis->execSync(static_cast<TreeModelEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TreeModelEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TreeModelEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TreeModelEvent *>(pRefAspect),
+                  dynamic_cast<const TreeModelEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TreeModelEventPtr>::_type("TreeModelEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TreeModelEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void TreeModelEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfChildIndices.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-

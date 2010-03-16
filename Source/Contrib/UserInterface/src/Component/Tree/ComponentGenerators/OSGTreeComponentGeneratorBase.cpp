@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,111 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETREECOMPONENTGENERATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTreeComponentGeneratorBase.h"
 #include "OSGTreeComponentGenerator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector TreeComponentGeneratorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::TreeComponentGenerator
+    A UI Tree ComponentGenerator.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType TreeComponentGeneratorBase::_type(
-    "TreeComponentGenerator",
-    "ComponentGenerator",
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TreeComponentGenerator *>::_type("TreeComponentGeneratorPtr", "ComponentGeneratorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TreeComponentGenerator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TreeComponentGenerator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TreeComponentGenerator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+TreeComponentGeneratorBase::TypeObject TreeComponentGeneratorBase::_type(
+    TreeComponentGeneratorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     TreeComponentGenerator::initMethod,
-    NULL,
-    0);
+    TreeComponentGenerator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TreeComponentGenerator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TreeComponentGenerator\"\n"
+    "\tparent=\"ComponentGenerator\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Tree ComponentGenerator.\n"
+    "</FieldContainer>\n",
+    "A UI Tree ComponentGenerator.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TreeComponentGeneratorBase, TreeComponentGeneratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TreeComponentGeneratorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TreeComponentGeneratorBase::getType(void) const 
+FieldContainerType &TreeComponentGeneratorBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 TreeComponentGeneratorBase::getContainerSize(void) const 
-{ 
-    return sizeof(TreeComponentGenerator); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TreeComponentGeneratorBase::getType(void) const
 {
-    this->executeSyncImpl((TreeComponentGeneratorBase *) &other, whichField);
+    return _type;
 }
-#else
-void TreeComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TreeComponentGeneratorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TreeComponentGeneratorBase *) &other, whichField, sInfo);
-}
-void TreeComponentGeneratorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(TreeComponentGenerator);
 }
 
-void TreeComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-TreeComponentGeneratorBase::TreeComponentGeneratorBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TreeComponentGeneratorBase::TreeComponentGeneratorBase(const TreeComponentGeneratorBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-TreeComponentGeneratorBase::~TreeComponentGeneratorBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TreeComponentGeneratorBase::getBinSize(const BitVector &whichField)
+UInt32 TreeComponentGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -162,88 +176,69 @@ UInt32 TreeComponentGeneratorBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void TreeComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TreeComponentGeneratorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void TreeComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TreeComponentGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeComponentGeneratorBase::executeSyncImpl(      TreeComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TreeComponentGeneratorBase::TreeComponentGeneratorBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void TreeComponentGeneratorBase::executeSyncImpl(      TreeComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void TreeComponentGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+TreeComponentGeneratorBase::TreeComponentGeneratorBase(const TreeComponentGeneratorBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+TreeComponentGeneratorBase::~TreeComponentGeneratorBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TreeComponentGeneratorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TreeComponentGenerator *pThis = static_cast<TreeComponentGenerator *>(this);
+
+    pThis->execSync(static_cast<TreeComponentGenerator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void TreeComponentGeneratorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TreeComponentGeneratorPtr>::_type("TreeComponentGeneratorPtr", "ComponentGeneratorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TreeComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TreeComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTREECOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTREECOMPONENTGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTREECOMPONENTGENERATORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

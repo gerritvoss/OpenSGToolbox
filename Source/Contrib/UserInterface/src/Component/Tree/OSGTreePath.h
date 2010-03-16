@@ -43,19 +43,19 @@
 #pragma once
 #endif
  
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 #include <boost/any.hpp>
 
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGBaseTypes.h"
 #include <vector>
 #include <deque>
-#include "Component/Tree/Model/OSGTreeModelFields.h"
+#include "OSGTreeModelFields.h"
 
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING TreePath
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreePath
 {
 
 public:
@@ -130,21 +130,22 @@ public:
 private:
     friend class TreeModel;
     
-    TreePath(const PathVectorType& path, TreeModelPtr theModel);
-    TreePath(const std::deque<boost::any>& path, TreeModelPtr theModel);
+    TreePath(const PathVectorType& path, TreeModelRefPtr theModel);
+    TreePath(const std::deque<boost::any>& path, TreeModelRefPtr theModel);
 
     TreePath(const TreePath& p, UInt32 len);
 
 protected:
 
 	PathVectorType _Path;
-    TreeModelPtr _Model;
+    TreeModelRefPtr _Model;
 };
 
 typedef TreePath* TreePathPtr;
 
 OSG_END_NAMESPACE
 
+#include "OSGTreeModel.h"
 #include "OSGTreePath.inl"
 
 #endif /* _OSG_UI_TREE_PATH_H_ */

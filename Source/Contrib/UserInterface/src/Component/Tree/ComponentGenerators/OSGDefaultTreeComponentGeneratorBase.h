@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,101 +58,124 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGTreeComponentGenerator.h" // Parent
 
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ExpandedDrawObjectPrototype type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // NotExpandedDrawObjectPrototype type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // LeafDrawObjectPrototype type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // NonLeafDrawObjectPrototype type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ExpandedNonLeafDrawObjectPrototype type
-#include "Component/Text/OSGLabelFields.h" // NodeLabelPrototype type
-#include "Component/Container/OSGPanelFields.h" // NodePanelPrototype type
-#include "Layer/OSGLayerFields.h" // SelectedBackground type
-#include "Layer/OSGLayerFields.h" // NonSelectedBackground type
-#include "Layer/OSGLayerFields.h" // SelectedForeground type
-#include "Layer/OSGLayerFields.h" // NonSelectedForeground type
-#include "Border/OSGBorderFields.h" // SelectedBorder type
-#include <OpenSG/OSGColor4fFields.h> // SelectedTextColor type
-#include <OpenSG/OSGColor4fFields.h> // NonSelectedTextColor type
+#include "OSGUIDrawObjectCanvasFields.h" // ExpandedDrawObjectPrototype type
+#include "OSGLabelFields.h"             // NodeLabelPrototype type
+#include "OSGPanelFields.h"             // NodePanelPrototype type
+#include "OSGLayerFields.h"             // SelectedBackground type
+#include "OSGBorderFields.h"            // SelectedBorder type
+#include "OSGBaseFields.h"              // SelectedTextColor type
 
 #include "OSGDefaultTreeComponentGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DefaultTreeComponentGenerator;
-class BinaryDataHandler;
 
 //! \brief DefaultTreeComponentGenerator Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public TreeComponentGenerator
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : public TreeComponentGenerator
 {
-  private:
-
-    typedef TreeComponentGenerator    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DefaultTreeComponentGeneratorPtr  Ptr;
+    typedef TreeComponentGenerator Inherited;
+    typedef TreeComponentGenerator ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DefaultTreeComponentGenerator);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        ExpandedDrawObjectPrototypeFieldId        = Inherited::NextFieldId,
-        NotExpandedDrawObjectPrototypeFieldId     = ExpandedDrawObjectPrototypeFieldId        + 1,
-        LeafDrawObjectPrototypeFieldId            = NotExpandedDrawObjectPrototypeFieldId     + 1,
-        NonLeafDrawObjectPrototypeFieldId         = LeafDrawObjectPrototypeFieldId            + 1,
-        ExpandedNonLeafDrawObjectPrototypeFieldId = NonLeafDrawObjectPrototypeFieldId         + 1,
-        NodeLabelPrototypeFieldId                 = ExpandedNonLeafDrawObjectPrototypeFieldId + 1,
-        NodePanelPrototypeFieldId                 = NodeLabelPrototypeFieldId                 + 1,
-        SelectedBackgroundFieldId                 = NodePanelPrototypeFieldId                 + 1,
-        NonSelectedBackgroundFieldId              = SelectedBackgroundFieldId                 + 1,
-        SelectedForegroundFieldId                 = NonSelectedBackgroundFieldId              + 1,
-        NonSelectedForegroundFieldId              = SelectedForegroundFieldId                 + 1,
-        SelectedBorderFieldId                     = NonSelectedForegroundFieldId              + 1,
-        SelectedTextColorFieldId                  = SelectedBorderFieldId                     + 1,
-        NonSelectedTextColorFieldId               = SelectedTextColorFieldId                  + 1,
-        NextFieldId                               = NonSelectedTextColorFieldId               + 1
+        ExpandedDrawObjectPrototypeFieldId = Inherited::NextFieldId,
+        NotExpandedDrawObjectPrototypeFieldId = ExpandedDrawObjectPrototypeFieldId + 1,
+        LeafDrawObjectPrototypeFieldId = NotExpandedDrawObjectPrototypeFieldId + 1,
+        NonLeafDrawObjectPrototypeFieldId = LeafDrawObjectPrototypeFieldId + 1,
+        ExpandedNonLeafDrawObjectPrototypeFieldId = NonLeafDrawObjectPrototypeFieldId + 1,
+        NodeLabelPrototypeFieldId = ExpandedNonLeafDrawObjectPrototypeFieldId + 1,
+        NodePanelPrototypeFieldId = NodeLabelPrototypeFieldId + 1,
+        SelectedBackgroundFieldId = NodePanelPrototypeFieldId + 1,
+        NonSelectedBackgroundFieldId = SelectedBackgroundFieldId + 1,
+        SelectedForegroundFieldId = NonSelectedBackgroundFieldId + 1,
+        NonSelectedForegroundFieldId = SelectedForegroundFieldId + 1,
+        SelectedBorderFieldId = NonSelectedForegroundFieldId + 1,
+        SelectedTextColorFieldId = SelectedBorderFieldId + 1,
+        NonSelectedTextColorFieldId = SelectedTextColorFieldId + 1,
+        NextFieldId = NonSelectedTextColorFieldId + 1
     };
 
-    static const OSG::BitVector ExpandedDrawObjectPrototypeFieldMask;
-    static const OSG::BitVector NotExpandedDrawObjectPrototypeFieldMask;
-    static const OSG::BitVector LeafDrawObjectPrototypeFieldMask;
-    static const OSG::BitVector NonLeafDrawObjectPrototypeFieldMask;
-    static const OSG::BitVector ExpandedNonLeafDrawObjectPrototypeFieldMask;
-    static const OSG::BitVector NodeLabelPrototypeFieldMask;
-    static const OSG::BitVector NodePanelPrototypeFieldMask;
-    static const OSG::BitVector SelectedBackgroundFieldMask;
-    static const OSG::BitVector NonSelectedBackgroundFieldMask;
-    static const OSG::BitVector SelectedForegroundFieldMask;
-    static const OSG::BitVector NonSelectedForegroundFieldMask;
-    static const OSG::BitVector SelectedBorderFieldMask;
-    static const OSG::BitVector SelectedTextColorFieldMask;
-    static const OSG::BitVector NonSelectedTextColorFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector ExpandedDrawObjectPrototypeFieldMask =
+        (TypeTraits<BitVector>::One << ExpandedDrawObjectPrototypeFieldId);
+    static const OSG::BitVector NotExpandedDrawObjectPrototypeFieldMask =
+        (TypeTraits<BitVector>::One << NotExpandedDrawObjectPrototypeFieldId);
+    static const OSG::BitVector LeafDrawObjectPrototypeFieldMask =
+        (TypeTraits<BitVector>::One << LeafDrawObjectPrototypeFieldId);
+    static const OSG::BitVector NonLeafDrawObjectPrototypeFieldMask =
+        (TypeTraits<BitVector>::One << NonLeafDrawObjectPrototypeFieldId);
+    static const OSG::BitVector ExpandedNonLeafDrawObjectPrototypeFieldMask =
+        (TypeTraits<BitVector>::One << ExpandedNonLeafDrawObjectPrototypeFieldId);
+    static const OSG::BitVector NodeLabelPrototypeFieldMask =
+        (TypeTraits<BitVector>::One << NodeLabelPrototypeFieldId);
+    static const OSG::BitVector NodePanelPrototypeFieldMask =
+        (TypeTraits<BitVector>::One << NodePanelPrototypeFieldId);
+    static const OSG::BitVector SelectedBackgroundFieldMask =
+        (TypeTraits<BitVector>::One << SelectedBackgroundFieldId);
+    static const OSG::BitVector NonSelectedBackgroundFieldMask =
+        (TypeTraits<BitVector>::One << NonSelectedBackgroundFieldId);
+    static const OSG::BitVector SelectedForegroundFieldMask =
+        (TypeTraits<BitVector>::One << SelectedForegroundFieldId);
+    static const OSG::BitVector NonSelectedForegroundFieldMask =
+        (TypeTraits<BitVector>::One << NonSelectedForegroundFieldId);
+    static const OSG::BitVector SelectedBorderFieldMask =
+        (TypeTraits<BitVector>::One << SelectedBorderFieldId);
+    static const OSG::BitVector SelectedTextColorFieldMask =
+        (TypeTraits<BitVector>::One << SelectedTextColorFieldId);
+    static const OSG::BitVector NonSelectedTextColorFieldMask =
+        (TypeTraits<BitVector>::One << NonSelectedTextColorFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecUIDrawObjectCanvasPtr SFExpandedDrawObjectPrototypeType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFNotExpandedDrawObjectPrototypeType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFLeafDrawObjectPrototypeType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFNonLeafDrawObjectPrototypeType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFExpandedNonLeafDrawObjectPrototypeType;
+    typedef SFUnrecLabelPtr   SFNodeLabelPrototypeType;
+    typedef SFUnrecPanelPtr   SFNodePanelPrototypeType;
+    typedef SFUnrecLayerPtr   SFSelectedBackgroundType;
+    typedef SFUnrecLayerPtr   SFNonSelectedBackgroundType;
+    typedef SFUnrecLayerPtr   SFSelectedForegroundType;
+    typedef SFUnrecLayerPtr   SFNonSelectedForegroundType;
+    typedef SFUnrecBorderPtr  SFSelectedBorderType;
+    typedef SFColor4f         SFSelectedTextColorType;
+    typedef SFColor4f         SFNonSelectedTextColorType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -161,73 +184,96 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIDrawObjectCanvasPtr *getSFExpandedDrawObjectPrototype(void);
-           SFUIDrawObjectCanvasPtr *getSFNotExpandedDrawObjectPrototype(void);
-           SFUIDrawObjectCanvasPtr *getSFLeafDrawObjectPrototype(void);
-           SFUIDrawObjectCanvasPtr *getSFNonLeafDrawObjectPrototype(void);
-           SFUIDrawObjectCanvasPtr *getSFExpandedNonLeafDrawObjectPrototype(void);
-           SFLabelPtr          *getSFNodeLabelPrototype(void);
-           SFPanelPtr          *getSFNodePanelPrototype(void);
-           SFLayerPtr          *getSFSelectedBackground(void);
-           SFLayerPtr          *getSFNonSelectedBackground(void);
-           SFLayerPtr          *getSFSelectedForeground(void);
-           SFLayerPtr          *getSFNonSelectedForeground(void);
-           SFBorderPtr         *getSFSelectedBorder (void);
-           SFColor4f           *getSFSelectedTextColor(void);
-           SFColor4f           *getSFNonSelectedTextColor(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFExpandedDrawObjectPrototype(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFExpandedDrawObjectPrototype(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFNotExpandedDrawObjectPrototype(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFNotExpandedDrawObjectPrototype(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFLeafDrawObjectPrototype(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFLeafDrawObjectPrototype(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFNonLeafDrawObjectPrototype(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFNonLeafDrawObjectPrototype(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFExpandedNonLeafDrawObjectPrototype(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFExpandedNonLeafDrawObjectPrototype(void);
+            const SFUnrecLabelPtr     *getSFNodeLabelPrototype(void) const;
+                  SFUnrecLabelPtr     *editSFNodeLabelPrototype(void);
+            const SFUnrecPanelPtr     *getSFNodePanelPrototype(void) const;
+                  SFUnrecPanelPtr     *editSFNodePanelPrototype(void);
+            const SFUnrecLayerPtr     *getSFSelectedBackground(void) const;
+                  SFUnrecLayerPtr     *editSFSelectedBackground(void);
+            const SFUnrecLayerPtr     *getSFNonSelectedBackground(void) const;
+                  SFUnrecLayerPtr     *editSFNonSelectedBackground(void);
+            const SFUnrecLayerPtr     *getSFSelectedForeground(void) const;
+                  SFUnrecLayerPtr     *editSFSelectedForeground(void);
+            const SFUnrecLayerPtr     *getSFNonSelectedForeground(void) const;
+                  SFUnrecLayerPtr     *editSFNonSelectedForeground(void);
+            const SFUnrecBorderPtr    *getSFSelectedBorder (void) const;
+                  SFUnrecBorderPtr    *editSFSelectedBorder (void);
 
-           UIDrawObjectCanvasPtr &getExpandedDrawObjectPrototype(void);
-     const UIDrawObjectCanvasPtr &getExpandedDrawObjectPrototype(void) const;
-           UIDrawObjectCanvasPtr &getNotExpandedDrawObjectPrototype(void);
-     const UIDrawObjectCanvasPtr &getNotExpandedDrawObjectPrototype(void) const;
-           UIDrawObjectCanvasPtr &getLeafDrawObjectPrototype(void);
-     const UIDrawObjectCanvasPtr &getLeafDrawObjectPrototype(void) const;
-           UIDrawObjectCanvasPtr &getNonLeafDrawObjectPrototype(void);
-     const UIDrawObjectCanvasPtr &getNonLeafDrawObjectPrototype(void) const;
-           UIDrawObjectCanvasPtr &getExpandedNonLeafDrawObjectPrototype(void);
-     const UIDrawObjectCanvasPtr &getExpandedNonLeafDrawObjectPrototype(void) const;
-           LabelPtr            &getNodeLabelPrototype(void);
-     const LabelPtr            &getNodeLabelPrototype(void) const;
-           PanelPtr            &getNodePanelPrototype(void);
-     const PanelPtr            &getNodePanelPrototype(void) const;
-           LayerPtr            &getSelectedBackground(void);
-     const LayerPtr            &getSelectedBackground(void) const;
-           LayerPtr            &getNonSelectedBackground(void);
-     const LayerPtr            &getNonSelectedBackground(void) const;
-           LayerPtr            &getSelectedForeground(void);
-     const LayerPtr            &getSelectedForeground(void) const;
-           LayerPtr            &getNonSelectedForeground(void);
-     const LayerPtr            &getNonSelectedForeground(void) const;
-           BorderPtr           &getSelectedBorder (void);
-     const BorderPtr           &getSelectedBorder (void) const;
-           Color4f             &getSelectedTextColor(void);
-     const Color4f             &getSelectedTextColor(void) const;
-           Color4f             &getNonSelectedTextColor(void);
-     const Color4f             &getNonSelectedTextColor(void) const;
+                  SFColor4f           *editSFSelectedTextColor(void);
+            const SFColor4f           *getSFSelectedTextColor (void) const;
+
+                  SFColor4f           *editSFNonSelectedTextColor(void);
+            const SFColor4f           *getSFNonSelectedTextColor (void) const;
+
+
+                  UIDrawObjectCanvas * getExpandedDrawObjectPrototype(void) const;
+
+                  UIDrawObjectCanvas * getNotExpandedDrawObjectPrototype(void) const;
+
+                  UIDrawObjectCanvas * getLeafDrawObjectPrototype(void) const;
+
+                  UIDrawObjectCanvas * getNonLeafDrawObjectPrototype(void) const;
+
+                  UIDrawObjectCanvas * getExpandedNonLeafDrawObjectPrototype(void) const;
+
+                  Label * getNodeLabelPrototype(void) const;
+
+                  Panel * getNodePanelPrototype(void) const;
+
+                  Layer * getSelectedBackground(void) const;
+
+                  Layer * getNonSelectedBackground(void) const;
+
+                  Layer * getSelectedForeground(void) const;
+
+                  Layer * getNonSelectedForeground(void) const;
+
+                  Border * getSelectedBorder (void) const;
+
+                  Color4f             &editSelectedTextColor(void);
+            const Color4f             &getSelectedTextColor (void) const;
+
+                  Color4f             &editNonSelectedTextColor(void);
+            const Color4f             &getNonSelectedTextColor (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setExpandedDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
-     void setNotExpandedDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
-     void setLeafDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
-     void setNonLeafDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
-     void setExpandedNonLeafDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
-     void setNodeLabelPrototype( const LabelPtr &value );
-     void setNodePanelPrototype( const PanelPtr &value );
-     void setSelectedBackground( const LayerPtr &value );
-     void setNonSelectedBackground( const LayerPtr &value );
-     void setSelectedForeground( const LayerPtr &value );
-     void setNonSelectedForeground( const LayerPtr &value );
-     void setSelectedBorder ( const BorderPtr &value );
-     void setSelectedTextColor( const Color4f &value );
-     void setNonSelectedTextColor( const Color4f &value );
+            void setExpandedDrawObjectPrototype(UIDrawObjectCanvas * const value);
+            void setNotExpandedDrawObjectPrototype(UIDrawObjectCanvas * const value);
+            void setLeafDrawObjectPrototype(UIDrawObjectCanvas * const value);
+            void setNonLeafDrawObjectPrototype(UIDrawObjectCanvas * const value);
+            void setExpandedNonLeafDrawObjectPrototype(UIDrawObjectCanvas * const value);
+            void setNodeLabelPrototype(Label * const value);
+            void setNodePanelPrototype(Panel * const value);
+            void setSelectedBackground(Layer * const value);
+            void setNonSelectedBackground(Layer * const value);
+            void setSelectedForeground(Layer * const value);
+            void setNonSelectedForeground(Layer * const value);
+            void setSelectedBorder (Border * const value);
+            void setSelectedTextColor(const Color4f &value);
+            void setNonSelectedTextColor(const Color4f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -235,11 +281,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -247,39 +293,56 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DefaultTreeComponentGeneratorPtr      create          (void); 
-    static  DefaultTreeComponentGeneratorPtr      createEmpty     (void); 
+    static  DefaultTreeComponentGeneratorTransitPtr  create          (void);
+    static  DefaultTreeComponentGenerator           *createEmpty     (void);
+
+    static  DefaultTreeComponentGeneratorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DefaultTreeComponentGenerator            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DefaultTreeComponentGeneratorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIDrawObjectCanvasPtr   _sfExpandedDrawObjectPrototype;
-    SFUIDrawObjectCanvasPtr   _sfNotExpandedDrawObjectPrototype;
-    SFUIDrawObjectCanvasPtr   _sfLeafDrawObjectPrototype;
-    SFUIDrawObjectCanvasPtr   _sfNonLeafDrawObjectPrototype;
-    SFUIDrawObjectCanvasPtr   _sfExpandedNonLeafDrawObjectPrototype;
-    SFLabelPtr          _sfNodeLabelPrototype;
-    SFPanelPtr          _sfNodePanelPrototype;
-    SFLayerPtr          _sfSelectedBackground;
-    SFLayerPtr          _sfNonSelectedBackground;
-    SFLayerPtr          _sfSelectedForeground;
-    SFLayerPtr          _sfNonSelectedForeground;
-    SFBorderPtr         _sfSelectedBorder;
-    SFColor4f           _sfSelectedTextColor;
-    SFColor4f           _sfNonSelectedTextColor;
+    SFUnrecUIDrawObjectCanvasPtr _sfExpandedDrawObjectPrototype;
+    SFUnrecUIDrawObjectCanvasPtr _sfNotExpandedDrawObjectPrototype;
+    SFUnrecUIDrawObjectCanvasPtr _sfLeafDrawObjectPrototype;
+    SFUnrecUIDrawObjectCanvasPtr _sfNonLeafDrawObjectPrototype;
+    SFUnrecUIDrawObjectCanvasPtr _sfExpandedNonLeafDrawObjectPrototype;
+    SFUnrecLabelPtr   _sfNodeLabelPrototype;
+    SFUnrecPanelPtr   _sfNodePanelPrototype;
+    SFUnrecLayerPtr   _sfSelectedBackground;
+    SFUnrecLayerPtr   _sfNonSelectedBackground;
+    SFUnrecLayerPtr   _sfSelectedForeground;
+    SFUnrecLayerPtr   _sfNonSelectedForeground;
+    SFUnrecBorderPtr  _sfSelectedBorder;
+    SFColor4f         _sfSelectedTextColor;
+    SFColor4f         _sfNonSelectedTextColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -294,69 +357,106 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultTreeComponentGeneratorBase(void); 
+    virtual ~DefaultTreeComponentGeneratorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const DefaultTreeComponentGenerator *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleExpandedDrawObjectPrototype (void) const;
+    EditFieldHandlePtr editHandleExpandedDrawObjectPrototype(void);
+    GetFieldHandlePtr  getHandleNotExpandedDrawObjectPrototype (void) const;
+    EditFieldHandlePtr editHandleNotExpandedDrawObjectPrototype(void);
+    GetFieldHandlePtr  getHandleLeafDrawObjectPrototype (void) const;
+    EditFieldHandlePtr editHandleLeafDrawObjectPrototype(void);
+    GetFieldHandlePtr  getHandleNonLeafDrawObjectPrototype (void) const;
+    EditFieldHandlePtr editHandleNonLeafDrawObjectPrototype(void);
+    GetFieldHandlePtr  getHandleExpandedNonLeafDrawObjectPrototype (void) const;
+    EditFieldHandlePtr editHandleExpandedNonLeafDrawObjectPrototype(void);
+    GetFieldHandlePtr  getHandleNodeLabelPrototype (void) const;
+    EditFieldHandlePtr editHandleNodeLabelPrototype(void);
+    GetFieldHandlePtr  getHandleNodePanelPrototype (void) const;
+    EditFieldHandlePtr editHandleNodePanelPrototype(void);
+    GetFieldHandlePtr  getHandleSelectedBackground (void) const;
+    EditFieldHandlePtr editHandleSelectedBackground(void);
+    GetFieldHandlePtr  getHandleNonSelectedBackground (void) const;
+    EditFieldHandlePtr editHandleNonSelectedBackground(void);
+    GetFieldHandlePtr  getHandleSelectedForeground (void) const;
+    EditFieldHandlePtr editHandleSelectedForeground(void);
+    GetFieldHandlePtr  getHandleNonSelectedForeground (void) const;
+    EditFieldHandlePtr editHandleNonSelectedForeground(void);
+    GetFieldHandlePtr  getHandleSelectedBorder  (void) const;
+    EditFieldHandlePtr editHandleSelectedBorder (void);
+    GetFieldHandlePtr  getHandleSelectedTextColor (void) const;
+    EditFieldHandlePtr editHandleSelectedTextColor(void);
+    GetFieldHandlePtr  getHandleNonSelectedTextColor (void) const;
+    EditFieldHandlePtr editHandleNonSelectedTextColor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DefaultTreeComponentGeneratorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DefaultTreeComponentGeneratorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DefaultTreeComponentGeneratorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DefaultTreeComponentGeneratorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DefaultTreeComponentGeneratorBase *DefaultTreeComponentGeneratorBaseP;
 
-typedef osgIF<DefaultTreeComponentGeneratorBase::isNodeCore,
-              CoredNodePtr<DefaultTreeComponentGenerator>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DefaultTreeComponentGeneratorNodePtr;
-
-typedef RefPtr<DefaultTreeComponentGeneratorPtr> DefaultTreeComponentGeneratorRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTTREECOMPONENTGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDEFAULTTREECOMPONENTGENERATORBASE_H_ */

@@ -31,24 +31,24 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGTreeSelectionEvent.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeSelectionListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeSelectionListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
 public:
     //Called whenever elements are added to the selection
-	virtual void selectionAdded(const TreeSelectionEventPtr e) = 0;
+	virtual void selectionAdded(const TreeSelectionEventUnrecPtr e) = 0;
 
     //Called whenever elements are removed to the selection
-	virtual void selectionRemoved(const TreeSelectionEventPtr e) = 0;
+	virtual void selectionRemoved(const TreeSelectionEventUnrecPtr e) = 0;
 };
 
 typedef TreeSelectionListener* TreeSelectionListenerPtr;

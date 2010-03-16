@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+    name="AbstractTreeModelLayout"
+	parent="TreeModelLayout"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+    structure="abstract"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+    >
+    A UI Abstract Tree Model Layout.
+    <Field
+        name="RootVisibleInternal"
+        type="bool"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="false"
+        access="protected"
+        >
+        Is the tree model root visible.
+    </Field>
+    <Field
+        name="RowHeightInternal"
+        type="Real32"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="13.0"
+        access="protected"
+        >
+        The Row Height.
+    </Field>
+    <Field
+        name="DepthOffsetInternal"
+        type="Real32"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="15.0"
+        access="protected"
+        >
+        The Depth Offset.
+    </Field>
+</FieldContainer>

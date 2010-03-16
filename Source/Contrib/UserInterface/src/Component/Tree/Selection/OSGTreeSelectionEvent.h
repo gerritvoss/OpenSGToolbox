@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,50 +42,52 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGTreeSelectionEventBase.h"
-#include "Util/OSGNumberRangeSet.h"
+#include "OSGNumberRangeSet.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeSelectionEvent class. See \ref 
-           PageUserInterfaceTreeSelectionEvent for a description.
+/*! \brief TreeSelectionEvent class. See \ref
+           PageContribUserInterfaceTreeSelectionEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeSelectionEvent : public TreeSelectionEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeSelectionEvent : public TreeSelectionEventBase
 {
-  private:
-
-    typedef TreeSelectionEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeSelectionEventBase Inherited;
+    typedef TreeSelectionEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  TreeSelectionEventPtr      create(  FieldContainerPtr Source,
-                                                Time TimeStamp,
-                                                const std::vector<NumberRange>& ElementsChanged,
-                                                Int32 NewLeadSelectionPath,
-                                                Int32 OldLeadSelectionPath); 
+    static  TreeSelectionEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                       Time TimeStamp,
+                                                       const std::vector<NumberRange>& ElementsChanged,
+                                                       Int32 NewLeadSelectionPath,
+                                                       Int32 OldLeadSelectionPath); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TreeSelectionEventBase.
@@ -102,20 +104,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeSelectionEvent : public TreeSelectionE
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeSelectionEvent(void); 
+    virtual ~TreeSelectionEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TreeSelectionEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TreeSelectionEvent &source);
 };
 
