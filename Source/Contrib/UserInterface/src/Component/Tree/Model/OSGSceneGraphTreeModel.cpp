@@ -85,11 +85,11 @@ boost::any SceneGraphTreeModel::getChild(const boost::any& parent, const UInt32&
 {
     try
     {
-        NodeRefPtr TheNode = boost::any_cast<NodeRefPtr>(parent);
+        NodeUnrecPtr TheNode = boost::any_cast<NodeUnrecPtr>(parent);
         if(TheNode != NULL &&
            TheNode->getNChildren() > index)
         {
-            return boost::any(TheNode->getChild(index));
+            return boost::any(NodeUnrecPtr(TheNode->getChild(index)));
         }
         else
         {
@@ -106,12 +106,12 @@ boost::any SceneGraphTreeModel::getParent(const boost::any& node) const
 {
     try
     {
-        NodeRefPtr TheNode = boost::any_cast<NodeRefPtr>(node);
+        NodeUnrecPtr TheNode = boost::any_cast<NodeUnrecPtr>(node);
         if(TheNode != NULL &&
            TheNode != getInternalRoot() &&
            TheNode->getParent() != NULL)
         {
-            return boost::any(TheNode->getParent());
+            return boost::any(NodeUnrecPtr(TheNode->getParent()));
         }
     }
     catch(boost::bad_any_cast &)
@@ -124,7 +124,7 @@ UInt32 SceneGraphTreeModel::getChildCount(const boost::any& parent) const
 {
     try
     {
-        NodeRefPtr TheNode = boost::any_cast<NodeRefPtr>(parent);
+        NodeUnrecPtr TheNode = boost::any_cast<NodeUnrecPtr>(parent);
         if(TheNode != NULL)
         {
             return TheNode->getNChildren();
@@ -144,8 +144,8 @@ UInt32 SceneGraphTreeModel::getIndexOfChild(const boost::any& parent, const boos
 {
     try
     {
-        NodeRefPtr ParentNode = boost::any_cast<NodeRefPtr>(parent);
-        NodeRefPtr ChildNode = boost::any_cast<NodeRefPtr>(child);
+        NodeUnrecPtr ParentNode = boost::any_cast<NodeUnrecPtr>(parent);
+        NodeUnrecPtr ChildNode = boost::any_cast<NodeUnrecPtr>(child);
         if(ParentNode != NULL &&
            ChildNode  != NULL)
         {
@@ -164,7 +164,7 @@ UInt32 SceneGraphTreeModel::getIndexOfChild(const boost::any& parent, const boos
 
 boost::any SceneGraphTreeModel::getRoot(void) const
 {
-    return boost::any(getInternalRoot());
+    return boost::any(NodeUnrecPtr(getInternalRoot()));
 }
 
 bool SceneGraphTreeModel::isLeaf(const boost::any& node) const
@@ -176,14 +176,14 @@ void SceneGraphTreeModel::valueForPathChanged(TreePath path, const boost::any& n
 {
     try
     {
-        NodeRefPtr NewNode = boost::any_cast<NodeRefPtr>(newValue);
-        NodeRefPtr OldNode = boost::any_cast<NodeRefPtr>(path.getLastPathComponent());
+        NodeUnrecPtr NewNode = boost::any_cast<NodeUnrecPtr>(newValue);
+        NodeUnrecPtr OldNode = boost::any_cast<NodeUnrecPtr>(path.getLastPathComponent());
         if(NewNode != NULL &&
            OldNode  != NULL &&
            NewNode != OldNode &&
            OldNode->getParent() != NULL)
         {
-            NodeRefPtr ParentNode(OldNode->getParent());
+            NodeUnrecPtr ParentNode(OldNode->getParent());
             if(ParentNode->replaceChildBy(OldNode, NewNode))
             {
                 UInt32 ChildIndex(ParentNode->findChild(NewNode));
@@ -196,12 +196,12 @@ void SceneGraphTreeModel::valueForPathChanged(TreePath path, const boost::any& n
     }
 }
 
-void SceneGraphTreeModel::setRoot(NodeRefPtr root)
+void SceneGraphTreeModel::setRoot(NodeUnrecPtr root)
 {
     setInternalRoot(root);
 }
 
-NodeRefPtr SceneGraphTreeModel::getRootNode(void) const
+NodeUnrecPtr SceneGraphTreeModel::getRootNode(void) const
 {
     return getInternalRoot();
 }
@@ -211,8 +211,8 @@ bool SceneGraphTreeModel::isEqual(const boost::any& left, const boost::any& righ
 {
     try
     {
-        NodeRefPtr LeftNode = boost::any_cast<NodeRefPtr>(left);
-        NodeRefPtr RightNode = boost::any_cast<NodeRefPtr>(right);
+        NodeUnrecPtr LeftNode = boost::any_cast<NodeUnrecPtr>(left);
+        NodeUnrecPtr RightNode = boost::any_cast<NodeUnrecPtr>(right);
 
         return LeftNode == RightNode;
     }

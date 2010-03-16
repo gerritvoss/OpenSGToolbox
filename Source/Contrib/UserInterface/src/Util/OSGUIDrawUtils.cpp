@@ -216,7 +216,7 @@ Pnt2f Rotate(const Pnt2f& Point, const Real32& Angle)
 }
 
 
-void getDrawObjectBounds(MFUnrecUIDrawObjectPtr DrawObjects, Pnt2f& TopLeft, Pnt2f& BottomRight)
+void getDrawObjectBounds(const MFUnrecUIDrawObjectPtr& DrawObjects, Pnt2f& TopLeft, Pnt2f& BottomRight)
 {
     if(DrawObjects.size() > 0)
     {

@@ -126,11 +126,6 @@ void LookAndFeel::initUndefinedPrototypes(void)
                 << "    Closest Ancestor: "         << ClosestAncestorType->getCName() << std::endl;
             //For all of these types set the prototype values of all of the 
             //inherited fields to the same as the closest ancestor
-            BitVector TheBitMask(0);
-            for(UInt32 j(0); j<ClosestAncestorType->getNumFieldDescs() ; ++j)
-            {
-                TheBitMask = (TheBitMask << 1) | TypeTraits<BitVector>::One;
-            }
             UndefinedPrototype = UndefinedPrototypeType->getPrototype();
             ClosestAncestorPrototype = ClosestAncestorType->getPrototype();
             for(UInt32 j(1); j<=ClosestAncestorType->getNumFieldDescs() ; ++j)

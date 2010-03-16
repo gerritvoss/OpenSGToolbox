@@ -101,10 +101,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SceneGraphTreeModel : public SceneGrap
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
 
     //Sets the root to root.
-    void setRoot(NodeRefPtr root);
+    void setRoot(NodeUnrecPtr root);
 
-    //Get the NodeRefPtr to the Root Node
-    NodeRefPtr getRootNode(void) const;
+    //Get the NodeUnrecPtr to the Root Node
+    NodeUnrecPtr getRootNode(void) const;
 
     //Returns true if these objects represent the same node in the tree
     virtual bool isEqual(const boost::any& left, const boost::any& right) const;

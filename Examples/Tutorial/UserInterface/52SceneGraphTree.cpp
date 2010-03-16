@@ -261,8 +261,8 @@ int main(int argc, char **argv)
     TheTreeModel->setRoot(Root);
 
     TheFileSystemTreeModel = FileSystemTreeModel::create();
-    //TheFileSystemTreeModel->setRoot(Path("C:\\"));
-    TheFileSystemTreeModel->setRoot(BoostPath("/"));
+    TheFileSystemTreeModel->setRoot(BoostPath("C:\\"));
+    //TheFileSystemTreeModel->setRoot(BoostPath("/"));
 
     //Create the Tree
     TheTree = Tree::create();

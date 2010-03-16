@@ -174,7 +174,7 @@ boost::any DefaultTreeModel::getRoot(void) const
 {
     if(getInternalRoot() != NULL)
     {
-        return boost::any(getInternalRoot());
+        return boost::any(ModelTreeNodeRefPtr(getInternalRoot()));
     }
     else
     {

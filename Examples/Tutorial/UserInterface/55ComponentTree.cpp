@@ -77,22 +77,25 @@ class TutorialKeyListener : public KeyListener
 ComponentTreeModelRefPtr TheTreeModel;
 TreeRefPtr TheTree;
 
+class ComponentTreeItemGenerator;
+
+typedef TransitPtr   < ComponentTreeItemGenerator > ComponentTreeItemGeneratorTransitPtr;
+
 class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
 {
     /*==========================  PUBLIC  =================================*/
   public:
     typedef          DefaultTreeComponentGenerator Inherited;
     typedef          ComponentTreeItemGenerator Self;
-    typedef          FCRefPtr<Inherited::RefPtr,  Self      > PtrType;
 
-    OSG_FIELD_CONTAINER_DECL(PtrType)
+    OSG_GEN_INTERNALPTR(ComponentTreeItemGenerator);
 
         virtual ComponentRefPtr getTreeComponent(TreeRefPtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
         {
             std::string LabelText("");
             try
             {
-                ComponentRefPtr TheComponent = boost::any_cast<ComponentRefPtr>(Value);
+                ComponentWeakPtr TheComponent = boost::any_cast<ComponentWeakPtr>(Value);
                 if(TheComponent != NULL)
                 {
                     const Char8* CompName = getName(TheComponent);
@@ -113,6 +116,83 @@ class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
             return getTreeComponentText(Parent,LabelText,IsSelected,Expanded,Leaf,Row,HasFocus);
         }
 
+    static FieldContainerType &getClassType   (void)
+    {
+        return _type;
+    }
+
+    static UInt32              getClassTypeId (void)
+    {
+        return _type.getId();
+    }
+
+    static UInt16              getClassGroupId(void)
+    {
+        return _type.getGroupId();
+    }
+
+    virtual       FieldContainerType &getType         (void)
+    {
+        return _type;
+    }
+
+    virtual const FieldContainerType &getType         (void) const
+    {
+        return _type;
+    }
+
+	static ComponentTreeItemGeneratorTransitPtr create(void)
+	{
+		ComponentTreeItemGeneratorTransitPtr fc;
+
+		if(getClassType().getPrototype() != NULL)
+		{
+			FieldContainerTransitPtr tmpPtr =
+				getClassType().getPrototype()-> shallowCopy();
+
+			fc = dynamic_pointer_cast<ComponentTreeItemGenerator>(tmpPtr);
+		}
+
+		return fc;
+	}
+
+	static ComponentTreeItemGenerator *ComponentTreeItemGenerator::createEmpty(void)
+	{
+		ComponentTreeItemGenerator *returnValue;
+
+		newPtr<ComponentTreeItemGenerator>(returnValue, Thread::getCurrentLocalFlags());
+
+		returnValue->_pFieldFlags->_bNamespaceMask &=
+			~Thread::getCurrentLocalFlags();
+
+		return returnValue;
+	}
+
+	static ComponentTreeItemGenerator *ComponentTreeItemGenerator::createEmptyLocal(BitVector bFlags)
+	{
+		ComponentTreeItemGenerator *returnValue;
+
+		newPtr<ComponentTreeItemGenerator>(returnValue, bFlags);
+
+		returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+		return returnValue;
+	}
+
+	FieldContainerTransitPtr ComponentTreeItemGenerator::shallowCopy(void) const
+	{
+		ComponentTreeItemGenerator *tmpPtr;
+
+		newPtr(tmpPtr,
+			   dynamic_cast<const ComponentTreeItemGenerator *>(this),
+			   Thread::getCurrentLocalFlags());
+
+		tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+		FieldContainerTransitPtr returnValue(tmpPtr);
+
+		return returnValue;
+	}
 
   protected:
 
@@ -138,19 +218,128 @@ class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
     }
 };
 
-FieldContainerType ComponentTreeItemGenerator::_type("ComponentTreeItemGenerator",
-                                                     "DefaultTreeComponentGenerator",
-                                                     NULL,
-                                                     (PrototypeCreateF) &ComponentTreeItemGenerator::createEmpty,
-                                                     NULL,
-                                                     NULL,
-                                                     0);
+ComponentTreeItemGenerator::TypeObject ComponentTreeItemGenerator::_type(
+    "ComponentTreeItemGenerator",
+    "DefaultTreeComponentGenerator",
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ComponentTreeItemGenerator::createEmptyLocal),
+    NULL,
+    NULL,
+    NULL,//reinterpret_cast<InitalInsertDescFunc>(&DefaultListComponentGenerator::classDescInserter),
+    false,
+    0,
+    "",
+    "ComponentTreeItemGenerator"
+    );
 
-    OSG_FIELD_CONTAINER_INL_DEF(ComponentTreeItemGenerator::Self, ComponentTreeItemGenerator::PtrType)
-OSG_FIELD_CONTAINER_DEF(ComponentTreeItemGenerator::Self, ComponentTreeItemGenerator::PtrType)
+OSG_BEGIN_NAMESPACE
 
-    typedef ComponentTreeItemGenerator::PtrType ComponentTreeItemGeneratorRefPtr;
+OSG_GEN_CONTAINERPTR(ComponentTreeItemGenerator);
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
+ */
+template <>
+struct FieldTraits<ComponentTreeItemGenerator *> :
+    public FieldTraitsFCPtrBase<ComponentTreeItemGenerator *>
+{
+  private:
 
+    static DataType             _type;
+
+  public:
+
+    typedef FieldTraits<ComponentTreeItemGenerator *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFComponentTreeItemGeneratorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFComponentTreeItemGeneratorPtr"; }
+};
+
+template<> inline
+const Char8 *FieldTraits<ComponentTreeItemGenerator *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecComponentTreeItemGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentTreeItemGenerator *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecComponentTreeItemGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentTreeItemGenerator *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakComponentTreeItemGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentTreeItemGenerator *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdComponentTreeItemGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentTreeItemGenerator *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecComponentTreeItemGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentTreeItemGenerator *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecComponentTreeItemGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentTreeItemGenerator *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakComponentTreeItemGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentTreeItemGenerator *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdComponentTreeItemGeneratorPtr"; 
+}
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentTreeItemGenerator *,
+                      RecordedRefCountPolicy  > SFRecComponentTreeItemGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentTreeItemGenerator *,
+                      UnrecordedRefCountPolicy> SFUnrecComponentTreeItemGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentTreeItemGenerator *,
+                      WeakRefCountPolicy      > SFWeakComponentTreeItemGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentTreeItemGenerator *,
+                      NoRefCountPolicy        > SFUncountedComponentTreeItemGeneratorPtr;
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentTreeItemGenerator *,
+                      RecordedRefCountPolicy  > MFRecComponentTreeItemGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentTreeItemGenerator *,
+                      UnrecordedRefCountPolicy> MFUnrecComponentTreeItemGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentTreeItemGenerator *,
+                      WeakRefCountPolicy      > MFWeakComponentTreeItemGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentTreeItemGenerator *,
+                      NoRefCountPolicy        > MFUncountedComponentTreeItemGeneratorPtr;
+OSG_END_NAMESPACE
 int main(int argc, char **argv)
 {
     // OSG init
@@ -209,7 +398,7 @@ int main(int argc, char **argv)
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
     ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
-    ExampleScrollPanel->setPreferredSize(Vec2s(350,300));
+    ExampleScrollPanel->setPreferredSize(Vec2f(350,300));
     //ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     ExampleScrollPanel->setViewComponent(TheTree);
@@ -226,7 +415,7 @@ int main(int argc, char **argv)
     std::vector<InternalWindowRefPtr> StoreWindows;
 
     FCFileType::FCPtrStore NewContainers;
-    NewContainers = FCFileHandler::the()->read(Path("./Data/55ComponentTree.xml"));
+    NewContainers = FCFileHandler::the()->read(BoostPath("./Data/55ComponentTree.xml"));
 
     //Store each window found in the XML in the vector
     FCFileType::FCPtrStore::iterator Itor;

@@ -87,7 +87,7 @@ boost::any ComponentTreeModel::getChild(const boost::any& parent, const UInt32& 
         if(TheContainer != NULL &&
            TheContainer->getMFChildren()->size() > index)
         {
-            return boost::any(ComponentRefPtr(TheContainer->getChildren(index)));
+            return boost::any(ComponentWeakPtr(TheContainer->getChildren(index)));
         }
         else
         {
@@ -104,12 +104,12 @@ boost::any ComponentTreeModel::getParent(const boost::any& node) const
 {
     try
     {
-        ComponentRefPtr TheComponent = boost::any_cast<ComponentWeakPtr>(node);
+        ComponentWeakPtr TheComponent = boost::any_cast<ComponentWeakPtr>(node);
         if(TheComponent != NULL &&
             TheComponent != getInternalRootComponent() &&
             TheComponent->getParentContainer() != NULL)
         {
-            return boost::any(ComponentRefPtr(dynamic_cast<Component*>(TheComponent->getParentContainer())));
+            return boost::any(ComponentWeakPtr(dynamic_cast<Component*>(TheComponent->getParentContainer())));
         }
     }
     catch(boost::bad_any_cast &)
@@ -143,7 +143,7 @@ UInt32 ComponentTreeModel::getIndexOfChild(const boost::any& parent, const boost
     try
     {
         ComponentContainerRefPtr ParentContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(parent));
-        ComponentRefPtr ChildComponent = boost::any_cast<ComponentWeakPtr>(child);
+        ComponentWeakPtr ChildComponent = boost::any_cast<ComponentWeakPtr>(child);
         if(ParentContainer != NULL &&
            ChildComponent  != NULL)
         {
@@ -162,7 +162,7 @@ UInt32 ComponentTreeModel::getIndexOfChild(const boost::any& parent, const boost
 
 boost::any ComponentTreeModel::getRoot(void) const
 {
-    return boost::any(ComponentRefPtr(getInternalRootComponent()));
+    return boost::any(ComponentWeakPtr(getInternalRootComponent()));
 }
 
 bool ComponentTreeModel::isLeaf(const boost::any& node) const
@@ -182,8 +182,8 @@ void ComponentTreeModel::valueForPathChanged(TreePath path, const boost::any& ne
 {
     try
     {
-        ComponentRefPtr NewComponent = boost::any_cast<ComponentWeakPtr>(newValue);
-        ComponentRefPtr OldComponent = boost::any_cast<ComponentWeakPtr>(path.getLastPathComponent());
+        ComponentWeakPtr NewComponent = boost::any_cast<ComponentWeakPtr>(newValue);
+        ComponentWeakPtr OldComponent = boost::any_cast<ComponentWeakPtr>(path.getLastPathComponent());
         if(NewComponent != NULL &&
            OldComponent  != NULL &&
            NewComponent != OldComponent &&
@@ -213,8 +213,8 @@ bool ComponentTreeModel::isEqual(const boost::any& left, const boost::any& right
 {
     try
     {
-        ComponentRefPtr LeftComponent = boost::any_cast<ComponentWeakPtr>(left);
-        ComponentRefPtr RightComponent = boost::any_cast<ComponentWeakPtr>(right);
+        ComponentWeakPtr LeftComponent = boost::any_cast<ComponentWeakPtr>(left);
+        ComponentWeakPtr RightComponent = boost::any_cast<ComponentWeakPtr>(right);
 
         return LeftComponent == RightComponent;
     }

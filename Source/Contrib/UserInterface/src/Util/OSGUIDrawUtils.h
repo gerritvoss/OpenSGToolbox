@@ -71,7 +71,7 @@ Pnt2f OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentToFrame(const Pnt2f& Componen
 Pnt2f OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentToComponent(const Pnt2f& ComponentPoint, const Component* Comp, const Component* ParentComp);
 Pnt2f OSG_CONTRIBUSERINTERFACE_DLLMAPPING Rotate(const Pnt2f& Point, const Real32& Angle);
 
-void OSG_CONTRIBUSERINTERFACE_DLLMAPPING getDrawObjectBounds(MFUnrecUIDrawObjectPtr DrawObjects, Pnt2f& TopLeft, Pnt2f& BottomRight);
+void OSG_CONTRIBUSERINTERFACE_DLLMAPPING getDrawObjectBounds(const MFUnrecUIDrawObjectPtr& DrawObjects, Pnt2f& TopLeft, Pnt2f& BottomRight);
 
 OSG_END_NAMESPACE
 
