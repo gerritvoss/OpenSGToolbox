@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETABLECOLUMNMODELEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTableColumnModelEventBase.h"
 #include "OSGTableColumnModelEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TableColumnModelEventBase::FromIndexFieldMask = 
-    (TypeTraits<BitVector>::One << TableColumnModelEventBase::FromIndexFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TableColumnModelEventBase::ToIndexFieldMask = 
-    (TypeTraits<BitVector>::One << TableColumnModelEventBase::ToIndexFieldId);
+/*! \class OSG::TableColumnModelEvent
+    
+ */
 
-const OSG::BitVector TableColumnModelEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          TableColumnModelEventBase::_sfFromIndex
     
 */
+
 /*! \var UInt32          TableColumnModelEventBase::_sfToIndex
     
 */
 
-//! TableColumnModelEvent description
 
-FieldDescription *TableColumnModelEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TableColumnModelEvent *>::_type("TableColumnModelEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TableColumnModelEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TableColumnModelEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TableColumnModelEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TableColumnModelEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "FromIndex", 
-                     FromIndexFieldId, FromIndexFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnModelEventBase::editSFFromIndex)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ToIndex", 
-                     ToIndexFieldId, ToIndexFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnModelEventBase::editSFToIndex))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TableColumnModelEventBase::_type(
-    "TableColumnModelEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TableColumnModelEventBase::createEmpty),
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "FromIndex",
+        "",
+        FromIndexFieldId, FromIndexFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableColumnModelEvent::editHandleFromIndex),
+        static_cast<FieldGetMethodSig >(&TableColumnModelEvent::getHandleFromIndex));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ToIndex",
+        "",
+        ToIndexFieldId, ToIndexFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableColumnModelEvent::editHandleToIndex),
+        static_cast<FieldGetMethodSig >(&TableColumnModelEvent::getHandleToIndex));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+TableColumnModelEventBase::TypeObject TableColumnModelEventBase::_type(
+    TableColumnModelEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TableColumnModelEventBase::createEmptyLocal),
     TableColumnModelEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    TableColumnModelEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TableColumnModelEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TableColumnModelEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"FromIndex\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ToIndex\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TableColumnModelEventBase, TableColumnModelEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TableColumnModelEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TableColumnModelEventBase::getType(void) const 
+FieldContainerType &TableColumnModelEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TableColumnModelEventBase::shallowCopy(void) const 
-{ 
-    TableColumnModelEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TableColumnModelEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TableColumnModelEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(TableColumnModelEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableColumnModelEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TableColumnModelEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<TableColumnModelEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void TableColumnModelEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TableColumnModelEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TableColumnModelEventBase *) &other, whichField, sInfo);
+    return sizeof(TableColumnModelEvent);
 }
-void TableColumnModelEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *TableColumnModelEventBase::editSFFromIndex(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(FromIndexFieldMask);
+
+    return &_sfFromIndex;
 }
 
-void TableColumnModelEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *TableColumnModelEventBase::getSFFromIndex(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfFromIndex;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TableColumnModelEventBase::TableColumnModelEventBase(void) :
-    _sfFromIndex              (UInt32(0)), 
-    _sfToIndex                (UInt32(0)), 
-    Inherited() 
+SFUInt32 *TableColumnModelEventBase::editSFToIndex(void)
 {
+    editSField(ToIndexFieldMask);
+
+    return &_sfToIndex;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TableColumnModelEventBase::TableColumnModelEventBase(const TableColumnModelEventBase &source) :
-    _sfFromIndex              (source._sfFromIndex              ), 
-    _sfToIndex                (source._sfToIndex                ), 
-    Inherited                 (source)
+const SFUInt32 *TableColumnModelEventBase::getSFToIndex(void) const
 {
+    return &_sfToIndex;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-TableColumnModelEventBase::~TableColumnModelEventBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TableColumnModelEventBase::getBinSize(const BitVector &whichField)
+UInt32 TableColumnModelEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +259,16 @@ UInt32 TableColumnModelEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfFromIndex.getBinSize();
     }
-
     if(FieldBits::NoField != (ToIndexFieldMask & whichField))
     {
         returnValue += _sfToIndex.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TableColumnModelEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TableColumnModelEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +276,14 @@ void TableColumnModelEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfFromIndex.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ToIndexFieldMask & whichField))
     {
         _sfToIndex.copyToBin(pMem);
     }
-
-
 }
 
-void TableColumnModelEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TableColumnModelEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,71 +291,244 @@ void TableColumnModelEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfFromIndex.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ToIndexFieldMask & whichField))
     {
         _sfToIndex.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableColumnModelEventBase::executeSyncImpl(      TableColumnModelEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TableColumnModelEventTransitPtr TableColumnModelEventBase::createLocal(BitVector bFlags)
 {
+    TableColumnModelEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (FromIndexFieldMask & whichField))
-        _sfFromIndex.syncWith(pOther->_sfFromIndex);
+        fc = dynamic_pointer_cast<TableColumnModelEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ToIndexFieldMask & whichField))
-        _sfToIndex.syncWith(pOther->_sfToIndex);
-
-
-}
-#else
-void TableColumnModelEventBase::executeSyncImpl(      TableColumnModelEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (FromIndexFieldMask & whichField))
-        _sfFromIndex.syncWith(pOther->_sfFromIndex);
-
-    if(FieldBits::NoField != (ToIndexFieldMask & whichField))
-        _sfToIndex.syncWith(pOther->_sfToIndex);
-
-
-
+    return fc;
 }
 
-void TableColumnModelEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TableColumnModelEventTransitPtr TableColumnModelEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TableColumnModelEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<TableColumnModelEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TableColumnModelEventTransitPtr TableColumnModelEventBase::create(void)
+{
+    TableColumnModelEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TableColumnModelEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TableColumnModelEvent *TableColumnModelEventBase::createEmptyLocal(BitVector bFlags)
+{
+    TableColumnModelEvent *returnValue;
+
+    newPtr<TableColumnModelEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TableColumnModelEvent *TableColumnModelEventBase::createEmpty(void)
+{
+    TableColumnModelEvent *returnValue;
+
+    newPtr<TableColumnModelEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TableColumnModelEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TableColumnModelEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TableColumnModelEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TableColumnModelEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TableColumnModelEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TableColumnModelEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TableColumnModelEventBase::shallowCopy(void) const
+{
+    TableColumnModelEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TableColumnModelEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TableColumnModelEventBase::TableColumnModelEventBase(void) :
+    Inherited(),
+    _sfFromIndex              (UInt32(0)),
+    _sfToIndex                (UInt32(0))
+{
+}
+
+TableColumnModelEventBase::TableColumnModelEventBase(const TableColumnModelEventBase &source) :
+    Inherited(source),
+    _sfFromIndex              (source._sfFromIndex              ),
+    _sfToIndex                (source._sfToIndex                )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TableColumnModelEventBase::~TableColumnModelEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr TableColumnModelEventBase::getHandleFromIndex       (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfFromIndex,
+             this->getType().getFieldDesc(FromIndexFieldId),
+             const_cast<TableColumnModelEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnModelEventBase::editHandleFromIndex      (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfFromIndex,
+             this->getType().getFieldDesc(FromIndexFieldId),
+             this));
+
+
+    editSField(FromIndexFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableColumnModelEventBase::getHandleToIndex         (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfToIndex,
+             this->getType().getFieldDesc(ToIndexFieldId),
+             const_cast<TableColumnModelEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnModelEventBase::editHandleToIndex        (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfToIndex,
+             this->getType().getFieldDesc(ToIndexFieldId),
+             this));
+
+
+    editSField(ToIndexFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TableColumnModelEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TableColumnModelEvent *pThis = static_cast<TableColumnModelEvent *>(this);
+
+    pThis->execSync(static_cast<TableColumnModelEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TableColumnModelEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TableColumnModelEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TableColumnModelEvent *>(pRefAspect),
+                  dynamic_cast<const TableColumnModelEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TableColumnModelEventPtr>::_type("TableColumnModelEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TableColumnModelEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void TableColumnModelEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

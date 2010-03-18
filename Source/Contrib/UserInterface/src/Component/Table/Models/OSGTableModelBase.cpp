@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,163 +50,198 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETABLEMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTableModelBase.h"
 #include "OSGTableModel.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TableModelBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << TableModelBase::EventProducerFieldId);
-const OSG::BitVector TableModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::TableModel
+    A UI TableModel.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
-//! TableModel description
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldDescription *TableModelBase::_desc[] = 
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TableModel *>::_type("TableModelPtr", "FieldContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TableModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TableModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TableModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TableModelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&TableModelBase::editSFEventProducer))
-};
+    FieldDescriptionBase *pDesc = NULL;
+
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&TableModel::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&TableModel::invalidGetField));
+
+    oType.addInitialDesc(pDesc);
+}
 
 
-FieldContainerType TableModelBase::_type(
-    "TableModel",
-    "FieldContainer",
+TableModelBase::TypeObject TableModelBase::_type(
+    TableModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     TableModel::initMethod,
-    _desc,
-    sizeof(_desc));
+    TableModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TableModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TableModel\"\n"
+    "\tparent=\"FieldContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI TableModel.\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ContentsHeaderRowChanged\"\n"
+    "\t\ttype=\"TableModelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ContentsChanged\"\n"
+    "\t\ttype=\"TableModelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"IntervalAdded\"\n"
+    "\t\ttype=\"TableModelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"IntervalRemoved\"\n"
+    "\t\ttype=\"TableModelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI TableModel.\n"
+    );
 
 //! TableModel Produced Methods
 
 MethodDescription *TableModelBase::_methodDesc[] =
 {
     new MethodDescription("ContentsHeaderRowChanged", 
+                    "",
                      ContentsHeaderRowChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ContentsChanged", 
+                    "",
                      ContentsChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("IntervalAdded", 
+                    "",
                      IntervalAddedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("IntervalRemoved", 
+                    "",
                      IntervalRemovedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType TableModelBase::_producerType(
     "TableModelProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(TableModelBase, TableModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TableModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TableModelBase::getType(void) const 
+FieldContainerType &TableModelBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &TableModelBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &TableModelBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-UInt32 TableModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(TableModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 TableModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<TableModelBase *>(&other),
-                          whichField);
-}
-#else
-void TableModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
-{
-    this->executeSyncImpl((TableModelBase *) &other, whichField, sInfo);
-}
-void TableModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(TableModel);
 }
 
-void TableModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-TableModelBase::TableModelBase(void) :
-    _Producer(&getProducerType()),
-    _sfEventProducer(&_Producer),
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TableModelBase::TableModelBase(const TableModelBase &source) :
-    _Producer(&source.getProducerType()),
-    _sfEventProducer(&_Producer),
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-TableModelBase::~TableModelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TableModelBase::getBinSize(const BitVector &whichField)
+UInt32 TableModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -215,12 +250,11 @@ UInt32 TableModelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfEventProducer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TableModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TableModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -228,12 +262,10 @@ void TableModelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfEventProducer.copyToBin(pMem);
     }
-
-
 }
 
-void TableModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TableModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -241,59 +273,61 @@ void TableModelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfEventProducer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableModelBase::executeSyncImpl(      TableModelBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TableModelBase::TableModelBase(void) :
+    _Producer(&getProducerType()),
+    Inherited(),
+    _sfEventProducer(&_Producer)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
-
-}
-#else
-void TableModelBase::executeSyncImpl(      TableModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void TableModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+TableModelBase::TableModelBase(const TableModelBase &source) :
+    _Producer(&source.getProducerType()),
+    Inherited(source),
+    _sfEventProducer(&_Producer)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+TableModelBase::~TableModelBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TableModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TableModel *pThis = static_cast<TableModel *>(this);
+
+    pThis->execSync(static_cast<TableModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void TableModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TableModelPtr>::_type("TableModelPtr", "FieldContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TableModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TableModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

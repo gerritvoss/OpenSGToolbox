@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,49 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGDefaultTableColumnModelBase.h"
-#include "Component/List/OSGListSelectionListener.h"
-#include <OpenSG/Toolbox/OSGFieldChangeListener.h>
+#include "OSGListSelectionListener.h"
+#include "OSGFieldChangeListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultTableColumnModel class. See \ref 
-           PageUserInterfaceDefaultTableColumnModel for a description.
+/*! \brief DefaultTableColumnModel class. See \ref
+           PageContribUserInterfaceDefaultTableColumnModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTableColumnModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public DefaultTableColumnModelBase
 {
-  private:
-
-    typedef DefaultTableColumnModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DefaultTableColumnModelBase Inherited;
+    typedef DefaultTableColumnModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
     //Appends aColumn to the end of the tableColumns array.
-    virtual void addColumn(const TableColumnPtr aColumn);
+    virtual void addColumn(const TableColumnRefPtr aColumn);
 
     //Returns the TableColumn object for the column at columnIndex.
-    virtual TableColumnPtr getColumn(const UInt32& columnIndex) const;
+    virtual TableColumnRefPtr getColumn(const UInt32& columnIndex) const;
 
     //Returns the number of columns in the model.
     virtual UInt32 getColumnCount(void) const;
@@ -96,7 +97,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
     virtual UInt32 getColumnMargin(void) const;
 
     //Returns an Enumeration of all the columns in the model.
-    virtual std::vector<TableColumnPtr> getColumns(void) const;
+    virtual std::vector<TableColumnUnrecPtr> getColumns(void) const;
 
     //Returns true if columns may be selected.
     virtual bool getColumnSelectionAllowed(void) const;
@@ -117,7 +118,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
     virtual void moveColumn(const UInt32& columnIndex, const UInt32& newIndex);
 
     //Deletes the TableColumn column from the tableColumns array.
-    virtual void removeColumn(TableColumnPtr column);
+    virtual void removeColumn(TableColumnRefPtr column);
 
     //Sets the TableColumn's column margin to newMargin.
     virtual void setColumnMargin(const UInt32& newMargin);
@@ -128,12 +129,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
     //Sets the selection model.
     virtual void setSelectionModel(ListSelectionModelPtr newModel);
     
-    
     /*=========================  PROTECTED  ===============================*/
+
   protected:
-    typedef std::vector<TableColumnPtr> TableColumnVector;
 
     // Variables should all be in DefaultTableColumnModelBase.
+    typedef std::vector<TableColumnUnrecPtr> TableColumnVector;
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -147,7 +148,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultTableColumnModel(void); 
+    virtual ~DefaultTableColumnModel(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
@@ -161,16 +169,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
     UInt32 _TotalColumnWidth;
     
     
-	class TableSelectionListener : public ListSelectionListener
-	{
-	public :
-		TableSelectionListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel);
-		
+    class TableSelectionListener : public ListSelectionListener
+    {
+      public :
+        TableSelectionListener(DefaultTableColumnModelRefPtr TheDefaultTableColumnModel);
+
         //A ListSelectionListener that forwards ListSelectionEvents when there is a column selection change
-        virtual void selectionChanged(const ListSelectionEventPtr e);
-	protected :
-		DefaultTableColumnModelPtr _DefaultTableColumnModel;
-	};
+        virtual void selectionChanged(const ListSelectionEventUnrecPtr e);
+      protected :
+        DefaultTableColumnModelRefPtr _DefaultTableColumnModel;
+    };
 
 	friend class TableSelectionListener;
 
@@ -179,11 +187,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
 	/*class TableFieldChangeListener : public FieldChangeListener
 	{
 	public :
-		TableFieldChangeListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel);
+		TableFieldChangeListener(DefaultTableColumnModelRefPtr TheDefaultTableColumnModel);
 		
-        virtual void fieldChanged(const FieldChangeEventPtr e);
+        virtual void fieldChanged(const FieldChangeEventUnrecPtr e);
 	protected :
-		DefaultTableColumnModelPtr _DefaultTableColumnModel;
+		DefaultTableColumnModelRefPtr _DefaultTableColumnModel;
 	};
 
 	friend class TableFieldChangeListener;
@@ -191,15 +199,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
 	TableFieldChangeListener _TableFieldChangeListener;*/
 
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DefaultTableColumnModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DefaultTableColumnModel &source);
 };
 
@@ -209,7 +215,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDefaultTableColumnModelBase.inl"
 #include "OSGDefaultTableColumnModel.inl"
-
-#define OSGDEFAULTTABLECOLUMNMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDEFAULTTABLECOLUMNMODEL_H_ */

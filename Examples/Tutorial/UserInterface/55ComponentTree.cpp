@@ -156,7 +156,7 @@ class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
 		return fc;
 	}
 
-	static ComponentTreeItemGenerator *ComponentTreeItemGenerator::createEmpty(void)
+	static ComponentTreeItemGenerator *createEmpty(void)
 	{
 		ComponentTreeItemGenerator *returnValue;
 
@@ -168,7 +168,7 @@ class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
 		return returnValue;
 	}
 
-	static ComponentTreeItemGenerator *ComponentTreeItemGenerator::createEmptyLocal(BitVector bFlags)
+	static ComponentTreeItemGenerator *createEmptyLocal(BitVector bFlags)
 	{
 		ComponentTreeItemGenerator *returnValue;
 
@@ -179,7 +179,7 @@ class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
 		return returnValue;
 	}
 
-	FieldContainerTransitPtr ComponentTreeItemGenerator::shallowCopy(void) const
+	FieldContainerTransitPtr shallowCopy(void) const
 	{
 		ComponentTreeItemGenerator *tmpPtr;
 

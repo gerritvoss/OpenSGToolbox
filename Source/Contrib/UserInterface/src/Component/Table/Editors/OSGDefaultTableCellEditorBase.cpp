@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,207 +50,371 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTTABLECELLEDITORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGTextField.h"               // DefaultEditor Class
+#include "OSGSpinner.h"                 // DefaultNumberEditor Class
+#include "OSGComboBox.h"                // DefaultGLenumEditor Class
+#include "OSGCheckboxButton.h"          // DefaultBoolEditor Class
 
 #include "OSGDefaultTableCellEditorBase.h"
 #include "OSGDefaultTableCellEditor.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DefaultTableCellEditorBase::ClickCountToStartFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTableCellEditorBase::ClickCountToStartFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultTableCellEditorBase::DefaultEditorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTableCellEditorBase::DefaultEditorFieldId);
+/*! \class OSG::DefaultTableCellEditor
+    A UI Default Table Cell Editor.
+ */
 
-const OSG::BitVector  DefaultTableCellEditorBase::DefaultStringEditorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTableCellEditorBase::DefaultStringEditorFieldId);
-
-const OSG::BitVector  DefaultTableCellEditorBase::DefaultNumberEditorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTableCellEditorBase::DefaultNumberEditorFieldId);
-
-const OSG::BitVector  DefaultTableCellEditorBase::DefaultGLenumEditorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTableCellEditorBase::DefaultGLenumEditorFieldId);
-
-const OSG::BitVector  DefaultTableCellEditorBase::DefaultBoolEditorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTableCellEditorBase::DefaultBoolEditorFieldId);
-
-const OSG::BitVector DefaultTableCellEditorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          DefaultTableCellEditorBase::_sfClickCountToStart
     
 */
-/*! \var TextFieldPtr    DefaultTableCellEditorBase::_sfDefaultEditor
-    
-*/
-/*! \var TextFieldPtr    DefaultTableCellEditorBase::_sfDefaultStringEditor
-    
-*/
-/*! \var SpinnerPtr      DefaultTableCellEditorBase::_sfDefaultNumberEditor
-    
-*/
-/*! \var ComboBoxPtr     DefaultTableCellEditorBase::_sfDefaultGLenumEditor
-    
-*/
-/*! \var CheckboxButtonPtr DefaultTableCellEditorBase::_sfDefaultBoolEditor
+
+/*! \var TextField *     DefaultTableCellEditorBase::_sfDefaultEditor
     
 */
 
-//! DefaultTableCellEditor description
+/*! \var TextField *     DefaultTableCellEditorBase::_sfDefaultStringEditor
+    
+*/
 
-FieldDescription *DefaultTableCellEditorBase::_desc[] = 
+/*! \var Spinner *       DefaultTableCellEditorBase::_sfDefaultNumberEditor
+    
+*/
+
+/*! \var ComboBox *      DefaultTableCellEditorBase::_sfDefaultGLenumEditor
+    
+*/
+
+/*! \var CheckboxButton * DefaultTableCellEditorBase::_sfDefaultBoolEditor
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultTableCellEditor *>::_type("DefaultTableCellEditorPtr", "TableCellEditorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultTableCellEditor *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultTableCellEditor *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultTableCellEditor *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultTableCellEditorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ClickCountToStart", 
-                     ClickCountToStartFieldId, ClickCountToStartFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTableCellEditorBase::getSFClickCountToStart),
-    new FieldDescription(SFTextFieldPtr::getClassType(), 
-                     "DefaultEditor", 
-                     DefaultEditorFieldId, DefaultEditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTableCellEditorBase::getSFDefaultEditor),
-    new FieldDescription(SFTextFieldPtr::getClassType(), 
-                     "DefaultStringEditor", 
-                     DefaultStringEditorFieldId, DefaultStringEditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTableCellEditorBase::getSFDefaultStringEditor),
-    new FieldDescription(SFSpinnerPtr::getClassType(), 
-                     "DefaultNumberEditor", 
-                     DefaultNumberEditorFieldId, DefaultNumberEditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTableCellEditorBase::getSFDefaultNumberEditor),
-    new FieldDescription(SFComboBoxPtr::getClassType(), 
-                     "DefaultGLenumEditor", 
-                     DefaultGLenumEditorFieldId, DefaultGLenumEditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTableCellEditorBase::getSFDefaultGLenumEditor),
-    new FieldDescription(SFCheckboxButtonPtr::getClassType(), 
-                     "DefaultBoolEditor", 
-                     DefaultBoolEditorFieldId, DefaultBoolEditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultTableCellEditorBase::getSFDefaultBoolEditor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DefaultTableCellEditorBase::_type(
-    "DefaultTableCellEditor",
-    "TableCellEditor",
-    NULL,
-    (PrototypeCreateF) &DefaultTableCellEditorBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ClickCountToStart",
+        "",
+        ClickCountToStartFieldId, ClickCountToStartFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTableCellEditor::editHandleClickCountToStart),
+        static_cast<FieldGetMethodSig >(&DefaultTableCellEditor::getHandleClickCountToStart));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecTextFieldPtr::Description(
+        SFUnrecTextFieldPtr::getClassType(),
+        "DefaultEditor",
+        "",
+        DefaultEditorFieldId, DefaultEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTableCellEditor::editHandleDefaultEditor),
+        static_cast<FieldGetMethodSig >(&DefaultTableCellEditor::getHandleDefaultEditor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecTextFieldPtr::Description(
+        SFUnrecTextFieldPtr::getClassType(),
+        "DefaultStringEditor",
+        "",
+        DefaultStringEditorFieldId, DefaultStringEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTableCellEditor::editHandleDefaultStringEditor),
+        static_cast<FieldGetMethodSig >(&DefaultTableCellEditor::getHandleDefaultStringEditor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecSpinnerPtr::Description(
+        SFUnrecSpinnerPtr::getClassType(),
+        "DefaultNumberEditor",
+        "",
+        DefaultNumberEditorFieldId, DefaultNumberEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTableCellEditor::editHandleDefaultNumberEditor),
+        static_cast<FieldGetMethodSig >(&DefaultTableCellEditor::getHandleDefaultNumberEditor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecComboBoxPtr::Description(
+        SFUnrecComboBoxPtr::getClassType(),
+        "DefaultGLenumEditor",
+        "",
+        DefaultGLenumEditorFieldId, DefaultGLenumEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTableCellEditor::editHandleDefaultGLenumEditor),
+        static_cast<FieldGetMethodSig >(&DefaultTableCellEditor::getHandleDefaultGLenumEditor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecCheckboxButtonPtr::Description(
+        SFUnrecCheckboxButtonPtr::getClassType(),
+        "DefaultBoolEditor",
+        "",
+        DefaultBoolEditorFieldId, DefaultBoolEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTableCellEditor::editHandleDefaultBoolEditor),
+        static_cast<FieldGetMethodSig >(&DefaultTableCellEditor::getHandleDefaultBoolEditor));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DefaultTableCellEditorBase::TypeObject DefaultTableCellEditorBase::_type(
+    DefaultTableCellEditorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultTableCellEditorBase::createEmptyLocal),
     DefaultTableCellEditor::initMethod,
-    _desc,
-    sizeof(_desc));
+    DefaultTableCellEditor::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultTableCellEditor::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"DefaultTableCellEditor\"\n"
+    "    parent=\"TableCellEditor\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    >\n"
+    "    A UI Default Table Cell Editor.\n"
+    "    <Field\n"
+    "        name=\"ClickCountToStart\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"3\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DefaultEditor\"\n"
+    "        type=\"TextField\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DefaultStringEditor\"\n"
+    "        type=\"TextField\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DefaultNumberEditor\"\n"
+    "        type=\"Spinner\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DefaultGLenumEditor\"\n"
+    "        type=\"ComboBox\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DefaultBoolEditor\"\n"
+    "        type=\"CheckboxButton\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Default Table Cell Editor.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DefaultTableCellEditorBase, DefaultTableCellEditorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultTableCellEditorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultTableCellEditorBase::getType(void) const 
+FieldContainerType &DefaultTableCellEditorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultTableCellEditorBase::shallowCopy(void) const 
-{ 
-    DefaultTableCellEditorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultTableCellEditor *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultTableCellEditorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultTableCellEditor); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTableCellEditorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultTableCellEditorBase::getType(void) const
 {
-    this->executeSyncImpl((DefaultTableCellEditorBase *) &other, whichField);
+    return _type;
 }
-#else
-void DefaultTableCellEditorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultTableCellEditorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultTableCellEditorBase *) &other, whichField, sInfo);
+    return sizeof(DefaultTableCellEditor);
 }
-void DefaultTableCellEditorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *DefaultTableCellEditorBase::editSFClickCountToStart(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ClickCountToStartFieldMask);
+
+    return &_sfClickCountToStart;
 }
 
-void DefaultTableCellEditorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *DefaultTableCellEditorBase::getSFClickCountToStart(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfClickCountToStart;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DefaultTableCellEditorBase::DefaultTableCellEditorBase(void) :
-    _sfClickCountToStart      (UInt32(3)), 
-    _sfDefaultEditor          (TextFieldPtr(NullFC)), 
-    _sfDefaultStringEditor    (TextFieldPtr(NullFC)), 
-    _sfDefaultNumberEditor    (SpinnerPtr(NullFC)), 
-    _sfDefaultGLenumEditor    (ComboBoxPtr(NullFC)), 
-    _sfDefaultBoolEditor      (CheckboxButtonPtr(NullFC)), 
-    Inherited() 
+//! Get the DefaultTableCellEditor::_sfDefaultEditor field.
+const SFUnrecTextFieldPtr *DefaultTableCellEditorBase::getSFDefaultEditor(void) const
 {
+    return &_sfDefaultEditor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultTableCellEditorBase::DefaultTableCellEditorBase(const DefaultTableCellEditorBase &source) :
-    _sfClickCountToStart      (source._sfClickCountToStart      ), 
-    _sfDefaultEditor          (source._sfDefaultEditor          ), 
-    _sfDefaultStringEditor    (source._sfDefaultStringEditor    ), 
-    _sfDefaultNumberEditor    (source._sfDefaultNumberEditor    ), 
-    _sfDefaultGLenumEditor    (source._sfDefaultGLenumEditor    ), 
-    _sfDefaultBoolEditor      (source._sfDefaultBoolEditor      ), 
-    Inherited                 (source)
+SFUnrecTextFieldPtr *DefaultTableCellEditorBase::editSFDefaultEditor  (void)
 {
+    editSField(DefaultEditorFieldMask);
+
+    return &_sfDefaultEditor;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-DefaultTableCellEditorBase::~DefaultTableCellEditorBase(void)
+//! Get the DefaultTableCellEditor::_sfDefaultStringEditor field.
+const SFUnrecTextFieldPtr *DefaultTableCellEditorBase::getSFDefaultStringEditor(void) const
 {
+    return &_sfDefaultStringEditor;
 }
+
+SFUnrecTextFieldPtr *DefaultTableCellEditorBase::editSFDefaultStringEditor(void)
+{
+    editSField(DefaultStringEditorFieldMask);
+
+    return &_sfDefaultStringEditor;
+}
+
+//! Get the DefaultTableCellEditor::_sfDefaultNumberEditor field.
+const SFUnrecSpinnerPtr *DefaultTableCellEditorBase::getSFDefaultNumberEditor(void) const
+{
+    return &_sfDefaultNumberEditor;
+}
+
+SFUnrecSpinnerPtr   *DefaultTableCellEditorBase::editSFDefaultNumberEditor(void)
+{
+    editSField(DefaultNumberEditorFieldMask);
+
+    return &_sfDefaultNumberEditor;
+}
+
+//! Get the DefaultTableCellEditor::_sfDefaultGLenumEditor field.
+const SFUnrecComboBoxPtr *DefaultTableCellEditorBase::getSFDefaultGLenumEditor(void) const
+{
+    return &_sfDefaultGLenumEditor;
+}
+
+SFUnrecComboBoxPtr  *DefaultTableCellEditorBase::editSFDefaultGLenumEditor(void)
+{
+    editSField(DefaultGLenumEditorFieldMask);
+
+    return &_sfDefaultGLenumEditor;
+}
+
+//! Get the DefaultTableCellEditor::_sfDefaultBoolEditor field.
+const SFUnrecCheckboxButtonPtr *DefaultTableCellEditorBase::getSFDefaultBoolEditor(void) const
+{
+    return &_sfDefaultBoolEditor;
+}
+
+SFUnrecCheckboxButtonPtr *DefaultTableCellEditorBase::editSFDefaultBoolEditor(void)
+{
+    editSField(DefaultBoolEditorFieldMask);
+
+    return &_sfDefaultBoolEditor;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultTableCellEditorBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultTableCellEditorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -258,38 +422,32 @@ UInt32 DefaultTableCellEditorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfClickCountToStart.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
     {
         returnValue += _sfDefaultEditor.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
     {
         returnValue += _sfDefaultStringEditor.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultNumberEditorFieldMask & whichField))
     {
         returnValue += _sfDefaultNumberEditor.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultGLenumEditorFieldMask & whichField))
     {
         returnValue += _sfDefaultGLenumEditor.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultBoolEditorFieldMask & whichField))
     {
         returnValue += _sfDefaultBoolEditor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DefaultTableCellEditorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultTableCellEditorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -297,37 +455,30 @@ void DefaultTableCellEditorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfClickCountToStart.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
     {
         _sfDefaultEditor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
     {
         _sfDefaultStringEditor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultNumberEditorFieldMask & whichField))
     {
         _sfDefaultNumberEditor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultGLenumEditorFieldMask & whichField))
     {
         _sfDefaultGLenumEditor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultBoolEditorFieldMask & whichField))
     {
         _sfDefaultBoolEditor.copyToBin(pMem);
     }
-
-
 }
 
-void DefaultTableCellEditorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultTableCellEditorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -335,137 +486,412 @@ void DefaultTableCellEditorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfClickCountToStart.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
     {
         _sfDefaultEditor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
     {
         _sfDefaultStringEditor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultNumberEditorFieldMask & whichField))
     {
         _sfDefaultNumberEditor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultGLenumEditorFieldMask & whichField))
     {
         _sfDefaultGLenumEditor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultBoolEditorFieldMask & whichField))
     {
         _sfDefaultBoolEditor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTableCellEditorBase::executeSyncImpl(      DefaultTableCellEditorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultTableCellEditorTransitPtr DefaultTableCellEditorBase::createLocal(BitVector bFlags)
 {
+    DefaultTableCellEditorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ClickCountToStartFieldMask & whichField))
-        _sfClickCountToStart.syncWith(pOther->_sfClickCountToStart);
+        fc = dynamic_pointer_cast<DefaultTableCellEditor>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
-        _sfDefaultEditor.syncWith(pOther->_sfDefaultEditor);
-
-    if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
-        _sfDefaultStringEditor.syncWith(pOther->_sfDefaultStringEditor);
-
-    if(FieldBits::NoField != (DefaultNumberEditorFieldMask & whichField))
-        _sfDefaultNumberEditor.syncWith(pOther->_sfDefaultNumberEditor);
-
-    if(FieldBits::NoField != (DefaultGLenumEditorFieldMask & whichField))
-        _sfDefaultGLenumEditor.syncWith(pOther->_sfDefaultGLenumEditor);
-
-    if(FieldBits::NoField != (DefaultBoolEditorFieldMask & whichField))
-        _sfDefaultBoolEditor.syncWith(pOther->_sfDefaultBoolEditor);
-
-
-}
-#else
-void DefaultTableCellEditorBase::executeSyncImpl(      DefaultTableCellEditorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ClickCountToStartFieldMask & whichField))
-        _sfClickCountToStart.syncWith(pOther->_sfClickCountToStart);
-
-    if(FieldBits::NoField != (DefaultEditorFieldMask & whichField))
-        _sfDefaultEditor.syncWith(pOther->_sfDefaultEditor);
-
-    if(FieldBits::NoField != (DefaultStringEditorFieldMask & whichField))
-        _sfDefaultStringEditor.syncWith(pOther->_sfDefaultStringEditor);
-
-    if(FieldBits::NoField != (DefaultNumberEditorFieldMask & whichField))
-        _sfDefaultNumberEditor.syncWith(pOther->_sfDefaultNumberEditor);
-
-    if(FieldBits::NoField != (DefaultGLenumEditorFieldMask & whichField))
-        _sfDefaultGLenumEditor.syncWith(pOther->_sfDefaultGLenumEditor);
-
-    if(FieldBits::NoField != (DefaultBoolEditorFieldMask & whichField))
-        _sfDefaultBoolEditor.syncWith(pOther->_sfDefaultBoolEditor);
-
-
-
+    return fc;
 }
 
-void DefaultTableCellEditorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultTableCellEditorTransitPtr DefaultTableCellEditorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultTableCellEditorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultTableCellEditor>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultTableCellEditorTransitPtr DefaultTableCellEditorBase::create(void)
+{
+    DefaultTableCellEditorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultTableCellEditor>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultTableCellEditor *DefaultTableCellEditorBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultTableCellEditor *returnValue;
+
+    newPtr<DefaultTableCellEditor>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultTableCellEditor *DefaultTableCellEditorBase::createEmpty(void)
+{
+    DefaultTableCellEditor *returnValue;
+
+    newPtr<DefaultTableCellEditor>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultTableCellEditorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultTableCellEditor *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTableCellEditor *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTableCellEditorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultTableCellEditor *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTableCellEditor *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTableCellEditorBase::shallowCopy(void) const
+{
+    DefaultTableCellEditor *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultTableCellEditor *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultTableCellEditorBase::DefaultTableCellEditorBase(void) :
+    Inherited(),
+    _sfClickCountToStart      (UInt32(3)),
+    _sfDefaultEditor          (NULL),
+    _sfDefaultStringEditor    (NULL),
+    _sfDefaultNumberEditor    (NULL),
+    _sfDefaultGLenumEditor    (NULL),
+    _sfDefaultBoolEditor      (NULL)
+{
+}
+
+DefaultTableCellEditorBase::DefaultTableCellEditorBase(const DefaultTableCellEditorBase &source) :
+    Inherited(source),
+    _sfClickCountToStart      (source._sfClickCountToStart      ),
+    _sfDefaultEditor          (NULL),
+    _sfDefaultStringEditor    (NULL),
+    _sfDefaultNumberEditor    (NULL),
+    _sfDefaultGLenumEditor    (NULL),
+    _sfDefaultBoolEditor      (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultTableCellEditorBase::~DefaultTableCellEditorBase(void)
+{
+}
+
+void DefaultTableCellEditorBase::onCreate(const DefaultTableCellEditor *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DefaultTableCellEditor *pThis = static_cast<DefaultTableCellEditor *>(this);
+
+        pThis->setDefaultEditor(source->getDefaultEditor());
+
+        pThis->setDefaultStringEditor(source->getDefaultStringEditor());
+
+        pThis->setDefaultNumberEditor(source->getDefaultNumberEditor());
+
+        pThis->setDefaultGLenumEditor(source->getDefaultGLenumEditor());
+
+        pThis->setDefaultBoolEditor(source->getDefaultBoolEditor());
+    }
+}
+
+GetFieldHandlePtr DefaultTableCellEditorBase::getHandleClickCountToStart (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfClickCountToStart,
+             this->getType().getFieldDesc(ClickCountToStartFieldId),
+             const_cast<DefaultTableCellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTableCellEditorBase::editHandleClickCountToStart(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfClickCountToStart,
+             this->getType().getFieldDesc(ClickCountToStartFieldId),
+             this));
+
+
+    editSField(ClickCountToStartFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTableCellEditorBase::getHandleDefaultEditor   (void) const
+{
+    SFUnrecTextFieldPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::GetHandle(
+             &_sfDefaultEditor,
+             this->getType().getFieldDesc(DefaultEditorFieldId),
+             const_cast<DefaultTableCellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTableCellEditorBase::editHandleDefaultEditor  (void)
+{
+    SFUnrecTextFieldPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::EditHandle(
+             &_sfDefaultEditor,
+             this->getType().getFieldDesc(DefaultEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTableCellEditor::setDefaultEditor,
+                    static_cast<DefaultTableCellEditor *>(this), _1));
+
+    editSField(DefaultEditorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTableCellEditorBase::getHandleDefaultStringEditor (void) const
+{
+    SFUnrecTextFieldPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::GetHandle(
+             &_sfDefaultStringEditor,
+             this->getType().getFieldDesc(DefaultStringEditorFieldId),
+             const_cast<DefaultTableCellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTableCellEditorBase::editHandleDefaultStringEditor(void)
+{
+    SFUnrecTextFieldPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextFieldPtr::EditHandle(
+             &_sfDefaultStringEditor,
+             this->getType().getFieldDesc(DefaultStringEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTableCellEditor::setDefaultStringEditor,
+                    static_cast<DefaultTableCellEditor *>(this), _1));
+
+    editSField(DefaultStringEditorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTableCellEditorBase::getHandleDefaultNumberEditor (void) const
+{
+    SFUnrecSpinnerPtr::GetHandlePtr returnValue(
+        new  SFUnrecSpinnerPtr::GetHandle(
+             &_sfDefaultNumberEditor,
+             this->getType().getFieldDesc(DefaultNumberEditorFieldId),
+             const_cast<DefaultTableCellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTableCellEditorBase::editHandleDefaultNumberEditor(void)
+{
+    SFUnrecSpinnerPtr::EditHandlePtr returnValue(
+        new  SFUnrecSpinnerPtr::EditHandle(
+             &_sfDefaultNumberEditor,
+             this->getType().getFieldDesc(DefaultNumberEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTableCellEditor::setDefaultNumberEditor,
+                    static_cast<DefaultTableCellEditor *>(this), _1));
+
+    editSField(DefaultNumberEditorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTableCellEditorBase::getHandleDefaultGLenumEditor (void) const
+{
+    SFUnrecComboBoxPtr::GetHandlePtr returnValue(
+        new  SFUnrecComboBoxPtr::GetHandle(
+             &_sfDefaultGLenumEditor,
+             this->getType().getFieldDesc(DefaultGLenumEditorFieldId),
+             const_cast<DefaultTableCellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTableCellEditorBase::editHandleDefaultGLenumEditor(void)
+{
+    SFUnrecComboBoxPtr::EditHandlePtr returnValue(
+        new  SFUnrecComboBoxPtr::EditHandle(
+             &_sfDefaultGLenumEditor,
+             this->getType().getFieldDesc(DefaultGLenumEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTableCellEditor::setDefaultGLenumEditor,
+                    static_cast<DefaultTableCellEditor *>(this), _1));
+
+    editSField(DefaultGLenumEditorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTableCellEditorBase::getHandleDefaultBoolEditor (void) const
+{
+    SFUnrecCheckboxButtonPtr::GetHandlePtr returnValue(
+        new  SFUnrecCheckboxButtonPtr::GetHandle(
+             &_sfDefaultBoolEditor,
+             this->getType().getFieldDesc(DefaultBoolEditorFieldId),
+             const_cast<DefaultTableCellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTableCellEditorBase::editHandleDefaultBoolEditor(void)
+{
+    SFUnrecCheckboxButtonPtr::EditHandlePtr returnValue(
+        new  SFUnrecCheckboxButtonPtr::EditHandle(
+             &_sfDefaultBoolEditor,
+             this->getType().getFieldDesc(DefaultBoolEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTableCellEditor::setDefaultBoolEditor,
+                    static_cast<DefaultTableCellEditor *>(this), _1));
+
+    editSField(DefaultBoolEditorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultTableCellEditorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultTableCellEditor *pThis = static_cast<DefaultTableCellEditor *>(this);
+
+    pThis->execSync(static_cast<DefaultTableCellEditor *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultTableCellEditorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultTableCellEditor *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultTableCellEditor *>(pRefAspect),
+                  dynamic_cast<const DefaultTableCellEditor *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DefaultTableCellEditorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DefaultTableCellEditor *>(this)->setDefaultEditor(NULL);
+
+    static_cast<DefaultTableCellEditor *>(this)->setDefaultStringEditor(NULL);
+
+    static_cast<DefaultTableCellEditor *>(this)->setDefaultNumberEditor(NULL);
+
+    static_cast<DefaultTableCellEditor *>(this)->setDefaultGLenumEditor(NULL);
+
+    static_cast<DefaultTableCellEditor *>(this)->setDefaultBoolEditor(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultTableCellEditorPtr>::_type("DefaultTableCellEditorPtr", "TableCellEditorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultTableCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultTableCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTTABLECELLEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTTABLECELLEDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTTABLECELLEDITORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

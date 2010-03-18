@@ -43,27 +43,25 @@
 #pragma once
 #endif
  
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "Component/OSGComponent.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
+#include "OSGComponent.h"
 #include "OSGTableFields.h"
 
 #include <boost/any.hpp>
 
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
-
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING TableCellRenderer : public IntrusivePtrImplBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableCellRenderer
 {
 private:
 protected:
 public:
-	virtual ComponentPtr getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column) = 0;
+	virtual ComponentRefPtr getTableCellRendererComponent(TableRefPtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column) = 0;
 
 };
 
-typedef boost::intrusive_ptr<TableCellRenderer> TableCellRendererPtr;
+typedef boost::shared_ptr<TableCellRenderer> TableCellRendererPtr;
 
 OSG_END_NAMESPACE
 

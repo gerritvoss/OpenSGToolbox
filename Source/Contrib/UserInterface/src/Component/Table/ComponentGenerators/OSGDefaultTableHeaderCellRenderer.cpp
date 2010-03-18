@@ -43,13 +43,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
-#include "Border/OSGBevelBorder.h"
-#include "Component/Text/OSGLabel.h"
+#include "OSGBevelBorder.h"
+#include "OSGLabel.h"
 
 #include "OSGDefaultTableHeaderCellRenderer.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,7 +57,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultTableHeaderCellRenderer
+/*! \class OSG::DefaultTableHeaderCellRenderer
 A DefaultTableHeaderCellRenderer.
 */
 
@@ -74,38 +74,34 @@ A DefaultTableHeaderCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentRefPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(TableRefPtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
-	if(value.empty()){
-		return NullFC;
-	}
-	BevelBorderPtr DefaultBorder = BevelBorder::create();
-	beginEditCP(DefaultBorder);
-		DefaultBorder->setRaised(true);
-		DefaultBorder->setWidth(1);
-		DefaultBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
-		DefaultBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
-		DefaultBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
-		DefaultBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
-	endEditCP(DefaultBorder);
+    if(value.empty()){
+        return NULL;
+    }
+    BevelBorderRefPtr DefaultBorder = BevelBorder::create();
+    DefaultBorder->setRaised(true);
+    DefaultBorder->setWidth(1);
+    DefaultBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+    DefaultBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+    DefaultBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+    DefaultBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
 
-	LabelPtr TheLabel = Label::create();
-	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BordersFieldMask);
-		std::string tempString;
-        try
-        {
-            tempString = lexical_cast(value);
-        }
-        catch (boost::bad_lexical_cast &)
-        {
-            //Could not convert to string
-        }
-		TheLabel->setText(tempString);
-		TheLabel->setPreferredSize(Vec2f(100,30));
-		TheLabel->setBorders(DefaultBorder);
-	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BordersFieldMask);
+    LabelRefPtr TheLabel = Label::create();
+    std::string tempString;
+    try
+    {
+        tempString = lexical_cast(value);
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        //Could not convert to string
+    }
+    TheLabel->setText(tempString);
+    TheLabel->setPreferredSize(Vec2f(100,30));
+    TheLabel->setBorders(DefaultBorder);
 
-	return Component::Ptr::dcast(TheLabel);
+    return dynamic_pointer_cast<Component>(TheLabel);
 }
 
 /*-------------------------------------------------------------------------*\

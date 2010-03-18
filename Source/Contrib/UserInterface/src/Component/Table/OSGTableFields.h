@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Table;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TablePtr
+OSG_GEN_CONTAINERPTR(Table);
 
-typedef FCPtr<ContainerPtr, Table> TablePtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TablePtr> : 
-    public FieldTraitsRecurseMapper<TablePtr, true>
+struct FieldTraits<Table *> :
+    public FieldTraitsFCPtrBase<Table *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTablePtr"; }
-    static const char *getMName(void) { return "MFTablePtr"; }
+    typedef FieldTraits<Table *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTablePtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTablePtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TablePtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<Table *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTablePtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<Table *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTablePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Table *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTablePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Table *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTablePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Table *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTablePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Table *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTablePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Table *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTablePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Table *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTablePtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Table *,
+                      RecordedRefCountPolicy  > SFRecTablePtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Table *,
+                      UnrecordedRefCountPolicy> SFUnrecTablePtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Table *,
+                      WeakRefCountPolicy      > SFWeakTablePtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Table *,
+                      NoRefCountPolicy        > SFUncountedTablePtr;
 
-typedef SField<TablePtr> SFTablePtr;
-#endif
 
-#ifndef OSG_COMPILETABLEINST
-OSG_DLLEXPORT_DECL1(SField, TablePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Table *,
+                      RecordedRefCountPolicy  > MFRecTablePtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Table *,
+                      UnrecordedRefCountPolicy> MFUnrecTablePtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Table *,
+                      WeakRefCountPolicy      > MFWeakTablePtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Table *,
+                      NoRefCountPolicy        > MFUncountedTablePtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TablePtr> MFTablePtr;
-#endif
 
-#ifndef OSG_COMPILETABLEINST
-OSG_DLLEXPORT_DECL1(MField, TablePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTablePtr : 
+    public PointerSField<Table *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTablePtr : 
+    public PointerSField<Table *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTablePtr :
+    public PointerSField<Table *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTablePtr :
+    public PointerSField<Table *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTablePtr :
+    public PointerMField<Table *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTablePtr :
+    public PointerMField<Table *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTablePtr :
+    public PointerMField<Table *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTablePtr :
+    public PointerMField<Table *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGTABLEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTABLEFIELDS_H_ */

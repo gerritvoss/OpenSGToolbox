@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,46 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTableColumnBase.h"
-
 #include "OSGTableCellRenderer.h"
-#include <OpenSG/OSGField.h>
+#include "OSGField.h"
 
-#include <OpenSG/Toolbox/OSGFieldChangeListener.h>
-#include <OpenSG/Toolbox/OSGFieldChangeEvent.h>
+#include "OSGFieldChangeListener.h"
+#include "OSGFieldChangeEvent.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TableColumn class. See \ref 
-           PageUserInterfaceTableColumn for a description.
+/*! \brief TableColumn class. See \ref
+           PageContribUserInterfaceTableColumn for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumn : public TableColumnBase
 {
-  private:
-
-    typedef TableColumnBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TableColumnBase Inherited;
+    typedef TableColumn     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -110,6 +109,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
     //Sets the Object whose string representation will be used as the value for the headerRenderer.
     void setHeaderValue(const boost::any& headerValue);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TableColumnBase.
@@ -126,7 +126,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableColumn(void); 
+    virtual ~TableColumn(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
@@ -141,17 +148,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
 	
     FieldChangeListenerSet       _FieldChangeListeners;
     
-    virtual void produceFieldChanged(Field* TheField, FieldDescription* TheDescription);
+    virtual void produceFieldChanged(EditFieldHandlePtr TheField, FieldDescriptionBase* TheDescription);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TableColumnBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TableColumn &source);
 };
 
@@ -159,6 +164,7 @@ typedef TableColumn *TableColumnP;
 
 OSG_END_NAMESPACE
 
+#include "OSGTableCellEditor.h"
 #include "OSGTableColumnBase.inl"
 #include "OSGTableColumn.inl"
 

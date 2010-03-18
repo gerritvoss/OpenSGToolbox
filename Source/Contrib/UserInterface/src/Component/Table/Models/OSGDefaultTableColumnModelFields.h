@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGAbstractTableColumnModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DefaultTableColumnModel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DefaultTableColumnModelPtr
+OSG_GEN_CONTAINERPTR(DefaultTableColumnModel);
 
-typedef FCPtr<AbstractTableColumnModelPtr, DefaultTableColumnModel> DefaultTableColumnModelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<DefaultTableColumnModelPtr> : 
-    public FieldTraitsRecurseMapper<DefaultTableColumnModelPtr, true>
+struct FieldTraits<DefaultTableColumnModel *> :
+    public FieldTraitsFCPtrBase<DefaultTableColumnModel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFDefaultTableColumnModelPtr"; }
-    static const char *getMName(void) { return "MFDefaultTableColumnModelPtr"; }
+    typedef FieldTraits<DefaultTableColumnModel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFDefaultTableColumnModelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFDefaultTableColumnModelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DefaultTableColumnModelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<DefaultTableColumnModel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecDefaultTableColumnModelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<DefaultTableColumnModel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecDefaultTableColumnModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultTableColumnModel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakDefaultTableColumnModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultTableColumnModel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdDefaultTableColumnModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultTableColumnModel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecDefaultTableColumnModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultTableColumnModel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecDefaultTableColumnModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultTableColumnModel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakDefaultTableColumnModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultTableColumnModel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdDefaultTableColumnModelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultTableColumnModel *,
+                      RecordedRefCountPolicy  > SFRecDefaultTableColumnModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultTableColumnModel *,
+                      UnrecordedRefCountPolicy> SFUnrecDefaultTableColumnModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultTableColumnModel *,
+                      WeakRefCountPolicy      > SFWeakDefaultTableColumnModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultTableColumnModel *,
+                      NoRefCountPolicy        > SFUncountedDefaultTableColumnModelPtr;
 
-typedef SField<DefaultTableColumnModelPtr> SFDefaultTableColumnModelPtr;
-#endif
 
-#ifndef OSG_COMPILEDEFAULTTABLECOLUMNMODELINST
-OSG_DLLEXPORT_DECL1(SField, DefaultTableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultTableColumnModel *,
+                      RecordedRefCountPolicy  > MFRecDefaultTableColumnModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultTableColumnModel *,
+                      UnrecordedRefCountPolicy> MFUnrecDefaultTableColumnModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultTableColumnModel *,
+                      WeakRefCountPolicy      > MFWeakDefaultTableColumnModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultTableColumnModel *,
+                      NoRefCountPolicy        > MFUncountedDefaultTableColumnModelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<DefaultTableColumnModelPtr> MFDefaultTableColumnModelPtr;
-#endif
 
-#ifndef OSG_COMPILEDEFAULTTABLECOLUMNMODELINST
-OSG_DLLEXPORT_DECL1(MField, DefaultTableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecDefaultTableColumnModelPtr : 
+    public PointerSField<DefaultTableColumnModel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecDefaultTableColumnModelPtr : 
+    public PointerSField<DefaultTableColumnModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakDefaultTableColumnModelPtr :
+    public PointerSField<DefaultTableColumnModel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedDefaultTableColumnModelPtr :
+    public PointerSField<DefaultTableColumnModel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecDefaultTableColumnModelPtr :
+    public PointerMField<DefaultTableColumnModel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecDefaultTableColumnModelPtr :
+    public PointerMField<DefaultTableColumnModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakDefaultTableColumnModelPtr :
+    public PointerMField<DefaultTableColumnModel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedDefaultTableColumnModelPtr :
+    public PointerMField<DefaultTableColumnModel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTTABLECOLUMNMODELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGDEFAULTTABLECOLUMNMODELFIELDS_H_ */

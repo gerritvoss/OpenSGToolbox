@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,25 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultTableCellEditor.h"
-#include "Layer/OSGColorLayer.h"
-#include "Border/OSGLineBorder.h"
-#include "Border/OSGEmptyBorder.h"
-#include "Component/Text/OSGTextField.h"
-#include <OpenSG/Toolbox/OSGStringUtils.h>
+#include "OSGColorLayer.h"
+#include "OSGLineBorder.h"
+#include "OSGEmptyBorder.h"
+#include "OSGTextField.h"
+#include "OSGStringUtils.h"
+#include "OSGTable.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultTableCellEditor
-A UI Default Table Cell Editor. 	
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultTableCellEditorBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultTableCellEditor.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,8 +68,13 @@ A UI Default Table Cell Editor.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultTableCellEditor::initMethod (void)
+void DefaultTableCellEditor::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -81,81 +82,67 @@ void DefaultTableCellEditor::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column)
+ComponentRefPtr DefaultTableCellEditor::getTableCellEditorComponent(TableRefPtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column)
 {
-	if(value.empty()){
-		return NullFC;
-	}
-	TextFieldPtr TheTextField = TextField::create();
-	beginEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::AlignmentFieldMask | TextField::CaretPositionFieldMask);
-		std::string tempString;
-        try
-        {
-            tempString = lexical_cast(value);
-        }
-        catch (boost::bad_lexical_cast &)
-        {
-            //Could not convert to string
-        }
-		TheTextField->setText(tempString);
-		TheTextField->setPreferredSize(Vec2f(100,30));
-		TheTextField->setAlignment(Vec2f(0.5,0.5));
-		TheTextField->selectAll();
-		TheTextField->setCaretPosition(TheTextField->getText().size());
-	endEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::AlignmentFieldMask | TextField::CaretPositionFieldMask);
-	ColorLayerPtr tempBackground;
-	tempBackground = ColorLayer::create();
+    if(value.empty()){
+        return NULL;
+    }
+    TextFieldRefPtr TheTextField = TextField::create();
+    std::string tempString;
+    try
+    {
+        tempString = lexical_cast(value);
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        //Could not convert to string
+    }
+    TheTextField->setText(tempString);
+    TheTextField->setPreferredSize(Vec2f(100,30));
+    TheTextField->setAlignment(Vec2f(0.5,0.5));
+    TheTextField->selectAll();
+    TheTextField->setCaretPosition(TheTextField->getText().size());
+    ColorLayerRefPtr tempBackground;
+    tempBackground = ColorLayer::create();
 
-	beginEditCP(TheTextField, TextField::BackgroundFieldMask);
-		TheTextField->setBackground(tempBackground);
-	endEditCP(TheTextField, TextField::BackgroundFieldMask);
+    TheTextField->setBackground(tempBackground);
 
-	beginEditCP(tempBackground, ColorLayer::ColorFieldMask);
-		//if(isSelected){
-		//	tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
-		//}
-		//else{
-			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
-		//}
-	endEditCP(tempBackground, ColorLayer::ColorFieldMask);
+    //if(isSelected){
+    //	tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
+    //}
+    //else{
+    tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+    //}
 
-	LineBorderPtr tempBorder;
+    LineBorderRefPtr tempBorder;
 
-	tempBorder = LineBorder::create();
-	beginEditCP(tempBorder, LineBorder::ColorFieldMask);
-		tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
-	endEditCP(tempBorder, LineBorder::ColorFieldMask);
+    tempBorder = LineBorder::create();
+    tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
 
-	beginEditCP(TheTextField, TextField::BorderFieldMask);
-		TheTextField->setBorder(tempBorder);
-	endEditCP(TheTextField, TextField::BorderFieldMask);
+    TheTextField->setBorder(tempBorder);
 
-    beginEditCP(DefaultTableCellEditorPtr(this), DefaultStringEditorFieldMask);
-        setDefaultStringEditor(TheTextField);
-    endEditCP(DefaultTableCellEditorPtr(this), DefaultStringEditorFieldMask);
+    setDefaultStringEditor(TheTextField);
     getDefaultStringEditor()->addActionListener(&_DefaultStringEditorListener);
     getDefaultStringEditor()->addFocusListener(&_DefaultStringEditorListener);
     getDefaultStringEditor()->addKeyListener(&_DefaultStringEditorListener);
-	return getDefaultStringEditor();
+    return getDefaultStringEditor();
 }
 
-ComponentPtr DefaultTableCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
+ComponentRefPtr DefaultTableCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
 {
-    return getTableCellEditorComponent(NullFC, Value, IsSelected, 0, 0);
+    return getTableCellEditorComponent(TableRefPtr(NULL), Value, IsSelected, 0, 0);
 }
 
 void DefaultTableCellEditor::cancelCellEditing(void)
 {
-    if(getDefaultStringEditor() != NullFC)
+    if(getDefaultStringEditor() != NULL)
     {
         getDefaultStringEditor()->removeActionListener(&_DefaultStringEditorListener);
         getDefaultStringEditor()->removeFocusListener(&_DefaultStringEditorListener);
         getDefaultStringEditor()->removeKeyListener(&_DefaultStringEditorListener);
     }
     AbstractCellEditor::cancelCellEditing();
-    beginEditCP(DefaultTableCellEditorPtr(this), DefaultStringEditorFieldMask);
-        setDefaultStringEditor(NullFC);
-    endEditCP(DefaultTableCellEditorPtr(this), DefaultStringEditorFieldMask);
+    setDefaultStringEditor(NULL);
 }
 
 boost::any DefaultTableCellEditor::getCellEditorValue(void) const
@@ -164,11 +151,11 @@ boost::any DefaultTableCellEditor::getCellEditorValue(void) const
     return boost::any(_Value);
 }
 
-bool DefaultTableCellEditor::isCellEditable(const EventPtr anEvent) const
+bool DefaultTableCellEditor::isCellEditable(const EventUnrecPtr anEvent) const
 {
     if(/*anEvent.getType() != MouseEvent::getClassType() ||*/
        (anEvent->getType().isDerivedFrom(MouseEvent::getClassType()) &&
-       MouseEventPtr::dcast(anEvent)->getClickCount() >= getClickCountToStart()))
+        dynamic_pointer_cast<MouseEvent>(anEvent)->getClickCount() >= getClickCountToStart()))
     {
         return AbstractCellEditor::isCellEditable(anEvent);
     }
@@ -178,48 +165,46 @@ bool DefaultTableCellEditor::isCellEditable(const EventPtr anEvent) const
     }
 }
 
-bool DefaultTableCellEditor::shouldSelectCell(const EventPtr anEvent) const
+bool DefaultTableCellEditor::shouldSelectCell(const EventUnrecPtr anEvent) const
 {
     return Inherited::shouldSelectCell(anEvent);
 }
 
 bool DefaultTableCellEditor::stopCellEditing(void)
 {
-    if(getDefaultStringEditor() != NullFC)
+    if(getDefaultStringEditor() != NULL)
     {
         getDefaultStringEditor()->removeActionListener(&_DefaultStringEditorListener);
         getDefaultStringEditor()->removeFocusListener(&_DefaultStringEditorListener);
         getDefaultStringEditor()->removeKeyListener(&_DefaultStringEditorListener);
     }
     bool Return =  AbstractCellEditor::stopCellEditing();
-    beginEditCP(DefaultTableCellEditorPtr(this), DefaultStringEditorFieldMask);
-        setDefaultStringEditor(NullFC);
-    endEditCP(DefaultTableCellEditorPtr(this), DefaultStringEditorFieldMask);
+    setDefaultStringEditor(NULL);
     return Return;
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::actionPerformed(const ActionEventPtr e)
+void DefaultTableCellEditor::DefaultStringEditorListener::actionPerformed(const ActionEventUnrecPtr e)
 {
     _DefaultTableCellEditor->stopCellEditing();
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::focusGained(const FocusEventPtr e)
+void DefaultTableCellEditor::DefaultStringEditorListener::focusGained(const FocusEventUnrecPtr e)
 {
-	//Do nothing
+    //Do nothing
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::focusLost(const FocusEventPtr e)
+void DefaultTableCellEditor::DefaultStringEditorListener::focusLost(const FocusEventUnrecPtr e)
 {
     _DefaultTableCellEditor->stopCellEditing();
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::keyPressed(const KeyEventPtr e)
+void DefaultTableCellEditor::DefaultStringEditorListener::keyPressed(const KeyEventUnrecPtr e)
 {
-	if(e->getKey() == KeyEvent::KEY_ESCAPE ||
-		e->getKey() == KeyEvent::KEY_CANCEL)
-	{
-		_DefaultTableCellEditor->cancelCellEditing();
-	}
+    if(e->getKey() == KeyEvent::KEY_ESCAPE ||
+       e->getKey() == KeyEvent::KEY_CANCEL)
+    {
+        _DefaultTableCellEditor->cancelCellEditing();
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -230,14 +215,14 @@ void DefaultTableCellEditor::DefaultStringEditorListener::keyPressed(const KeyEv
 
 DefaultTableCellEditor::DefaultTableCellEditor(void) :
     Inherited(),
-        _DefaultStringEditorListener(DefaultTableCellEditorPtr(this)),
+        _DefaultStringEditorListener(this),
         _Value()
 {
 }
 
 DefaultTableCellEditor::DefaultTableCellEditor(const DefaultTableCellEditor &source) :
     Inherited(source),
-        _DefaultStringEditorListener(DefaultTableCellEditorPtr(this)),
+        _DefaultStringEditorListener(this),
         _Value()
 {
 }
@@ -248,41 +233,17 @@ DefaultTableCellEditor::~DefaultTableCellEditor(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultTableCellEditor::changed(BitVector whichField, UInt32 origin)
+void DefaultTableCellEditor::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DefaultTableCellEditor::dump(      UInt32    , 
+void DefaultTableCellEditor::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultTableCellEditor NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTTABLECELLEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTTABLECELLEDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTTABLECELLEDITORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

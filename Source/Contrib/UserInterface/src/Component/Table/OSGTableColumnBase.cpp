@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,256 +50,442 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETABLECOLUMNINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGTableCellEditor.h"         // CellEditor Class
 
 #include "OSGTableColumnBase.h"
 #include "OSGTableColumn.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TableColumnBase::MaxWidthFieldMask = 
-    (TypeTraits<BitVector>::One << TableColumnBase::MaxWidthFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TableColumnBase::MinWidthFieldMask = 
-    (TypeTraits<BitVector>::One << TableColumnBase::MinWidthFieldId);
+/*! \class OSG::TableColumn
+    A UI Table Column.
+ */
 
-const OSG::BitVector  TableColumnBase::ModelIndexFieldMask = 
-    (TypeTraits<BitVector>::One << TableColumnBase::ModelIndexFieldId);
-
-const OSG::BitVector  TableColumnBase::PreferredWidthFieldMask = 
-    (TypeTraits<BitVector>::One << TableColumnBase::PreferredWidthFieldId);
-
-const OSG::BitVector  TableColumnBase::WidthFieldMask = 
-    (TypeTraits<BitVector>::One << TableColumnBase::WidthFieldId);
-
-const OSG::BitVector  TableColumnBase::ResizableFieldMask = 
-    (TypeTraits<BitVector>::One << TableColumnBase::ResizableFieldId);
-
-const OSG::BitVector  TableColumnBase::CellEditorFieldMask = 
-    (TypeTraits<BitVector>::One << TableColumnBase::CellEditorFieldId);
-
-const OSG::BitVector  TableColumnBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << TableColumnBase::EventProducerFieldId);
-
-const OSG::BitVector TableColumnBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          TableColumnBase::_sfMaxWidth
     
 */
+
 /*! \var UInt32          TableColumnBase::_sfMinWidth
     
 */
+
 /*! \var UInt32          TableColumnBase::_sfModelIndex
     
 */
+
 /*! \var UInt32          TableColumnBase::_sfPreferredWidth
     
 */
+
 /*! \var UInt32          TableColumnBase::_sfWidth
     
 */
+
 /*! \var bool            TableColumnBase::_sfResizable
     
 */
-/*! \var TableCellEditorPtr TableColumnBase::_sfCellEditor
+
+/*! \var TableCellEditor * TableColumnBase::_sfCellEditor
     
 */
 
-//! TableColumn description
 
-FieldDescription *TableColumnBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TableColumn *>::_type("TableColumnPtr", "FieldContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TableColumn *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TableColumn *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TableColumn *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TableColumnBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "MaxWidth", 
-                     MaxWidthFieldId, MaxWidthFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFMaxWidth)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "MinWidth", 
-                     MinWidthFieldId, MinWidthFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFMinWidth)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ModelIndex", 
-                     ModelIndexFieldId, ModelIndexFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFModelIndex)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "PreferredWidth", 
-                     PreferredWidthFieldId, PreferredWidthFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFPreferredWidth)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Width", 
-                     WidthFieldId, WidthFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFWidth)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Resizable", 
-                     ResizableFieldId, ResizableFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFResizable)),
-    new FieldDescription(SFTableCellEditorPtr::getClassType(), 
-                     "CellEditor", 
-                     CellEditorFieldId, CellEditorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFCellEditor))
-    , 
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFEventProducer))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TableColumnBase::_type(
-    "TableColumn",
-    "FieldContainer",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TableColumnBase::createEmpty),
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "MaxWidth",
+        "",
+        MaxWidthFieldId, MaxWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableColumn::editHandleMaxWidth),
+        static_cast<FieldGetMethodSig >(&TableColumn::getHandleMaxWidth));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "MinWidth",
+        "",
+        MinWidthFieldId, MinWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableColumn::editHandleMinWidth),
+        static_cast<FieldGetMethodSig >(&TableColumn::getHandleMinWidth));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ModelIndex",
+        "",
+        ModelIndexFieldId, ModelIndexFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableColumn::editHandleModelIndex),
+        static_cast<FieldGetMethodSig >(&TableColumn::getHandleModelIndex));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "PreferredWidth",
+        "",
+        PreferredWidthFieldId, PreferredWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableColumn::editHandlePreferredWidth),
+        static_cast<FieldGetMethodSig >(&TableColumn::getHandlePreferredWidth));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Width",
+        "",
+        WidthFieldId, WidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableColumn::editHandleWidth),
+        static_cast<FieldGetMethodSig >(&TableColumn::getHandleWidth));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Resizable",
+        "",
+        ResizableFieldId, ResizableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableColumn::editHandleResizable),
+        static_cast<FieldGetMethodSig >(&TableColumn::getHandleResizable));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTableCellEditorPtr::Description(
+        SFUnrecTableCellEditorPtr::getClassType(),
+        "CellEditor",
+        "",
+        CellEditorFieldId, CellEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableColumn::editHandleCellEditor),
+        static_cast<FieldGetMethodSig >(&TableColumn::getHandleCellEditor));
+
+    oType.addInitialDesc(pDesc);
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&TableColumn::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&TableColumn::invalidGetField));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+TableColumnBase::TypeObject TableColumnBase::_type(
+    TableColumnBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TableColumnBase::createEmptyLocal),
     TableColumn::initMethod,
-    _desc,
-    sizeof(_desc));
+    TableColumn::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TableColumn::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"TableColumn\"\n"
+    "    parent=\"FieldContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    >\n"
+    "    A UI Table Column.\n"
+    "    <Field\n"
+    "        name=\"MaxWidth\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"1000\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"MinWidth\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"1\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ModelIndex\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"0\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"PreferredWidth\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"100\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Width\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"100\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Resizable\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"CellEditor\"\n"
+    "        type=\"TableCellEditor\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <ProducedMethod\n"
+    "        name=\"FieldChanged\"\n"
+    "        type=\"FieldChangedEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI Table Column.\n"
+    );
 
 //! TableColumn Produced Methods
 
 MethodDescription *TableColumnBase::_methodDesc[] =
 {
     new MethodDescription("FieldChanged", 
+                    "",
                      FieldChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType TableColumnBase::_producerType(
     "TableColumnProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(TableColumnBase, TableColumnPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TableColumnBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TableColumnBase::getType(void) const 
+FieldContainerType &TableColumnBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &TableColumnBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &TableColumnBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr TableColumnBase::shallowCopy(void) const 
-{ 
-    TableColumnPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TableColumn *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 TableColumnBase::getContainerSize(void) const 
-{ 
-    return sizeof(TableColumn); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableColumnBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 TableColumnBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<TableColumnBase *>(&other),
-                          whichField);
+    return sizeof(TableColumn);
 }
-#else
-void TableColumnBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *TableColumnBase::editSFMaxWidth(void)
 {
-    this->executeSyncImpl((TableColumnBase *) &other, whichField, sInfo);
+    editSField(MaxWidthFieldMask);
+
+    return &_sfMaxWidth;
 }
-void TableColumnBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+const SFUInt32 *TableColumnBase::getSFMaxWidth(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfMaxWidth;
 }
 
-void TableColumnBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+
+SFUInt32 *TableColumnBase::editSFMinWidth(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(MinWidthFieldMask);
 
+    return &_sfMinWidth;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TableColumnBase::TableColumnBase(void) :
-    _Producer(&getProducerType()),
-    _sfMaxWidth               (UInt32(1000)), 
-    _sfMinWidth               (UInt32(1)), 
-    _sfModelIndex             (UInt32(0)), 
-    _sfPreferredWidth         (UInt32(100)), 
-    _sfWidth                  (UInt32(100)), 
-    _sfResizable              (bool(true)), 
-    _sfCellEditor             (TableCellEditorPtr(NullFC)), 
-    _sfEventProducer(&_Producer),
-    Inherited() 
+const SFUInt32 *TableColumnBase::getSFMinWidth(void) const
 {
+    return &_sfMinWidth;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-TableColumnBase::TableColumnBase(const TableColumnBase &source) :
-    _Producer(&source.getProducerType()),
-    _sfMaxWidth               (source._sfMaxWidth               ), 
-    _sfMinWidth               (source._sfMinWidth               ), 
-    _sfModelIndex             (source._sfModelIndex             ), 
-    _sfPreferredWidth         (source._sfPreferredWidth         ), 
-    _sfWidth                  (source._sfWidth                  ), 
-    _sfResizable              (source._sfResizable              ), 
-    _sfCellEditor             (source._sfCellEditor             ), 
-    _sfEventProducer(&_Producer),
-    Inherited                 (source)
+SFUInt32 *TableColumnBase::editSFModelIndex(void)
 {
+    editSField(ModelIndexFieldMask);
+
+    return &_sfModelIndex;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-TableColumnBase::~TableColumnBase(void)
+const SFUInt32 *TableColumnBase::getSFModelIndex(void) const
 {
+    return &_sfModelIndex;
 }
+
+
+SFUInt32 *TableColumnBase::editSFPreferredWidth(void)
+{
+    editSField(PreferredWidthFieldMask);
+
+    return &_sfPreferredWidth;
+}
+
+const SFUInt32 *TableColumnBase::getSFPreferredWidth(void) const
+{
+    return &_sfPreferredWidth;
+}
+
+
+SFUInt32 *TableColumnBase::editSFWidth(void)
+{
+    editSField(WidthFieldMask);
+
+    return &_sfWidth;
+}
+
+const SFUInt32 *TableColumnBase::getSFWidth(void) const
+{
+    return &_sfWidth;
+}
+
+
+SFBool *TableColumnBase::editSFResizable(void)
+{
+    editSField(ResizableFieldMask);
+
+    return &_sfResizable;
+}
+
+const SFBool *TableColumnBase::getSFResizable(void) const
+{
+    return &_sfResizable;
+}
+
+
+//! Get the TableColumn::_sfCellEditor field.
+const SFUnrecTableCellEditorPtr *TableColumnBase::getSFCellEditor(void) const
+{
+    return &_sfCellEditor;
+}
+
+SFUnrecTableCellEditorPtr *TableColumnBase::editSFCellEditor     (void)
+{
+    editSField(CellEditorFieldMask);
+
+    return &_sfCellEditor;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TableColumnBase::getBinSize(const BitVector &whichField)
+UInt32 TableColumnBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -307,48 +493,40 @@ UInt32 TableColumnBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfMaxWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (MinWidthFieldMask & whichField))
     {
         returnValue += _sfMinWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (ModelIndexFieldMask & whichField))
     {
         returnValue += _sfModelIndex.getBinSize();
     }
-
     if(FieldBits::NoField != (PreferredWidthFieldMask & whichField))
     {
         returnValue += _sfPreferredWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         returnValue += _sfWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
     {
         returnValue += _sfResizable.getBinSize();
     }
-
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
     {
         returnValue += _sfCellEditor.getBinSize();
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         returnValue += _sfEventProducer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TableColumnBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TableColumnBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -356,47 +534,38 @@ void TableColumnBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfMaxWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinWidthFieldMask & whichField))
     {
         _sfMinWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelIndexFieldMask & whichField))
     {
         _sfModelIndex.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PreferredWidthFieldMask & whichField))
     {
         _sfPreferredWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
     {
         _sfResizable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
     {
         _sfCellEditor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyToBin(pMem);
     }
-
-
 }
 
-void TableColumnBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TableColumnBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -404,136 +573,423 @@ void TableColumnBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfMaxWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinWidthFieldMask & whichField))
     {
         _sfMinWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelIndexFieldMask & whichField))
     {
         _sfModelIndex.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PreferredWidthFieldMask & whichField))
     {
         _sfPreferredWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
     {
         _sfResizable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
     {
         _sfCellEditor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableColumnBase::executeSyncImpl(      TableColumnBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TableColumnTransitPtr TableColumnBase::createLocal(BitVector bFlags)
 {
+    TableColumnTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (MaxWidthFieldMask & whichField))
-        _sfMaxWidth.syncWith(pOther->_sfMaxWidth);
+        fc = dynamic_pointer_cast<TableColumn>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (MinWidthFieldMask & whichField))
-        _sfMinWidth.syncWith(pOther->_sfMinWidth);
-
-    if(FieldBits::NoField != (ModelIndexFieldMask & whichField))
-        _sfModelIndex.syncWith(pOther->_sfModelIndex);
-
-    if(FieldBits::NoField != (PreferredWidthFieldMask & whichField))
-        _sfPreferredWidth.syncWith(pOther->_sfPreferredWidth);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (ResizableFieldMask & whichField))
-        _sfResizable.syncWith(pOther->_sfResizable);
-
-    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
-        _sfCellEditor.syncWith(pOther->_sfCellEditor);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
-
-}
-#else
-void TableColumnBase::executeSyncImpl(      TableColumnBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (MaxWidthFieldMask & whichField))
-        _sfMaxWidth.syncWith(pOther->_sfMaxWidth);
-
-    if(FieldBits::NoField != (MinWidthFieldMask & whichField))
-        _sfMinWidth.syncWith(pOther->_sfMinWidth);
-
-    if(FieldBits::NoField != (ModelIndexFieldMask & whichField))
-        _sfModelIndex.syncWith(pOther->_sfModelIndex);
-
-    if(FieldBits::NoField != (PreferredWidthFieldMask & whichField))
-        _sfPreferredWidth.syncWith(pOther->_sfPreferredWidth);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (ResizableFieldMask & whichField))
-        _sfResizable.syncWith(pOther->_sfResizable);
-
-    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
-        _sfCellEditor.syncWith(pOther->_sfCellEditor);
-
-
-
+    return fc;
 }
 
-void TableColumnBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TableColumnTransitPtr TableColumnBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TableColumnTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<TableColumn>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TableColumnTransitPtr TableColumnBase::create(void)
+{
+    TableColumnTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TableColumn>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TableColumn *TableColumnBase::createEmptyLocal(BitVector bFlags)
+{
+    TableColumn *returnValue;
+
+    newPtr<TableColumn>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TableColumn *TableColumnBase::createEmpty(void)
+{
+    TableColumn *returnValue;
+
+    newPtr<TableColumn>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TableColumnBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TableColumn *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TableColumn *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TableColumnBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TableColumn *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TableColumn *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TableColumnBase::shallowCopy(void) const
+{
+    TableColumn *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TableColumn *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TableColumnBase::TableColumnBase(void) :
+    _Producer(&getProducerType()),
+    Inherited(),
+    _sfMaxWidth               (UInt32(1000)),
+    _sfMinWidth               (UInt32(1)),
+    _sfModelIndex             (UInt32(0)),
+    _sfPreferredWidth         (UInt32(100)),
+    _sfWidth                  (UInt32(100)),
+    _sfResizable              (bool(true)),
+    _sfCellEditor             (NULL)
+    ,_sfEventProducer(&_Producer)
+{
+}
+
+TableColumnBase::TableColumnBase(const TableColumnBase &source) :
+    _Producer(&source.getProducerType()),
+    Inherited(source),
+    _sfMaxWidth               (source._sfMaxWidth               ),
+    _sfMinWidth               (source._sfMinWidth               ),
+    _sfModelIndex             (source._sfModelIndex             ),
+    _sfPreferredWidth         (source._sfPreferredWidth         ),
+    _sfWidth                  (source._sfWidth                  ),
+    _sfResizable              (source._sfResizable              ),
+    _sfCellEditor             (NULL)
+    ,_sfEventProducer(&_Producer)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TableColumnBase::~TableColumnBase(void)
+{
+}
+
+void TableColumnBase::onCreate(const TableColumn *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        TableColumn *pThis = static_cast<TableColumn *>(this);
+
+        pThis->setCellEditor(source->getCellEditor());
+    }
+}
+
+GetFieldHandlePtr TableColumnBase::getHandleMaxWidth        (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfMaxWidth,
+             this->getType().getFieldDesc(MaxWidthFieldId),
+             const_cast<TableColumnBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnBase::editHandleMaxWidth       (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfMaxWidth,
+             this->getType().getFieldDesc(MaxWidthFieldId),
+             this));
+
+
+    editSField(MaxWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableColumnBase::getHandleMinWidth        (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfMinWidth,
+             this->getType().getFieldDesc(MinWidthFieldId),
+             const_cast<TableColumnBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnBase::editHandleMinWidth       (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfMinWidth,
+             this->getType().getFieldDesc(MinWidthFieldId),
+             this));
+
+
+    editSField(MinWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableColumnBase::getHandleModelIndex      (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfModelIndex,
+             this->getType().getFieldDesc(ModelIndexFieldId),
+             const_cast<TableColumnBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnBase::editHandleModelIndex     (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfModelIndex,
+             this->getType().getFieldDesc(ModelIndexFieldId),
+             this));
+
+
+    editSField(ModelIndexFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableColumnBase::getHandlePreferredWidth  (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfPreferredWidth,
+             this->getType().getFieldDesc(PreferredWidthFieldId),
+             const_cast<TableColumnBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnBase::editHandlePreferredWidth (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfPreferredWidth,
+             this->getType().getFieldDesc(PreferredWidthFieldId),
+             this));
+
+
+    editSField(PreferredWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableColumnBase::getHandleWidth           (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             const_cast<TableColumnBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnBase::editHandleWidth          (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             this));
+
+
+    editSField(WidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableColumnBase::getHandleResizable       (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfResizable,
+             this->getType().getFieldDesc(ResizableFieldId),
+             const_cast<TableColumnBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnBase::editHandleResizable      (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfResizable,
+             this->getType().getFieldDesc(ResizableFieldId),
+             this));
+
+
+    editSField(ResizableFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableColumnBase::getHandleCellEditor      (void) const
+{
+    SFUnrecTableCellEditorPtr::GetHandlePtr returnValue(
+        new  SFUnrecTableCellEditorPtr::GetHandle(
+             &_sfCellEditor,
+             this->getType().getFieldDesc(CellEditorFieldId),
+             const_cast<TableColumnBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnBase::editHandleCellEditor     (void)
+{
+    SFUnrecTableCellEditorPtr::EditHandlePtr returnValue(
+        new  SFUnrecTableCellEditorPtr::EditHandle(
+             &_sfCellEditor,
+             this->getType().getFieldDesc(CellEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TableColumn::setCellEditor,
+                    static_cast<TableColumn *>(this), _1));
+
+    editSField(CellEditorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TableColumnBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TableColumn *pThis = static_cast<TableColumn *>(this);
+
+    pThis->execSync(static_cast<TableColumn *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TableColumnBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TableColumn *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TableColumn *>(pRefAspect),
+                  dynamic_cast<const TableColumn *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TableColumnPtr>::_type("TableColumnPtr", "FieldContainerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TableColumnPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TableColumnPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void TableColumnBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<TableColumn *>(this)->setCellEditor(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

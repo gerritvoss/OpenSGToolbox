@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,49 +42,53 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGDefaultTableCellEditorBase.h"
-#include "Event/OSGActionListener.h"
-#include "Event/OSGFocusListener.h"
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGActionListener.h"
+#include "OSGFocusListener.h"
+#include "OSGKeyAdapter.h"
+#include "OSGTextField.h"
+#include "OSGSpinner.h"
+#include "OSGComboBox.h"
+#include "OSGCheckboxButton.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultTableCellEditor class. See \ref 
-           PageUserInterfaceDefaultTableCellEditor for a description.
+/*! \brief DefaultTableCellEditor class. See \ref
+           PageContribUserInterfaceDefaultTableCellEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTableCellEditorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableCellEditor : public DefaultTableCellEditorBase
 {
-  private:
-
-    typedef DefaultTableCellEditorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DefaultTableCellEditorBase Inherited;
+    typedef DefaultTableCellEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
     
-	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column);
+	virtual ComponentRefPtr getTableCellEditorComponent(TableRefPtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column);
 
-    virtual ComponentPtr getCellEditor(const boost::any& Value, bool IsSelected);
+    virtual ComponentRefPtr getCellEditor(const boost::any& Value, bool IsSelected);
 
     //Tells the editor to cancel editing and not accept any partially edited value.
     virtual void cancelCellEditing(void);
@@ -93,18 +97,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTab
     virtual boost::any getCellEditorValue(void) const;
 
     //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const EventPtr anEvent) const;
+    virtual bool isCellEditable(const EventUnrecPtr anEvent) const;
 
     //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const EventPtr anEvent) const;
+    virtual bool shouldSelectCell(const EventUnrecPtr anEvent) const;
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void);
 
     //Returns a reference to the editor component.
-    ComponentPtr getComponent(void) const;
+    ComponentRefPtr getComponent(void) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DefaultTableCellEditorBase.
@@ -121,22 +126,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTab
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultTableCellEditor(void); 
+    virtual ~DefaultTableCellEditor(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
-	class DefaultStringEditorListener : public ActionListener,public FocusListener,public KeyAdapter
-	{
-	public :
-		DefaultStringEditorListener(DefaultTableCellEditorPtr TheDefaultTableCellEditor);
-		
-        virtual void actionPerformed(const ActionEventPtr e);
-        virtual void focusGained(const FocusEventPtr e);
-        virtual void focusLost(const FocusEventPtr e);
-        virtual void keyPressed(const KeyEventPtr e);
-	protected :
-		DefaultTableCellEditorPtr _DefaultTableCellEditor;
-	};
+    class DefaultStringEditorListener : public ActionListener,public FocusListener,public KeyAdapter
+    {
+      public :
+        DefaultStringEditorListener(DefaultTableCellEditorRefPtr TheDefaultTableCellEditor);
+
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
+        virtual void focusGained(const FocusEventUnrecPtr e);
+        virtual void focusLost(const FocusEventUnrecPtr e);
+        virtual void keyPressed(const KeyEventUnrecPtr e);
+      protected :
+        DefaultTableCellEditorRefPtr _DefaultTableCellEditor;
+    };
 
 	friend class DefaultStringEditorListener;
 
@@ -144,15 +156,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTab
     
     mutable std::string _Value;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DefaultTableCellEditorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DefaultTableCellEditor &source);
 };
 
@@ -162,7 +172,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDefaultTableCellEditorBase.inl"
 #include "OSGDefaultTableCellEditor.inl"
-
-#define OSGDEFAULTTABLECELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDEFAULTTABLECELLEDITOR_H_ */

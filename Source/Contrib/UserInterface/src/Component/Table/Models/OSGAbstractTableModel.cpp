@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbstractTableModel.h"
-#include "Component/Table/OSGTableModelEvent.h"
+#include "OSGTableModelEvent.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbstractTableModel
-A UI AbstractTableModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGAbstractTableModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbstractTableModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +65,13 @@ A UI AbstractTableModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbstractTableModel::initMethod (void)
+void AbstractTableModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -93,64 +93,65 @@ void AbstractTableModel::setValueAt(const boost::any& aValue, UInt32 rowIndex, U
 
 EventConnection AbstractTableModel::addTableModelListener(TableModelListenerPtr l)
 {
-   _ModelListeners.insert(l);
-   return EventConnection(
-       boost::bind(&AbstractTableModel::isTableModelListenerAttached, this, l),
-       boost::bind(&AbstractTableModel::removeTableModelListener, this, l));
+    _ModelListeners.insert(l);
+    return EventConnection(
+                           boost::bind(&AbstractTableModel::isTableModelListenerAttached, this, l),
+                           boost::bind(&AbstractTableModel::removeTableModelListener, this, l));
 }
 
 void AbstractTableModel::removeTableModelListener(TableModelListenerPtr l)
 {
-   TableModelListenerSetItor EraseIter(_ModelListeners.find(l));
-   if(EraseIter != _ModelListeners.end())
-   {
-      _ModelListeners.erase(EraseIter);
-   }
+    TableModelListenerSetItor EraseIter(_ModelListeners.find(l));
+    if(EraseIter != _ModelListeners.end())
+    {
+        _ModelListeners.erase(EraseIter);
+    }
 }
 
 void AbstractTableModel::produceContentsHeaderRowChanged(UInt32 FirstColumn, UInt32 LastColumn)
 {
-   const TableModelEventPtr TheEvent = TableModelEvent::create(TableModelPtr(this), getSystemTime(), FirstColumn, LastColumn, 0,0);
-   TableModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->contentsHeaderRowChanged(TheEvent);
-   }
-   _Producer.produceEvent(ContentsHeaderRowChangedMethodId,TheEvent);
+    const TableModelEventUnrecPtr TheEvent = TableModelEvent::create(TableModelRefPtr(this), getSystemTime(), FirstColumn, LastColumn, 0,0);
+    TableModelListenerSet ModelListenerSet(_ModelListeners);
+    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->contentsHeaderRowChanged(TheEvent);
+    }
+    _Producer.produceEvent(ContentsHeaderRowChangedMethodId,TheEvent);
 }
 
 void AbstractTableModel::produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-   const TableModelEventPtr TheEvent = TableModelEvent::create(TableModelPtr(this), getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
-   TableModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->contentsChanged(TheEvent);
-   }
-   _Producer.produceEvent(ContentsChangedMethodId,TheEvent);
+    const TableModelEventUnrecPtr TheEvent = TableModelEvent::create(TableModelRefPtr(this), getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
+    TableModelListenerSet ModelListenerSet(_ModelListeners);
+    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->contentsChanged(TheEvent);
+    }
+    _Producer.produceEvent(ContentsChangedMethodId,TheEvent);
 }
 
 void AbstractTableModel::produceIntervalAdded(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-   const TableModelEventPtr TheEvent = TableModelEvent::create(TableModelPtr(this), getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
-   TableModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->intervalAdded(TheEvent);
-   }
-   _Producer.produceEvent(IntervalAddedMethodId,TheEvent);
+    const TableModelEventUnrecPtr TheEvent = TableModelEvent::create(TableModelRefPtr(this), getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
+    TableModelListenerSet ModelListenerSet(_ModelListeners);
+    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->intervalAdded(TheEvent);
+    }
+    _Producer.produceEvent(IntervalAddedMethodId,TheEvent);
 }
 
 void AbstractTableModel::produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-   const TableModelEventPtr TheEvent = TableModelEvent::create(TableModelPtr(this), getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
-   TableModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->intervalRemoved(TheEvent);
-   }
-   _Producer.produceEvent(IntervalRemovedMethodId,TheEvent);
+    const TableModelEventUnrecPtr TheEvent = TableModelEvent::create(TableModelRefPtr(this), getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
+    TableModelListenerSet ModelListenerSet(_ModelListeners);
+    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->intervalRemoved(TheEvent);
+    }
+    _Producer.produceEvent(IntervalRemovedMethodId,TheEvent);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -173,41 +174,17 @@ AbstractTableModel::~AbstractTableModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractTableModel::changed(BitVector whichField, UInt32 origin)
+void AbstractTableModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbstractTableModel::dump(      UInt32    , 
+void AbstractTableModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbstractTableModel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTTABLEMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTTABLEMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTTABLEMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

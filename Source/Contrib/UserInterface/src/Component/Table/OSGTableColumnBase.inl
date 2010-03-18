@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TableColumnBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TableColumnBase::getClassTypeId(void) 
+OSG::UInt32 TableColumnBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &TableColumnBase::getProducerClassType(void)
@@ -81,291 +78,230 @@ UInt32 TableColumnBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-TableColumnPtr TableColumnBase::create(void) 
+OSG::UInt16 TableColumnBase::getClassGroupId(void)
 {
-    TableColumnPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TableColumnPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-TableColumnPtr TableColumnBase::createEmpty(void) 
-{ 
-    TableColumnPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TableColumn::_sfMaxWidth field.
-inline
-const SFUInt32 *TableColumnBase::getSFMaxWidth(void) const
-{
-    return &_sfMaxWidth;
-}
-
-//! Get the TableColumn::_sfMaxWidth field.
-inline
-SFUInt32 *TableColumnBase::editSFMaxWidth(void)
-{
-    return &_sfMaxWidth;
-}
-
-//! Get the TableColumn::_sfMinWidth field.
-inline
-const SFUInt32 *TableColumnBase::getSFMinWidth(void) const
-{
-    return &_sfMinWidth;
-}
-
-//! Get the TableColumn::_sfMinWidth field.
-inline
-SFUInt32 *TableColumnBase::editSFMinWidth(void)
-{
-    return &_sfMinWidth;
-}
-
-//! Get the TableColumn::_sfModelIndex field.
-inline
-const SFUInt32 *TableColumnBase::getSFModelIndex(void) const
-{
-    return &_sfModelIndex;
-}
-
-//! Get the TableColumn::_sfModelIndex field.
-inline
-SFUInt32 *TableColumnBase::editSFModelIndex(void)
-{
-    return &_sfModelIndex;
-}
-
-//! Get the TableColumn::_sfPreferredWidth field.
-inline
-const SFUInt32 *TableColumnBase::getSFPreferredWidth(void) const
-{
-    return &_sfPreferredWidth;
-}
-
-//! Get the TableColumn::_sfPreferredWidth field.
-inline
-SFUInt32 *TableColumnBase::editSFPreferredWidth(void)
-{
-    return &_sfPreferredWidth;
-}
-
-//! Get the TableColumn::_sfWidth field.
-inline
-const SFUInt32 *TableColumnBase::getSFWidth(void) const
-{
-    return &_sfWidth;
-}
-
-//! Get the TableColumn::_sfWidth field.
-inline
-SFUInt32 *TableColumnBase::editSFWidth(void)
-{
-    return &_sfWidth;
-}
-
-//! Get the TableColumn::_sfResizable field.
-inline
-const SFBool *TableColumnBase::getSFResizable(void) const
-{
-    return &_sfResizable;
-}
-
-//! Get the TableColumn::_sfResizable field.
-inline
-SFBool *TableColumnBase::editSFResizable(void)
-{
-    return &_sfResizable;
-}
-
-//! Get the TableColumn::_sfCellEditor field.
-inline
-const SFTableCellEditorPtr *TableColumnBase::getSFCellEditor(void) const
-{
-    return &_sfCellEditor;
-}
-
-//! Get the TableColumn::_sfCellEditor field.
-inline
-SFTableCellEditorPtr *TableColumnBase::editSFCellEditor(void)
-{
-    return &_sfCellEditor;
-}
-
-
 //! Get the value of the TableColumn::_sfMaxWidth field.
+
 inline
 UInt32 &TableColumnBase::editMaxWidth(void)
 {
+    editSField(MaxWidthFieldMask);
+
     return _sfMaxWidth.getValue();
 }
 
 //! Get the value of the TableColumn::_sfMaxWidth field.
 inline
-const UInt32 &TableColumnBase::getMaxWidth(void) const
+      UInt32  TableColumnBase::getMaxWidth(void) const
 {
     return _sfMaxWidth.getValue();
 }
 
 //! Set the value of the TableColumn::_sfMaxWidth field.
 inline
-void TableColumnBase::setMaxWidth(const UInt32 &value)
+void TableColumnBase::setMaxWidth(const UInt32 value)
 {
+    editSField(MaxWidthFieldMask);
+
     _sfMaxWidth.setValue(value);
 }
-
 //! Get the value of the TableColumn::_sfMinWidth field.
+
 inline
 UInt32 &TableColumnBase::editMinWidth(void)
 {
+    editSField(MinWidthFieldMask);
+
     return _sfMinWidth.getValue();
 }
 
 //! Get the value of the TableColumn::_sfMinWidth field.
 inline
-const UInt32 &TableColumnBase::getMinWidth(void) const
+      UInt32  TableColumnBase::getMinWidth(void) const
 {
     return _sfMinWidth.getValue();
 }
 
 //! Set the value of the TableColumn::_sfMinWidth field.
 inline
-void TableColumnBase::setMinWidth(const UInt32 &value)
+void TableColumnBase::setMinWidth(const UInt32 value)
 {
+    editSField(MinWidthFieldMask);
+
     _sfMinWidth.setValue(value);
 }
-
 //! Get the value of the TableColumn::_sfModelIndex field.
+
 inline
 UInt32 &TableColumnBase::editModelIndex(void)
 {
+    editSField(ModelIndexFieldMask);
+
     return _sfModelIndex.getValue();
 }
 
 //! Get the value of the TableColumn::_sfModelIndex field.
 inline
-const UInt32 &TableColumnBase::getModelIndex(void) const
+      UInt32  TableColumnBase::getModelIndex(void) const
 {
     return _sfModelIndex.getValue();
 }
 
 //! Set the value of the TableColumn::_sfModelIndex field.
 inline
-void TableColumnBase::setModelIndex(const UInt32 &value)
+void TableColumnBase::setModelIndex(const UInt32 value)
 {
+    editSField(ModelIndexFieldMask);
+
     _sfModelIndex.setValue(value);
 }
-
 //! Get the value of the TableColumn::_sfPreferredWidth field.
+
 inline
 UInt32 &TableColumnBase::editPreferredWidth(void)
 {
+    editSField(PreferredWidthFieldMask);
+
     return _sfPreferredWidth.getValue();
 }
 
 //! Get the value of the TableColumn::_sfPreferredWidth field.
 inline
-const UInt32 &TableColumnBase::getPreferredWidth(void) const
+      UInt32  TableColumnBase::getPreferredWidth(void) const
 {
     return _sfPreferredWidth.getValue();
 }
 
 //! Set the value of the TableColumn::_sfPreferredWidth field.
 inline
-void TableColumnBase::setPreferredWidth(const UInt32 &value)
+void TableColumnBase::setPreferredWidth(const UInt32 value)
 {
+    editSField(PreferredWidthFieldMask);
+
     _sfPreferredWidth.setValue(value);
 }
-
 //! Get the value of the TableColumn::_sfWidth field.
+
 inline
 UInt32 &TableColumnBase::editWidth(void)
 {
+    editSField(WidthFieldMask);
+
     return _sfWidth.getValue();
 }
 
 //! Get the value of the TableColumn::_sfWidth field.
 inline
-const UInt32 &TableColumnBase::getWidth(void) const
+      UInt32  TableColumnBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the TableColumn::_sfWidth field.
 inline
-void TableColumnBase::setWidth(const UInt32 &value)
+void TableColumnBase::setWidth(const UInt32 value)
 {
+    editSField(WidthFieldMask);
+
     _sfWidth.setValue(value);
 }
-
 //! Get the value of the TableColumn::_sfResizable field.
+
 inline
 bool &TableColumnBase::editResizable(void)
 {
+    editSField(ResizableFieldMask);
+
     return _sfResizable.getValue();
 }
 
 //! Get the value of the TableColumn::_sfResizable field.
 inline
-const bool &TableColumnBase::getResizable(void) const
+      bool  TableColumnBase::getResizable(void) const
 {
     return _sfResizable.getValue();
 }
 
 //! Set the value of the TableColumn::_sfResizable field.
 inline
-void TableColumnBase::setResizable(const bool &value)
+void TableColumnBase::setResizable(const bool value)
 {
+    editSField(ResizableFieldMask);
+
     _sfResizable.setValue(value);
 }
 
 //! Get the value of the TableColumn::_sfCellEditor field.
 inline
-TableCellEditorPtr &TableColumnBase::editCellEditor(void)
-{
-    return _sfCellEditor.getValue();
-}
-
-//! Get the value of the TableColumn::_sfCellEditor field.
-inline
-const TableCellEditorPtr &TableColumnBase::getCellEditor(void) const
+TableCellEditor * TableColumnBase::getCellEditor(void) const
 {
     return _sfCellEditor.getValue();
 }
 
 //! Set the value of the TableColumn::_sfCellEditor field.
 inline
-void TableColumnBase::setCellEditor(const TableCellEditorPtr &value)
+void TableColumnBase::setCellEditor(TableCellEditor * const value)
 {
+    editSField(CellEditorFieldMask);
+
     _sfCellEditor.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TableColumnBase::execSync (      TableColumnBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (MaxWidthFieldMask & whichField))
+        _sfMaxWidth.syncWith(pFrom->_sfMaxWidth);
+
+    if(FieldBits::NoField != (MinWidthFieldMask & whichField))
+        _sfMinWidth.syncWith(pFrom->_sfMinWidth);
+
+    if(FieldBits::NoField != (ModelIndexFieldMask & whichField))
+        _sfModelIndex.syncWith(pFrom->_sfModelIndex);
+
+    if(FieldBits::NoField != (PreferredWidthFieldMask & whichField))
+        _sfPreferredWidth.syncWith(pFrom->_sfPreferredWidth);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pFrom->_sfWidth);
+
+    if(FieldBits::NoField != (ResizableFieldMask & whichField))
+        _sfResizable.syncWith(pFrom->_sfResizable);
+
+    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
+        _sfCellEditor.syncWith(pFrom->_sfCellEditor);
+}
+#endif
+
 
 inline
-EventConnection TableColumnBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+const Char8 *TableColumnBase::getClassname(void)
+{
+    return "TableColumn";
+}
+
+inline
+EventConnection TableColumnBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool TableColumnBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool TableColumnBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -377,13 +313,13 @@ UInt32 TableColumnBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 }
 
 inline
-ActivityPtr TableColumnBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr TableColumnBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void TableColumnBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void TableColumnBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }
@@ -395,7 +331,7 @@ UInt32 TableColumnBase::getNumProducedEvents(void) const
 }
 
 inline
-const MethodDescription *TableColumnBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+const MethodDescription *TableColumnBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventDescription(ProducedEventName);
 }
@@ -407,7 +343,7 @@ const MethodDescription *TableColumnBase::getProducedEventDescription(UInt32 Pro
 }
 
 inline
-UInt32 TableColumnBase::getProducedEventId(const Char8 *ProducedEventName) const
+UInt32 TableColumnBase::getProducedEventId(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
@@ -425,4 +361,7 @@ EventProducerPtr &TableColumnBase::editEventProducer(void)
     return _sfEventProducer.getValue();
 }
 
+OSG_GEN_CONTAINERPTR(TableColumn);
+
 OSG_END_NAMESPACE
+

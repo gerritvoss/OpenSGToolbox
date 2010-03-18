@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TableColumnModelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TableColumnModelBase::getClassTypeId(void) 
+OSG::UInt32 TableColumnModelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &TableColumnModelBase::getProducerClassType(void)
@@ -81,20 +78,43 @@ UInt32 TableColumnModelBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
+inline
+OSG::UInt16 TableColumnModelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TableColumnModelBase::execSync (      TableColumnModelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+}
+#endif
+
 
 inline
-EventConnection TableColumnModelBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+const Char8 *TableColumnModelBase::getClassname(void)
+{
+    return "TableColumnModel";
+}
+
+inline
+EventConnection TableColumnModelBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool TableColumnModelBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool TableColumnModelBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -106,13 +126,13 @@ UInt32 TableColumnModelBase::getNumActivitiesAttached(UInt32 ProducedEventId) co
 }
 
 inline
-ActivityPtr TableColumnModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr TableColumnModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void TableColumnModelBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void TableColumnModelBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }
@@ -124,7 +144,7 @@ UInt32 TableColumnModelBase::getNumProducedEvents(void) const
 }
 
 inline
-const MethodDescription *TableColumnModelBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+const MethodDescription *TableColumnModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventDescription(ProducedEventName);
 }
@@ -136,7 +156,7 @@ const MethodDescription *TableColumnModelBase::getProducedEventDescription(UInt3
 }
 
 inline
-UInt32 TableColumnModelBase::getProducedEventId(const Char8 *ProducedEventName) const
+UInt32 TableColumnModelBase::getProducedEventId(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
@@ -154,4 +174,7 @@ EventProducerPtr &TableColumnModelBase::editEventProducer(void)
     return _sfEventProducer.getValue();
 }
 
+OSG_GEN_CONTAINERPTR(TableColumnModel);
+
 OSG_END_NAMESPACE
+

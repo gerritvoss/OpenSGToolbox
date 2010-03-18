@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Editors/OSGAbstractCellEditorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TableCellEditor;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TableCellEditorPtr
+OSG_GEN_CONTAINERPTR(TableCellEditor);
 
-typedef FCPtr<AbstractCellEditorPtr, TableCellEditor> TableCellEditorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TableCellEditorPtr> : 
-    public FieldTraitsRecurseMapper<TableCellEditorPtr, true>
+struct FieldTraits<TableCellEditor *> :
+    public FieldTraitsFCPtrBase<TableCellEditor *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTableCellEditorPtr"; }
-    static const char *getMName(void) { return "MFTableCellEditorPtr"; }
+    typedef FieldTraits<TableCellEditor *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTableCellEditorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTableCellEditorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TableCellEditorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TableCellEditor *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTableCellEditorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TableCellEditor *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTableCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableCellEditor *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTableCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableCellEditor *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTableCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableCellEditor *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTableCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableCellEditor *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTableCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableCellEditor *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTableCellEditorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableCellEditor *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTableCellEditorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TableCellEditor *,
+                      RecordedRefCountPolicy  > SFRecTableCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TableCellEditor *,
+                      UnrecordedRefCountPolicy> SFUnrecTableCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TableCellEditor *,
+                      WeakRefCountPolicy      > SFWeakTableCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TableCellEditor *,
+                      NoRefCountPolicy        > SFUncountedTableCellEditorPtr;
 
-typedef SField<TableCellEditorPtr> SFTableCellEditorPtr;
-#endif
 
-#ifndef OSG_COMPILETABLECELLEDITORINST
-OSG_DLLEXPORT_DECL1(SField, TableCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TableCellEditor *,
+                      RecordedRefCountPolicy  > MFRecTableCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TableCellEditor *,
+                      UnrecordedRefCountPolicy> MFUnrecTableCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TableCellEditor *,
+                      WeakRefCountPolicy      > MFWeakTableCellEditorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TableCellEditor *,
+                      NoRefCountPolicy        > MFUncountedTableCellEditorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TableCellEditorPtr> MFTableCellEditorPtr;
-#endif
 
-#ifndef OSG_COMPILETABLECELLEDITORINST
-OSG_DLLEXPORT_DECL1(MField, TableCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTableCellEditorPtr : 
+    public PointerSField<TableCellEditor *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTableCellEditorPtr : 
+    public PointerSField<TableCellEditor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTableCellEditorPtr :
+    public PointerSField<TableCellEditor *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTableCellEditorPtr :
+    public PointerSField<TableCellEditor *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTableCellEditorPtr :
+    public PointerMField<TableCellEditor *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTableCellEditorPtr :
+    public PointerMField<TableCellEditor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTableCellEditorPtr :
+    public PointerMField<TableCellEditor *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTableCellEditorPtr :
+    public PointerMField<TableCellEditor *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGTABLECELLEDITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTABLECELLEDITORFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTableColumn.h"
-
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TableColumn
-A UI Table Column.  	
-*/
+// Documentation for this class is emitted in the
+// OSGTableColumnBase.cpp file.
+// To modify it, please change the .fcd file (OSGTableColumn.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +63,13 @@ A UI Table Column.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TableColumn::initMethod (void)
+void TableColumn::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,25 +77,26 @@ void TableColumn::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
 EventConnection TableColumn::addFieldChangeListener(FieldChangeListenerPtr Listener)
 {
-   _FieldChangeListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&TableColumn::isFieldChangeListenerAttached, this, Listener),
-       boost::bind(&TableColumn::removeFieldChangeListener, this, Listener));
+    _FieldChangeListeners.insert(Listener);
+    return EventConnection(
+                           boost::bind(&TableColumn::isFieldChangeListenerAttached, this, Listener),
+                           boost::bind(&TableColumn::removeFieldChangeListener, this, Listener));
 }
 
-void TableColumn::produceFieldChanged(Field* TheField, FieldDescription* TheDescription)
+void TableColumn::produceFieldChanged(EditFieldHandlePtr TheField,
+                                      FieldDescriptionBase* TheDescription)
 {
     //TODO: Implement
-   //const FieldChangeEventPtr TheEvent = FieldChangeEvent::create(TableColumnPtr(this), getSystemTime(), TheField, TheDescription);
-   //FieldChangeListenerSet FieldChangeListenerSet(_FieldChangeListeners);
-   //for(FieldChangeListenerSetConstItor SetItor(FieldChangeListenerSet.begin()) ; SetItor != FieldChangeListenerSet.end() ; ++SetItor)
-   //{
-      //(*SetItor)->fieldChanged(TheEvent);
-   //}
+    //const FieldChangeEventUnrecPtr TheEvent = FieldChangeEvent::create(TableColumnRefPtr(this), getSystemTime(), TheField, TheDescription);
+    //FieldChangeListenerSet FieldChangeListenerSet(_FieldChangeListeners);
+    //for(FieldChangeListenerSetConstItor SetItor(FieldChangeListenerSet.begin()) ; SetItor != FieldChangeListenerSet.end() ; ++SetItor)
+    //{
+    //(*SetItor)->fieldChanged(TheEvent);
+    //}
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -114,6 +114,7 @@ TableColumn::TableColumn(const TableColumn &source) :
     _TableCellRenderer(source._TableCellRenderer),
     _HeaderCellRenderer(source._HeaderCellRenderer),
     _HeaderValue(source._HeaderValue)
+
 {
 }
 
@@ -123,27 +124,27 @@ TableColumn::~TableColumn(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TableColumn::changed(BitVector whichField, UInt32 origin)
+void TableColumn::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
-
+    Inherited::changed(whichField, origin, details);
 
     //Produce a FieldChanged Event for each Field that was changed
     for(UInt32 i(0) ; i<getType().getNumFieldDescs() ; ++i)
     {
-        if(getType().getFieldDescription(i) != NULL &&
-            whichField & getType().getFieldDescription(i)->getFieldMask())
+        if(getType().getFieldDesc(i) != NULL &&
+            whichField & getType().getFieldDesc(i)->getFieldMask())
         {
-            produceFieldChanged(getField(i), getType().getFieldDescription(i));
+            produceFieldChanged(editField(i), getType().getFieldDesc(i));
         }
     }
 }
 
-void TableColumn::dump(      UInt32    , 
+void TableColumn::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TableColumn NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

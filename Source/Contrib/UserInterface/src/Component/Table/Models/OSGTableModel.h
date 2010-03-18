@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,48 +42,49 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTableModelBase.h"
 #include <boost/any.hpp>
 
-#include "Component/Table/OSGTableModelListener.h"
+#include "OSGTableModelListener.h"
 #include <typeinfo>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TableModel class. See \ref 
-           PageUserInterfaceTableModel for a description.
+/*! \brief TableModel class. See \ref
+           PageContribUserInterfaceTableModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableModel : public TableModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableModel : public TableModelBase
 {
-  private:
-
-    typedef TableModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TableModelBase Inherited;
+    typedef TableModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     //Adds a listener to the list that is notified each time a change to the data model occurs.
     virtual EventConnection addTableModelListener(TableModelListenerPtr l) = 0;
 	virtual bool isTableModelListenerAttached(TableModelListenerPtr l) const = 0;
@@ -111,7 +112,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModel : public TableModelBase
 
     //Returns the most specific superclass for all the cell values in the column.
     virtual const std::type_info& getColumnType(const UInt32& columnIndex) = 0;
+    
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TableModelBase.
@@ -128,20 +131,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModel : public TableModelBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableModel(void); 
+    virtual ~TableModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TableModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TableModel &source);
 };
 

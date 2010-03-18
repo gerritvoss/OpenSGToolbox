@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,17 +42,14 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTableBase.h"
-#include "Editors/OSGCellEditorListener.h"
-#include "Component/List/OSGListSelectionListener.h"
-#include "Component/List/OSGListSelectionModel.h"
-#include "Event/OSGFocusListener.h"
+#include "OSGCellEditorListener.h"
+#include "OSGListSelectionListener.h"
+#include "OSGListSelectionModel.h"
+#include "OSGFocusListener.h"
 #include "OSGTableModelListener.h"
 #include "OSGTableColumnModelListener.h"
-#include "Editors/OSGTableCellEditor.h"
+#include "OSGTableCellEditor.h"
 #include "OSGTableCellRenderer.h"
 #include "OSGTableColumnFields.h"
 #include <boost/any.hpp>
@@ -60,77 +57,88 @@
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Table class. See \ref 
-           PageUserInterfaceTable for a description.
+/*! \brief Table class. See \ref
+           PageContribUserInterfaceTable for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     public CellEditorListener,
     public ListSelectionListener,
     public TableColumnModelListener,
     public TableModelListener,
     public FocusListener
-{
-  private:
 
-    typedef TableBase Inherited;
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum ResizeModes{AUTO_RESIZE_ALL_COLUMNS, AUTO_RESIZE_LAST_COLUMN, AUTO_RESIZE_NEXT_COLUMN, AUTO_RESIZE_OFF, AUTO_RESIZE_SUBSEQUENT_COLUMNS};
+    enum ResizeModes
+    {
+        AUTO_RESIZE_ALL_COLUMNS        = 0,
+        AUTO_RESIZE_LAST_COLUMN        = 1,
+        AUTO_RESIZE_NEXT_COLUMN        = 2,
+        AUTO_RESIZE_OFF                = 3,
+        AUTO_RESIZE_SUBSEQUENT_COLUMNS = 4
+    };
+
+    typedef TableBase Inherited;
+    typedef Table     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 	//Focus Events
-	virtual void focusGained(const FocusEventPtr e);
-	virtual void focusLost(const FocusEventPtr e);
+	virtual void focusGained(const FocusEventUnrecPtr e);
+	virtual void focusLost(const FocusEventUnrecPtr e);
     
 	//Mouse Events
-    virtual void mouseClicked(const MouseEventPtr e);
-    virtual void mousePressed(const MouseEventPtr e);
-    virtual void mouseReleased(const MouseEventPtr e);
+    virtual void mouseClicked(const MouseEventUnrecPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventPtr e);
-    virtual void mouseDragged(const MouseEventPtr e);
+    virtual void mouseMoved(const MouseEventUnrecPtr e);
+    virtual void mouseDragged(const MouseEventUnrecPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
     
-	virtual void keyPressed(const KeyEventPtr e);
-	virtual void keyReleased(const KeyEventPtr e);
-	virtual void keyTyped(const KeyEventPtr e);
+	virtual void keyPressed(const KeyEventUnrecPtr e);
+	virtual void keyReleased(const KeyEventUnrecPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
 
     virtual void updateLayout(void);
 
 	//Sent when the contents of the table header row has changed
-	virtual void contentsHeaderRowChanged(const TableModelEventPtr e);
+	virtual void contentsHeaderRowChanged(const TableModelEventUnrecPtr e);
 	
 	//Sent when the contents of the table has changed in a way that's too complex to characterize with the previous methods.
-	virtual void contentsChanged(const TableModelEventPtr e);
+	virtual void contentsChanged(const TableModelEventUnrecPtr e);
 	
 	//Sent after the an interval was added to the table model
-	virtual void intervalAdded(const TableModelEventPtr e);
+	virtual void intervalAdded(const TableModelEventUnrecPtr e);
 	
 	//Sent after the an interval was removed to the table model
-	virtual void intervalRemoved(const TableModelEventPtr e);
+	virtual void intervalRemoved(const TableModelEventUnrecPtr e);
 
     //Appends aColumn to the end of the array of columns held by this JTable's column model.
-    void addColumn(TableColumnPtr aColumn);
+    void addColumn(TableColumnRefPtr aColumn);
 
     //Adds the columns from index0 to index1, inclusive, to the current selection.
     void addColumnSelectionInterval(const UInt32& index0, const UInt32& index1);
@@ -145,25 +153,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void clearSelection(void);
 
     //Invoked when a column is added to the table column model.
-    virtual void columnAdded(const TableColumnModelEventPtr e);
+    virtual void columnAdded(const TableColumnModelEventUnrecPtr e);
 
     //Returns the index of the column that point lies in, or -1 if the result is not in the range [0,  getColumnCount(void)-1].
     Int32 columnAtPoint(const Pnt2f& point);
 
     //Invoked when a column is moved due to a margin change.
-    virtual void columnMarginChanged(const ChangeEventPtr e);
+    virtual void columnMarginChanged(const ChangeEventUnrecPtr e);
 
     //Invoked when a column is repositioned.
-    virtual void columnMoved(const TableColumnModelEventPtr e);
+    virtual void columnMoved(const TableColumnModelEventUnrecPtr e);
 
     //Invoked when a column is removed from the table column model.
-    virtual void columnRemoved(const TableColumnModelEventPtr e);
+    virtual void columnRemoved(const TableColumnModelEventUnrecPtr e);
 
     //Invoked when the selection model of the TableColumnModel is changed.
-    virtual void columnSelectionChanged(const ListSelectionEventPtr e);
+    virtual void columnSelectionChanged(const ListSelectionEventUnrecPtr e);
 
     //Returns the default table model object, which is a DefaultTableModel.
-    //protected  TableModelPtr createDefaultDataModel(void);
+    //protected  TableModelRefPtr createDefaultDataModel(void);
 
     //Returns the default selection model object, which is a DefaultListSelectionModel.
     //protected  ListSelectionModel createDefaultSelectionModel(void);
@@ -175,16 +183,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     bool editCellAt(const UInt32& row, const UInt32& column);
 
     //Programmatically starts editing the cell at row and column, if the cell is editable.
-    bool editCellAt(const UInt32& row, const UInt32& column, const EventPtr e);
+    bool editCellAt(const UInt32& row, const UInt32& column, const EventUnrecPtr e);
 
     //Invoked when editing is canceled.
-    virtual void editingCanceled(const ChangeEventPtr e);
+    virtual void editingCanceled(const ChangeEventUnrecPtr e);
 
     //Invoked when editing is finished.
-    virtual void editingStopped(const ChangeEventPtr e);
+    virtual void editingStopped(const ChangeEventUnrecPtr e);
 
     //Returns an appropriate editor for the cell specified by row and column.
-    TableCellEditorPtr getCellEditor(const UInt32& row, const UInt32& column) const;
+    TableCellEditorRefPtr getCellEditor(const UInt32& row, const UInt32& column) const;
 
     //Returns a rectangle for the cell that lies at the intersection of row and column.
     //Rectangle getCellRect(int row, int column, bool includeSpacing);
@@ -199,7 +207,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     UInt32 getColumnCount(void) const;
 
     //Returns the TableColumnModel that contains all column information of this table.
-    //TableColumnModelPtr getColumnModel(void) const;
+    //TableColumnModelRefPtr getColumnModel(void) const;
 
     //Returns the name of the column appearing in the view at column position column.
     boost::any getColumnValue(const UInt32& column) const;
@@ -208,7 +216,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     bool getColumnSelectionAllowed(void) const;
 
     //Returns the editor to be used when no editor has been set in a TableColumn.
-    TableCellEditorPtr getDefaultEditor(const std::type_info& TheType) const;
+    TableCellEditorRefPtr getDefaultEditor(const std::type_info& TheType) const;
 
     //Returns the cell renderer to be used when no renderer has been set in a TableColumn.
     TableCellRendererPtr getDefaultRenderer(const std::type_info& TheType) const;
@@ -220,10 +228,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     Int32 getEditingRow(void) const;
 
     //Returns the component that is handling the editing session.
-    ComponentPtr getEditorComponent(void) const;
+    ComponentRefPtr getEditorComponent(void) const;
 
     //Returns the TableModel that provides the data displayed by this JTable.
-    //TableModelPtr getModel(void) const;
+    //TableModelRefPtr getModel(void) const;
 
     //Returns the number of rows in this table's model.
     UInt32 getRowCount(void) const;
@@ -280,7 +288,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void moveColumn(const UInt32& column, const UInt32& targetColumn);
 
     //Removes aColumn from this JTable's array of columns.
-    void removeColumn(TableColumnPtr aColumn);
+    void removeColumn(TableColumnRefPtr aColumn);
 
     //Deselects the columns from index0 to index1, inclusive.
     void removeColumnSelectionInterval(const UInt32& index0, const UInt32& index1);
@@ -298,7 +306,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void setCellSelectionEnabled(bool cellSelectionEnabled);
 
     //Sets the column model for this table to newModel and registers for listener notifications from the new column model.
-    //void setColumnModel(TableColumnModelPtr columnModel);
+    //void setColumnModel(TableColumnModelRefPtr columnModel);
 
     //Sets whether the columns in this model can be selected.
     void setColumnSelectionAllowed(bool columnSelectionAllowed);
@@ -307,10 +315,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void setColumnSelectionInterval(const UInt32& index0, const UInt32& index1);
 
     //Invoked when the an event from the Row ListSelectionModel occurs
-    virtual void selectionChanged(const ListSelectionEventPtr e);
+    virtual void selectionChanged(const ListSelectionEventUnrecPtr e);
 
     //Sets a default cell editor to be used if no editor has been set in a TableColumn.
-    void setDefaultEditor(const std::type_info& TheType, TableCellEditorPtr editor);
+    void setDefaultEditor(const std::type_info& TheType, TableCellEditorRefPtr editor);
 
     //Sets a default cell renderer to be used if no renderer has been set in a TableColumn.
     void setDefaultRenderer(const std::type_info& TheType, TableCellRendererPtr renderer);
@@ -329,7 +337,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 
 
     //Sets the data model for this table to newModel and registers with it for listener notifications from the new data model.
-    //void setModel(TableModelPtr dataModel);
+    //void setModel(TableModelRefPtr dataModel);
 
     //Sets the height for row to rowHeight, revalidates, and repaints.
     //void setRowHeight(const UInt32& row, const UInt32& rowHeight);
@@ -345,8 +353,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 
     //Sets the value for the cell in the table model at row and column.
     void setValueAt(const boost::any& aValue, const UInt32& row, const UInt32& column);
+    /*=========================  PROTECTED  ===============================*/
 
-/*=========================  PROTECTED  ===============================*/
   protected:
 
     // Variables should all be in TableBase.
@@ -363,19 +371,33 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Table(void); 
+    virtual ~Table(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const Table *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
 
     Int32 _EditingColumn;
 
     Int32 _EditingRow;
 
-    ComponentPtr _EditingComponent;
+    ComponentRefPtr _EditingComponent;
 
     ListSelectionModelPtr _RowSelectionModel;
 
-    typedef std::map<std::string, TableCellEditorPtr> CellEditorByTypeMap;
+    typedef std::map<std::string, TableCellEditorRefPtr> CellEditorByTypeMap;
     typedef CellEditorByTypeMap::iterator CellEditorByTypeMapItor;
 
     typedef std::map<std::string, TableCellRendererPtr> CellRendererByTypeMap;
@@ -385,31 +407,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 
     CellRendererByTypeMap _DefaultCellRendererByTypeMap;
 
-    mutable TableCellEditorPtr _DefaultCellEditor;
+    mutable TableCellEditorRefPtr _DefaultCellEditor;
     mutable TableCellRendererPtr _DefaultCellRenderer;
     
     
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(const GraphicsRefPtr Graphics, Real32 Opacity = 1.0f) const;
 	void updateTableComponents(void);
 	void createColumnsFromModel(void);
     void updateItem(const UInt32& index);
-    void checkCellEdit(const EventPtr e, const UInt32& Row, const UInt32& Column);
+    void checkCellEdit(const EventUnrecPtr e, const UInt32& Row, const UInt32& Column);
     void startEditing(const UInt32& Row, const UInt32& Column);
     bool getFocusedCell(UInt32& Row, UInt32& Column) const;
     
-	virtual void produceMouseExitOnComponent(const MouseEventPtr e, ComponentPtr Comp);
-	virtual void produceMouseEnterOnComponent(const MouseEventPtr e, ComponentPtr Comp);
+	virtual void produceMouseExitOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp);
+	virtual void produceMouseEnterOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp);
 
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TableBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Table &source);
 };
 
@@ -417,9 +437,10 @@ typedef Table *TableP;
 
 OSG_END_NAMESPACE
 
+#include "OSGTableColumnModel.h"
+#include "OSGTableModel.h"
+#include "OSGTableHeader.h"
 #include "OSGTableBase.inl"
 #include "OSGTable.inl"
-
-#define OSGTABLE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTABLE_H_ */

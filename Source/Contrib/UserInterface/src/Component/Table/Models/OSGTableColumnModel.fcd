@@ -3,38 +3,40 @@
 <FieldContainer
 	name="TableColumnModel"
 	parent="FieldContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI TableColumnModel.
 	<ProducedMethod
 		name="ColumnAdded"
-		producedEventType="TableColumnModelEventPtr"
+		type="TableColumnModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ColumnMoved"
-		producedEventType="TableColumnModelEventPtr"
+		type="TableColumnModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ColumnRemoved"
-		producedEventType="TableColumnModelEventPtr"
+		type="TableColumnModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ColumnMarginChanged"
-		producedEventType="TableColumnModelEventPtr"
+		type="TableColumnModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ColumnSelectionChanged"
-		producedEventType="ListSelectionEventPtr"
+		type="ListSelectionEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

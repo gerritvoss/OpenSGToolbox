@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,98 +58,121 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include "Component/Table/OSGTableHeaderFields.h" // Header type
-#include "Models/OSGTableModelFields.h" // Model type
-#include "Models/OSGTableColumnModelFields.h" // ColumnModel type
-#include "Component/OSGComponent.h" // Table type
-#include <OpenSG/OSGBoolFields.h> // AutoCreateColumnsFromModel type
-#include <OpenSG/OSGUInt32Fields.h> // AutoResizeMode type
-#include <OpenSG/OSGUInt32Fields.h> // RowHeight type
-#include <OpenSG/OSGUInt32Fields.h> // RowMargin type
-#include <OpenSG/OSGBoolFields.h> // RowSelectionAllowed type
-#include <OpenSG/OSGBoolFields.h> // ShowHorizontalLines type
-#include <OpenSG/OSGBoolFields.h> // ShowVerticalLines type
-#include <OpenSG/OSGColor4fFields.h> // GridColor type
-#include "Editors/OSGCellEditorFields.h" // CellEditor type
+#include "OSGTableHeaderFields.h"       // Header type
+#include "OSGTableModelFields.h"        // Model type
+#include "OSGTableColumnModelFields.h"  // ColumnModel type
+#include "OSGComponentFields.h"         // Table type
+#include "OSGSysFields.h"               // AutoCreateColumnsFromModel type
+#include "OSGBaseFields.h"              // GridColor type
+#include "OSGCellEditorFields.h"        // GlobalCellEditor type
 
 #include "OSGTableFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Table;
-class BinaryDataHandler;
 
 //! \brief Table Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TablePtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(Table);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        HeaderFieldId                     = Inherited::NextFieldId,
-        ModelFieldId                      = HeaderFieldId                     + 1,
-        ColumnModelFieldId                = ModelFieldId                      + 1,
-        TableFieldId                      = ColumnModelFieldId                + 1,
-        AutoCreateColumnsFromModelFieldId = TableFieldId                      + 1,
-        AutoResizeModeFieldId             = AutoCreateColumnsFromModelFieldId + 1,
-        RowHeightFieldId                  = AutoResizeModeFieldId             + 1,
-        RowMarginFieldId                  = RowHeightFieldId                  + 1,
-        RowSelectionAllowedFieldId        = RowMarginFieldId                  + 1,
-        ShowHorizontalLinesFieldId        = RowSelectionAllowedFieldId        + 1,
-        ShowVerticalLinesFieldId          = ShowHorizontalLinesFieldId        + 1,
-        GridColorFieldId                  = ShowVerticalLinesFieldId          + 1,
-        CellEditorFieldId                 = GridColorFieldId                  + 1,
-        NextFieldId                       = CellEditorFieldId                 + 1
+        HeaderFieldId = Inherited::NextFieldId,
+        ModelFieldId = HeaderFieldId + 1,
+        ColumnModelFieldId = ModelFieldId + 1,
+        TableFieldId = ColumnModelFieldId + 1,
+        AutoCreateColumnsFromModelFieldId = TableFieldId + 1,
+        AutoResizeModeFieldId = AutoCreateColumnsFromModelFieldId + 1,
+        RowHeightFieldId = AutoResizeModeFieldId + 1,
+        RowMarginFieldId = RowHeightFieldId + 1,
+        RowSelectionAllowedFieldId = RowMarginFieldId + 1,
+        ShowHorizontalLinesFieldId = RowSelectionAllowedFieldId + 1,
+        ShowVerticalLinesFieldId = ShowHorizontalLinesFieldId + 1,
+        GridColorFieldId = ShowVerticalLinesFieldId + 1,
+        GlobalCellEditorFieldId = GridColorFieldId + 1,
+        NextFieldId = GlobalCellEditorFieldId + 1
     };
 
-    static const OSG::BitVector HeaderFieldMask;
-    static const OSG::BitVector ModelFieldMask;
-    static const OSG::BitVector ColumnModelFieldMask;
-    static const OSG::BitVector TableFieldMask;
-    static const OSG::BitVector AutoCreateColumnsFromModelFieldMask;
-    static const OSG::BitVector AutoResizeModeFieldMask;
-    static const OSG::BitVector RowHeightFieldMask;
-    static const OSG::BitVector RowMarginFieldMask;
-    static const OSG::BitVector RowSelectionAllowedFieldMask;
-    static const OSG::BitVector ShowHorizontalLinesFieldMask;
-    static const OSG::BitVector ShowVerticalLinesFieldMask;
-    static const OSG::BitVector GridColorFieldMask;
-    static const OSG::BitVector CellEditorFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector HeaderFieldMask =
+        (TypeTraits<BitVector>::One << HeaderFieldId);
+    static const OSG::BitVector ModelFieldMask =
+        (TypeTraits<BitVector>::One << ModelFieldId);
+    static const OSG::BitVector ColumnModelFieldMask =
+        (TypeTraits<BitVector>::One << ColumnModelFieldId);
+    static const OSG::BitVector TableFieldMask =
+        (TypeTraits<BitVector>::One << TableFieldId);
+    static const OSG::BitVector AutoCreateColumnsFromModelFieldMask =
+        (TypeTraits<BitVector>::One << AutoCreateColumnsFromModelFieldId);
+    static const OSG::BitVector AutoResizeModeFieldMask =
+        (TypeTraits<BitVector>::One << AutoResizeModeFieldId);
+    static const OSG::BitVector RowHeightFieldMask =
+        (TypeTraits<BitVector>::One << RowHeightFieldId);
+    static const OSG::BitVector RowMarginFieldMask =
+        (TypeTraits<BitVector>::One << RowMarginFieldId);
+    static const OSG::BitVector RowSelectionAllowedFieldMask =
+        (TypeTraits<BitVector>::One << RowSelectionAllowedFieldId);
+    static const OSG::BitVector ShowHorizontalLinesFieldMask =
+        (TypeTraits<BitVector>::One << ShowHorizontalLinesFieldId);
+    static const OSG::BitVector ShowVerticalLinesFieldMask =
+        (TypeTraits<BitVector>::One << ShowVerticalLinesFieldId);
+    static const OSG::BitVector GridColorFieldMask =
+        (TypeTraits<BitVector>::One << GridColorFieldId);
+    static const OSG::BitVector GlobalCellEditorFieldMask =
+        (TypeTraits<BitVector>::One << GlobalCellEditorFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecTableHeaderPtr SFHeaderType;
+    typedef SFUnrecTableModelPtr SFModelType;
+    typedef SFUnrecTableColumnModelPtr SFColumnModelType;
+    typedef MFUnrecComponentPtr MFTableType;
+    typedef SFBool            SFAutoCreateColumnsFromModelType;
+    typedef SFUInt32          SFAutoResizeModeType;
+    typedef SFUInt32          SFRowHeightType;
+    typedef SFUInt32          SFRowMarginType;
+    typedef SFBool            SFRowSelectionAllowedType;
+    typedef SFBool            SFShowHorizontalLinesType;
+    typedef SFBool            SFShowVerticalLinesType;
+    typedef SFColor4f         SFGridColorType;
+    typedef SFUnrecCellEditorPtr SFGlobalCellEditorType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -158,65 +181,98 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFTableHeaderPtr    *getSFHeader         (void);
-           SFTableModelPtr     *getSFModel          (void);
-           SFTableColumnModelPtr *getSFColumnModel    (void);
-           SFBool              *getSFAutoCreateColumnsFromModel(void);
-           SFUInt32            *getSFAutoResizeMode (void);
-           SFUInt32            *getSFRowHeight      (void);
-           SFUInt32            *getSFRowMargin      (void);
-           SFBool              *getSFRowSelectionAllowed(void);
-           SFBool              *getSFShowHorizontalLines(void);
-           SFBool              *getSFShowVerticalLines(void);
-           SFColor4f           *getSFGridColor      (void);
-           SFCellEditorPtr     *getSFCellEditor     (void);
+            const SFUnrecTableHeaderPtr *getSFHeader         (void) const;
+                  SFUnrecTableHeaderPtr *editSFHeader         (void);
+            const SFUnrecTableModelPtr *getSFModel          (void) const;
+                  SFUnrecTableModelPtr *editSFModel          (void);
+            const SFUnrecTableColumnModelPtr *getSFColumnModel    (void) const;
+                  SFUnrecTableColumnModelPtr *editSFColumnModel    (void);
 
-           TableHeaderPtr      &getHeader         (void);
-     const TableHeaderPtr      &getHeader         (void) const;
-           TableModelPtr       &getModel          (void);
-     const TableModelPtr       &getModel          (void) const;
-           TableColumnModelPtr &getColumnModel    (void);
-     const TableColumnModelPtr &getColumnModel    (void) const;
-           bool                &getAutoCreateColumnsFromModel(void);
-     const bool                &getAutoCreateColumnsFromModel(void) const;
-           UInt32              &getAutoResizeMode (void);
-     const UInt32              &getAutoResizeMode (void) const;
-           UInt32              &getRowHeight      (void);
-     const UInt32              &getRowHeight      (void) const;
-           UInt32              &getRowMargin      (void);
-     const UInt32              &getRowMargin      (void) const;
-           bool                &getRowSelectionAllowed(void);
-     const bool                &getRowSelectionAllowed(void) const;
-           bool                &getShowHorizontalLines(void);
-     const bool                &getShowHorizontalLines(void) const;
-           bool                &getShowVerticalLines(void);
-     const bool                &getShowVerticalLines(void) const;
-           Color4f             &getGridColor      (void);
-     const Color4f             &getGridColor      (void) const;
-           CellEditorPtr       &getCellEditor     (void);
-     const CellEditorPtr       &getCellEditor     (void) const;
+                  SFBool              *editSFAutoCreateColumnsFromModel(void);
+            const SFBool              *getSFAutoCreateColumnsFromModel (void) const;
+
+                  SFUInt32            *editSFAutoResizeMode (void);
+            const SFUInt32            *getSFAutoResizeMode  (void) const;
+
+                  SFUInt32            *editSFRowHeight      (void);
+            const SFUInt32            *getSFRowHeight       (void) const;
+
+                  SFUInt32            *editSFRowMargin      (void);
+            const SFUInt32            *getSFRowMargin       (void) const;
+
+                  SFBool              *editSFRowSelectionAllowed(void);
+            const SFBool              *getSFRowSelectionAllowed (void) const;
+
+                  SFBool              *editSFShowHorizontalLines(void);
+            const SFBool              *getSFShowHorizontalLines (void) const;
+
+                  SFBool              *editSFShowVerticalLines(void);
+            const SFBool              *getSFShowVerticalLines (void) const;
+
+                  SFColor4f           *editSFGridColor      (void);
+            const SFColor4f           *getSFGridColor       (void) const;
+            const SFUnrecCellEditorPtr *getSFGlobalCellEditor(void) const;
+                  SFUnrecCellEditorPtr *editSFGlobalCellEditor(void);
+
+
+                  TableHeader * getHeader         (void) const;
+
+                  TableModel * getModel          (void) const;
+
+                  TableColumnModel * getColumnModel    (void) const;
+
+                  bool                &editAutoCreateColumnsFromModel(void);
+                  bool                 getAutoCreateColumnsFromModel (void) const;
+
+                  UInt32              &editAutoResizeMode (void);
+                  UInt32               getAutoResizeMode  (void) const;
+
+                  UInt32              &editRowHeight      (void);
+                  UInt32               getRowHeight       (void) const;
+
+                  UInt32              &editRowMargin      (void);
+                  UInt32               getRowMargin       (void) const;
+
+                  bool                &editRowSelectionAllowed(void);
+                  bool                 getRowSelectionAllowed (void) const;
+
+                  bool                &editShowHorizontalLines(void);
+                  bool                 getShowHorizontalLines (void) const;
+
+                  bool                &editShowVerticalLines(void);
+                  bool                 getShowVerticalLines (void) const;
+
+                  Color4f             &editGridColor      (void);
+            const Color4f             &getGridColor       (void) const;
+
+                  CellEditor * getGlobalCellEditor(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setHeader         ( const TableHeaderPtr &value );
-     void setModel          ( const TableModelPtr &value );
-     void setColumnModel    ( const TableColumnModelPtr &value );
-     void setAutoCreateColumnsFromModel( const bool &value );
-     void setAutoResizeMode ( const UInt32 &value );
-     void setRowHeight      ( const UInt32 &value );
-     void setRowMargin      ( const UInt32 &value );
-     void setRowSelectionAllowed( const bool &value );
-     void setShowHorizontalLines( const bool &value );
-     void setShowVerticalLines( const bool &value );
-     void setGridColor      ( const Color4f &value );
-     void setCellEditor     ( const CellEditorPtr &value );
+            void setHeader         (TableHeader * const value);
+            void setModel          (TableModel * const value);
+            void setColumnModel    (TableColumnModel * const value);
+            void setAutoCreateColumnsFromModel(const bool value);
+            void setAutoResizeMode (const UInt32 value);
+            void setRowHeight      (const UInt32 value);
+            void setRowMargin      (const UInt32 value);
+            void setRowSelectionAllowed(const bool value);
+            void setShowHorizontalLines(const bool value);
+            void setShowVerticalLines(const bool value);
+            void setGridColor      (const Color4f &value);
+            void setGlobalCellEditor(CellEditor * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -224,11 +280,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -236,38 +292,55 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TablePtr      create          (void); 
-    static  TablePtr      createEmpty     (void); 
+    static  TableTransitPtr  create          (void);
+    static  Table           *createEmpty     (void);
+
+    static  TableTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  Table            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  TableTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFTableHeaderPtr    _sfHeader;
-    SFTableModelPtr     _sfModel;
-    SFTableColumnModelPtr   _sfColumnModel;
-    MFComponentPtr      _mfTable;
-    SFBool              _sfAutoCreateColumnsFromModel;
-    SFUInt32            _sfAutoResizeMode;
-    SFUInt32            _sfRowHeight;
-    SFUInt32            _sfRowMargin;
-    SFBool              _sfRowSelectionAllowed;
-    SFBool              _sfShowHorizontalLines;
-    SFBool              _sfShowVerticalLines;
-    SFColor4f           _sfGridColor;
-    SFCellEditorPtr     _sfCellEditor;
+    SFUnrecTableHeaderPtr _sfHeader;
+    SFUnrecTableModelPtr _sfModel;
+    SFUnrecTableColumnModelPtr _sfColumnModel;
+    MFUnrecComponentPtr _mfTable;
+    SFBool            _sfAutoCreateColumnsFromModel;
+    SFUInt32          _sfAutoResizeMode;
+    SFUInt32          _sfRowHeight;
+    SFUInt32          _sfRowMargin;
+    SFBool            _sfRowSelectionAllowed;
+    SFBool            _sfShowHorizontalLines;
+    SFBool            _sfShowVerticalLines;
+    SFColor4f         _sfGridColor;
+    SFUnrecCellEditorPtr _sfGlobalCellEditor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -282,18 +355,57 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableBase(void); 
+    virtual ~TableBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const Table *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleHeader          (void) const;
+    EditFieldHandlePtr editHandleHeader         (void);
+    GetFieldHandlePtr  getHandleModel           (void) const;
+    EditFieldHandlePtr editHandleModel          (void);
+    GetFieldHandlePtr  getHandleColumnModel     (void) const;
+    EditFieldHandlePtr editHandleColumnModel    (void);
+    GetFieldHandlePtr  getHandleTable           (void) const;
+    EditFieldHandlePtr editHandleTable          (void);
+    GetFieldHandlePtr  getHandleAutoCreateColumnsFromModel (void) const;
+    EditFieldHandlePtr editHandleAutoCreateColumnsFromModel(void);
+    GetFieldHandlePtr  getHandleAutoResizeMode  (void) const;
+    EditFieldHandlePtr editHandleAutoResizeMode (void);
+    GetFieldHandlePtr  getHandleRowHeight       (void) const;
+    EditFieldHandlePtr editHandleRowHeight      (void);
+    GetFieldHandlePtr  getHandleRowMargin       (void) const;
+    EditFieldHandlePtr editHandleRowMargin      (void);
+    GetFieldHandlePtr  getHandleRowSelectionAllowed (void) const;
+    EditFieldHandlePtr editHandleRowSelectionAllowed(void);
+    GetFieldHandlePtr  getHandleShowHorizontalLines (void) const;
+    EditFieldHandlePtr editHandleShowHorizontalLines(void);
+    GetFieldHandlePtr  getHandleShowVerticalLines (void) const;
+    EditFieldHandlePtr editHandleShowVerticalLines(void);
+    GetFieldHandlePtr  getHandleGridColor       (void) const;
+    EditFieldHandlePtr editHandleGridColor      (void);
+    GetFieldHandlePtr  getHandleGlobalCellEditor (void) const;
+    EditFieldHandlePtr editHandleGlobalCellEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFComponentPtr      *getMFTable          (void);
+            const MFUnrecComponentPtr *getMFTable           (void) const;
+                  MFUnrecComponentPtr *editMFTable          (void);
 
-           ComponentPtr        &getTable          (UInt32 index);
-           MFComponentPtr      &getTable          (void);
-     const MFComponentPtr      &getTable          (void) const;
+
+                  Component * getTable          (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -303,65 +415,72 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToTable               (Component * const value   );
+    void assignTable               (const MFUnrecComponentPtr &value);
+    void removeFromTable (UInt32                uiIndex );
+    void removeObjFromTable(Component * const value   );
+    void clearTable                 (void                          );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TableBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      TableBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      TableBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const TableBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef TableBase *TableBaseP;
 
-typedef osgIF<TableBase::isNodeCore,
-              CoredNodePtr<Table>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TableNodePtr;
-
-typedef RefPtr<TablePtr> TableRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGTABLEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTABLEBASE_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,235 +50,546 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETABLEHEADERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGTable.h"                   // Table Class
+#include "OSGTableColumnModel.h"        // ColumnModel Class
+#include "OSGUIDrawObjectCanvas.h"      // DefaultMarginDrawObject Class
+#include "OSGComponent.h"               // ColumnHeaders Class
 
 #include "OSGTableHeaderBase.h"
 #include "OSGTableHeader.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TableHeaderBase::TableFieldMask = 
-    (TypeTraits<BitVector>::One << TableHeaderBase::TableFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TableHeaderBase::ColumnModelFieldMask = 
-    (TypeTraits<BitVector>::One << TableHeaderBase::ColumnModelFieldId);
+/*! \class OSG::TableHeader
+    A UI Table Header.
+ */
 
-const OSG::BitVector  TableHeaderBase::ReorderingAllowedFieldMask = 
-    (TypeTraits<BitVector>::One << TableHeaderBase::ReorderingAllowedFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  TableHeaderBase::ResizingAllowedFieldMask = 
-    (TypeTraits<BitVector>::One << TableHeaderBase::ResizingAllowedFieldId);
-
-const OSG::BitVector  TableHeaderBase::ResizingCursorDriftAllowanceFieldMask = 
-    (TypeTraits<BitVector>::One << TableHeaderBase::ResizingCursorDriftAllowanceFieldId);
-
-const OSG::BitVector  TableHeaderBase::DefaultMarginDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << TableHeaderBase::DefaultMarginDrawObjectFieldId);
-
-const OSG::BitVector  TableHeaderBase::MarginsFieldMask = 
-    (TypeTraits<BitVector>::One << TableHeaderBase::MarginsFieldId);
-
-const OSG::BitVector  TableHeaderBase::ColumnHeadersFieldMask = 
-    (TypeTraits<BitVector>::One << TableHeaderBase::ColumnHeadersFieldId);
-
-const OSG::BitVector TableHeaderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var TablePtr        TableHeaderBase::_sfTable
+/*! \var Table *         TableHeaderBase::_sfTable
     
 */
-/*! \var TableColumnModelPtr TableHeaderBase::_sfColumnModel
+
+/*! \var TableColumnModel * TableHeaderBase::_sfColumnModel
     
 */
+
 /*! \var bool            TableHeaderBase::_sfReorderingAllowed
     
 */
+
 /*! \var bool            TableHeaderBase::_sfResizingAllowed
     
 */
+
 /*! \var UInt32          TableHeaderBase::_sfResizingCursorDriftAllowance
     
 */
-/*! \var UIDrawObjectCanvasPtr TableHeaderBase::_sfDefaultMarginDrawObject
-    
-*/
-/*! \var UIDrawObjectCanvasPtr TableHeaderBase::_mfMargins
-    
-*/
-/*! \var ComponentPtr    TableHeaderBase::_mfColumnHeaders
+
+/*! \var UIDrawObjectCanvas * TableHeaderBase::_sfDefaultMarginDrawObject
     
 */
 
-//! TableHeader description
+/*! \var UIDrawObjectCanvas * TableHeaderBase::_mfMargins
+    
+*/
 
-FieldDescription *TableHeaderBase::_desc[] = 
+/*! \var Component *     TableHeaderBase::_mfColumnHeaders
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TableHeader *>::_type("TableHeaderPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TableHeader *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TableHeader *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TableHeader *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TableHeaderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFTablePtr::getClassType(), 
-                     "Table", 
-                     TableFieldId, TableFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableHeaderBase::getSFTable),
-    new FieldDescription(SFTableColumnModelPtr::getClassType(), 
-                     "ColumnModel", 
-                     ColumnModelFieldId, ColumnModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableHeaderBase::getSFColumnModel),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ReorderingAllowed", 
-                     ReorderingAllowedFieldId, ReorderingAllowedFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableHeaderBase::getSFReorderingAllowed),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ResizingAllowed", 
-                     ResizingAllowedFieldId, ResizingAllowedFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableHeaderBase::getSFResizingAllowed),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ResizingCursorDriftAllowance", 
-                     ResizingCursorDriftAllowanceFieldId, ResizingCursorDriftAllowanceFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableHeaderBase::getSFResizingCursorDriftAllowance),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "DefaultMarginDrawObject", 
-                     DefaultMarginDrawObjectFieldId, DefaultMarginDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableHeaderBase::getSFDefaultMarginDrawObject),
-    new FieldDescription(MFUIDrawObjectCanvasPtr::getClassType(), 
-                     "Margins", 
-                     MarginsFieldId, MarginsFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableHeaderBase::getMFMargins),
-    new FieldDescription(MFComponentPtr::getClassType(), 
-                     "ColumnHeaders", 
-                     ColumnHeadersFieldId, ColumnHeadersFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableHeaderBase::getMFColumnHeaders)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TableHeaderBase::_type(
-    "TableHeader",
-    "Container",
-    NULL,
-    (PrototypeCreateF) &TableHeaderBase::createEmpty,
+    pDesc = new SFUnrecTablePtr::Description(
+        SFUnrecTablePtr::getClassType(),
+        "Table",
+        "",
+        TableFieldId, TableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableHeader::editHandleTable),
+        static_cast<FieldGetMethodSig >(&TableHeader::getHandleTable));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTableColumnModelPtr::Description(
+        SFUnrecTableColumnModelPtr::getClassType(),
+        "ColumnModel",
+        "",
+        ColumnModelFieldId, ColumnModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableHeader::editHandleColumnModel),
+        static_cast<FieldGetMethodSig >(&TableHeader::getHandleColumnModel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ReorderingAllowed",
+        "",
+        ReorderingAllowedFieldId, ReorderingAllowedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableHeader::editHandleReorderingAllowed),
+        static_cast<FieldGetMethodSig >(&TableHeader::getHandleReorderingAllowed));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ResizingAllowed",
+        "",
+        ResizingAllowedFieldId, ResizingAllowedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableHeader::editHandleResizingAllowed),
+        static_cast<FieldGetMethodSig >(&TableHeader::getHandleResizingAllowed));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ResizingCursorDriftAllowance",
+        "",
+        ResizingCursorDriftAllowanceFieldId, ResizingCursorDriftAllowanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableHeader::editHandleResizingCursorDriftAllowance),
+        static_cast<FieldGetMethodSig >(&TableHeader::getHandleResizingCursorDriftAllowance));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "DefaultMarginDrawObject",
+        "",
+        DefaultMarginDrawObjectFieldId, DefaultMarginDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableHeader::editHandleDefaultMarginDrawObject),
+        static_cast<FieldGetMethodSig >(&TableHeader::getHandleDefaultMarginDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFUnrecUIDrawObjectCanvasPtr::Description(
+        MFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "Margins",
+        "",
+        MarginsFieldId, MarginsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableHeader::editHandleMargins),
+        static_cast<FieldGetMethodSig >(&TableHeader::getHandleMargins));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFUnrecComponentPtr::Description(
+        MFUnrecComponentPtr::getClassType(),
+        "ColumnHeaders",
+        "",
+        ColumnHeadersFieldId, ColumnHeadersFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TableHeader::editHandleColumnHeaders),
+        static_cast<FieldGetMethodSig >(&TableHeader::getHandleColumnHeaders));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+TableHeaderBase::TypeObject TableHeaderBase::_type(
+    TableHeaderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TableHeaderBase::createEmptyLocal),
     TableHeader::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(TableHeaderBase, TableHeaderPtr)
+    TableHeader::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TableHeader::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"TableHeader\"\n"
+    "    parent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    >\n"
+    "    A UI Table Header.\n"
+    "    <Field\n"
+    "        name=\"Table\"\n"
+    "        type=\"Table\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ColumnModel\"\n"
+    "        type=\"TableColumnModel\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ReorderingAllowed\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ResizingAllowed\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ResizingCursorDriftAllowance\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"1\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DefaultMarginDrawObject\"\n"
+    "        type=\"UIDrawObjectCanvas\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Margins\"\n"
+    "        type=\"UIDrawObjectCanvas\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"multi\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"protected\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ColumnHeaders\"\n"
+    "        type=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"multi\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"protected\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Table Header.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TableHeaderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TableHeaderBase::getType(void) const 
+FieldContainerType &TableHeaderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TableHeaderBase::shallowCopy(void) const 
-{ 
-    TableHeaderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TableHeader *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TableHeaderBase::getContainerSize(void) const 
-{ 
-    return sizeof(TableHeader); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableHeaderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TableHeaderBase::getType(void) const
 {
-    this->executeSyncImpl((TableHeaderBase *) &other, whichField);
+    return _type;
 }
-#else
-void TableHeaderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TableHeaderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TableHeaderBase *) &other, whichField, sInfo);
+    return sizeof(TableHeader);
 }
-void TableHeaderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the TableHeader::_sfTable field.
+const SFUnrecTablePtr *TableHeaderBase::getSFTable(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfTable;
 }
 
-void TableHeaderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecTablePtr     *TableHeaderBase::editSFTable          (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(TableFieldMask);
 
-    _mfMargins.terminateShare(uiAspect, this->getContainerSize());
-    _mfColumnHeaders.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfTable;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TableHeaderBase::TableHeaderBase(void) :
-    _sfTable                  (TablePtr(NullFC)), 
-    _sfColumnModel            (TableColumnModelPtr(NullFC)), 
-    _sfReorderingAllowed      (bool(true)), 
-    _sfResizingAllowed        (bool(true)), 
-    _sfResizingCursorDriftAllowance(UInt32(1)), 
-    _sfDefaultMarginDrawObject(UIDrawObjectCanvasPtr(NullFC)), 
-    _mfMargins                (), 
-    _mfColumnHeaders          (), 
-    Inherited() 
+//! Get the TableHeader::_sfColumnModel field.
+const SFUnrecTableColumnModelPtr *TableHeaderBase::getSFColumnModel(void) const
 {
+    return &_sfColumnModel;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TableHeaderBase::TableHeaderBase(const TableHeaderBase &source) :
-    _sfTable                  (source._sfTable                  ), 
-    _sfColumnModel            (source._sfColumnModel            ), 
-    _sfReorderingAllowed      (source._sfReorderingAllowed      ), 
-    _sfResizingAllowed        (source._sfResizingAllowed        ), 
-    _sfResizingCursorDriftAllowance(source._sfResizingCursorDriftAllowance), 
-    _sfDefaultMarginDrawObject(source._sfDefaultMarginDrawObject), 
-    _mfMargins                (source._mfMargins                ), 
-    _mfColumnHeaders          (source._mfColumnHeaders          ), 
-    Inherited                 (source)
+SFUnrecTableColumnModelPtr *TableHeaderBase::editSFColumnModel    (void)
 {
+    editSField(ColumnModelFieldMask);
+
+    return &_sfColumnModel;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-TableHeaderBase::~TableHeaderBase(void)
+SFBool *TableHeaderBase::editSFReorderingAllowed(void)
 {
+    editSField(ReorderingAllowedFieldMask);
+
+    return &_sfReorderingAllowed;
 }
+
+const SFBool *TableHeaderBase::getSFReorderingAllowed(void) const
+{
+    return &_sfReorderingAllowed;
+}
+
+
+SFBool *TableHeaderBase::editSFResizingAllowed(void)
+{
+    editSField(ResizingAllowedFieldMask);
+
+    return &_sfResizingAllowed;
+}
+
+const SFBool *TableHeaderBase::getSFResizingAllowed(void) const
+{
+    return &_sfResizingAllowed;
+}
+
+
+SFUInt32 *TableHeaderBase::editSFResizingCursorDriftAllowance(void)
+{
+    editSField(ResizingCursorDriftAllowanceFieldMask);
+
+    return &_sfResizingCursorDriftAllowance;
+}
+
+const SFUInt32 *TableHeaderBase::getSFResizingCursorDriftAllowance(void) const
+{
+    return &_sfResizingCursorDriftAllowance;
+}
+
+
+//! Get the TableHeader::_sfDefaultMarginDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *TableHeaderBase::getSFDefaultMarginDrawObject(void) const
+{
+    return &_sfDefaultMarginDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *TableHeaderBase::editSFDefaultMarginDrawObject(void)
+{
+    editSField(DefaultMarginDrawObjectFieldMask);
+
+    return &_sfDefaultMarginDrawObject;
+}
+
+//! Get the TableHeader::_mfMargins field.
+const MFUnrecUIDrawObjectCanvasPtr *TableHeaderBase::getMFMargins(void) const
+{
+    return &_mfMargins;
+}
+
+MFUnrecUIDrawObjectCanvasPtr *TableHeaderBase::editMFMargins        (void)
+{
+    editMField(MarginsFieldMask, _mfMargins);
+
+    return &_mfMargins;
+}
+
+//! Get the TableHeader::_mfColumnHeaders field.
+const MFUnrecComponentPtr *TableHeaderBase::getMFColumnHeaders(void) const
+{
+    return &_mfColumnHeaders;
+}
+
+MFUnrecComponentPtr *TableHeaderBase::editMFColumnHeaders  (void)
+{
+    editMField(ColumnHeadersFieldMask, _mfColumnHeaders);
+
+    return &_mfColumnHeaders;
+}
+
+
+
+void TableHeaderBase::pushToMargins(UIDrawObjectCanvas * const value)
+{
+    editMField(MarginsFieldMask, _mfMargins);
+
+    _mfMargins.push_back(value);
+}
+
+void TableHeaderBase::assignMargins  (const MFUnrecUIDrawObjectCanvasPtr &value)
+{
+    MFUnrecUIDrawObjectCanvasPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecUIDrawObjectCanvasPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<TableHeader *>(this)->clearMargins();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToMargins(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void TableHeaderBase::removeFromMargins(UInt32 uiIndex)
+{
+    if(uiIndex < _mfMargins.size())
+    {
+        editMField(MarginsFieldMask, _mfMargins);
+
+        _mfMargins.erase(uiIndex);
+    }
+}
+
+void TableHeaderBase::removeObjFromMargins(UIDrawObjectCanvas * const value)
+{
+    Int32 iElemIdx = _mfMargins.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(MarginsFieldMask, _mfMargins);
+
+        _mfMargins.erase(iElemIdx);
+    }
+}
+void TableHeaderBase::clearMargins(void)
+{
+    editMField(MarginsFieldMask, _mfMargins);
+
+
+    _mfMargins.clear();
+}
+
+void TableHeaderBase::pushToColumnHeaders(Component * const value)
+{
+    editMField(ColumnHeadersFieldMask, _mfColumnHeaders);
+
+    _mfColumnHeaders.push_back(value);
+}
+
+void TableHeaderBase::assignColumnHeaders(const MFUnrecComponentPtr &value)
+{
+    MFUnrecComponentPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecComponentPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<TableHeader *>(this)->clearColumnHeaders();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToColumnHeaders(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void TableHeaderBase::removeFromColumnHeaders(UInt32 uiIndex)
+{
+    if(uiIndex < _mfColumnHeaders.size())
+    {
+        editMField(ColumnHeadersFieldMask, _mfColumnHeaders);
+
+        _mfColumnHeaders.erase(uiIndex);
+    }
+}
+
+void TableHeaderBase::removeObjFromColumnHeaders(Component * const value)
+{
+    Int32 iElemIdx = _mfColumnHeaders.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(ColumnHeadersFieldMask, _mfColumnHeaders);
+
+        _mfColumnHeaders.erase(iElemIdx);
+    }
+}
+void TableHeaderBase::clearColumnHeaders(void)
+{
+    editMField(ColumnHeadersFieldMask, _mfColumnHeaders);
+
+
+    _mfColumnHeaders.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TableHeaderBase::getBinSize(const BitVector &whichField)
+UInt32 TableHeaderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -286,48 +597,40 @@ UInt32 TableHeaderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfTable.getBinSize();
     }
-
     if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
     {
         returnValue += _sfColumnModel.getBinSize();
     }
-
     if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
     {
         returnValue += _sfReorderingAllowed.getBinSize();
     }
-
     if(FieldBits::NoField != (ResizingAllowedFieldMask & whichField))
     {
         returnValue += _sfResizingAllowed.getBinSize();
     }
-
     if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
     {
         returnValue += _sfResizingCursorDriftAllowance.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
     {
         returnValue += _sfDefaultMarginDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (MarginsFieldMask & whichField))
     {
         returnValue += _mfMargins.getBinSize();
     }
-
     if(FieldBits::NoField != (ColumnHeadersFieldMask & whichField))
     {
         returnValue += _mfColumnHeaders.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TableHeaderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TableHeaderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -335,47 +638,38 @@ void TableHeaderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfTable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
     {
         _sfColumnModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
     {
         _sfReorderingAllowed.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizingAllowedFieldMask & whichField))
     {
         _sfResizingAllowed.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
     {
         _sfResizingCursorDriftAllowance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
     {
         _sfDefaultMarginDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MarginsFieldMask & whichField))
     {
         _mfMargins.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColumnHeadersFieldMask & whichField))
     {
         _mfColumnHeaders.copyToBin(pMem);
     }
-
-
 }
 
-void TableHeaderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TableHeaderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -383,165 +677,512 @@ void TableHeaderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfTable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
     {
         _sfColumnModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
     {
         _sfReorderingAllowed.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizingAllowedFieldMask & whichField))
     {
         _sfResizingAllowed.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
     {
         _sfResizingCursorDriftAllowance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
     {
         _sfDefaultMarginDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MarginsFieldMask & whichField))
     {
         _mfMargins.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColumnHeadersFieldMask & whichField))
     {
         _mfColumnHeaders.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableHeaderBase::executeSyncImpl(      TableHeaderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TableHeaderTransitPtr TableHeaderBase::createLocal(BitVector bFlags)
 {
+    TableHeaderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (TableFieldMask & whichField))
-        _sfTable.syncWith(pOther->_sfTable);
+        fc = dynamic_pointer_cast<TableHeader>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
-        _sfColumnModel.syncWith(pOther->_sfColumnModel);
-
-    if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
-        _sfReorderingAllowed.syncWith(pOther->_sfReorderingAllowed);
-
-    if(FieldBits::NoField != (ResizingAllowedFieldMask & whichField))
-        _sfResizingAllowed.syncWith(pOther->_sfResizingAllowed);
-
-    if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
-        _sfResizingCursorDriftAllowance.syncWith(pOther->_sfResizingCursorDriftAllowance);
-
-    if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
-        _sfDefaultMarginDrawObject.syncWith(pOther->_sfDefaultMarginDrawObject);
-
-    if(FieldBits::NoField != (MarginsFieldMask & whichField))
-        _mfMargins.syncWith(pOther->_mfMargins);
-
-    if(FieldBits::NoField != (ColumnHeadersFieldMask & whichField))
-        _mfColumnHeaders.syncWith(pOther->_mfColumnHeaders);
-
-
-}
-#else
-void TableHeaderBase::executeSyncImpl(      TableHeaderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (TableFieldMask & whichField))
-        _sfTable.syncWith(pOther->_sfTable);
-
-    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
-        _sfColumnModel.syncWith(pOther->_sfColumnModel);
-
-    if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
-        _sfReorderingAllowed.syncWith(pOther->_sfReorderingAllowed);
-
-    if(FieldBits::NoField != (ResizingAllowedFieldMask & whichField))
-        _sfResizingAllowed.syncWith(pOther->_sfResizingAllowed);
-
-    if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
-        _sfResizingCursorDriftAllowance.syncWith(pOther->_sfResizingCursorDriftAllowance);
-
-    if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
-        _sfDefaultMarginDrawObject.syncWith(pOther->_sfDefaultMarginDrawObject);
-
-
-    if(FieldBits::NoField != (MarginsFieldMask & whichField))
-        _mfMargins.syncWith(pOther->_mfMargins, sInfo);
-
-    if(FieldBits::NoField != (ColumnHeadersFieldMask & whichField))
-        _mfColumnHeaders.syncWith(pOther->_mfColumnHeaders, sInfo);
-
-
+    return fc;
 }
 
-void TableHeaderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TableHeaderTransitPtr TableHeaderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TableHeaderTransitPtr fc;
 
-    if(FieldBits::NoField != (MarginsFieldMask & whichField))
-        _mfMargins.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (ColumnHeadersFieldMask & whichField))
-        _mfColumnHeaders.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<TableHeader>(tmpPtr);
+    }
 
+    return fc;
+}
+
+//! create a new instance of the class
+TableHeaderTransitPtr TableHeaderBase::create(void)
+{
+    TableHeaderTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TableHeader>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TableHeader *TableHeaderBase::createEmptyLocal(BitVector bFlags)
+{
+    TableHeader *returnValue;
+
+    newPtr<TableHeader>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TableHeader *TableHeaderBase::createEmpty(void)
+{
+    TableHeader *returnValue;
+
+    newPtr<TableHeader>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TableHeaderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TableHeader *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TableHeader *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TableHeaderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TableHeader *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TableHeader *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TableHeaderBase::shallowCopy(void) const
+{
+    TableHeader *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TableHeader *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TableHeaderBase::TableHeaderBase(void) :
+    Inherited(),
+    _sfTable                  (NULL),
+    _sfColumnModel            (NULL),
+    _sfReorderingAllowed      (bool(true)),
+    _sfResizingAllowed        (bool(true)),
+    _sfResizingCursorDriftAllowance(UInt32(1)),
+    _sfDefaultMarginDrawObject(NULL),
+    _mfMargins                (),
+    _mfColumnHeaders          ()
+{
+}
+
+TableHeaderBase::TableHeaderBase(const TableHeaderBase &source) :
+    Inherited(source),
+    _sfTable                  (NULL),
+    _sfColumnModel            (NULL),
+    _sfReorderingAllowed      (source._sfReorderingAllowed      ),
+    _sfResizingAllowed        (source._sfResizingAllowed        ),
+    _sfResizingCursorDriftAllowance(source._sfResizingCursorDriftAllowance),
+    _sfDefaultMarginDrawObject(NULL),
+    _mfMargins                (),
+    _mfColumnHeaders          ()
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TableHeaderBase::~TableHeaderBase(void)
+{
+}
+
+void TableHeaderBase::onCreate(const TableHeader *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        TableHeader *pThis = static_cast<TableHeader *>(this);
+
+        pThis->setTable(source->getTable());
+
+        pThis->setColumnModel(source->getColumnModel());
+
+        pThis->setDefaultMarginDrawObject(source->getDefaultMarginDrawObject());
+
+        MFUnrecUIDrawObjectCanvasPtr::const_iterator MarginsIt  =
+            source->_mfMargins.begin();
+        MFUnrecUIDrawObjectCanvasPtr::const_iterator MarginsEnd =
+            source->_mfMargins.end  ();
+
+        while(MarginsIt != MarginsEnd)
+        {
+            pThis->pushToMargins(*MarginsIt);
+
+            ++MarginsIt;
+        }
+
+        MFUnrecComponentPtr::const_iterator ColumnHeadersIt  =
+            source->_mfColumnHeaders.begin();
+        MFUnrecComponentPtr::const_iterator ColumnHeadersEnd =
+            source->_mfColumnHeaders.end  ();
+
+        while(ColumnHeadersIt != ColumnHeadersEnd)
+        {
+            pThis->pushToColumnHeaders(*ColumnHeadersIt);
+
+            ++ColumnHeadersIt;
+        }
+    }
+}
+
+GetFieldHandlePtr TableHeaderBase::getHandleTable           (void) const
+{
+    SFUnrecTablePtr::GetHandlePtr returnValue(
+        new  SFUnrecTablePtr::GetHandle(
+             &_sfTable,
+             this->getType().getFieldDesc(TableFieldId),
+             const_cast<TableHeaderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableHeaderBase::editHandleTable          (void)
+{
+    SFUnrecTablePtr::EditHandlePtr returnValue(
+        new  SFUnrecTablePtr::EditHandle(
+             &_sfTable,
+             this->getType().getFieldDesc(TableFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TableHeader::setTable,
+                    static_cast<TableHeader *>(this), _1));
+
+    editSField(TableFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableHeaderBase::getHandleColumnModel     (void) const
+{
+    SFUnrecTableColumnModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecTableColumnModelPtr::GetHandle(
+             &_sfColumnModel,
+             this->getType().getFieldDesc(ColumnModelFieldId),
+             const_cast<TableHeaderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableHeaderBase::editHandleColumnModel    (void)
+{
+    SFUnrecTableColumnModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecTableColumnModelPtr::EditHandle(
+             &_sfColumnModel,
+             this->getType().getFieldDesc(ColumnModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TableHeader::setColumnModel,
+                    static_cast<TableHeader *>(this), _1));
+
+    editSField(ColumnModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableHeaderBase::getHandleReorderingAllowed (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfReorderingAllowed,
+             this->getType().getFieldDesc(ReorderingAllowedFieldId),
+             const_cast<TableHeaderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableHeaderBase::editHandleReorderingAllowed(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfReorderingAllowed,
+             this->getType().getFieldDesc(ReorderingAllowedFieldId),
+             this));
+
+
+    editSField(ReorderingAllowedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableHeaderBase::getHandleResizingAllowed (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfResizingAllowed,
+             this->getType().getFieldDesc(ResizingAllowedFieldId),
+             const_cast<TableHeaderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableHeaderBase::editHandleResizingAllowed(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfResizingAllowed,
+             this->getType().getFieldDesc(ResizingAllowedFieldId),
+             this));
+
+
+    editSField(ResizingAllowedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableHeaderBase::getHandleResizingCursorDriftAllowance (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfResizingCursorDriftAllowance,
+             this->getType().getFieldDesc(ResizingCursorDriftAllowanceFieldId),
+             const_cast<TableHeaderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableHeaderBase::editHandleResizingCursorDriftAllowance(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfResizingCursorDriftAllowance,
+             this->getType().getFieldDesc(ResizingCursorDriftAllowanceFieldId),
+             this));
+
+
+    editSField(ResizingCursorDriftAllowanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableHeaderBase::getHandleDefaultMarginDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfDefaultMarginDrawObject,
+             this->getType().getFieldDesc(DefaultMarginDrawObjectFieldId),
+             const_cast<TableHeaderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableHeaderBase::editHandleDefaultMarginDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfDefaultMarginDrawObject,
+             this->getType().getFieldDesc(DefaultMarginDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TableHeader::setDefaultMarginDrawObject,
+                    static_cast<TableHeader *>(this), _1));
+
+    editSField(DefaultMarginDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableHeaderBase::getHandleMargins         (void) const
+{
+    MFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  MFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_mfMargins,
+             this->getType().getFieldDesc(MarginsFieldId),
+             const_cast<TableHeaderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableHeaderBase::editHandleMargins        (void)
+{
+    MFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  MFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_mfMargins,
+             this->getType().getFieldDesc(MarginsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&TableHeader::pushToMargins,
+                    static_cast<TableHeader *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&TableHeader::removeFromMargins,
+                    static_cast<TableHeader *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&TableHeader::removeObjFromMargins,
+                    static_cast<TableHeader *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&TableHeader::clearMargins,
+                    static_cast<TableHeader *>(this)));
+
+    editMField(MarginsFieldMask, _mfMargins);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableHeaderBase::getHandleColumnHeaders   (void) const
+{
+    MFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  MFUnrecComponentPtr::GetHandle(
+             &_mfColumnHeaders,
+             this->getType().getFieldDesc(ColumnHeadersFieldId),
+             const_cast<TableHeaderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableHeaderBase::editHandleColumnHeaders  (void)
+{
+    MFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  MFUnrecComponentPtr::EditHandle(
+             &_mfColumnHeaders,
+             this->getType().getFieldDesc(ColumnHeadersFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&TableHeader::pushToColumnHeaders,
+                    static_cast<TableHeader *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&TableHeader::removeFromColumnHeaders,
+                    static_cast<TableHeader *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&TableHeader::removeObjFromColumnHeaders,
+                    static_cast<TableHeader *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&TableHeader::clearColumnHeaders,
+                    static_cast<TableHeader *>(this)));
+
+    editMField(ColumnHeadersFieldMask, _mfColumnHeaders);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TableHeaderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TableHeader *pThis = static_cast<TableHeader *>(this);
+
+    pThis->execSync(static_cast<TableHeader *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TableHeaderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TableHeader *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TableHeader *>(pRefAspect),
+                  dynamic_cast<const TableHeader *>(this));
+
+    return returnValue;
+}
+#endif
+
+void TableHeaderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<TableHeader *>(this)->setTable(NULL);
+
+    static_cast<TableHeader *>(this)->setColumnModel(NULL);
+
+    static_cast<TableHeader *>(this)->setDefaultMarginDrawObject(NULL);
+
+    static_cast<TableHeader *>(this)->clearMargins();
+
+    static_cast<TableHeader *>(this)->clearColumnHeaders();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TableHeaderPtr>::_type("TableHeaderPtr", "ContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TableHeaderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TableHeaderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTABLEHEADERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTABLEHEADERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTABLEHEADERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

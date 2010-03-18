@@ -43,16 +43,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
-#include "Layer/OSGColorLayer.h"
-#include "Border/OSGLineBorder.h"
-#include "Border/OSGEmptyBorder.h"
-#include "Component/Text/OSGLabel.h"
+#include "OSGColorLayer.h"
+#include "OSGLineBorder.h"
+#include "OSGEmptyBorder.h"
+#include "OSGLabel.h"
 
 #include "OSGDefaultGLenumTableCellRenderer.h"
 
-#include <OpenSG/Toolbox/OSGGLenumUtils.h>
+#include "OSGGLDefineMapper.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -60,7 +60,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultGLenumTableCellRenderer
+/*! \class OSG::DefaultGLenumTableCellRenderer
 A DefaultGLenumTableCellRenderer.
 */
 
@@ -77,64 +77,52 @@ A DefaultGLenumTableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultGLenumTableCellRenderer::getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentRefPtr DefaultGLenumTableCellRenderer::getTableCellRendererComponent(TableRefPtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
-	if(value.empty()){
-		return NullFC;
-	}
-	LabelPtr TheLabel = Label::create();
-	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-		std::string tempString;
-        try
-        {
-		    tempString = toString(boost::any_cast<GLenum>(value));
-        }
-        catch (boost::bad_any_cast &)
-        {
-            //Not a UInt32
-        }
-		TheLabel->setText(tempString);
-		TheLabel->setPreferredSize(Vec2f(100,30));
-	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-	ColorLayerPtr tempBackground;
-	tempBackground = ColorLayer::create();
+    if(value.empty()){
+        return NULL;
+    }
+    LabelRefPtr TheLabel = Label::create();
+    std::string tempString;
+    try
+    {
+        tempString = GLDefineMapper::the()->toString(boost::any_cast<GLenum>(value));
+    }
+    catch (boost::bad_any_cast &)
+    {
+        //Not a UInt32
+    }
+    TheLabel->setText(tempString);
+    TheLabel->setPreferredSize(Vec2f(100,30));
+    ColorLayerRefPtr tempBackground;
+    tempBackground = ColorLayer::create();
 
-	beginEditCP(TheLabel, Label::BackgroundsFieldMask);
-		TheLabel->setBackgrounds(tempBackground);
-	endEditCP(TheLabel, Label::BackgroundsFieldMask);
+    TheLabel->setBackgrounds(tempBackground);
 
-	beginEditCP(tempBackground, ColorLayer::ColorFieldMask);
-		if(isSelected){
-			tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
-		}
-		else{
-			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
-		}
-	endEditCP(tempBackground, ColorLayer::ColorFieldMask);
+    if(isSelected){
+        tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
+    }
+    else{
+        tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+    }
 
-	if(hasFocus){
-		LineBorderPtr tempBorder;
+    if(hasFocus){
+        LineBorderRefPtr tempBorder;
 
-			tempBorder = LineBorder::create();
-			beginEditCP(TheLabel, Label::BordersFieldMask);
-				TheLabel->setBorders(tempBorder);
-			endEditCP(TheLabel, Label::BordersFieldMask);
+        tempBorder = LineBorder::create();
+        TheLabel->setBorders(tempBorder);
 
-		beginEditCP(tempBorder, LineBorder::ColorFieldMask);
-			tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
-		endEditCP(tempBorder, LineBorder::ColorFieldMask);
-	}
-	else{
-		EmptyBorderPtr tempBorder;
+        tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
+    }
+    else{
+        EmptyBorderRefPtr tempBorder;
 
-			tempBorder = EmptyBorder::create();
-			beginEditCP(TheLabel, Label::BordersFieldMask);
-				TheLabel->setBorders(tempBorder);
-			endEditCP(TheLabel, Label::BordersFieldMask);
-	}
-	return Component::Ptr::dcast(TheLabel);
-	
-	
+        tempBorder = EmptyBorder::create();
+        TheLabel->setBorders(tempBorder);
+    }
+    return dynamic_pointer_cast<Component>(TheLabel);
+
+
 }
 
 /*-------------------------------------------------------------------------*\

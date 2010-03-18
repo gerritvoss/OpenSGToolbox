@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,83 +58,99 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include "Component/Table/OSGTableFields.h" // Table type
-#include "Models/OSGTableColumnModelFields.h" // ColumnModel type
-#include <OpenSG/OSGBoolFields.h> // ReorderingAllowed type
-#include <OpenSG/OSGBoolFields.h> // ResizingAllowed type
-#include <OpenSG/OSGUInt32Fields.h> // ResizingCursorDriftAllowance type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DefaultMarginDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // Margins type
-#include "Component/OSGComponent.h" // ColumnHeaders type
+#include "OSGTableFields.h"             // Table type
+#include "OSGTableColumnModelFields.h"  // ColumnModel type
+#include "OSGSysFields.h"               // ReorderingAllowed type
+#include "OSGUIDrawObjectCanvasFields.h" // DefaultMarginDrawObject type
+#include "OSGComponentFields.h"         // ColumnHeaders type
 
 #include "OSGTableHeaderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TableHeader;
-class BinaryDataHandler;
 
 //! \brief TableHeader Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeaderBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TableHeaderPtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(TableHeader);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        TableFieldId                        = Inherited::NextFieldId,
-        ColumnModelFieldId                  = TableFieldId                        + 1,
-        ReorderingAllowedFieldId            = ColumnModelFieldId                  + 1,
-        ResizingAllowedFieldId              = ReorderingAllowedFieldId            + 1,
-        ResizingCursorDriftAllowanceFieldId = ResizingAllowedFieldId              + 1,
-        DefaultMarginDrawObjectFieldId      = ResizingCursorDriftAllowanceFieldId + 1,
-        MarginsFieldId                      = DefaultMarginDrawObjectFieldId      + 1,
-        ColumnHeadersFieldId                = MarginsFieldId                      + 1,
-        NextFieldId                         = ColumnHeadersFieldId                + 1
+        TableFieldId = Inherited::NextFieldId,
+        ColumnModelFieldId = TableFieldId + 1,
+        ReorderingAllowedFieldId = ColumnModelFieldId + 1,
+        ResizingAllowedFieldId = ReorderingAllowedFieldId + 1,
+        ResizingCursorDriftAllowanceFieldId = ResizingAllowedFieldId + 1,
+        DefaultMarginDrawObjectFieldId = ResizingCursorDriftAllowanceFieldId + 1,
+        MarginsFieldId = DefaultMarginDrawObjectFieldId + 1,
+        ColumnHeadersFieldId = MarginsFieldId + 1,
+        NextFieldId = ColumnHeadersFieldId + 1
     };
 
-    static const OSG::BitVector TableFieldMask;
-    static const OSG::BitVector ColumnModelFieldMask;
-    static const OSG::BitVector ReorderingAllowedFieldMask;
-    static const OSG::BitVector ResizingAllowedFieldMask;
-    static const OSG::BitVector ResizingCursorDriftAllowanceFieldMask;
-    static const OSG::BitVector DefaultMarginDrawObjectFieldMask;
-    static const OSG::BitVector MarginsFieldMask;
-    static const OSG::BitVector ColumnHeadersFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector TableFieldMask =
+        (TypeTraits<BitVector>::One << TableFieldId);
+    static const OSG::BitVector ColumnModelFieldMask =
+        (TypeTraits<BitVector>::One << ColumnModelFieldId);
+    static const OSG::BitVector ReorderingAllowedFieldMask =
+        (TypeTraits<BitVector>::One << ReorderingAllowedFieldId);
+    static const OSG::BitVector ResizingAllowedFieldMask =
+        (TypeTraits<BitVector>::One << ResizingAllowedFieldId);
+    static const OSG::BitVector ResizingCursorDriftAllowanceFieldMask =
+        (TypeTraits<BitVector>::One << ResizingCursorDriftAllowanceFieldId);
+    static const OSG::BitVector DefaultMarginDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DefaultMarginDrawObjectFieldId);
+    static const OSG::BitVector MarginsFieldMask =
+        (TypeTraits<BitVector>::One << MarginsFieldId);
+    static const OSG::BitVector ColumnHeadersFieldMask =
+        (TypeTraits<BitVector>::One << ColumnHeadersFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecTablePtr   SFTableType;
+    typedef SFUnrecTableColumnModelPtr SFColumnModelType;
+    typedef SFBool            SFReorderingAllowedType;
+    typedef SFBool            SFResizingAllowedType;
+    typedef SFUInt32          SFResizingCursorDriftAllowanceType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDefaultMarginDrawObjectType;
+    typedef MFUnrecUIDrawObjectCanvasPtr MFMarginsType;
+    typedef MFUnrecComponentPtr MFColumnHeadersType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -143,41 +159,58 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFTablePtr          *getSFTable          (void);
-           SFTableColumnModelPtr *getSFColumnModel    (void);
-           SFBool              *getSFReorderingAllowed(void);
-           SFBool              *getSFResizingAllowed(void);
-           SFUInt32            *getSFResizingCursorDriftAllowance(void);
-           SFUIDrawObjectCanvasPtr *getSFDefaultMarginDrawObject(void);
+            const SFUnrecTablePtr     *getSFTable          (void) const;
+                  SFUnrecTablePtr     *editSFTable          (void);
+            const SFUnrecTableColumnModelPtr *getSFColumnModel    (void) const;
+                  SFUnrecTableColumnModelPtr *editSFColumnModel    (void);
 
-           TablePtr            &getTable          (void);
-     const TablePtr            &getTable          (void) const;
-           TableColumnModelPtr &getColumnModel    (void);
-     const TableColumnModelPtr &getColumnModel    (void) const;
-           bool                &getReorderingAllowed(void);
-     const bool                &getReorderingAllowed(void) const;
-           bool                &getResizingAllowed(void);
-     const bool                &getResizingAllowed(void) const;
-           UInt32              &getResizingCursorDriftAllowance(void);
-     const UInt32              &getResizingCursorDriftAllowance(void) const;
-           UIDrawObjectCanvasPtr &getDefaultMarginDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDefaultMarginDrawObject(void) const;
+                  SFBool              *editSFReorderingAllowed(void);
+            const SFBool              *getSFReorderingAllowed (void) const;
+
+                  SFBool              *editSFResizingAllowed(void);
+            const SFBool              *getSFResizingAllowed (void) const;
+
+                  SFUInt32            *editSFResizingCursorDriftAllowance(void);
+            const SFUInt32            *getSFResizingCursorDriftAllowance (void) const;
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDefaultMarginDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDefaultMarginDrawObject(void);
+
+
+                  Table * getTable          (void) const;
+
+                  TableColumnModel * getColumnModel    (void) const;
+
+                  bool                &editReorderingAllowed(void);
+                  bool                 getReorderingAllowed (void) const;
+
+                  bool                &editResizingAllowed(void);
+                  bool                 getResizingAllowed (void) const;
+
+                  UInt32              &editResizingCursorDriftAllowance(void);
+                  UInt32               getResizingCursorDriftAllowance (void) const;
+
+                  UIDrawObjectCanvas * getDefaultMarginDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTable          ( const TablePtr &value );
-     void setColumnModel    ( const TableColumnModelPtr &value );
-     void setReorderingAllowed( const bool &value );
-     void setResizingAllowed( const bool &value );
-     void setResizingCursorDriftAllowance( const UInt32 &value );
-     void setDefaultMarginDrawObject( const UIDrawObjectCanvasPtr &value );
+            void setTable          (Table * const value);
+            void setColumnModel    (TableColumnModel * const value);
+            void setReorderingAllowed(const bool value);
+            void setResizingAllowed(const bool value);
+            void setResizingCursorDriftAllowance(const UInt32 value);
+            void setDefaultMarginDrawObject(UIDrawObjectCanvas * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -185,11 +218,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -197,33 +230,50 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TableHeaderPtr      create          (void); 
-    static  TableHeaderPtr      createEmpty     (void); 
+    static  TableHeaderTransitPtr  create          (void);
+    static  TableHeader           *createEmpty     (void);
+
+    static  TableHeaderTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  TableHeader            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  TableHeaderTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFTablePtr          _sfTable;
-    SFTableColumnModelPtr   _sfColumnModel;
-    SFBool              _sfReorderingAllowed;
-    SFBool              _sfResizingAllowed;
-    SFUInt32            _sfResizingCursorDriftAllowance;
-    SFUIDrawObjectCanvasPtr   _sfDefaultMarginDrawObject;
-    MFUIDrawObjectCanvasPtr   _mfMargins;
-    MFComponentPtr      _mfColumnHeaders;
+    SFUnrecTablePtr   _sfTable;
+    SFUnrecTableColumnModelPtr _sfColumnModel;
+    SFBool            _sfReorderingAllowed;
+    SFBool            _sfResizingAllowed;
+    SFUInt32          _sfResizingCursorDriftAllowance;
+    SFUnrecUIDrawObjectCanvasPtr _sfDefaultMarginDrawObject;
+    MFUnrecUIDrawObjectCanvasPtr _mfMargins;
+    MFUnrecComponentPtr _mfColumnHeaders;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -238,22 +288,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableHeaderBase(void); 
+    virtual ~TableHeaderBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const TableHeader *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleTable           (void) const;
+    EditFieldHandlePtr editHandleTable          (void);
+    GetFieldHandlePtr  getHandleColumnModel     (void) const;
+    EditFieldHandlePtr editHandleColumnModel    (void);
+    GetFieldHandlePtr  getHandleReorderingAllowed (void) const;
+    EditFieldHandlePtr editHandleReorderingAllowed(void);
+    GetFieldHandlePtr  getHandleResizingAllowed (void) const;
+    EditFieldHandlePtr editHandleResizingAllowed(void);
+    GetFieldHandlePtr  getHandleResizingCursorDriftAllowance (void) const;
+    EditFieldHandlePtr editHandleResizingCursorDriftAllowance(void);
+    GetFieldHandlePtr  getHandleDefaultMarginDrawObject (void) const;
+    EditFieldHandlePtr editHandleDefaultMarginDrawObject(void);
+    GetFieldHandlePtr  getHandleMargins         (void) const;
+    EditFieldHandlePtr editHandleMargins        (void);
+    GetFieldHandlePtr  getHandleColumnHeaders   (void) const;
+    EditFieldHandlePtr editHandleColumnHeaders  (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFUIDrawObjectCanvasPtr *getMFMargins        (void);
-           MFComponentPtr      *getMFColumnHeaders  (void);
+            const MFUnrecUIDrawObjectCanvasPtr *getMFMargins         (void) const;
+                  MFUnrecUIDrawObjectCanvasPtr *editMFMargins        (void);
+            const MFUnrecComponentPtr *getMFColumnHeaders   (void) const;
+                  MFUnrecComponentPtr *editMFColumnHeaders  (void);
 
-           UIDrawObjectCanvasPtr &getMargins        (UInt32 index);
-           MFUIDrawObjectCanvasPtr &getMargins        (void);
-     const MFUIDrawObjectCanvasPtr &getMargins        (void) const;
-           ComponentPtr        &getColumnHeaders  (UInt32 index);
-           MFComponentPtr      &getColumnHeaders  (void);
-     const MFComponentPtr      &getColumnHeaders  (void) const;
+
+                  UIDrawObjectCanvas * getMargins        (const UInt32 index) const;
+
+                  Component * getColumnHeaders  (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -263,65 +342,78 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToMargins             (UIDrawObjectCanvas * const value   );
+    void assignMargins             (const MFUnrecUIDrawObjectCanvasPtr &value);
+    void removeFromMargins (UInt32                uiIndex );
+    void removeObjFromMargins(UIDrawObjectCanvas * const value   );
+    void clearMargins               (void                          );
+
+    void pushToColumnHeaders           (Component * const value   );
+    void assignColumnHeaders           (const MFUnrecComponentPtr &value);
+    void removeFromColumnHeaders (UInt32                uiIndex );
+    void removeObjFromColumnHeaders(Component * const value   );
+    void clearColumnHeaders            (void                          );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TableHeaderBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      TableHeaderBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      TableHeaderBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const TableHeaderBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef TableHeaderBase *TableHeaderBaseP;
 
-typedef osgIF<TableHeaderBase::isNodeCore,
-              CoredNodePtr<TableHeader>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TableHeaderNodePtr;
-
-typedef RefPtr<TableHeaderPtr> TableHeaderRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGTABLEHEADERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTABLEHEADERBASE_H_ */

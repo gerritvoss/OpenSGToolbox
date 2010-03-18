@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTableColumnModelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TableColumnModelEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGTableColumnModelEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGTableColumnModelEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,28 +62,35 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TableColumnModelEvent::initMethod (void)
+void TableColumnModelEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-TableColumnModelEventPtr TableColumnModelEvent::create(  FieldContainerPtr Source,
-                                                         Time TimeStamp,
-                                                         UInt32 FromIndex,
-                                                         UInt32 ToIndex)
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+TableColumnModelEventTransitPtr TableColumnModelEvent::create(
+                                                              FieldContainerRefPtr Source,
+                                                              Time TimeStamp,
+                                                              UInt32 FromIndex,
+                                                              UInt32 ToIndex)
 {
-    TableColumnModelEventPtr TheEvent = TableColumnModelEvent::createEmpty();
+    TableColumnModelEvent* TheEvent = TableColumnModelEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setFromIndex(FromIndex);
     TheEvent->setToIndex(ToIndex);
 
-    return TheEvent;
+    return TableColumnModelEventTransitPtr(TheEvent);
 }
-
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -112,17 +114,17 @@ TableColumnModelEvent::~TableColumnModelEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TableColumnModelEvent::changed(BitVector whichField, UInt32 origin)
+void TableColumnModelEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TableColumnModelEvent::dump(      UInt32    , 
+void TableColumnModelEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TableColumnModelEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

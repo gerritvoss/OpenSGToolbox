@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultTableColumnModel.h"
-#include "Component/List/OSGListSelectionModel.h"
-#include "Component/List/OSGDefaultListSelectionModel.h"
+#include "OSGListSelectionModel.h"
+#include "OSGDefaultListSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultTableColumnModel
-A UI DefaultTableColumnModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultTableColumnModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultTableColumnModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,20 +64,21 @@ A UI DefaultTableColumnModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultTableColumnModel::initMethod (void)
+void DefaultTableColumnModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
-ListSelectionModelPtr DefaultTableColumnModel::createSelectionModel(void)
-{
-    return ListSelectionModelPtr(new DefaultListSelectionModel());
-}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DefaultTableColumnModel::addColumn(const TableColumnPtr aColumn)
+void DefaultTableColumnModel::addColumn(const TableColumnRefPtr aColumn)
 {
     _Columns.push_back(aColumn);
     recalcWidthCache();
@@ -90,7 +86,7 @@ void DefaultTableColumnModel::addColumn(const TableColumnPtr aColumn)
     produceColumnAdded(_Columns.size());
 }
 
-TableColumnPtr DefaultTableColumnModel::getColumn(const UInt32& columnIndex) const
+TableColumnRefPtr DefaultTableColumnModel::getColumn(const UInt32& columnIndex) const
 {
     return _Columns[columnIndex];
 }
@@ -126,7 +122,7 @@ UInt32 DefaultTableColumnModel::getColumnMargin(void) const
     return _ColumnMargin;
 }
 
-std::vector<TableColumnPtr> DefaultTableColumnModel::getColumns(void) const
+std::vector<TableColumnUnrecPtr> DefaultTableColumnModel::getColumns(void) const
 {
     return _Columns;
 }
@@ -190,8 +186,8 @@ void DefaultTableColumnModel::moveColumn(const UInt32& columnIndex, const UInt32
 {
     //Check the validity of the parameters
     if(columnIndex == newIndex ||
-        columnIndex < _Columns.size() || 
-        newIndex < _Columns.size())
+       columnIndex < _Columns.size() || 
+       newIndex < _Columns.size())
     {
         return;
     }
@@ -218,7 +214,7 @@ void DefaultTableColumnModel::moveColumn(const UInt32& columnIndex, const UInt32
     produceColumnMoved(columnIndex, newIndex);
 }
 
-void DefaultTableColumnModel::removeColumn(TableColumnPtr column)
+void DefaultTableColumnModel::removeColumn(TableColumnRefPtr column)
 {
     //Find the Column
     UInt32 FindIndex(0);
@@ -237,7 +233,7 @@ void DefaultTableColumnModel::removeColumn(TableColumnPtr column)
         //column->removeFieldChangeListener(&_TableFieldChangeListener);
         produceColumnRemoved(FindIndex);
     }
-    
+
 }
 
 void DefaultTableColumnModel::setColumnMargin(const UInt32& newMargin)
@@ -278,6 +274,7 @@ void DefaultTableColumnModel::recalcWidthCache(void)
         }
     }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -290,8 +287,7 @@ DefaultTableColumnModel::DefaultTableColumnModel(void) :
     _ColumnSelectionAllowed(true),
     _SelectionModel(),
     _TotalColumnWidth(0),
-    _TableSelectionListener(DefaultTableColumnModelPtr(this))//,
-    //_TableFieldChangeListener(DefaultTableColumnModelPtr(this))
+    _TableSelectionListener(this)
 {
 }
 
@@ -300,8 +296,7 @@ DefaultTableColumnModel::DefaultTableColumnModel(const DefaultTableColumnModel &
     _ColumnMargin(source._ColumnMargin),
     _ColumnSelectionAllowed(source._ColumnSelectionAllowed),
     _SelectionModel(source._SelectionModel),
-    _TableSelectionListener(DefaultTableColumnModelPtr(this))//,
-    //_TableFieldChangeListener(DefaultTableColumnModelPtr(this))
+    _TableSelectionListener(this)
 {
 }
 
@@ -311,25 +306,25 @@ DefaultTableColumnModel::~DefaultTableColumnModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultTableColumnModel::changed(BitVector whichField, UInt32 origin)
+void DefaultTableColumnModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DefaultTableColumnModel::dump(      UInt32    , 
+void DefaultTableColumnModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultTableColumnModel NI" << std::endl;
 }
 
-
-
-void DefaultTableColumnModel::TableSelectionListener::selectionChanged(const ListSelectionEventPtr e)
+void DefaultTableColumnModel::TableSelectionListener::selectionChanged(const ListSelectionEventUnrecPtr e)
 {
     _DefaultTableColumnModel->produceColumnSelectionChanged(e);
 }
 
-/*void DefaultTableColumnModel::TableFieldChangeListener::fieldChanged(const FieldChangeEventPtr e)
+/*void DefaultTableColumnModel::TableFieldChangeListener::fieldChanged(const FieldChangeEventUnrecPtr e)
 {
     if(e->getFieldDescription()->getFieldId() == TableColumn::PreferredWidthFieldId ||
         e->getFieldDescription()->getFieldId() == TableColumn::WidthFieldId)
@@ -338,29 +333,4 @@ void DefaultTableColumnModel::TableSelectionListener::selectionChanged(const Lis
     }
 }*/
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTTABLECOLUMNMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTTABLECOLUMNMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTTABLECOLUMNMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

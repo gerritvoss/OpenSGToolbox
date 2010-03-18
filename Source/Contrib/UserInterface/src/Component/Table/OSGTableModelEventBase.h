@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,70 +58,79 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h> // Parent
+#include "OSGEvent.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // FirstColumn type
-#include <OpenSG/OSGUInt32Fields.h> // LastColumn type
-#include <OpenSG/OSGUInt32Fields.h> // FirstRow type
-#include <OpenSG/OSGUInt32Fields.h> // LastRow type
+#include "OSGSysFields.h"               // FirstColumn type
 
 #include "OSGTableModelEventFields.h"
+
 OSG_BEGIN_NAMESPACE
 
 class TableModelEvent;
-class BinaryDataHandler;
 
 //! \brief TableModelEvent Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableModelEventBase : public Event
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableModelEventBase : public Event
 {
-  private:
-
-    typedef Event    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TableModelEventPtr  Ptr;
+    typedef Event Inherited;
+    typedef Event ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(TableModelEvent);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         FirstColumnFieldId = Inherited::NextFieldId,
-        LastColumnFieldId  = FirstColumnFieldId + 1,
-        FirstRowFieldId    = LastColumnFieldId  + 1,
-        LastRowFieldId     = FirstRowFieldId    + 1,
-        NextFieldId        = LastRowFieldId     + 1
+        LastColumnFieldId = FirstColumnFieldId + 1,
+        FirstRowFieldId = LastColumnFieldId + 1,
+        LastRowFieldId = FirstRowFieldId + 1,
+        NextFieldId = LastRowFieldId + 1
     };
 
-    static const OSG::BitVector FirstColumnFieldMask;
-    static const OSG::BitVector LastColumnFieldMask;
-    static const OSG::BitVector FirstRowFieldMask;
-    static const OSG::BitVector LastRowFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector FirstColumnFieldMask =
+        (TypeTraits<BitVector>::One << FirstColumnFieldId);
+    static const OSG::BitVector LastColumnFieldMask =
+        (TypeTraits<BitVector>::One << LastColumnFieldId);
+    static const OSG::BitVector FirstRowFieldMask =
+        (TypeTraits<BitVector>::One << FirstRowFieldId);
+    static const OSG::BitVector LastRowFieldMask =
+        (TypeTraits<BitVector>::One << LastRowFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFFirstColumnType;
+    typedef SFUInt32          SFLastColumnType;
+    typedef SFUInt32          SFFirstRowType;
+    typedef SFUInt32          SFLastRowType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -130,19 +139,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModelEventBase : public Event
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-     const SFUInt32            *getSFFirstColumn    (void) const;
-     const SFUInt32            *getSFLastColumn     (void) const;
-     const SFUInt32            *getSFFirstRow       (void) const;
-     const SFUInt32            *getSFLastRow        (void) const;
+
+            const SFUInt32            *getSFFirstColumn     (void) const;
+
+            const SFUInt32            *getSFLastColumn      (void) const;
+
+            const SFUInt32            *getSFFirstRow        (void) const;
+
+            const SFUInt32            *getSFLastRow         (void) const;
 
 
-     const UInt32              &getFirstColumn    (void) const;
+                  UInt32               getFirstColumn     (void) const;
 
-     const UInt32              &getLastColumn     (void) const;
+                  UInt32               getLastColumn      (void) const;
 
-     const UInt32              &getFirstRow       (void) const;
+                  UInt32               getFirstRow        (void) const;
 
-     const UInt32              &getLastRow        (void) const;
+                  UInt32               getLastRow         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -152,7 +165,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModelEventBase : public Event
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -160,11 +173,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModelEventBase : public Event
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -172,29 +185,46 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModelEventBase : public Event
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TableModelEventPtr      create          (void); 
-    static  TableModelEventPtr      createEmpty     (void); 
+    static  TableModelEventTransitPtr  create          (void);
+    static  TableModelEvent           *createEmpty     (void);
+
+    static  TableModelEventTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  TableModelEvent            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  TableModelEventTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfFirstColumn;
-    SFUInt32            _sfLastColumn;
-    SFUInt32            _sfFirstRow;
-    SFUInt32            _sfLastRow;
+    SFUInt32          _sfFirstColumn;
+    SFUInt32          _sfLastColumn;
+    SFUInt32          _sfFirstRow;
+    SFUInt32          _sfLastRow;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -209,91 +239,122 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModelEventBase : public Event
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableModelEventBase(void); 
+    virtual ~TableModelEventBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleFirstColumn     (void) const;
+    EditFieldHandlePtr editHandleFirstColumn    (void);
+    GetFieldHandlePtr  getHandleLastColumn      (void) const;
+    EditFieldHandlePtr editHandleLastColumn     (void);
+    GetFieldHandlePtr  getHandleFirstRow        (void) const;
+    EditFieldHandlePtr editHandleFirstRow       (void);
+    GetFieldHandlePtr  getHandleLastRow         (void) const;
+    EditFieldHandlePtr editHandleLastRow        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *editSFFirstColumn    (void);
-           SFUInt32            *editSFLastColumn     (void);
-           SFUInt32            *editSFFirstRow       (void);
-           SFUInt32            *editSFLastRow        (void);
 
-           UInt32              &editFirstColumn    (void);
-           UInt32              &editLastColumn     (void);
-           UInt32              &editFirstRow       (void);
-           UInt32              &editLastRow        (void);
+                  SFUInt32            *editSFFirstColumn    (void);
+
+                  SFUInt32            *editSFLastColumn     (void);
+
+                  SFUInt32            *editSFFirstRow       (void);
+
+                  SFUInt32            *editSFLastRow        (void);
+
+
+                  UInt32              &editFirstColumn    (void);
+
+                  UInt32              &editLastColumn     (void);
+
+                  UInt32              &editFirstRow       (void);
+
+                  UInt32              &editLastRow        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFirstColumn    (const UInt32 &value);
-     void setLastColumn     (const UInt32 &value);
-     void setFirstRow       (const UInt32 &value);
-     void setLastRow        (const UInt32 &value);
+            void setFirstColumn    (const UInt32 value);
+            void setLastColumn     (const UInt32 value);
+            void setFirstRow       (const UInt32 value);
+            void setLastRow        (const UInt32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TableModelEventBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      TableModelEventBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      TableModelEventBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const TableModelEventBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef TableModelEventBase *TableModelEventBaseP;
-
-typedef osgIF<TableModelEventBase::isNodeCore,
-              CoredNodePtr<TableModelEvent>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TableModelEventNodePtr;
-
-typedef RefPtr<TableModelEventPtr> TableModelEventRefPtr;
 
 OSG_END_NAMESPACE
 

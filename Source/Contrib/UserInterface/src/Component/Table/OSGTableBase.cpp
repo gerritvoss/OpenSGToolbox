@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,299 +50,690 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETABLEINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGTableHeader.h"             // Header Class
+#include "OSGTableModel.h"              // Model Class
+#include "OSGTableColumnModel.h"        // ColumnModel Class
+#include "OSGComponent.h"               // Table Class
+#include "OSGCellEditor.h"              // GlobalCellEditor Class
 
 #include "OSGTableBase.h"
 #include "OSGTable.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TableBase::HeaderFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::HeaderFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TableBase::ModelFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::ModelFieldId);
+/*! \class OSG::Table
+    A UI Table.
+ */
 
-const OSG::BitVector  TableBase::ColumnModelFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::ColumnModelFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  TableBase::TableFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::TableFieldId);
-
-const OSG::BitVector  TableBase::AutoCreateColumnsFromModelFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::AutoCreateColumnsFromModelFieldId);
-
-const OSG::BitVector  TableBase::AutoResizeModeFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::AutoResizeModeFieldId);
-
-const OSG::BitVector  TableBase::RowHeightFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::RowHeightFieldId);
-
-const OSG::BitVector  TableBase::RowMarginFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::RowMarginFieldId);
-
-const OSG::BitVector  TableBase::RowSelectionAllowedFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::RowSelectionAllowedFieldId);
-
-const OSG::BitVector  TableBase::ShowHorizontalLinesFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::ShowHorizontalLinesFieldId);
-
-const OSG::BitVector  TableBase::ShowVerticalLinesFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::ShowVerticalLinesFieldId);
-
-const OSG::BitVector  TableBase::GridColorFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::GridColorFieldId);
-
-const OSG::BitVector  TableBase::CellEditorFieldMask = 
-    (TypeTraits<BitVector>::One << TableBase::CellEditorFieldId);
-
-const OSG::BitVector TableBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var TableHeaderPtr  TableBase::_sfHeader
+/*! \var TableHeader *   TableBase::_sfHeader
     
 */
-/*! \var TableModelPtr   TableBase::_sfModel
+
+/*! \var TableModel *    TableBase::_sfModel
     
 */
-/*! \var TableColumnModelPtr TableBase::_sfColumnModel
+
+/*! \var TableColumnModel * TableBase::_sfColumnModel
     
 */
-/*! \var ComponentPtr    TableBase::_mfTable
+
+/*! \var Component *     TableBase::_mfTable
     
 */
+
 /*! \var bool            TableBase::_sfAutoCreateColumnsFromModel
     
 */
+
 /*! \var UInt32          TableBase::_sfAutoResizeMode
     
 */
+
 /*! \var UInt32          TableBase::_sfRowHeight
     
 */
+
 /*! \var UInt32          TableBase::_sfRowMargin
     
 */
+
 /*! \var bool            TableBase::_sfRowSelectionAllowed
     
 */
+
 /*! \var bool            TableBase::_sfShowHorizontalLines
     
 */
+
 /*! \var bool            TableBase::_sfShowVerticalLines
     
 */
+
 /*! \var Color4f         TableBase::_sfGridColor
     
 */
-/*! \var CellEditorPtr   TableBase::_sfCellEditor
+
+/*! \var CellEditor *    TableBase::_sfGlobalCellEditor
     
 */
 
-//! Table description
 
-FieldDescription *TableBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Table *>::_type("TablePtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Table *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Table *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Table *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TableBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFTableHeaderPtr::getClassType(), 
-                     "Header", 
-                     HeaderFieldId, HeaderFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFHeader),
-    new FieldDescription(SFTableModelPtr::getClassType(), 
-                     "Model", 
-                     ModelFieldId, ModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFModel),
-    new FieldDescription(SFTableColumnModelPtr::getClassType(), 
-                     "ColumnModel", 
-                     ColumnModelFieldId, ColumnModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFColumnModel),
-    new FieldDescription(MFComponentPtr::getClassType(), 
-                     "Table", 
-                     TableFieldId, TableFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getMFTable),
-    new FieldDescription(SFBool::getClassType(), 
-                     "AutoCreateColumnsFromModel", 
-                     AutoCreateColumnsFromModelFieldId, AutoCreateColumnsFromModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFAutoCreateColumnsFromModel),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "AutoResizeMode", 
-                     AutoResizeModeFieldId, AutoResizeModeFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFAutoResizeMode),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "RowHeight", 
-                     RowHeightFieldId, RowHeightFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFRowHeight),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "RowMargin", 
-                     RowMarginFieldId, RowMarginFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFRowMargin),
-    new FieldDescription(SFBool::getClassType(), 
-                     "RowSelectionAllowed", 
-                     RowSelectionAllowedFieldId, RowSelectionAllowedFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFRowSelectionAllowed),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ShowHorizontalLines", 
-                     ShowHorizontalLinesFieldId, ShowHorizontalLinesFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFShowHorizontalLines),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ShowVerticalLines", 
-                     ShowVerticalLinesFieldId, ShowVerticalLinesFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFShowVerticalLines),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "GridColor", 
-                     GridColorFieldId, GridColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFGridColor),
-    new FieldDescription(SFCellEditorPtr::getClassType(), 
-                     "CellEditor", 
-                     CellEditorFieldId, CellEditorFieldMask,
-                     false,
-                     (FieldAccessMethod) &TableBase::getSFCellEditor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TableBase::_type(
-    "Table",
-    "Container",
-    NULL,
-    (PrototypeCreateF) &TableBase::createEmpty,
+    pDesc = new SFUnrecTableHeaderPtr::Description(
+        SFUnrecTableHeaderPtr::getClassType(),
+        "Header",
+        "",
+        HeaderFieldId, HeaderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleHeader),
+        static_cast<FieldGetMethodSig >(&Table::getHandleHeader));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTableModelPtr::Description(
+        SFUnrecTableModelPtr::getClassType(),
+        "Model",
+        "",
+        ModelFieldId, ModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleModel),
+        static_cast<FieldGetMethodSig >(&Table::getHandleModel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTableColumnModelPtr::Description(
+        SFUnrecTableColumnModelPtr::getClassType(),
+        "ColumnModel",
+        "",
+        ColumnModelFieldId, ColumnModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleColumnModel),
+        static_cast<FieldGetMethodSig >(&Table::getHandleColumnModel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFUnrecComponentPtr::Description(
+        MFUnrecComponentPtr::getClassType(),
+        "Table",
+        "",
+        TableFieldId, TableFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleTable),
+        static_cast<FieldGetMethodSig >(&Table::getHandleTable));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "AutoCreateColumnsFromModel",
+        "",
+        AutoCreateColumnsFromModelFieldId, AutoCreateColumnsFromModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleAutoCreateColumnsFromModel),
+        static_cast<FieldGetMethodSig >(&Table::getHandleAutoCreateColumnsFromModel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "AutoResizeMode",
+        "",
+        AutoResizeModeFieldId, AutoResizeModeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleAutoResizeMode),
+        static_cast<FieldGetMethodSig >(&Table::getHandleAutoResizeMode));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "RowHeight",
+        "",
+        RowHeightFieldId, RowHeightFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleRowHeight),
+        static_cast<FieldGetMethodSig >(&Table::getHandleRowHeight));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "RowMargin",
+        "",
+        RowMarginFieldId, RowMarginFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleRowMargin),
+        static_cast<FieldGetMethodSig >(&Table::getHandleRowMargin));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "RowSelectionAllowed",
+        "",
+        RowSelectionAllowedFieldId, RowSelectionAllowedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleRowSelectionAllowed),
+        static_cast<FieldGetMethodSig >(&Table::getHandleRowSelectionAllowed));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ShowHorizontalLines",
+        "",
+        ShowHorizontalLinesFieldId, ShowHorizontalLinesFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleShowHorizontalLines),
+        static_cast<FieldGetMethodSig >(&Table::getHandleShowHorizontalLines));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ShowVerticalLines",
+        "",
+        ShowVerticalLinesFieldId, ShowVerticalLinesFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleShowVerticalLines),
+        static_cast<FieldGetMethodSig >(&Table::getHandleShowVerticalLines));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "GridColor",
+        "",
+        GridColorFieldId, GridColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleGridColor),
+        static_cast<FieldGetMethodSig >(&Table::getHandleGridColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecCellEditorPtr::Description(
+        SFUnrecCellEditorPtr::getClassType(),
+        "GlobalCellEditor",
+        "",
+        GlobalCellEditorFieldId, GlobalCellEditorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleGlobalCellEditor),
+        static_cast<FieldGetMethodSig >(&Table::getHandleGlobalCellEditor));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+TableBase::TypeObject TableBase::_type(
+    TableBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TableBase::createEmptyLocal),
     Table::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(TableBase, TablePtr)
+    Table::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Table::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"Table\"\n"
+    "    parent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    >\n"
+    "    A UI Table.\n"
+    "    <Field\n"
+    "        name=\"Header\"\n"
+    "        type=\"TableHeader\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Model\"\n"
+    "        type=\"TableModel\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ColumnModel\"\n"
+    "        type=\"TableColumnModel\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Table\"\n"
+    "        type=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"multi\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"protected\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"AutoCreateColumnsFromModel\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"AutoResizeMode\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"RowHeight\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"50\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"RowMargin\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"1\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"RowSelectionAllowed\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ShowHorizontalLines\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ShowVerticalLines\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"GridColor\"\n"
+    "        type=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"0.0, 0.0, 0.0, 1.0\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"GlobalCellEditor\"\n"
+    "        type=\"CellEditor\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Table.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TableBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TableBase::getType(void) const 
+FieldContainerType &TableBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TableBase::shallowCopy(void) const 
-{ 
-    TablePtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Table *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TableBase::getContainerSize(void) const 
-{ 
-    return sizeof(Table); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TableBase::getType(void) const
 {
-    this->executeSyncImpl((TableBase *) &other, whichField);
+    return _type;
 }
-#else
-void TableBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TableBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TableBase *) &other, whichField, sInfo);
+    return sizeof(Table);
 }
-void TableBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Table::_sfHeader field.
+const SFUnrecTableHeaderPtr *TableBase::getSFHeader(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfHeader;
 }
 
-void TableBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecTableHeaderPtr *TableBase::editSFHeader         (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(HeaderFieldMask);
 
-    _mfTable.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfHeader;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TableBase::TableBase(void) :
-    _sfHeader                 (TableHeaderPtr(NullFC)), 
-    _sfModel                  (TableModelPtr(NullFC)), 
-    _sfColumnModel            (TableColumnModelPtr(NullFC)), 
-    _mfTable                  (), 
-    _sfAutoCreateColumnsFromModel(bool(true)), 
-    _sfAutoResizeMode         (UInt32(Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS)), 
-    _sfRowHeight              (UInt32(50)), 
-    _sfRowMargin              (UInt32(1)), 
-    _sfRowSelectionAllowed    (bool(true)), 
-    _sfShowHorizontalLines    (bool(true)), 
-    _sfShowVerticalLines      (bool(true)), 
-    _sfGridColor              (Color4f(0.0, 0.0, 0.0, 1.0)), 
-    _sfCellEditor             (CellEditorPtr(NullFC)), 
-    Inherited() 
+//! Get the Table::_sfModel field.
+const SFUnrecTableModelPtr *TableBase::getSFModel(void) const
 {
+    return &_sfModel;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TableBase::TableBase(const TableBase &source) :
-    _sfHeader                 (source._sfHeader                 ), 
-    _sfModel                  (source._sfModel                  ), 
-    _sfColumnModel            (source._sfColumnModel            ), 
-    _mfTable                  (source._mfTable                  ), 
-    _sfAutoCreateColumnsFromModel(source._sfAutoCreateColumnsFromModel), 
-    _sfAutoResizeMode         (source._sfAutoResizeMode         ), 
-    _sfRowHeight              (source._sfRowHeight              ), 
-    _sfRowMargin              (source._sfRowMargin              ), 
-    _sfRowSelectionAllowed    (source._sfRowSelectionAllowed    ), 
-    _sfShowHorizontalLines    (source._sfShowHorizontalLines    ), 
-    _sfShowVerticalLines      (source._sfShowVerticalLines      ), 
-    _sfGridColor              (source._sfGridColor              ), 
-    _sfCellEditor             (source._sfCellEditor             ), 
-    Inherited                 (source)
+SFUnrecTableModelPtr *TableBase::editSFModel          (void)
 {
+    editSField(ModelFieldMask);
+
+    return &_sfModel;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-TableBase::~TableBase(void)
+//! Get the Table::_sfColumnModel field.
+const SFUnrecTableColumnModelPtr *TableBase::getSFColumnModel(void) const
 {
+    return &_sfColumnModel;
 }
+
+SFUnrecTableColumnModelPtr *TableBase::editSFColumnModel    (void)
+{
+    editSField(ColumnModelFieldMask);
+
+    return &_sfColumnModel;
+}
+
+//! Get the Table::_mfTable field.
+const MFUnrecComponentPtr *TableBase::getMFTable(void) const
+{
+    return &_mfTable;
+}
+
+MFUnrecComponentPtr *TableBase::editMFTable          (void)
+{
+    editMField(TableFieldMask, _mfTable);
+
+    return &_mfTable;
+}
+
+SFBool *TableBase::editSFAutoCreateColumnsFromModel(void)
+{
+    editSField(AutoCreateColumnsFromModelFieldMask);
+
+    return &_sfAutoCreateColumnsFromModel;
+}
+
+const SFBool *TableBase::getSFAutoCreateColumnsFromModel(void) const
+{
+    return &_sfAutoCreateColumnsFromModel;
+}
+
+
+SFUInt32 *TableBase::editSFAutoResizeMode(void)
+{
+    editSField(AutoResizeModeFieldMask);
+
+    return &_sfAutoResizeMode;
+}
+
+const SFUInt32 *TableBase::getSFAutoResizeMode(void) const
+{
+    return &_sfAutoResizeMode;
+}
+
+
+SFUInt32 *TableBase::editSFRowHeight(void)
+{
+    editSField(RowHeightFieldMask);
+
+    return &_sfRowHeight;
+}
+
+const SFUInt32 *TableBase::getSFRowHeight(void) const
+{
+    return &_sfRowHeight;
+}
+
+
+SFUInt32 *TableBase::editSFRowMargin(void)
+{
+    editSField(RowMarginFieldMask);
+
+    return &_sfRowMargin;
+}
+
+const SFUInt32 *TableBase::getSFRowMargin(void) const
+{
+    return &_sfRowMargin;
+}
+
+
+SFBool *TableBase::editSFRowSelectionAllowed(void)
+{
+    editSField(RowSelectionAllowedFieldMask);
+
+    return &_sfRowSelectionAllowed;
+}
+
+const SFBool *TableBase::getSFRowSelectionAllowed(void) const
+{
+    return &_sfRowSelectionAllowed;
+}
+
+
+SFBool *TableBase::editSFShowHorizontalLines(void)
+{
+    editSField(ShowHorizontalLinesFieldMask);
+
+    return &_sfShowHorizontalLines;
+}
+
+const SFBool *TableBase::getSFShowHorizontalLines(void) const
+{
+    return &_sfShowHorizontalLines;
+}
+
+
+SFBool *TableBase::editSFShowVerticalLines(void)
+{
+    editSField(ShowVerticalLinesFieldMask);
+
+    return &_sfShowVerticalLines;
+}
+
+const SFBool *TableBase::getSFShowVerticalLines(void) const
+{
+    return &_sfShowVerticalLines;
+}
+
+
+SFColor4f *TableBase::editSFGridColor(void)
+{
+    editSField(GridColorFieldMask);
+
+    return &_sfGridColor;
+}
+
+const SFColor4f *TableBase::getSFGridColor(void) const
+{
+    return &_sfGridColor;
+}
+
+
+//! Get the Table::_sfGlobalCellEditor field.
+const SFUnrecCellEditorPtr *TableBase::getSFGlobalCellEditor(void) const
+{
+    return &_sfGlobalCellEditor;
+}
+
+SFUnrecCellEditorPtr *TableBase::editSFGlobalCellEditor(void)
+{
+    editSField(GlobalCellEditorFieldMask);
+
+    return &_sfGlobalCellEditor;
+}
+
+
+
+void TableBase::pushToTable(Component * const value)
+{
+    editMField(TableFieldMask, _mfTable);
+
+    _mfTable.push_back(value);
+}
+
+void TableBase::assignTable    (const MFUnrecComponentPtr &value)
+{
+    MFUnrecComponentPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecComponentPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<Table *>(this)->clearTable();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToTable(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void TableBase::removeFromTable(UInt32 uiIndex)
+{
+    if(uiIndex < _mfTable.size())
+    {
+        editMField(TableFieldMask, _mfTable);
+
+        _mfTable.erase(uiIndex);
+    }
+}
+
+void TableBase::removeObjFromTable(Component * const value)
+{
+    Int32 iElemIdx = _mfTable.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(TableFieldMask, _mfTable);
+
+        _mfTable.erase(iElemIdx);
+    }
+}
+void TableBase::clearTable(void)
+{
+    editMField(TableFieldMask, _mfTable);
+
+
+    _mfTable.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TableBase::getBinSize(const BitVector &whichField)
+UInt32 TableBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -350,73 +741,60 @@ UInt32 TableBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfHeader.getBinSize();
     }
-
     if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
         returnValue += _sfModel.getBinSize();
     }
-
     if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
     {
         returnValue += _sfColumnModel.getBinSize();
     }
-
     if(FieldBits::NoField != (TableFieldMask & whichField))
     {
         returnValue += _mfTable.getBinSize();
     }
-
     if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
     {
         returnValue += _sfAutoCreateColumnsFromModel.getBinSize();
     }
-
     if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
     {
         returnValue += _sfAutoResizeMode.getBinSize();
     }
-
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
     {
         returnValue += _sfRowHeight.getBinSize();
     }
-
     if(FieldBits::NoField != (RowMarginFieldMask & whichField))
     {
         returnValue += _sfRowMargin.getBinSize();
     }
-
     if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
     {
         returnValue += _sfRowSelectionAllowed.getBinSize();
     }
-
     if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
     {
         returnValue += _sfShowHorizontalLines.getBinSize();
     }
-
     if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
     {
         returnValue += _sfShowVerticalLines.getBinSize();
     }
-
     if(FieldBits::NoField != (GridColorFieldMask & whichField))
     {
         returnValue += _sfGridColor.getBinSize();
     }
-
-    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
+    if(FieldBits::NoField != (GlobalCellEditorFieldMask & whichField))
     {
-        returnValue += _sfCellEditor.getBinSize();
+        returnValue += _sfGlobalCellEditor.getBinSize();
     }
-
 
     return returnValue;
 }
 
-void TableBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TableBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -424,72 +802,58 @@ void TableBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfHeader.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
         _sfModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
     {
         _sfColumnModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TableFieldMask & whichField))
     {
         _mfTable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
     {
         _sfAutoCreateColumnsFromModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
     {
         _sfAutoResizeMode.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
     {
         _sfRowHeight.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RowMarginFieldMask & whichField))
     {
         _sfRowMargin.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
     {
         _sfRowSelectionAllowed.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
     {
         _sfShowHorizontalLines.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
     {
         _sfShowVerticalLines.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (GridColorFieldMask & whichField))
     {
         _sfGridColor.copyToBin(pMem);
     }
-
-    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
+    if(FieldBits::NoField != (GlobalCellEditorFieldMask & whichField))
     {
-        _sfCellEditor.copyToBin(pMem);
+        _sfGlobalCellEditor.copyToBin(pMem);
     }
-
-
 }
 
-void TableBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TableBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -497,217 +861,648 @@ void TableBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfHeader.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
         _sfModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
     {
         _sfColumnModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TableFieldMask & whichField))
     {
         _mfTable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
     {
         _sfAutoCreateColumnsFromModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
     {
         _sfAutoResizeMode.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
     {
         _sfRowHeight.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RowMarginFieldMask & whichField))
     {
         _sfRowMargin.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
     {
         _sfRowSelectionAllowed.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
     {
         _sfShowHorizontalLines.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
     {
         _sfShowVerticalLines.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (GridColorFieldMask & whichField))
     {
         _sfGridColor.copyFromBin(pMem);
     }
-
-    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
+    if(FieldBits::NoField != (GlobalCellEditorFieldMask & whichField))
     {
-        _sfCellEditor.copyFromBin(pMem);
+        _sfGlobalCellEditor.copyFromBin(pMem);
+    }
+}
+
+//! create a new instance of the class
+TableTransitPtr TableBase::createLocal(BitVector bFlags)
+{
+    TableTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
+
+        fc = dynamic_pointer_cast<Table>(tmpPtr);
     }
 
-
+    return fc;
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TableBase::executeSyncImpl(      TableBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class, copy the container flags
+TableTransitPtr TableBase::createDependent(BitVector bFlags)
 {
+    TableTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (HeaderFieldMask & whichField))
-        _sfHeader.syncWith(pOther->_sfHeader);
+        fc = dynamic_pointer_cast<Table>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
-
-    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
-        _sfColumnModel.syncWith(pOther->_sfColumnModel);
-
-    if(FieldBits::NoField != (TableFieldMask & whichField))
-        _mfTable.syncWith(pOther->_mfTable);
-
-    if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
-        _sfAutoCreateColumnsFromModel.syncWith(pOther->_sfAutoCreateColumnsFromModel);
-
-    if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
-        _sfAutoResizeMode.syncWith(pOther->_sfAutoResizeMode);
-
-    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
-        _sfRowHeight.syncWith(pOther->_sfRowHeight);
-
-    if(FieldBits::NoField != (RowMarginFieldMask & whichField))
-        _sfRowMargin.syncWith(pOther->_sfRowMargin);
-
-    if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
-        _sfRowSelectionAllowed.syncWith(pOther->_sfRowSelectionAllowed);
-
-    if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
-        _sfShowHorizontalLines.syncWith(pOther->_sfShowHorizontalLines);
-
-    if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
-        _sfShowVerticalLines.syncWith(pOther->_sfShowVerticalLines);
-
-    if(FieldBits::NoField != (GridColorFieldMask & whichField))
-        _sfGridColor.syncWith(pOther->_sfGridColor);
-
-    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
-        _sfCellEditor.syncWith(pOther->_sfCellEditor);
-
-
-}
-#else
-void TableBase::executeSyncImpl(      TableBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (HeaderFieldMask & whichField))
-        _sfHeader.syncWith(pOther->_sfHeader);
-
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
-
-    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
-        _sfColumnModel.syncWith(pOther->_sfColumnModel);
-
-    if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
-        _sfAutoCreateColumnsFromModel.syncWith(pOther->_sfAutoCreateColumnsFromModel);
-
-    if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
-        _sfAutoResizeMode.syncWith(pOther->_sfAutoResizeMode);
-
-    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
-        _sfRowHeight.syncWith(pOther->_sfRowHeight);
-
-    if(FieldBits::NoField != (RowMarginFieldMask & whichField))
-        _sfRowMargin.syncWith(pOther->_sfRowMargin);
-
-    if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
-        _sfRowSelectionAllowed.syncWith(pOther->_sfRowSelectionAllowed);
-
-    if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
-        _sfShowHorizontalLines.syncWith(pOther->_sfShowHorizontalLines);
-
-    if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
-        _sfShowVerticalLines.syncWith(pOther->_sfShowVerticalLines);
-
-    if(FieldBits::NoField != (GridColorFieldMask & whichField))
-        _sfGridColor.syncWith(pOther->_sfGridColor);
-
-    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
-        _sfCellEditor.syncWith(pOther->_sfCellEditor);
-
-
-    if(FieldBits::NoField != (TableFieldMask & whichField))
-        _mfTable.syncWith(pOther->_mfTable, sInfo);
-
-
+    return fc;
 }
 
-void TableBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class
+TableTransitPtr TableBase::create(void)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TableTransitPtr fc;
 
-    if(FieldBits::NoField != (TableFieldMask & whichField))
-        _mfTable.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
 
+        fc = dynamic_pointer_cast<Table>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Table *TableBase::createEmptyLocal(BitVector bFlags)
+{
+    Table *returnValue;
+
+    newPtr<Table>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Table *TableBase::createEmpty(void)
+{
+    Table *returnValue;
+
+    newPtr<Table>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TableBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Table *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Table *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TableBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Table *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Table *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TableBase::shallowCopy(void) const
+{
+    Table *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Table *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TableBase::TableBase(void) :
+    Inherited(),
+    _sfHeader                 (NULL),
+    _sfModel                  (NULL),
+    _sfColumnModel            (NULL),
+    _mfTable                  (),
+    _sfAutoCreateColumnsFromModel(bool(true)),
+    _sfAutoResizeMode         (UInt32(Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS)),
+    _sfRowHeight              (UInt32(50)),
+    _sfRowMargin              (UInt32(1)),
+    _sfRowSelectionAllowed    (bool(true)),
+    _sfShowHorizontalLines    (bool(true)),
+    _sfShowVerticalLines      (bool(true)),
+    _sfGridColor              (Color4f(0.0, 0.0, 0.0, 1.0)),
+    _sfGlobalCellEditor       (NULL)
+{
+}
+
+TableBase::TableBase(const TableBase &source) :
+    Inherited(source),
+    _sfHeader                 (NULL),
+    _sfModel                  (NULL),
+    _sfColumnModel            (NULL),
+    _mfTable                  (),
+    _sfAutoCreateColumnsFromModel(source._sfAutoCreateColumnsFromModel),
+    _sfAutoResizeMode         (source._sfAutoResizeMode         ),
+    _sfRowHeight              (source._sfRowHeight              ),
+    _sfRowMargin              (source._sfRowMargin              ),
+    _sfRowSelectionAllowed    (source._sfRowSelectionAllowed    ),
+    _sfShowHorizontalLines    (source._sfShowHorizontalLines    ),
+    _sfShowVerticalLines      (source._sfShowVerticalLines      ),
+    _sfGridColor              (source._sfGridColor              ),
+    _sfGlobalCellEditor       (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TableBase::~TableBase(void)
+{
+}
+
+void TableBase::onCreate(const Table *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Table *pThis = static_cast<Table *>(this);
+
+        pThis->setHeader(source->getHeader());
+
+        pThis->setModel(source->getModel());
+
+        pThis->setColumnModel(source->getColumnModel());
+
+        MFUnrecComponentPtr::const_iterator TableIt  =
+            source->_mfTable.begin();
+        MFUnrecComponentPtr::const_iterator TableEnd =
+            source->_mfTable.end  ();
+
+        while(TableIt != TableEnd)
+        {
+            pThis->pushToTable(*TableIt);
+
+            ++TableIt;
+        }
+
+        pThis->setGlobalCellEditor(source->getGlobalCellEditor());
+    }
+}
+
+GetFieldHandlePtr TableBase::getHandleHeader          (void) const
+{
+    SFUnrecTableHeaderPtr::GetHandlePtr returnValue(
+        new  SFUnrecTableHeaderPtr::GetHandle(
+             &_sfHeader,
+             this->getType().getFieldDesc(HeaderFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleHeader         (void)
+{
+    SFUnrecTableHeaderPtr::EditHandlePtr returnValue(
+        new  SFUnrecTableHeaderPtr::EditHandle(
+             &_sfHeader,
+             this->getType().getFieldDesc(HeaderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Table::setHeader,
+                    static_cast<Table *>(this), _1));
+
+    editSField(HeaderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleModel           (void) const
+{
+    SFUnrecTableModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecTableModelPtr::GetHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleModel          (void)
+{
+    SFUnrecTableModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecTableModelPtr::EditHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Table::setModel,
+                    static_cast<Table *>(this), _1));
+
+    editSField(ModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleColumnModel     (void) const
+{
+    SFUnrecTableColumnModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecTableColumnModelPtr::GetHandle(
+             &_sfColumnModel,
+             this->getType().getFieldDesc(ColumnModelFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleColumnModel    (void)
+{
+    SFUnrecTableColumnModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecTableColumnModelPtr::EditHandle(
+             &_sfColumnModel,
+             this->getType().getFieldDesc(ColumnModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Table::setColumnModel,
+                    static_cast<Table *>(this), _1));
+
+    editSField(ColumnModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleTable           (void) const
+{
+    MFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  MFUnrecComponentPtr::GetHandle(
+             &_mfTable,
+             this->getType().getFieldDesc(TableFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleTable          (void)
+{
+    MFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  MFUnrecComponentPtr::EditHandle(
+             &_mfTable,
+             this->getType().getFieldDesc(TableFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&Table::pushToTable,
+                    static_cast<Table *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&Table::removeFromTable,
+                    static_cast<Table *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&Table::removeObjFromTable,
+                    static_cast<Table *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&Table::clearTable,
+                    static_cast<Table *>(this)));
+
+    editMField(TableFieldMask, _mfTable);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleAutoCreateColumnsFromModel (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfAutoCreateColumnsFromModel,
+             this->getType().getFieldDesc(AutoCreateColumnsFromModelFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleAutoCreateColumnsFromModel(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfAutoCreateColumnsFromModel,
+             this->getType().getFieldDesc(AutoCreateColumnsFromModelFieldId),
+             this));
+
+
+    editSField(AutoCreateColumnsFromModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleAutoResizeMode  (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfAutoResizeMode,
+             this->getType().getFieldDesc(AutoResizeModeFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleAutoResizeMode (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfAutoResizeMode,
+             this->getType().getFieldDesc(AutoResizeModeFieldId),
+             this));
+
+
+    editSField(AutoResizeModeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleRowHeight       (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfRowHeight,
+             this->getType().getFieldDesc(RowHeightFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleRowHeight      (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfRowHeight,
+             this->getType().getFieldDesc(RowHeightFieldId),
+             this));
+
+
+    editSField(RowHeightFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleRowMargin       (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfRowMargin,
+             this->getType().getFieldDesc(RowMarginFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleRowMargin      (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfRowMargin,
+             this->getType().getFieldDesc(RowMarginFieldId),
+             this));
+
+
+    editSField(RowMarginFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleRowSelectionAllowed (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfRowSelectionAllowed,
+             this->getType().getFieldDesc(RowSelectionAllowedFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleRowSelectionAllowed(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfRowSelectionAllowed,
+             this->getType().getFieldDesc(RowSelectionAllowedFieldId),
+             this));
+
+
+    editSField(RowSelectionAllowedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleShowHorizontalLines (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfShowHorizontalLines,
+             this->getType().getFieldDesc(ShowHorizontalLinesFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleShowHorizontalLines(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfShowHorizontalLines,
+             this->getType().getFieldDesc(ShowHorizontalLinesFieldId),
+             this));
+
+
+    editSField(ShowHorizontalLinesFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleShowVerticalLines (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfShowVerticalLines,
+             this->getType().getFieldDesc(ShowVerticalLinesFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleShowVerticalLines(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfShowVerticalLines,
+             this->getType().getFieldDesc(ShowVerticalLinesFieldId),
+             this));
+
+
+    editSField(ShowVerticalLinesFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleGridColor       (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfGridColor,
+             this->getType().getFieldDesc(GridColorFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleGridColor      (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfGridColor,
+             this->getType().getFieldDesc(GridColorFieldId),
+             this));
+
+
+    editSField(GridColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TableBase::getHandleGlobalCellEditor (void) const
+{
+    SFUnrecCellEditorPtr::GetHandlePtr returnValue(
+        new  SFUnrecCellEditorPtr::GetHandle(
+             &_sfGlobalCellEditor,
+             this->getType().getFieldDesc(GlobalCellEditorFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleGlobalCellEditor(void)
+{
+    SFUnrecCellEditorPtr::EditHandlePtr returnValue(
+        new  SFUnrecCellEditorPtr::EditHandle(
+             &_sfGlobalCellEditor,
+             this->getType().getFieldDesc(GlobalCellEditorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Table::setGlobalCellEditor,
+                    static_cast<Table *>(this), _1));
+
+    editSField(GlobalCellEditorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TableBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Table *pThis = static_cast<Table *>(this);
+
+    pThis->execSync(static_cast<Table *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TableBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Table *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Table *>(pRefAspect),
+                  dynamic_cast<const Table *>(this));
+
+    return returnValue;
+}
+#endif
+
+void TableBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Table *>(this)->setHeader(NULL);
+
+    static_cast<Table *>(this)->setModel(NULL);
+
+    static_cast<Table *>(this)->setColumnModel(NULL);
+
+    static_cast<Table *>(this)->clearTable();
+
+    static_cast<Table *>(this)->setGlobalCellEditor(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TablePtr>::_type("TablePtr", "ContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TablePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TablePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTABLEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTABLEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTABLEFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

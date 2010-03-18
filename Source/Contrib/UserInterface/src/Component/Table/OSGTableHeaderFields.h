@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TableHeader;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TableHeaderPtr
+OSG_GEN_CONTAINERPTR(TableHeader);
 
-typedef FCPtr<ContainerPtr, TableHeader> TableHeaderPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TableHeaderPtr> : 
-    public FieldTraitsRecurseMapper<TableHeaderPtr, true>
+struct FieldTraits<TableHeader *> :
+    public FieldTraitsFCPtrBase<TableHeader *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTableHeaderPtr"; }
-    static const char *getMName(void) { return "MFTableHeaderPtr"; }
+    typedef FieldTraits<TableHeader *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTableHeaderPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTableHeaderPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TableHeaderPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTableHeaderPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTableHeaderPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TableHeader *,
+                      RecordedRefCountPolicy  > SFRecTableHeaderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TableHeader *,
+                      UnrecordedRefCountPolicy> SFUnrecTableHeaderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TableHeader *,
+                      WeakRefCountPolicy      > SFWeakTableHeaderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TableHeader *,
+                      NoRefCountPolicy        > SFUncountedTableHeaderPtr;
 
-typedef SField<TableHeaderPtr> SFTableHeaderPtr;
-#endif
 
-#ifndef OSG_COMPILETABLEHEADERINST
-OSG_DLLEXPORT_DECL1(SField, TableHeaderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TableHeader *,
+                      RecordedRefCountPolicy  > MFRecTableHeaderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TableHeader *,
+                      UnrecordedRefCountPolicy> MFUnrecTableHeaderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TableHeader *,
+                      WeakRefCountPolicy      > MFWeakTableHeaderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TableHeader *,
+                      NoRefCountPolicy        > MFUncountedTableHeaderPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TableHeaderPtr> MFTableHeaderPtr;
-#endif
 
-#ifndef OSG_COMPILETABLEHEADERINST
-OSG_DLLEXPORT_DECL1(MField, TableHeaderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTableHeaderPtr : 
+    public PointerSField<TableHeader *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTableHeaderPtr : 
+    public PointerSField<TableHeader *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTableHeaderPtr :
+    public PointerSField<TableHeader *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTableHeaderPtr :
+    public PointerSField<TableHeader *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTableHeaderPtr :
+    public PointerMField<TableHeader *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTableHeaderPtr :
+    public PointerMField<TableHeader *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTableHeaderPtr :
+    public PointerMField<TableHeader *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTableHeaderPtr :
+    public PointerMField<TableHeader *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGTABLEHEADERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTABLEHEADERFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,120 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTTABLECOLUMNMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDefaultTableColumnModelBase.h"
 #include "OSGDefaultTableColumnModel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector DefaultTableColumnModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::DefaultTableColumnModel
+    A UI DefaultTableColumnModel.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType DefaultTableColumnModelBase::_type(
-    "DefaultTableColumnModel",
-    "AbstractTableColumnModel",
-    NULL,
-    (PrototypeCreateF) &DefaultTableColumnModelBase::createEmpty,
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultTableColumnModel *>::_type("DefaultTableColumnModelPtr", "AbstractTableColumnModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultTableColumnModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultTableColumnModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultTableColumnModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultTableColumnModelBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+DefaultTableColumnModelBase::TypeObject DefaultTableColumnModelBase::_type(
+    DefaultTableColumnModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultTableColumnModelBase::createEmptyLocal),
     DefaultTableColumnModel::initMethod,
-    NULL,
-    0);
+    DefaultTableColumnModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultTableColumnModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultTableColumnModel\"\n"
+    "\tparent=\"AbstractTableColumnModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI DefaultTableColumnModel.\n"
+    "</FieldContainer>\n",
+    "A UI DefaultTableColumnModel.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DefaultTableColumnModelBase, DefaultTableColumnModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultTableColumnModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultTableColumnModelBase::getType(void) const 
+FieldContainerType &DefaultTableColumnModelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultTableColumnModelBase::shallowCopy(void) const 
-{ 
-    DefaultTableColumnModelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultTableColumnModel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultTableColumnModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultTableColumnModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTableColumnModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultTableColumnModelBase::getType(void) const
 {
-    this->executeSyncImpl((DefaultTableColumnModelBase *) &other, whichField);
+    return _type;
 }
-#else
-void DefaultTableColumnModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultTableColumnModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultTableColumnModelBase *) &other, whichField, sInfo);
-}
-void DefaultTableColumnModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(DefaultTableColumnModel);
 }
 
-void DefaultTableColumnModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-DefaultTableColumnModelBase::DefaultTableColumnModelBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultTableColumnModelBase::DefaultTableColumnModelBase(const DefaultTableColumnModelBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-DefaultTableColumnModelBase::~DefaultTableColumnModelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultTableColumnModelBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultTableColumnModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,88 +176,198 @@ UInt32 DefaultTableColumnModelBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void DefaultTableColumnModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultTableColumnModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void DefaultTableColumnModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultTableColumnModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultTableColumnModelBase::executeSyncImpl(      DefaultTableColumnModelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultTableColumnModelTransitPtr DefaultTableColumnModelBase::createLocal(BitVector bFlags)
 {
+    DefaultTableColumnModelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<DefaultTableColumnModel>(tmpPtr);
+    }
 
-}
-#else
-void DefaultTableColumnModelBase::executeSyncImpl(      DefaultTableColumnModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void DefaultTableColumnModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultTableColumnModelTransitPtr DefaultTableColumnModelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultTableColumnModelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultTableColumnModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultTableColumnModelTransitPtr DefaultTableColumnModelBase::create(void)
+{
+    DefaultTableColumnModelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultTableColumnModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultTableColumnModel *DefaultTableColumnModelBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultTableColumnModel *returnValue;
+
+    newPtr<DefaultTableColumnModel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultTableColumnModel *DefaultTableColumnModelBase::createEmpty(void)
+{
+    DefaultTableColumnModel *returnValue;
+
+    newPtr<DefaultTableColumnModel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultTableColumnModelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultTableColumnModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTableColumnModel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTableColumnModelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultTableColumnModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultTableColumnModel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultTableColumnModelBase::shallowCopy(void) const
+{
+    DefaultTableColumnModel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultTableColumnModel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultTableColumnModelBase::DefaultTableColumnModelBase(void) :
+    Inherited()
+{
+}
+
+DefaultTableColumnModelBase::DefaultTableColumnModelBase(const DefaultTableColumnModelBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultTableColumnModelBase::~DefaultTableColumnModelBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultTableColumnModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultTableColumnModel *pThis = static_cast<DefaultTableColumnModel *>(this);
+
+    pThis->execSync(static_cast<DefaultTableColumnModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultTableColumnModelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultTableColumnModel *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultTableColumnModel *>(pRefAspect),
+                  dynamic_cast<const DefaultTableColumnModel *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DefaultTableColumnModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultTableColumnModelPtr>::_type("DefaultTableColumnModelPtr", "AbstractTableColumnModelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultTableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultTableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTTABLECOLUMNMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTTABLECOLUMNMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTTABLECOLUMNMODELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

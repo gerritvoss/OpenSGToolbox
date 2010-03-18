@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbstractTableColumnModel.h"
-#include "Component/Table/OSGTableColumnModelEvent.h"
+#include "OSGTableColumnModelEvent.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbstractTableColumnModel
-A UI AbstractTableColumnModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGAbstractTableColumnModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbstractTableColumnModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +65,13 @@ A UI AbstractTableColumnModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbstractTableColumnModel::initMethod (void)
+void AbstractTableColumnModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -81,73 +81,74 @@ void AbstractTableColumnModel::initMethod (void)
 
 EventConnection AbstractTableColumnModel::addColumnModelListener(TableColumnModelListenerPtr l)
 {
-   _ModelListeners.insert(l);
-   return EventConnection(
-       boost::bind(&AbstractTableColumnModel::isColumnModelListenerAttached, this, l),
-       boost::bind(&AbstractTableColumnModel::removeColumnModelListener, this, l));
+    _ModelListeners.insert(l);
+    return EventConnection(
+                           boost::bind(&AbstractTableColumnModel::isColumnModelListenerAttached, this, l),
+                           boost::bind(&AbstractTableColumnModel::removeColumnModelListener, this, l));
 }
 
 void AbstractTableColumnModel::removeColumnModelListener(TableColumnModelListenerPtr l)
 {
-   TableColumnModelListenerSetItor EraseIter(_ModelListeners.find(l));
-   if(EraseIter != _ModelListeners.end())
-   {
-      _ModelListeners.erase(EraseIter);
-   }
+    TableColumnModelListenerSetItor EraseIter(_ModelListeners.find(l));
+    if(EraseIter != _ModelListeners.end())
+    {
+        _ModelListeners.erase(EraseIter);
+    }
 }
 
 void AbstractTableColumnModel::produceColumnAdded(const UInt32& ToIndex)
 {
-   const TableColumnModelEventPtr TheEvent = TableColumnModelEvent::create(TableColumnModelPtr(this), getSystemTime(), 0, ToIndex);
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnAdded(TheEvent);
-   }
-   _Producer.produceEvent(ColumnAddedMethodId,TheEvent);
+    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(TableColumnModelRefPtr(this), getSystemTime(), 0, ToIndex);
+    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
+    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->columnAdded(TheEvent);
+    }
+    _Producer.produceEvent(ColumnAddedMethodId,TheEvent);
 }
 void AbstractTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex)
 {
-    const TableColumnModelEventPtr TheEvent = TableColumnModelEvent::create(TableColumnModelPtr(this), getSystemTime(), FromIndex, ToIndex);
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnMoved(TheEvent);
-   }
-   _Producer.produceEvent(ColumnMovedMethodId,TheEvent);
+    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(TableColumnModelRefPtr(this), getSystemTime(), FromIndex, ToIndex);
+    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
+    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->columnMoved(TheEvent);
+    }
+    _Producer.produceEvent(ColumnMovedMethodId,TheEvent);
 }
 
 void AbstractTableColumnModel::produceColumnRemoved(const UInt32& FromIndex)
 {
-    const TableColumnModelEventPtr TheEvent = TableColumnModelEvent::create(TableColumnModelPtr(this), getSystemTime(), FromIndex, 0);
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnRemoved(TheEvent);
-   }
-   _Producer.produceEvent(ColumnRemovedMethodId,TheEvent);
+    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(TableColumnModelRefPtr(this), getSystemTime(), FromIndex, 0);
+    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
+    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->columnRemoved(TheEvent);
+    }
+    _Producer.produceEvent(ColumnRemovedMethodId,TheEvent);
 }
 
 void AbstractTableColumnModel::produceColumnMarginChanged(void)
 {
-   const ChangeEventPtr TheEvent = ChangeEvent::create(TableColumnModelPtr(this), getSystemTime());
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnMarginChanged(TheEvent);
-   }
-   _Producer.produceEvent(ColumnMarginChangedMethodId,TheEvent);
+    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(TableColumnModelRefPtr(this), getSystemTime());
+    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
+    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->columnMarginChanged(TheEvent);
+    }
+    _Producer.produceEvent(ColumnMarginChangedMethodId,TheEvent);
 }
 
-void AbstractTableColumnModel::produceColumnSelectionChanged(const ListSelectionEventPtr e)
+void AbstractTableColumnModel::produceColumnSelectionChanged(const ListSelectionEventUnrecPtr e)
 {
-   TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-   for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->columnSelectionChanged(e);
-   }
-   _Producer.produceEvent(ColumnSelectionChangedMethodId,e);
+    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
+    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->columnSelectionChanged(e);
+    }
+    _Producer.produceEvent(ColumnSelectionChangedMethodId,e);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -170,41 +171,17 @@ AbstractTableColumnModel::~AbstractTableColumnModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractTableColumnModel::changed(BitVector whichField, UInt32 origin)
+void AbstractTableColumnModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbstractTableColumnModel::dump(      UInt32    , 
+void AbstractTableColumnModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbstractTableColumnModel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTTABLECOLUMNMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTTABLECOLUMNMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTTABLECOLUMNMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

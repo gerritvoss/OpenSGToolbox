@@ -42,10 +42,10 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include "Component/Table/OSGTableCellRenderer.h"
+#include "OSGTableCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -53,11 +53,11 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultReal32TableCellRenderer for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultReal32TableCellRenderer : public TableCellRenderer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultReal32TableCellRenderer : public TableCellRenderer
 {
     /*==========================  PUBLIC  =================================*/
   public:
-	virtual ComponentPtr getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column);
+	virtual ComponentRefPtr getTableCellRendererComponent(TableRefPtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -80,7 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultReal32TableCellRenderer : public Ta
   private:
 };
 
-typedef boost::intrusive_ptr<DefaultReal32TableCellRenderer> DefaultReal32TableCellRendererPtr;
+typedef boost::shared_ptr<DefaultReal32TableCellRenderer> DefaultReal32TableCellRendererPtr;
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,50 +42,53 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGAbstractTableColumnModelBase.h"
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractTableColumnModel class. See \ref 
-           PageUserInterfaceAbstractTableColumnModel for a description.
+/*! \brief AbstractTableColumnModel class. See \ref
+           PageContribUserInterfaceAbstractTableColumnModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableColumnModel : public AbstractTableColumnModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTableColumnModel : public AbstractTableColumnModelBase
 {
-  private:
-
-    typedef AbstractTableColumnModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AbstractTableColumnModelBase Inherited;
+    typedef AbstractTableColumnModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     //Adds a listener for table column model events.
     virtual EventConnection addColumnModelListener(TableColumnModelListenerPtr l);
 	virtual bool isColumnModelListenerAttached(TableColumnModelListenerPtr l) const;
 
     //Removes a listener for table column model events.
     virtual void removeColumnModelListener(TableColumnModelListenerPtr l);
+    
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AbstractTableColumnModelBase.
@@ -102,7 +105,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableColumnModel : public Abstract
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractTableColumnModel(void); 
+    virtual ~AbstractTableColumnModel(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 	typedef std::set<TableColumnModelListenerPtr> TableColumnModelListenerSet;
@@ -114,18 +124,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableColumnModel : public Abstract
     void produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex);
     void produceColumnRemoved(const UInt32& FromIndex);
     void produceColumnMarginChanged(void);
-    void produceColumnSelectionChanged(const ListSelectionEventPtr e);
+    void produceColumnSelectionChanged(const ListSelectionEventUnrecPtr e);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AbstractTableColumnModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AbstractTableColumnModel &source);
 };
 
@@ -135,7 +143,5 @@ OSG_END_NAMESPACE
 
 #include "OSGAbstractTableColumnModelBase.inl"
 #include "OSGAbstractTableColumnModel.inl"
-
-#define OSGABSTRACTTABLECOLUMNMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGABSTRACTTABLECOLUMNMODEL_H_ */

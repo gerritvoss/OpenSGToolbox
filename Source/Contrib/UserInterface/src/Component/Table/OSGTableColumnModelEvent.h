@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,48 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGTableColumnModelEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TableColumnModelEvent class. See \ref 
-           PageUserInterfaceTableColumnModelEvent for a description.
+/*! \brief TableColumnModelEvent class. See \ref
+           PageContribUserInterfaceTableColumnModelEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelEvent : public TableColumnModelEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModelEvent : public TableColumnModelEventBase
 {
-  private:
-
-    typedef TableColumnModelEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TableColumnModelEventBase Inherited;
+    typedef TableColumnModelEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  TableColumnModelEventPtr      create(  FieldContainerPtr Source,
-                                                   Time TimeStamp,
-                                                   UInt32 FromIndex,
-                                                   UInt32 ToIndex); 
+    static  TableColumnModelEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                          Time TimeStamp,
+                                                          UInt32 FromIndex,
+                                                          UInt32 ToIndex); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TableColumnModelEventBase.
@@ -100,20 +102,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelEvent : public TableColumn
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableColumnModelEvent(void); 
+    virtual ~TableColumnModelEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TableColumnModelEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TableColumnModelEvent &source);
 };
 

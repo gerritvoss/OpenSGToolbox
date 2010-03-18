@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,351 +55,254 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TableBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TableBase::getClassTypeId(void) 
+OSG::UInt32 TableBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TablePtr TableBase::create(void) 
-{
-    TablePtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TablePtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TablePtr TableBase::createEmpty(void) 
-{ 
-    TablePtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TableBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Table::_sfHeader field.
-inline
-SFTableHeaderPtr *TableBase::getSFHeader(void)
-{
-    return &_sfHeader;
-}
-
-//! Get the Table::_sfModel field.
-inline
-SFTableModelPtr *TableBase::getSFModel(void)
-{
-    return &_sfModel;
-}
-
-//! Get the Table::_sfColumnModel field.
-inline
-SFTableColumnModelPtr *TableBase::getSFColumnModel(void)
-{
-    return &_sfColumnModel;
-}
-
-//! Get the Table::_mfTable field.
-inline
-MFComponentPtr *TableBase::getMFTable(void)
-{
-    return &_mfTable;
-}
-
-//! Get the Table::_sfAutoCreateColumnsFromModel field.
-inline
-SFBool *TableBase::getSFAutoCreateColumnsFromModel(void)
-{
-    return &_sfAutoCreateColumnsFromModel;
-}
-
-//! Get the Table::_sfAutoResizeMode field.
-inline
-SFUInt32 *TableBase::getSFAutoResizeMode(void)
-{
-    return &_sfAutoResizeMode;
-}
-
-//! Get the Table::_sfRowHeight field.
-inline
-SFUInt32 *TableBase::getSFRowHeight(void)
-{
-    return &_sfRowHeight;
-}
-
-//! Get the Table::_sfRowMargin field.
-inline
-SFUInt32 *TableBase::getSFRowMargin(void)
-{
-    return &_sfRowMargin;
-}
-
-//! Get the Table::_sfRowSelectionAllowed field.
-inline
-SFBool *TableBase::getSFRowSelectionAllowed(void)
-{
-    return &_sfRowSelectionAllowed;
-}
-
-//! Get the Table::_sfShowHorizontalLines field.
-inline
-SFBool *TableBase::getSFShowHorizontalLines(void)
-{
-    return &_sfShowHorizontalLines;
-}
-
-//! Get the Table::_sfShowVerticalLines field.
-inline
-SFBool *TableBase::getSFShowVerticalLines(void)
-{
-    return &_sfShowVerticalLines;
-}
-
-//! Get the Table::_sfGridColor field.
-inline
-SFColor4f *TableBase::getSFGridColor(void)
-{
-    return &_sfGridColor;
-}
-
-//! Get the Table::_sfCellEditor field.
-inline
-SFCellEditorPtr *TableBase::getSFCellEditor(void)
-{
-    return &_sfCellEditor;
-}
-
 
 //! Get the value of the Table::_sfHeader field.
 inline
-TableHeaderPtr &TableBase::getHeader(void)
-{
-    return _sfHeader.getValue();
-}
-
-//! Get the value of the Table::_sfHeader field.
-inline
-const TableHeaderPtr &TableBase::getHeader(void) const
+TableHeader * TableBase::getHeader(void) const
 {
     return _sfHeader.getValue();
 }
 
 //! Set the value of the Table::_sfHeader field.
 inline
-void TableBase::setHeader(const TableHeaderPtr &value)
+void TableBase::setHeader(TableHeader * const value)
 {
+    editSField(HeaderFieldMask);
+
     _sfHeader.setValue(value);
 }
 
 //! Get the value of the Table::_sfModel field.
 inline
-TableModelPtr &TableBase::getModel(void)
-{
-    return _sfModel.getValue();
-}
-
-//! Get the value of the Table::_sfModel field.
-inline
-const TableModelPtr &TableBase::getModel(void) const
+TableModel * TableBase::getModel(void) const
 {
     return _sfModel.getValue();
 }
 
 //! Set the value of the Table::_sfModel field.
 inline
-void TableBase::setModel(const TableModelPtr &value)
+void TableBase::setModel(TableModel * const value)
 {
+    editSField(ModelFieldMask);
+
     _sfModel.setValue(value);
 }
 
 //! Get the value of the Table::_sfColumnModel field.
 inline
-TableColumnModelPtr &TableBase::getColumnModel(void)
-{
-    return _sfColumnModel.getValue();
-}
-
-//! Get the value of the Table::_sfColumnModel field.
-inline
-const TableColumnModelPtr &TableBase::getColumnModel(void) const
+TableColumnModel * TableBase::getColumnModel(void) const
 {
     return _sfColumnModel.getValue();
 }
 
 //! Set the value of the Table::_sfColumnModel field.
 inline
-void TableBase::setColumnModel(const TableColumnModelPtr &value)
+void TableBase::setColumnModel(TableColumnModel * const value)
 {
+    editSField(ColumnModelFieldMask);
+
     _sfColumnModel.setValue(value);
 }
-
 //! Get the value of the Table::_sfAutoCreateColumnsFromModel field.
+
 inline
-bool &TableBase::getAutoCreateColumnsFromModel(void)
+bool &TableBase::editAutoCreateColumnsFromModel(void)
 {
+    editSField(AutoCreateColumnsFromModelFieldMask);
+
     return _sfAutoCreateColumnsFromModel.getValue();
 }
 
 //! Get the value of the Table::_sfAutoCreateColumnsFromModel field.
 inline
-const bool &TableBase::getAutoCreateColumnsFromModel(void) const
+      bool  TableBase::getAutoCreateColumnsFromModel(void) const
 {
     return _sfAutoCreateColumnsFromModel.getValue();
 }
 
 //! Set the value of the Table::_sfAutoCreateColumnsFromModel field.
 inline
-void TableBase::setAutoCreateColumnsFromModel(const bool &value)
+void TableBase::setAutoCreateColumnsFromModel(const bool value)
 {
+    editSField(AutoCreateColumnsFromModelFieldMask);
+
     _sfAutoCreateColumnsFromModel.setValue(value);
 }
-
 //! Get the value of the Table::_sfAutoResizeMode field.
+
 inline
-UInt32 &TableBase::getAutoResizeMode(void)
+UInt32 &TableBase::editAutoResizeMode(void)
 {
+    editSField(AutoResizeModeFieldMask);
+
     return _sfAutoResizeMode.getValue();
 }
 
 //! Get the value of the Table::_sfAutoResizeMode field.
 inline
-const UInt32 &TableBase::getAutoResizeMode(void) const
+      UInt32  TableBase::getAutoResizeMode(void) const
 {
     return _sfAutoResizeMode.getValue();
 }
 
 //! Set the value of the Table::_sfAutoResizeMode field.
 inline
-void TableBase::setAutoResizeMode(const UInt32 &value)
+void TableBase::setAutoResizeMode(const UInt32 value)
 {
+    editSField(AutoResizeModeFieldMask);
+
     _sfAutoResizeMode.setValue(value);
 }
-
 //! Get the value of the Table::_sfRowHeight field.
+
 inline
-UInt32 &TableBase::getRowHeight(void)
+UInt32 &TableBase::editRowHeight(void)
 {
+    editSField(RowHeightFieldMask);
+
     return _sfRowHeight.getValue();
 }
 
 //! Get the value of the Table::_sfRowHeight field.
 inline
-const UInt32 &TableBase::getRowHeight(void) const
+      UInt32  TableBase::getRowHeight(void) const
 {
     return _sfRowHeight.getValue();
 }
 
 //! Set the value of the Table::_sfRowHeight field.
 inline
-void TableBase::setRowHeight(const UInt32 &value)
+void TableBase::setRowHeight(const UInt32 value)
 {
+    editSField(RowHeightFieldMask);
+
     _sfRowHeight.setValue(value);
 }
-
 //! Get the value of the Table::_sfRowMargin field.
+
 inline
-UInt32 &TableBase::getRowMargin(void)
+UInt32 &TableBase::editRowMargin(void)
 {
+    editSField(RowMarginFieldMask);
+
     return _sfRowMargin.getValue();
 }
 
 //! Get the value of the Table::_sfRowMargin field.
 inline
-const UInt32 &TableBase::getRowMargin(void) const
+      UInt32  TableBase::getRowMargin(void) const
 {
     return _sfRowMargin.getValue();
 }
 
 //! Set the value of the Table::_sfRowMargin field.
 inline
-void TableBase::setRowMargin(const UInt32 &value)
+void TableBase::setRowMargin(const UInt32 value)
 {
+    editSField(RowMarginFieldMask);
+
     _sfRowMargin.setValue(value);
 }
-
 //! Get the value of the Table::_sfRowSelectionAllowed field.
+
 inline
-bool &TableBase::getRowSelectionAllowed(void)
+bool &TableBase::editRowSelectionAllowed(void)
 {
+    editSField(RowSelectionAllowedFieldMask);
+
     return _sfRowSelectionAllowed.getValue();
 }
 
 //! Get the value of the Table::_sfRowSelectionAllowed field.
 inline
-const bool &TableBase::getRowSelectionAllowed(void) const
+      bool  TableBase::getRowSelectionAllowed(void) const
 {
     return _sfRowSelectionAllowed.getValue();
 }
 
 //! Set the value of the Table::_sfRowSelectionAllowed field.
 inline
-void TableBase::setRowSelectionAllowed(const bool &value)
+void TableBase::setRowSelectionAllowed(const bool value)
 {
+    editSField(RowSelectionAllowedFieldMask);
+
     _sfRowSelectionAllowed.setValue(value);
 }
-
 //! Get the value of the Table::_sfShowHorizontalLines field.
+
 inline
-bool &TableBase::getShowHorizontalLines(void)
+bool &TableBase::editShowHorizontalLines(void)
 {
+    editSField(ShowHorizontalLinesFieldMask);
+
     return _sfShowHorizontalLines.getValue();
 }
 
 //! Get the value of the Table::_sfShowHorizontalLines field.
 inline
-const bool &TableBase::getShowHorizontalLines(void) const
+      bool  TableBase::getShowHorizontalLines(void) const
 {
     return _sfShowHorizontalLines.getValue();
 }
 
 //! Set the value of the Table::_sfShowHorizontalLines field.
 inline
-void TableBase::setShowHorizontalLines(const bool &value)
+void TableBase::setShowHorizontalLines(const bool value)
 {
+    editSField(ShowHorizontalLinesFieldMask);
+
     _sfShowHorizontalLines.setValue(value);
 }
-
 //! Get the value of the Table::_sfShowVerticalLines field.
+
 inline
-bool &TableBase::getShowVerticalLines(void)
+bool &TableBase::editShowVerticalLines(void)
 {
+    editSField(ShowVerticalLinesFieldMask);
+
     return _sfShowVerticalLines.getValue();
 }
 
 //! Get the value of the Table::_sfShowVerticalLines field.
 inline
-const bool &TableBase::getShowVerticalLines(void) const
+      bool  TableBase::getShowVerticalLines(void) const
 {
     return _sfShowVerticalLines.getValue();
 }
 
 //! Set the value of the Table::_sfShowVerticalLines field.
 inline
-void TableBase::setShowVerticalLines(const bool &value)
+void TableBase::setShowVerticalLines(const bool value)
 {
+    editSField(ShowVerticalLinesFieldMask);
+
     _sfShowVerticalLines.setValue(value);
 }
-
 //! Get the value of the Table::_sfGridColor field.
+
 inline
-Color4f &TableBase::getGridColor(void)
+Color4f &TableBase::editGridColor(void)
 {
+    editSField(GridColorFieldMask);
+
     return _sfGridColor.getValue();
 }
 
@@ -416,53 +317,96 @@ const Color4f &TableBase::getGridColor(void) const
 inline
 void TableBase::setGridColor(const Color4f &value)
 {
+    editSField(GridColorFieldMask);
+
     _sfGridColor.setValue(value);
 }
 
-//! Get the value of the Table::_sfCellEditor field.
+//! Get the value of the Table::_sfGlobalCellEditor field.
 inline
-CellEditorPtr &TableBase::getCellEditor(void)
+CellEditor * TableBase::getGlobalCellEditor(void) const
 {
-    return _sfCellEditor.getValue();
+    return _sfGlobalCellEditor.getValue();
 }
 
-//! Get the value of the Table::_sfCellEditor field.
+//! Set the value of the Table::_sfGlobalCellEditor field.
 inline
-const CellEditorPtr &TableBase::getCellEditor(void) const
+void TableBase::setGlobalCellEditor(CellEditor * const value)
 {
-    return _sfCellEditor.getValue();
-}
+    editSField(GlobalCellEditorFieldMask);
 
-//! Set the value of the Table::_sfCellEditor field.
-inline
-void TableBase::setCellEditor(const CellEditorPtr &value)
-{
-    _sfCellEditor.setValue(value);
+    _sfGlobalCellEditor.setValue(value);
 }
-
 
 //! Get the value of the \a index element the Table::_mfTable field.
 inline
-ComponentPtr &TableBase::getTable(const UInt32 index)
+Component * TableBase::getTable(const UInt32 index) const
 {
     return _mfTable[index];
 }
 
-//! Get the Table::_mfTable field.
-inline
-MFComponentPtr &TableBase::getTable(void)
-{
-    return _mfTable;
-}
 
-//! Get the Table::_mfTable field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFComponentPtr &TableBase::getTable(void) const
+void TableBase::execSync (      TableBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfTable;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (HeaderFieldMask & whichField))
+        _sfHeader.syncWith(pFrom->_sfHeader);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pFrom->_sfModel);
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+        _sfColumnModel.syncWith(pFrom->_sfColumnModel);
+
+    if(FieldBits::NoField != (TableFieldMask & whichField))
+        _mfTable.syncWith(pFrom->_mfTable,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
+        _sfAutoCreateColumnsFromModel.syncWith(pFrom->_sfAutoCreateColumnsFromModel);
+
+    if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
+        _sfAutoResizeMode.syncWith(pFrom->_sfAutoResizeMode);
+
+    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
+        _sfRowHeight.syncWith(pFrom->_sfRowHeight);
+
+    if(FieldBits::NoField != (RowMarginFieldMask & whichField))
+        _sfRowMargin.syncWith(pFrom->_sfRowMargin);
+
+    if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
+        _sfRowSelectionAllowed.syncWith(pFrom->_sfRowSelectionAllowed);
+
+    if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
+        _sfShowHorizontalLines.syncWith(pFrom->_sfShowHorizontalLines);
+
+    if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
+        _sfShowVerticalLines.syncWith(pFrom->_sfShowVerticalLines);
+
+    if(FieldBits::NoField != (GridColorFieldMask & whichField))
+        _sfGridColor.syncWith(pFrom->_sfGridColor);
+
+    if(FieldBits::NoField != (GlobalCellEditorFieldMask & whichField))
+        _sfGlobalCellEditor.syncWith(pFrom->_sfGlobalCellEditor);
 }
+#endif
+
+
+inline
+const Char8 *TableBase::getClassname(void)
+{
+    return "Table";
+}
+OSG_GEN_CONTAINERPTR(Table);
 
 OSG_END_NAMESPACE
-
-#define OSGTABLEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

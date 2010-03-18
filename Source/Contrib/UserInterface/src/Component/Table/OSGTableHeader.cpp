@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,16 +40,16 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
+#include <OSGConfig.h>
 
-#include <OpenSG/OSGConfig.h>
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGTableHeader.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGInternalWindow.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGUIDrawUtils.h"
 
 #include "OSGTable.h"
 
@@ -57,13 +57,10 @@
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TableHeader
-A UI Table Header. 	
-*/
+// Documentation for this class is emitted in the
+// OSGTableHeaderBase.cpp file.
+// To modify it, please change the .fcd file (OSGTableHeader.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -73,8 +70,13 @@ A UI Table Header.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TableHeader::initMethod (void)
+void TableHeader::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -82,12 +84,12 @@ void TableHeader::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-TableColumnPtr TableHeader::columnAtPoint(const Pnt2f& point) const
+TableColumnRefPtr TableHeader::columnAtPoint(const Pnt2f& point) const
 {
     Int32 ColumnIndex = getColumnModel()->getColumnIndexAtX(point.x());
     if(ColumnIndex == -1)
     {
-        return NullFC;
+        return NULL;
     }
     else
     {
@@ -99,13 +101,12 @@ TableColumnPtr TableHeader::columnAtPoint(const Pnt2f& point) const
 
 void TableHeader::updateColumnHeadersComponents(void)
 {
-    if(getColumnModel() == NullFC) return;
+    if(getColumnModel() == NULL) return;
 
     std::vector<UInt32> SelectedColumns = getColumnModel()->getSelectedColumns();
     std::vector<UInt32>::iterator SearchItor;
     bool isSelected(false);
-    beginEditCP(TableHeaderPtr(this) , ColumnHeadersFieldMask);
-        getColumnHeaders().clear();
+        clearColumnHeaders();
         for(UInt32 i(0) ; i<getColumnModel()->getColumnCount(); ++i)
         {
             SearchItor = std::find(SelectedColumns.begin(), SelectedColumns.end(), i);
@@ -113,25 +114,22 @@ void TableHeader::updateColumnHeadersComponents(void)
             isSelected = (SearchItor != SelectedColumns.end());
 
             //TODO: Add Column Focusing
-            getColumnHeaders().push_back(
+            pushToColumnHeaders(
             _DefaultTableHeaderRenderer->getTableCellRendererComponent(getTable(), getColumnModel()->getColumn(i)->getHeaderValue(), isSelected, false, 0, i)
             );
         }
-    endEditCP(TableHeaderPtr(this) , ColumnHeadersFieldMask);
 
     
-    beginEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
-        getChildren().clear();
+        clearChildren();
 
         //Add all of the Header Components
-        for(UInt32 i(0); i<getColumnHeaders().size() ; ++i)
+        for(UInt32 i(0); i<getMFColumnHeaders()->size() ; ++i)
         {
-            getChildren().push_back(getColumnHeaders()[i]);
+            pushToChildren(getColumnHeaders(i));
         }
 
         //TODO: Add all of the Margin Components
         
-    endEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
 }
 
 void TableHeader::updateLayout(void)
@@ -143,18 +141,16 @@ void TableHeader::updateLayout(void)
     UInt32 Height(0);
     
     //Use the Model to update the position and sizes of the Headers
-    for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFColumnHeaders()->size() ; ++i)
     {
-        beginEditCP(getColumnHeaders()[i], PositionFieldMask | SizeFieldMask);
-            getColumnHeaders()[i]->setPosition( Pnt2f(BorderTopLeft.x() + CumulativeWidth, BorderTopLeft.y()) );
-            getColumnHeaders()[i]->setSize( Vec2f(getColumnModel()->getColumn(i)->getWidth(), getColumnHeaders()[i]->getPreferredSize().y()) );
-        endEditCP(getColumnHeaders()[i], PositionFieldMask | SizeFieldMask);
+            getColumnHeaders(i)->setPosition( Pnt2f(BorderTopLeft.x() + CumulativeWidth, BorderTopLeft.y()) );
+            getColumnHeaders(i)->setSize( Vec2f(getColumnModel()->getColumn(i)->getWidth(), getColumnHeaders(i)->getPreferredSize().y()) );
 
-        Height = osgMax<UInt32>(Height, getColumnHeaders()[i]->getSize().y());
-        CumulativeWidth += getColumnHeaders()[i]->getSize().x();
+        Height = osgMax<UInt32>(Height, getColumnHeaders(i)->getSize().y());
+        CumulativeWidth += getColumnHeaders(i)->getSize().x();
 
         //Add on the Margin
-        if(i != getColumnHeaders().size()-1)
+        if(i != getMFColumnHeaders()->size()-1)
         {
             CumulativeWidth += getColumnModel()->getColumnMargin();
         }
@@ -169,13 +165,11 @@ void TableHeader::updateLayout(void)
                                Height + (BottomRight.y() - TopLeft.y() - BorderBottomRight.y() + BorderTopLeft.y()));
     if(NewPreferredSize != getPreferredSize())
     {
-        beginEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);
             setPreferredSize(NewPreferredSize);
-        endEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);
     }
 }
 
-void TableHeader::mouseExited(const MouseEventPtr e)
+void TableHeader::mouseExited(const MouseEventUnrecPtr e)
 {
     if(getResizingAllowed())
     {
@@ -184,15 +178,15 @@ void TableHeader::mouseExited(const MouseEventPtr e)
     Inherited::mouseExited(e);
 }
 
-void TableHeader::mousePressed(const MouseEventPtr e)
+void TableHeader::mousePressed(const MouseEventUnrecPtr e)
 {
     if(getResizingAllowed())
     {
-		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderPtr(this), e->getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderRefPtr(this), e->getViewport());
         UInt32 CumulativeHeaderWidth(0);
-        for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFColumnHeaders()->size() ; ++i)
         {
-            CumulativeHeaderWidth += getColumnHeaders()[i]->getSize().x();
+            CumulativeHeaderWidth += getColumnHeaders(i)->getSize().x();
             if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
                MousePosInComponent.x() <= CumulativeHeaderWidth + getColumnModel()->getColumnMargin() + getResizingCursorDriftAllowance())
             {
@@ -207,7 +201,7 @@ void TableHeader::mousePressed(const MouseEventPtr e)
     Inherited::mousePressed(e);
 }
 
-void TableHeader::mouseMoved(const MouseEventPtr e)
+void TableHeader::mouseMoved(const MouseEventUnrecPtr e)
 {
     if(getResizingAllowed())
     {
@@ -216,15 +210,15 @@ void TableHeader::mouseMoved(const MouseEventPtr e)
     Inherited::mouseMoved(e);
 }
 
-void TableHeader::checkMouseMargins(const MouseEventPtr e)
+void TableHeader::checkMouseMargins(const MouseEventUnrecPtr e)
 {
-    if(isContainedClipBounds(e->getLocation(), TableHeaderPtr(this)))
+    if(isContainedClipBounds(e->getLocation(), TableHeaderRefPtr(this)))
     {
-		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderPtr(this), e->getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderRefPtr(this), e->getViewport());
         UInt32 CumulativeHeaderWidth(0);
-        for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFColumnHeaders()->size() ; ++i)
         {
-            CumulativeHeaderWidth += getColumnHeaders()[i]->getSize().x();
+            CumulativeHeaderWidth += getColumnHeaders(i)->getSize().x();
             if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
                MousePosInComponent.x() <= CumulativeHeaderWidth + getColumnModel()->getColumnMargin() + getResizingCursorDriftAllowance())
             {
@@ -247,12 +241,31 @@ void TableHeader::detachFromEventProducer(void)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void TableHeader::onCreate(const TableHeader * Id)
+{
+	Inherited::onCreate(Id);
+
+    if(getColumnModel() != NULL)
+    {
+        getColumnModel()->addColumnModelListener(&_ColumnModelListener);
+    }
+}
+
+void TableHeader::onDestroy()
+{
+    if(getColumnModel() != NULL)
+    {
+        getColumnModel()->removeColumnModelListener(&_ColumnModelListener);
+    }
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 TableHeader::TableHeader(void) :
     Inherited(),
     _ColumnModelListener(this),
     _MarginDraggedListener(this)
+
 {
 }
 
@@ -261,26 +274,21 @@ TableHeader::TableHeader(const TableHeader &source) :
     _DefaultTableHeaderRenderer(source._DefaultTableHeaderRenderer),
     _ColumnModelListener(this),
     _MarginDraggedListener(this)
+
 {
-    if(getColumnModel() != NullFC)
-    {
-        getColumnModel()->addColumnModelListener(&_ColumnModelListener);
-    }
 }
 
 TableHeader::~TableHeader(void)
 {
-    if(getColumnModel() != NullFC)
-    {
-        getColumnModel()->removeColumnModelListener(&_ColumnModelListener);
-    }
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void TableHeader::changed(BitVector whichField, UInt32 origin)
-{   
-    Inherited::changed(whichField, origin);
+void TableHeader::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
+{
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & ColumnModelFieldMask)
     {
@@ -290,66 +298,62 @@ void TableHeader::changed(BitVector whichField, UInt32 origin)
         //}
         //_ColumnModel = columnModel;
         updateColumnHeadersComponents();
-        if(getColumnModel() != NullFC)
+        if(getColumnModel() != NULL)
         {
             getColumnModel()->addColumnModelListener(&_ColumnModelListener);
         }
     }
 }
 
-void TableHeader::dump(      UInt32    , 
+void TableHeader::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TableHeader NI" << std::endl;
 }
-
-/*----------------------------- Embeded Classes ---------------------------*/
-
-
 		
-void TableHeader::ColumnModelListener::columnAdded(const TableColumnModelEventPtr e)
+void TableHeader::ColumnModelListener::columnAdded(const TableColumnModelEventUnrecPtr e)
 {
-    //Update the ComponentPtr vector of the headers
+    //Update the ComponentRefPtr vector of the headers
     _TableHeader->updateColumnHeadersComponents();
 }
 
-void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEventPtr e)
+void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEventUnrecPtr e)
 {
     //This will require a layout update
     _TableHeader->updateLayout();
 }
 
-void TableHeader::ColumnModelListener::columnMoved(const TableColumnModelEventPtr e)
+void TableHeader::ColumnModelListener::columnMoved(const TableColumnModelEventUnrecPtr e)
 {
-    //Update the ComponentPtr vector of the headers
+    //Update the ComponentRefPtr vector of the headers
     _TableHeader->updateColumnHeadersComponents();
 }
 
-void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEventPtr e)
+void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEventUnrecPtr e)
 {
-    //Update the ComponentPtr vector of the headers
+    //Update the ComponentRefPtr vector of the headers
     _TableHeader->updateColumnHeadersComponents();
 }
 
-void TableHeader::ColumnModelListener::columnSelectionChanged(const ListSelectionEventPtr e)
+void TableHeader::ColumnModelListener::columnSelectionChanged(const ListSelectionEventUnrecPtr e)
 {
     _TableHeader->updateColumnHeadersComponents();
 }
 
-void TableHeader::MarginDraggedListener::mouseMoved(const MouseEventPtr e)
+void TableHeader::MarginDraggedListener::mouseMoved(const MouseEventUnrecPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mouseDragged(const MouseEventPtr e)
+void TableHeader::MarginDraggedListener::mouseDragged(const MouseEventUnrecPtr e)
 {
 	if(e->getButton() == e->BUTTON1)
 	{
-		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderPtr(_TableHeader), e->getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderRefPtr(_TableHeader), e->getViewport());
 
 
-        TableColumnPtr TheColumn(_TableHeader->getColumnModel()->getColumn(_TableHeader->_ResizingColumn));
-        Real32 NewWidth(MousePosInComponent.x() - _TableHeader->getColumnHeaders()[_TableHeader->_ResizingColumn]->getPosition().x());
+        TableColumnRefPtr TheColumn(_TableHeader->getColumnModel()->getColumn(_TableHeader->_ResizingColumn));
+        Real32 NewWidth(MousePosInComponent.x() - _TableHeader->getColumnHeaders(_TableHeader->_ResizingColumn)->getPosition().x());
 
         if(NewWidth <= 0 || NewWidth < TheColumn->getMinWidth())
         {
@@ -362,36 +366,34 @@ void TableHeader::MarginDraggedListener::mouseDragged(const MouseEventPtr e)
         }
         
 		//Get the new desired center for this margin
-        beginEditCP(TheColumn, TableColumn::WidthFieldMask);
 	        TheColumn->setWidth(NewWidth);
-        endEditCP(TheColumn, TableColumn::WidthFieldMask);
         _TableHeader->updateLayout();
 	}
 }
 
-void TableHeader::MarginDraggedListener::mouseClicked(const MouseEventPtr e)
+void TableHeader::MarginDraggedListener::mouseClicked(const MouseEventUnrecPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mouseEntered(const MouseEventPtr e)
+void TableHeader::MarginDraggedListener::mouseEntered(const MouseEventUnrecPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mouseExited(const MouseEventPtr e)
+void TableHeader::MarginDraggedListener::mouseExited(const MouseEventUnrecPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mousePressed(const MouseEventPtr e)
+void TableHeader::MarginDraggedListener::mousePressed(const MouseEventUnrecPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mouseReleased(const MouseEventPtr e)
+void TableHeader::MarginDraggedListener::mouseReleased(const MouseEventUnrecPtr e)
 {
-	if(_TableHeader->getParentWindow() != NullFC)
+	if(_TableHeader->getParentWindow() != NULL)
 	{
         disconnect();
 	}
@@ -404,29 +406,4 @@ void TableHeader::MarginDraggedListener::disconnect(void)
     _TableHeader->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_TableHeader->_MarginDraggedListener));
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTABLEHEADERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTABLEHEADERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTABLEHEADERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

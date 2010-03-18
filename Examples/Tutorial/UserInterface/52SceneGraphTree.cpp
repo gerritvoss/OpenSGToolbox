@@ -260,8 +260,8 @@ int main(int argc, char **argv)
     TheTreeModel = SceneGraphTreeModel::create();
     TheTreeModel->setRoot(Root);
 
-    TheFileSystemTreeModel = FileSystemTreeModel::create();
-    TheFileSystemTreeModel->setRoot(BoostPath("C:\\"));
+    //TheFileSystemTreeModel = FileSystemTreeModel::create();
+    //TheFileSystemTreeModel->setRoot(BoostPath("C:\\"));
     //TheFileSystemTreeModel->setRoot(BoostPath("/"));
 
     //Create the Tree

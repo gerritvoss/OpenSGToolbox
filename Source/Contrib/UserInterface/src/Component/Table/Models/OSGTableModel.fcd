@@ -3,33 +3,35 @@
 <FieldContainer
 	name="TableModel"
 	parent="FieldContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI TableModel.
 	<ProducedMethod
 		name="ContentsHeaderRowChanged"
-		producedEventType="TableModelEventPtr"
+		type="TableModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ContentsChanged"
-		producedEventType="TableModelEventPtr"
+		type="TableModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="IntervalAdded"
-		producedEventType="TableModelEventPtr"
+		type="TableModelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="IntervalRemoved"
-		producedEventType="TableModelEventPtr"
+		type="TableModelEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

@@ -43,12 +43,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
-#include "Layer/OSGColorLayer.h"
-#include "Border/OSGLineBorder.h"
-#include "Border/OSGEmptyBorder.h"
-#include "Component/Text/OSGLabel.h"
+#include "OSGColorLayer.h"
+#include "OSGLineBorder.h"
+#include "OSGEmptyBorder.h"
+#include "OSGLabel.h"
 
 #include "OSGDefaultReal32TableCellRenderer.h"
 #include <boost/lexical_cast.hpp>
@@ -59,7 +59,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultReal32TableCellRenderer
+/*! \class OSG::DefaultReal32TableCellRenderer
 A DefaultReal32TableCellRenderer.
 */
 
@@ -76,13 +76,12 @@ A DefaultReal32TableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultReal32TableCellRenderer::getTableCellRendererComponent(TablePtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentRefPtr DefaultReal32TableCellRenderer::getTableCellRendererComponent(TableRefPtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
 	if(value.empty()){
-		return NullFC;
+		return NULL;
 	}
-	LabelPtr TheLabel = Label::create();
-	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+	LabelRefPtr TheLabel = Label::create();
 		std::string tempString;
         try
         {
@@ -98,44 +97,33 @@ ComponentPtr DefaultReal32TableCellRenderer::getTableCellRendererComponent(Table
         }
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2f(100,30));
-	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-	ColorLayerPtr tempBackground;
+	ColorLayerRefPtr tempBackground;
 	tempBackground = ColorLayer::create();
 
-	beginEditCP(TheLabel, Label::BackgroundsFieldMask);
 		TheLabel->setBackgrounds(tempBackground);
-	endEditCP(TheLabel, Label::BackgroundsFieldMask);
 
-	beginEditCP(tempBackground, ColorLayer::ColorFieldMask);
 		if(isSelected){
 			tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
 		}
 		else{
 			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 		}
-	endEditCP(tempBackground, ColorLayer::ColorFieldMask);
 
 	if(hasFocus){
-		LineBorderPtr tempBorder;
+		LineBorderRefPtr tempBorder;
 
 			tempBorder = LineBorder::create();
-			beginEditCP(TheLabel, Label::BordersFieldMask);
 				TheLabel->setBorders(tempBorder);
-			endEditCP(TheLabel, Label::BordersFieldMask);
 
-		beginEditCP(tempBorder, LineBorder::ColorFieldMask);
 			tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
-		endEditCP(tempBorder, LineBorder::ColorFieldMask);
 	}
 	else{
-		EmptyBorderPtr tempBorder;
+		EmptyBorderRefPtr tempBorder;
 
 			tempBorder = EmptyBorder::create();
-			beginEditCP(TheLabel, Label::BordersFieldMask);
 				TheLabel->setBorders(tempBorder);
-			endEditCP(TheLabel, Label::BordersFieldMask);
 	}
-	return Component::Ptr::dcast(TheLabel);
+	return dynamic_pointer_cast<Component>(TheLabel);
 	
 	
 }

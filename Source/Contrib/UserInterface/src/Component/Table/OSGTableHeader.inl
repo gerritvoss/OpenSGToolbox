@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,7 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -48,7 +47,7 @@ TableCellRendererPtr TableHeader::getDefaultRenderer(void) const
 }
 
 inline
-TableColumnPtr TableHeader::getDraggedColumn(void) const
+TableColumnRefPtr TableHeader::getDraggedColumn(void) const
 {
     return _DraggedColumn;
 }
@@ -62,7 +61,7 @@ Real32 TableHeader::getDraggedDistance(void) const
 inline
 void TableHeader::getHeaderBounds(const UInt32 ColumnIndex, Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-    getColumnHeaders()[ColumnIndex]->getBounds(TopLeft, BottomRight);
+    getColumnHeaders(ColumnIndex)->getBounds(TopLeft, BottomRight);
 }
 
 inline
@@ -78,7 +77,7 @@ void TableHeader::setDefaultRenderer(TableCellRendererPtr defaultRenderer)
 }
 
 inline
-void TableHeader::setDraggedColumn(TableColumnPtr aColumn)
+void TableHeader::setDraggedColumn(TableColumnRefPtr aColumn)
 {
     _DraggedColumn = aColumn;
 }
@@ -108,6 +107,3 @@ TableHeader::MarginDraggedListener::MarginDraggedListener(TableHeader* TheTableH
 }
 
 OSG_END_NAMESPACE
-
-#define OSGTABLEHEADER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

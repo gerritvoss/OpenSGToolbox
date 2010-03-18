@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,46 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTableCellEditorBase.h"
-#include "Component/Table/OSGTableFields.h"
+#include "OSGTableFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TableCellEditor class. See \ref 
-           PageUserInterfaceTableCellEditor for a description.
+/*! \brief TableCellEditor class. See \ref
+           PageContribUserInterfaceTableCellEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : public TableCellEditorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableCellEditor : public TableCellEditorBase
 {
-  private:
-
-    typedef TableCellEditorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TableCellEditorBase Inherited;
+    typedef TableCellEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column) = 0;
+
+	virtual ComponentRefPtr getTableCellEditorComponent(TableRefPtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column) = 0;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TableCellEditorBase.
@@ -98,20 +100,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : public TableCellEditorBa
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableCellEditor(void); 
+    virtual ~TableCellEditor(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TableCellEditorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TableCellEditor &source);
 };
 
@@ -121,7 +127,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTableCellEditorBase.inl"
 #include "OSGTableCellEditor.inl"
-
-#define OSGTABLECELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTABLECELLEDITOR_H_ */

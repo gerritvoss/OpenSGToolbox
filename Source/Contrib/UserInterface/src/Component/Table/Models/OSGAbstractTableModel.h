@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,42 +42,41 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include <set>
-
 #include "OSGAbstractTableModelBase.h"
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include <set>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractTableModel class. See \ref 
-           PageUserInterfaceAbstractTableModel for a description.
+/*! \brief AbstractTableModel class. See \ref
+           PageContribUserInterfaceAbstractTableModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public AbstractTableModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTableModel : public AbstractTableModelBase
 {
-  private:
-
-    typedef AbstractTableModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AbstractTableModelBase Inherited;
+    typedef AbstractTableModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -94,6 +93,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public AbstractTableM
     //Sets the value in the cell at columnIndex and rowIndex to aValue.
     virtual void setValueAt(const boost::any& aValue, UInt32 rowIndex, UInt32 columnIndex);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AbstractTableModelBase.
@@ -110,9 +110,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public AbstractTableM
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractTableModel(void); 
+    virtual ~AbstractTableModel(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
 	typedef std::set<TableModelListenerPtr> TableModelListenerSet;
     typedef TableModelListenerSet::iterator TableModelListenerSetItor;
     typedef TableModelListenerSet::const_iterator TableModelListenerSetConstItor;
@@ -124,15 +132,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public AbstractTableM
 	void produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AbstractTableModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AbstractTableModel &source);
 };
 
@@ -142,7 +148,5 @@ OSG_END_NAMESPACE
 
 #include "OSGAbstractTableModelBase.inl"
 #include "OSGAbstractTableModel.inl"
-
-#define OSGABSTRACTTABLEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGABSTRACTTABLEMODEL_H_ */

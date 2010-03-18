@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,116 +55,101 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TableColumnModelEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TableColumnModelEventBase::getClassTypeId(void) 
+OSG::UInt32 TableColumnModelEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TableColumnModelEventPtr TableColumnModelEventBase::create(void) 
-{
-    TableColumnModelEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TableColumnModelEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TableColumnModelEventPtr TableColumnModelEventBase::createEmpty(void) 
-{ 
-    TableColumnModelEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TableColumnModelEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TableColumnModelEvent::_sfFromIndex field.
-inline
-const SFUInt32 *TableColumnModelEventBase::getSFFromIndex(void) const
-{
-    return &_sfFromIndex;
-}
-
-//! Get the TableColumnModelEvent::_sfFromIndex field.
-inline
-SFUInt32 *TableColumnModelEventBase::editSFFromIndex(void)
-{
-    return &_sfFromIndex;
-}
-
-//! Get the TableColumnModelEvent::_sfToIndex field.
-inline
-const SFUInt32 *TableColumnModelEventBase::getSFToIndex(void) const
-{
-    return &_sfToIndex;
-}
-
-//! Get the TableColumnModelEvent::_sfToIndex field.
-inline
-SFUInt32 *TableColumnModelEventBase::editSFToIndex(void)
-{
-    return &_sfToIndex;
-}
-
-
 //! Get the value of the TableColumnModelEvent::_sfFromIndex field.
+
 inline
 UInt32 &TableColumnModelEventBase::editFromIndex(void)
 {
+    editSField(FromIndexFieldMask);
+
     return _sfFromIndex.getValue();
 }
 
 //! Get the value of the TableColumnModelEvent::_sfFromIndex field.
 inline
-const UInt32 &TableColumnModelEventBase::getFromIndex(void) const
+      UInt32  TableColumnModelEventBase::getFromIndex(void) const
 {
     return _sfFromIndex.getValue();
 }
 
 //! Set the value of the TableColumnModelEvent::_sfFromIndex field.
 inline
-void TableColumnModelEventBase::setFromIndex(const UInt32 &value)
+void TableColumnModelEventBase::setFromIndex(const UInt32 value)
 {
+    editSField(FromIndexFieldMask);
+
     _sfFromIndex.setValue(value);
 }
-
 //! Get the value of the TableColumnModelEvent::_sfToIndex field.
+
 inline
 UInt32 &TableColumnModelEventBase::editToIndex(void)
 {
+    editSField(ToIndexFieldMask);
+
     return _sfToIndex.getValue();
 }
 
 //! Get the value of the TableColumnModelEvent::_sfToIndex field.
 inline
-const UInt32 &TableColumnModelEventBase::getToIndex(void) const
+      UInt32  TableColumnModelEventBase::getToIndex(void) const
 {
     return _sfToIndex.getValue();
 }
 
 //! Set the value of the TableColumnModelEvent::_sfToIndex field.
 inline
-void TableColumnModelEventBase::setToIndex(const UInt32 &value)
+void TableColumnModelEventBase::setToIndex(const UInt32 value)
 {
+    editSField(ToIndexFieldMask);
+
     _sfToIndex.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TableColumnModelEventBase::execSync (      TableColumnModelEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (FromIndexFieldMask & whichField))
+        _sfFromIndex.syncWith(pFrom->_sfFromIndex);
+
+    if(FieldBits::NoField != (ToIndexFieldMask & whichField))
+        _sfToIndex.syncWith(pFrom->_sfToIndex);
+}
+#endif
+
+
+inline
+const Char8 *TableColumnModelEventBase::getClassname(void)
+{
+    return "TableColumnModelEvent";
+}
+OSG_GEN_CONTAINERPTR(TableColumnModelEvent);
 
 OSG_END_NAMESPACE
 

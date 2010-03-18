@@ -31,30 +31,30 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
-#include "Component/Table/OSGTableModelEventFields.h"
+#include "OSGEventListener.h"
+#include "OSGTableModelEventFields.h"
 
 OSG_BEGIN_NAMESPACE
 class TableModelEvent;
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableModelListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableModelListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
 	//Sent when the contents of the table header row has changed
-	virtual void contentsHeaderRowChanged(const TableModelEventPtr e) = 0;
+	virtual void contentsHeaderRowChanged(const TableModelEventUnrecPtr e) = 0;
 	
 	//Sent when the contents of the table has changed in a way that's too complex to characterize with the previous methods.
-	virtual void contentsChanged(const TableModelEventPtr e) = 0;
+	virtual void contentsChanged(const TableModelEventUnrecPtr e) = 0;
 	
 	//Sent after the an interval was added to the table model
-	virtual void intervalAdded(const TableModelEventPtr e) = 0;
+	virtual void intervalAdded(const TableModelEventUnrecPtr e) = 0;
 	
 	//Sent after the an interval was removed to the table model
-	virtual void intervalRemoved(const TableModelEventPtr e) = 0;
+	virtual void intervalRemoved(const TableModelEventUnrecPtr e) = 0;
 };
 
 typedef TableModelListener* TableModelListenerPtr;

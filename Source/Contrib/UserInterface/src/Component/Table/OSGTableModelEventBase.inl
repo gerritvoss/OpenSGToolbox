@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,186 +55,157 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TableModelEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TableModelEventBase::getClassTypeId(void) 
+OSG::UInt32 TableModelEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TableModelEventPtr TableModelEventBase::create(void) 
-{
-    TableModelEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TableModelEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TableModelEventPtr TableModelEventBase::createEmpty(void) 
-{ 
-    TableModelEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TableModelEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TableModelEvent::_sfFirstColumn field.
-inline
-const SFUInt32 *TableModelEventBase::getSFFirstColumn(void) const
-{
-    return &_sfFirstColumn;
-}
-
-//! Get the TableModelEvent::_sfFirstColumn field.
-inline
-SFUInt32 *TableModelEventBase::editSFFirstColumn(void)
-{
-    return &_sfFirstColumn;
-}
-
-//! Get the TableModelEvent::_sfLastColumn field.
-inline
-const SFUInt32 *TableModelEventBase::getSFLastColumn(void) const
-{
-    return &_sfLastColumn;
-}
-
-//! Get the TableModelEvent::_sfLastColumn field.
-inline
-SFUInt32 *TableModelEventBase::editSFLastColumn(void)
-{
-    return &_sfLastColumn;
-}
-
-//! Get the TableModelEvent::_sfFirstRow field.
-inline
-const SFUInt32 *TableModelEventBase::getSFFirstRow(void) const
-{
-    return &_sfFirstRow;
-}
-
-//! Get the TableModelEvent::_sfFirstRow field.
-inline
-SFUInt32 *TableModelEventBase::editSFFirstRow(void)
-{
-    return &_sfFirstRow;
-}
-
-//! Get the TableModelEvent::_sfLastRow field.
-inline
-const SFUInt32 *TableModelEventBase::getSFLastRow(void) const
-{
-    return &_sfLastRow;
-}
-
-//! Get the TableModelEvent::_sfLastRow field.
-inline
-SFUInt32 *TableModelEventBase::editSFLastRow(void)
-{
-    return &_sfLastRow;
-}
-
-
 //! Get the value of the TableModelEvent::_sfFirstColumn field.
+
 inline
 UInt32 &TableModelEventBase::editFirstColumn(void)
 {
+    editSField(FirstColumnFieldMask);
+
     return _sfFirstColumn.getValue();
 }
 
 //! Get the value of the TableModelEvent::_sfFirstColumn field.
 inline
-const UInt32 &TableModelEventBase::getFirstColumn(void) const
+      UInt32  TableModelEventBase::getFirstColumn(void) const
 {
     return _sfFirstColumn.getValue();
 }
 
 //! Set the value of the TableModelEvent::_sfFirstColumn field.
 inline
-void TableModelEventBase::setFirstColumn(const UInt32 &value)
+void TableModelEventBase::setFirstColumn(const UInt32 value)
 {
+    editSField(FirstColumnFieldMask);
+
     _sfFirstColumn.setValue(value);
 }
-
 //! Get the value of the TableModelEvent::_sfLastColumn field.
+
 inline
 UInt32 &TableModelEventBase::editLastColumn(void)
 {
+    editSField(LastColumnFieldMask);
+
     return _sfLastColumn.getValue();
 }
 
 //! Get the value of the TableModelEvent::_sfLastColumn field.
 inline
-const UInt32 &TableModelEventBase::getLastColumn(void) const
+      UInt32  TableModelEventBase::getLastColumn(void) const
 {
     return _sfLastColumn.getValue();
 }
 
 //! Set the value of the TableModelEvent::_sfLastColumn field.
 inline
-void TableModelEventBase::setLastColumn(const UInt32 &value)
+void TableModelEventBase::setLastColumn(const UInt32 value)
 {
+    editSField(LastColumnFieldMask);
+
     _sfLastColumn.setValue(value);
 }
-
 //! Get the value of the TableModelEvent::_sfFirstRow field.
+
 inline
 UInt32 &TableModelEventBase::editFirstRow(void)
 {
+    editSField(FirstRowFieldMask);
+
     return _sfFirstRow.getValue();
 }
 
 //! Get the value of the TableModelEvent::_sfFirstRow field.
 inline
-const UInt32 &TableModelEventBase::getFirstRow(void) const
+      UInt32  TableModelEventBase::getFirstRow(void) const
 {
     return _sfFirstRow.getValue();
 }
 
 //! Set the value of the TableModelEvent::_sfFirstRow field.
 inline
-void TableModelEventBase::setFirstRow(const UInt32 &value)
+void TableModelEventBase::setFirstRow(const UInt32 value)
 {
+    editSField(FirstRowFieldMask);
+
     _sfFirstRow.setValue(value);
 }
-
 //! Get the value of the TableModelEvent::_sfLastRow field.
+
 inline
 UInt32 &TableModelEventBase::editLastRow(void)
 {
+    editSField(LastRowFieldMask);
+
     return _sfLastRow.getValue();
 }
 
 //! Get the value of the TableModelEvent::_sfLastRow field.
 inline
-const UInt32 &TableModelEventBase::getLastRow(void) const
+      UInt32  TableModelEventBase::getLastRow(void) const
 {
     return _sfLastRow.getValue();
 }
 
 //! Set the value of the TableModelEvent::_sfLastRow field.
 inline
-void TableModelEventBase::setLastRow(const UInt32 &value)
+void TableModelEventBase::setLastRow(const UInt32 value)
 {
+    editSField(LastRowFieldMask);
+
     _sfLastRow.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TableModelEventBase::execSync (      TableModelEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (FirstColumnFieldMask & whichField))
+        _sfFirstColumn.syncWith(pFrom->_sfFirstColumn);
+
+    if(FieldBits::NoField != (LastColumnFieldMask & whichField))
+        _sfLastColumn.syncWith(pFrom->_sfLastColumn);
+
+    if(FieldBits::NoField != (FirstRowFieldMask & whichField))
+        _sfFirstRow.syncWith(pFrom->_sfFirstRow);
+
+    if(FieldBits::NoField != (LastRowFieldMask & whichField))
+        _sfLastRow.syncWith(pFrom->_sfLastRow);
+}
+#endif
+
+
+inline
+const Char8 *TableModelEventBase::getClassname(void)
+{
+    return "TableModelEvent";
+}
+OSG_GEN_CONTAINERPTR(TableModelEvent);
 
 OSG_END_NAMESPACE
 

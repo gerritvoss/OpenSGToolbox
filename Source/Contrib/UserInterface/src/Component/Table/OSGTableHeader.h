@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,68 +42,69 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "OSGTableColumnModelListener.h"
-
+#include "OSGTableHeaderBase.h"
 #include "OSGTableHeaderBase.h"
 #include "OSGTableCellRenderer.h"
 #include "OSGTableColumn.h"
+#include "OSGTableColumnModelListener.h"
+#include "OSGUIDrawObjectCanvas.h"
 
-#include <OpenSG/Input/OSGMouseListener.h>
-#include <OpenSG/Input/OSGMouseMotionListener.h>
+#include "OSGMouseListener.h"
+#include "OSGMouseMotionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TableHeader class. See \ref 
-           PageUserInterfaceTableHeader for a description.
+/*! \brief TableHeader class. See \ref
+           PageContribUserInterfaceTableHeader for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeader : public TableHeaderBase
 {
-  private:
-
-    typedef TableHeaderBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TableHeaderBase Inherited;
+    typedef TableHeader     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
     
-    virtual void mouseExited(const MouseEventPtr e);
-    virtual void mouseMoved(const MouseEventPtr e);
-    virtual void mousePressed(const MouseEventPtr e);
+    virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mouseMoved(const MouseEventUnrecPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
     
     virtual void updateLayout(void);
     
     //Returns a pointer to the column that point lies in, or -1 if it lies out of bounds.
     //The point is assumed to be in TableHeader coordinate space
-    TableColumnPtr columnAtPoint(const Pnt2f& point) const;
+    TableColumnRefPtr columnAtPoint(const Pnt2f& point) const;
     
     //Returns the TableColumnModel that contains all column information of this table header.
-    //TableColumnModelPtr getColumnModel(void) const;
+    //TableColumnModelRefPtr getColumnModel(void) const;
     
     //Returns the default renderer used when no headerRenderer is defined by a TableColumn.
     TableCellRendererPtr getDefaultRenderer(void) const;
     
     //Returns the the dragged column, if and only if, a drag is in process, otherwise returns null.
-    TableColumnPtr getDraggedColumn(void) const;
+    TableColumnRefPtr getDraggedColumn(void) const;
     
     //Returns the column's horizontal distance from its original position, if and only if, a drag is in process.
     Real32 getDraggedDistance(void) const;
@@ -115,13 +116,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     Int32 getResizingColumn(void) const;
     
     //Sets the column model for this table to newModel and registers for listener notifications from the new column model.
-    //void setColumnModel(TableColumnModelPtr columnModel);
+    //void setColumnModel(TableColumnModelRefPtr columnModel);
     
     //Sets the default renderer to be used when no headerRenderer is defined by a TableColumn.
     void setDefaultRenderer(TableCellRendererPtr defaultRenderer);
     
     //Sets the header's draggedColumn to aColumn.
-    void setDraggedColumn(TableColumnPtr aColumn);
+    void setDraggedColumn(TableColumnRefPtr aColumn);
     
     //Sets the header's draggedDistance to distance.
     void setDraggedDistance(const Real32& distance);
@@ -131,6 +132,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
           
     virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TableHeaderBase.
@@ -147,15 +149,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableHeader(void); 
+    virtual ~TableHeader(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const TableHeader *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
 
     //The Default Table Header Renderer
     TableCellRendererPtr _DefaultTableHeaderRenderer;
     
     //The index of the column being dragged.
-    TableColumnPtr _DraggedColumn;
+    TableColumnRefPtr _DraggedColumn;
     
     //The distance from its original position the column has been dragged.
     Real32 _DraggedDistance;
@@ -164,45 +180,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     Int32 _ResizingColumn;
 
     //TableColumnModelListener
-	class ColumnModelListener : public TableColumnModelListener
-	{
-	public :
-		ColumnModelListener(TableHeader* TheTableHeader);
-		
-        virtual void columnAdded(const TableColumnModelEventPtr e);
-    
-        virtual void columnMarginChanged(const ChangeEventPtr e);
-    
-        virtual void columnMoved(const TableColumnModelEventPtr e);
-    
-        virtual void columnRemoved(const TableColumnModelEventPtr e);
-    
-        virtual void columnSelectionChanged(const ListSelectionEventPtr e);
-	protected :
-		TableHeader* _TableHeader;
-	};
+    class ColumnModelListener : public TableColumnModelListener
+    {
+      public :
+        ColumnModelListener(TableHeader* TheTableHeader);
 
-	friend class ColumnModelListener;
+        virtual void columnAdded(const TableColumnModelEventUnrecPtr e);
 
-	ColumnModelListener _ColumnModelListener;
-	
-	class MarginDraggedListener : public MouseMotionListener, public MouseListener
-	{
-	public :
-		MarginDraggedListener(TableHeader* ptr);
-		virtual void mouseMoved(const MouseEventPtr e);
-		virtual void mouseDragged(const MouseEventPtr e);
-		
-		virtual void mouseClicked(const MouseEventPtr e);
-		virtual void mouseEntered(const MouseEventPtr e);
-		virtual void mouseExited(const MouseEventPtr e);
-		virtual void mousePressed(const MouseEventPtr e);
-		virtual void mouseReleased(const MouseEventPtr e);
-        
-		void disconnect(void);
-	protected :
-		TableHeader* _TableHeader;
-	};
+        virtual void columnMarginChanged(const ChangeEventUnrecPtr e);
+
+        virtual void columnMoved(const TableColumnModelEventUnrecPtr e);
+
+        virtual void columnRemoved(const TableColumnModelEventUnrecPtr e);
+
+        virtual void columnSelectionChanged(const ListSelectionEventUnrecPtr e);
+      protected :
+        TableHeader* _TableHeader;
+    };
+
+    friend class ColumnModelListener;
+
+    ColumnModelListener _ColumnModelListener;
+
+    class MarginDraggedListener : public MouseMotionListener, public MouseListener
+    {
+      public :
+        MarginDraggedListener(TableHeader* ptr);
+        virtual void mouseMoved(const MouseEventUnrecPtr e);
+        virtual void mouseDragged(const MouseEventUnrecPtr e);
+
+        virtual void mouseClicked(const MouseEventUnrecPtr e);
+        virtual void mouseEntered(const MouseEventUnrecPtr e);
+        virtual void mouseExited(const MouseEventUnrecPtr e);
+        virtual void mousePressed(const MouseEventUnrecPtr e);
+        virtual void mouseReleased(const MouseEventUnrecPtr e);
+
+        void disconnect(void);
+      protected :
+        TableHeader* _TableHeader;
+    };
 
 	friend class _MarginDraggedListener;
 
@@ -210,18 +226,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
 
 	void updateColumnHeadersComponents(void);
 
-	void checkMouseMargins(const MouseEventPtr e);
+	void checkMouseMargins(const MouseEventUnrecPtr e);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TableHeaderBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TableHeader &source);
 };
 
@@ -229,9 +243,9 @@ typedef TableHeader *TableHeaderP;
 
 OSG_END_NAMESPACE
 
+#include "OSGTable.h"
+#include "OSGTableColumnModel.h"
 #include "OSGTableHeaderBase.inl"
 #include "OSGTableHeader.inl"
-
-#define OSGTABLEHEADER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTABLEHEADER_H_ */

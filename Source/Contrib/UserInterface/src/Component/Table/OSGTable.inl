@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,15 +38,9 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "Models/OSGTableColumnModel.h"
-#include "Models/OSGTableModel.h"
-
 OSG_BEGIN_NAMESPACE
-
 inline
-void Table::addColumn(TableColumnPtr aColumn)
+void Table::addColumn(TableColumnRefPtr aColumn)
 {
     getColumnModel()->addColumn(aColumn);
 }
@@ -70,7 +64,7 @@ Int32 Table::getEditingRow(void) const
 }
 
 inline
-ComponentPtr Table::getEditorComponent(void) const
+ComponentRefPtr Table::getEditorComponent(void) const
 {
     return _EditingComponent;
 }
@@ -134,7 +128,7 @@ bool Table::isColumnSelected(const UInt32& column) const
 inline
 bool Table::isEditing(void) const
 {
-    return _EditingComponent != NullFC;
+    return _EditingComponent != NULL;
 }
 
 inline
@@ -170,7 +164,7 @@ const std::type_info& Table::getColumnType(const UInt32& column)
 }
 
 inline
-void Table::setDefaultEditor(const std::type_info& TheType, TableCellEditorPtr editor)
+void Table::setDefaultEditor(const std::type_info& TheType, TableCellEditorRefPtr editor)
 {
     _DefaultCellEditorByTypeMap[std::string(TheType.name())] = editor;
 }
@@ -212,7 +206,7 @@ void Table::moveColumn(const UInt32& column, const UInt32& targetColumn)
 }
 
 inline
-void Table::removeColumn(TableColumnPtr aColumn)
+void Table::removeColumn(TableColumnRefPtr aColumn)
 {
     getColumnModel()->removeColumn(aColumn);
 }
@@ -260,6 +254,3 @@ Int32 Table::columnAtPoint(const Pnt2f& point)
 }
 
 OSG_END_NAMESPACE
-
-#define OSGTABLE_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

@@ -89,10 +89,10 @@
 #include "OSGScrollPanel.h"
 #include "OSGUIViewport.h"
 
-//#include "OSGTableHeader.h"
-//#include "OSGTable.h"
-//#include "OSGDefaultTableCellRenderers.h"
-//#include "OSGDefaultTableColumnModel.h"
+#include "OSGTableHeader.h"
+#include "OSGTable.h"
+#include "OSGDefaultTableCellRenderers.h"
+#include "OSGDefaultTableColumnModel.h"
 
 #include "OSGList.h"
 #include "OSGDefaultListSelectionModel.h"
@@ -183,8 +183,8 @@ void WindowsLookAndFeel::init(void)
     SliderRefPtr WindowsSlider = Slider::create();
     DefaultComboBoxComponentGeneratorRefPtr WindowsDefaultComboBoxComponentGenerator = DefaultComboBoxComponentGenerator::create();
     ComboBoxRefPtr WindowsComboBox = ComboBox::create();
-    //TableHeaderRefPtr WindowsTableHeader = TableHeader::create();
-    //TableRefPtr WindowsTable = Table::create();
+    TableHeaderRefPtr WindowsTableHeader = TableHeader::create();
+    TableRefPtr WindowsTable = Table::create();
     DefaultTreeCellEditorRefPtr WindowsDefaultTreeCellEditor = DefaultTreeCellEditor::create();
     DefaultTreeComponentGeneratorRefPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::create();
     TreeRefPtr WindowsTree = Tree::create();
@@ -234,8 +234,8 @@ void WindowsLookAndFeel::init(void)
     pushToPrototypes(WindowsSlider);
     pushToPrototypes(WindowsDefaultComboBoxComponentGenerator);
     pushToPrototypes(WindowsComboBox);
-    //pushToPrototypes(WindowsTableHeader);
-    //pushToPrototypes(WindowsTable);
+    pushToPrototypes(WindowsTableHeader);
+    pushToPrototypes(WindowsTable);
     pushToPrototypes(WindowsDefaultTreeCellEditor);
     pushToPrototypes(WindowsDefaultTreeComponentGenerator);
     pushToPrototypes(WindowsTree);
@@ -3702,98 +3702,99 @@ void WindowsLookAndFeel::init(void)
     WindowsComboBox->setMaxRowCount(5);
     WindowsComboBox->setCellGenerator(WindowsDefaultComboBoxComponentGenerator);
 
-    ///[>************************* TableHeader *****************************
-    ////Windows RotatedComponentBorder
-    //EmptyBorderRefPtr WindowsTableHeaderBorder = EmptyBorder::create();
+    //************************** TableHeader *****************************
+    //Windows RotatedComponentBorder
+    EmptyBorderRefPtr WindowsTableHeaderBorder = EmptyBorder::create();
 
-    ////Windows RotatedComponentBackground
-    //EmptyLayerRefPtr WindowsTableHeaderBackground = EmptyLayer::create();
+    //Windows RotatedComponentBackground
+    EmptyLayerRefPtr WindowsTableHeaderBackground = EmptyLayer::create();
 
-    ////Windows RotatedComponent
-    //WindowsTableHeader->setEnabled(true);
-    //WindowsTableHeader->setVisible(true);
+    //Windows RotatedComponent
+    WindowsTableHeader->setEnabled(true);
+    WindowsTableHeader->setVisible(true);
 
-    //WindowsTableHeader->setConstraints(NULL);
-    ////Sizes
-    //WindowsTableHeader->setMinSize(Vec2f(0,0));
-    //WindowsTableHeader->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsTableHeader->setPreferredSize(Vec2f(100,100));
+    WindowsTableHeader->setConstraints(NULL);
+    //Sizes
+    WindowsTableHeader->setMinSize(Vec2f(0,0));
+    WindowsTableHeader->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsTableHeader->setPreferredSize(Vec2f(100,100));
 
-    ////Border
-    //WindowsTableHeader->setBorder(WindowsTableHeaderBorder);
-    //WindowsTableHeader->setRolloverBorder(WindowsTableHeaderBorder);
-    //WindowsTableHeader->setFocusedBorder(WindowsTableHeaderBorder);
-    //WindowsTableHeader->setDisabledBorder(WindowsTableHeaderBorder);
+    //Border
+    WindowsTableHeader->setBorder(WindowsTableHeaderBorder);
+    WindowsTableHeader->setRolloverBorder(WindowsTableHeaderBorder);
+    WindowsTableHeader->setFocusedBorder(WindowsTableHeaderBorder);
+    WindowsTableHeader->setDisabledBorder(WindowsTableHeaderBorder);
 
-    ////Background
-    //WindowsTableHeader->setBackground(WindowsTableHeaderBackground);
-    //WindowsTableHeader->setRolloverBackground(WindowsTableHeaderBackground);
-    //WindowsTableHeader->setFocusedBackground(WindowsTableHeaderBackground);
-    //WindowsTableHeader->setDisabledBackground(WindowsTableHeaderBackground);
+    //Background
+    WindowsTableHeader->setBackground(WindowsTableHeaderBackground);
+    WindowsTableHeader->setRolloverBackground(WindowsTableHeaderBackground);
+    WindowsTableHeader->setFocusedBackground(WindowsTableHeaderBackground);
+    WindowsTableHeader->setDisabledBackground(WindowsTableHeaderBackground);
 
-    ////Opacity
-    //WindowsTableHeader->setOpacity(1.0);
+    //Opacity
+    WindowsTableHeader->setOpacity(1.0);
 
-    ////Table Values
-    //WindowsTableHeader->setTable(NULL);
-    //WindowsTableHeader->setReorderingAllowed(true);
-    //WindowsTableHeader->setResizingAllowed(true);
-    //WindowsTableHeader->setDefaultMarginDrawObject(NULL);
-    //WindowsTableHeader->setDefaultRenderer(TableCellRendererRefPtr(new DefaultTableHeaderCellRenderer()));
-    //WindowsTableHeader->setResizingCursorDriftAllowance(1);
+    //Table Values
+    WindowsTableHeader->setTable(NULL);
+    WindowsTableHeader->setReorderingAllowed(true);
+    WindowsTableHeader->setResizingAllowed(true);
+    WindowsTableHeader->setDefaultMarginDrawObject(NULL);
+    WindowsTableHeader->setDefaultRenderer(TableCellRendererPtr(new DefaultTableHeaderCellRenderer()));
+    WindowsTableHeader->setResizingCursorDriftAllowance(1);
 
 
 
-    ///[>************************* Table *****************************
-    ////Windows RotatedComponentBorder
-    //EmptyBorderRefPtr WindowsTableBorder = EmptyBorder::create();
+    //************************** Table *****************************
+    //Windows RotatedComponentBorder
+    EmptyBorderRefPtr WindowsTableBorder = EmptyBorder::create();
 
-    ////Windows RotatedComponentBackground
-    //EmptyLayerRefPtr WindowsTableBackground = EmptyLayer::create();
+    //Windows RotatedComponentBackground
+    EmptyLayerRefPtr WindowsTableBackground = EmptyLayer::create();
 
-    ////Windows RotatedComponent
-    //WindowsTable->setEnabled(true);
-    //WindowsTable->setVisible(true);
+    //Windows RotatedComponent
+    WindowsTable->setEnabled(true);
+    WindowsTable->setVisible(true);
 
-    //WindowsTable->setConstraints(NULL);
-    ////Sizes
-    //WindowsTable->setMinSize(Vec2f(0,0));
-    //WindowsTable->setMaxSize(Vec2f(32767,32767)); //2^15
-    //WindowsTable->setPreferredSize(Vec2f(100,100));
+    WindowsTable->setConstraints(NULL);
+    //Sizes
+    WindowsTable->setMinSize(Vec2f(0,0));
+    WindowsTable->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsTable->setPreferredSize(Vec2f(100,100));
 
-    ////Border
-    //WindowsTable->setBorder(WindowsTableBorder);
-    //WindowsTable->setRolloverBorder(WindowsTableBorder);
-    //WindowsTable->setFocusedBorder(WindowsTableBorder);
-    //WindowsTable->setDisabledBorder(WindowsTableBorder);
+    //Border
+    WindowsTable->setBorder(WindowsTableBorder);
+    WindowsTable->setRolloverBorder(WindowsTableBorder);
+    WindowsTable->setFocusedBorder(WindowsTableBorder);
+    WindowsTable->setDisabledBorder(WindowsTableBorder);
 
-    ////Background
-    //WindowsTable->setBackground(WindowsTableBackground);
-    //WindowsTable->setRolloverBackground(WindowsTableBackground);
-    //WindowsTable->setFocusedBackground(WindowsTableBackground);
-    //WindowsTable->setDisabledBackground(WindowsTableBackground);
+    //Background
+    WindowsTable->setBackground(WindowsTableBackground);
+    WindowsTable->setRolloverBackground(WindowsTableBackground);
+    WindowsTable->setFocusedBackground(WindowsTableBackground);
+    WindowsTable->setDisabledBackground(WindowsTableBackground);
 
-    ////Opacity
-    //WindowsTable->setOpacity(1.0);
+    //Opacity
+    WindowsTable->setOpacity(1.0);
 
-    ////Table Properties
-    //WindowsTable->setHeader(WindowsTableHeader);
-    //WindowsTable->setAutoCreateColumnsFromModel(true);
-    //WindowsTable->setAutoResizeMode(Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-    //WindowsTable->setRowHeight(50);
-    //WindowsTable->setRowMargin(1);
-    //WindowsTable->setRowSelectionAllowed(true);
-    //WindowsTable->setShowHorizontalLines(true);
-    //WindowsTable->setShowVerticalLines(true);
-    //WindowsTable->setGridColor(Color4f(0.0,0.0,0.0,1.0));
-    //WindowsTable->setColumnModel(DefaultTableColumnModel::create());
+    //Table Properties
+    WindowsTable->setHeader(WindowsTableHeader);
+    WindowsTable->setAutoCreateColumnsFromModel(true);
+    WindowsTable->setAutoResizeMode(Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+    WindowsTable->setRowHeight(50);
+    WindowsTable->setRowMargin(1);
+    WindowsTable->setRowSelectionAllowed(true);
+    WindowsTable->setShowHorizontalLines(true);
+    WindowsTable->setShowVerticalLines(true);
+    WindowsTable->setGridColor(Color4f(0.0,0.0,0.0,1.0));
+    TableColumnModelUnrecPtr WindowsTableColumnModel(DefaultTableColumnModel::create());
+    WindowsTable->setColumnModel(WindowsTableColumnModel);
 
-    //WindowsTable->setDefaultRenderer(typeid(GLenum), TableCellRendererRefPtr(new DefaultGLenumTableCellRenderer()));
-    //WindowsTable->setDefaultRenderer(typeid(std::string), TableCellRendererRefPtr(new DefaultStringTableCellRenderer()));
-    //WindowsTable->setDefaultRenderer(typeid(bool), TableCellRendererRefPtr(new DefaultBoolTableCellRenderer()));
-    //WindowsTable->setDefaultRenderer(typeid(Int32), TableCellRendererRefPtr(new DefaultInt32TableCellRenderer()));
-    //WindowsTable->setDefaultRenderer(typeid(UInt32), TableCellRendererRefPtr(new DefaultUInt32TableCellRenderer()));
-    //WindowsTable->setDefaultRenderer(typeid(Real32), TableCellRendererRefPtr(new DefaultReal32TableCellRenderer()));
+    WindowsTable->setDefaultRenderer(typeid(GLenum), TableCellRendererPtr(new DefaultGLenumTableCellRenderer()));
+    WindowsTable->setDefaultRenderer(typeid(std::string), TableCellRendererPtr(new DefaultStringTableCellRenderer()));
+    WindowsTable->setDefaultRenderer(typeid(bool), TableCellRendererPtr(new DefaultBoolTableCellRenderer()));
+    WindowsTable->setDefaultRenderer(typeid(Int32), TableCellRendererPtr(new DefaultInt32TableCellRenderer()));
+    WindowsTable->setDefaultRenderer(typeid(UInt32), TableCellRendererPtr(new DefaultUInt32TableCellRenderer()));
+    WindowsTable->setDefaultRenderer(typeid(Real32), TableCellRendererPtr(new DefaultReal32TableCellRenderer()));
 
 
     //************************** DefaultTreeEditor *****************************

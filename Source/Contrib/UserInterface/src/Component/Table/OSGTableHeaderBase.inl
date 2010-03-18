@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,272 +55,212 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TableHeaderBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TableHeaderBase::getClassTypeId(void) 
+OSG::UInt32 TableHeaderBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TableHeaderPtr TableHeaderBase::create(void) 
-{
-    TableHeaderPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TableHeaderPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TableHeaderPtr TableHeaderBase::createEmpty(void) 
-{ 
-    TableHeaderPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TableHeaderBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TableHeader::_sfTable field.
-inline
-SFTablePtr *TableHeaderBase::getSFTable(void)
-{
-    return &_sfTable;
-}
-
-//! Get the TableHeader::_sfColumnModel field.
-inline
-SFTableColumnModelPtr *TableHeaderBase::getSFColumnModel(void)
-{
-    return &_sfColumnModel;
-}
-
-//! Get the TableHeader::_sfReorderingAllowed field.
-inline
-SFBool *TableHeaderBase::getSFReorderingAllowed(void)
-{
-    return &_sfReorderingAllowed;
-}
-
-//! Get the TableHeader::_sfResizingAllowed field.
-inline
-SFBool *TableHeaderBase::getSFResizingAllowed(void)
-{
-    return &_sfResizingAllowed;
-}
-
-//! Get the TableHeader::_sfResizingCursorDriftAllowance field.
-inline
-SFUInt32 *TableHeaderBase::getSFResizingCursorDriftAllowance(void)
-{
-    return &_sfResizingCursorDriftAllowance;
-}
-
-//! Get the TableHeader::_sfDefaultMarginDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *TableHeaderBase::getSFDefaultMarginDrawObject(void)
-{
-    return &_sfDefaultMarginDrawObject;
-}
-
-//! Get the TableHeader::_mfMargins field.
-inline
-MFUIDrawObjectCanvasPtr *TableHeaderBase::getMFMargins(void)
-{
-    return &_mfMargins;
-}
-
-//! Get the TableHeader::_mfColumnHeaders field.
-inline
-MFComponentPtr *TableHeaderBase::getMFColumnHeaders(void)
-{
-    return &_mfColumnHeaders;
-}
-
 
 //! Get the value of the TableHeader::_sfTable field.
 inline
-TablePtr &TableHeaderBase::getTable(void)
-{
-    return _sfTable.getValue();
-}
-
-//! Get the value of the TableHeader::_sfTable field.
-inline
-const TablePtr &TableHeaderBase::getTable(void) const
+Table * TableHeaderBase::getTable(void) const
 {
     return _sfTable.getValue();
 }
 
 //! Set the value of the TableHeader::_sfTable field.
 inline
-void TableHeaderBase::setTable(const TablePtr &value)
+void TableHeaderBase::setTable(Table * const value)
 {
+    editSField(TableFieldMask);
+
     _sfTable.setValue(value);
 }
 
 //! Get the value of the TableHeader::_sfColumnModel field.
 inline
-TableColumnModelPtr &TableHeaderBase::getColumnModel(void)
-{
-    return _sfColumnModel.getValue();
-}
-
-//! Get the value of the TableHeader::_sfColumnModel field.
-inline
-const TableColumnModelPtr &TableHeaderBase::getColumnModel(void) const
+TableColumnModel * TableHeaderBase::getColumnModel(void) const
 {
     return _sfColumnModel.getValue();
 }
 
 //! Set the value of the TableHeader::_sfColumnModel field.
 inline
-void TableHeaderBase::setColumnModel(const TableColumnModelPtr &value)
+void TableHeaderBase::setColumnModel(TableColumnModel * const value)
 {
+    editSField(ColumnModelFieldMask);
+
     _sfColumnModel.setValue(value);
 }
-
 //! Get the value of the TableHeader::_sfReorderingAllowed field.
+
 inline
-bool &TableHeaderBase::getReorderingAllowed(void)
+bool &TableHeaderBase::editReorderingAllowed(void)
 {
+    editSField(ReorderingAllowedFieldMask);
+
     return _sfReorderingAllowed.getValue();
 }
 
 //! Get the value of the TableHeader::_sfReorderingAllowed field.
 inline
-const bool &TableHeaderBase::getReorderingAllowed(void) const
+      bool  TableHeaderBase::getReorderingAllowed(void) const
 {
     return _sfReorderingAllowed.getValue();
 }
 
 //! Set the value of the TableHeader::_sfReorderingAllowed field.
 inline
-void TableHeaderBase::setReorderingAllowed(const bool &value)
+void TableHeaderBase::setReorderingAllowed(const bool value)
 {
+    editSField(ReorderingAllowedFieldMask);
+
     _sfReorderingAllowed.setValue(value);
 }
-
 //! Get the value of the TableHeader::_sfResizingAllowed field.
+
 inline
-bool &TableHeaderBase::getResizingAllowed(void)
+bool &TableHeaderBase::editResizingAllowed(void)
 {
+    editSField(ResizingAllowedFieldMask);
+
     return _sfResizingAllowed.getValue();
 }
 
 //! Get the value of the TableHeader::_sfResizingAllowed field.
 inline
-const bool &TableHeaderBase::getResizingAllowed(void) const
+      bool  TableHeaderBase::getResizingAllowed(void) const
 {
     return _sfResizingAllowed.getValue();
 }
 
 //! Set the value of the TableHeader::_sfResizingAllowed field.
 inline
-void TableHeaderBase::setResizingAllowed(const bool &value)
+void TableHeaderBase::setResizingAllowed(const bool value)
 {
+    editSField(ResizingAllowedFieldMask);
+
     _sfResizingAllowed.setValue(value);
 }
-
 //! Get the value of the TableHeader::_sfResizingCursorDriftAllowance field.
+
 inline
-UInt32 &TableHeaderBase::getResizingCursorDriftAllowance(void)
+UInt32 &TableHeaderBase::editResizingCursorDriftAllowance(void)
 {
+    editSField(ResizingCursorDriftAllowanceFieldMask);
+
     return _sfResizingCursorDriftAllowance.getValue();
 }
 
 //! Get the value of the TableHeader::_sfResizingCursorDriftAllowance field.
 inline
-const UInt32 &TableHeaderBase::getResizingCursorDriftAllowance(void) const
+      UInt32  TableHeaderBase::getResizingCursorDriftAllowance(void) const
 {
     return _sfResizingCursorDriftAllowance.getValue();
 }
 
 //! Set the value of the TableHeader::_sfResizingCursorDriftAllowance field.
 inline
-void TableHeaderBase::setResizingCursorDriftAllowance(const UInt32 &value)
+void TableHeaderBase::setResizingCursorDriftAllowance(const UInt32 value)
 {
+    editSField(ResizingCursorDriftAllowanceFieldMask);
+
     _sfResizingCursorDriftAllowance.setValue(value);
 }
 
 //! Get the value of the TableHeader::_sfDefaultMarginDrawObject field.
 inline
-UIDrawObjectCanvasPtr &TableHeaderBase::getDefaultMarginDrawObject(void)
-{
-    return _sfDefaultMarginDrawObject.getValue();
-}
-
-//! Get the value of the TableHeader::_sfDefaultMarginDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &TableHeaderBase::getDefaultMarginDrawObject(void) const
+UIDrawObjectCanvas * TableHeaderBase::getDefaultMarginDrawObject(void) const
 {
     return _sfDefaultMarginDrawObject.getValue();
 }
 
 //! Set the value of the TableHeader::_sfDefaultMarginDrawObject field.
 inline
-void TableHeaderBase::setDefaultMarginDrawObject(const UIDrawObjectCanvasPtr &value)
+void TableHeaderBase::setDefaultMarginDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(DefaultMarginDrawObjectFieldMask);
+
     _sfDefaultMarginDrawObject.setValue(value);
 }
 
-
 //! Get the value of the \a index element the TableHeader::_mfMargins field.
 inline
-UIDrawObjectCanvasPtr &TableHeaderBase::getMargins(const UInt32 index)
+UIDrawObjectCanvas * TableHeaderBase::getMargins(const UInt32 index) const
 {
     return _mfMargins[index];
 }
 
-//! Get the TableHeader::_mfMargins field.
-inline
-MFUIDrawObjectCanvasPtr &TableHeaderBase::getMargins(void)
-{
-    return _mfMargins;
-}
-
-//! Get the TableHeader::_mfMargins field.
-inline
-const MFUIDrawObjectCanvasPtr &TableHeaderBase::getMargins(void) const
-{
-    return _mfMargins;
-}
-
 //! Get the value of the \a index element the TableHeader::_mfColumnHeaders field.
 inline
-ComponentPtr &TableHeaderBase::getColumnHeaders(const UInt32 index)
+Component * TableHeaderBase::getColumnHeaders(const UInt32 index) const
 {
     return _mfColumnHeaders[index];
 }
 
-//! Get the TableHeader::_mfColumnHeaders field.
-inline
-MFComponentPtr &TableHeaderBase::getColumnHeaders(void)
-{
-    return _mfColumnHeaders;
-}
 
-//! Get the TableHeader::_mfColumnHeaders field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFComponentPtr &TableHeaderBase::getColumnHeaders(void) const
+void TableHeaderBase::execSync (      TableHeaderBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfColumnHeaders;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (TableFieldMask & whichField))
+        _sfTable.syncWith(pFrom->_sfTable);
+
+    if(FieldBits::NoField != (ColumnModelFieldMask & whichField))
+        _sfColumnModel.syncWith(pFrom->_sfColumnModel);
+
+    if(FieldBits::NoField != (ReorderingAllowedFieldMask & whichField))
+        _sfReorderingAllowed.syncWith(pFrom->_sfReorderingAllowed);
+
+    if(FieldBits::NoField != (ResizingAllowedFieldMask & whichField))
+        _sfResizingAllowed.syncWith(pFrom->_sfResizingAllowed);
+
+    if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
+        _sfResizingCursorDriftAllowance.syncWith(pFrom->_sfResizingCursorDriftAllowance);
+
+    if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
+        _sfDefaultMarginDrawObject.syncWith(pFrom->_sfDefaultMarginDrawObject);
+
+    if(FieldBits::NoField != (MarginsFieldMask & whichField))
+        _mfMargins.syncWith(pFrom->_mfMargins,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (ColumnHeadersFieldMask & whichField))
+        _mfColumnHeaders.syncWith(pFrom->_mfColumnHeaders,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
+#endif
+
+
+inline
+const Char8 *TableHeaderBase::getClassname(void)
+{
+    return "TableHeader";
+}
+OSG_GEN_CONTAINERPTR(TableHeader);
 
 OSG_END_NAMESPACE
-
-#define OSGTABLEHEADERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

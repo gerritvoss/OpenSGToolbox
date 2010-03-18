@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,96 +58,110 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include "OSGFieldContainer.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // MaxWidth type
-#include <OpenSG/OSGUInt32Fields.h> // MinWidth type
-#include <OpenSG/OSGUInt32Fields.h> // ModelIndex type
-#include <OpenSG/OSGUInt32Fields.h> // PreferredWidth type
-#include <OpenSG/OSGUInt32Fields.h> // Width type
-#include <OpenSG/OSGBoolFields.h> // Resizable type
-#include "Component/Table/Editors/OSGTableCellEditorFields.h" // CellEditor type
+#include "OSGSysFields.h"               // MaxWidth type
+#include "OSGTableCellEditorFields.h"   // CellEditor type
 
 #include "OSGTableColumnFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
+#include "OSGEventProducerPtrType.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TableColumn;
-class BinaryDataHandler;
 
 //! \brief TableColumn Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnBase : public FieldContainer
 {
-  private:
-
-    typedef FieldContainer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TableColumnPtr  Ptr;
+    typedef FieldContainer Inherited;
+    typedef FieldContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(TableColumn);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        MaxWidthFieldId       = Inherited::NextFieldId,
-        MinWidthFieldId       = MaxWidthFieldId       + 1,
-        ModelIndexFieldId     = MinWidthFieldId       + 1,
-        PreferredWidthFieldId = ModelIndexFieldId     + 1,
-        WidthFieldId          = PreferredWidthFieldId + 1,
-        ResizableFieldId      = WidthFieldId          + 1,
-        CellEditorFieldId     = ResizableFieldId      + 1,
-        EventProducerFieldId  = CellEditorFieldId     + 1,
-        NextFieldId           = EventProducerFieldId  + 1
+        MaxWidthFieldId = Inherited::NextFieldId,
+        MinWidthFieldId = MaxWidthFieldId + 1,
+        ModelIndexFieldId = MinWidthFieldId + 1,
+        PreferredWidthFieldId = ModelIndexFieldId + 1,
+        WidthFieldId = PreferredWidthFieldId + 1,
+        ResizableFieldId = WidthFieldId + 1,
+        CellEditorFieldId = ResizableFieldId + 1,
+        EventProducerFieldId = CellEditorFieldId + 1,
+        NextFieldId = EventProducerFieldId + 1
     };
 
-    static const OSG::BitVector MaxWidthFieldMask;
-    static const OSG::BitVector MinWidthFieldMask;
-    static const OSG::BitVector ModelIndexFieldMask;
-    static const OSG::BitVector PreferredWidthFieldMask;
-    static const OSG::BitVector WidthFieldMask;
-    static const OSG::BitVector ResizableFieldMask;
-    static const OSG::BitVector CellEditorFieldMask;
-    static const OSG::BitVector EventProducerFieldMask;
-
+    static const OSG::BitVector MaxWidthFieldMask =
+        (TypeTraits<BitVector>::One << MaxWidthFieldId);
+    static const OSG::BitVector MinWidthFieldMask =
+        (TypeTraits<BitVector>::One << MinWidthFieldId);
+    static const OSG::BitVector ModelIndexFieldMask =
+        (TypeTraits<BitVector>::One << ModelIndexFieldId);
+    static const OSG::BitVector PreferredWidthFieldMask =
+        (TypeTraits<BitVector>::One << PreferredWidthFieldId);
+    static const OSG::BitVector WidthFieldMask =
+        (TypeTraits<BitVector>::One << WidthFieldId);
+    static const OSG::BitVector ResizableFieldMask =
+        (TypeTraits<BitVector>::One << ResizableFieldId);
+    static const OSG::BitVector CellEditorFieldMask =
+        (TypeTraits<BitVector>::One << CellEditorFieldId);
+    static const OSG::BitVector EventProducerFieldMask =
+        (TypeTraits<BitVector>::One << EventProducerFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFMaxWidthType;
+    typedef SFUInt32          SFMinWidthType;
+    typedef SFUInt32          SFModelIndexType;
+    typedef SFUInt32          SFPreferredWidthType;
+    typedef SFUInt32          SFWidthType;
+    typedef SFBool            SFResizableType;
+    typedef SFUnrecTableCellEditorPtr SFCellEditorType;
+    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
         FieldChangedMethodId = 1,
-        NextMethodId         = FieldChangedMethodId + 1
+        NextProducedMethodId = FieldChangedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -157,84 +171,68 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
     /*! \{                                                                 */
 
 
-           SFUInt32            *editSFMaxWidth       (void);
-     const SFUInt32            *getSFMaxWidth       (void) const;
+                  SFUInt32            *editSFMaxWidth       (void);
+            const SFUInt32            *getSFMaxWidth        (void) const;
 
-           SFUInt32            *editSFMinWidth       (void);
-     const SFUInt32            *getSFMinWidth       (void) const;
+                  SFUInt32            *editSFMinWidth       (void);
+            const SFUInt32            *getSFMinWidth        (void) const;
 
-           SFUInt32            *editSFModelIndex     (void);
-     const SFUInt32            *getSFModelIndex     (void) const;
+                  SFUInt32            *editSFModelIndex     (void);
+            const SFUInt32            *getSFModelIndex      (void) const;
 
-           SFUInt32            *editSFPreferredWidth (void);
-     const SFUInt32            *getSFPreferredWidth (void) const;
+                  SFUInt32            *editSFPreferredWidth (void);
+            const SFUInt32            *getSFPreferredWidth  (void) const;
 
-           SFUInt32            *editSFWidth          (void);
-     const SFUInt32            *getSFWidth          (void) const;
+                  SFUInt32            *editSFWidth          (void);
+            const SFUInt32            *getSFWidth           (void) const;
 
-           SFBool              *editSFResizable      (void);
-     const SFBool              *getSFResizable      (void) const;
+                  SFBool              *editSFResizable      (void);
+            const SFBool              *getSFResizable       (void) const;
+            const SFUnrecTableCellEditorPtr *getSFCellEditor     (void) const;
+                  SFUnrecTableCellEditorPtr *editSFCellEditor     (void);
 
-           SFTableCellEditorPtr *editSFCellEditor     (void);
-     const SFTableCellEditorPtr *getSFCellEditor     (void) const;
 
+                  UInt32              &editMaxWidth       (void);
+                  UInt32               getMaxWidth        (void) const;
 
-           UInt32              &editMaxWidth       (void);
-     const UInt32              &getMaxWidth       (void) const;
+                  UInt32              &editMinWidth       (void);
+                  UInt32               getMinWidth        (void) const;
 
-           UInt32              &editMinWidth       (void);
-     const UInt32              &getMinWidth       (void) const;
+                  UInt32              &editModelIndex     (void);
+                  UInt32               getModelIndex      (void) const;
 
-           UInt32              &editModelIndex     (void);
-     const UInt32              &getModelIndex     (void) const;
+                  UInt32              &editPreferredWidth (void);
+                  UInt32               getPreferredWidth  (void) const;
 
-           UInt32              &editPreferredWidth (void);
-     const UInt32              &getPreferredWidth (void) const;
+                  UInt32              &editWidth          (void);
+                  UInt32               getWidth           (void) const;
 
-           UInt32              &editWidth          (void);
-     const UInt32              &getWidth          (void) const;
+                  bool                &editResizable      (void);
+                  bool                 getResizable       (void) const;
 
-           bool                &editResizable      (void);
-     const bool                &getResizable      (void) const;
-
-           TableCellEditorPtr  &editCellEditor     (void);
-     const TableCellEditorPtr  &getCellEditor     (void) const;
+                  TableCellEditor * getCellEditor     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMaxWidth       ( const UInt32 &value );
-     void setMinWidth       ( const UInt32 &value );
-     void setModelIndex     ( const UInt32 &value );
-     void setPreferredWidth ( const UInt32 &value );
-     void setWidth          ( const UInt32 &value );
-     void setResizable      ( const bool &value );
-     void setCellEditor     ( const TableCellEditorPtr &value );
+            void setMaxWidth       (const UInt32 value);
+            void setMinWidth       (const UInt32 value);
+            void setModelIndex     (const UInt32 value);
+            void setPreferredWidth (const UInt32 value);
+            void setWidth          (const UInt32 value);
+            void setResizable      (const bool value);
+            void setCellEditor     (TableCellEditor * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Ptr Field Set                                 */
     /*! \{                                                                 */
 
-    virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
-
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
-
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -242,49 +240,94 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
+
+    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId);
+    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId) const;
+    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
+    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
+                                                         UInt32 ActivityIndex) const;
+    void                     detachActivity             (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId);
+    UInt32                   getNumProducedEvents       (void) const;
+    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr   &editEventProducer  (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TableColumnPtr      create          (void); 
-    static  TableColumnPtr      createEmpty     (void); 
+    static  TableColumnTransitPtr  create          (void);
+    static  TableColumn           *createEmpty     (void);
+
+    static  TableColumnTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  TableColumn            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  TableColumnTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Event Producer                            */
+    /*! \{                                                                 */
     EventProducer _Producer;
 
+    /*! \}                                                                 */
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfMaxWidth;
-    SFUInt32            _sfMinWidth;
-    SFUInt32            _sfModelIndex;
-    SFUInt32            _sfPreferredWidth;
-    SFUInt32            _sfWidth;
-    SFBool              _sfResizable;
-    SFTableCellEditorPtr   _sfCellEditor;
+    SFUInt32          _sfMaxWidth;
+    SFUInt32          _sfMinWidth;
+    SFUInt32          _sfModelIndex;
+    SFUInt32          _sfPreferredWidth;
+    SFUInt32          _sfWidth;
+    SFBool            _sfResizable;
+    SFUnrecTableCellEditorPtr _sfCellEditor;
+    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -297,69 +340,94 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableColumnBase(void); 
+    virtual ~TableColumnBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const TableColumn *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleMaxWidth        (void) const;
+    EditFieldHandlePtr editHandleMaxWidth       (void);
+    GetFieldHandlePtr  getHandleMinWidth        (void) const;
+    EditFieldHandlePtr editHandleMinWidth       (void);
+    GetFieldHandlePtr  getHandleModelIndex      (void) const;
+    EditFieldHandlePtr editHandleModelIndex     (void);
+    GetFieldHandlePtr  getHandlePreferredWidth  (void) const;
+    EditFieldHandlePtr editHandlePreferredWidth (void);
+    GetFieldHandlePtr  getHandleWidth           (void) const;
+    EditFieldHandlePtr editHandleWidth          (void);
+    GetFieldHandlePtr  getHandleResizable       (void) const;
+    EditFieldHandlePtr editHandleResizable      (void);
+    GetFieldHandlePtr  getHandleCellEditor      (void) const;
+    EditFieldHandlePtr editHandleCellEditor     (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TableColumnBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      TableColumnBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      TableColumnBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const TableColumnBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef TableColumnBase *TableColumnBaseP;
-
-typedef osgIF<TableColumnBase::isNodeCore,
-              CoredNodePtr<TableColumn>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TableColumnNodePtr;
-
-typedef RefPtr<TableColumnPtr> TableColumnRefPtr;
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,44 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTableColumnModelBase.h"
-
-#include <OpenSG/OSGField.h>
-#include "Component/Table/OSGTableColumn.h"
-#include "Component/List/OSGListSelectionModel.h"
-#include "Component/Table/OSGTableColumnModelListener.h"
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGField.h"
+#include "OSGTableColumn.h"
+#include "OSGListSelectionModel.h"
+#include "OSGTableColumnModelListener.h"
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TableColumnModel class. See \ref 
-           PageUserInterfaceTableColumnModel for a description.
+/*! \brief TableColumnModel class. See \ref
+           PageContribUserInterfaceTableColumnModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel : public TableColumnModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModel : public TableColumnModelBase
 {
-  private:
-
-    typedef TableColumnModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TableColumnModelBase Inherited;
+    typedef TableColumnModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -92,10 +91,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel : public TableColumnModel
     virtual void removeColumnModelListener(TableColumnModelListenerPtr l) = 0;
 
     //Appends aColumn to the end of the tableColumns array.
-    virtual void addColumn(const TableColumnPtr aColumn) = 0;
+    virtual void addColumn(const TableColumnRefPtr aColumn) = 0;
 
     //Returns the TableColumn object for the column at columnIndex.
-    virtual TableColumnPtr getColumn(const UInt32& columnIndex) const = 0;
+    virtual TableColumnRefPtr getColumn(const UInt32& columnIndex) const = 0;
 
     //Returns the number of columns in the model.
     virtual UInt32 getColumnCount(void) const = 0;
@@ -107,7 +106,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel : public TableColumnModel
     virtual UInt32 getColumnMargin(void) const = 0;
 
     //Returns an Enumeration of all the columns in the model.
-    virtual std::vector<TableColumnPtr> getColumns(void) const = 0;
+    virtual std::vector<TableColumnUnrecPtr> getColumns(void) const = 0;
 
     //Returns true if columns may be selected.
     virtual bool getColumnSelectionAllowed(void) const = 0;
@@ -128,7 +127,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel : public TableColumnModel
     virtual void moveColumn(const UInt32& columnIndex, const UInt32& newIndex) = 0;
 
     //Deletes the TableColumn column from the tableColumns array.
-    virtual void removeColumn(TableColumnPtr column) = 0;
+    virtual void removeColumn(TableColumnRefPtr column) = 0;
 
     //Sets the TableColumn's column margin to newMargin.
     virtual void setColumnMargin(const UInt32& newMargin) = 0;
@@ -139,6 +138,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel : public TableColumnModel
     //Sets the selection model.
     virtual void setSelectionModel(ListSelectionModelPtr newModel) = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TableColumnModelBase.
@@ -155,20 +155,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel : public TableColumnModel
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableColumnModel(void); 
+    virtual ~TableColumnModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TableColumnModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TableColumnModel &source);
 };
 
