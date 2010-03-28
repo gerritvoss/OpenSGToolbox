@@ -32,6 +32,10 @@
 #include "OSGDirectShowManager.h"
 #endif
 
+#if defined(OSG_WITH_VLC)
+#include "OSGVLCManager.h"
+#endif
+
 #include "OSGStubVideoManager.h"
 
 OSG_BEGIN_NAMESPACE
@@ -40,8 +44,8 @@ VideoManagerPtr getDefaultVideoManager(void)
 {
 #ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
     return DirectShowManager::the();
-#elif defined(_OSGTOOLBOX_VIDEO_USE_VLC)
-    return StubVideoManager::the();
+#elif defined(OSG_WITH_VLC)
+    return VLCManager::the();
 #else
     return StubVideoManager::the();
 #endif

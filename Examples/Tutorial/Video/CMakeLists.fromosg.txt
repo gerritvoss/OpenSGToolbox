@@ -1,7 +1,7 @@
 
-PROJECT(OpenSGExamplesUserInterface)
+PROJECT(OpenSGExamplesVido)
 
-MESSAGE(STATUS "Building particle system examples integrated")
+MESSAGE(STATUS "Building video examples integrated")
 
 #############################################################################
 # find sources
@@ -15,8 +15,8 @@ FILE(GLOB SRCFILES "*.cpp")
 # get dependencies
 
 SET(OSG_COMPONENTS OSGBase OSGCluster OSGDrawable OSGFileIO OSGGroup OSGState
-                   OSGSystem OSGUtil OSGWindow OSGWindowGLUT
-                   OSGContribParticleSystem OSGTBFileIO)
+                   OSGSystem OSGUtil OSGWindow OSGWindowGLUT OSGContribVideo
+                   OSGTBFileIO)
 
 IF(UNIX)
     IF(APPLE)
@@ -34,7 +34,7 @@ SET(DEP_INCLUDE_DIRS)
 SET(DEP_LIBRARY_DIRS)
 SET(DEP_LIBRARIES)
 
-SET(OSG_EXTERNAL_COMPONENTS Boost GLUT)
+SET(OSG_EXTERNAL_COMPONENTS Boost GLUT FMOD)
 
 #############
 #### X11 (optional)

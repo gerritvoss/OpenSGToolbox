@@ -3,7 +3,7 @@
 <FieldContainer
 	name="Animator"
 	parent="FieldContainer"
-    library="Dynamics"
+    library="TBAnimation"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="true"

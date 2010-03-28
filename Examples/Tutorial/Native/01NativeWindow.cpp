@@ -364,6 +364,8 @@ int main(int argc, char **argv)
 // redraw the window
 void display(void)
 {
+    commitChanges();
+
     mgr->redraw();
 }
 

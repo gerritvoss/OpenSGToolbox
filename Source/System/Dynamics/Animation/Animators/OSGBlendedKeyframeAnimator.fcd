@@ -3,7 +3,7 @@
 <FieldContainer
 	name="BlendedKeyframeAnimator"
 	parent="Animator"
-    library="Dynamics"
+    library="TBAnimation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="true"

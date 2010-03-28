@@ -3,7 +3,7 @@
 <FieldContainer
 	name="KeyframeTransformationSequence"
 	parent="KeyframeSequence"
-    library="Dynamics"
+    library="TBAnimation"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="true"

@@ -32,7 +32,7 @@
 #include "OSGConfig.h"
 #include "OSGContribVideoDef.h"
 
-#ifdef _OSGTOOLBOX_VIDEO_USE_VLC
+#ifdef OSG_WITH_VLC
 
 #include "OSGVideoManager.h"
 #include <string>

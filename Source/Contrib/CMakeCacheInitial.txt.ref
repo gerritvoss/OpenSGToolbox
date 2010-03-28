@@ -1,33 +1,33 @@
 
 MESSAGE(STATUS "LOAD INITIAL CACHE")
 
-SET(OpenSG_DIR /home/vossg/Projects/OpenSG/ToolBox/OpenSGDevMaster_Toolbox.install CACHE PATH "")
+SET(OpenSG_DIR /home/gerrit/Projects/OpenSG/ToolBox/OpenSGDevMaster_Toolbox.install CACHE PATH "")
 
 SET(CMAKE_VERBOSE_MAKEFILE TRUE CACHE BOOL "xxx" FORCE)
 
 SET(OSG_USE_OSGSUPPORT_LIBS TRUE CACHE BOOL "" FORCE)
 
-SET(OSG_SUPPORT_ROOT /home/vossg/Projects/OpenSG/ToolBox/OpenSGDevMaster_Toolbox.Support.install CACHE PATH "" FORCE)
+SET(OSG_SUPPORT_ROOT /home/gerrit/Projects/OpenSG/ToolBox/OpenSGDevMaster_Toolbox.Support.install CACHE PATH "" FORCE)
 
-SET(COLLADA_DAE_INCLUDE_DIR /home/vossg/Projects/Collada/collada-dom/dom/include CACHE PATH "")
+SET(COLLADA_DAE_INCLUDE_DIR /home/gerrit/Projects/Collada/collada-dom/dom/include CACHE PATH "")
 
-SET(COLLADA_DOM_INCLUDE_DIR /home/vossg/Projects/Collada/collada-dom/dom/include/1.4 CACHE PATH "")
+SET(COLLADA_DOM_INCLUDE_DIR /home/gerrit/Projects/Collada/collada-dom/dom/include/1.4 CACHE PATH "")
 
-SET(COLLADA_LIBRARY_DEBUG /home/vossg/Projects/Collada/collada-dom/dom/build/linux-1.4-d/libcollada14dom-d.so CACHE FILEPATH "")
+SET(COLLADA_LIBRARY_DEBUG /home/gerrit/Projects/Collada/collada-dom/dom/build/linux-1.4-d/libcollada14dom-d.so CACHE FILEPATH "")
 
-SET(COLLADA_LIBRARY_RELEASE /home/vossg/Projects/Collada/collada-dom/dom/build/linux-1.4/libcollada14dom.so CACHE FILEPATH "")
+SET(COLLADA_LIBRARY_RELEASE /home/gerrit/Projects/Collada/collada-dom/dom/build/linux-1.4/libcollada14dom.so CACHE FILEPATH "")
 
 
-SET(CUDA_TOOLKIT_ROOT_DIR /home/vossg/Projects/NVidia/cuda CACHE PATH "")
+SET(CUDA_TOOLKIT_ROOT_DIR /home/gerrit/Projects/NVidia/cuda CACHE PATH "")
 
 SET(CUDA_NVCC_FLAGS "--maxrregcount=32;--compiler-options;-fno-strict-aliasing;--compiler-options;-fno-inline" CACHE STRING "")
 
 SET(CUDA_VERBOSE_BUILD ON CACHE BOOL "")
 
-SET(FMOD_INCLUDE_DIR /home/vossg/Projects/OpenSG/Support/Unpack/fmodapi42807linux64/api/inc CACHE PATH "")
-SET(FMOD_LIBRARY_DEBUG /home/vossg/Projects/OpenSG/Support/Unpack/fmodapi42807linux64/api/lib/libfmodex64.so CACHE FILEPATH "")
-SET(FMOD_LIBRARY_RELEASE /home/vossg/Projects/OpenSG/Support/Unpack/fmodapi42807linux64/api/lib/libfmodex64.so CACHE FILEPATH "")
+SET(FMOD_INCLUDE_DIR /home/gerrit/Projects/OpenSG/Support/Unpack/fmodapi42807linux64/api/inc CACHE PATH "")
+SET(FMOD_LIBRARY_DEBUG /home/gerrit/Projects/OpenSG/Support/Unpack/fmodapi42807linux64/api/lib/libfmodex64.so CACHE FILEPATH "")
+SET(FMOD_LIBRARY_RELEASE /home/gerrit/Projects/OpenSG/Support/Unpack/fmodapi42807linux64/api/lib/libfmodex64.so CACHE FILEPATH "")
 
-SET(ODE_INCLUDE_DIR /home/vossg/Projects/OpenSG/Support/Builds/ode-0.11.1.install/include CACHE PATH "")
-SET(ODE_LIBRARY_DEBUG /home/vossg/Projects/OpenSG/Support/Builds/ode-0.11.1.install/lib/libode.a CACHE FILEPATH "")
-SET(ODE_LIBRARY_RELEASE /home/vossg/Projects/OpenSG/Support/Builds/ode-0.11.1.install/lib/libode.a CACHE FILEPATH "")
+SET(ODE_INCLUDE_DIR /home/gerrit/Projects/OpenSG/Support/Builds/ode-0.11.1.install/include CACHE PATH "")
+SET(ODE_LIBRARY_DEBUG /home/gerrit/Projects/OpenSG/Support/Builds/ode-0.11.1.install/lib/libode.a CACHE FILEPATH "")
+SET(ODE_LIBRARY_RELEASE /home/gerrit/Projects/OpenSG/Support/Builds/ode-0.11.1.install/lib/libode.a CACHE FILEPATH "")

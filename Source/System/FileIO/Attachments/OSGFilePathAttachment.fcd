@@ -3,7 +3,7 @@
 <FieldContainer
 	name="FilePathAttachment"
 	parent="Attachment"
-    library="FileIO"
+    library="TBFileIO"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="true"

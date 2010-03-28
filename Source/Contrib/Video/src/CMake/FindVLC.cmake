@@ -75,7 +75,7 @@ FIND_PATH(VLC_INCLUDE_DIR vlc/vlc.h
     PATHS ${__VLC_INCLUDE_SEARCH_DIRS})
 
 IF(NOT EXISTS ${VLC_INCLUDE_DIR})
-    MESSAGE(SEND_ERROR "Could not find VLC Include Dir from: ${__VLC_INCLUDE_SEARCH_DIRS}.")
+    MESSAGE(STATUS "Could not find VLC Include Dir from: ${__VLC_INCLUDE_SEARCH_DIRS}.")
 ENDIF(NOT EXISTS ${VLC_INCLUDE_DIR})
 
 # locate libraries
