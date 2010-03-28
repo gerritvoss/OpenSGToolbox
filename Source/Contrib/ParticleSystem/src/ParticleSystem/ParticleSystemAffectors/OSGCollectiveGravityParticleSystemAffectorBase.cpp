@@ -134,7 +134,6 @@ void CollectiveGravityParticleSystemAffectorBase::classDescInserter(TypeObject &
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "GravitationalConstant",
@@ -147,7 +146,6 @@ void CollectiveGravityParticleSystemAffectorBase::classDescInserter(TypeObject &
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "ParticleMassSource",
@@ -159,7 +157,6 @@ void CollectiveGravityParticleSystemAffectorBase::classDescInserter(TypeObject &
         static_cast<FieldGetMethodSig >(&CollectiveGravityParticleSystemAffector::getHandleParticleMassSource));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -222,7 +219,6 @@ CollectiveGravityParticleSystemAffectorBase::TypeObject CollectiveGravityParticl
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -69,7 +69,6 @@
 
 #include "OSGDistanceKillParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class DistanceKillParticleAffector;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceKillParticleAffectorBase : pu
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFReal32          SFKillDistanceType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceKillParticleAffectorBase : pu
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

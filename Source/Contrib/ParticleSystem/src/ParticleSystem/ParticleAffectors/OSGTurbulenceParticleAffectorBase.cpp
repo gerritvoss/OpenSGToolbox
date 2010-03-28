@@ -165,7 +165,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Amplitude",
@@ -177,7 +176,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleAmplitude));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -191,7 +189,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Phase",
@@ -203,7 +200,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandlePhase));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -217,7 +213,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Frequency",
@@ -229,7 +224,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleFrequency));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -243,7 +237,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
         "Beacon",
@@ -255,7 +248,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleBeacon));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -269,7 +261,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MaxDistance",
@@ -281,7 +272,6 @@ void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleMaxDistance));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -416,7 +406,6 @@ TurbulenceParticleAffectorBase::TypeObject TurbulenceParticleAffectorBase::_type
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -73,7 +73,6 @@
 
 #include "OSGPhysicsGeomFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsGeom;
@@ -148,7 +147,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsGeomBase : public Attachment
     typedef SFUInt64          SFCollideBitsType;
     typedef SFUnrecPhysicsSpacePtr SFSpaceType;
     typedef SFBool            SFEnableType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -277,7 +275,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsGeomBase : public Attachment
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

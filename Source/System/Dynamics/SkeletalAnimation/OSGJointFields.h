@@ -68,8 +68,8 @@ class Joint;
 
 OSG_GEN_CONTAINERPTR(Joint);
 
-/*! \ingroup GrpDynamicsFieldTraits
-    \ingroup GrpLibOSGDynamics
+/*! \ingroup GrpTBAnimationFieldTraits
+    \ingroup GrpLibOSGTBAnimation
  */
 template <>
 struct FieldTraits<Joint *> :
@@ -147,30 +147,30 @@ const Char8 *FieldTraits<Joint *, 0>::getMName<NoRefCountPolicy>(void)
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<Joint *,
                       RecordedRefCountPolicy  > SFRecJointPtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<Joint *,
                       UnrecordedRefCountPolicy> SFUnrecJointPtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<Joint *,
                       WeakRefCountPolicy      > SFWeakJointPtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<Joint *,
                       NoRefCountPolicy        > SFUncountedJointPtr;
 
 
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<Joint *,
                       RecordedRefCountPolicy  > MFRecJointPtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<Joint *,
                       UnrecordedRefCountPolicy> MFUnrecJointPtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<Joint *,
                       WeakRefCountPolicy      > MFWeakJointPtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<Joint *,
                       NoRefCountPolicy        > MFUncountedJointPtr;
 
@@ -179,37 +179,37 @@ typedef PointerMField<Joint *,
 
 #else // these are the doxygen hacks
 
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFRecJointPtr : 
     public PointerSField<Joint *,
                          RecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUnrecJointPtr : 
     public PointerSField<Joint *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFWeakJointPtr :
     public PointerSField<Joint *,
                          WeakRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUncountedJointPtr :
     public PointerSField<Joint *,
                          NoRefCountPolicy> {};
 
 
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFRecJointPtr :
     public PointerMField<Joint *,
                          RecordedRefCountPolicy  > {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFUnrecJointPtr :
     public PointerMField<Joint *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFWeakJointPtr :
     public PointerMField<Joint *,
                          WeakRefCountPolicy      > {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFUncountedJointPtr :
     public PointerMField<Joint *,
                          NoRefCountPolicy        > {};

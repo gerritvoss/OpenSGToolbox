@@ -125,7 +125,6 @@ void PhysicsSphereGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsSphereGeom::getHandleRadius));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -168,7 +167,6 @@ PhysicsSphereGeomBase::TypeObject PhysicsSphereGeomBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -121,8 +121,6 @@ const Char8 *DistanceKillParticleAffectorBase::getClassname(void)
 {
     return "DistanceKillParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(DistanceKillParticleAffector);
 
 OSG_END_NAMESPACE

@@ -146,7 +146,6 @@ void DiscDistribution2DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MinRadius",
@@ -158,7 +157,6 @@ void DiscDistribution2DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscDistribution2D::getHandleMinRadius));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -172,7 +170,6 @@ void DiscDistribution2DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MinTheta",
@@ -184,7 +181,6 @@ void DiscDistribution2DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscDistribution2D::getHandleMinTheta));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -198,7 +194,6 @@ void DiscDistribution2DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SurfaceOrEdge",
@@ -210,7 +205,6 @@ void DiscDistribution2DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscDistribution2D::getHandleSurfaceOrEdge));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -304,7 +298,6 @@ DiscDistribution2DBase::TypeObject DiscDistribution2DBase::_type(
     "</FieldContainer>\n",
     "An DiscDistribution2D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

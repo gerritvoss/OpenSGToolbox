@@ -126,7 +126,6 @@ void SoundGroupBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SoundGroup::getHandleSounds));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ SoundGroupBase::TypeObject SoundGroupBase::_type(
     "</FieldContainer>\n",
     "A SoundGroup.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

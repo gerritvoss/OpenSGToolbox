@@ -93,8 +93,6 @@ const Char8 *ParticleSystemDrawerBase::getClassname(void)
 {
     return "ParticleSystemDrawer";
 }
-
-
 OSG_GEN_CONTAINERPTR(ParticleSystemDrawer);
 
 OSG_END_NAMESPACE

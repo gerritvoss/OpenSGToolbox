@@ -224,8 +224,6 @@ const Char8 *GravityParticleAffectorBase::getClassname(void)
 {
     return "GravityParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(GravityParticleAffector);
 
 OSG_END_NAMESPACE

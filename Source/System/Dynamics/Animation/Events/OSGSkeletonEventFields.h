@@ -68,8 +68,8 @@ class SkeletonEvent;
 
 OSG_GEN_CONTAINERPTR(SkeletonEvent);
 
-/*! \ingroup GrpDynamicsFieldTraits
-    \ingroup GrpLibOSGDynamics
+/*! \ingroup GrpTBAnimationFieldTraits
+    \ingroup GrpLibOSGTBAnimation
  */
 template <>
 struct FieldTraits<SkeletonEvent *> :
@@ -120,16 +120,16 @@ const Char8 *FieldTraits<SkeletonEvent *, 0>::getSName<NoRefCountPolicy>(void)
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<SkeletonEvent *,
                       RecordedRefCountPolicy  > SFRecSkeletonEventPtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<SkeletonEvent *,
                       UnrecordedRefCountPolicy> SFUnrecSkeletonEventPtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<SkeletonEvent *,
                       WeakRefCountPolicy      > SFWeakSkeletonEventPtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<SkeletonEvent *,
                       NoRefCountPolicy        > SFUncountedSkeletonEventPtr;
 
@@ -138,19 +138,19 @@ typedef PointerSField<SkeletonEvent *,
 
 #else // these are the doxygen hacks
 
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFRecSkeletonEventPtr : 
     public PointerSField<SkeletonEvent *,
                          RecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUnrecSkeletonEventPtr : 
     public PointerSField<SkeletonEvent *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFWeakSkeletonEventPtr :
     public PointerSField<SkeletonEvent *,
                          WeakRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUncountedSkeletonEventPtr :
     public PointerSField<SkeletonEvent *,
                          NoRefCountPolicy> {};

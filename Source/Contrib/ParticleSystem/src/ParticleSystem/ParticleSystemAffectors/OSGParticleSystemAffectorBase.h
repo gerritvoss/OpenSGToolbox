@@ -68,7 +68,6 @@
 
 #include "OSGParticleSystemAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleSystemAffector;
@@ -90,7 +89,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemAffectorBase : public A
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemAffectorBase : public A
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

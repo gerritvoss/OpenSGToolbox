@@ -233,8 +233,6 @@ const Char8 *QuadDistribution2DBase::getClassname(void)
 {
     return "QuadDistribution2D";
 }
-
-
 OSG_GEN_CONTAINERPTR(QuadDistribution2D);
 
 OSG_END_NAMESPACE

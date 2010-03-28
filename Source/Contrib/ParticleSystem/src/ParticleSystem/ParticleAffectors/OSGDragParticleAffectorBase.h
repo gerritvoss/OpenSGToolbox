@@ -71,7 +71,6 @@
 
 #include "OSGDragParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class DragParticleAffector;
@@ -138,7 +137,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DragParticleAffectorBase : public Par
     typedef SFReal32          SFMotionAttenuationType;
     typedef SFReal32          SFInheritVelocityType;
     typedef SFUnrecNodePtr    SFBeaconType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -255,7 +253,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DragParticleAffectorBase : public Par
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -139,7 +139,6 @@ void RadialParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Attenuation",
@@ -151,7 +150,6 @@ void RadialParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RadialParticleAffector::getHandleAttenuation));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -165,7 +163,6 @@ void RadialParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
         "Beacon",
@@ -177,7 +174,6 @@ void RadialParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RadialParticleAffector::getHandleBeacon));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -250,7 +246,6 @@ RadialParticleAffectorBase::TypeObject RadialParticleAffectorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

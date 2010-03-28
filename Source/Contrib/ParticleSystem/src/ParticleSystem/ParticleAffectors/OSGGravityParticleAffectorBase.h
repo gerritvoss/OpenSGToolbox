@@ -71,7 +71,6 @@
 
 #include "OSGGravityParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class GravityParticleAffector;
@@ -122,7 +121,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GravityParticleAffectorBase : public 
     typedef SFReal32          SFAttenuationType;
     typedef SFReal32          SFMaxDistanceType;
     typedef SFUnrecNodePtr    SFBeaconType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -211,7 +209,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GravityParticleAffectorBase : public 
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

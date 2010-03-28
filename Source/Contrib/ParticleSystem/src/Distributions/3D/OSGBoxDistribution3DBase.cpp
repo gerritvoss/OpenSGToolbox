@@ -134,7 +134,6 @@ void BoxDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
         "MaxPoint",
@@ -147,7 +146,6 @@ void BoxDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SurfaceOrVolume",
@@ -159,7 +157,6 @@ void BoxDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&BoxDistribution3D::getHandleSurfaceOrVolume));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -223,7 +220,6 @@ BoxDistribution3DBase::TypeObject BoxDistribution3DBase::_type(
     "</FieldContainer>\n",
     "An BoxDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

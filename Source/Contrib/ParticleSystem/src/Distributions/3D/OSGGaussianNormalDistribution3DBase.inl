@@ -205,8 +205,6 @@ const Char8 *GaussianNormalDistribution3DBase::getClassname(void)
 {
     return "GaussianNormalDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(GaussianNormalDistribution3D);
 
 OSG_END_NAMESPACE

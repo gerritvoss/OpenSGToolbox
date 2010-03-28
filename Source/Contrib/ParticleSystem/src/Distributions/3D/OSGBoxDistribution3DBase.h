@@ -70,7 +70,6 @@
 
 #include "OSGBoxDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class BoxDistribution3D;
@@ -113,7 +112,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING BoxDistribution3DBase : public Distri
     typedef SFPnt3f           SFMinPointType;
     typedef SFPnt3f           SFMaxPointType;
     typedef SFUInt32          SFSurfaceOrVolumeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -185,7 +183,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING BoxDistribution3DBase : public Distri
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

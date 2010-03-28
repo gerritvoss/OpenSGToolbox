@@ -112,8 +112,6 @@ const Char8 *PhysicsTriMeshGeomBase::getClassname(void)
 {
     return "PhysicsTriMeshGeom";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsTriMeshGeom);
 
 OSG_END_NAMESPACE

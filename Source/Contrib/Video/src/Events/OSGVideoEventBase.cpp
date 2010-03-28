@@ -138,7 +138,6 @@ VideoEventBase::TypeObject VideoEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &VideoEventBase::getType(void)

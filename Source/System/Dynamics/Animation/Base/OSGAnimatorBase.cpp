@@ -126,7 +126,7 @@ AnimatorBase::TypeObject AnimatorBase::_type(
     "<FieldContainer\n"
     "\tname=\"Animator\"\n"
     "\tparent=\"FieldContainer\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
     "\tsystemcomponent=\"true\"\n"

@@ -69,7 +69,6 @@
 
 #include "OSGDistanceAttractRepelParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class DistanceAttractRepelParticleAffector;
@@ -120,7 +119,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceAttractRepelParticleAffectorB
     typedef SFReal32          SFQuadraticType;
     typedef SFReal32          SFLinearType;
     typedef SFReal32          SFConstantType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -206,7 +204,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceAttractRepelParticleAffectorB
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -164,7 +164,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Normal",
@@ -176,7 +175,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionEvent::getHandleNormal));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecPhysicsGeomPtr::Description(
         SFUnrecPhysicsGeomPtr::getClassType(),
@@ -190,7 +188,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecPhysicsGeomPtr::Description(
         SFUnrecPhysicsGeomPtr::getClassType(),
         "Object2Geom",
@@ -202,7 +199,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionEvent::getHandleObject2Geom));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt64::Description(
         SFUInt64::getClassType(),
@@ -216,7 +212,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt64::Description(
         SFUInt64::getClassType(),
         "Object1CollideBits",
@@ -228,7 +223,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionEvent::getHandleObject1CollideBits));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt64::Description(
         SFUInt64::getClassType(),
@@ -242,7 +236,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt64::Description(
         SFUInt64::getClassType(),
         "Object2CollideBits",
@@ -254,7 +247,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionEvent::getHandleObject2CollideBits));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -268,7 +260,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Object2Velocity",
@@ -281,7 +272,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "ProjectedNormalSpeed",
@@ -293,7 +283,6 @@ void CollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionEvent::getHandleProjectedNormalSpeed));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -440,7 +429,6 @@ CollisionEventBase::TypeObject CollisionEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -71,7 +71,6 @@
 
 #include "OSGDistanceParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class DistanceParticleAffector;
@@ -118,7 +117,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceParticleAffectorBase : public
     typedef SFUnrecNodePtr    SFDistanceFromNodeType;
     typedef SFUnrecNodePtr    SFParticleSystemNodeType;
     typedef SFUnrecCameraPtr  SFDistanceFromCameraType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -196,7 +194,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceParticleAffectorBase : public
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

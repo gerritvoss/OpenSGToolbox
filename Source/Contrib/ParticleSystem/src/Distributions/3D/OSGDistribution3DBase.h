@@ -68,7 +68,6 @@
 
 #include "OSGDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class Distribution3D;
@@ -90,7 +89,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING Distribution3DBase : public Distribut
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING Distribution3DBase : public Distribut
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

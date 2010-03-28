@@ -302,8 +302,6 @@ const Char8 *DynamicsParticleGeneratorBase::getClassname(void)
 {
     return "DynamicsParticleGenerator";
 }
-
-
 OSG_GEN_CONTAINERPTR(DynamicsParticleGenerator);
 
 OSG_END_NAMESPACE

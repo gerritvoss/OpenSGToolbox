@@ -138,7 +138,6 @@ void PhysicsRayGeomBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
         "rayPosition",
@@ -150,7 +149,6 @@ void PhysicsRayGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsRayGeom::getHandleRayPosition));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -164,7 +162,6 @@ void PhysicsRayGeomBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "closestHit",
@@ -176,7 +173,6 @@ void PhysicsRayGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsRayGeom::getHandleClosestHit));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -248,7 +244,6 @@ PhysicsRayGeomBase::TypeObject PhysicsRayGeomBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

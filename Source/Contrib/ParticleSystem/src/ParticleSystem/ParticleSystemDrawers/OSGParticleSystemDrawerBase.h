@@ -68,7 +68,6 @@
 
 #include "OSGParticleSystemDrawerFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleSystemDrawer;
@@ -90,7 +89,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemDrawerBase : public Att
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemDrawerBase : public Att
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

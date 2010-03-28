@@ -71,7 +71,6 @@
 
 #include "OSGAirParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class AirParticleAffector;
@@ -134,7 +133,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING AirParticleAffectorBase : public Part
     typedef SFReal32          SFMaxDistanceType;
     typedef SFBool            SFUseSpreadType;
     typedef SFUnrecNodePtr    SFBeaconType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -244,7 +242,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING AirParticleAffectorBase : public Part
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

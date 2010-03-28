@@ -162,7 +162,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
         "Center",
@@ -174,7 +173,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CylinderDistribution3D::getHandleCenter));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -188,7 +186,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Tangent",
@@ -200,7 +197,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CylinderDistribution3D::getHandleTangent));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -214,7 +210,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "InnerRadius",
@@ -226,7 +221,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CylinderDistribution3D::getHandleInnerRadius));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -240,7 +234,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MinTheta",
@@ -252,7 +245,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CylinderDistribution3D::getHandleMinTheta));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -266,7 +258,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SurfaceOrVolume",
@@ -278,7 +269,6 @@ void CylinderDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CylinderDistribution3D::getHandleSurfaceOrVolume));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -412,7 +402,6 @@ CylinderDistribution3DBase::TypeObject CylinderDistribution3DBase::_type(
     "</FieldContainer>\n",
     "An CylinderDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

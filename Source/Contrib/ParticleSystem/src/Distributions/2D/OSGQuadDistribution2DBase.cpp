@@ -142,7 +142,6 @@ void QuadDistribution2DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Point2",
@@ -154,7 +153,6 @@ void QuadDistribution2DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&QuadDistribution2D::getHandlePoint2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
@@ -168,7 +166,6 @@ void QuadDistribution2DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Point4",
@@ -181,7 +178,6 @@ void QuadDistribution2DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SurfaceOrEdge",
@@ -193,7 +189,6 @@ void QuadDistribution2DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&QuadDistribution2D::getHandleSurfaceOrEdge));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -277,7 +272,6 @@ QuadDistribution2DBase::TypeObject QuadDistribution2DBase::_type(
     "</FieldContainer>\n",
     "An QuadDistribution2D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

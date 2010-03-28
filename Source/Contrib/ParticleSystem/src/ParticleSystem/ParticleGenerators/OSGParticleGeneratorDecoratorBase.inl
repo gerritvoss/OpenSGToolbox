@@ -112,8 +112,6 @@ const Char8 *ParticleGeneratorDecoratorBase::getClassname(void)
 {
     return "ParticleGeneratorDecorator";
 }
-
-
 OSG_GEN_CONTAINERPTR(ParticleGeneratorDecorator);
 
 OSG_END_NAMESPACE

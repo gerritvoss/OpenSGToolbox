@@ -68,7 +68,6 @@
 
 #include "OSGPhysicsPlane2DJointFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsPlane2DJoint;
@@ -90,7 +89,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsPlane2DJointBase : public PhysicsJoin
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsPlane2DJointBase : public PhysicsJoin
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

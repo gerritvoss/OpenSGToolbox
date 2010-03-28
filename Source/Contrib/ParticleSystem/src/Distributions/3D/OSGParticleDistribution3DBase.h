@@ -69,7 +69,6 @@
 
 #include "OSGParticleDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleDistribution3D;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleDistribution3DBase : public D
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecParticleSystemPtr SFSystemType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -165,7 +163,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleDistribution3DBase : public D
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

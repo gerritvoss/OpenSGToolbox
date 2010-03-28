@@ -170,7 +170,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "mu",
@@ -182,7 +181,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionContactParameters::getHandleMu));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -196,7 +194,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "bounce",
@@ -208,7 +205,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionContactParameters::getHandleBounce));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -222,7 +218,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "softCFM",
@@ -234,7 +229,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionContactParameters::getHandleSoftCFM));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -248,7 +242,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "motion1",
@@ -260,7 +253,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionContactParameters::getHandleMotion1));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -274,7 +266,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "motionN",
@@ -286,7 +277,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionContactParameters::getHandleMotionN));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -300,7 +290,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "slip2",
@@ -312,7 +301,6 @@ void CollisionContactParametersBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionContactParameters::getHandleSlip2));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -453,7 +441,6 @@ CollisionContactParametersBase::TypeObject CollisionContactParametersBase::_type
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

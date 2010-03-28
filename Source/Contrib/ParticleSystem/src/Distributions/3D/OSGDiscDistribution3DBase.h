@@ -70,7 +70,6 @@
 
 #include "OSGDiscDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class DiscDistribution3D;
@@ -137,7 +136,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscDistribution3DBase : public Distr
     typedef SFReal32          SFMinThetaType;
     typedef SFReal32          SFMaxThetaType;
     typedef SFUInt32          SFSurfaceOrEdgeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -237,7 +235,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscDistribution3DBase : public Distr
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

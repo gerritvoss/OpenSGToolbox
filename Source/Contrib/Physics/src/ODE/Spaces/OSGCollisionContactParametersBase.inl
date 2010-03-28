@@ -429,8 +429,6 @@ const Char8 *CollisionContactParametersBase::getClassname(void)
 {
     return "CollisionContactParameters";
 }
-
-
 OSG_GEN_CONTAINERPTR(CollisionContactParameters);
 
 OSG_END_NAMESPACE

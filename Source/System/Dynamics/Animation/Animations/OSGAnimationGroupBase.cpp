@@ -206,7 +206,7 @@ AnimationGroupBase::TypeObject AnimationGroupBase::_type(
     "<FieldContainer\n"
     "\tname=\"AnimationGroup\"\n"
     "\tparent=\"AttachmentContainer\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

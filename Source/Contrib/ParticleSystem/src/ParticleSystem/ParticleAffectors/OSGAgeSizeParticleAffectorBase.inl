@@ -137,8 +137,6 @@ const Char8 *AgeSizeParticleAffectorBase::getClassname(void)
 {
     return "AgeSizeParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(AgeSizeParticleAffector);
 
 OSG_END_NAMESPACE

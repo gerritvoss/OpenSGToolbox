@@ -70,7 +70,6 @@
 
 #include "OSGPhysicsQuadTreeSpaceFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsQuadTreeSpace;
@@ -113,7 +112,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsQuadTreeSpaceBase : public PhysicsSpa
     typedef SFPnt3f           SFCenterType;
     typedef SFVec3f           SFExtentType;
     typedef SFInt32           SFDepthType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -185,7 +183,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsQuadTreeSpaceBase : public PhysicsSpa
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

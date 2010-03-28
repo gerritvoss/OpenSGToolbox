@@ -130,7 +130,6 @@ void RateParticleDecoratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "TimeSinceLastGeneration",
@@ -142,7 +141,6 @@ void RateParticleDecoratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RateParticleDecorator::getHandleTimeSinceLastGeneration));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -195,7 +193,6 @@ RateParticleDecoratorBase::TypeObject RateParticleDecoratorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

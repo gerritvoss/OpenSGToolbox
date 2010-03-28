@@ -121,8 +121,6 @@ const Char8 *PhysicsHashSpaceBase::getClassname(void)
 {
     return "PhysicsHashSpace";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsHashSpace);
 
 OSG_END_NAMESPACE

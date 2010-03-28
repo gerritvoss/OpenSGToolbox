@@ -126,7 +126,6 @@ void PhysicsSweepAndPruneSpaceBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsSweepAndPruneSpace::getHandleAxisOrder));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ PhysicsSweepAndPruneSpaceBase::TypeObject PhysicsSweepAndPruneSpaceBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

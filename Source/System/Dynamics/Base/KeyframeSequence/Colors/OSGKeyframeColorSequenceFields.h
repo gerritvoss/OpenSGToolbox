@@ -68,8 +68,8 @@ class KeyframeColorSequence;
 
 OSG_GEN_CONTAINERPTR(KeyframeColorSequence);
 
-/*! \ingroup GrpDynamicsFieldTraits
-    \ingroup GrpLibOSGDynamics
+/*! \ingroup GrpTBAnimationFieldTraits
+    \ingroup GrpLibOSGTBAnimation
  */
 template <>
 struct FieldTraits<KeyframeColorSequence *> :
@@ -147,30 +147,30 @@ const Char8 *FieldTraits<KeyframeColorSequence *, 0>::getMName<NoRefCountPolicy>
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<KeyframeColorSequence *,
                       RecordedRefCountPolicy  > SFRecKeyframeColorSequencePtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<KeyframeColorSequence *,
                       UnrecordedRefCountPolicy> SFUnrecKeyframeColorSequencePtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<KeyframeColorSequence *,
                       WeakRefCountPolicy      > SFWeakKeyframeColorSequencePtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<KeyframeColorSequence *,
                       NoRefCountPolicy        > SFUncountedKeyframeColorSequencePtr;
 
 
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<KeyframeColorSequence *,
                       RecordedRefCountPolicy  > MFRecKeyframeColorSequencePtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<KeyframeColorSequence *,
                       UnrecordedRefCountPolicy> MFUnrecKeyframeColorSequencePtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<KeyframeColorSequence *,
                       WeakRefCountPolicy      > MFWeakKeyframeColorSequencePtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<KeyframeColorSequence *,
                       NoRefCountPolicy        > MFUncountedKeyframeColorSequencePtr;
 
@@ -179,37 +179,37 @@ typedef PointerMField<KeyframeColorSequence *,
 
 #else // these are the doxygen hacks
 
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFRecKeyframeColorSequencePtr : 
     public PointerSField<KeyframeColorSequence *,
                          RecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUnrecKeyframeColorSequencePtr : 
     public PointerSField<KeyframeColorSequence *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFWeakKeyframeColorSequencePtr :
     public PointerSField<KeyframeColorSequence *,
                          WeakRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUncountedKeyframeColorSequencePtr :
     public PointerSField<KeyframeColorSequence *,
                          NoRefCountPolicy> {};
 
 
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFRecKeyframeColorSequencePtr :
     public PointerMField<KeyframeColorSequence *,
                          RecordedRefCountPolicy  > {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFUnrecKeyframeColorSequencePtr :
     public PointerMField<KeyframeColorSequence *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFWeakKeyframeColorSequencePtr :
     public PointerMField<KeyframeColorSequence *,
                          WeakRefCountPolicy      > {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFUncountedKeyframeColorSequencePtr :
     public PointerMField<KeyframeColorSequence *,
                          NoRefCountPolicy        > {};

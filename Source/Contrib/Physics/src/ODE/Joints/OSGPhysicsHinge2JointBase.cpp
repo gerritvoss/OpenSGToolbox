@@ -190,7 +190,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "axis1",
@@ -202,7 +201,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHinge2Joint::getHandleAxis1));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -216,7 +214,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "hiStop",
@@ -228,7 +225,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHinge2Joint::getHandleHiStop));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -242,7 +238,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "bounce",
@@ -254,7 +249,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHinge2Joint::getHandleBounce));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -268,7 +262,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopERP",
@@ -280,7 +273,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHinge2Joint::getHandleStopERP));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -294,7 +286,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "hiStop2",
@@ -306,7 +297,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHinge2Joint::getHandleHiStop2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -320,7 +310,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "bounce2",
@@ -332,7 +321,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHinge2Joint::getHandleBounce2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -346,7 +334,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopERP2",
@@ -358,7 +345,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHinge2Joint::getHandleStopERP2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -372,7 +358,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "suspensionERP",
@@ -385,7 +370,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "suspensionCFM",
@@ -397,7 +381,6 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHinge2Joint::getHandleSuspensionCFM));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -597,7 +580,6 @@ PhysicsHinge2JointBase::TypeObject PhysicsHinge2JointBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

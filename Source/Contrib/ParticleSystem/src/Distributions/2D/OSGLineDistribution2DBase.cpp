@@ -130,7 +130,6 @@ void LineDistribution2DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Point2",
@@ -142,7 +141,6 @@ void LineDistribution2DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LineDistribution2D::getHandlePoint2));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -196,7 +194,6 @@ LineDistribution2DBase::TypeObject LineDistribution2DBase::_type(
     "</FieldContainer>\n",
     "An LineDistribution2D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

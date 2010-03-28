@@ -140,7 +140,6 @@ DistributionBase::TypeObject DistributionBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &DistributionBase::getType(void)

@@ -69,7 +69,6 @@
 
 #include "OSGConserveVelocityParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ConserveVelocityParticleAffector;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConserveVelocityParticleAffectorBase 
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFReal32          SFConserveType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConserveVelocityParticleAffectorBase 
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

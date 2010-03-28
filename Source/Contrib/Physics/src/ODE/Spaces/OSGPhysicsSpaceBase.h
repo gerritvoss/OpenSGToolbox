@@ -77,7 +77,6 @@
 #include "OSGMethodDescription.h"
 #include "OSGEventProducerPtrType.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsSpace;
@@ -146,7 +145,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
         CollisionMethodId = 1,
         NextProducedMethodId = CollisionMethodId + 1
     };
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -247,7 +245,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
     EventProducerPtr   &editEventProducer  (void);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

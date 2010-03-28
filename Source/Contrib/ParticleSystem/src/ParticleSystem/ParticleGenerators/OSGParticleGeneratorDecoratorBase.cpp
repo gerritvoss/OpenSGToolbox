@@ -126,7 +126,6 @@ void ParticleGeneratorDecoratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleGeneratorDecorator::getHandleDecoratee));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ ParticleGeneratorDecoratorBase::TypeObject ParticleGeneratorDecoratorBase::_type
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

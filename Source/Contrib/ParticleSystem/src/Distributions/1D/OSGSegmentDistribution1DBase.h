@@ -69,7 +69,6 @@
 
 #include "OSGSegmentDistribution1DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SegmentDistribution1D;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SegmentDistribution1DBase : public Di
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFVec2f           SFSegmentType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SegmentDistribution1DBase : public Di
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

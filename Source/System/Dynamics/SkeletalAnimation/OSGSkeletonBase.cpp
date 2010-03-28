@@ -158,7 +158,7 @@ SkeletonBase::TypeObject SkeletonBase::_type(
     "<FieldContainer\n"
     "\tname=\"Skeleton\"\n"
     "\tparent=\"AttachmentContainer\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

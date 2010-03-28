@@ -69,7 +69,6 @@
 
 #include "OSGPhysicsPlaneGeomFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsPlaneGeom;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsPlaneGeomBase : public PhysicsGeom
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFVec4f           SFParametersType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsPlaneGeomBase : public PhysicsGeom
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -263,7 +263,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt8::Description(
         SFUInt8::getClassType(),
         "numAxes",
@@ -275,7 +274,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleNumAxes));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -289,7 +287,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "axis2",
@@ -301,7 +298,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleAxis2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -315,7 +311,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt8::Description(
         SFUInt8::getClassType(),
         "axis1ReferenceFrame",
@@ -327,7 +322,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleAxis1ReferenceFrame));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt8::Description(
         SFUInt8::getClassType(),
@@ -341,7 +335,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt8::Description(
         SFUInt8::getClassType(),
         "axis3ReferenceFrame",
@@ -353,7 +346,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleAxis3ReferenceFrame));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -367,7 +359,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "fMax",
@@ -379,7 +370,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleFMax));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -393,7 +383,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "vel2",
@@ -405,7 +394,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleVel2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -419,7 +407,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "fudgeFactor2",
@@ -431,7 +418,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleFudgeFactor2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -445,7 +431,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "fMax3",
@@ -457,7 +442,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleFMax3));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -471,7 +455,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "hiStop",
@@ -483,7 +466,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleHiStop));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -497,7 +479,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "bounce",
@@ -509,7 +490,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleBounce));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -523,7 +503,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopERP",
@@ -535,7 +514,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleStopERP));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -549,7 +527,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "hiStop2",
@@ -561,7 +538,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleHiStop2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -575,7 +551,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "bounce2",
@@ -587,7 +562,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleBounce2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -601,7 +575,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopERP2",
@@ -613,7 +586,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleStopERP2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -627,7 +599,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "hiStop3",
@@ -639,7 +610,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleHiStop3));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -653,7 +623,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "bounce3",
@@ -665,7 +634,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleBounce3));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -679,7 +647,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopERP3",
@@ -692,7 +659,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopCFM3",
@@ -704,7 +670,6 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsAMotorJoint::getHandleStopCFM3));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -1088,7 +1053,6 @@ PhysicsAMotorJointBase::TypeObject PhysicsAMotorJointBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

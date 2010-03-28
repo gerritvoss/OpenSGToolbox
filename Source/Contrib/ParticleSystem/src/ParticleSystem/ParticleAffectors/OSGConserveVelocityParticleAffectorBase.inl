@@ -121,8 +121,6 @@ const Char8 *ConserveVelocityParticleAffectorBase::getClassname(void)
 {
     return "ConserveVelocityParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(ConserveVelocityParticleAffector);
 
 OSG_END_NAMESPACE

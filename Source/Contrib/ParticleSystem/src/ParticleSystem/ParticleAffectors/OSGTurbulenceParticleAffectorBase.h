@@ -72,7 +72,6 @@
 
 #include "OSGTurbulenceParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class TurbulenceParticleAffector;
@@ -143,7 +142,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING TurbulenceParticleAffectorBase : publ
     typedef SFUnrecNodePtr    SFBeaconType;
     typedef SFReal32          SFAttenuationType;
     typedef SFReal32          SFMaxDistanceType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -265,7 +263,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING TurbulenceParticleAffectorBase : publ
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

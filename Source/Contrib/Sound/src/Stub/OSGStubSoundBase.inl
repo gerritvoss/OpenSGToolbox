@@ -93,8 +93,6 @@ const Char8 *StubSoundBase::getClassname(void)
 {
     return "StubSound";
 }
-
-
 OSG_GEN_CONTAINERPTR(StubSound);
 
 OSG_END_NAMESPACE

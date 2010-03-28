@@ -69,7 +69,6 @@
 
 #include "OSGPhysicsBoxGeomFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsBoxGeom;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsBoxGeomBase : public PhysicsGeom
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFVec3f           SFLengthsType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsBoxGeomBase : public PhysicsGeom
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

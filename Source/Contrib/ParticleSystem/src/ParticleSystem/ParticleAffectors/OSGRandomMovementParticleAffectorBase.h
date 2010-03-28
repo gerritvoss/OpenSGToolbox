@@ -71,7 +71,6 @@
 
 #include "OSGRandomMovementParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class RandomMovementParticleAffector;
@@ -134,7 +133,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RandomMovementParticleAffectorBase : 
     typedef SFReal32          SFPersistanceType;
     typedef SFReal32          SFFrequencyType;
     typedef SFUInt32          SFOctavesType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -239,7 +237,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RandomMovementParticleAffectorBase : 
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

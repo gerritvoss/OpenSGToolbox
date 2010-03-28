@@ -252,8 +252,6 @@ const Char8 *NewtonParticleAffectorBase::getClassname(void)
 {
     return "NewtonParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(NewtonParticleAffector);
 
 OSG_END_NAMESPACE

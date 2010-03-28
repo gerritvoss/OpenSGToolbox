@@ -317,8 +317,6 @@ const Char8 *ConeDistribution3DBase::getClassname(void)
 {
     return "ConeDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(ConeDistribution3D);
 
 OSG_END_NAMESPACE

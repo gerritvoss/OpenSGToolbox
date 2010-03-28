@@ -149,8 +149,6 @@ const Char8 *LineDistribution3DBase::getClassname(void)
 {
     return "LineDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(LineDistribution3D);
 
 OSG_END_NAMESPACE

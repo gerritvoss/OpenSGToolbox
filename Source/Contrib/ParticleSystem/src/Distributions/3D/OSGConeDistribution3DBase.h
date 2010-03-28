@@ -70,7 +70,6 @@
 
 #include "OSGConeDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ConeDistribution3D;
@@ -133,7 +132,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConeDistribution3DBase : public Distr
     typedef SFReal32          SFMinType;
     typedef SFReal32          SFMaxType;
     typedef SFUInt32          SFSurfaceOrVolumeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -240,7 +238,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConeDistribution3DBase : public Distr
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -143,7 +143,6 @@ void GravityParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Direction",
@@ -155,7 +154,6 @@ void GravityParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GravityParticleAffector::getHandleDirection));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -169,7 +167,6 @@ void GravityParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MaxDistance",
@@ -182,7 +179,6 @@ void GravityParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
         "Beacon",
@@ -194,7 +190,6 @@ void GravityParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GravityParticleAffector::getHandleBeacon));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -277,7 +272,6 @@ GravityParticleAffectorBase::TypeObject GravityParticleAffectorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

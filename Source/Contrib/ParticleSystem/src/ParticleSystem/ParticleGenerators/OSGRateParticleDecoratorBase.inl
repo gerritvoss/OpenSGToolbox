@@ -149,8 +149,6 @@ const Char8 *RateParticleDecoratorBase::getClassname(void)
 {
     return "RateParticleDecorator";
 }
-
-
 OSG_GEN_CONTAINERPTR(RateParticleDecorator);
 
 OSG_END_NAMESPACE

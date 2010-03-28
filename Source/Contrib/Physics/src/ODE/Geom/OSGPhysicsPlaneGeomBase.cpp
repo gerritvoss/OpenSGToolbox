@@ -125,7 +125,6 @@ void PhysicsPlaneGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPlaneGeom::getHandleParameters));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -168,7 +167,6 @@ PhysicsPlaneGeomBase::TypeObject PhysicsPlaneGeomBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -121,8 +121,6 @@ const Char8 *PhysicsSweepAndPruneSpaceBase::getClassname(void)
 {
     return "PhysicsSweepAndPruneSpace";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsSweepAndPruneSpace);
 
 OSG_END_NAMESPACE

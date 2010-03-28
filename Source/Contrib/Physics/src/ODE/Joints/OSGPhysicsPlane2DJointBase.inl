@@ -93,8 +93,6 @@ const Char8 *PhysicsPlane2DJointBase::getClassname(void)
 {
     return "PhysicsPlane2DJoint";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsPlane2DJoint);
 
 OSG_END_NAMESPACE

@@ -177,8 +177,6 @@ const Char8 *CollectiveGravityParticleSystemAffectorBase::getClassname(void)
 {
     return "CollectiveGravityParticleSystemAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(CollectiveGravityParticleSystemAffector);
 
 OSG_END_NAMESPACE

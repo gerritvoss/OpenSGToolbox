@@ -69,7 +69,6 @@
 
 #include "OSGPhysicsBallJointFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsBallJoint;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsBallJointBase : public PhysicsJoint
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFVec3f           SFAnchorType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsBallJointBase : public PhysicsJoint
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

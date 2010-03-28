@@ -126,7 +126,6 @@ void ParticleDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleDistribution3D::getHandleSystem));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ ParticleDistribution3DBase::TypeObject ParticleDistribution3DBase::_type(
     "</FieldContainer>\n",
     "An BoxDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

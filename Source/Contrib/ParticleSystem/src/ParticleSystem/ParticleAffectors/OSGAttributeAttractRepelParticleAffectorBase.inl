@@ -261,8 +261,6 @@ const Char8 *AttributeAttractRepelParticleAffectorBase::getClassname(void)
 {
     return "AttributeAttractRepelParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(AttributeAttractRepelParticleAffector);
 
 OSG_END_NAMESPACE

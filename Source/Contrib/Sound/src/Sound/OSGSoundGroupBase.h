@@ -69,7 +69,6 @@
 
 #include "OSGSoundGroupFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SoundGroup;
@@ -104,7 +103,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundGroupBase : public AttachmentContainer
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef MFUnrecSoundPtr   MFSoundsType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -170,7 +168,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundGroupBase : public AttachmentContainer
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

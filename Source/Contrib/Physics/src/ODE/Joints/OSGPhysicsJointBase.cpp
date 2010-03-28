@@ -136,7 +136,6 @@ void PhysicsJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecPhysicsBodyPtr::Description(
         SFUnrecPhysicsBodyPtr::getClassType(),
         "firstBody",
@@ -149,7 +148,6 @@ void PhysicsJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecPhysicsBodyPtr::Description(
         SFUnrecPhysicsBodyPtr::getClassType(),
         "secondBody",
@@ -161,7 +159,6 @@ void PhysicsJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsJoint::getHandleSecondBody));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -224,7 +221,6 @@ PhysicsJointBase::TypeObject PhysicsJointBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

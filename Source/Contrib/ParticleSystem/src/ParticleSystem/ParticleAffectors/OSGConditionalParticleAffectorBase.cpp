@@ -139,7 +139,6 @@ void ConditionalParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt8::Description(
         SFUInt8::getClassType(),
         "ConditionalOperator",
@@ -151,7 +150,6 @@ void ConditionalParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ConditionalParticleAffector::getHandleConditionalOperator));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -165,7 +163,6 @@ void ConditionalParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecParticleAffectorPtr::Description(
         MFUnrecParticleAffectorPtr::getClassType(),
         "Affectors",
@@ -177,7 +174,6 @@ void ConditionalParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ConditionalParticleAffector::getHandleAffectors));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -249,7 +245,6 @@ ConditionalParticleAffectorBase::TypeObject ConditionalParticleAffectorBase::_ty
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

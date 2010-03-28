@@ -182,7 +182,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "axis1",
@@ -194,7 +193,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPRJoint::getHandleAxis1));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -208,7 +206,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "hiStop",
@@ -220,7 +217,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPRJoint::getHandleHiStop));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -234,7 +230,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "bounce",
@@ -246,7 +241,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPRJoint::getHandleBounce));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -260,7 +254,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopERP",
@@ -272,7 +265,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPRJoint::getHandleStopERP));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -286,7 +278,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "hiStop2",
@@ -298,7 +289,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPRJoint::getHandleHiStop2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -312,7 +302,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "bounce2",
@@ -324,7 +313,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPRJoint::getHandleBounce2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -338,7 +326,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopERP2",
@@ -351,7 +338,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopCFM2",
@@ -363,7 +349,6 @@ void PhysicsPRJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPRJoint::getHandleStopCFM2));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -543,7 +528,6 @@ PhysicsPRJointBase::TypeObject PhysicsPRJointBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

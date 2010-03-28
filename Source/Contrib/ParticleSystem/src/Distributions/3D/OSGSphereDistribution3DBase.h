@@ -70,7 +70,6 @@
 
 #include "OSGSphereDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SphereDistribution3D;
@@ -133,7 +132,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SphereDistribution3DBase : public Dis
     typedef SFReal32          SFMinZType;
     typedef SFReal32          SFMaxZType;
     typedef SFUInt32          SFSurfaceOrVolumeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -240,7 +238,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SphereDistribution3DBase : public Dis
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -72,7 +72,6 @@
 
 #include "OSGParticleEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleEvent;
@@ -151,7 +150,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
     typedef SFVec3f           SFParticleSecVelocityType;
     typedef SFVec3f           SFParticleAccelerationType;
     typedef SFStringToUInt32Map SFParticleAttributesType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -250,7 +248,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

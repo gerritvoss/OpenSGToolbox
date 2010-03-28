@@ -140,7 +140,6 @@ ParticleSystemEventBase::TypeObject ParticleSystemEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ParticleSystemEventBase::getType(void)

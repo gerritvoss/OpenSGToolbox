@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,7 +69,6 @@
 
 #include "OSGPerlinNoiseDistribution1DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PerlinNoiseDistribution1D;
@@ -128,7 +127,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING PerlinNoiseDistribution1DBase : publi
     typedef SFUInt32          SFInterpolationTypeType;
     typedef SFReal32          SFPhaseType;
     typedef SFBool            SFUseSmoothingType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -228,7 +226,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING PerlinNoiseDistribution1DBase : publi
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

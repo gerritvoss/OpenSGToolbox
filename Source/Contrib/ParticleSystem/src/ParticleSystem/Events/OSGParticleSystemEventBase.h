@@ -68,7 +68,6 @@
 
 #include "OSGParticleSystemEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleSystemEvent;
@@ -90,7 +89,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemEventBase : public Even
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemEventBase : public Even
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

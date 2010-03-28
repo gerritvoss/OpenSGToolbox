@@ -171,7 +171,6 @@ void NodeParticleSystemCoreBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
         "PrototypeNode",
@@ -183,7 +182,6 @@ void NodeParticleSystemCoreBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandlePrototypeNode));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -197,7 +195,6 @@ void NodeParticleSystemCoreBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecNodePtr::Description(
         MFUnrecNodePtr::getClassType(),
         "ParticleNodes",
@@ -209,7 +206,6 @@ void NodeParticleSystemCoreBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleParticleNodes));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -231,7 +227,6 @@ void NodeParticleSystemCoreBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Normal",
@@ -243,7 +238,6 @@ void NodeParticleSystemCoreBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleNormal));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -264,7 +258,6 @@ void NodeParticleSystemCoreBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Up",
@@ -276,7 +269,6 @@ void NodeParticleSystemCoreBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleUp));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -410,7 +402,6 @@ NodeParticleSystemCoreBase::TypeObject NodeParticleSystemCoreBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -71,7 +71,6 @@
 
 #include "OSGConditionalParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ConditionalParticleAffector;
@@ -118,7 +117,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffectorBase : pub
     typedef SFUInt8           SFConditionalOperatorType;
     typedef SFUInt32          SFConditionalValueType;
     typedef MFUnrecParticleAffectorPtr MFAffectorsType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -205,7 +203,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffectorBase : pub
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

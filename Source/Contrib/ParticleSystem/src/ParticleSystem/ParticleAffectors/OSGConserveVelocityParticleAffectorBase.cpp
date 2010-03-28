@@ -125,7 +125,6 @@ void ConserveVelocityParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ConserveVelocityParticleAffector::getHandleConserve));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -168,7 +167,6 @@ ConserveVelocityParticleAffectorBase::TypeObject ConserveVelocityParticleAffecto
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -93,8 +93,6 @@ const Char8 *PhysicsSimpleSpaceBase::getClassname(void)
 {
     return "PhysicsSimpleSpace";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsSimpleSpace);
 
 OSG_END_NAMESPACE

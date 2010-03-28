@@ -70,7 +70,6 @@
 
 #include "OSGRadialParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class RadialParticleAffector;
@@ -117,7 +116,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RadialParticleAffectorBase : public P
     typedef SFReal32          SFAttenuationType;
     typedef SFReal32          SFMaxDistanceType;
     typedef SFUnrecNodePtr    SFBeaconType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -199,7 +197,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RadialParticleAffectorBase : public P
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

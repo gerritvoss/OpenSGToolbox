@@ -69,7 +69,6 @@
 
 #include "OSGBurstParticleGeneratorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class BurstParticleGenerator;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING BurstParticleGeneratorBase : public D
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUInt32          SFBurstAmountType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING BurstParticleGeneratorBase : public D
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -69,7 +69,6 @@
 
 #include "OSGPhysicsHashSpaceFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsHashSpace;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFVec2f           SFLevelsType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

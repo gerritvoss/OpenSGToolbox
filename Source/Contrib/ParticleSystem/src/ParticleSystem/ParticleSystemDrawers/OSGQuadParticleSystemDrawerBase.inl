@@ -317,8 +317,6 @@ const Char8 *QuadParticleSystemDrawerBase::getClassname(void)
 {
     return "QuadParticleSystemDrawer";
 }
-
-
 OSG_GEN_CONTAINERPTR(QuadParticleSystemDrawer);
 
 OSG_END_NAMESPACE

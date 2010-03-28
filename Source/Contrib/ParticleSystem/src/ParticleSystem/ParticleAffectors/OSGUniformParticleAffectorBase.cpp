@@ -147,7 +147,6 @@ void UniformParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Direction",
@@ -159,7 +158,6 @@ void UniformParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&UniformParticleAffector::getHandleDirection));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -173,7 +171,6 @@ void UniformParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MaxDistance",
@@ -185,7 +182,6 @@ void UniformParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&UniformParticleAffector::getHandleMaxDistance));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
@@ -199,7 +195,6 @@ void UniformParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "ParticleMass",
@@ -211,7 +206,6 @@ void UniformParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&UniformParticleAffector::getHandleParticleMass));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -304,7 +298,6 @@ UniformParticleAffectorBase::TypeObject UniformParticleAffectorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

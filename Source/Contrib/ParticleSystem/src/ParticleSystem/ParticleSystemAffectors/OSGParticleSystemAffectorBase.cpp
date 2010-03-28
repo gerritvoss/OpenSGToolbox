@@ -140,7 +140,6 @@ ParticleSystemAffectorBase::TypeObject ParticleSystemAffectorBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ParticleSystemAffectorBase::getType(void)

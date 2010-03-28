@@ -429,8 +429,6 @@ const Char8 *ParticleEventBase::getClassname(void)
 {
     return "ParticleEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(ParticleEvent);
 
 OSG_END_NAMESPACE

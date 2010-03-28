@@ -126,7 +126,6 @@ void GeoSurfaceDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GeoSurfaceDistribution3D::getHandleSurface));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ GeoSurfaceDistribution3DBase::TypeObject GeoSurfaceDistribution3DBase::_type(
     "</FieldContainer>\n",
     "An GeoSurfaceDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -149,8 +149,6 @@ const Char8 *LineDistribution2DBase::getClassname(void)
 {
     return "LineDistribution2D";
 }
-
-
 OSG_GEN_CONTAINERPTR(LineDistribution2D);
 
 OSG_END_NAMESPACE

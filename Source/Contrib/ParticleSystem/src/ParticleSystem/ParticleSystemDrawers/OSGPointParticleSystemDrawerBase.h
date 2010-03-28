@@ -69,7 +69,6 @@
 
 #include "OSGPointParticleSystemDrawerFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PointParticleSystemDrawer;
@@ -108,7 +107,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING PointParticleSystemDrawerBase : publi
         
     typedef SFReal32          SFPointSizeScalingType;
     typedef SFBool            SFForcePerParticleSizingType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -173,7 +171,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING PointParticleSystemDrawerBase : publi
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

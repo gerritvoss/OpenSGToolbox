@@ -130,7 +130,6 @@ void LineDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
         "Point2",
@@ -142,7 +141,6 @@ void LineDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LineDistribution3D::getHandlePoint2));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -196,7 +194,6 @@ LineDistribution3DBase::TypeObject LineDistribution3DBase::_type(
     "</FieldContainer>\n",
     "An LineDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

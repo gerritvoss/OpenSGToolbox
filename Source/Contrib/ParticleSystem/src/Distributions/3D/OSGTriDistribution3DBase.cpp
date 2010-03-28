@@ -138,7 +138,6 @@ void TriDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
         "Point2",
@@ -150,7 +149,6 @@ void TriDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TriDistribution3D::getHandlePoint2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
@@ -164,7 +162,6 @@ void TriDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SurfaceOrEdge",
@@ -176,7 +173,6 @@ void TriDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TriDistribution3D::getHandleSurfaceOrEdge));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -250,7 +246,6 @@ TriDistribution3DBase::TypeObject TriDistribution3DBase::_type(
     "</FieldContainer>\n",
     "An TriDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

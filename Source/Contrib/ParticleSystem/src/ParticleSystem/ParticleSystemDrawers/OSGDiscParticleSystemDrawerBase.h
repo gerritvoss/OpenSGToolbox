@@ -70,7 +70,6 @@
 
 #include "OSGDiscParticleSystemDrawerFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class DiscParticleSystemDrawer;
@@ -137,7 +136,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscParticleSystemDrawerBase : public
     typedef SFBool            SFUseNormalAsObjectSpaceRotationType;
     typedef SFReal32          SFCenterAlphaType;
     typedef SFReal32          SFEdgeAlphaType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -251,7 +249,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscParticleSystemDrawerBase : public
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -69,7 +69,6 @@
 
 #include "OSGPhysicsSphereGeomFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsSphereGeom;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSphereGeomBase : public PhysicsGeom
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFReal32          SFRadiusType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSphereGeomBase : public PhysicsGeom
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

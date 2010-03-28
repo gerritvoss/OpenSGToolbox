@@ -345,8 +345,6 @@ const Char8 *DiscParticleSystemDrawerBase::getClassname(void)
 {
     return "DiscParticleSystemDrawer";
 }
-
-
 OSG_GEN_CONTAINERPTR(DiscParticleSystemDrawer);
 
 OSG_END_NAMESPACE

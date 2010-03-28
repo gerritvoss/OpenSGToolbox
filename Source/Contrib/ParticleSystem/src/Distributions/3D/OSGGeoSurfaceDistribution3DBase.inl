@@ -112,8 +112,6 @@ const Char8 *GeoSurfaceDistribution3DBase::getClassname(void)
 {
     return "GeoSurfaceDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(GeoSurfaceDistribution3D);
 
 OSG_END_NAMESPACE

@@ -70,7 +70,6 @@
 
 #include "OSGDiscDistribution2DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class DiscDistribution2D;
@@ -125,7 +124,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscDistribution2DBase : public Distr
     typedef SFReal32          SFMinThetaType;
     typedef SFReal32          SFMaxThetaType;
     typedef SFUInt32          SFSurfaceOrEdgeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -218,7 +216,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscDistribution2DBase : public Distr
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

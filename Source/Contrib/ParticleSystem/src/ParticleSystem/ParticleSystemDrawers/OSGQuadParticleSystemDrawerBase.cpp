@@ -169,7 +169,6 @@ void QuadParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "UseImageSizeRatio",
@@ -181,7 +180,6 @@ void QuadParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&QuadParticleSystemDrawer::getHandleUseImageSizeRatio));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -203,7 +201,6 @@ void QuadParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Normal",
@@ -215,7 +212,6 @@ void QuadParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&QuadParticleSystemDrawer::getHandleNormal));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -236,7 +232,6 @@ void QuadParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Up",
@@ -248,7 +243,6 @@ void QuadParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&QuadParticleSystemDrawer::getHandleUp));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -262,7 +256,6 @@ void QuadParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Twist",
@@ -274,7 +267,6 @@ void QuadParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&QuadParticleSystemDrawer::getHandleTwist));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -409,7 +401,6 @@ QuadParticleSystemDrawerBase::TypeObject QuadParticleSystemDrawerBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

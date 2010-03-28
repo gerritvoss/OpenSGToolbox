@@ -140,7 +140,6 @@ Distribution3DBase::TypeObject Distribution3DBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &Distribution3DBase::getType(void)

@@ -76,7 +76,6 @@
 #include "OSGMethodDescription.h"
 #include "OSGEventProducerPtrType.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class GeometryCollisionParticleSystemAffector;
@@ -125,7 +124,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeometryCollisionParticleSystemAffect
         ParticleCollisionMethodId = 1,
         NextProducedMethodId = ParticleCollisionMethodId + 1
     };
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -222,7 +220,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeometryCollisionParticleSystemAffect
     EventProducerPtr   &editEventProducer  (void);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

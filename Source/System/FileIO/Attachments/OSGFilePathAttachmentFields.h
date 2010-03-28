@@ -68,8 +68,8 @@ class FilePathAttachment;
 
 OSG_GEN_CONTAINERPTR(FilePathAttachment);
 
-/*! \ingroup GrpFileIOFieldTraits
-    \ingroup GrpLibOSGFileIO
+/*! \ingroup GrpTBFileIOFieldTraits
+    \ingroup GrpLibOSGTBFileIO
  */
 template <>
 struct FieldTraits<FilePathAttachment *> :
@@ -147,30 +147,30 @@ const Char8 *FieldTraits<FilePathAttachment *, 0>::getMName<NoRefCountPolicy>(vo
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-/*! \ingroup GrpFileIOFieldSFields */
+/*! \ingroup GrpTBFileIOFieldSFields */
 typedef PointerSField<FilePathAttachment *,
                       RecordedRefCountPolicy  > SFRecFilePathAttachmentPtr;
-/*! \ingroup GrpFileIOFieldSFields */
+/*! \ingroup GrpTBFileIOFieldSFields */
 typedef PointerSField<FilePathAttachment *,
                       UnrecordedRefCountPolicy> SFUnrecFilePathAttachmentPtr;
-/*! \ingroup GrpFileIOFieldSFields */
+/*! \ingroup GrpTBFileIOFieldSFields */
 typedef PointerSField<FilePathAttachment *,
                       WeakRefCountPolicy      > SFWeakFilePathAttachmentPtr;
-/*! \ingroup GrpFileIOFieldSFields */
+/*! \ingroup GrpTBFileIOFieldSFields */
 typedef PointerSField<FilePathAttachment *,
                       NoRefCountPolicy        > SFUncountedFilePathAttachmentPtr;
 
 
-/*! \ingroup GrpFileIOFieldMFields */
+/*! \ingroup GrpTBFileIOFieldMFields */
 typedef PointerMField<FilePathAttachment *,
                       RecordedRefCountPolicy  > MFRecFilePathAttachmentPtr;
-/*! \ingroup GrpFileIOFieldMFields */
+/*! \ingroup GrpTBFileIOFieldMFields */
 typedef PointerMField<FilePathAttachment *,
                       UnrecordedRefCountPolicy> MFUnrecFilePathAttachmentPtr;
-/*! \ingroup GrpFileIOFieldMFields */
+/*! \ingroup GrpTBFileIOFieldMFields */
 typedef PointerMField<FilePathAttachment *,
                       WeakRefCountPolicy      > MFWeakFilePathAttachmentPtr;
-/*! \ingroup GrpFileIOFieldMFields */
+/*! \ingroup GrpTBFileIOFieldMFields */
 typedef PointerMField<FilePathAttachment *,
                       NoRefCountPolicy        > MFUncountedFilePathAttachmentPtr;
 
@@ -179,37 +179,37 @@ typedef PointerMField<FilePathAttachment *,
 
 #else // these are the doxygen hacks
 
-/*! \ingroup GrpFileIOFieldSFields \ingroup GrpLibOSGFileIO */
+/*! \ingroup GrpTBFileIOFieldSFields \ingroup GrpLibOSGTBFileIO */
 struct SFRecFilePathAttachmentPtr : 
     public PointerSField<FilePathAttachment *,
                          RecordedRefCountPolicy> {};
-/*! \ingroup GrpFileIOFieldSFields \ingroup GrpLibOSGFileIO */
+/*! \ingroup GrpTBFileIOFieldSFields \ingroup GrpLibOSGTBFileIO */
 struct SFUnrecFilePathAttachmentPtr : 
     public PointerSField<FilePathAttachment *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpFileIOFieldSFields \ingroup GrpLibOSGFileIO */
+/*! \ingroup GrpTBFileIOFieldSFields \ingroup GrpLibOSGTBFileIO */
 struct SFWeakFilePathAttachmentPtr :
     public PointerSField<FilePathAttachment *,
                          WeakRefCountPolicy> {};
-/*! \ingroup GrpFileIOFieldSFields \ingroup GrpLibOSGFileIO */
+/*! \ingroup GrpTBFileIOFieldSFields \ingroup GrpLibOSGTBFileIO */
 struct SFUncountedFilePathAttachmentPtr :
     public PointerSField<FilePathAttachment *,
                          NoRefCountPolicy> {};
 
 
-/*! \ingroup GrpFileIOFieldMFields \ingroup GrpLibOSGFileIO */
+/*! \ingroup GrpTBFileIOFieldMFields \ingroup GrpLibOSGTBFileIO */
 struct MFRecFilePathAttachmentPtr :
     public PointerMField<FilePathAttachment *,
                          RecordedRefCountPolicy  > {};
-/*! \ingroup GrpFileIOFieldMFields \ingroup GrpLibOSGFileIO */
+/*! \ingroup GrpTBFileIOFieldMFields \ingroup GrpLibOSGTBFileIO */
 struct MFUnrecFilePathAttachmentPtr :
     public PointerMField<FilePathAttachment *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpFileIOFieldMFields \ingroup GrpLibOSGFileIO */
+/*! \ingroup GrpTBFileIOFieldMFields \ingroup GrpLibOSGTBFileIO */
 struct MFWeakFilePathAttachmentPtr :
     public PointerMField<FilePathAttachment *,
                          WeakRefCountPolicy      > {};
-/*! \ingroup GrpFileIOFieldMFields \ingroup GrpLibOSGFileIO */
+/*! \ingroup GrpTBFileIOFieldMFields \ingroup GrpLibOSGTBFileIO */
 struct MFUncountedFilePathAttachmentPtr :
     public PointerMField<FilePathAttachment *,
                          NoRefCountPolicy        > {};

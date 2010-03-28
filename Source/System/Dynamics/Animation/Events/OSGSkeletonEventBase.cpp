@@ -123,7 +123,7 @@ SkeletonEventBase::TypeObject SkeletonEventBase::_type(
     "<FieldContainer\n"
     "\tname=\"SkeletonEvent\"\n"
     "\tparent=\"Event\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"single\"\n"
     "    structure=\"concrete\"\n"
     "    systemcomponent=\"true\"\n"

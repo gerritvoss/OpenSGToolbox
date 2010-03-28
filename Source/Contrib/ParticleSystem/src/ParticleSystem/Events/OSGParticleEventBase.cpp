@@ -170,7 +170,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
         "ParticlePosition",
@@ -182,7 +181,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleEvent::getHandleParticlePosition));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
@@ -196,7 +194,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "ParticleNormal",
@@ -208,7 +205,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleEvent::getHandleParticleNormal));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -222,7 +218,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "ParticleSize",
@@ -234,7 +229,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleEvent::getHandleParticleSize));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -248,7 +242,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "ParticleAge",
@@ -260,7 +253,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleEvent::getHandleParticleAge));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -274,7 +266,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "ParticleSecVelocity",
@@ -286,7 +277,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleEvent::getHandleParticleSecVelocity));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -300,7 +290,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFStringToUInt32Map::Description(
         SFStringToUInt32Map::getClassType(),
         "ParticleAttributes",
@@ -312,7 +301,6 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleEvent::getHandleParticleAttributes));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -476,7 +464,6 @@ ParticleEventBase::TypeObject ParticleEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

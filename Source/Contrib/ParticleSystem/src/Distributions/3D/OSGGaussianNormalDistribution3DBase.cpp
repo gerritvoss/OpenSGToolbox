@@ -138,7 +138,6 @@ void GaussianNormalDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "StandardDeviationX",
@@ -150,7 +149,6 @@ void GaussianNormalDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GaussianNormalDistribution3D::getHandleStandardDeviationX));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -164,7 +162,6 @@ void GaussianNormalDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "StandardDeviationZ",
@@ -176,7 +173,6 @@ void GaussianNormalDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GaussianNormalDistribution3D::getHandleStandardDeviationZ));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -250,7 +246,6 @@ GaussianNormalDistribution3DBase::TypeObject GaussianNormalDistribution3DBase::_
     "</FieldContainer>\n",
     "An GaussianNormaDistribution2D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

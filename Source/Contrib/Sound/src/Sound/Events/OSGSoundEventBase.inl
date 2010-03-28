@@ -121,8 +121,6 @@ const Char8 *SoundEventBase::getClassname(void)
 {
     return "SoundEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(SoundEvent);
 
 OSG_END_NAMESPACE

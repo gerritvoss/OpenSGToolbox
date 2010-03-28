@@ -112,8 +112,6 @@ const Char8 *SoundEmitterBase::getClassname(void)
 {
     return "SoundEmitter";
 }
-
-
 OSG_GEN_CONTAINERPTR(SoundEmitter);
 
 OSG_END_NAMESPACE

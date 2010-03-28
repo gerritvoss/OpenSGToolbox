@@ -317,8 +317,6 @@ const Char8 *SphereDistribution3DBase::getClassname(void)
 {
     return "SphereDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(SphereDistribution3D);
 
 OSG_END_NAMESPACE

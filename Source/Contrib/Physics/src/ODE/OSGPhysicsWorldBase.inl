@@ -420,8 +420,6 @@ const Char8 *PhysicsWorldBase::getClassname(void)
 {
     return "PhysicsWorld";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsWorld);
 
 OSG_END_NAMESPACE

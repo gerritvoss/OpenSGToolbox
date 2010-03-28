@@ -156,7 +156,6 @@ void RandomMovementParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecPerlinNoiseDistribution1DPtr::Description(
         SFUnrecPerlinNoiseDistribution1DPtr::getClassType(),
         "PerlinDistribution",
@@ -168,7 +167,6 @@ void RandomMovementParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandlePerlinDistribution));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -182,7 +180,6 @@ void RandomMovementParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "InterpolationType",
@@ -194,7 +191,6 @@ void RandomMovementParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandleInterpolationType));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -208,7 +204,6 @@ void RandomMovementParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Persistance",
@@ -220,7 +215,6 @@ void RandomMovementParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandlePersistance));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -234,7 +228,6 @@ void RandomMovementParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Octaves",
@@ -246,7 +239,6 @@ void RandomMovementParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandleOctaves));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -360,7 +352,6 @@ RandomMovementParticleAffectorBase::TypeObject RandomMovementParticleAffectorBas
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

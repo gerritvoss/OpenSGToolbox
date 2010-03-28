@@ -308,8 +308,6 @@ const Char8 *AirParticleAffectorBase::getClassname(void)
 {
     return "AirParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(AirParticleAffector);
 
 OSG_END_NAMESPACE

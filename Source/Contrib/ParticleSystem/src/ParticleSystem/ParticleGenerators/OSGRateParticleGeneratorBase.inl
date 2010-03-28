@@ -177,8 +177,6 @@ const Char8 *RateParticleGeneratorBase::getClassname(void)
 {
     return "RateParticleGenerator";
 }
-
-
 OSG_GEN_CONTAINERPTR(RateParticleGenerator);
 
 OSG_END_NAMESPACE

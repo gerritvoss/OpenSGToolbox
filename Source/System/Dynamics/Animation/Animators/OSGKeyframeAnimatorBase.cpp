@@ -145,7 +145,7 @@ KeyframeAnimatorBase::TypeObject KeyframeAnimatorBase::_type(
     "<FieldContainer\n"
     "\tname=\"KeyframeAnimator\"\n"
     "\tparent=\"Animator\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

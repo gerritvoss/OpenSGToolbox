@@ -155,7 +155,6 @@ void AirParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Direction",
@@ -167,7 +166,6 @@ void AirParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleDirection));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -181,7 +179,6 @@ void AirParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Speed",
@@ -193,7 +190,6 @@ void AirParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleSpeed));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -207,7 +203,6 @@ void AirParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MaxDistance",
@@ -219,7 +214,6 @@ void AirParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleMaxDistance));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -233,7 +227,6 @@ void AirParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
         "Beacon",
@@ -245,7 +238,6 @@ void AirParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleBeacon));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -358,7 +350,6 @@ AirParticleAffectorBase::TypeObject AirParticleAffectorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

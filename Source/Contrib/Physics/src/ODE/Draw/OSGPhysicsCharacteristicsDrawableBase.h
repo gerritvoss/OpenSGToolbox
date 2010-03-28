@@ -71,7 +71,6 @@
 
 #include "OSGPhysicsCharacteristicsDrawableFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsCharacteristicsDrawable;
@@ -146,7 +145,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsCharacteristicsDrawableBase : public 
     typedef SFColor4f         SFSpaceColorType;
     typedef SFBool            SFDrawWorldsType;
     typedef SFColor4f         SFWorldColorType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -277,7 +275,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsCharacteristicsDrawableBase : public 
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

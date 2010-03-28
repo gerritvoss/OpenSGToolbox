@@ -158,7 +158,6 @@ void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Normal",
@@ -170,7 +169,6 @@ void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleNormal));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -184,7 +182,6 @@ void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Binormal",
@@ -196,7 +193,6 @@ void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleBinormal));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -210,7 +206,6 @@ void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "OuterRadius",
@@ -222,7 +217,6 @@ void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleOuterRadius));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -236,7 +230,6 @@ void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MaxTheta",
@@ -249,7 +242,6 @@ void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SurfaceOrEdge",
@@ -261,7 +253,6 @@ void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleSurfaceOrEdge));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -385,7 +376,6 @@ DiscDistribution3DBase::TypeObject DiscDistribution3DBase::_type(
     "</FieldContainer>\n",
     "An DiscDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

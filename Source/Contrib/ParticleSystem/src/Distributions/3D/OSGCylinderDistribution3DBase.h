@@ -70,7 +70,6 @@
 
 #include "OSGCylinderDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class CylinderDistribution3D;
@@ -141,7 +140,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CylinderDistribution3DBase : public D
     typedef SFReal32          SFMinThetaType;
     typedef SFReal32          SFMaxThetaType;
     typedef SFUInt32          SFSurfaceOrVolumeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -248,7 +246,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CylinderDistribution3DBase : public D
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

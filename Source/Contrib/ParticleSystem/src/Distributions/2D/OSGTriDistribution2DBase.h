@@ -70,7 +70,6 @@
 
 #include "OSGTriDistribution2DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class TriDistribution2D;
@@ -117,7 +116,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING TriDistribution2DBase : public Distri
     typedef SFPnt2f           SFPoint2Type;
     typedef SFPnt2f           SFPoint3Type;
     typedef SFUInt32          SFSurfaceOrEdgeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -196,7 +194,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING TriDistribution2DBase : public Distri
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

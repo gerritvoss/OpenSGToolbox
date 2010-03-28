@@ -140,7 +140,6 @@ VLCVideoWrapperBase::TypeObject VLCVideoWrapperBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &VLCVideoWrapperBase::getType(void)

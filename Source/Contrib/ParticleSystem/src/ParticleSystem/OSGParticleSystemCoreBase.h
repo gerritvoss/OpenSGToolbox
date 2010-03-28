@@ -71,7 +71,6 @@
 
 #include "OSGParticleSystemCoreFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleSystemCore;
@@ -118,7 +117,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
     typedef MFUInt32          MFSortType;
     typedef SFUnrecParticleSystemPtr SFSystemType;
     typedef SFUnrecParticleSystemDrawerPtr SFDrawerType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -191,7 +189,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

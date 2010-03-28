@@ -167,7 +167,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "DrawGeoms",
@@ -179,7 +178,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsCharacteristicsDrawable::getHandleDrawGeoms));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -193,7 +191,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "DrawJoints",
@@ -205,7 +202,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsCharacteristicsDrawable::getHandleDrawJoints));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -219,7 +215,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "DrawBodies",
@@ -231,7 +226,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsCharacteristicsDrawable::getHandleDrawBodies));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -245,7 +239,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "DrawSpaces",
@@ -257,7 +250,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsCharacteristicsDrawable::getHandleDrawSpaces));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -271,7 +263,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "DrawWorlds",
@@ -284,7 +275,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "WorldColor",
@@ -296,7 +286,6 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsCharacteristicsDrawable::getHandleWorldColor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -439,7 +428,6 @@ PhysicsCharacteristicsDrawableBase::TypeObject PhysicsCharacteristicsDrawableBas
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -196,7 +196,7 @@ SkeletonAnimationBase::TypeObject SkeletonAnimationBase::_type(
     "<FieldContainer\n"
     "\tname=\"SkeletonAnimation\"\n"
     "\tparent=\"Animation\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

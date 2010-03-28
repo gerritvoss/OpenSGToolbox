@@ -178,7 +178,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "axis",
@@ -190,7 +189,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPistonJoint::getHandleAxis));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -204,7 +202,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "loStop",
@@ -216,7 +213,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPistonJoint::getHandleLoStop));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -230,7 +226,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "CFM",
@@ -242,7 +237,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPistonJoint::getHandleCFM));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -256,7 +250,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopCFM",
@@ -268,7 +261,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPistonJoint::getHandleStopCFM));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -282,7 +274,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "loStop2",
@@ -294,7 +285,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPistonJoint::getHandleLoStop2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -308,7 +298,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "CFM2",
@@ -320,7 +309,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPistonJoint::getHandleCFM2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -334,7 +322,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopCFM2",
@@ -346,7 +333,6 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsPistonJoint::getHandleStopCFM2));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -517,7 +503,6 @@ PhysicsPistonJointBase::TypeObject PhysicsPistonJointBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

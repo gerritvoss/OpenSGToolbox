@@ -264,8 +264,6 @@ const Char8 *SurfaceParticleGeneratorBase::getClassname(void)
 {
     return "SurfaceParticleGenerator";
 }
-
-
 OSG_GEN_CONTAINERPTR(SurfaceParticleGenerator);
 
 OSG_END_NAMESPACE

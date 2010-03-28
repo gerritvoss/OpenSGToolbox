@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -230,7 +230,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFPnt3f::Description(
         MFPnt3f::getClassType(),
         "InternalPositions",
@@ -243,7 +242,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalPositions));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFPnt3f::Description(
         MFPnt3f::getClassType(),
@@ -259,7 +257,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFVec3f::Description(
         MFVec3f::getClassType(),
         "InternalNormals",
@@ -274,7 +271,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFColor4f::Description(
         MFColor4f::getClassType(),
         "InternalColors",
@@ -286,7 +282,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalColors));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFVec3f::Description(
         MFVec3f::getClassType(),
@@ -304,7 +299,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFTime::Description(
         MFTime::getClassType(),
         "InternalLifespans",
@@ -317,7 +311,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFTime::Description(
         MFTime::getClassType(),
         "InternalAges",
@@ -329,7 +322,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalAges));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFVec3f::Description(
         MFVec3f::getClassType(),
@@ -346,7 +338,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFVec3f::Description(
         MFVec3f::getClassType(),
         "InternalSecVelocities",
@@ -359,7 +350,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalSecVelocities));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFVec3f::Description(
         MFVec3f::getClassType(),
@@ -376,7 +366,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFStringToUInt32Map::Description(
         MFStringToUInt32Map::getClassType(),
         "InternalAttributes",
@@ -389,7 +378,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "MaxParticles",
@@ -401,7 +389,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleMaxParticles));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -416,7 +403,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "UpdateSecAttribs",
@@ -430,7 +416,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFTime::Description(
         SFTime::getClassType(),
         "LastElapsedTime",
@@ -442,7 +427,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleLastElapsedTime));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFUnrecParticleGeneratorPtr::Description(
         MFUnrecParticleGeneratorPtr::getClassType(),
@@ -456,7 +440,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecParticleAffectorPtr::Description(
         MFUnrecParticleAffectorPtr::getClassType(),
         "Affectors",
@@ -468,7 +451,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleAffectors));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFUnrecParticleSystemAffectorPtr::Description(
         MFUnrecParticleSystemAffectorPtr::getClassType(),
@@ -482,7 +464,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBoxVolume::Description(
         SFBoxVolume::getClassType(),
         "Volume",
@@ -495,7 +476,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "MaxParticleSize",
@@ -507,7 +487,6 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleMaxParticleSize));
 
     oType.addInitialDesc(pDesc);
-
     pDesc = new SFEventProducerPtr::Description(
         SFEventProducerPtr::getClassType(),
         "EventProducer",
@@ -546,7 +525,7 @@ ParticleSystemBase::TypeObject ParticleSystemBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
     ">\n"
     "\t<Field\n"
     "\t\tname=\"Beacon\"\n"

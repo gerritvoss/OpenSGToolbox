@@ -125,7 +125,6 @@ void PhysicsBallJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBallJoint::getHandleAnchor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -167,7 +166,6 @@ PhysicsBallJointBase::TypeObject PhysicsBallJointBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

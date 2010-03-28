@@ -125,7 +125,6 @@ void PhysicsHashSpaceBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHashSpace::getHandleLevels));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -167,7 +166,6 @@ PhysicsHashSpaceBase::TypeObject PhysicsHashSpaceBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

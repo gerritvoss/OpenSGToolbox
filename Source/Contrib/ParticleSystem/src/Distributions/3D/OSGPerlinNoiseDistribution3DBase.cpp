@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -152,7 +152,6 @@ void PerlinNoiseDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Persistance",
@@ -164,7 +163,6 @@ void PerlinNoiseDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PerlinNoiseDistribution3D::getHandlePersistance));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -178,7 +176,6 @@ void PerlinNoiseDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Amplitude",
@@ -190,7 +187,6 @@ void PerlinNoiseDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PerlinNoiseDistribution3D::getHandleAmplitude));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -206,7 +202,6 @@ void PerlinNoiseDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Phase",
@@ -219,7 +214,6 @@ void PerlinNoiseDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "UseSmoothing",
@@ -231,7 +225,6 @@ void PerlinNoiseDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PerlinNoiseDistribution3D::getHandleUseSmoothing));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -259,7 +252,7 @@ PerlinNoiseDistribution3DBase::TypeObject PerlinNoiseDistribution3DBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
     ">\n"
     "A PerlinNoiseDistribution3D.\n"
     "\t<Field\n"
@@ -338,7 +331,6 @@ PerlinNoiseDistribution3DBase::TypeObject PerlinNoiseDistribution3DBase::_type(
     "</FieldContainer>\n",
     "A PerlinNoiseDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

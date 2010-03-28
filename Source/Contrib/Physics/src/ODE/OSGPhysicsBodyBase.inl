@@ -784,8 +784,6 @@ const Char8 *PhysicsBodyBase::getClassname(void)
 {
     return "PhysicsBody";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsBody);
 
 OSG_END_NAMESPACE

@@ -126,7 +126,6 @@ void PhysicsTriMeshGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsTriMeshGeom::getHandleGeometryNode));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ PhysicsTriMeshGeomBase::TypeObject PhysicsTriMeshGeomBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -70,7 +70,6 @@
 
 #include "OSGDynamicsParticleGeneratorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class DynamicsParticleGenerator;
@@ -145,7 +144,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DynamicsParticleGeneratorBase : publi
     typedef SFUnrecDistribution3DPtr SFVelocityDistributionType;
     typedef SFUnrecDistribution3DPtr SFSecVelocityDistributionType;
     typedef SFUnrecDistribution3DPtr SFAccelerationDistributionType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -256,7 +254,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DynamicsParticleGeneratorBase : publi
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

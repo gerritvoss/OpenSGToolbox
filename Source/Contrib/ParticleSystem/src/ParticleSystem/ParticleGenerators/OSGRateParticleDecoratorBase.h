@@ -69,7 +69,6 @@
 
 #include "OSGRateParticleDecoratorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class RateParticleDecorator;
@@ -108,7 +107,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RateParticleDecoratorBase : public Pa
         
     typedef SFReal32          SFGenerationRateType;
     typedef SFReal32          SFTimeSinceLastGenerationType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -166,7 +164,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RateParticleDecoratorBase : public Pa
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

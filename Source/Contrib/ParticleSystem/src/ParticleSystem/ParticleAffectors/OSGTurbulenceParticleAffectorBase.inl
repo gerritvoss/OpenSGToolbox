@@ -355,8 +355,6 @@ const Char8 *TurbulenceParticleAffectorBase::getClassname(void)
 {
     return "TurbulenceParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(TurbulenceParticleAffector);
 
 OSG_END_NAMESPACE

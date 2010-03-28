@@ -69,7 +69,6 @@
 
 #include "OSGCollectiveGravityParticleSystemAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class CollectiveGravityParticleSystemAffector;
@@ -112,7 +111,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
     typedef SFReal32          SFParticleMassType;
     typedef SFReal32          SFGravitationalConstantType;
     typedef SFUInt32          SFParticleMassSourceType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -184,7 +182,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -145,7 +145,6 @@ void PhysicsHandlerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecPhysicsSpacePtr::Description(
         MFUnrecPhysicsSpacePtr::getClassType(),
         "spaces",
@@ -157,7 +156,6 @@ void PhysicsHandlerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHandler::getHandleSpaces));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
@@ -171,7 +169,6 @@ void PhysicsHandlerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "StepSize",
@@ -184,7 +181,6 @@ void PhysicsHandlerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "MaxStepsPerUpdate",
@@ -196,7 +192,6 @@ void PhysicsHandlerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHandler::getHandleMaxStepsPerUpdate));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -278,7 +273,6 @@ PhysicsHandlerBase::TypeObject PhysicsHandlerBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

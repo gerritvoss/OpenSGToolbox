@@ -70,7 +70,6 @@
 
 #include "OSGParticleGeneratorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleGenerator;
@@ -109,7 +108,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorBase : public Attach
         
     typedef SFUnrecNodePtr    SFBeaconType;
     typedef SFBool            SFGenerateInWorldSpaceType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -177,7 +175,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorBase : public Attach
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

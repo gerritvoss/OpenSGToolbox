@@ -345,8 +345,6 @@ const Char8 *DiscDistribution3DBase::getClassname(void)
 {
     return "DiscDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(DiscDistribution3D);
 
 OSG_END_NAMESPACE

@@ -143,8 +143,6 @@ const Char8 *SegmentSetDistribution1DBase::getClassname(void)
 {
     return "SegmentSetDistribution1D";
 }
-
-
 OSG_GEN_CONTAINERPTR(SegmentSetDistribution1D);
 
 OSG_END_NAMESPACE

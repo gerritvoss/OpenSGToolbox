@@ -130,7 +130,6 @@ void AgeSizeParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFVec3f::Description(
         MFVec3f::getClassType(),
         "Sizes",
@@ -142,7 +141,6 @@ void AgeSizeParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AgeSizeParticleAffector::getHandleSizes));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -195,7 +193,6 @@ AgeSizeParticleAffectorBase::TypeObject AgeSizeParticleAffectorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

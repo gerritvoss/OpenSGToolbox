@@ -141,7 +141,6 @@ StubSoundBase::TypeObject StubSoundBase::_type(
     "A FMod Sound Interface.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &StubSoundBase::getType(void)

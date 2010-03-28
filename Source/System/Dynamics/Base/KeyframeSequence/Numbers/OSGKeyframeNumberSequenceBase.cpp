@@ -126,7 +126,7 @@ KeyframeNumberSequenceBase::TypeObject KeyframeNumberSequenceBase::_type(
     "<FieldContainer\n"
     "\tname=\"KeyframeNumberSequence\"\n"
     "\tparent=\"KeyframeSequence\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
     "\tsystemcomponent=\"true\"\n"

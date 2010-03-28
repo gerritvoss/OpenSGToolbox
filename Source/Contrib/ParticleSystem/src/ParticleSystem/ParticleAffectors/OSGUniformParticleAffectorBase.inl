@@ -252,8 +252,6 @@ const Char8 *UniformParticleAffectorBase::getClassname(void)
 {
     return "UniformParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(UniformParticleAffector);
 
 OSG_END_NAMESPACE

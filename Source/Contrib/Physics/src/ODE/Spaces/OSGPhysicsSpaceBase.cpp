@@ -154,7 +154,6 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "sublevel",
@@ -166,7 +165,6 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsSpace::getHandleSublevel));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecPhysicsHandlerPtr::Description(
         SFUnrecPhysicsHandlerPtr::getClassType(),
@@ -180,7 +178,6 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecCollisionContactParametersPtr::Description(
         SFUnrecCollisionContactParametersPtr::getClassType(),
         "defaultCollisionParameters",
@@ -192,7 +189,6 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsSpace::getHandleDefaultCollisionParameters));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFUInt64::Description(
         MFUInt64::getClassType(),
@@ -206,7 +202,6 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUInt64::Description(
         MFUInt64::getClassType(),
         "category2",
@@ -219,7 +214,6 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecCollisionContactParametersPtr::Description(
         MFUnrecCollisionContactParametersPtr::getClassType(),
         "categoryCollisionParameters",
@@ -231,7 +225,6 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsSpace::getHandleCategoryCollisionParameters));
 
     oType.addInitialDesc(pDesc);
-
     pDesc = new SFEventProducerPtr::Description(
         SFEventProducerPtr::getClassType(),
         "EventProducer",

@@ -168,7 +168,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
         "SecPositionDistribution",
@@ -180,7 +179,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleSecPositionDistribution));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
@@ -194,7 +192,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
         "ColorDistribution",
@@ -206,7 +203,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleColorDistribution));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecDistribution1DPtr::Description(
         SFUnrecDistribution1DPtr::getClassType(),
@@ -220,7 +216,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
         "SizeDistribution",
@@ -232,7 +227,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleSizeDistribution));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecDistribution1DPtr::Description(
         SFUnrecDistribution1DPtr::getClassType(),
@@ -246,7 +240,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution1DPtr::Description(
         SFUnrecDistribution1DPtr::getClassType(),
         "AgeDistribution",
@@ -258,7 +251,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleAgeDistribution));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
@@ -272,7 +264,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
         "SecVelocityDistribution",
@@ -285,7 +276,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
         "AccelerationDistribution",
@@ -297,7 +287,6 @@ void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleAccelerationDistribution));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -440,7 +429,6 @@ DynamicsParticleGeneratorBase::TypeObject DynamicsParticleGeneratorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

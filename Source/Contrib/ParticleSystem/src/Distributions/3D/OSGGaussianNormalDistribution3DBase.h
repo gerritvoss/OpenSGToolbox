@@ -70,7 +70,6 @@
 
 #include "OSGGaussianNormalDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class GaussianNormalDistribution3D;
@@ -117,7 +116,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GaussianNormalDistribution3DBase : pu
     typedef SFReal32          SFStandardDeviationXType;
     typedef SFReal32          SFStandardDeviationYType;
     typedef SFReal32          SFStandardDeviationZType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -196,7 +194,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GaussianNormalDistribution3DBase : pu
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

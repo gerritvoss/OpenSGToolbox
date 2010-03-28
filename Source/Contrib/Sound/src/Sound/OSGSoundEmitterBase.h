@@ -69,7 +69,6 @@
 
 #include "OSGSoundEmitterFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SoundEmitter;
@@ -104,7 +103,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundEmitterBase : public NodeCore
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecSoundPtr   SFSoundType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -165,7 +163,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundEmitterBase : public NodeCore
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -123,7 +123,7 @@ AnimationEventBase::TypeObject AnimationEventBase::_type(
     "<FieldContainer\n"
     "\tname=\"AnimationEvent\"\n"
     "\tparent=\"Event\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"single\"\n"
     "    structure=\"concrete\"\n"
     "    systemcomponent=\"true\"\n"

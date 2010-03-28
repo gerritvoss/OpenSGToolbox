@@ -72,7 +72,6 @@
 
 #include "OSGPhysicsBodyFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsBody;
@@ -203,7 +202,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsBodyBase : public Attachment
     typedef SFReal32          SFMaxAngularSpeedType;
     typedef SFBool            SFKinematicType;
     typedef SFUnrecPhysicsWorldPtr SFWorldType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -432,7 +430,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsBodyBase : public Attachment
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

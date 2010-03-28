@@ -138,7 +138,6 @@ void DistanceFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "DistanceFadeEnd",
@@ -150,7 +149,6 @@ void DistanceFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DistanceFadeParticleAffector::getHandleDistanceFadeEnd));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -164,7 +162,6 @@ void DistanceFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "FadeEndAlpha",
@@ -176,7 +173,6 @@ void DistanceFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DistanceFadeParticleAffector::getHandleFadeEndAlpha));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -249,7 +245,6 @@ DistanceFadeParticleAffectorBase::TypeObject DistanceFadeParticleAffectorBase::_
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

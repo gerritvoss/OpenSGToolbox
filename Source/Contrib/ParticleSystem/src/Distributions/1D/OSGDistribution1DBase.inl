@@ -93,8 +93,6 @@ const Char8 *Distribution1DBase::getClassname(void)
 {
     return "Distribution1D";
 }
-
-
 OSG_GEN_CONTAINERPTR(Distribution1D);
 
 OSG_END_NAMESPACE

@@ -200,8 +200,6 @@ const Char8 *PhysicsHandlerBase::getClassname(void)
 {
     return "PhysicsHandler";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsHandler);
 
 OSG_END_NAMESPACE

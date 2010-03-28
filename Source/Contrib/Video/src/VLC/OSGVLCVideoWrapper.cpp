@@ -45,8 +45,6 @@
 
 #include <OSGConfig.h>
 
-#ifdef _OSGTOOLBOX_VIDEO_USE_VLC
-
 #ifdef WIN32
 #include <Windowsx.h>
 #endif
@@ -65,12 +63,14 @@
 
 #include <vlc/vlc.h>
 #include <vlc/libvlc_media_player.h>
+#ifdef __APPLE__
 #include <AGL/agl.h>
+#endif
 
 #include "OSGVLCVideoWrapper.h"
 
 #ifdef __APPLE__
-#include <OpenSG/OSGCarbonWindow.h>
+#include <OSGCarbonWindow.h>
 #endif
 
 OSG_BEGIN_NAMESPACE
@@ -119,7 +119,7 @@ bool VLCVideoWrapper::VLC_Execption_catch (libvlc_exception_t ex, std::string me
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool VLCVideoWrapper::open(const std::string& ThePath, WindowPtr window)
+bool VLCVideoWrapper::open(const std::string& ThePath)
 {
 	bool errorOpening(false);
 
@@ -314,7 +314,7 @@ SLOG << "Height: " << videoHeight << std::endl;
 void VLCVideoWrapper::lock( struct ctx* ctx, void** pp_ret )	
 {
     // Lock the buffer (to avoid concurrent access and data corruption)
-    ctx->lock->aquire();
+    ctx->lock->acquire();
     
   	// Tell libvlc to write the next frame into our pre-allocated buffer
     *pp_ret = ctx->pixels;	
@@ -334,9 +334,9 @@ void VLCVideoWrapper::processNewFrame( struct ctx* ctx )
 
 
 
-bool VLCVideoWrapper::open(BoostPath ThePath, WindowPtr window)
+bool VLCVideoWrapper::open(BoostPath ThePath)
 {
-	  return open(ThePath.string(), window);
+	  return open(ThePath.string());
 }
 
 
@@ -668,6 +668,7 @@ VLCVideoWrapper::VLCVideoWrapper(void) :
 {
 }
 
+#if 0
 VLCVideoWrapper::VLCVideoWrapper(void *carbonWindow) :
     Inherited(),
 		reachEndOnce(false)
@@ -680,6 +681,13 @@ VLCVideoWrapper::VLCVideoWrapper(const VLCVideoWrapper &source, void *carbonWind
 		reachEndOnce(false)
 {
     theCarbonWindow = carbonWindow;
+}
+#endif
+
+VLCVideoWrapper::VLCVideoWrapper(const VLCVideoWrapper &source) :
+    Inherited(source),
+		reachEndOnce(false)
+{
 }
 
 VLCVideoWrapper::~VLCVideoWrapper(void)

@@ -177,8 +177,6 @@ const Char8 *BoxDistribution3DBase::getClassname(void)
 {
     return "BoxDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(BoxDistribution3D);
 
 OSG_END_NAMESPACE

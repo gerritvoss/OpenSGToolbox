@@ -133,7 +133,6 @@ void CollisionParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecParticleSystemPtr::Description(
         MFUnrecParticleSystemPtr::getClassType(),
         "SecondaryCollisionSystems",
@@ -145,7 +144,6 @@ void CollisionParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionParticleSystemAffector::getHandleSecondaryCollisionSystems));
 
     oType.addInitialDesc(pDesc);
-
     pDesc = new SFEventProducerPtr::Description(
         SFEventProducerPtr::getClassType(),
         "EventProducer",

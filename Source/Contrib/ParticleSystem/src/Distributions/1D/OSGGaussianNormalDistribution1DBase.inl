@@ -149,8 +149,6 @@ const Char8 *GaussianNormalDistribution1DBase::getClassname(void)
 {
     return "GaussianNormalDistribution1D";
 }
-
-
 OSG_GEN_CONTAINERPTR(GaussianNormalDistribution1D);
 
 OSG_END_NAMESPACE

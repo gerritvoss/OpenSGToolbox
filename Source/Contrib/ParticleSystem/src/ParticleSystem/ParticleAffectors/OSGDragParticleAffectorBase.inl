@@ -336,8 +336,6 @@ const Char8 *DragParticleAffectorBase::getClassname(void)
 {
     return "DragParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(DragParticleAffector);
 
 OSG_END_NAMESPACE

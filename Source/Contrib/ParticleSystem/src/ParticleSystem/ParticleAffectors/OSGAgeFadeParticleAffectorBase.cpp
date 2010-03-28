@@ -142,7 +142,6 @@ void AgeFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "FadeOutTime",
@@ -154,7 +153,6 @@ void AgeFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AgeFadeParticleAffector::getHandleFadeOutTime));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -168,7 +166,6 @@ void AgeFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "StartAlpha",
@@ -181,7 +178,6 @@ void AgeFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "EndAlpha",
@@ -193,7 +189,6 @@ void AgeFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AgeFadeParticleAffector::getHandleEndAlpha));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -276,7 +271,6 @@ AgeFadeParticleAffectorBase::TypeObject AgeFadeParticleAffectorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

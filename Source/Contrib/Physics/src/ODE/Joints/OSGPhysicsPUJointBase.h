@@ -70,7 +70,6 @@
 
 #include "OSGPhysicsPUJointFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsPUJoint;
@@ -189,7 +188,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsPUJointBase : public PhysicsJoint
     typedef SFReal32          SFCFM3Type;
     typedef SFReal32          SFStopERP3Type;
     typedef SFReal32          SFStopCFM3Type;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -394,7 +392,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsPUJointBase : public PhysicsJoint
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

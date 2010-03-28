@@ -147,7 +147,6 @@ void NewtonParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Attenuation",
@@ -159,7 +158,6 @@ void NewtonParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&NewtonParticleAffector::getHandleAttenuation));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -173,7 +171,6 @@ void NewtonParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MinDistance",
@@ -185,7 +182,6 @@ void NewtonParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&NewtonParticleAffector::getHandleMinDistance));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
@@ -199,7 +195,6 @@ void NewtonParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "ParticleMass",
@@ -211,7 +206,6 @@ void NewtonParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&NewtonParticleAffector::getHandleParticleMass));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -304,7 +298,6 @@ NewtonParticleAffectorBase::TypeObject NewtonParticleAffectorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

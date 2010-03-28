@@ -150,7 +150,6 @@ void PhysicsSliderJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "hiStop",
@@ -162,7 +161,6 @@ void PhysicsSliderJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsSliderJoint::getHandleHiStop));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -176,7 +174,6 @@ void PhysicsSliderJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "bounce",
@@ -188,7 +185,6 @@ void PhysicsSliderJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsSliderJoint::getHandleBounce));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -202,7 +198,6 @@ void PhysicsSliderJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopERP",
@@ -215,7 +210,6 @@ void PhysicsSliderJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopCFM",
@@ -227,7 +221,6 @@ void PhysicsSliderJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsSliderJoint::getHandleStopCFM));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -329,7 +322,6 @@ PhysicsSliderJointBase::TypeObject PhysicsSliderJointBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

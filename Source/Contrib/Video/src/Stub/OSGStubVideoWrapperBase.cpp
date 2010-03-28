@@ -140,7 +140,6 @@ StubVideoWrapperBase::TypeObject StubVideoWrapperBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &StubVideoWrapperBase::getType(void)

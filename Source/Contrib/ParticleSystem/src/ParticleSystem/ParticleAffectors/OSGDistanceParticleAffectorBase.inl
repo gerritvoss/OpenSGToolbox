@@ -178,8 +178,6 @@ const Char8 *DistanceParticleAffectorBase::getClassname(void)
 {
     return "DistanceParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(DistanceParticleAffector);
 
 OSG_END_NAMESPACE

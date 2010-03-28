@@ -69,7 +69,6 @@
 
 #include "OSGAgeFadeParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class AgeFadeParticleAffector;
@@ -120,7 +119,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING AgeFadeParticleAffectorBase : public 
     typedef SFReal32          SFFadeToAlphaType;
     typedef SFReal32          SFStartAlphaType;
     typedef SFReal32          SFEndAlphaType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -206,7 +204,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING AgeFadeParticleAffectorBase : public 
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

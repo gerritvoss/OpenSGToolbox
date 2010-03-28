@@ -289,8 +289,6 @@ const Char8 *LineParticleSystemDrawerBase::getClassname(void)
 {
     return "LineParticleSystemDrawer";
 }
-
-
 OSG_GEN_CONTAINERPTR(LineParticleSystemDrawer);
 
 OSG_END_NAMESPACE

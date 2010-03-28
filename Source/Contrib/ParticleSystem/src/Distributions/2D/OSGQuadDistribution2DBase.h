@@ -70,7 +70,6 @@
 
 #include "OSGQuadDistribution2DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class QuadDistribution2D;
@@ -121,7 +120,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadDistribution2DBase : public Distr
     typedef SFPnt2f           SFPoint3Type;
     typedef SFPnt2f           SFPoint4Type;
     typedef SFUInt32          SFSurfaceOrEdgeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -207,7 +205,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadDistribution2DBase : public Distr
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

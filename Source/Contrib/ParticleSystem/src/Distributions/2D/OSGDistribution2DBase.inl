@@ -93,8 +93,6 @@ const Char8 *Distribution2DBase::getClassname(void)
 {
     return "Distribution2D";
 }
-
-
 OSG_GEN_CONTAINERPTR(Distribution2D);
 
 OSG_END_NAMESPACE

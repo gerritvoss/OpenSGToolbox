@@ -130,7 +130,6 @@ void PhysicsCapsuleGeomBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "length",
@@ -142,7 +141,6 @@ void PhysicsCapsuleGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsCapsuleGeom::getHandleLength));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -193,7 +191,6 @@ PhysicsCapsuleGeomBase::TypeObject PhysicsCapsuleGeomBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

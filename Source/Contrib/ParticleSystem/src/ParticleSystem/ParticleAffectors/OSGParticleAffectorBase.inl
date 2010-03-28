@@ -93,8 +93,6 @@ const Char8 *ParticleAffectorBase::getClassname(void)
 {
     return "ParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(ParticleAffector);
 
 OSG_END_NAMESPACE

@@ -106,8 +106,6 @@ const Char8 *SoundGroupBase::getClassname(void)
 {
     return "SoundGroup";
 }
-
-
 OSG_GEN_CONTAINERPTR(SoundGroup);
 
 OSG_END_NAMESPACE

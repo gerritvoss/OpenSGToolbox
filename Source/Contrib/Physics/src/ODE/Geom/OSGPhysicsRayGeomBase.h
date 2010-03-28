@@ -70,7 +70,6 @@
 
 #include "OSGPhysicsRayGeomFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsRayGeom;
@@ -117,7 +116,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
     typedef SFPnt3f           SFRayPositionType;
     typedef SFVec3f           SFDirectionType;
     typedef SFBool            SFClosestHitType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -196,7 +194,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -69,7 +69,6 @@
 
 #include "OSGLineDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class LineDistribution3D;
@@ -108,7 +107,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING LineDistribution3DBase : public Distr
         
     typedef SFPnt3f           SFPoint1Type;
     typedef SFPnt3f           SFPoint2Type;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -173,7 +171,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING LineDistribution3DBase : public Distr
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

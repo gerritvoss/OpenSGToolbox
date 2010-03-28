@@ -69,7 +69,6 @@
 
 #include "OSGDistanceFadeParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class DistanceFadeParticleAffector;
@@ -116,7 +115,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceFadeParticleAffectorBase : pu
     typedef SFReal32          SFDistanceFadeEndType;
     typedef SFReal32          SFFadeStartAlphaType;
     typedef SFReal32          SFFadeEndAlphaType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -195,7 +193,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceFadeParticleAffectorBase : pu
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

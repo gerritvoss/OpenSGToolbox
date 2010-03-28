@@ -308,8 +308,6 @@ const Char8 *RandomMovementParticleAffectorBase::getClassname(void)
 {
     return "RandomMovementParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(RandomMovementParticleAffector);
 
 OSG_END_NAMESPACE

@@ -68,7 +68,6 @@
 
 #include "OSGStubSoundFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class StubSound;
@@ -90,7 +89,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING StubSoundBase : public Sound
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING StubSoundBase : public Sound
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

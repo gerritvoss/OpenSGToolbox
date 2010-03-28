@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -81,7 +81,6 @@
 #include "OSGEventProducerType.h"
 #include "OSGMethodDescription.h"
 #include "OSGEventProducerPtrType.h"
-
 
 OSG_BEGIN_NAMESPACE
 
@@ -211,7 +210,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
         ParticleStolenMethodId = ParticleKilledMethodId + 1,
         NextProducedMethodId = ParticleStolenMethodId + 1
     };
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -364,7 +362,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     EventProducerPtr   &editEventProducer  (void);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

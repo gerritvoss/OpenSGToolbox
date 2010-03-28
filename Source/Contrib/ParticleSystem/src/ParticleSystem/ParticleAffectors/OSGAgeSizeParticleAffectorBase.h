@@ -70,7 +70,6 @@
 
 #include "OSGAgeSizeParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class AgeSizeParticleAffector;
@@ -109,7 +108,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING AgeSizeParticleAffectorBase : public 
         
     typedef MFReal32          MFAgesType;
     typedef MFVec3f           MFSizesType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -172,7 +170,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING AgeSizeParticleAffectorBase : public 
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

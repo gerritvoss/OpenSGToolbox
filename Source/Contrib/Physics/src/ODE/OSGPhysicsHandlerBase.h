@@ -72,7 +72,6 @@
 
 #include "OSGPhysicsHandlerFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsHandler;
@@ -123,7 +122,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandlerBase : public Attachment
     typedef SFUnrecNodePtr    SFUpdateNodeType;
     typedef SFReal32          SFStepSizeType;
     typedef SFUInt32          SFMaxStepsPerUpdateType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -213,7 +211,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandlerBase : public Attachment
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

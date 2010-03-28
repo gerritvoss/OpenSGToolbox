@@ -134,7 +134,6 @@ void RateParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "TimeSinceLastGeneration",
@@ -147,7 +146,6 @@ void RateParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "RateSpread",
@@ -159,7 +157,6 @@ void RateParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RateParticleGenerator::getHandleRateSpread));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -222,7 +219,6 @@ RateParticleGeneratorBase::TypeObject RateParticleGeneratorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

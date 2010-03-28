@@ -177,8 +177,6 @@ const Char8 *PhysicsQuadTreeSpaceBase::getClassname(void)
 {
     return "PhysicsQuadTreeSpace";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsQuadTreeSpace);
 
 OSG_END_NAMESPACE

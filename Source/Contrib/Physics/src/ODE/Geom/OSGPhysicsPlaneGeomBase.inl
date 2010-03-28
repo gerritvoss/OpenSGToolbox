@@ -121,8 +121,6 @@ const Char8 *PhysicsPlaneGeomBase::getClassname(void)
 {
     return "PhysicsPlaneGeom";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsPlaneGeom);
 
 OSG_END_NAMESPACE

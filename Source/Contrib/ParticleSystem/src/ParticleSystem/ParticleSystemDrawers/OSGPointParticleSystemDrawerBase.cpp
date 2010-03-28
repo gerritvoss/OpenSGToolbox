@@ -130,7 +130,6 @@ void PointParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "ForcePerParticleSizing",
@@ -142,7 +141,6 @@ void PointParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PointParticleSystemDrawer::getHandleForcePerParticleSizing));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ PointParticleSystemDrawerBase::TypeObject PointParticleSystemDrawerBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

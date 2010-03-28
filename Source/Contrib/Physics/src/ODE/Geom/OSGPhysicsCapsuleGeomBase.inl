@@ -149,8 +149,6 @@ const Char8 *PhysicsCapsuleGeomBase::getClassname(void)
 {
     return "PhysicsCapsuleGeom";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsCapsuleGeom);
 
 OSG_END_NAMESPACE

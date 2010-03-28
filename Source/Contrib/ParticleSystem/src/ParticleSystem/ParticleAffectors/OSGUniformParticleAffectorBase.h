@@ -71,7 +71,6 @@
 
 #include "OSGUniformParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class UniformParticleAffector;
@@ -126,7 +125,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING UniformParticleAffectorBase : public 
     typedef SFReal32          SFMaxDistanceType;
     typedef SFUnrecNodePtr    SFBeaconType;
     typedef SFReal32          SFParticleMassType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -222,7 +220,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING UniformParticleAffectorBase : public 
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

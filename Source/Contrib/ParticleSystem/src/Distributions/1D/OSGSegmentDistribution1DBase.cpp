@@ -125,7 +125,6 @@ void SegmentDistribution1DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SegmentDistribution1D::getHandleSegment));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ SegmentDistribution1DBase::TypeObject SegmentDistribution1DBase::_type(
     "</FieldContainer>\n",
     "An SegmentDistribution1D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

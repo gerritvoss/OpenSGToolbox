@@ -72,7 +72,6 @@
 
 #include "OSGNodeParticleSystemCoreFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class NodeParticleSystemCore;
@@ -135,7 +134,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING NodeParticleSystemCoreBase : public G
     typedef SFVec3f           SFNormalType;
     typedef SFUInt32          SFUpSourceType;
     typedef SFVec3f           SFUpType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -236,7 +234,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING NodeParticleSystemCoreBase : public G
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

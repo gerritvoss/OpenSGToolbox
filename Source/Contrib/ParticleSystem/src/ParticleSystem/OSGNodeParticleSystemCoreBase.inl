@@ -284,8 +284,6 @@ const Char8 *NodeParticleSystemCoreBase::getClassname(void)
 {
     return "NodeParticleSystemCore";
 }
-
-
 OSG_GEN_CONTAINERPTR(NodeParticleSystemCore);
 
 OSG_END_NAMESPACE

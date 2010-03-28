@@ -224,8 +224,6 @@ const Char8 *VortexParticleAffectorBase::getClassname(void)
 {
     return "VortexParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(VortexParticleAffector);
 
 OSG_END_NAMESPACE

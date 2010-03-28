@@ -121,8 +121,6 @@ const Char8 *PhysicsSphereGeomBase::getClassname(void)
 {
     return "PhysicsSphereGeom";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsSphereGeom);
 
 OSG_END_NAMESPACE

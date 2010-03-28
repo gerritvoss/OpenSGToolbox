@@ -1045,8 +1045,6 @@ const Char8 *PhysicsLMotorJointBase::getClassname(void)
 {
     return "PhysicsLMotorJoint";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsLMotorJoint);
 
 OSG_END_NAMESPACE

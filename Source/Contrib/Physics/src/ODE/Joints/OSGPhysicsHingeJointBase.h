@@ -70,7 +70,6 @@
 
 #include "OSGPhysicsHingeJointFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsHingeJoint;
@@ -133,7 +132,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHingeJointBase : public PhysicsJoint
     typedef SFReal32          SFCFMType;
     typedef SFReal32          SFStopERPType;
     typedef SFReal32          SFStopCFMType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -240,7 +238,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHingeJointBase : public PhysicsJoint
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

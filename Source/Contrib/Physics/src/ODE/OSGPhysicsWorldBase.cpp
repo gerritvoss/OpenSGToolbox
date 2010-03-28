@@ -171,7 +171,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "gravity",
@@ -183,7 +182,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsWorld::getHandleGravity));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -197,7 +195,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "autoDisableFlag",
@@ -209,7 +206,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsWorld::getHandleAutoDisableFlag));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -223,7 +219,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "autoDisableAngularThreshold",
@@ -235,7 +230,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsWorld::getHandleAutoDisableAngularThreshold));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
@@ -249,7 +243,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "autoDisableTime",
@@ -261,7 +254,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsWorld::getHandleAutoDisableTime));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
@@ -275,7 +267,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "worldContactMaxCorrectingVel",
@@ -287,7 +278,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsWorld::getHandleWorldContactMaxCorrectingVel));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -301,7 +291,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecPhysicsHandlerPtr::Description(
         SFUnrecPhysicsHandlerPtr::getClassType(),
         "InternalParentHandler",
@@ -313,7 +302,6 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsWorld::getHandleInternalParentHandler));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -474,7 +462,6 @@ PhysicsWorldBase::TypeObject PhysicsWorldBase::_type(
     "</FieldContainer>\n",
     "The PhysicsWorld contains all global dWorld attributes from ODE.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

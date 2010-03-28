@@ -126,7 +126,6 @@ void SoundEmitterBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SoundEmitter::getHandleSound));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ SoundEmitterBase::TypeObject SoundEmitterBase::_type(
     "</FieldContainer>\n",
     "A SoundEmitter Core.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

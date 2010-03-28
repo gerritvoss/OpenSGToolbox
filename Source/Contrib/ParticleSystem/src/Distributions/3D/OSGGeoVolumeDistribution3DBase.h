@@ -69,7 +69,6 @@
 
 #include "OSGGeoVolumeDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class GeoVolumeDistribution3D;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeoVolumeDistribution3DBase : public 
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecGeometryPtr SFVolumeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -165,7 +163,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeoVolumeDistribution3DBase : public 
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

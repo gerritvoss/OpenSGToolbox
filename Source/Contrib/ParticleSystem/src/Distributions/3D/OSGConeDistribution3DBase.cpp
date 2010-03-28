@@ -154,7 +154,6 @@ void ConeDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Direction",
@@ -166,7 +165,6 @@ void ConeDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ConeDistribution3D::getHandleDirection));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -180,7 +178,6 @@ void ConeDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MinTheta",
@@ -192,7 +189,6 @@ void ConeDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ConeDistribution3D::getHandleMinTheta));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -206,7 +202,6 @@ void ConeDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Min",
@@ -218,7 +213,6 @@ void ConeDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ConeDistribution3D::getHandleMin));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -232,7 +226,6 @@ void ConeDistribution3DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SurfaceOrVolume",
@@ -244,7 +237,6 @@ void ConeDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ConeDistribution3D::getHandleSurfaceOrVolume));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -358,7 +350,6 @@ ConeDistribution3DBase::TypeObject ConeDistribution3DBase::_type(
     "</FieldContainer>\n",
     "An BoxDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

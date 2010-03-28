@@ -125,7 +125,6 @@ void PhysicsBoxGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBoxGeom::getHandleLengths));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -168,7 +167,6 @@ PhysicsBoxGeomBase::TypeObject PhysicsBoxGeomBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

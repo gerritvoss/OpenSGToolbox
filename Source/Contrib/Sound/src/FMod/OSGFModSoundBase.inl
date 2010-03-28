@@ -93,8 +93,6 @@ const Char8 *FModSoundBase::getClassname(void)
 {
     return "FModSound";
 }
-
-
 OSG_GEN_CONTAINERPTR(FModSound);
 
 OSG_END_NAMESPACE

@@ -142,7 +142,6 @@ void DistanceAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oTy
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MaxDistance",
@@ -154,7 +153,6 @@ void DistanceAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oTy
         static_cast<FieldGetMethodSig >(&DistanceAttractRepelParticleAffector::getHandleMaxDistance));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -168,7 +166,6 @@ void DistanceAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oTy
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Linear",
@@ -181,7 +178,6 @@ void DistanceAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oTy
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Constant",
@@ -193,7 +189,6 @@ void DistanceAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oTy
         static_cast<FieldGetMethodSig >(&DistanceAttractRepelParticleAffector::getHandleConstant));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -276,7 +271,6 @@ DistanceAttractRepelParticleAffectorBase::TypeObject DistanceAttractRepelParticl
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -569,8 +569,6 @@ const Char8 *PhysicsHinge2JointBase::getClassname(void)
 {
     return "PhysicsHinge2Joint";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsHinge2Joint);
 
 OSG_END_NAMESPACE

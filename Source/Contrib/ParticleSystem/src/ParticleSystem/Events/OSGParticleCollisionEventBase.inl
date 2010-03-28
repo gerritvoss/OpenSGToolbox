@@ -187,8 +187,6 @@ const Char8 *ParticleCollisionEventBase::getClassname(void)
 {
     return "ParticleCollisionEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(ParticleCollisionEvent);
 
 OSG_END_NAMESPACE

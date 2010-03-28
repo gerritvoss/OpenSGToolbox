@@ -196,8 +196,6 @@ const Char8 *RadialParticleAffectorBase::getClassname(void)
 {
     return "RadialParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(RadialParticleAffector);
 
 OSG_END_NAMESPACE

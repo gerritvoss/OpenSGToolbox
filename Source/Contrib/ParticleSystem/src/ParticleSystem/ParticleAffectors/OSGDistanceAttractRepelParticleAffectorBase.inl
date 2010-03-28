@@ -233,8 +233,6 @@ const Char8 *DistanceAttractRepelParticleAffectorBase::getClassname(void)
 {
     return "DistanceAttractRepelParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(DistanceAttractRepelParticleAffector);
 
 OSG_END_NAMESPACE

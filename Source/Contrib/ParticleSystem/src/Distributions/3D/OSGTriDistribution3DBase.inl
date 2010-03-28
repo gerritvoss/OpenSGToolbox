@@ -205,8 +205,6 @@ const Char8 *TriDistribution3DBase::getClassname(void)
 {
     return "TriDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(TriDistribution3D);
 
 OSG_END_NAMESPACE

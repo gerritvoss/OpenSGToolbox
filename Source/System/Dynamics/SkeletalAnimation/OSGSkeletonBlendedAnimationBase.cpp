@@ -177,7 +177,7 @@ SkeletonBlendedAnimationBase::TypeObject SkeletonBlendedAnimationBase::_type(
     "<FieldContainer\n"
     "\tname=\"SkeletonBlendedAnimation\"\n"
     "\tparent=\"Animation\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

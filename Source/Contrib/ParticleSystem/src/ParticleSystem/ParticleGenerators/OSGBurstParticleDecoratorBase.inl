@@ -121,8 +121,6 @@ const Char8 *BurstParticleDecoratorBase::getClassname(void)
 {
     return "BurstParticleDecorator";
 }
-
-
 OSG_GEN_CONTAINERPTR(BurstParticleDecorator);
 
 OSG_END_NAMESPACE

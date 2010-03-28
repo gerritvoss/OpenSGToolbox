@@ -485,8 +485,6 @@ const Char8 *PhysicsPistonJointBase::getClassname(void)
 {
     return "PhysicsPistonJoint";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsPistonJoint);
 
 OSG_END_NAMESPACE

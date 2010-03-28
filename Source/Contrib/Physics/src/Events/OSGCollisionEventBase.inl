@@ -383,8 +383,6 @@ const Char8 *CollisionEventBase::getClassname(void)
 {
     return "CollisionEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(CollisionEvent);
 
 OSG_END_NAMESPACE

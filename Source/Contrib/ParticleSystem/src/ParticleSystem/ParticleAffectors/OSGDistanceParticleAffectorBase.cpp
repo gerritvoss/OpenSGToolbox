@@ -140,7 +140,6 @@ void DistanceParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
         "DistanceFromNode",
@@ -152,7 +151,6 @@ void DistanceParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DistanceParticleAffector::getHandleDistanceFromNode));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
@@ -166,7 +164,6 @@ void DistanceParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecCameraPtr::Description(
         SFUnrecCameraPtr::getClassType(),
         "DistanceFromCamera",
@@ -178,7 +175,6 @@ void DistanceParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DistanceParticleAffector::getHandleDistanceFromCamera));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -251,7 +247,6 @@ DistanceParticleAffectorBase::TypeObject DistanceParticleAffectorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -69,7 +69,6 @@
 
 #include "OSGPhysicsSweepAndPruneSpaceFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsSweepAndPruneSpace;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSweepAndPruneSpaceBase : public Physi
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFInt32           SFAxisOrderType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSweepAndPruneSpaceBase : public Physi
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

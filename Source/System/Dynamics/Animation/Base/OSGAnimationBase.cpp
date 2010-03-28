@@ -221,7 +221,7 @@ AnimationBase::TypeObject AnimationBase::_type(
     "<FieldContainer\n"
     "\tname=\"Animation\"\n"
     "\tparent=\"AttachmentContainer\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
     "\tsystemcomponent=\"true\"\n"

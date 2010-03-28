@@ -70,7 +70,6 @@
 
 #include "OSGNewtonParticleAffectorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class NewtonParticleAffector;
@@ -125,7 +124,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING NewtonParticleAffectorBase : public P
     typedef SFReal32          SFMinDistanceType;
     typedef SFUnrecNodePtr    SFBeaconType;
     typedef SFReal32          SFParticleMassType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -221,7 +219,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING NewtonParticleAffectorBase : public P
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

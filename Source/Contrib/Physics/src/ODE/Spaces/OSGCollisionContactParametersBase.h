@@ -69,7 +69,6 @@
 
 #include "OSGCollisionContactParametersFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class CollisionContactParameters;
@@ -148,7 +147,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING CollisionContactParametersBase : public Atta
     typedef SFReal32          SFMotionNType;
     typedef SFReal32          SFSlip1Type;
     typedef SFReal32          SFSlip2Type;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -283,7 +281,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING CollisionContactParametersBase : public Atta
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -68,8 +68,8 @@ class SkeletonAnimation;
 
 OSG_GEN_CONTAINERPTR(SkeletonAnimation);
 
-/*! \ingroup GrpDynamicsFieldTraits
-    \ingroup GrpLibOSGDynamics
+/*! \ingroup GrpTBAnimationFieldTraits
+    \ingroup GrpLibOSGTBAnimation
  */
 template <>
 struct FieldTraits<SkeletonAnimation *> :
@@ -147,30 +147,30 @@ const Char8 *FieldTraits<SkeletonAnimation *, 0>::getMName<NoRefCountPolicy>(voi
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<SkeletonAnimation *,
                       RecordedRefCountPolicy  > SFRecSkeletonAnimationPtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<SkeletonAnimation *,
                       UnrecordedRefCountPolicy> SFUnrecSkeletonAnimationPtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<SkeletonAnimation *,
                       WeakRefCountPolicy      > SFWeakSkeletonAnimationPtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<SkeletonAnimation *,
                       NoRefCountPolicy        > SFUncountedSkeletonAnimationPtr;
 
 
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<SkeletonAnimation *,
                       RecordedRefCountPolicy  > MFRecSkeletonAnimationPtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<SkeletonAnimation *,
                       UnrecordedRefCountPolicy> MFUnrecSkeletonAnimationPtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<SkeletonAnimation *,
                       WeakRefCountPolicy      > MFWeakSkeletonAnimationPtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<SkeletonAnimation *,
                       NoRefCountPolicy        > MFUncountedSkeletonAnimationPtr;
 
@@ -179,37 +179,37 @@ typedef PointerMField<SkeletonAnimation *,
 
 #else // these are the doxygen hacks
 
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFRecSkeletonAnimationPtr : 
     public PointerSField<SkeletonAnimation *,
                          RecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUnrecSkeletonAnimationPtr : 
     public PointerSField<SkeletonAnimation *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFWeakSkeletonAnimationPtr :
     public PointerSField<SkeletonAnimation *,
                          WeakRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUncountedSkeletonAnimationPtr :
     public PointerSField<SkeletonAnimation *,
                          NoRefCountPolicy> {};
 
 
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFRecSkeletonAnimationPtr :
     public PointerMField<SkeletonAnimation *,
                          RecordedRefCountPolicy  > {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFUnrecSkeletonAnimationPtr :
     public PointerMField<SkeletonAnimation *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFWeakSkeletonAnimationPtr :
     public PointerMField<SkeletonAnimation *,
                          WeakRefCountPolicy      > {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFUncountedSkeletonAnimationPtr :
     public PointerMField<SkeletonAnimation *,
                          NoRefCountPolicy        > {};

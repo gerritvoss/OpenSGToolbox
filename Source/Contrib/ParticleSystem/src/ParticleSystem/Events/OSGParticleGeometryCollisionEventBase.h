@@ -72,7 +72,6 @@
 
 #include "OSGParticleGeometryCollisionEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleGeometryCollisionEvent;
@@ -131,7 +130,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeometryCollisionEventBase : 
     typedef SFPnt3f           SFHitPointType;
     typedef SFUnrecParticleSystemPtr SFSystemType;
     typedef SFUInt32          SFParticleIndexType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -213,7 +211,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeometryCollisionEventBase : 
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

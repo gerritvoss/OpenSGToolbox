@@ -69,7 +69,6 @@
 
 #include "OSGPhysicsCapsuleGeomFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsCapsuleGeom;
@@ -108,7 +107,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsCapsuleGeomBase : public PhysicsGeom
         
     typedef SFReal32          SFRadiusType;
     typedef SFReal32          SFLengthType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -173,7 +171,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsCapsuleGeomBase : public PhysicsGeom
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

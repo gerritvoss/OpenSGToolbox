@@ -205,8 +205,6 @@ const Char8 *DistanceFadeParticleAffectorBase::getClassname(void)
 {
     return "DistanceFadeParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(DistanceFadeParticleAffector);
 
 OSG_END_NAMESPACE

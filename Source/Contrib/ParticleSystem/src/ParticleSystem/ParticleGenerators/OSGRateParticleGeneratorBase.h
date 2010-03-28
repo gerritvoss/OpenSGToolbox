@@ -69,7 +69,6 @@
 
 #include "OSGRateParticleGeneratorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class RateParticleGenerator;
@@ -112,7 +111,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RateParticleGeneratorBase : public Dy
     typedef SFReal32          SFGenerationRateType;
     typedef SFReal32          SFTimeSinceLastGenerationType;
     typedef SFReal32          SFRateSpreadType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -177,7 +175,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RateParticleGeneratorBase : public Dy
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

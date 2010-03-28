@@ -68,7 +68,6 @@
 
 #include "OSGDistributionFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class Distribution;
@@ -90,7 +89,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistributionBase : public AttachmentC
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistributionBase : public AttachmentC
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

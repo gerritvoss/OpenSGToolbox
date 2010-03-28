@@ -70,7 +70,6 @@
 
 #include "OSGSegmentSetDistribution1DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SegmentSetDistribution1D;
@@ -109,7 +108,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SegmentSetDistribution1DBase : public
         
     typedef MFVec2f           MFSegmentType;
     typedef SFReal32          SFTotalLengthType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -166,7 +164,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SegmentSetDistribution1DBase : public
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

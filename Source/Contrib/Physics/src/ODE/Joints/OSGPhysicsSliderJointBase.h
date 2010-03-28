@@ -70,7 +70,6 @@
 
 #include "OSGPhysicsSliderJointFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsSliderJoint;
@@ -129,7 +128,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSliderJointBase : public PhysicsJoint
     typedef SFReal32          SFCFMType;
     typedef SFReal32          SFStopERPType;
     typedef SFReal32          SFStopCFMType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -229,7 +227,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSliderJointBase : public PhysicsJoint
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

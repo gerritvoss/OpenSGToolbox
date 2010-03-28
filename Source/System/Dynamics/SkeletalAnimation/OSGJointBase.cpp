@@ -226,7 +226,7 @@ JointBase::TypeObject JointBase::_type(
     "<FieldContainer\n"
     "\tname=\"Joint\"\n"
     "\tparent=\"AttachmentContainer\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

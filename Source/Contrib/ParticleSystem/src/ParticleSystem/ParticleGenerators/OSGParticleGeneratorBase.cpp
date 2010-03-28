@@ -131,7 +131,6 @@ void ParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "GenerateInWorldSpace",
@@ -143,7 +142,6 @@ void ParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleGenerator::getHandleGenerateInWorldSpace));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -196,7 +194,6 @@ ParticleGeneratorBase::TypeObject ParticleGeneratorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

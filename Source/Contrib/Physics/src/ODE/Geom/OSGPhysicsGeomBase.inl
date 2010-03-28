@@ -383,8 +383,6 @@ const Char8 *PhysicsGeomBase::getClassname(void)
 {
     return "PhysicsGeom";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsGeom);
 
 OSG_END_NAMESPACE

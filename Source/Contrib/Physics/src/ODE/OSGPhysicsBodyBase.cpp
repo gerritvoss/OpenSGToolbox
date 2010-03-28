@@ -223,7 +223,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFMatrix::Description(
         SFMatrix::getClassType(),
         "rotation",
@@ -235,7 +234,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleRotation));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFQuaternion::Description(
         SFQuaternion::getClassType(),
@@ -249,7 +247,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "linearVel",
@@ -261,7 +258,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleLinearVel));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -275,7 +271,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "force",
@@ -287,7 +282,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleForce));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -301,7 +295,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "mass",
@@ -313,7 +306,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleMass));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -327,7 +319,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFMatrix::Description(
         SFMatrix::getClassType(),
         "massInertiaTensor",
@@ -339,7 +330,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleMassInertiaTensor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
@@ -353,7 +343,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "autoDisableLinearThreshold",
@@ -365,7 +354,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleAutoDisableLinearThreshold));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -379,7 +367,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "autoDisableSteps",
@@ -391,7 +378,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleAutoDisableSteps));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -405,7 +391,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "finiteRotationMode",
@@ -417,7 +402,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleFiniteRotationMode));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -431,7 +415,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "gravityMode",
@@ -443,7 +426,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleGravityMode));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -457,7 +439,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "angularDamping",
@@ -469,7 +450,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleAngularDamping));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -483,7 +463,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "angularDampingThreshold",
@@ -495,7 +474,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleAngularDampingThreshold));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -509,7 +487,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "kinematic",
@@ -522,7 +499,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecPhysicsWorldPtr::Description(
         SFUnrecPhysicsWorldPtr::getClassType(),
         "world",
@@ -534,7 +510,6 @@ void PhysicsBodyBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsBody::getHandleWorld));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -814,7 +789,6 @@ PhysicsBodyBase::TypeObject PhysicsBodyBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -69,7 +69,6 @@
 
 #include "OSGPhysicsTriMeshGeomFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsTriMeshGeom;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsTriMeshGeomBase : public PhysicsGeom
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecNodePtr    SFGeometryNodeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -165,7 +163,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsTriMeshGeomBase : public PhysicsGeom
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

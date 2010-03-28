@@ -140,7 +140,6 @@ ParticleSystemDrawerBase::TypeObject ParticleSystemDrawerBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ParticleSystemDrawerBase::getType(void)

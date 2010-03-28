@@ -144,7 +144,7 @@ KeyframeSequenceBase::TypeObject KeyframeSequenceBase::_type(
     "<FieldContainer\n"
     "\tname=\"KeyframeSequence\"\n"
     "\tparent=\"Attachment\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
     "\tsystemcomponent=\"true\"\n"

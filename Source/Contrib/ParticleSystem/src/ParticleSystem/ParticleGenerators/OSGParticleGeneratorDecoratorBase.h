@@ -69,7 +69,6 @@
 
 #include "OSGParticleGeneratorDecoratorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleGeneratorDecorator;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorDecoratorBase : publ
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecParticleGeneratorPtr SFDecorateeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -165,7 +163,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorDecoratorBase : publ
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

@@ -160,7 +160,6 @@ void LineParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "LineLengthScaling",
@@ -172,7 +171,6 @@ void LineParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LineParticleSystemDrawer::getHandleLineLengthScaling));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -192,7 +190,6 @@ void LineParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "LineDirection",
@@ -204,7 +201,6 @@ void LineParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LineParticleSystemDrawer::getHandleLineDirection));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -223,7 +219,6 @@ void LineParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "LineLength",
@@ -235,7 +230,6 @@ void LineParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LineParticleSystemDrawer::getHandleLineLength));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
@@ -249,7 +243,6 @@ void LineParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LineParticleSystemDrawer::getHandleEndPointFading));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -371,7 +364,6 @@ LineParticleSystemDrawerBase::TypeObject LineParticleSystemDrawerBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

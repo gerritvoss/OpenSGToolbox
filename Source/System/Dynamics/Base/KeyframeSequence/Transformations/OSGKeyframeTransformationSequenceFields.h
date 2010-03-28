@@ -68,8 +68,8 @@ class KeyframeTransformationSequence;
 
 OSG_GEN_CONTAINERPTR(KeyframeTransformationSequence);
 
-/*! \ingroup GrpDynamicsFieldTraits
-    \ingroup GrpLibOSGDynamics
+/*! \ingroup GrpTBAnimationFieldTraits
+    \ingroup GrpLibOSGTBAnimation
  */
 template <>
 struct FieldTraits<KeyframeTransformationSequence *> :
@@ -147,30 +147,30 @@ const Char8 *FieldTraits<KeyframeTransformationSequence *, 0>::getMName<NoRefCou
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<KeyframeTransformationSequence *,
                       RecordedRefCountPolicy  > SFRecKeyframeTransformationSequencePtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<KeyframeTransformationSequence *,
                       UnrecordedRefCountPolicy> SFUnrecKeyframeTransformationSequencePtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<KeyframeTransformationSequence *,
                       WeakRefCountPolicy      > SFWeakKeyframeTransformationSequencePtr;
-/*! \ingroup GrpDynamicsFieldSFields */
+/*! \ingroup GrpTBAnimationFieldSFields */
 typedef PointerSField<KeyframeTransformationSequence *,
                       NoRefCountPolicy        > SFUncountedKeyframeTransformationSequencePtr;
 
 
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<KeyframeTransformationSequence *,
                       RecordedRefCountPolicy  > MFRecKeyframeTransformationSequencePtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<KeyframeTransformationSequence *,
                       UnrecordedRefCountPolicy> MFUnrecKeyframeTransformationSequencePtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<KeyframeTransformationSequence *,
                       WeakRefCountPolicy      > MFWeakKeyframeTransformationSequencePtr;
-/*! \ingroup GrpDynamicsFieldMFields */
+/*! \ingroup GrpTBAnimationFieldMFields */
 typedef PointerMField<KeyframeTransformationSequence *,
                       NoRefCountPolicy        > MFUncountedKeyframeTransformationSequencePtr;
 
@@ -179,37 +179,37 @@ typedef PointerMField<KeyframeTransformationSequence *,
 
 #else // these are the doxygen hacks
 
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFRecKeyframeTransformationSequencePtr : 
     public PointerSField<KeyframeTransformationSequence *,
                          RecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUnrecKeyframeTransformationSequencePtr : 
     public PointerSField<KeyframeTransformationSequence *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFWeakKeyframeTransformationSequencePtr :
     public PointerSField<KeyframeTransformationSequence *,
                          WeakRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
 struct SFUncountedKeyframeTransformationSequencePtr :
     public PointerSField<KeyframeTransformationSequence *,
                          NoRefCountPolicy> {};
 
 
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFRecKeyframeTransformationSequencePtr :
     public PointerMField<KeyframeTransformationSequence *,
                          RecordedRefCountPolicy  > {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFUnrecKeyframeTransformationSequencePtr :
     public PointerMField<KeyframeTransformationSequence *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFWeakKeyframeTransformationSequencePtr :
     public PointerMField<KeyframeTransformationSequence *,
                          WeakRefCountPolicy      > {};
-/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
 struct MFUncountedKeyframeTransformationSequencePtr :
     public PointerMField<KeyframeTransformationSequence *,
                          NoRefCountPolicy        > {};

@@ -140,7 +140,6 @@ PhysicsPlane2DJointBase::TypeObject PhysicsPlane2DJointBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &PhysicsPlane2DJointBase::getType(void)

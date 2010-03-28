@@ -70,7 +70,6 @@
 
 #include "OSGPhysicsAMotorJointFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsAMotorJoint;
@@ -241,7 +240,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsAMotorJointBase : public PhysicsJoint
     typedef SFReal32          SFCFM3Type;
     typedef SFReal32          SFStopERP3Type;
     typedef SFReal32          SFStopCFM3Type;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -495,7 +493,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsAMotorJointBase : public PhysicsJoint
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

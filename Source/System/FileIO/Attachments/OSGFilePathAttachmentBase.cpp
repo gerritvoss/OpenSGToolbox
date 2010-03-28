@@ -144,7 +144,7 @@ FilePathAttachmentBase::TypeObject FilePathAttachmentBase::_type(
     "<FieldContainer\n"
     "\tname=\"FilePathAttachment\"\n"
     "\tparent=\"Attachment\"\n"
-    "    library=\"FileIO\"\n"
+    "    library=\"TBFileIO\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

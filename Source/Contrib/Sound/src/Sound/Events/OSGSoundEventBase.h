@@ -69,7 +69,6 @@
 
 #include "OSGSoundEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SoundEvent;
@@ -104,7 +103,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundEventBase : public Event
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUInt32          SFChannelType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -159,7 +157,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundEventBase : public Event
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

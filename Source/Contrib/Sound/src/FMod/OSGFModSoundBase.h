@@ -68,7 +68,6 @@
 
 #include "OSGFModSoundFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class FModSound;
@@ -90,7 +89,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING FModSoundBase : public Sound
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING FModSoundBase : public Sound
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

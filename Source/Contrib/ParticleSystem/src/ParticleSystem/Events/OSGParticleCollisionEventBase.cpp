@@ -139,7 +139,6 @@ void ParticleCollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "PrimaryParticleIndex",
@@ -151,7 +150,6 @@ void ParticleCollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleCollisionEvent::getHandlePrimaryParticleIndex));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecParticleSystemPtr::Description(
         SFUnrecParticleSystemPtr::getClassType(),
@@ -165,7 +163,6 @@ void ParticleCollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SecondaryParticleIndex",
@@ -177,7 +174,6 @@ void ParticleCollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleCollisionEvent::getHandleSecondaryParticleIndex));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -254,7 +250,6 @@ ParticleCollisionEventBase::TypeObject ParticleCollisionEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -244,7 +244,7 @@ FieldAnimationBase::TypeObject FieldAnimationBase::_type(
     "<FieldContainer\n"
     "\tname=\"FieldAnimation\"\n"
     "\tparent=\"Animation\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

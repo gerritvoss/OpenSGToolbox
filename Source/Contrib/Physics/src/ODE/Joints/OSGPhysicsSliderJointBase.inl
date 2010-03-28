@@ -289,8 +289,6 @@ const Char8 *PhysicsSliderJointBase::getClassname(void)
 {
     return "PhysicsSliderJoint";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsSliderJoint);
 
 OSG_END_NAMESPACE

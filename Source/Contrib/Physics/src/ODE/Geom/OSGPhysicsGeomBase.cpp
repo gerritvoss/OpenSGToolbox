@@ -168,7 +168,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "position",
@@ -180,7 +179,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsGeom::getHandlePosition));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFMatrix::Description(
         SFMatrix::getClassType(),
@@ -194,7 +192,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFQuaternion::Description(
         SFQuaternion::getClassType(),
         "quaternion",
@@ -206,7 +203,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsGeom::getHandleQuaternion));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
@@ -220,7 +216,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFMatrix::Description(
         SFMatrix::getClassType(),
         "offsetRotation",
@@ -232,7 +227,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsGeom::getHandleOffsetRotation));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFQuaternion::Description(
         SFQuaternion::getClassType(),
@@ -246,7 +240,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt64::Description(
         SFUInt64::getClassType(),
         "categoryBits",
@@ -258,7 +251,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsGeom::getHandleCategoryBits));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt64::Description(
         SFUInt64::getClassType(),
@@ -272,7 +264,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecPhysicsSpacePtr::Description(
         SFUnrecPhysicsSpacePtr::getClassType(),
         "space",
@@ -285,7 +276,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "enable",
@@ -297,7 +287,6 @@ void PhysicsGeomBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsGeom::getHandleEnable));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -432,7 +421,6 @@ PhysicsGeomBase::TypeObject PhysicsGeomBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

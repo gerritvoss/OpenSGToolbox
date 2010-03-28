@@ -513,8 +513,6 @@ const Char8 *PhysicsPRJointBase::getClassname(void)
 {
     return "PhysicsPRJoint";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsPRJoint);
 
 OSG_END_NAMESPACE

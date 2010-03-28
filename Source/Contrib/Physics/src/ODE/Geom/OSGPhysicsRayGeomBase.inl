@@ -205,8 +205,6 @@ const Char8 *PhysicsRayGeomBase::getClassname(void)
 {
     return "PhysicsRayGeom";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsRayGeom);
 
 OSG_END_NAMESPACE

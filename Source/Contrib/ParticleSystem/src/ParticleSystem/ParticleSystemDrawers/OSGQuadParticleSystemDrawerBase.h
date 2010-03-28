@@ -70,7 +70,6 @@
 
 #include "OSGQuadParticleSystemDrawerFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class QuadParticleSystemDrawer;
@@ -133,7 +132,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadParticleSystemDrawerBase : public
     typedef SFVec3f           SFUpType;
     typedef SFBool            SFUseNormalAsObjectSpaceRotationType;
     typedef SFReal32          SFTwistType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -240,7 +238,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadParticleSystemDrawerBase : public
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -121,8 +121,6 @@ const Char8 *PhysicsBallJointBase::getClassname(void)
 {
     return "PhysicsBallJoint";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsBallJoint);
 
 OSG_END_NAMESPACE

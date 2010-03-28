@@ -392,8 +392,6 @@ const Char8 *PhysicsCharacteristicsDrawableBase::getClassname(void)
 {
     return "PhysicsCharacteristicsDrawable";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsCharacteristicsDrawable);
 
 OSG_END_NAMESPACE

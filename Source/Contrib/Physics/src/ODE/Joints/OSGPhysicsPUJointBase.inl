@@ -709,8 +709,6 @@ const Char8 *PhysicsPUJointBase::getClassname(void)
 {
     return "PhysicsPUJoint";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsPUJoint);
 
 OSG_END_NAMESPACE

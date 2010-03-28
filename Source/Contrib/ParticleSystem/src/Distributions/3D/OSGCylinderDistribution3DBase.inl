@@ -373,8 +373,6 @@ const Char8 *CylinderDistribution3DBase::getClassname(void)
 {
     return "CylinderDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(CylinderDistribution3D);
 
 OSG_END_NAMESPACE

@@ -112,8 +112,6 @@ const Char8 *GeoVolumeDistribution3DBase::getClassname(void)
 {
     return "GeoVolumeDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(GeoVolumeDistribution3D);
 
 OSG_END_NAMESPACE

@@ -152,7 +152,6 @@ void ParticleGeometryCollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
         "HitNode",
@@ -164,7 +163,6 @@ void ParticleGeometryCollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleHitNode));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
@@ -178,7 +176,6 @@ void ParticleGeometryCollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "HitNormal",
@@ -190,7 +187,6 @@ void ParticleGeometryCollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleHitNormal));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
@@ -204,7 +200,6 @@ void ParticleGeometryCollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecParticleSystemPtr::Description(
         SFUnrecParticleSystemPtr::getClassType(),
         "System",
@@ -217,7 +212,6 @@ void ParticleGeometryCollisionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "ParticleIndex",
@@ -229,7 +223,6 @@ void ParticleGeometryCollisionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleParticleIndex));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -339,7 +332,6 @@ ParticleGeometryCollisionEventBase::TypeObject ParticleGeometryCollisionEventBas
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

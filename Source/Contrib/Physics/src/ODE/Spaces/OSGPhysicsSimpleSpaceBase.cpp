@@ -140,7 +140,6 @@ PhysicsSimpleSpaceBase::TypeObject PhysicsSimpleSpaceBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &PhysicsSimpleSpaceBase::getType(void)

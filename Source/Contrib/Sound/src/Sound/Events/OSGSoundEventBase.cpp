@@ -122,7 +122,6 @@ void SoundEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SoundEvent::getHandleChannel));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -167,7 +166,6 @@ SoundEventBase::TypeObject SoundEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

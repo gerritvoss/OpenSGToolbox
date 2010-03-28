@@ -125,7 +125,6 @@ void DistanceKillParticleAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DistanceKillParticleAffector::getHandleKillDistance));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -168,7 +167,6 @@ DistanceKillParticleAffectorBase::TypeObject DistanceKillParticleAffectorBase::_
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -209,7 +209,7 @@ SkeletonDrawableBase::TypeObject SkeletonDrawableBase::_type(
     "<FieldContainer\n"
     "\tname=\"SkeletonDrawable\"\n"
     "\tparent=\"MaterialDrawable\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

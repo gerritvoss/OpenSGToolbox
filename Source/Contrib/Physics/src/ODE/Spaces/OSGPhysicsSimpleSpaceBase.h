@@ -68,7 +68,6 @@
 
 #include "OSGPhysicsSimpleSpaceFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsSimpleSpace;
@@ -90,7 +89,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSimpleSpaceBase : public PhysicsSpace
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSimpleSpaceBase : public PhysicsSpace
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

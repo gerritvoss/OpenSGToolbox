@@ -134,7 +134,6 @@ void PhysicsQuadTreeSpaceBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "extent",
@@ -147,7 +146,6 @@ void PhysicsQuadTreeSpaceBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "depth",
@@ -159,7 +157,6 @@ void PhysicsQuadTreeSpaceBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsQuadTreeSpace::getHandleDepth));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -219,7 +216,6 @@ PhysicsQuadTreeSpaceBase::TypeObject PhysicsQuadTreeSpaceBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

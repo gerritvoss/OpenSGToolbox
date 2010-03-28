@@ -126,7 +126,6 @@ void GeoVolumeDistribution3DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GeoVolumeDistribution3D::getHandleVolume));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ GeoVolumeDistribution3DBase::TypeObject GeoVolumeDistribution3DBase::_type(
     "</FieldContainer>\n",
     "An GeoVolumeDistribution3D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

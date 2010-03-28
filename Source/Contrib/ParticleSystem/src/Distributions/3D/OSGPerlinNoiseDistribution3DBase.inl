@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -289,8 +289,6 @@ const Char8 *PerlinNoiseDistribution3DBase::getClassname(void)
 {
     return "PerlinNoiseDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(PerlinNoiseDistribution3D);
 
 OSG_END_NAMESPACE

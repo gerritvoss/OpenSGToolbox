@@ -141,7 +141,6 @@ FModSoundBase::TypeObject FModSoundBase::_type(
     "A FMod Sound Interface.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &FModSoundBase::getType(void)

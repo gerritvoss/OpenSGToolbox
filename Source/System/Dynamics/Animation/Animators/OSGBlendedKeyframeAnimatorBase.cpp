@@ -161,7 +161,7 @@ BlendedKeyframeAnimatorBase::TypeObject BlendedKeyframeAnimatorBase::_type(
     "<FieldContainer\n"
     "\tname=\"BlendedKeyframeAnimator\"\n"
     "\tparent=\"Animator\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

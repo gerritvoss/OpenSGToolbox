@@ -71,7 +71,6 @@
 
 #include "OSGPhysicsWorldFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsWorld;
@@ -150,7 +149,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
     typedef SFReal32          SFWorldContactMaxCorrectingVelType;
     typedef SFReal32          SFWorldContactSurfaceLayerType;
     typedef SFUnrecPhysicsHandlerPtr SFInternalParentHandlerType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -283,7 +281,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

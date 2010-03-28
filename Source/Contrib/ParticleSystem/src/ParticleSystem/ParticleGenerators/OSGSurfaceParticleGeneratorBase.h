@@ -71,7 +71,6 @@
 
 #include "OSGSurfaceParticleGeneratorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SurfaceParticleGenerator;
@@ -138,7 +137,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SurfaceParticleGeneratorBase : public
     typedef SFUnrecDistribution1DPtr SFAgeDistributionType;
     typedef SFUnrecDistribution1DPtr SFSpeedDistributionType;
     typedef SFUnrecDistribution3DPtr SFAccelerationDistributionType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -239,7 +237,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SurfaceParticleGeneratorBase : public
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

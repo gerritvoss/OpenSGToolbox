@@ -161,7 +161,6 @@ void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
         "NormalDistribution",
@@ -173,7 +172,6 @@ void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleNormalDistribution));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
@@ -187,7 +185,6 @@ void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution1DPtr::Description(
         SFUnrecDistribution1DPtr::getClassType(),
         "TransparencyDistribution",
@@ -199,7 +196,6 @@ void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleTransparencyDistribution));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
@@ -213,7 +209,6 @@ void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution1DPtr::Description(
         SFUnrecDistribution1DPtr::getClassType(),
         "LifespanDistribution",
@@ -225,7 +220,6 @@ void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleLifespanDistribution));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecDistribution1DPtr::Description(
         SFUnrecDistribution1DPtr::getClassType(),
@@ -239,7 +233,6 @@ void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution1DPtr::Description(
         SFUnrecDistribution1DPtr::getClassType(),
         "SpeedDistribution",
@@ -252,7 +245,6 @@ void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecDistribution3DPtr::Description(
         SFUnrecDistribution3DPtr::getClassType(),
         "AccelerationDistribution",
@@ -264,7 +256,6 @@ void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleAccelerationDistribution));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -387,7 +378,6 @@ SurfaceParticleGeneratorBase::TypeObject SurfaceParticleGeneratorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

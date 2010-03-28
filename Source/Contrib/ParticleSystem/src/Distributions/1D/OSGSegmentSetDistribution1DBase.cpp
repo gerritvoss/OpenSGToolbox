@@ -130,7 +130,6 @@ void SegmentSetDistribution1DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "TotalLength",
@@ -142,7 +141,6 @@ void SegmentSetDistribution1DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SegmentSetDistribution1D::getHandleTotalLength));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -194,7 +192,6 @@ SegmentSetDistribution1DBase::TypeObject SegmentSetDistribution1DBase::_type(
     "</FieldContainer>\n",
     "An SegmentSetDistribution1D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

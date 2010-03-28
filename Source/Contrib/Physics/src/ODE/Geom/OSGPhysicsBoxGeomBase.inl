@@ -121,8 +121,6 @@ const Char8 *PhysicsBoxGeomBase::getClassname(void)
 {
     return "PhysicsBoxGeom";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsBoxGeom);
 
 OSG_END_NAMESPACE

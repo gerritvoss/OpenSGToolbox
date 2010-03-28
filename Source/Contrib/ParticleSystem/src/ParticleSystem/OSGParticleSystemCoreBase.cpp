@@ -146,7 +146,6 @@ void ParticleSystemCoreBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUInt32::Description(
         MFUInt32::getClassType(),
         "Sort",
@@ -158,7 +157,6 @@ void ParticleSystemCoreBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleSort));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecParticleSystemPtr::Description(
         SFUnrecParticleSystemPtr::getClassType(),
@@ -172,7 +170,6 @@ void ParticleSystemCoreBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecParticleSystemDrawerPtr::Description(
         SFUnrecParticleSystemDrawerPtr::getClassType(),
         "Drawer",
@@ -184,7 +181,6 @@ void ParticleSystemCoreBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleDrawer));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -260,7 +256,6 @@ ParticleSystemCoreBase::TypeObject ParticleSystemCoreBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

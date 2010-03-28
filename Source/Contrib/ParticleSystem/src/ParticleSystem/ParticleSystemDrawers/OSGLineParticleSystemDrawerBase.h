@@ -70,7 +70,6 @@
 
 #include "OSGLineParticleSystemDrawerFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class LineParticleSystemDrawer;
@@ -129,7 +128,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING LineParticleSystemDrawerBase : public
     typedef SFUInt32          SFLineLengthSourceType;
     typedef SFReal32          SFLineLengthType;
     typedef SFVec2f           SFEndPointFadingType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -229,7 +227,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING LineParticleSystemDrawerBase : public
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

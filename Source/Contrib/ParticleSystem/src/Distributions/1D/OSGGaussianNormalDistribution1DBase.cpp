@@ -130,7 +130,6 @@ void GaussianNormalDistribution1DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "StandardDeviation",
@@ -142,7 +141,6 @@ void GaussianNormalDistribution1DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GaussianNormalDistribution1D::getHandleStandardDeviation));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -196,7 +194,6 @@ GaussianNormalDistribution1DBase::TypeObject GaussianNormalDistribution1DBase::_
     "</FieldContainer>\n",
     "An GaussianNormalDistribution1D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

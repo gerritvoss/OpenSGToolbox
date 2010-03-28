@@ -190,8 +190,6 @@ const Char8 *ConditionalParticleAffectorBase::getClassname(void)
 {
     return "ConditionalParticleAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(ConditionalParticleAffector);
 
 OSG_END_NAMESPACE

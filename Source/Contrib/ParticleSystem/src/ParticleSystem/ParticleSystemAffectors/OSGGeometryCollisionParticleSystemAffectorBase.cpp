@@ -134,7 +134,6 @@ void GeometryCollisionParticleSystemAffectorBase::classDescInserter(TypeObject &
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecNodePtr::Description(
         SFUnrecNodePtr::getClassType(),
         "CollisionNode",
@@ -146,7 +145,6 @@ void GeometryCollisionParticleSystemAffectorBase::classDescInserter(TypeObject &
         static_cast<FieldGetMethodSig >(&GeometryCollisionParticleSystemAffector::getHandleCollisionNode));
 
     oType.addInitialDesc(pDesc);
-
     pDesc = new SFEventProducerPtr::Description(
         SFEventProducerPtr::getClassType(),
         "EventProducer",

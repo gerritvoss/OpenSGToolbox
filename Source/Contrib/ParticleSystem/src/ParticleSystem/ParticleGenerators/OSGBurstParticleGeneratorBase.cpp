@@ -125,7 +125,6 @@ void BurstParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&BurstParticleGenerator::getHandleBurstAmount));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -168,7 +167,6 @@ BurstParticleGeneratorBase::TypeObject BurstParticleGeneratorBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

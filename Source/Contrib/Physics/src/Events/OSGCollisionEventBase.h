@@ -71,7 +71,6 @@
 
 #include "OSGCollisionEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class CollisionEvent;
@@ -146,7 +145,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING CollisionEventBase : public Event
     typedef SFVec3f           SFObject1VelocityType;
     typedef SFVec3f           SFObject2VelocityType;
     typedef SFReal32          SFProjectedNormalSpeedType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -256,7 +254,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING CollisionEventBase : public Event
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

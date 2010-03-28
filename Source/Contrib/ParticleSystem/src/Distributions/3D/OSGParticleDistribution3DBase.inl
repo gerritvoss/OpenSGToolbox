@@ -112,8 +112,6 @@ const Char8 *ParticleDistribution3DBase::getClassname(void)
 {
     return "ParticleDistribution3D";
 }
-
-
 OSG_GEN_CONTAINERPTR(ParticleDistribution3D);
 
 OSG_END_NAMESPACE

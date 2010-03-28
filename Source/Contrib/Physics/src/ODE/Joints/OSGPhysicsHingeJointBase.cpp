@@ -154,7 +154,6 @@ void PhysicsHingeJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "axis",
@@ -166,7 +165,6 @@ void PhysicsHingeJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHingeJoint::getHandleAxis));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -180,7 +178,6 @@ void PhysicsHingeJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "loStop",
@@ -192,7 +189,6 @@ void PhysicsHingeJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHingeJoint::getHandleLoStop));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -206,7 +202,6 @@ void PhysicsHingeJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "CFM",
@@ -218,7 +213,6 @@ void PhysicsHingeJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHingeJoint::getHandleCFM));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -232,7 +226,6 @@ void PhysicsHingeJointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "stopCFM",
@@ -244,7 +237,6 @@ void PhysicsHingeJointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsHingeJoint::getHandleStopCFM));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -361,7 +353,6 @@ PhysicsHingeJointBase::TypeObject PhysicsHingeJointBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

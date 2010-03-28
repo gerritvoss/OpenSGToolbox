@@ -146,7 +146,6 @@ void AttributeAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oT
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MinDistance",
@@ -158,7 +157,6 @@ void AttributeAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oT
         static_cast<FieldGetMethodSig >(&AttributeAttractRepelParticleAffector::getHandleMinDistance));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -172,7 +170,6 @@ void AttributeAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oT
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Quadratic",
@@ -184,7 +181,6 @@ void AttributeAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oT
         static_cast<FieldGetMethodSig >(&AttributeAttractRepelParticleAffector::getHandleQuadratic));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -198,7 +194,6 @@ void AttributeAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oT
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Constant",
@@ -210,7 +205,6 @@ void AttributeAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oT
         static_cast<FieldGetMethodSig >(&AttributeAttractRepelParticleAffector::getHandleConstant));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -303,7 +297,6 @@ AttributeAttractRepelParticleAffectorBase::TypeObject AttributeAttractRepelParti
     "</FieldContainer>\n",
     "l\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

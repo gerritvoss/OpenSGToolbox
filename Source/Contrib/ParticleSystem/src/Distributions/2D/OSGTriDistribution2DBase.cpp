@@ -138,7 +138,6 @@ void TriDistribution2DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Point2",
@@ -150,7 +149,6 @@ void TriDistribution2DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TriDistribution2D::getHandlePoint2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
@@ -164,7 +162,6 @@ void TriDistribution2DBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SurfaceOrEdge",
@@ -176,7 +173,6 @@ void TriDistribution2DBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TriDistribution2D::getHandleSurfaceOrEdge));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -250,7 +246,6 @@ TriDistribution2DBase::TypeObject TriDistribution2DBase::_type(
     "</FieldContainer>\n",
     "An TriangleDistribution2D.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

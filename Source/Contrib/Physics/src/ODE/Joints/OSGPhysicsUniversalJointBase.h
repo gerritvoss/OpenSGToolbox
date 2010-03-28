@@ -70,7 +70,6 @@
 
 #include "OSGPhysicsUniversalJointFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsUniversalJoint;
@@ -161,7 +160,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsUniversalJointBase : public PhysicsJo
     typedef SFReal32          SFCFM2Type;
     typedef SFReal32          SFStopERP2Type;
     typedef SFReal32          SFStopCFM2Type;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -317,7 +315,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsUniversalJointBase : public PhysicsJo
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

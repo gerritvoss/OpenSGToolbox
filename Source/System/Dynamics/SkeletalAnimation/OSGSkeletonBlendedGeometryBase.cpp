@@ -227,7 +227,7 @@ SkeletonBlendedGeometryBase::TypeObject SkeletonBlendedGeometryBase::_type(
     "<FieldContainer\n"
     "\tname=\"SkeletonBlendedGeometry\"\n"
     "\tparent=\"Geometry\"\n"
-    "    library=\"Dynamics\"\n"
+    "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"

@@ -69,7 +69,6 @@
 
 #include "OSGGeoSurfaceDistribution3DFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class GeoSurfaceDistribution3D;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeoSurfaceDistribution3DBase : public
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecGeometryPtr SFSurfaceType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -165,7 +163,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeoSurfaceDistribution3DBase : public
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

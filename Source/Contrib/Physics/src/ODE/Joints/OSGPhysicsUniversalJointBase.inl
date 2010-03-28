@@ -513,8 +513,6 @@ const Char8 *PhysicsUniversalJointBase::getClassname(void)
 {
     return "PhysicsUniversalJoint";
 }
-
-
 OSG_GEN_CONTAINERPTR(PhysicsUniversalJoint);
 
 OSG_END_NAMESPACE

@@ -70,7 +70,6 @@
 
 #include "OSGPhysicsJointFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsJoint;
@@ -113,7 +112,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsJointBase : public AttachmentContaine
     typedef SFUnrecPhysicsWorldPtr SFWorldType;
     typedef SFUnrecPhysicsBodyPtr SFFirstBodyType;
     typedef SFUnrecPhysicsBodyPtr SFSecondBodyType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -184,7 +182,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsJointBase : public AttachmentContaine
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -69,7 +69,6 @@
 
 #include "OSGBurstParticleDecoratorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class BurstParticleDecorator;
@@ -104,7 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING BurstParticleDecoratorBase : public P
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUInt32          SFBurstAmountType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING BurstParticleDecoratorBase : public P
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

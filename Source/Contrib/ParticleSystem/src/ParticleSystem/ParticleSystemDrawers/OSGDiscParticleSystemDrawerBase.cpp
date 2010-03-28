@@ -173,7 +173,6 @@ void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Segments",
@@ -185,7 +184,6 @@ void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleSegments));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -207,7 +205,6 @@ void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Normal",
@@ -219,7 +216,6 @@ void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleNormal));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -240,7 +236,6 @@ void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Up",
@@ -252,7 +247,6 @@ void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleUp));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -266,7 +260,6 @@ void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "CenterAlpha",
@@ -279,7 +272,6 @@ void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "EdgeAlpha",
@@ -291,7 +283,6 @@ void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleEdgeAlpha));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -435,7 +426,6 @@ DiscParticleSystemDrawerBase::TypeObject DiscParticleSystemDrawerBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

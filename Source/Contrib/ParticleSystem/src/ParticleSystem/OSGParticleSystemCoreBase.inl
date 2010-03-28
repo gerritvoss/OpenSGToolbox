@@ -181,8 +181,6 @@ const Char8 *ParticleSystemCoreBase::getClassname(void)
 {
     return "ParticleSystemCore";
 }
-
-
 OSG_GEN_CONTAINERPTR(ParticleSystemCore);
 
 OSG_END_NAMESPACE
