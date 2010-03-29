@@ -126,7 +126,6 @@ void AbstractColorChooserPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AbstractColorChooserPanel::getHandleParentChooser));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ AbstractColorChooserPanelBase::TypeObject AbstractColorChooserPanelBase::_type(
     "</FieldContainer>\n",
     "A UI AbstractColorChooserPanel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

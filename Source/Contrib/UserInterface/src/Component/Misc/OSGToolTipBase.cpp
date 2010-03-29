@@ -144,7 +144,6 @@ void ToolTipBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecComponentPtr::Description(
         SFUnrecComponentPtr::getClassType(),
         "TippedComponent",
@@ -156,7 +155,6 @@ void ToolTipBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ToolTip::getHandleTippedComponent));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFString::Description(
         SFString::getClassType(),
@@ -170,7 +168,6 @@ void ToolTipBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "Alignment",
@@ -183,7 +180,6 @@ void ToolTipBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "TextColor",
@@ -195,7 +191,6 @@ void ToolTipBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ToolTip::getHandleTextColor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -277,7 +272,6 @@ ToolTipBase::TypeObject ToolTipBase::_type(
     "</FieldContainer>\n",
     "A UI Tooltip.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

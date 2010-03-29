@@ -130,7 +130,6 @@ void PasswordFieldBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFString::Description(
         SFString::getClassType(),
         "Echo",
@@ -142,7 +141,6 @@ void PasswordFieldBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PasswordField::getHandleEcho));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -196,7 +194,6 @@ PasswordFieldBase::TypeObject PasswordFieldBase::_type(
     "</FieldContainer>\n",
     "A UI Password Field\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

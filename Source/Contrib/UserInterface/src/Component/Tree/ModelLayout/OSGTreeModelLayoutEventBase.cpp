@@ -140,7 +140,6 @@ TreeModelLayoutEventBase::TypeObject TreeModelLayoutEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &TreeModelLayoutEventBase::getType(void)

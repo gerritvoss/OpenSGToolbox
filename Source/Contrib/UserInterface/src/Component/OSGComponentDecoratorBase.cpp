@@ -133,9 +133,9 @@ void ComponentDecoratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ComponentDecorator::getHandleDecoratee ));
 
     oType.addInitialDesc(pDesc);
-    pDesc = new EventProducer::Description(
+    pDesc = new SFEventProducerPtr::Description(
         SFEventProducerPtr::getClassType(),
-        "EventProducer",
+        "ComponentDecoratorEventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
         true,
@@ -3174,7 +3174,7 @@ void ComponentDecoratorBase::setRolloverBackground(Layer * const value)
 }
 
 //! Get the value of the ComponentDecorator::_sfToolTipText field.
-string &ComponentDecoratorBase::editToolTipText(void)
+std::string &ComponentDecoratorBase::editToolTipText(void)
 {
     if(_sfDecoratee.getValue() != NULL)
     {
@@ -3187,7 +3187,7 @@ string &ComponentDecoratorBase::editToolTipText(void)
 }
 
 //! Get the value of the ComponentDecorator::_sfToolTipText field.
-const string &ComponentDecoratorBase::getToolTipText(void) const
+const std::string &ComponentDecoratorBase::getToolTipText(void) const
 {
     if(_sfDecoratee.getValue() != NULL)
     {
@@ -3201,7 +3201,7 @@ const string &ComponentDecoratorBase::getToolTipText(void) const
 
 
 //! Set the value of the ComponentDecorator::_sfToolTipText field.
-void ComponentDecoratorBase::setToolTipText(const string &value)
+void ComponentDecoratorBase::setToolTipText(const std::string &value)
 {
     if(_sfDecoratee.getValue() != NULL)
     {

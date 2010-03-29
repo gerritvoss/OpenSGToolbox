@@ -152,7 +152,6 @@ void Graphics3DExtrudeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "ExtrudeLength",
@@ -164,7 +163,6 @@ void Graphics3DExtrudeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleExtrudeLength));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -178,7 +176,6 @@ void Graphics3DExtrudeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "TextOffset",
@@ -190,7 +187,6 @@ void Graphics3DExtrudeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleTextOffset));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -204,7 +200,6 @@ void Graphics3DExtrudeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "EnableLighting",
@@ -217,7 +212,6 @@ void Graphics3DExtrudeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecMaterialPtr::Description(
         SFUnrecMaterialPtr::getClassType(),
         "Material",
@@ -229,7 +223,6 @@ void Graphics3DExtrudeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleMaterial));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -333,7 +326,6 @@ Graphics3DExtrudeBase::TypeObject Graphics3DExtrudeBase::_type(
     "</FieldContainer>\n",
     "A Concrete 3D Extrution UI Graphics.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

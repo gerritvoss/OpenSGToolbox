@@ -138,7 +138,6 @@ void GridLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Columns",
@@ -150,7 +149,6 @@ void GridLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GridLayout::getHandleColumns));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -164,7 +162,6 @@ void GridLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "VerticalGap",
@@ -176,7 +173,6 @@ void GridLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GridLayout::getHandleVerticalGap));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -250,7 +246,6 @@ GridLayoutBase::TypeObject GridLayoutBase::_type(
     "</FieldContainer>\n",
     "A UI GridLayout.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

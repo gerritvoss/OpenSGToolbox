@@ -141,7 +141,6 @@ TransferHandlerBase::TypeObject TransferHandlerBase::_type(
     "A UI TransferHandler.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &TransferHandlerBase::getType(void)

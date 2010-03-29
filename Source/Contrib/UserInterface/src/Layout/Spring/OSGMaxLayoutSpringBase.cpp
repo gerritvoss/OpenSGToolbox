@@ -141,7 +141,6 @@ MaxLayoutSpringBase::TypeObject MaxLayoutSpringBase::_type(
     "A UI Max LayoutSpring.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &MaxLayoutSpringBase::getType(void)

@@ -126,7 +126,6 @@ void MaterialLayerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MaterialLayer::getHandleMaterial));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ MaterialLayerBase::TypeObject MaterialLayerBase::_type(
     "</FieldContainer>\n",
     "UI Material Background.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

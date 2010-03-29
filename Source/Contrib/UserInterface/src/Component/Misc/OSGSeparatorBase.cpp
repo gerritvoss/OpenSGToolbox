@@ -134,7 +134,6 @@ void SeparatorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "SeparatorSize",
@@ -147,7 +146,6 @@ void SeparatorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "Color",
@@ -159,7 +157,6 @@ void SeparatorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Separator::getHandleColor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -223,7 +220,6 @@ SeparatorBase::TypeObject SeparatorBase::_type(
     "</FieldContainer>\n",
     "A UI Separator.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

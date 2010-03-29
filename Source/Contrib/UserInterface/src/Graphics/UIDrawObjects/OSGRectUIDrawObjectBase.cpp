@@ -138,7 +138,6 @@ void RectUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "BottomRight",
@@ -150,7 +149,6 @@ void RectUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RectUIDrawObject::getHandleBottomRight));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -164,7 +162,6 @@ void RectUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Opacity",
@@ -176,7 +173,6 @@ void RectUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RectUIDrawObject::getHandleOpacity));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -250,7 +246,6 @@ RectUIDrawObjectBase::TypeObject RectUIDrawObjectBase::_type(
     "</FieldContainer>\n",
     "A UI RectUIDrawObject.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

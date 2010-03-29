@@ -138,7 +138,6 @@ void TableModelEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "LastColumn",
@@ -150,7 +149,6 @@ void TableModelEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TableModelEvent::getHandleLastColumn));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -164,7 +162,6 @@ void TableModelEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "LastRow",
@@ -176,7 +173,6 @@ void TableModelEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TableModelEvent::getHandleLastRow));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -253,7 +249,6 @@ TableModelEventBase::TypeObject TableModelEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -141,7 +141,6 @@ TreeRowMapperBase::TypeObject TreeRowMapperBase::_type(
     "A UI Tree Row Mapper.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &TreeRowMapperBase::getType(void)

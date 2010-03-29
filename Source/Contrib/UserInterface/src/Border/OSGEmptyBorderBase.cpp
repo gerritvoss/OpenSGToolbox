@@ -138,7 +138,6 @@ void EmptyBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "RightWidth",
@@ -150,7 +149,6 @@ void EmptyBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&EmptyBorder::getHandleRightWidth));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -164,7 +162,6 @@ void EmptyBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "BottomWidth",
@@ -176,7 +173,6 @@ void EmptyBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&EmptyBorder::getHandleBottomWidth));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -250,7 +246,6 @@ EmptyBorderBase::TypeObject EmptyBorderBase::_type(
     "</FieldContainer>\n",
     "UI Empty Border. A Empty border that takes up space on each side.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

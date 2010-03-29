@@ -125,7 +125,6 @@ void TreeModelEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TreeModelEvent::getHandleChildIndices));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ TreeModelEventBase::TypeObject TreeModelEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

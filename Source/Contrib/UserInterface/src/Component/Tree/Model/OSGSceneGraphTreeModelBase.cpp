@@ -126,7 +126,6 @@ void SceneGraphTreeModelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SceneGraphTreeModel::getHandleInternalRoot));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ SceneGraphTreeModelBase::TypeObject SceneGraphTreeModelBase::_type(
     "</FieldContainer>\n",
     "A UI SceneGraphTreeModel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

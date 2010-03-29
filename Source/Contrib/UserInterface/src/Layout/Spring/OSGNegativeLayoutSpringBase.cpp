@@ -126,7 +126,6 @@ void NegativeLayoutSpringBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&NegativeLayoutSpring::getHandleSpring));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ NegativeLayoutSpringBase::TypeObject NegativeLayoutSpringBase::_type(
     "</FieldContainer>\n",
     "A UI Negative LayoutSpring.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

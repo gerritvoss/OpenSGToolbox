@@ -141,7 +141,6 @@ UIDrawObjectBase::TypeObject UIDrawObjectBase::_type(
     "A UI DrawObject.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &UIDrawObjectBase::getType(void)

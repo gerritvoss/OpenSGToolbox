@@ -125,7 +125,6 @@ void DefaultSingleSelectionModelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultSingleSelectionModel::getHandleInternalSelectedIndex));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ DefaultSingleSelectionModelBase::TypeObject DefaultSingleSelectionModelBase::_ty
     "</FieldContainer>\n",
     "A UI DefaultSingleSelectionModel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

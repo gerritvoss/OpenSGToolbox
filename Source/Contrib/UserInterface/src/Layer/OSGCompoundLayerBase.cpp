@@ -126,7 +126,6 @@ void CompoundLayerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CompoundLayer::getHandleBackgrounds));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ CompoundLayerBase::TypeObject CompoundLayerBase::_type(
     "</FieldContainer>\n",
     "UI Compound Background.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

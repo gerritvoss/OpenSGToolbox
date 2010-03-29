@@ -130,7 +130,6 @@ void LabelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "TextSelectable",
@@ -142,7 +141,6 @@ void LabelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Label::getHandleTextSelectable));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -196,7 +194,6 @@ LabelBase::TypeObject LabelBase::_type(
     "</FieldContainer>\n",
     "A UI Label.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

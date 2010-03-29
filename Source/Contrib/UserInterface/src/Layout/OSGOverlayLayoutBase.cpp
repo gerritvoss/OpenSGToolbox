@@ -141,7 +141,6 @@ OverlayLayoutBase::TypeObject OverlayLayoutBase::_type(
     "A UI OverlayLayout.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &OverlayLayoutBase::getType(void)

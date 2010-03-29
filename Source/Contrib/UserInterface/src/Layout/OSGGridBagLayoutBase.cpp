@@ -146,7 +146,6 @@ void GridBagLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Columns",
@@ -158,7 +157,6 @@ void GridBagLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GridBagLayout::getHandleColumns));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFReal32::Description(
         MFReal32::getClassType(),
@@ -172,7 +170,6 @@ void GridBagLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFReal32::Description(
         MFReal32::getClassType(),
         "ColumnWidths",
@@ -184,7 +181,6 @@ void GridBagLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GridBagLayout::getHandleColumnWidths));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFReal32::Description(
         MFReal32::getClassType(),
@@ -198,7 +194,6 @@ void GridBagLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFReal32::Description(
         MFReal32::getClassType(),
         "RowHeights",
@@ -210,7 +205,6 @@ void GridBagLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GridBagLayout::getHandleRowHeights));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -304,7 +298,6 @@ GridBagLayoutBase::TypeObject GridBagLayoutBase::_type(
     "</FieldContainer>\n",
     "A UI GridBagLayout.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

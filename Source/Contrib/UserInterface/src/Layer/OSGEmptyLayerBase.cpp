@@ -141,7 +141,6 @@ EmptyLayerBase::TypeObject EmptyLayerBase::_type(
     "UI Empty Background.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &EmptyLayerBase::getType(void)

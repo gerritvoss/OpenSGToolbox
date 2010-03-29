@@ -160,7 +160,6 @@ void SplitPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecComponentPtr::Description(
         SFUnrecComponentPtr::getClassType(),
         "MaxComponent",
@@ -172,7 +171,6 @@ void SplitPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SplitPanel::getHandleMaxComponent));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -186,7 +184,6 @@ void SplitPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "DividerPosition",
@@ -198,7 +195,6 @@ void SplitPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SplitPanel::getHandleDividerPosition));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -212,7 +208,6 @@ void SplitPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MaxDividerPosition",
@@ -224,7 +219,6 @@ void SplitPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SplitPanel::getHandleMaxDividerPosition));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
         SFUnrecUIDrawObjectCanvasPtr::getClassType(),
@@ -238,7 +232,6 @@ void SplitPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "Expandable",
@@ -251,7 +244,6 @@ void SplitPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Orientation",
@@ -263,7 +255,6 @@ void SplitPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SplitPanel::getHandleOrientation));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -387,7 +378,6 @@ SplitPanelBase::TypeObject SplitPanelBase::_type(
     "</FieldContainer>\n",
     "A UI Split Panel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

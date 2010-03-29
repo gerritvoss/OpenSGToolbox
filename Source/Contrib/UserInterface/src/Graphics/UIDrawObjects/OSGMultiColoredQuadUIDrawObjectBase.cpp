@@ -158,7 +158,6 @@ void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Point2",
@@ -170,7 +169,6 @@ void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandlePoint2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
@@ -184,7 +182,6 @@ void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Point4",
@@ -196,7 +193,6 @@ void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandlePoint4));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -210,7 +206,6 @@ void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "Color2",
@@ -222,7 +217,6 @@ void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandleColor2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -236,7 +230,6 @@ void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "Color4",
@@ -249,7 +242,6 @@ void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Opacity",
@@ -261,7 +253,6 @@ void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandleOpacity));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -385,7 +376,6 @@ MultiColoredQuadUIDrawObjectBase::TypeObject MultiColoredQuadUIDrawObjectBase::_
     "</FieldContainer>\n",
     "A UI MultiColoredQuadUIDrawObject.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

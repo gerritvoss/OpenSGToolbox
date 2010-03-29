@@ -126,7 +126,6 @@ void GLViewportBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GLViewport::getHandlePort));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ GLViewportBase::TypeObject GLViewportBase::_type(
     "</FieldContainer>\n",
     "An OpenSG Viewport Component.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

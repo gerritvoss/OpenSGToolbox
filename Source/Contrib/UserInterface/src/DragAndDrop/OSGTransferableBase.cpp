@@ -141,7 +141,6 @@ TransferableBase::TypeObject TransferableBase::_type(
     "A UI Transferable.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &TransferableBase::getType(void)

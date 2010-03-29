@@ -141,7 +141,6 @@ ComboBoxEditorBase::TypeObject ComboBoxEditorBase::_type(
     "A UI ComboBoxEditor.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ComboBoxEditorBase::getType(void)

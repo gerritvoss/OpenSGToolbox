@@ -141,7 +141,6 @@ BorderBase::TypeObject BorderBase::_type(
     "UI Border Interface.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &BorderBase::getType(void)

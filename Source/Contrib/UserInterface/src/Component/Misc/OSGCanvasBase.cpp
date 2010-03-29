@@ -141,7 +141,6 @@ CanvasBase::TypeObject CanvasBase::_type(
     "A UI Canvas.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &CanvasBase::getType(void)

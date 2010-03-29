@@ -125,7 +125,6 @@ void CardLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CardLayout::getHandleCard));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ CardLayoutBase::TypeObject CardLayoutBase::_type(
     "</FieldContainer>\n",
     "A UI CardLayout.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

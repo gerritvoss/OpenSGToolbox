@@ -138,7 +138,6 @@ void PolygonBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "Color",
@@ -150,7 +149,6 @@ void PolygonBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PolygonBorder::getHandleColor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFPnt2f::Description(
         MFPnt2f::getClassType(),
@@ -164,7 +162,6 @@ void PolygonBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFPnt2f::Description(
         MFPnt2f::getClassType(),
         "DrawnQuads",
@@ -176,7 +173,6 @@ void PolygonBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PolygonBorder::getHandleDrawnQuads));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -250,7 +246,6 @@ PolygonBorderBase::TypeObject PolygonBorderBase::_type(
     "</FieldContainer>\n",
     "UI Polygon Border.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

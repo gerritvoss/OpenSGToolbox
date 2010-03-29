@@ -275,8 +275,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
                   SFUnrecBorderPtr    *editSFContentRolloverBorder(void);
             const SFUnrecLayerPtr     *getSFContentRolloverBackground(void) const;
                   SFUnrecLayerPtr     *editSFContentRolloverBackground(void);
-            const SFUnrecSingleSelectionModelPtr *getSFSelectionModel (void) const;
-                  SFUnrecSingleSelectionModelPtr *editSFSelectionModel (void);
 
 
                   Component * getTabs           (const UInt32 index) const;
@@ -330,8 +328,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
 
                   Layer * getContentRolloverBackground(void) const;
 
-                  SingleSelectionModel * getSelectionModel (void) const;
-
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -358,7 +354,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
             void setContentDisabledBackground(Layer * const value);
             void setContentRolloverBorder(Border * const value);
             void setContentRolloverBackground(Layer * const value);
-            void setSelectionModel (SingleSelectionModel * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -535,6 +530,29 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
     EditFieldHandlePtr editHandleContentRolloverBackground(void);
     GetFieldHandlePtr  getHandleSelectionModel  (void) const;
     EditFieldHandlePtr editHandleSelectionModel (void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+            const SFUnrecSingleSelectionModelPtr *getSFSelectionModel  (void) const;
+                  SFUnrecSingleSelectionModelPtr *editSFSelectionModel (void);
+
+
+                  SingleSelectionModel * getSelectionModel (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setSelectionModel (SingleSelectionModel * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

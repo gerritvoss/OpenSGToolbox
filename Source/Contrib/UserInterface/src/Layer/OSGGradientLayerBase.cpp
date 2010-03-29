@@ -142,7 +142,6 @@ void GradientLayerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "EndPosition",
@@ -154,7 +153,6 @@ void GradientLayerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GradientLayer::getHandleEndPosition));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFColor4f::Description(
         MFColor4f::getClassType(),
@@ -168,7 +166,6 @@ void GradientLayerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFReal32::Description(
         MFReal32::getClassType(),
         "Stops",
@@ -181,7 +178,6 @@ void GradientLayerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SpreadMethod",
@@ -193,7 +189,6 @@ void GradientLayerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&GradientLayer::getHandleSpreadMethod));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -275,7 +270,6 @@ GradientLayerBase::TypeObject GradientLayerBase::_type(
     "</FieldContainer>\n",
     "UI Gradient Background.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

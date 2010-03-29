@@ -134,7 +134,6 @@ void PolygonUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "Color",
@@ -147,7 +146,6 @@ void PolygonUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Opacity",
@@ -159,7 +157,6 @@ void PolygonUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PolygonUIDrawObject::getHandleOpacity));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -222,7 +219,6 @@ PolygonUIDrawObjectBase::TypeObject PolygonUIDrawObjectBase::_type(
     "</FieldContainer>\n",
     "A UI PolygonUIDrawObject.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

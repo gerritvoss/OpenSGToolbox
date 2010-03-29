@@ -140,7 +140,6 @@ ActionEventBase::TypeObject ActionEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ActionEventBase::getType(void)

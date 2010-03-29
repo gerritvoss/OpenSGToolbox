@@ -131,7 +131,6 @@ void CompoundLayoutSpringBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayoutSpringPtr::Description(
         SFUnrecLayoutSpringPtr::getClassType(),
         "Spring2",
@@ -143,7 +142,6 @@ void CompoundLayoutSpringBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CompoundLayoutSpring::getHandleSpring2));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ CompoundLayoutSpringBase::TypeObject CompoundLayoutSpringBase::_type(
     "</FieldContainer>\n",
     "A UI Compound LayoutSpring. Use the instance variables of the StaticSpring superclass to cache values that have already been calculated.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -131,7 +131,6 @@ void UIDrawObjectCanvasBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "UsePreferredSizeAsRequested",
@@ -143,7 +142,6 @@ void UIDrawObjectCanvasBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&UIDrawObjectCanvas::getHandleUsePreferredSizeAsRequested));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -196,7 +194,6 @@ UIDrawObjectCanvasBase::TypeObject UIDrawObjectCanvasBase::_type(
     "</FieldContainer>\n",
     "A UI UIDrawObjectCanvas.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

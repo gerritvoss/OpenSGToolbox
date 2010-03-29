@@ -138,7 +138,6 @@ void EtchedBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "Shadow",
@@ -150,7 +149,6 @@ void EtchedBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&EtchedBorder::getHandleShadow));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -164,7 +162,6 @@ void EtchedBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Width",
@@ -176,7 +173,6 @@ void EtchedBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&EtchedBorder::getHandleWidth));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -248,7 +244,6 @@ EtchedBorderBase::TypeObject EtchedBorderBase::_type(
     "</FieldContainer>\n",
     "UI Etched Border.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

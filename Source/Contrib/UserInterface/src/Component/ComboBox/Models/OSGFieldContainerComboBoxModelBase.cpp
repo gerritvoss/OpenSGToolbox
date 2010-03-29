@@ -134,7 +134,6 @@ void FieldContainerComboBoxModelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUInt32::Description(
         MFUInt32::getClassType(),
         "InternalFieldContainerTypes",
@@ -147,7 +146,6 @@ void FieldContainerComboBoxModelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "IncludeAbstract",
@@ -159,7 +157,6 @@ void FieldContainerComboBoxModelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FieldContainerComboBoxModel::getHandleIncludeAbstract));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -223,7 +220,6 @@ FieldContainerComboBoxModelBase::TypeObject FieldContainerComboBoxModelBase::_ty
     "</FieldContainer>\n",
     "A UI FieldContainerComboBoxModel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

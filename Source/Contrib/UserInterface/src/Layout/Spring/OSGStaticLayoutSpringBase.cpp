@@ -134,7 +134,6 @@ void StaticLayoutSpringBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Maximum",
@@ -147,7 +146,6 @@ void StaticLayoutSpringBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Preferred",
@@ -159,7 +157,6 @@ void StaticLayoutSpringBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&StaticLayoutSpring::getHandlePreferred));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -223,7 +220,6 @@ StaticLayoutSpringBase::TypeObject StaticLayoutSpringBase::_type(
     "</FieldContainer>\n",
     "A UI Static LayoutSpring.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

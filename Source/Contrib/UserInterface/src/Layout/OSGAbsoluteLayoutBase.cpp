@@ -141,7 +141,6 @@ AbsoluteLayoutBase::TypeObject AbsoluteLayoutBase::_type(
     "A UI AbsoluteLayout.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &AbsoluteLayoutBase::getType(void)

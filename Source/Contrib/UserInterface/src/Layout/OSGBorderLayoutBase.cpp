@@ -141,7 +141,6 @@ BorderLayoutBase::TypeObject BorderLayoutBase::_type(
     "A UI BorderLayout.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &BorderLayoutBase::getType(void)

@@ -141,7 +141,6 @@ TreeComponentGeneratorBase::TypeObject TreeComponentGeneratorBase::_type(
     "A UI Tree ComponentGenerator.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &TreeComponentGeneratorBase::getType(void)

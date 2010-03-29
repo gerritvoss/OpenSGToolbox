@@ -135,7 +135,6 @@ void DefaultTreeCellEditorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecTextFieldPtr::Description(
         SFUnrecTextFieldPtr::getClassType(),
         "DefaultEditor",
@@ -148,7 +147,6 @@ void DefaultTreeCellEditorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecTextFieldPtr::Description(
         SFUnrecTextFieldPtr::getClassType(),
         "DefaultStringEditor",
@@ -160,7 +158,6 @@ void DefaultTreeCellEditorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeCellEditor::getHandleDefaultStringEditor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -225,7 +222,6 @@ DefaultTreeCellEditorBase::TypeObject DefaultTreeCellEditorBase::_type(
     "</FieldContainer>\n",
     "A UI Default Tree Cell Editor.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

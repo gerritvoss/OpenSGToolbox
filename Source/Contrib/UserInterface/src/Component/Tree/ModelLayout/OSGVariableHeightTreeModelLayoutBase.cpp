@@ -141,7 +141,6 @@ VariableHeightTreeModelLayoutBase::TypeObject VariableHeightTreeModelLayoutBase:
     "A UI Variable Height Tree Model Layout.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &VariableHeightTreeModelLayoutBase::getType(void)

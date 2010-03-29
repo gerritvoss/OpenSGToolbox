@@ -144,7 +144,6 @@ void SpinnerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecButtonPtr::Description(
         SFUnrecButtonPtr::getClassType(),
         "PreviousButton",
@@ -156,7 +155,6 @@ void SpinnerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Spinner::getHandlePreviousButton));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecComponentPtr::Description(
         SFUnrecComponentPtr::getClassType(),
@@ -170,7 +168,6 @@ void SpinnerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Orientation",
@@ -183,7 +180,6 @@ void SpinnerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "EditorToButtonOffset",
@@ -195,7 +191,6 @@ void SpinnerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Spinner::getHandleEditorToButtonOffset));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -279,7 +274,6 @@ SpinnerBase::TypeObject SpinnerBase::_type(
     "</FieldContainer>\n",
     "A UI Spinner.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

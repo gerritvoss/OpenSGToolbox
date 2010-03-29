@@ -125,7 +125,6 @@ void AbstractLayoutSpringBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AbstractLayoutSpring::getHandleSize));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ AbstractLayoutSpringBase::TypeObject AbstractLayoutSpringBase::_type(
     "</FieldContainer>\n",
     "A UI AbstractLayoutSpring.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

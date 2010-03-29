@@ -140,7 +140,6 @@ MenuEventBase::TypeObject MenuEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &MenuEventBase::getType(void)

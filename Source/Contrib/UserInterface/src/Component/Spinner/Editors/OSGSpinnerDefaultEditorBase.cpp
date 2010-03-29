@@ -132,7 +132,6 @@ void SpinnerDefaultEditorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecSpinnerPtr::Description(
         SFUnrecSpinnerPtr::getClassType(),
         "Spinner",
@@ -144,7 +143,6 @@ void SpinnerDefaultEditorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SpinnerDefaultEditor::getHandleSpinner));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -198,7 +196,6 @@ SpinnerDefaultEditorBase::TypeObject SpinnerDefaultEditorBase::_type(
     "</FieldContainer>\n",
     "A UI SpinnerDefaultEditor.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

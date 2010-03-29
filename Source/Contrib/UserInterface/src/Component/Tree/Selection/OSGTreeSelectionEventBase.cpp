@@ -134,7 +134,6 @@ void TreeSelectionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "OldLeadSelectionPath",
@@ -147,7 +146,6 @@ void TreeSelectionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFVec2s::Description(
         MFVec2s::getClassType(),
         "ElementsChanged",
@@ -159,7 +157,6 @@ void TreeSelectionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TreeSelectionEvent::getHandleElementsChanged));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -224,7 +221,6 @@ TreeSelectionEventBase::TypeObject TreeSelectionEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -222,7 +222,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecComponentPtr::Description(
         MFUnrecComponentPtr::getClassType(),
         "TabContents",
@@ -234,7 +233,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabContents));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -248,7 +246,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "TabAlignment",
@@ -260,7 +257,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabAlignment));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -274,7 +270,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "TabBorderInsets",
@@ -286,7 +281,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabBorderInsets));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
@@ -300,7 +294,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "TabBackground",
@@ -312,7 +305,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabBackground));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
@@ -326,7 +318,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "TabDisabledBackground",
@@ -338,7 +329,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabDisabledBackground));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
@@ -352,7 +342,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "TabFocusedBackground",
@@ -364,7 +353,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabFocusedBackground));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
@@ -378,7 +366,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "TabRolloverBackground",
@@ -390,7 +377,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabRolloverBackground));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
@@ -404,7 +390,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "TabActiveBackground",
@@ -416,7 +401,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleTabActiveBackground));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
@@ -430,7 +414,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "ContentBorder",
@@ -442,7 +425,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentBorder));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
@@ -456,7 +438,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "ContentDisabledBorder",
@@ -468,7 +449,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentDisabledBorder));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
@@ -482,7 +462,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "ContentRolloverBorder",
@@ -494,7 +473,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleContentRolloverBorder));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
@@ -508,7 +486,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecSingleSelectionModelPtr::Description(
         SFUnrecSingleSelectionModelPtr::getClassType(),
         "SelectionModel",
@@ -520,7 +497,6 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TabPanel::getHandleSelectionModel));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -786,7 +762,7 @@ TabPanelBase::TypeObject TabPanelBase::_type(
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
+    "\t\taccess=\"protected\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\n"
@@ -865,7 +841,6 @@ TabPanelBase::TypeObject TabPanelBase::_type(
     "\t<!--</Field>-->\n",
     "A UI Tab Panel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

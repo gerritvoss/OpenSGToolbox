@@ -146,7 +146,6 @@ void BoxLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MajorAxisAlignment",
@@ -158,7 +157,6 @@ void BoxLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&BoxLayout::getHandleMajorAxisAlignment));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -172,7 +170,6 @@ void BoxLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "ComponentAlignment",
@@ -184,7 +181,6 @@ void BoxLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&BoxLayout::getHandleComponentAlignment));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -198,7 +194,6 @@ void BoxLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MajorAxisMaximumGap",
@@ -210,7 +205,6 @@ void BoxLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&BoxLayout::getHandleMajorAxisMaximumGap));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -304,7 +298,6 @@ BoxLayoutBase::TypeObject BoxLayoutBase::_type(
     "</FieldContainer>\n",
     "A UI BoxLayout.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -125,7 +125,6 @@ void DragGestureEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DragGestureEvent::getHandleDragLocation));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ DragGestureEventBase::TypeObject DragGestureEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -125,7 +125,6 @@ void ColorLayerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ColorLayer::getHandleColor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ ColorLayerBase::TypeObject ColorLayerBase::_type(
     "</FieldContainer>\n",
     "UI Color Background.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

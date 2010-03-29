@@ -193,7 +193,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "IndeterminateBarMoveRate",
@@ -205,7 +204,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ProgressBar::getHandleIndeterminateBarMoveRate));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -219,7 +217,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "EnableProgressString",
@@ -231,7 +228,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ProgressBar::getHandleEnableProgressString));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFString::Description(
         SFString::getClassType(),
@@ -245,7 +241,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "Alignment",
@@ -257,7 +252,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ProgressBar::getHandleAlignment));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecUIFontPtr::Description(
         SFUnrecUIFontPtr::getClassType(),
@@ -271,7 +265,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "FocusedTextColor",
@@ -283,7 +276,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ProgressBar::getHandleFocusedTextColor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -297,7 +289,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "DisabledTextColor",
@@ -309,7 +300,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ProgressBar::getHandleDisabledTextColor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -323,7 +313,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Orientation",
@@ -335,7 +324,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ProgressBar::getHandleOrientation));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
         SFUnrecUIDrawObjectCanvasPtr::getClassType(),
@@ -349,7 +337,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
         SFUnrecUIDrawObjectCanvasPtr::getClassType(),
         "FocusedDrawObject",
@@ -361,7 +348,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ProgressBar::getHandleFocusedDrawObject));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
         SFUnrecUIDrawObjectCanvasPtr::getClassType(),
@@ -375,7 +361,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
         SFUnrecUIDrawObjectCanvasPtr::getClassType(),
         "DisabledDrawObject",
@@ -388,7 +373,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecBoundedRangeModelPtr::Description(
         SFUnrecBoundedRangeModelPtr::getClassType(),
         "RangeModel",
@@ -400,7 +384,6 @@ void ProgressBarBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ProgressBar::getHandleRangeModel));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -595,7 +578,6 @@ ProgressBarBase::TypeObject ProgressBarBase::_type(
     "</FieldContainer>\n",
     "A UI ProgressBar.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -141,7 +141,6 @@ TableCellEditorBase::TypeObject TableCellEditorBase::_type(
     "A UI Table Cell Editor.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &TableCellEditorBase::getType(void)

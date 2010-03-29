@@ -126,7 +126,6 @@ void ComponentTreeModelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ComponentTreeModel::getHandleInternalRootComponent));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ ComponentTreeModelBase::TypeObject ComponentTreeModelBase::_type(
     "</FieldContainer>\n",
     "A UI ComponentTreeModel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

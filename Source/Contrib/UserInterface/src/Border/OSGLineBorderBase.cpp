@@ -135,7 +135,6 @@ void LineBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "Color",
@@ -148,7 +147,6 @@ void LineBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecMaterialPtr::Description(
         SFUnrecMaterialPtr::getClassType(),
         "Material",
@@ -160,7 +158,6 @@ void LineBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LineBorder::getHandleMaterial));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -224,7 +221,6 @@ LineBorderBase::TypeObject LineBorderBase::_type(
     "</FieldContainer>\n",
     "UI Line Border.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

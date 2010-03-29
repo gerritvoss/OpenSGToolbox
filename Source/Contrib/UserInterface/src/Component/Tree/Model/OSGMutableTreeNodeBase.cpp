@@ -141,7 +141,6 @@ MutableTreeNodeBase::TypeObject MutableTreeNodeBase::_type(
     "A UI Mutable Tree Node.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &MutableTreeNodeBase::getType(void)

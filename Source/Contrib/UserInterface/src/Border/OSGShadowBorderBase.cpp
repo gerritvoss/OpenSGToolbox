@@ -159,7 +159,6 @@ void ShadowBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "BottomOffset",
@@ -171,7 +170,6 @@ void ShadowBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleBottomOffset));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -185,7 +183,6 @@ void ShadowBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "RightOffset",
@@ -197,7 +194,6 @@ void ShadowBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleRightOffset));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -211,7 +207,6 @@ void ShadowBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "EdgeColor",
@@ -223,7 +218,6 @@ void ShadowBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleEdgeColor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
@@ -237,7 +231,6 @@ void ShadowBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "CornerRadius",
@@ -250,7 +243,6 @@ void ShadowBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "InternalToEdgeColorLength",
@@ -262,7 +254,6 @@ void ShadowBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleInternalToEdgeColorLength));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -386,7 +377,6 @@ ShadowBorderBase::TypeObject ShadowBorderBase::_type(
     "</FieldContainer>\n",
     "UI Shadow Border.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

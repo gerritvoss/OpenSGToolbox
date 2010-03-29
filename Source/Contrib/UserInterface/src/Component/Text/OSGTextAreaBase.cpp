@@ -134,7 +134,6 @@ void TextAreaBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "WrapStyleWord",
@@ -147,7 +146,6 @@ void TextAreaBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "TabSize",
@@ -159,7 +157,6 @@ void TextAreaBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TextArea::getHandleTabSize));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -223,7 +220,6 @@ TextAreaBase::TypeObject TextAreaBase::_type(
     "</FieldContainer>\n",
     "A UI TextArea\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

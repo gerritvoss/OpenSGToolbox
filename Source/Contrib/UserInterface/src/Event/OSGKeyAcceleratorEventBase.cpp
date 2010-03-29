@@ -132,7 +132,6 @@ void KeyAcceleratorEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Modifiers",
@@ -144,7 +143,6 @@ void KeyAcceleratorEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&KeyAcceleratorEvent::getHandleModifiers));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -201,7 +199,6 @@ KeyAcceleratorEventBase::TypeObject KeyAcceleratorEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

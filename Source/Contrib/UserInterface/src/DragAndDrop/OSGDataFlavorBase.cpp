@@ -141,7 +141,6 @@ DataFlavorBase::TypeObject DataFlavorBase::_type(
     "A UI DataFlavor.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &DataFlavorBase::getType(void)

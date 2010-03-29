@@ -125,7 +125,6 @@ void HSVColorChooserPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&HSVColorChooserPanel::getHandleIncludeAlpha));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ HSVColorChooserPanelBase::TypeObject HSVColorChooserPanelBase::_type(
     "</FieldContainer>\n",
     "A UI RGBColorChooserPanel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

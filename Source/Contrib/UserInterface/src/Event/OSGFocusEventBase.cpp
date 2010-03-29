@@ -131,7 +131,6 @@ void FocusEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecComponentPtr::Description(
         SFUnrecComponentPtr::getClassType(),
         "OppositeComponent",
@@ -143,7 +142,6 @@ void FocusEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FocusEvent::getHandleOppositeComponent));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -198,7 +196,6 @@ FocusEventBase::TypeObject FocusEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

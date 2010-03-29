@@ -141,7 +141,6 @@ LayoutSpringBase::TypeObject LayoutSpringBase::_type(
     "A UI LayoutSpring.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &LayoutSpringBase::getType(void)

@@ -141,7 +141,6 @@ FixedHeightTreeModelLayoutBase::TypeObject FixedHeightTreeModelLayoutBase::_type
     "A UI Fixed Height Tree Model Layout.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &FixedHeightTreeModelLayoutBase::getType(void)

@@ -141,7 +141,6 @@ ComponentGeneratorBase::TypeObject ComponentGeneratorBase::_type(
     "A UI ComponentGenerator.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ComponentGeneratorBase::getType(void)

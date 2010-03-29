@@ -141,7 +141,6 @@ SumLayoutSpringBase::TypeObject SumLayoutSpringBase::_type(
     "A UI Sum LayoutSpring.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &SumLayoutSpringBase::getType(void)

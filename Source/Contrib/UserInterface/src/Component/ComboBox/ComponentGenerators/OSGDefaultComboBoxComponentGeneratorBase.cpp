@@ -173,7 +173,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "SelectedBackground",
@@ -185,7 +184,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleSelectedBackground));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
@@ -199,7 +197,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "SelectedForeground",
@@ -211,7 +208,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleSelectedForeground));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
@@ -225,7 +221,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "SelectedBorder",
@@ -237,7 +232,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleSelectedBorder));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
@@ -251,7 +245,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "SelectedTextColor",
@@ -263,7 +256,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleSelectedTextColor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -277,7 +269,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "FocusedTextColorHasPriority",
@@ -289,7 +280,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleFocusedTextColorHasPriority));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -303,7 +293,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "FocusedBackgroundHasPriority",
@@ -315,7 +304,6 @@ void DefaultComboBoxComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultComboBoxComponentGenerator::getHandleFocusedBackgroundHasPriority));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -468,7 +456,6 @@ DefaultComboBoxComponentGeneratorBase::TypeObject DefaultComboBoxComponentGenera
     "</FieldContainer>\n",
     "A UI Default ComboBox ComponentGenerator.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

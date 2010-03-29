@@ -141,7 +141,6 @@ LayerBase::TypeObject LayerBase::_type(
     "UI Background Interface.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &LayerBase::getType(void)

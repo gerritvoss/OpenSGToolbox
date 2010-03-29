@@ -146,7 +146,6 @@ void FlowLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "HorizontalGap",
@@ -158,7 +157,6 @@ void FlowLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FlowLayout::getHandleHorizontalGap));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -172,7 +170,6 @@ void FlowLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "MajorAxisAlignment",
@@ -184,7 +181,6 @@ void FlowLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FlowLayout::getHandleMajorAxisAlignment));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -198,7 +194,6 @@ void FlowLayoutBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "ComponentAlignment",
@@ -210,7 +205,6 @@ void FlowLayoutBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FlowLayout::getHandleComponentAlignment));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -304,7 +298,6 @@ FlowLayoutBase::TypeObject FlowLayoutBase::_type(
     "</FieldContainer>\n",
     "A UI FlowLayout.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -130,7 +130,6 @@ void TableColumnModelEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "ToIndex",
@@ -142,7 +141,6 @@ void TableColumnModelEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TableColumnModelEvent::getHandleToIndex));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ TableColumnModelEventBase::TypeObject TableColumnModelEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -141,7 +141,6 @@ AbstractTreeModelBase::TypeObject AbstractTreeModelBase::_type(
     "A UI AbstractTreeModel.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &AbstractTreeModelBase::getType(void)

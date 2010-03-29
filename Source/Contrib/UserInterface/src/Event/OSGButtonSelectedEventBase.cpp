@@ -140,7 +140,6 @@ ButtonSelectedEventBase::TypeObject ButtonSelectedEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ButtonSelectedEventBase::getType(void)

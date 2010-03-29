@@ -141,7 +141,6 @@ AbstractCellEditorBase::TypeObject AbstractCellEditorBase::_type(
     "A UI Abstract Cell Editor.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &AbstractCellEditorBase::getType(void)

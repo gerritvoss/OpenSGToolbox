@@ -150,7 +150,6 @@ void DefaultTableCellEditorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecTextFieldPtr::Description(
         SFUnrecTextFieldPtr::getClassType(),
         "DefaultEditor",
@@ -162,7 +161,6 @@ void DefaultTableCellEditorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTableCellEditor::getHandleDefaultEditor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecTextFieldPtr::Description(
         SFUnrecTextFieldPtr::getClassType(),
@@ -176,7 +174,6 @@ void DefaultTableCellEditorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecSpinnerPtr::Description(
         SFUnrecSpinnerPtr::getClassType(),
         "DefaultNumberEditor",
@@ -188,7 +185,6 @@ void DefaultTableCellEditorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTableCellEditor::getHandleDefaultNumberEditor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecComboBoxPtr::Description(
         SFUnrecComboBoxPtr::getClassType(),
@@ -202,7 +198,6 @@ void DefaultTableCellEditorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecCheckboxButtonPtr::Description(
         SFUnrecCheckboxButtonPtr::getClassType(),
         "DefaultBoolEditor",
@@ -214,7 +209,6 @@ void DefaultTableCellEditorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTableCellEditor::getHandleDefaultBoolEditor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -308,7 +302,6 @@ DefaultTableCellEditorBase::TypeObject DefaultTableCellEditorBase::_type(
     "</FieldContainer>\n",
     "A UI Default Table Cell Editor.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

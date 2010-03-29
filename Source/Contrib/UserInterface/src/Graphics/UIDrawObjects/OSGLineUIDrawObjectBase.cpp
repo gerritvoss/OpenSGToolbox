@@ -142,7 +142,6 @@ void LineUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "BottomRight",
@@ -154,7 +153,6 @@ void LineUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LineUIDrawObject::getHandleBottomRight));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -168,7 +166,6 @@ void LineUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "Color",
@@ -181,7 +178,6 @@ void LineUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Opacity",
@@ -193,7 +189,6 @@ void LineUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LineUIDrawObject::getHandleOpacity));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -277,7 +272,6 @@ LineUIDrawObjectBase::TypeObject LineUIDrawObjectBase::_type(
     "</FieldContainer>\n",
     "A UI DrawObject.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

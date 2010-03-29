@@ -146,7 +146,6 @@ void BevelBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Width",
@@ -158,7 +157,6 @@ void BevelBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&BevelBorder::getHandleWidth));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -172,7 +170,6 @@ void BevelBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "ShadowInner",
@@ -184,7 +181,6 @@ void BevelBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&BevelBorder::getHandleShadowInner));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -198,7 +194,6 @@ void BevelBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "Raised",
@@ -210,7 +205,6 @@ void BevelBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&BevelBorder::getHandleRaised));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -300,7 +294,6 @@ BevelBorderBase::TypeObject BevelBorderBase::_type(
     "</FieldContainer>\n",
     "UI Bevel Border.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

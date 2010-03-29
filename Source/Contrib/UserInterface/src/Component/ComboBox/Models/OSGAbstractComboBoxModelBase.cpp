@@ -141,7 +141,6 @@ AbstractComboBoxModelBase::TypeObject AbstractComboBoxModelBase::_type(
     "A UI AbstractComboBoxModel.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &AbstractComboBoxModelBase::getType(void)

@@ -183,7 +183,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
         SFUnrecUIDrawObjectCanvasPtr::getClassType(),
         "NotExpandedDrawObjectPrototype",
@@ -195,7 +194,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNotExpandedDrawObjectPrototype));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
         SFUnrecUIDrawObjectCanvasPtr::getClassType(),
@@ -209,7 +207,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
         SFUnrecUIDrawObjectCanvasPtr::getClassType(),
         "NonLeafDrawObjectPrototype",
@@ -221,7 +218,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNonLeafDrawObjectPrototype));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
         SFUnrecUIDrawObjectCanvasPtr::getClassType(),
@@ -235,7 +231,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLabelPtr::Description(
         SFUnrecLabelPtr::getClassType(),
         "NodeLabelPrototype",
@@ -247,7 +242,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNodeLabelPrototype));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecPanelPtr::Description(
         SFUnrecPanelPtr::getClassType(),
@@ -261,7 +255,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "SelectedBackground",
@@ -273,7 +266,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleSelectedBackground));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
@@ -287,7 +279,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "SelectedForeground",
@@ -299,7 +290,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleSelectedForeground));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
@@ -313,7 +303,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "SelectedBorder",
@@ -325,7 +314,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleSelectedBorder));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -339,7 +327,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "NonSelectedTextColor",
@@ -351,7 +338,6 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNonSelectedTextColor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -520,7 +506,6 @@ DefaultTreeComponentGeneratorBase::TypeObject DefaultTreeComponentGeneratorBase:
     "</FieldContainer>\n",
     "A UI Default Tree ComponentGenerator.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

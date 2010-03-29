@@ -130,7 +130,6 @@ void AdjustmentEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "ValueIsAdjusting",
@@ -142,7 +141,6 @@ void AdjustmentEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AdjustmentEvent::getHandleValueIsAdjusting));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ AdjustmentEventBase::TypeObject AdjustmentEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

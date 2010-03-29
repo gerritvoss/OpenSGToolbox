@@ -141,7 +141,6 @@ LayeredLayoutBase::TypeObject LayeredLayoutBase::_type(
     "A UI LayeredLayout.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &LayeredLayoutBase::getType(void)

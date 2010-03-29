@@ -125,7 +125,6 @@ void CaretEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CaretEvent::getHandlePosition));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ CaretEventBase::TypeObject CaretEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

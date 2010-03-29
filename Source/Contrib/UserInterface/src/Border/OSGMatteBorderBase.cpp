@@ -147,7 +147,6 @@ void MatteBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "RightWidth",
@@ -159,7 +158,6 @@ void MatteBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MatteBorder::getHandleRightWidth));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -173,7 +171,6 @@ void MatteBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "BottomWidth",
@@ -185,7 +182,6 @@ void MatteBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MatteBorder::getHandleBottomWidth));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -199,7 +195,6 @@ void MatteBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecMaterialPtr::Description(
         SFUnrecMaterialPtr::getClassType(),
         "Material",
@@ -211,7 +206,6 @@ void MatteBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MatteBorder::getHandleMaterial));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -305,7 +299,6 @@ MatteBorderBase::TypeObject MatteBorderBase::_type(
     "</FieldContainer>\n",
     "UI Matte Border. Creates a matte-look border using a solid color or Material. (The difference between this border and a line border is that you can specify the individual border dimensions.)\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

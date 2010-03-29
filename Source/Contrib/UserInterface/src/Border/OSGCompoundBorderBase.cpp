@@ -131,7 +131,6 @@ void CompoundBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "OuterBorder",
@@ -143,7 +142,6 @@ void CompoundBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CompoundBorder::getHandleOuterBorder));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ CompoundBorderBase::TypeObject CompoundBorderBase::_type(
     "</FieldContainer>\n",
     "UI Compound Border. A Compound Border made up of an inner border and outer border of any type.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

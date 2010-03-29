@@ -141,7 +141,6 @@ TreeCellEditorBase::TypeObject TreeCellEditorBase::_type(
     "A UI Tree Cell Editor.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &TreeCellEditorBase::getType(void)

@@ -135,7 +135,6 @@ void RotatedComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecComponentPtr::Description(
         SFUnrecComponentPtr::getClassType(),
         "InternalComponent",
@@ -148,7 +147,6 @@ void RotatedComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "ResizePolicy",
@@ -160,7 +158,6 @@ void RotatedComponentBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RotatedComponent::getHandleResizePolicy));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -225,7 +222,6 @@ RotatedComponentBase::TypeObject RotatedComponentBase::_type(
     "</FieldContainer>\n",
     "A UI Rotated Component.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

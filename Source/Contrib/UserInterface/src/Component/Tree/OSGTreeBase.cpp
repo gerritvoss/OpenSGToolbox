@@ -174,7 +174,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "Editable",
@@ -186,7 +185,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Tree::getHandleEditable));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -200,7 +198,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "InvokesStopCellEditing",
@@ -212,7 +209,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Tree::getHandleInvokesStopCellEditing));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -226,7 +222,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "ScrollsOnExpand",
@@ -238,7 +233,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Tree::getHandleScrollsOnExpand));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -252,7 +246,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "ToggleClickCount",
@@ -264,7 +257,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Tree::getHandleToggleClickCount));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -278,7 +270,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecCellEditorPtr::Description(
         SFUnrecCellEditorPtr::getClassType(),
         "CellEditor",
@@ -290,7 +281,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Tree::getHandleCellEditor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecComponentGeneratorPtr::Description(
         SFUnrecComponentGeneratorPtr::getClassType(),
@@ -304,7 +294,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecTreeModelLayoutPtr::Description(
         SFUnrecTreeModelLayoutPtr::getClassType(),
         "ModelLayout",
@@ -316,7 +305,6 @@ void TreeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Tree::getHandleModelLayout));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -477,7 +465,6 @@ TreeBase::TypeObject TreeBase::_type(
     "</FieldContainer>\n",
     "A UI Tree.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

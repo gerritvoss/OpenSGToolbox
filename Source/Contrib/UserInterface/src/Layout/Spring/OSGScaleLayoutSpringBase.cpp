@@ -131,7 +131,6 @@ void ScaleLayoutSpringBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Factor",
@@ -143,7 +142,6 @@ void ScaleLayoutSpringBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ScaleLayoutSpring::getHandleFactor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ ScaleLayoutSpringBase::TypeObject ScaleLayoutSpringBase::_type(
     "</FieldContainer>\n",
     "A UI Scale LayoutSpring.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

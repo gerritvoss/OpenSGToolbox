@@ -141,7 +141,6 @@ AbstractTableModelBase::TypeObject AbstractTableModelBase::_type(
     "A UI AbstractTableModel.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &AbstractTableModelBase::getType(void)

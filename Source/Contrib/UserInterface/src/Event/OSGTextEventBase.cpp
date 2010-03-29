@@ -140,7 +140,6 @@ TextEventBase::TypeObject TextEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &TextEventBase::getType(void)

@@ -141,7 +141,6 @@ SpinnerEditorBase::TypeObject SpinnerEditorBase::_type(
     "A UI SpinnerEditor.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &SpinnerEditorBase::getType(void)

@@ -136,7 +136,6 @@ void WindowBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "OuterBorder",
@@ -149,7 +148,6 @@ void WindowBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecComponentPtr::Description(
         SFUnrecComponentPtr::getClassType(),
         "Titlebar",
@@ -161,7 +159,6 @@ void WindowBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&WindowBorder::getHandleTitlebar));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -225,7 +222,6 @@ WindowBorderBase::TypeObject WindowBorderBase::_type(
     "</FieldContainer>\n",
     "UI Window Border. A Compound Border made up of an inner border and outer border of any type.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -170,7 +170,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "RightWidth",
@@ -182,7 +181,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleRightWidth));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -196,7 +194,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "BottomWidth",
@@ -208,7 +205,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleBottomWidth));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -222,7 +218,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "LeftLineBottomColor",
@@ -234,7 +229,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleLeftLineBottomColor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -248,7 +242,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "TopLineRightColor",
@@ -260,7 +253,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleTopLineRightColor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -274,7 +266,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "RightLineBottomColor",
@@ -286,7 +277,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleRightLineBottomColor));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -300,7 +290,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "BottomLineRightColor",
@@ -312,7 +301,6 @@ void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleBottomLineRightColor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -466,7 +454,6 @@ MultiColorMatteBorderBase::TypeObject MultiColorMatteBorderBase::_type(
     "</FieldContainer>\n",
     "UI MultiColor Matte Border. Creates a matte-look border using a different color for each side. (The difference between this border and a line border is that you can specify the individual border dimensions as well as colors.)\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

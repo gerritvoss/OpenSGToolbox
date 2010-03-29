@@ -163,7 +163,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Point2",
@@ -175,7 +174,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TexturedQuadUIDrawObject::getHandlePoint2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
@@ -189,7 +187,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Point4",
@@ -201,7 +198,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TexturedQuadUIDrawObject::getHandlePoint4));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
@@ -215,7 +211,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "TexCoord2",
@@ -227,7 +222,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TexturedQuadUIDrawObject::getHandleTexCoord2));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
@@ -241,7 +235,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "TexCoord4",
@@ -253,7 +246,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TexturedQuadUIDrawObject::getHandleTexCoord4));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecTextureObjChunkPtr::Description(
         SFUnrecTextureObjChunkPtr::getClassType(),
@@ -267,7 +259,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Opacity",
@@ -279,7 +270,6 @@ void TexturedQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TexturedQuadUIDrawObject::getHandleOpacity));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -413,7 +403,6 @@ TexturedQuadUIDrawObjectBase::TypeObject TexturedQuadUIDrawObjectBase::_type(
     "</FieldContainer>\n",
     "A UI TexturedQuadUIDrawObject.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

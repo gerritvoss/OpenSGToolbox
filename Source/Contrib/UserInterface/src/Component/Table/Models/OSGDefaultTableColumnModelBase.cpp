@@ -141,7 +141,6 @@ DefaultTableColumnModelBase::TypeObject DefaultTableColumnModelBase::_type(
     "A UI DefaultTableColumnModel.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &DefaultTableColumnModelBase::getType(void)

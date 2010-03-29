@@ -741,6 +741,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ComponentBase &source);
+
+    friend class ComponentDecoratorBase;
 };
 
 typedef ComponentBase *ComponentBaseP;

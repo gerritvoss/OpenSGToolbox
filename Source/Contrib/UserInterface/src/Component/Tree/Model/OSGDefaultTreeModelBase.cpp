@@ -131,7 +131,6 @@ void DefaultTreeModelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "AskAllowsChildren",
@@ -143,7 +142,6 @@ void DefaultTreeModelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeModel::getHandleAskAllowsChildren));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ DefaultTreeModelBase::TypeObject DefaultTreeModelBase::_type(
     "</FieldContainer>\n",
     "A UI DefaultTreeModel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

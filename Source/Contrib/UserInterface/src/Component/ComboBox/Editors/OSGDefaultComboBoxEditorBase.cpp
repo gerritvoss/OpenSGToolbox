@@ -126,7 +126,6 @@ void DefaultComboBoxEditorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultComboBoxEditor::getHandleEditor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -170,7 +169,6 @@ DefaultComboBoxEditorBase::TypeObject DefaultComboBoxEditorBase::_type(
     "</FieldContainer>\n",
     "A UI DefaultComboBoxEditor.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

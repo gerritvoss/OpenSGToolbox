@@ -140,7 +140,6 @@ PopupMenuEventBase::TypeObject PopupMenuEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &PopupMenuEventBase::getType(void)

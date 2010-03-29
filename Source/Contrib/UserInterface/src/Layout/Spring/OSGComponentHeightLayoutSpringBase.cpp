@@ -131,7 +131,6 @@ void ComponentHeightLayoutSpringBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SizeField",
@@ -143,7 +142,6 @@ void ComponentHeightLayoutSpringBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ComponentHeightLayoutSpring::getHandleSizeField));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ ComponentHeightLayoutSpringBase::TypeObject ComponentHeightLayoutSpringBase::_ty
     "</FieldContainer>\n",
     "A UI ComponentHeight LayoutSpring.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

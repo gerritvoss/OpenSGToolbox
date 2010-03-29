@@ -74,7 +74,6 @@ OSG::UInt16 UIDrawingSurfaceBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
-
 //! Get the value of the UIDrawingSurface::_sfEventProducer field.
 inline
 WindowEventProducer * UIDrawingSurfaceBase::getEventProducer(void) const

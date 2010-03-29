@@ -140,7 +140,6 @@ ChangeEventBase::TypeObject ChangeEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ChangeEventBase::getType(void)

@@ -141,7 +141,6 @@ ComboBoxComponentGeneratorBase::TypeObject ComboBoxComponentGeneratorBase::_type
     "A UI ComboBox ComponentGenerator.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ComboBoxComponentGeneratorBase::getType(void)

@@ -125,7 +125,6 @@ void RGBColorChooserPanelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RGBColorChooserPanel::getHandleIncludeAlpha));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ RGBColorChooserPanelBase::TypeObject RGBColorChooserPanelBase::_type(
     "</FieldContainer>\n",
     "A UI RGBColorChooserPanel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -130,7 +130,6 @@ void ComboBoxSelectionEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "PreviousIndex",
@@ -142,7 +141,6 @@ void ComboBoxSelectionEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ComboBoxSelectionEvent::getHandlePreviousIndex));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ ComboBoxSelectionEventBase::TypeObject ComboBoxSelectionEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

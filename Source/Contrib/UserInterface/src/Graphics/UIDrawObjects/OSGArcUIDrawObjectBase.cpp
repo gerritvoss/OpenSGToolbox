@@ -158,7 +158,6 @@ void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Width",
@@ -170,7 +169,6 @@ void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleWidth));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -184,7 +182,6 @@ void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "StartAngleRad",
@@ -196,7 +193,6 @@ void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleStartAngleRad));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -210,7 +206,6 @@ void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt16::Description(
         SFUInt16::getClassType(),
         "SubDivisions",
@@ -222,7 +217,6 @@ void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleSubDivisions));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
@@ -236,7 +230,6 @@ void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "LineWidth",
@@ -249,7 +242,6 @@ void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Opacity",
@@ -261,7 +253,6 @@ void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleOpacity));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -385,7 +376,6 @@ ArcUIDrawObjectBase::TypeObject ArcUIDrawObjectBase::_type(
     "</FieldContainer>\n",
     "A UI ArcUIDrawObject.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

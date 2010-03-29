@@ -140,7 +140,6 @@ ComponentEventBase::TypeObject ComponentEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ComponentEventBase::getType(void)

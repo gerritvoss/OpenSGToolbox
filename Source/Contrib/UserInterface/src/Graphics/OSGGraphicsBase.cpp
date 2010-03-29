@@ -138,7 +138,6 @@ void GraphicsBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "EnablePointAntiAliasing",
@@ -150,7 +149,6 @@ void GraphicsBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Graphics::getHandleEnablePointAntiAliasing));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -164,7 +162,6 @@ void GraphicsBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "EnablePolygonAntiAliasing",
@@ -176,7 +173,6 @@ void GraphicsBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Graphics::getHandleEnablePolygonAntiAliasing));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -250,7 +246,6 @@ GraphicsBase::TypeObject GraphicsBase::_type(
     "</FieldContainer>\n",
     "A UI Graphics Interface.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

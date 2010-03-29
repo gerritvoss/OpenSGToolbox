@@ -125,7 +125,6 @@ void FileSystemTreeModelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FileSystemTreeModel::getHandleInternalRoot));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -169,7 +168,6 @@ FileSystemTreeModelBase::TypeObject FileSystemTreeModelBase::_type(
     "</FieldContainer>\n",
     "A UI FileSystemTreeModel.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

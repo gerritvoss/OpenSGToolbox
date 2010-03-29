@@ -134,7 +134,6 @@ void RoundedCornerLineBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "Color",
@@ -147,7 +146,6 @@ void RoundedCornerLineBorderBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "CornerRadius",
@@ -159,7 +157,6 @@ void RoundedCornerLineBorderBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&RoundedCornerLineBorder::getHandleCornerRadius));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -223,7 +220,6 @@ RoundedCornerLineBorderBase::TypeObject RoundedCornerLineBorderBase::_type(
     "</FieldContainer>\n",
     "UI Line Border.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -319,26 +319,6 @@ UInt32 UIDrawingSurfaceBase::getContainerSize(void) const
     return sizeof(UIDrawingSurface);
 }
 
-//! Get the value of the UIDrawingSurface::_sfFocusedWindow field.
-InternalWindow * UIDrawingSurfaceBase::getFocusedWindow(void) const
-{
-    return _sfFocusedWindow.getValue();
-}
-
-//! Set the value of the UIDrawingSurface::_sfFocusedWindow field.
-void UIDrawingSurfaceBase::setFocusedWindow(InternalWindow * const value)
-{
-    editSField(FocusedWindowFieldMask);
-
-    _sfFocusedWindow.setValue(value);
-}
-
-
-//! Get the value of the \a index element the UIDrawingSurface::_mfInternalWindows field.
-InternalWindow * UIDrawingSurfaceBase::getInternalWindows(const UInt32 index) const
-{
-    return _mfInternalWindows[index];
-}
 /*------------------------- decorator get ------------------------------*/
 
 

@@ -141,7 +141,6 @@ ModelTreeNodeBase::TypeObject ModelTreeNodeBase::_type(
     "A UI Model Tree Node.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ModelTreeNodeBase::getType(void)

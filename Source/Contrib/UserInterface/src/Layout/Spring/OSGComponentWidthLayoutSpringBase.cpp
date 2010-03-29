@@ -131,7 +131,6 @@ void ComponentWidthLayoutSpringBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "SizeField",
@@ -143,7 +142,6 @@ void ComponentWidthLayoutSpringBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ComponentWidthLayoutSpring::getHandleSizeField));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -197,7 +195,6 @@ ComponentWidthLayoutSpringBase::TypeObject ComponentWidthLayoutSpringBase::_type
     "</FieldContainer>\n",
     "A UI ComponentWidth LayoutSpring.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

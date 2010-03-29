@@ -135,7 +135,6 @@ void DefaultMutableTreeNodeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecMutableTreeNodePtr::Description(
         MFUnrecMutableTreeNodePtr::getClassType(),
         "ChildrenInternal",
@@ -148,7 +147,6 @@ void DefaultMutableTreeNodeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecMutableTreeNodePtr::Description(
         SFUnrecMutableTreeNodePtr::getClassType(),
         "ParentInternal",
@@ -160,7 +158,6 @@ void DefaultMutableTreeNodeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultMutableTreeNode::getHandleParentInternal));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -223,7 +220,6 @@ DefaultMutableTreeNodeBase::TypeObject DefaultMutableTreeNodeBase::_type(
     "</FieldContainer>\n",
     "A UI Default Mutable Tree Node.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

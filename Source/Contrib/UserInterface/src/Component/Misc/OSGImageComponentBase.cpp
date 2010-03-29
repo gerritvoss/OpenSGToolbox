@@ -354,6 +354,7 @@ ImageComponentBase::TypeObject ImageComponentBase::_type(
     "\t<Field\n"
     "\t\tname=\"Color\"\n"
     "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
