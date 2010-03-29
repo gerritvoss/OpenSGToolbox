@@ -1,7 +1,7 @@
 
 PROJECT(OpenSGExamplesUserInterface)
 
-MESSAGE(STATUS "Building particle system examples integrated")
+MESSAGE(STATUS "Building user interface examples integrated")
 
 #############################################################################
 # find sources
@@ -9,14 +9,15 @@ MESSAGE(STATUS "Building particle system examples integrated")
 FILE(GLOB SRCFILES "*.cpp")
 
 # stuff that is broken -- these examples need to be fixed
-#LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/clusterclientshader.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/35Graphics3DExtrude.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/49LookAndFeel.cpp")
 
 #############################################################################
 # get dependencies
 
 SET(OSG_COMPONENTS OSGBase OSGCluster OSGDrawable OSGFileIO OSGGroup OSGState
-                   OSGSystem OSGUtil OSGWindow OSGWindowGLUT
-                   OSGContribParticleSystem OSGTBFileIO)
+                   OSGSystem OSGUtil OSGText OSGWindow OSGWindowGLUT
+                   OSGContribUserInterface OSGTBFileIO)
 
 IF(UNIX)
     IF(APPLE)
@@ -80,7 +81,9 @@ FOREACH(SRC ${SRCFILES})
 
     GET_FILENAME_COMPONENT(EXE ${SRC} NAME_WE)
 
-    ADD_EXECUTABLE(${EXE} ${SRC})
+    ADD_EXECUTABLE(${EXE} ${OSGEXCLUDE_TOOLBOXTESTS} ${SRC})
+
+    ADD_DEPENDENCIES(OSGAllToolboxTests ${EXE})
 
     FOREACH(OSGDEP ${OSG_COMPONENTS})
         ADD_DEPENDENCIES(${EXE} ${OSGDEP})

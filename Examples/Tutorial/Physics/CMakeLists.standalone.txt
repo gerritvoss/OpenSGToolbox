@@ -1,7 +1,7 @@
 
-PROJECT(OpenSGNativeTutorials)
+PROJECT(OpenSGPhysicsTutorials)
 
-MESSAGE(STATUS "Building native window tutorials standalone")
+MESSAGE(STATUS "Building physics tutorials standalone")
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OpenSGNativeTutorials_SOURCE_DIR}/../../../CMake")
 

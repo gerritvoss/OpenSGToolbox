@@ -1,7 +1,7 @@
 
 PROJECT(OpenSGParticleSystemTutorials)
 
-MESSAGE(STATUS "Building native window tutorials standalone")
+MESSAGE(STATUS "Building particle system tutorials standalone")
 
 #SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OpenSGNativeTutorials_SOURCE_DIR}/../../../CMake")
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OpenSGParticleSystemTutorials_SOURCE_DIR}/../../../../../ToolboxDevMaster/OpenSGDevMaster_Toolbox/CMake")

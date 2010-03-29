@@ -89,6 +89,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
+    using Inherited::getClipBounds;
+
     virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 

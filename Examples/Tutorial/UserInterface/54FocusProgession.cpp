@@ -141,7 +141,7 @@ int main(int argc, char **argv)
     ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
     ExampleButton->setAlignment(Vec2f(1.0,0.0));
     ExampleButton->setFocusedBackground(ButtonFocusedBackground);
-    ExampleButton->setFocusIndex(5);
+//    ExampleButton->setFocusIndex(5);
 
     ExampleButton2->setMinSize(Vec2f(50, 25));
     ExampleButton2->setMaxSize(Vec2f(200, 100));

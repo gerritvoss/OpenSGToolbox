@@ -1,7 +1,7 @@
 
 PROJECT(OpenSGSoundTutorials)
 
-MESSAGE(STATUS "Building native window tutorials standalone")
+MESSAGE(STATUS "Building sound tutorials standalone")
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OpenSGNativeTutorials_SOURCE_DIR}/../../../CMake")
 
