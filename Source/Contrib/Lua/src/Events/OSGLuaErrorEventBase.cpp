@@ -135,7 +135,6 @@ void LuaErrorEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "Status",
@@ -147,7 +146,6 @@ void LuaErrorEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LuaErrorEvent::getHandleStatus));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFString::Description(
         MFString::getClassType(),
@@ -161,7 +159,6 @@ void LuaErrorEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "StackTraceEnabled",
@@ -173,7 +170,6 @@ void LuaErrorEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LuaErrorEvent::getHandleStackTraceEnabled));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -207,6 +203,7 @@ LuaErrorEventBase::TypeObject LuaErrorEventBase::_type(
     "    <Field\n"
     "        name=\"LuaStateVoidP\"\n"
     "        type=\"VoidP\"\n"
+    "\t\tcategory=\"data\"\n"
     "        cardinality=\"single\"\n"
     "        visibility=\"internal\"\n"
     "        access=\"protected\"\n"
@@ -217,6 +214,7 @@ LuaErrorEventBase::TypeObject LuaErrorEventBase::_type(
     "\t<Field\n"
     "\t\tname=\"Status\"\n"
     "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"internal\"\n"
     "\t\taccess=\"protected\"\n"
@@ -227,6 +225,7 @@ LuaErrorEventBase::TypeObject LuaErrorEventBase::_type(
     "\t<Field\n"
     "\t\tname=\"StackTrace\"\n"
     "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"multi\"\n"
     "\t\tvisibility=\"internal\"\n"
     "\t\taccess=\"protected\"\n"
@@ -236,6 +235,7 @@ LuaErrorEventBase::TypeObject LuaErrorEventBase::_type(
     "\t<Field\n"
     "\t\tname=\"StackTraceEnabled\"\n"
     "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"internal\"\n"
     "\t\taccess=\"protected\"\n"
@@ -246,7 +246,6 @@ LuaErrorEventBase::TypeObject LuaErrorEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 
@@ -492,7 +491,7 @@ FieldContainerTransitPtr LuaErrorEventBase::shallowCopy(void) const
 
 LuaErrorEventBase::LuaErrorEventBase(void) :
     Inherited(),
-    _sfLuaStateVoidP          (NULL),
+    _sfLuaStateVoidP          (VoidP(NULL)),
     _sfStatus                 (Int32(0)),
     _mfStackTrace             (),
     _sfStackTraceEnabled      (bool(false))

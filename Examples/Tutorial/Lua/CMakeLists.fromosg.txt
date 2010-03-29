@@ -1,5 +1,5 @@
 
-PROJECT(OpenSGSimpleExamples)
+PROJECT(OpenSGExamplesLua)
 
 MESSAGE(STATUS "Building simple examples integrated")
 
@@ -8,11 +8,15 @@ MESSAGE(STATUS "Building simple examples integrated")
 
 FILE(GLOB SRCFILES "*.cpp")
 
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/04LuaDebugWithParticleSystem.cpp")
+
 #############################################################################
 # get dependencies
 
 SET(OSG_COMPONENTS OSGBase OSGCluster OSGDrawable OSGFileIO OSGGroup OSGState
-                   OSGSystem OSGUtil OSGWindow OSGTBFileIO OSGContribLua )
+                   OSGSystem OSGUtil OSGText OSGWindow OSGTBFileIO
+                   OSGContribUserInterface OSGContribParticleSystem
+                   OSGContribLua OSGContribLuaToolbox )
 
 IF(UNIX)
     IF(APPLE)
@@ -30,7 +34,7 @@ SET(DEP_INCLUDE_DIRS)
 SET(DEP_LIBRARY_DIRS)
 SET(DEP_LIBRARIES)
 
-SET(OSG_EXTERNAL_COMPONENTS Boost Lua)
+SET(OSG_EXTERNAL_COMPONENTS Boost LUA)
 
 #############
 #### X11 (optional)
@@ -74,7 +78,9 @@ FOREACH(SRC ${SRCFILES})
 
     GET_FILENAME_COMPONENT(EXE ${SRC} NAME_WE)
 
-    ADD_EXECUTABLE(${EXE} ${SRC})
+    ADD_EXECUTABLE(${EXE} ${OSGEXCLUDE_TOOLBOXTESTS} ${SRC})
+
+    ADD_DEPENDENCIES(OSGAllToolboxTests ${EXE})
 
     FOREACH(OSGDEP ${OSG_COMPONENTS})
         ADD_DEPENDENCIES(${EXE} ${OSGDEP})

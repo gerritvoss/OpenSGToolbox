@@ -3352,9 +3352,9 @@ SWIGINTERN void OSG_TypeFactory_writeTypeGraph(OSG::TypeFactory *self,OSG::Char8
               return SWIG_arg;
           }
           //Make sure the index is in range
-          if(arg4 > TheFieldHandle->getSize())
+          if(arg4 > TheFieldHandle->size())
           {
-              lua_pushfstring(L,"Error in insertFieldValue: arg4 out of range. Attempted to insert before index: %s, on a field %s of size %s.",arg4,arg2,TheFieldHandle->getSize());
+              lua_pushfstring(L,"Error in insertFieldValue: arg4 out of range. Attempted to insert before index: %s, on a field %s of size %s.",arg4,arg2,TheFieldHandle->size());
               lua_error(L);
               return SWIG_arg;
           }
@@ -3780,7 +3780,7 @@ SWIGINTERN OSG::UInt32 OSG_FieldContainerRefPtr_getFieldSize(OSG::FieldContainer
                   ErrorString += "'";
                   throw(ErrorString.c_str());
               }
-              return TheFieldHandle->getSize();
+              return TheFieldHandle->size();
         }
 SWIGINTERN void OSG_FieldContainerRefPtr_clearField(OSG::FieldContainerRefPtr *self,OSG::Char8 *FieldName){
               //Check that the field referenced exists
@@ -3993,7 +3993,7 @@ SWIGINTERN void OSG_FieldContainerRefPtr_removeFieldValue(OSG::FieldContainerRef
                   throw(ErrorString.c_str());
               }
               //Make sure the index is in range
-              if(Index >= TheFieldHandle->getSize())
+              if(Index >= TheFieldHandle->size())
               {
                   std::string ErrorString = "Error in removeFieldValue: Index out of range.  Attempted to remove index: .";
                   //ErrorString += ;

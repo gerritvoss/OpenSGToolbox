@@ -1,7 +1,7 @@
 
 PROJECT(OpenSGLuaTutorials)
 
-MESSAGE(STATUS "Building native window tutorials standalone")
+MESSAGE(STATUS "Building lua tutorials standalone")
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OpenSGLuaTutorials_SOURCE_DIR}/../../../../../ToolboxDevMaster/OpenSGDevMaster_Toolbox/CMake")
 

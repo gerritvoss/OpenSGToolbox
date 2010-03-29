@@ -76,7 +76,7 @@ OSG::UInt16 LuaErrorEventBase::getClassGroupId(void)
 //! Get the value of the LuaErrorEvent::_sfLuaStateVoidP field.
 
 inline
-void* &LuaErrorEventBase::editLuaStateVoidP(void)
+VoidP &LuaErrorEventBase::editLuaStateVoidP(void)
 {
     editSField(LuaStateVoidPFieldMask);
 
@@ -85,14 +85,14 @@ void* &LuaErrorEventBase::editLuaStateVoidP(void)
 
 //! Get the value of the LuaErrorEvent::_sfLuaStateVoidP field.
 inline
-const void* LuaErrorEventBase::getLuaStateVoidP(void) const
+const VoidP &LuaErrorEventBase::getLuaStateVoidP(void) const
 {
     return _sfLuaStateVoidP.getValue();
 }
 
 //! Set the value of the LuaErrorEvent::_sfLuaStateVoidP field.
 inline
-void LuaErrorEventBase::setLuaStateVoidP(void* value)
+void LuaErrorEventBase::setLuaStateVoidP(const VoidP &value)
 {
     editSField(LuaStateVoidPFieldMask);
 

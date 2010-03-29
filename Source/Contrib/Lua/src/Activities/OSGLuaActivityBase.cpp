@@ -127,7 +127,6 @@ void LuaActivityBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFString::Description(
         SFString::getClassType(),
         "EntryFunction",
@@ -139,7 +138,6 @@ void LuaActivityBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LuaActivity::getHandleEntryFunction));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -193,7 +191,6 @@ LuaActivityBase::TypeObject LuaActivityBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

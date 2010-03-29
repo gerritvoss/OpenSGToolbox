@@ -150,7 +150,7 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventBase : public Event
             const SFBool              *getSFStackTraceEnabled (void) const;
 
 
-            const void*               getLuaStateVoidP   (void) const;
+            const VoidP               &getLuaStateVoidP   (void) const;
 
                   Int32                getStatus          (void) const;
 
@@ -277,7 +277,7 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventBase : public Event
                   SFBool              *editSFStackTraceEnabled(void);
 
 
-                  void*               &editLuaStateVoidP  (void);
+                  VoidP               &editLuaStateVoidP  (void);
 
                   Int32               &editStatus         (void);
 
@@ -290,7 +290,7 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventBase : public Event
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setLuaStateVoidP  (void* value);
+            void setLuaStateVoidP  (const VoidP &value);
             void setStatus         (const Int32 value);
             void setStackTraceEnabled(const bool value);
 

@@ -1683,9 +1683,9 @@
               return SWIG_arg;
           }
           //Make sure the index is in range
-          if(arg4 > TheFieldHandle->getSize())
+          if(arg4 > TheFieldHandle->size())
           {
-              lua_pushfstring(L,"Error in insertFieldValue: arg4 out of range. Attempted to insert before index: %s, on a field %s of size %s.",arg4,arg2,TheFieldHandle->getSize());
+              lua_pushfstring(L,"Error in insertFieldValue: arg4 out of range. Attempted to insert before index: %s, on a field %s of size %s.",arg4,arg2,TheFieldHandle->size());
               lua_error(L);
               return SWIG_arg;
           }
@@ -2325,7 +2325,7 @@ namespace OSG {
                   ErrorString += "'";
                   throw(ErrorString.c_str());
               }
-              return TheFieldHandle->getSize();
+              return TheFieldHandle->size();
         }
         
         void clearField(Char8* FieldName) throw(const char *)
@@ -2542,7 +2542,7 @@ namespace OSG {
                   throw(ErrorString.c_str());
               }
               //Make sure the index is in range
-              if(Index >= TheFieldHandle->getSize())
+              if(Index >= TheFieldHandle->size())
               {
                   std::string ErrorString = "Error in removeFieldValue: Index out of range.  Attempted to remove index: .";
                   //ErrorString += ;
