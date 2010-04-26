@@ -52,7 +52,7 @@
 #include "OSGSound.h"
 #include "OSGStubSoundManager.h"
 
-#ifdef _OSG_USE_FMOD_
+#ifdef OSG_WITH_FMOD
 #include "OSGFModSoundManager.h"
 #endif
 
@@ -98,7 +98,7 @@ void SoundManager::setSoundManager(SoundManager *manager)
 
 SoundManager* SoundManager::getDefaultSoundManager(void)
 {
-#ifdef _OSG_USE_FMOD_
+#ifdef OSG_WITH_FMOD
     return FModSoundManager::the();
 #else
     return StubSoundManager::the();

@@ -45,8 +45,6 @@
 
 #include <OSGConfig.h>
 
-#ifdef OSG_WITH_FMOD
-
 #include "OSGFModSoundManager.h"
 #include "OSGFModSound.h"
 
@@ -716,5 +714,3 @@ void FModSound::dump(      UInt32    ,
 }
 
 OSG_END_NAMESPACE
-
-#endif _OSG_USE_FMOD_
