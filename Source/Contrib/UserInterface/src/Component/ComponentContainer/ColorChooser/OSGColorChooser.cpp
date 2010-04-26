@@ -126,7 +126,11 @@ void ColorChooser::addChooserPanel(AbstractColorChooserPanelRefPtr panel)
 	{
 		panel->installChooserPanel(this);
 
-			pushToInternalChooserPanels(panel);
+        pushToInternalChooserPanels(panel);
+
+		//updateChildren();
+        
+		//panel->updateChooser();
 	}
 }
 
@@ -225,12 +229,26 @@ void ColorChooser::setSelectionModel(ColorSelectionModelPtr newModel)
 
 void ColorChooser::updateChoosers(void)
 {
-		_DefaultPreviewPanelBackground->setColor(_SelectionModel->getSelectedColor());
+    _DefaultPreviewPanelBackground->setColor(_SelectionModel->getSelectedColor());
+
+    //dettach Model Listeners
+	for(UInt32 i(0) ; i<getMFInternalChooserPanels()->size() ; ++i)
+	{
+		getInternalChooserPanels(i)->dettachModelListener();
+    }
 
 	for(UInt32 i(0) ; i<getMFInternalChooserPanels()->size() ; ++i)
 	{
 		getInternalChooserPanels(i)->updateChooser();
 	}
+
+	commitChanges();
+
+    //Reattach Model Listeners
+	for(UInt32 i(0) ; i<getMFInternalChooserPanels()->size() ; ++i)
+	{
+		getInternalChooserPanels(i)->attachModelListener();
+    }
 }
 
 void ColorChooser::createDefaultPanel(void)
@@ -362,15 +380,9 @@ void ColorChooser::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-	if((whichField & PreviewPanelFieldMask) || 
-	   (whichField & InternalChooserPanelsFieldMask))
+	if(whichField & PreviewPanelFieldMask)
 	{
 		updateChildren();
-	}
-
-	if(whichField & InternalChooserPanelsFieldMask)
-	{
-		updateChoosers();
 	}
 }
 

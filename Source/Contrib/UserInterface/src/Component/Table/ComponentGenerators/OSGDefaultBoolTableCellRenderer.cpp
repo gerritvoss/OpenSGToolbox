@@ -49,6 +49,7 @@
 #include "OSGLineBorder.h"
 #include "OSGEmptyBorder.h"
 #include "OSGLabel.h"
+#include "OSGTable.h"
 
 #include "OSGDefaultBoolTableCellRenderer.h"
 

@@ -51,6 +51,7 @@
 #include "OSGLabel.h"
 
 #include "OSGDefaultTableCellRenderer.h"
+#include "OSGTable.h"
 
 OSG_BEGIN_NAMESPACE
 

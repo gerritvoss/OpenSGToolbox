@@ -96,7 +96,6 @@ std::string HSVColorChooserPanel::getDisplayText(void) const
 
 void HSVColorChooserPanel::updateChooser(void)
 {
-    dettachModelListener();
 
     Real32 Hue, Saturation, Value;
     Color4f ColorSelected(getColorFromModel());
@@ -202,9 +201,6 @@ void HSVColorChooserPanel::updateChooser(void)
                                                                        1.0f));
         _AlphaSliderTrackBackground->editMFStops()->push_back(1.0);
     }
-	commitChanges();
-
-    attachModelListener();
 }
 
 void HSVColorChooserPanel::buildChooser(void)

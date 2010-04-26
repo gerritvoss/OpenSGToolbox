@@ -78,33 +78,39 @@ void DefaultTableColumnModel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DefaultTableColumnModel::addColumn(const TableColumnRefPtr aColumn)
+void DefaultTableColumnModel::addColumn(TableColumnRefPtr aColumn)
 {
-    _Columns.push_back(aColumn);
+    pushToInternalColumns(aColumn);
     recalcWidthCache();
     //aColumn->addFieldChangeListener(&_TableFieldChangeListener);
-    produceColumnAdded(_Columns.size());
+    produceColumnAdded(getMFInternalColumns()->getSize());
 }
 
 TableColumnRefPtr DefaultTableColumnModel::getColumn(const UInt32& columnIndex) const
 {
-    return _Columns[columnIndex];
+	if(columnIndex < getColumnCount())
+	{
+        return getInternalColumns(columnIndex);
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 UInt32 DefaultTableColumnModel::getColumnCount(void) const
 {
-    return _Columns.size();
+    return getMFInternalColumns()->getSize();
 }
 
 Int32 DefaultTableColumnModel::getColumnIndexAtX(UInt32 xPosition) const
 {
     UInt32 CumulativeColumnWidth = 0;
 
-    TableColumnVector::iterator Iter;
-    for(UInt32 Index(0) ; Index<_Columns.size() ; ++Index)
+    for(UInt32 Index(0) ; Index<getMFInternalColumns()->getSize() ; ++Index)
     {
-        CumulativeColumnWidth += (*Iter)->getWidth();
-        if(Index != _Columns.size()-1)
+        CumulativeColumnWidth += getInternalColumns(Index)->getWidth();
+        if(Index != getMFInternalColumns()->getSize()-1)
         {
             CumulativeColumnWidth += getColumnMargin();
         }
@@ -122,11 +128,6 @@ UInt32 DefaultTableColumnModel::getColumnMargin(void) const
     return _ColumnMargin;
 }
 
-std::vector<TableColumnUnrecPtr> DefaultTableColumnModel::getColumns(void) const
-{
-    return _Columns;
-}
-
 bool DefaultTableColumnModel::getColumnSelectionAllowed(void) const
 {
     return _ColumnSelectionAllowed;
@@ -137,7 +138,7 @@ UInt32 DefaultTableColumnModel::getSelectedColumnCount(void) const
     if(_ColumnSelectionAllowed && _SelectionModel != NULL)
     {
         UInt32 SelectedCount(0);
-        for(UInt32 i(0) ; i<_Columns.size() ; ++i)
+        for(UInt32 i(0) ; i<getMFInternalColumns()->getSize() ; ++i)
         {
             if(_SelectionModel->isSelectedIndex(i))
             {
@@ -157,7 +158,7 @@ std::vector<UInt32> DefaultTableColumnModel::getSelectedColumns(void) const
     if(_ColumnSelectionAllowed)
     {
         std::vector<UInt32> SelectedVector;
-        for(UInt32 i(0) ; i<_Columns.size() ; ++i)
+        for(UInt32 i(0) ; i<getMFInternalColumns()->getSize() ; ++i)
         {
             if(_SelectionModel->isSelectedIndex(i))
             {
@@ -186,8 +187,8 @@ void DefaultTableColumnModel::moveColumn(const UInt32& columnIndex, const UInt32
 {
     //Check the validity of the parameters
     if(columnIndex == newIndex ||
-       columnIndex < _Columns.size() || 
-       newIndex < _Columns.size())
+       columnIndex < getMFInternalColumns()->getSize() || 
+       newIndex < getMFInternalColumns()->getSize())
     {
         return;
     }
@@ -202,14 +203,14 @@ void DefaultTableColumnModel::moveColumn(const UInt32& columnIndex, const UInt32
         FillDirection = -1;
     }
 
-    TableColumnVector::value_type TempHold(_Columns[columnIndex]);
+    TableColumnUnrecPtr TempHold(getInternalColumns(columnIndex));
 
     for(Int32 i(columnIndex) ; (FillDirection*i)<(FillDirection*static_cast<Int32>(newIndex)) ; i+=FillDirection)
     {
-        _Columns[i] = _Columns[i+FillDirection];
+        (*editMFInternalColumns())[i] = getInternalColumns(i+FillDirection);
     }
 
-    _Columns[newIndex] = TempHold;
+    (*editMFInternalColumns())[newIndex] = TempHold;
 
     produceColumnMoved(columnIndex, newIndex);
 }
@@ -218,17 +219,18 @@ void DefaultTableColumnModel::removeColumn(TableColumnRefPtr column)
 {
     //Find the Column
     UInt32 FindIndex(0);
-    TableColumnVector::iterator Itor(_Columns.begin());
-    while(FindIndex < _Columns.size() && column != _Columns[FindIndex])
+    MFInternalColumnsType::iterator Itor(editMFInternalColumns()->begin());
+    while(FindIndex < getMFInternalColumns()->getSize() && column !=
+          getInternalColumns(FindIndex))
     {
         ++FindIndex;
         ++Itor;
     }
 
-    if(FindIndex != _Columns.size())
+    if(FindIndex != getMFInternalColumns()->getSize())
     {
         //Erase
-        _Columns.erase(Itor);
+        editMFInternalColumns()->erase(Itor);
         recalcWidthCache();
         //column->removeFieldChangeListener(&_TableFieldChangeListener);
         produceColumnRemoved(FindIndex);
@@ -264,11 +266,10 @@ void DefaultTableColumnModel::recalcWidthCache(void)
 {
     _TotalColumnWidth = 0;
 
-    TableColumnVector::iterator Iter;
-    for(Iter = _Columns.begin() ; Iter != _Columns.end() ; ++Iter)
+    for(UInt32 i(0) ; i != getMFInternalColumns()->getSize() ; ++i)
     {
-        _TotalColumnWidth += (*Iter)->getWidth();
-        if(Iter != _Columns.begin())
+        _TotalColumnWidth += getInternalColumns(i)->getWidth();
+        if(i != 0)
         {
             _TotalColumnWidth += getColumnMargin();
         }

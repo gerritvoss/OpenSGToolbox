@@ -58,6 +58,7 @@
 
 
 
+#include "OSGTableColumn.h"             // InternalColumns Class
 
 #include "OSGDefaultTableColumnModelBase.h"
 #include "OSGDefaultTableColumnModel.h"
@@ -81,6 +82,10 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                        Field Documentation                              *
 \***************************************************************************/
+
+/*! \var TableColumn *   DefaultTableColumnModelBase::_mfInternalColumns
+    
+*/
 
 
 /***************************************************************************\
@@ -107,6 +112,20 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void DefaultTableColumnModelBase::classDescInserter(TypeObject &oType)
 {
+    FieldDescriptionBase *pDesc = NULL;
+
+
+    pDesc = new MFUnrecTableColumnPtr::Description(
+        MFUnrecTableColumnPtr::getClassType(),
+        "InternalColumns",
+        "",
+        InternalColumnsFieldId, InternalColumnsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTableColumnModel::editHandleInternalColumns),
+        static_cast<FieldGetMethodSig >(&DefaultTableColumnModel::getHandleInternalColumns));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -137,6 +156,16 @@ DefaultTableColumnModelBase::TypeObject DefaultTableColumnModelBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI DefaultTableColumnModel.\n"
+    "    <Field\n"
+    "        name=\"InternalColumns\"\n"
+    "        type=\"TableColumn\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"multi\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"\"\n"
+    "        access=\"protected\"\n"
+    "        >\n"
+    "    </Field>\n"
     "</FieldContainer>\n",
     "A UI DefaultTableColumnModel.\n"
     );
@@ -161,7 +190,73 @@ UInt32 DefaultTableColumnModelBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
+//! Get the DefaultTableColumnModel::_mfInternalColumns field.
+const MFUnrecTableColumnPtr *DefaultTableColumnModelBase::getMFInternalColumns(void) const
+{
+    return &_mfInternalColumns;
+}
 
+MFUnrecTableColumnPtr *DefaultTableColumnModelBase::editMFInternalColumns(void)
+{
+    editMField(InternalColumnsFieldMask, _mfInternalColumns);
+
+    return &_mfInternalColumns;
+}
+
+
+
+void DefaultTableColumnModelBase::pushToInternalColumns(TableColumn * const value)
+{
+    editMField(InternalColumnsFieldMask, _mfInternalColumns);
+
+    _mfInternalColumns.push_back(value);
+}
+
+void DefaultTableColumnModelBase::assignInternalColumns(const MFUnrecTableColumnPtr &value)
+{
+    MFUnrecTableColumnPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecTableColumnPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<DefaultTableColumnModel *>(this)->clearInternalColumns();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToInternalColumns(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void DefaultTableColumnModelBase::removeFromInternalColumns(UInt32 uiIndex)
+{
+    if(uiIndex < _mfInternalColumns.size())
+    {
+        editMField(InternalColumnsFieldMask, _mfInternalColumns);
+
+        _mfInternalColumns.erase(uiIndex);
+    }
+}
+
+void DefaultTableColumnModelBase::removeObjFromInternalColumns(TableColumn * const value)
+{
+    Int32 iElemIdx = _mfInternalColumns.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(InternalColumnsFieldMask, _mfInternalColumns);
+
+        _mfInternalColumns.erase(iElemIdx);
+    }
+}
+void DefaultTableColumnModelBase::clearInternalColumns(void)
+{
+    editMField(InternalColumnsFieldMask, _mfInternalColumns);
+
+
+    _mfInternalColumns.clear();
+}
 
 
 
@@ -171,6 +266,10 @@ UInt32 DefaultTableColumnModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (InternalColumnsFieldMask & whichField))
+    {
+        returnValue += _mfInternalColumns.getBinSize();
+    }
 
     return returnValue;
 }
@@ -180,6 +279,10 @@ void DefaultTableColumnModelBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (InternalColumnsFieldMask & whichField))
+    {
+        _mfInternalColumns.copyToBin(pMem);
+    }
 }
 
 void DefaultTableColumnModelBase::copyFromBin(BinaryDataHandler &pMem,
@@ -187,6 +290,10 @@ void DefaultTableColumnModelBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (InternalColumnsFieldMask & whichField))
+    {
+        _mfInternalColumns.copyFromBin(pMem);
+    }
 }
 
 //! create a new instance of the class
@@ -311,12 +418,14 @@ FieldContainerTransitPtr DefaultTableColumnModelBase::shallowCopy(void) const
 /*------------------------- constructors ----------------------------------*/
 
 DefaultTableColumnModelBase::DefaultTableColumnModelBase(void) :
-    Inherited()
+    Inherited(),
+    _mfInternalColumns        ()
 {
 }
 
 DefaultTableColumnModelBase::DefaultTableColumnModelBase(const DefaultTableColumnModelBase &source) :
-    Inherited(source)
+    Inherited(source),
+    _mfInternalColumns        ()
 {
 }
 
@@ -327,6 +436,64 @@ DefaultTableColumnModelBase::~DefaultTableColumnModelBase(void)
 {
 }
 
+void DefaultTableColumnModelBase::onCreate(const DefaultTableColumnModel *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DefaultTableColumnModel *pThis = static_cast<DefaultTableColumnModel *>(this);
+
+        MFUnrecTableColumnPtr::const_iterator InternalColumnsIt  =
+            source->_mfInternalColumns.begin();
+        MFUnrecTableColumnPtr::const_iterator InternalColumnsEnd =
+            source->_mfInternalColumns.end  ();
+
+        while(InternalColumnsIt != InternalColumnsEnd)
+        {
+            pThis->pushToInternalColumns(*InternalColumnsIt);
+
+            ++InternalColumnsIt;
+        }
+    }
+}
+
+GetFieldHandlePtr DefaultTableColumnModelBase::getHandleInternalColumns (void) const
+{
+    MFUnrecTableColumnPtr::GetHandlePtr returnValue(
+        new  MFUnrecTableColumnPtr::GetHandle(
+             &_mfInternalColumns,
+             this->getType().getFieldDesc(InternalColumnsFieldId),
+             const_cast<DefaultTableColumnModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTableColumnModelBase::editHandleInternalColumns(void)
+{
+    MFUnrecTableColumnPtr::EditHandlePtr returnValue(
+        new  MFUnrecTableColumnPtr::EditHandle(
+             &_mfInternalColumns,
+             this->getType().getFieldDesc(InternalColumnsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&DefaultTableColumnModel::pushToInternalColumns,
+                    static_cast<DefaultTableColumnModel *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&DefaultTableColumnModel::removeFromInternalColumns,
+                    static_cast<DefaultTableColumnModel *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&DefaultTableColumnModel::removeObjFromInternalColumns,
+                    static_cast<DefaultTableColumnModel *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&DefaultTableColumnModel::clearInternalColumns,
+                    static_cast<DefaultTableColumnModel *>(this)));
+
+    editMField(InternalColumnsFieldMask, _mfInternalColumns);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -364,6 +531,8 @@ FieldContainer *DefaultTableColumnModelBase::createAspectCopy(
 void DefaultTableColumnModelBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
+
+    static_cast<DefaultTableColumnModel *>(this)->clearInternalColumns();
 
 
 }

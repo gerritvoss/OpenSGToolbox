@@ -85,7 +85,7 @@ EventConnection TableColumn::addFieldChangeListener(FieldChangeListenerPtr Liste
                            boost::bind(&TableColumn::removeFieldChangeListener, this, Listener));
 }
 
-void TableColumn::produceFieldChanged(EditFieldHandlePtr TheField,
+void TableColumn::produceFieldChanged(FieldContainerWeakPtr TheFieldContainer,
                                       FieldDescriptionBase* TheDescription)
 {
     //TODO: Implement
@@ -105,7 +105,7 @@ void TableColumn::produceFieldChanged(EditFieldHandlePtr TheField,
 
 TableColumn::TableColumn(void) :
     Inherited(),
-    _HeaderValue()
+    _HeaderValue(0)
 {
 }
 
@@ -136,7 +136,7 @@ void TableColumn::changed(ConstFieldMaskArg whichField,
         if(getType().getFieldDesc(i) != NULL &&
             whichField & getType().getFieldDesc(i)->getFieldMask())
         {
-            produceFieldChanged(editField(i), getType().getFieldDesc(i));
+            produceFieldChanged(FieldContainerWeakPtr(this), getType().getFieldDesc(i));
         }
     }
 }

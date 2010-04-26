@@ -52,6 +52,7 @@
 
 #include "OSGDefaultInt32TableCellRenderer.h"
 #include <boost/lexical_cast.hpp>
+#include "OSGTable.h"
 
 OSG_BEGIN_NAMESPACE
 

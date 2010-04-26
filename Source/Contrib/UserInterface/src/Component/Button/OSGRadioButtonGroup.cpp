@@ -98,7 +98,7 @@ void RadioButtonGroup::addButton(RadioButtonRefPtr Button)
 void RadioButtonGroup::removeButton(RadioButtonRefPtr Button)
 {
     MFUnrecRadioButtonPtr *curButtons = editMFGroupButtons();
-    MFUnrecRadioButtonPtr::iterator ButtonIter = std::find((*curButtons).begin(),(*curButtons).end(),Button);
+    MFUnrecRadioButtonPtr::iterator ButtonIter = (*curButtons).find(Button);
     if(ButtonIter != (*curButtons).end())
     {
         (*curButtons).erase(ButtonIter);		

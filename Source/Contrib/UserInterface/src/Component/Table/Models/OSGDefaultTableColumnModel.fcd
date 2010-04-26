@@ -14,4 +14,14 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI DefaultTableColumnModel.
+    <Field
+        name="InternalColumns"
+        type="TableColumn"
+        category="pointer"
+        cardinality="multi"
+        visibility="external"
+        defaultValue=""
+        access="protected"
+        >
+    </Field>
 </FieldContainer>

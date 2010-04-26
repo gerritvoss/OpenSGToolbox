@@ -66,7 +66,6 @@
 #include "OSGBorderLayout.h"
 #include "OSGBorderLayoutConstraints.h"
 
-#include "OSGColorChooser.h"
 #include "OSGBorderLayout.h"
 #include "OSGBorderLayoutConstraints.h"
 

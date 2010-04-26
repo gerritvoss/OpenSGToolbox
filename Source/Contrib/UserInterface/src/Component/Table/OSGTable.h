@@ -353,6 +353,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
 
     //Sets the value for the cell in the table model at row and column.
     void setValueAt(const boost::any& aValue, const UInt32& row, const UInt32& column);
+	
+
+    void setHeader         (TableHeader * const value);
+    void setModel          (TableModel * const value);
+    void setColumnModel    (TableColumnModel * const value);
     /*=========================  PROTECTED  ===============================*/
 
   protected:

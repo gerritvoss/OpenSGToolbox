@@ -138,12 +138,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractColorChooserPanel : public Abs
 
 	//Returns the color that is currently selected.
 	Color4f getColorFromModel(void) const;
+
+    
+	virtual void attachModelListener(void) = 0;
+	virtual void dettachModelListener(void) = 0;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
     friend class AbstractColorChooserPanelBase;
+    friend class ColorChooser;
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const AbstractColorChooserPanel &source);

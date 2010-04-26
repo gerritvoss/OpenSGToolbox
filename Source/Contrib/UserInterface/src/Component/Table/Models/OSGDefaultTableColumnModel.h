@@ -82,7 +82,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     /*! \}                                                                 */
 
     //Appends aColumn to the end of the tableColumns array.
-    virtual void addColumn(const TableColumnRefPtr aColumn);
+    virtual void addColumn(TableColumnRefPtr aColumn);
 
     //Returns the TableColumn object for the column at columnIndex.
     virtual TableColumnRefPtr getColumn(const UInt32& columnIndex) const;
@@ -97,7 +97,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     virtual UInt32 getColumnMargin(void) const;
 
     //Returns an Enumeration of all the columns in the model.
-    virtual std::vector<TableColumnUnrecPtr> getColumns(void) const;
+    //virtual std::vector<TableColumnUnrecPtr> getColumns(void) const;
 
     //Returns true if columns may be selected.
     virtual bool getColumnSelectionAllowed(void) const;
@@ -133,9 +133,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
 
   protected:
 
-    // Variables should all be in DefaultTableColumnModelBase.
-    typedef std::vector<TableColumnUnrecPtr> TableColumnVector;
-
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
@@ -165,7 +162,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     UInt32 _ColumnMargin;
     bool _ColumnSelectionAllowed;;
     ListSelectionModelPtr _SelectionModel;
-    TableColumnVector _Columns;
     UInt32 _TotalColumnWidth;
     
     

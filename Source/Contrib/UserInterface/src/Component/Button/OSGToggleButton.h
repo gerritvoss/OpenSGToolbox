@@ -115,6 +115,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ToggleButton : public ToggleButtonBase
     Color4f             &editSelectedTextColor(void);
     const Color4f             &getSelectedTextColor(void) const;
 
+	void setSelected       (const bool value);
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

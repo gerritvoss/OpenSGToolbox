@@ -154,8 +154,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING HSVColorChooserPanel : public HSVColor
 	BoundedRangeSpinnerChangeListener _BoundedRangeSpinnerChangeListener;
 
 	void updateColorSelectedModel(void);
-	void attachModelListener(void);
-	void dettachModelListener(void);
+	virtual void attachModelListener(void);
+	virtual void dettachModelListener(void);
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -96,8 +96,6 @@ std::string RGBColorChooserPanel::getDisplayText(void) const
 
 void RGBColorChooserPanel::updateChooser(void)
 {
-    dettachModelListener();
-
     Int32 Red,Green,Blue,Alpha;
 
     Color4f ColorSelected(getColorFromModel());
@@ -180,10 +178,6 @@ void RGBColorChooserPanel::updateChooser(void)
                                                                        1.0f));
         _AlphaSliderTrackBackground->editMFStops()->push_back(1.0);
     }
-
-	commitChanges();
-
-    attachModelListener();
 }
 
 void RGBColorChooserPanel::buildChooser(void)

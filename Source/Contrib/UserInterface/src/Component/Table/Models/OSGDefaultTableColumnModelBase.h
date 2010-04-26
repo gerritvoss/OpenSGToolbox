@@ -65,6 +65,7 @@
 
 #include "OSGAbstractTableColumnModel.h" // Parent
 
+#include "OSGTableColumnFields.h"       // InternalColumns type
 
 #include "OSGDefaultTableColumnModelFields.h"
 
@@ -90,6 +91,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModelBase : public A
 
   public:
 
+    enum
+    {
+        InternalColumnsFieldId = Inherited::NextFieldId,
+        NextFieldId = InternalColumnsFieldId + 1
+    };
+
+    static const OSG::BitVector InternalColumnsFieldMask =
+        (TypeTraits<BitVector>::One << InternalColumnsFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFUnrecTableColumnPtr MFInternalColumnsType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -159,6 +172,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModelBase : public A
     static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    MFUnrecTableColumnPtr _mfInternalColumns;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
@@ -177,12 +197,43 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModelBase : public A
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
+    void onCreate(const DefaultTableColumnModel *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
+    GetFieldHandlePtr  getHandleInternalColumns (void) const;
+    EditFieldHandlePtr editHandleInternalColumns(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+            const MFUnrecTableColumnPtr *getMFInternalColumns (void) const;
+                  MFUnrecTableColumnPtr *editMFInternalColumns(void);
+
+
+                  TableColumn * getInternalColumns(const UInt32 index) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToInternalColumns           (TableColumn * const value   );
+    void assignInternalColumns           (const MFUnrecTableColumnPtr &value);
+    void removeFromInternalColumns (UInt32                uiIndex );
+    void removeObjFromInternalColumns(TableColumn * const value   );
+    void clearInternalColumns            (void                          );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

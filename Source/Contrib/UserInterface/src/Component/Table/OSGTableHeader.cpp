@@ -54,6 +54,8 @@
 #include "OSGTable.h"
 
 #include "OSGTableHeader.h"
+#include "OSGTableColumnModelEvent.h"
+#include "OSGTableModelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -237,6 +239,20 @@ void TableHeader::detachFromEventProducer(void)
     _MarginDraggedListener.disconnect();
 }
 
+void TableHeader::setColumnModel(TableColumnModel * const value)
+{
+    //if(_ColumnModel.get() != NULL)
+    //{
+    //    getColumnModel()->removeColumnModelListener(&_ColumnModelListener);
+    //}
+    //_ColumnModel = columnModel;
+    updateColumnHeadersComponents();
+    if(getColumnModel() != NULL)
+    {
+        getColumnModel()->addColumnModelListener(&_ColumnModelListener);
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -284,25 +300,12 @@ TableHeader::~TableHeader(void)
 
 /*----------------------------- class specific ----------------------------*/
 
+
 void TableHeader::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
-
-    if(whichField & ColumnModelFieldMask)
-    {
-        //if(_ColumnModel.get() != NULL)
-        //{
-        //    getColumnModel()->removeColumnModelListener(&_ColumnModelListener);
-        //}
-        //_ColumnModel = columnModel;
-        updateColumnHeadersComponents();
-        if(getColumnModel() != NULL)
-        {
-            getColumnModel()->addColumnModelListener(&_ColumnModelListener);
-        }
-    }
 }
 
 void TableHeader::dump(      UInt32    ,

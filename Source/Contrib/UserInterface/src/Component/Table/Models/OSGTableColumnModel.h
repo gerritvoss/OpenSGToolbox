@@ -91,7 +91,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModel : public TableColumnM
     virtual void removeColumnModelListener(TableColumnModelListenerPtr l) = 0;
 
     //Appends aColumn to the end of the tableColumns array.
-    virtual void addColumn(const TableColumnRefPtr aColumn) = 0;
+    virtual void addColumn(TableColumnRefPtr aColumn) = 0;
 
     //Returns the TableColumn object for the column at columnIndex.
     virtual TableColumnRefPtr getColumn(const UInt32& columnIndex) const = 0;
@@ -106,7 +106,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModel : public TableColumnM
     virtual UInt32 getColumnMargin(void) const = 0;
 
     //Returns an Enumeration of all the columns in the model.
-    virtual std::vector<TableColumnUnrecPtr> getColumns(void) const = 0;
+    //virtual std::vector<TableColumnUnrecPtr> getColumns(void) const = 0;
 
     //Returns true if columns may be selected.
     virtual bool getColumnSelectionAllowed(void) const = 0;

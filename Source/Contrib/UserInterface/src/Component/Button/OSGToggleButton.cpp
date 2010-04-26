@@ -91,6 +91,28 @@ void ToggleButton::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void ToggleButton::setSelected(const bool value)
+{
+	if(value != getSelected())
+	{
+		if(value)
+		{
+			ButtonSelectedEventUnrecPtr
+				TheEvent(ButtonSelectedEvent::create(this,getSystemTime()));
+			produceButtonSelected(TheEvent);    
+		}
+		else
+		{
+			ButtonSelectedEventUnrecPtr
+				TheEvent(ButtonSelectedEvent::create(this,getSystemTime()));
+			produceButtonDeselected(TheEvent);    
+		}
+		
+		Inherited::setSelected(value);
+	}
+
+}
+
 EventConnection ToggleButton::addButtonSelectedListener(ButtonSelectedListenerPtr Listener)
 {
     _ButtonSelectedListeners.insert(Listener);
@@ -208,21 +230,6 @@ void ToggleButton::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-    if( (whichField & SelectedFieldMask) )
-    {
-        if(getSelected())
-        {
-            ButtonSelectedEventUnrecPtr
-                TheEvent(ButtonSelectedEvent::create(this,getSystemTime()));
-            produceButtonSelected(TheEvent);    
-        }
-        else
-        {
-            ButtonSelectedEventUnrecPtr
-                TheEvent(ButtonSelectedEvent::create(this,getSystemTime()));
-            produceButtonDeselected(TheEvent);    
-        }
-    }
 }
 
 void ToggleButton::dump(      UInt32    ,

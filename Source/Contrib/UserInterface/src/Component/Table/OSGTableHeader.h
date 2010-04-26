@@ -131,6 +131,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeader : public TableHeaderBase
     void setResizingColumn(Int32 aColumn);
           
     virtual void detachFromEventProducer(void);
+	
+	void setColumnModel    (TableColumnModel * const value);
     /*=========================  PROTECTED  ===============================*/
 
   protected:

@@ -53,6 +53,7 @@
 #include "OSGDefaultGLenumTableCellRenderer.h"
 
 #include "OSGGLDefineMapper.h"
+#include "OSGTable.h"
 
 OSG_BEGIN_NAMESPACE
 

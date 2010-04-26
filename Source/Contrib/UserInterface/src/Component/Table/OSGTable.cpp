@@ -58,6 +58,8 @@
 #include "OSGDefaultTableCellRenderer.h"
 #include "OSGDefaultTableCellEditor.h"
 #include "OSGTableCellEditor.h"
+#include "OSGTableColumnModelEvent.h"
+#include "OSGTableModelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -375,7 +377,7 @@ void Table::keyPressed(const KeyEventUnrecPtr e)
 
 void Table::mousePressed(const MouseEventUnrecPtr e)
 {
-    bool isContained;
+    bool isContained(false);
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
     {
         isContained = getChildren(i)->isContained(e->getLocation(), true);
@@ -632,8 +634,7 @@ void Table::updateTableComponents(void)
 
             //TODO: Add Focusing
             CellValue = getModel()->getValueAt(Row, Column);
-            pushToTable(
-                                 getCellRenderer(Row, Column)->getTableCellRendererComponent(TableRefPtr(this), CellValue, isSelected(Row, Column), false, Row, Column));
+            pushToTable(getCellRenderer(Row, Column)->getTableCellRendererComponent(TableRefPtr(this), CellValue, isSelected(Row, Column), false, Row, Column));
         }
     }
 
@@ -869,7 +870,8 @@ TableCellEditorRefPtr Table::getCellEditor(const UInt32& row, const UInt32& colu
 
 TableCellRendererPtr Table::getCellRenderer(const UInt32& row, const UInt32& column) const
 {
-    if(getColumnModel()->getColumn(column)->getCellRenderer() != NULL)
+    if(getColumnModel()->getColumn(column) != NULL &&
+        getColumnModel()->getColumn(column)->getCellRenderer() != NULL)
     {
         return getColumnModel()->getColumn(column)->getCellRenderer();
     }
@@ -1026,22 +1028,98 @@ void Table::setSelectionModel(ListSelectionModelPtr newModel)
 void Table::createColumnsFromModel(void)
 {
     getColumnModel()->removeColumnModelListener(this);
-    //Clear the old columns from the ColumnModel
-    while(getColumnModel()->getColumnCount() > 0)
-    {
-        getColumnModel()->removeColumn(getColumnModel()->getColumn(0));
-    }
 
-    //Add the Columns to the Model
-    TableColumnRefPtr NewColumn;
-    for(UInt32 i(0) ; i<getModel()->getColumnCount() ; ++i)
+	if(getColumnModel()->getColumnCount() > getModel()->getColumnCount())
+	{
+		//Clear the old columns from the ColumnModel
+		while(getColumnModel()->getColumnCount() > getModel()->getColumnCount())
+		{
+			getColumnModel()->removeColumn(getColumnModel()->getColumn(getColumnModel()->getColumnCount()-1));
+		}
+	}
+	else if(getColumnModel()->getColumnCount() < getModel()->getColumnCount())
+	{
+        //Add the Columns to the Model
+		TableColumnRefPtr NewColumn;
+		while(getColumnModel()->getColumnCount() < getModel()->getColumnCount())
+		{
+			NewColumn = TableColumn::create();
+			getColumnModel()->addColumn(NewColumn);
+		}
+	}
+
+
+	//Add the Column's values
+    for(UInt32 i(0) ; i<getColumnModel()->getColumnCount() ; ++i)
     {
-        NewColumn = TableColumn::create();
-        NewColumn->setHeaderValue(getModel()->getColumnValue(i));
-        getColumnModel()->addColumn(NewColumn);
+        getColumnModel()->getColumn(i)->setHeaderValue(getModel()->getColumnValue(i));
     }
     getColumnModel()->addColumnModelListener(this);
 }
+
+void Table::setHeader(TableHeader * const value)
+{
+	Inherited::setHeader(value);
+
+    if(getHeader() != NULL)
+    {
+        getHeader()->setTable(TableRefPtr(this));
+        getHeader()->setColumnModel(getColumnModel());
+    }
+}
+
+void Table::setModel(TableModel * const value)
+{
+    if(getModel() != NULL)
+    {
+        getModel()->removeTableModelListener(this);
+	}
+
+	Inherited::setModel(value);
+    //if(_Model.get() != NULL)
+    //{
+    //    _Model->removeTableModelListener(this);
+    //}
+    //_Model = dataModel;
+    if(getModel() != NULL)
+    {
+        if(getAutoCreateColumnsFromModel())
+        {
+            createColumnsFromModel();
+        }
+        getModel()->addTableModelListener(this);
+    }
+    updateTableComponents();
+}
+
+void Table::setColumnModel(TableColumnModel * const value)
+{
+    if(getColumnModel() != NULL)
+    {
+        getColumnModel()->removeColumnModelListener(this);
+	}
+	Inherited::setColumnModel(value);
+
+    //if(_ColumnModel.get() != NULL)
+    //{
+    //    _ColumnModel->removeColumnModelListener(this);
+    //}
+    //_ColumnModel = columnModel;
+    if(getHeader() != NULL)
+    {
+        getHeader()->setColumnModel(getColumnModel());
+    }
+    if(getColumnModel() != NULL)
+    {
+        if(getModel() != NULL && getAutoCreateColumnsFromModel())
+        {
+            createColumnsFromModel();
+        }
+        getColumnModel()->addColumnModelListener(this);
+    }
+    updateTableComponents();
+}
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -1133,18 +1211,12 @@ Table::~Table(void)
 
 /*----------------------------- class specific ----------------------------*/
 
+
 void Table::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
-
-    if((whichField & HeaderFieldMask) &&
-        getHeader() != NULL)
-    {
-            getHeader()->setTable(TableRefPtr(this));
-            getHeader()->setColumnModel(getColumnModel());
-    }
 
     if(whichField & RowSelectionAllowedFieldMask)
     {
@@ -1152,47 +1224,8 @@ void Table::changed(ConstFieldMaskArg whichField,
         if(getColumnModel() != NULL &&
            getColumnModel()->getSelectionModel().get() != NULL)
         {
-            getColumnModel()->getSelectionModel()->clearSelection();
+            //getColumnModel()->getSelectionModel()->clearSelection();
         }
-    }
-
-    if(whichField & ColumnModelFieldMask)
-    {
-        //if(_ColumnModel.get() != NULL)
-        //{
-        //    _ColumnModel->removeColumnModelListener(this);
-        //}
-        //_ColumnModel = columnModel;
-        if(getHeader() != NULL)
-        {
-            getHeader()->setColumnModel(getColumnModel());
-        }
-        if(getColumnModel() != NULL)
-        {
-            if(getModel() != NULL && getAutoCreateColumnsFromModel())
-            {
-                createColumnsFromModel();
-            }
-            getColumnModel()->addColumnModelListener(this);
-        }
-        updateTableComponents();
-    }
-    if(whichField & ModelFieldMask)
-    {
-        //if(_Model.get() != NULL)
-        //{
-        //    _Model->removeTableModelListener(this);
-        //}
-        //_Model = dataModel;
-        if(getModel() != NULL)
-        {
-            if(getAutoCreateColumnsFromModel())
-            {
-                createColumnsFromModel();
-            }
-            getModel()->addTableModelListener(this);
-        }
-        updateTableComponents();
     }
 }
 

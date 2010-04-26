@@ -74,6 +74,13 @@ OSG::UInt16 DefaultTableColumnModelBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
+//! Get the value of the \a index element the DefaultTableColumnModel::_mfInternalColumns field.
+inline
+TableColumn * DefaultTableColumnModelBase::getInternalColumns(const UInt32 index) const
+{
+    return _mfInternalColumns[index];
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -84,6 +91,12 @@ void DefaultTableColumnModelBase::execSync (      DefaultTableColumnModelBase *p
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (InternalColumnsFieldMask & whichField))
+        _mfInternalColumns.syncWith(pFrom->_mfInternalColumns,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
 #endif
 
