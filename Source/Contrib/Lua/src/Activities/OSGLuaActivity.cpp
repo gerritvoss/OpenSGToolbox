@@ -117,6 +117,20 @@ LuaActivityRefPtr LuaActivity::addLuaCallback(FieldContainerRefPtr producerObjec
             return NULL;
         }
 
+        //Check if a LuaActivity with this funcName is already attached
+        ActivityUnrecPtr CheckActiviy;
+        for(UInt32 i(0) ; i<getEventProducer(producerObject)->getNumAttachedActivities() ; ++i)
+        {
+            CheckActiviy = getEventProducer(producerObject)->getAttachedActivity(producedMethodId, i);
+
+            if(CheckActiviy->getType() == LuaActivity::getClassType() &&
+                dynamic_pointer_cast<LuaActivity>(CheckActiviy)->getEntryFunction().compare(funcName) == 0)
+            {
+                SWARNING << "Lua function: " << funcName << " is already attached to this produced method." << std::endl;
+                return dynamic_pointer_cast<LuaActivity>(CheckActiviy);
+            }
+        }
+
         LuaActivityUnrecPtr TheLuaActivity = LuaActivity::create();
         TheLuaActivity->setEntryFunction(funcName);
         getEventProducer(producerObject)->attachActivity(TheLuaActivity,producedMethodId);
