@@ -143,22 +143,58 @@ void AbstractWindow::updateClipBounds(void)
 
 BorderRefPtr AbstractWindow::getDrawnBorder(void) const
 {
-	if(getDrawDecorations())
-	{
-		return Inherited::getDrawnBorder();
-	}
-	else
-	{
-		return NULL;
-	}
+    if(getDrawDecorations())
+    {
+        if(getEnabled())
+        {
+            if(getFocused())
+            {
+                return getFocusedBorder();
+            }
+            else if(_MouseInComponentLastMouse)
+            {
+                return getRolloverBorder();
+            }
+            else
+            {
+                return getBorder();
+            }
+        }
+        else
+        {
+            return getDisabledBorder();
+        }
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 LayerRefPtr AbstractWindow::getDrawnBackground(void) const
 {
 	if(getDrawDecorations())
-	{
-		return Inherited::getDrawnBackground();
-	}
+    {
+        if(getEnabled())
+        {
+            if(getFocused())
+            {
+                return getFocusedBackground();
+            }
+            else if(_MouseInComponentLastMouse)
+            {
+                return getRolloverBackground();
+            }
+            else
+            {
+                return getBackground();
+            }
+        }
+        else
+        {
+            return getDisabledBackground();
+        }
+    }
 	else
 	{
 		return NULL;
@@ -168,10 +204,28 @@ LayerRefPtr AbstractWindow::getDrawnBackground(void) const
 LayerRefPtr AbstractWindow::getDrawnForeground(void) const
 {
 	if(getDrawDecorations())
-	{
-		return Inherited::getDrawnForeground();
-	}
-	else
+    {
+        if(getEnabled())
+        {
+            if(getFocused())
+            {
+                return getFocusedForeground();
+            }
+            else if(_MouseInComponentLastMouse)
+            {
+                return getRolloverForeground();
+            }
+            else
+            {
+                return getForeground();
+            }
+        }
+        else
+        {
+            return getDisabledForeground();
+        }
+    }
+    else
 	{
 		return NULL;
 	}

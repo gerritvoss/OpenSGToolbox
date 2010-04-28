@@ -370,6 +370,12 @@ void TabPanel::removeTab(const ComponentRefPtr Tab)
 
 void TabPanel::removeTab(const UInt32 TabIndex)
 {
+    if(TabIndex == getMFTabs()->size()-1 &&
+       TabIndex == getSelectedIndex())
+    {
+        setSelectedIndex(TabIndex-1);
+    }
+
     getTabs(TabIndex)->removeFocusListener(this);
     editMFChildren()->erase(editMFChildren()->find(getTabs(TabIndex))); // an incredibly ridiculous function call
     editMFChildren()->erase(editMFChildren()->find(getTabContents(TabIndex)));
@@ -490,6 +496,10 @@ void TabPanel::updateLayout(void)
         offset[AxisIndex] += getTabs(i)->getSize()[AxisIndex] + TabBorderBottomRightWidth[AxisIndex];
     }
 
+    if((getSelectedIndex()+1)>getMFTabContents()->size())
+    {
+        setSelectedIndex(getMFTabContents()->size()-1);
+    }
     if(getMFTabContents()->size() > 0 && getSelectedIndex() != -1)
     {
         Vec2f ContentBorderTopLeftWidth, ContentBorderBottomRightWidth;

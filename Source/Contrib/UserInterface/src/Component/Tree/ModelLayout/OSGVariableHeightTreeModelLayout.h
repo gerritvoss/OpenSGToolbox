@@ -133,6 +133,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING VariableHeightTreeModelLayout : public
 	//Sets the height of each cell.
 	virtual void setRowHeight(const Real32& rowHeight);
 
+    //Returns the height of the Layout.
+    virtual Real32 getHeight(void) const;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

@@ -205,10 +205,10 @@ void PopupMenu::removeItem(const UInt32& Index)
             {
                 ++ItemCount;
             }
-            if(ItemCount == Index)
-            {
-                break;
-            }
+            //if(ItemCount == Index)
+            //{
+                //break;
+            //}
             ++RemoveItor;
         }
         if(RemoveItor != editMFChildren()->end())

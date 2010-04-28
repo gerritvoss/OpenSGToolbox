@@ -77,9 +77,15 @@ void VariableHeightTreeModelLayout::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Real32 VariableHeightTreeModelLayout::getHeight(void) const
+{
+    //TODO:Implement
+    return 0.0f;
+}
+
 void VariableHeightTreeModelLayout::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, TreePath path, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn) const
 {
-	//TODO:Implement
+    //TODO:Implement
 }
 
 bool VariableHeightTreeModelLayout::isVisible(const TreePath& path) const

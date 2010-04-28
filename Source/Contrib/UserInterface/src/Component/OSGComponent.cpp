@@ -307,11 +307,11 @@ BorderRefPtr Component::getDrawnBorder(void) const
     {
         if(_MouseInComponentLastMouse)
         {
-            return getFocusedBorder();
+            return getRolloverBorder();
         }
         else if(getFocused())
         {
-            return getRolloverBorder();
+            return getFocusedBorder();
         }
         else
         {
@@ -514,41 +514,40 @@ void Component::draw(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
     if (!getVisible())
         return;
 
+    GLdouble InitMat[16];
+    glGetDoublev(GL_MODELVIEW_MATRIX, InitMat);
     //Translate to my position
     glTranslatef(getPosition().x(), getPosition().y(), 0);
 
-    if(!setupClipping(TheGraphics))
+    if(setupClipping(TheGraphics))
     {
-        //Translate to my position
-        glTranslatef(-getPosition().x(), -getPosition().y(), 0);
-        return;
+
+        //Activate My Border Drawing constraints
+        BorderRefPtr DrawnBorder = getDrawnBorder();
+        if(DrawnBorder != NULL)
+        {
+            DrawnBorder->activateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
+        }
+
+
+        //Draw My Background
+        drawBackground(TheGraphics, getDrawnBackground(), Opacity);
+
+        //Draw Internal
+        drawInternal(TheGraphics, Opacity);
+
+        //Set Clipping to initial settings
+        setupClipping(TheGraphics);
+
+        //Draw My Foreground
+        drawForeground(TheGraphics, getDrawnForeground(), Opacity);
+
+        //Draw all parts that should not be clipped against
+        drawUnclipped(TheGraphics, Opacity);
     }
-
-    //Activate My Border Drawing constraints
-    BorderRefPtr DrawnBorder = getDrawnBorder();
-    if(DrawnBorder != NULL)
-    {
-        DrawnBorder->activateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
-    }
-
-
-    //Draw My Background
-    drawBackground(TheGraphics, getDrawnBackground(), Opacity);
-
-    //Draw Internal
-    drawInternal(TheGraphics, Opacity);
-
-    //Draw My Foreground
-    drawForeground(TheGraphics, getDrawnForeground(), Opacity);
-
-    //Set Clipping to initial settings
-    setupClipping(TheGraphics);
-
-    //Draw all parts that should not be clipped against
-    drawUnclipped(TheGraphics, Opacity);
 
     //Undo the Translation to Component Space
-    glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+    glLoadMatrixd(InitMat);
 }
 
 

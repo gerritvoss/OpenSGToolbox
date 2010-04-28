@@ -558,6 +558,12 @@ void AbstractTreeModelLayout::ModelListener::treeStructureChanged(const TreeMode
         _AbstractTreeModelLayout->setExpanded(e->getPath(), true);
     }
     _AbstractTreeModelLayout->produceTreeStructureChanged(e);
+
+    //If is root node
+    if(e->getPath().getDepth() == 1)
+    {
+        _AbstractTreeModelLayout->setExpanded(e->getPath(), true);
+    }
 }
 
 OSG_END_NAMESPACE

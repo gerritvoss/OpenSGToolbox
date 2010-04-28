@@ -111,8 +111,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollPanel : public ScrollPanelBase
     virtual void updateLayout(void);
 
     void setViewComponent(ComponentRefPtr TheComponent);
-    
-	//Mouse Wheel Events
+    Component * getViewComponent  (void) const;
+
+    //Mouse Wheel Events
     virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
     /*=========================  PROTECTED  ===============================*/
 

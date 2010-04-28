@@ -81,6 +81,11 @@ void FixedHeightTreeModelLayout::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, T
 	//TODO:Implement
 }
 
+Real32 FixedHeightTreeModelLayout::getHeight(void) const
+{
+    return getRowHeight()*getRowCount();
+}
+
 bool FixedHeightTreeModelLayout::isVisible(const TreePath& path) const
 {
     return _VisiblePathSet.find(path) != _VisiblePathSet.end();
@@ -176,54 +181,57 @@ bool FixedHeightTreeModelLayout::isExpanded(const TreePath& path) const
 
 void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
 {
-    if(Expand)
+    if(!_TreeModel->isLeaf(path.getLastPathComponent()))
     {
-		_VetoPathExpantion = false;
+        if(Expand)
+        {
+            _VetoPathExpantion = false;
 
-		if(!isExpanded(path))
-		{
-			produceTreeWillExpand(path);
-			if(!_VetoPathExpantion)
-			{
-				_ExpandedPathSet.insert(path);
+            if(!isExpanded(path))
+            {
+                produceTreeWillExpand(path);
+                if(!_VetoPathExpantion)
+                {
+                    _ExpandedPathSet.insert(path);
 
-                if(isVisible(path) || (_TreeModel->getPath(_TreeModel->getRoot()) == path))
-				{
-					//Insert all visible decendents of Path
-					std::vector<TreePath> VisibleDecendants;
-					getVisibleDecendants(path, VisibleDecendants);
-					for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
-					{
-						_VisiblePathSet.insert(VisibleDecendants[i]);
-					}
-				}
-				produceTreeExpanded(path);
-			}
-		}
-    }
-    else
-    {
-        _VetoPathCollapse = false;
-		if(isExpanded(path))
-		{
-			produceTreeWillCollapse(path);
-			if(!_VetoPathCollapse)
-			{
-				_ExpandedPathSet.erase(path);
-		        
-				if(isVisible(path) || _TreeModel->getPath(_TreeModel->getRoot()) == path)
-				{
-					//Remove all visible decendents of Path
-					std::vector<TreePath> VisibleDecendants;
-					getVisibleDecendants(path, VisibleDecendants);
-					for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
-					{
-						_VisiblePathSet.erase(VisibleDecendants[i]);
-					}
-				}
-				produceTreeCollapsed(path);
-			}
-		}
+                    if(isVisible(path) || (_TreeModel->getPath(_TreeModel->getRoot()) == path))
+                    {
+                        //Insert all visible decendents of Path
+                        std::vector<TreePath> VisibleDecendants;
+                        getVisibleDecendants(path, VisibleDecendants);
+                        for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+                        {
+                            _VisiblePathSet.insert(VisibleDecendants[i]);
+                        }
+                    }
+                    produceTreeExpanded(path);
+                }
+            }
+        }
+        else
+        {
+            _VetoPathCollapse = false;
+            if(isExpanded(path))
+            {
+                produceTreeWillCollapse(path);
+                if(!_VetoPathCollapse)
+                {
+                    _ExpandedPathSet.erase(path);
+
+                    if(isVisible(path) || _TreeModel->getPath(_TreeModel->getRoot()) == path)
+                    {
+                        //Remove all visible decendents of Path
+                        std::vector<TreePath> VisibleDecendants;
+                        getVisibleDecendants(path, VisibleDecendants);
+                        for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+                        {
+                            _VisiblePathSet.erase(VisibleDecendants[i]);
+                        }
+                    }
+                    produceTreeCollapsed(path);
+                }
+            }
+        }
     }
 }
 

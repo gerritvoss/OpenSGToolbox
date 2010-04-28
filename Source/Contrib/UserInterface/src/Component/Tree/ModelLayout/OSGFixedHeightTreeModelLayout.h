@@ -122,7 +122,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FixedHeightTreeModelLayout : public Fi
 	virtual void setRootVisible(bool rootVisible);
 
 	//Sets the height of each cell.
-	virtual void setRowHeight(const UInt32& rowHeight);
+    virtual void setRowHeight(const UInt32& rowHeight);
+
+    //Returns the height of the Layout.
+    virtual Real32 getHeight(void) const;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

@@ -41,6 +41,19 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+Component * ScrollPanel::getViewComponent  (void) const
+{
+    if(getView() == NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        return getView()->getViewComponent();
+    }
+}
+
+inline
 ScrollPanel::ViewportChangeListener::ViewportChangeListener(ScrollPanelRefPtr TheScrollPanel) :
    _ScrollPanel(TheScrollPanel)
 {

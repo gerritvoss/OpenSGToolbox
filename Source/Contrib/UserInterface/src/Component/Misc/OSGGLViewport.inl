@@ -41,6 +41,48 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+Real32 GLViewport::getYaw(void) const
+{
+    return _Yaw;
+}
+
+inline
+Real32 GLViewport::getRoll(void) const
+{
+    return _Roll;
+}
+
+inline
+Real32 GLViewport::getPitch(void) const
+{
+    return _Pitch;
+}
+
+inline
+const Vec3f& GLViewport::getOffset(void) const
+{
+    return _Offset;
+}
+
+inline
+const Vec3f& GLViewport::getOffsetMultipliers(void) const
+{
+    return _OffsetMultipliers;
+}
+
+inline
+const Vec3f& GLViewport::getMinOffset(void) const
+{
+    return _MinOffset;
+}
+
+inline
+const Vec3f& GLViewport::getMaxOffset(void) const
+{
+    return _MaxOffset;
+}
+ 
+inline
 void GLViewport::setOffsetMultipliers(const Vec3f& OffsetMultipliers)
 {
     _OffsetMultipliers= OffsetMultipliers;

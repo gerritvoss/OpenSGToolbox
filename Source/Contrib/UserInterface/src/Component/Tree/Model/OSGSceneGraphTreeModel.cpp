@@ -222,6 +222,80 @@ bool SceneGraphTreeModel::isEqual(const boost::any& left, const boost::any& righ
     }
 }
 
+void SceneGraphTreeModel::removeNode(const boost::any& nodeToBeRemoved)
+{
+    NodeRefPtr ntbr;
+    try
+    {
+        ntbr = boost::any_cast<NodeUnrecPtr>(nodeToBeRemoved);
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return;
+    }
+
+    NodeRefPtr parent = ntbr->getParent();
+
+    TreePath pathOfNode = getPath(nodeToBeRemoved);
+    if(parent!=NULL)
+    {
+        UInt32 ChildIndex(parent->findChild(ntbr));
+
+
+        produceTreeNodesWillBeRemoved(pathOfNode.getParentPath(),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, nodeToBeRemoved));
+        parent->subChild(ntbr);
+        produceTreeNodesRemoved(pathOfNode.getParentPath(),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, nodeToBeRemoved));
+
+        if(parent->getNChildren() == 0)
+        {
+            if(parent->getParent() != NULL)
+            {
+                std::vector<UInt32> childIndices;
+                childIndices.push_back(parent->getParent()->findChild(parent));
+                std::vector<boost::any> ChildUserObjects;
+                for(UInt32 i(0) ; i< childIndices.size() ; ++i)
+                {
+                    ChildUserObjects.push_back(boost::any(parent->getParent()->getChild(childIndices[i])));
+                }
+                produceTreeNodesChanged(getPath(boost::any(parent->getParent())), childIndices, ChildUserObjects);
+            }
+        }
+    }
+}
+
+void SceneGraphTreeModel::addNode(const boost::any& parent,const boost::any& nodeToBeAdded)
+{
+    NodeRefPtr parentNode;
+    NodeRefPtr nodeToBeAddedNode;
+    try
+    {
+        parentNode = boost::any_cast<NodeUnrecPtr>(parent);
+        nodeToBeAddedNode = boost::any_cast<NodeUnrecPtr>(nodeToBeAdded);
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return;
+    }
+    UInt32 ChildIndex(parentNode->getNChildren());
+    parentNode->addChild(nodeToBeAddedNode);
+    produceTreeNodesInserted(getPath(parent),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, nodeToBeAdded));
+
+    if(parentNode->getNChildren() == 1)
+    {
+        if(parentNode->getParent() != NULL)
+        {
+            std::vector<UInt32> childIndices;
+            childIndices.push_back(parentNode->getParent()->findChild(parentNode));
+            std::vector<boost::any> ChildUserObjects;
+            for(UInt32 i(0) ; i< childIndices.size() ; ++i)
+            {
+                ChildUserObjects.push_back(boost::any(parentNode->getParent()->getChild(childIndices[i])));
+            }
+            produceTreeNodesChanged(getPath(boost::any(parentNode->getParent())), childIndices, ChildUserObjects);
+        }
+    }
+}	
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

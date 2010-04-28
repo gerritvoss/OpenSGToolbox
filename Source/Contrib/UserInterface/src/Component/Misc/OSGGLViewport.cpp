@@ -85,6 +85,32 @@ void GLViewport::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+void GLViewport::copyView(const GLViewport& TheViewport)
+{
+    _Navigator = TheViewport._Navigator;
+    _DefaultView = TheViewport._DefaultView;
+    _Yaw = TheViewport._Yaw;
+    _Pitch = TheViewport._Pitch;
+    _Roll = TheViewport._Roll;
+    _InitialYaw = TheViewport._InitialYaw;
+    _InitialPitch = TheViewport._InitialPitch;
+    _InitialRoll = TheViewport._InitialRoll;
+    _Offset = TheViewport._Offset;
+}
+
+const Matrix& GLViewport::getViewMatrix(void)
+{
+    if(_Navigator.getMode() == Navigator::NONE && 
+       getPort()->getCamera()->getBeacon()->getCore()->getType().isDerivedFrom(Transform::getClassType()))
+    {
+        return dynamic_cast<Transform*>(getPort()->getCamera()->getBeacon()->getCore())->getMatrix();
+    }
+    else
+    {
+        _Navigator.getMatrix();
+    }
+}
+ 
 
 void GLViewport::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {

@@ -147,18 +147,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
     //Ensures that the node in the specified row is expanded and viewable.
     void expandRow(const UInt32& row);
 
-    //Notifies all listeners that have registered interest for notification on this event type.
-    //void fireTreeCollapsed(TreePath path);
-
-    //Notifies all listeners that have registered interest for notification on this event type.
-    //void fireTreeExpanded(TreePath path);
-
-    //Notifies all listeners that have registered interest for notification on this event type.
-    //void fireTreeWillCollapse(TreePath path);
-
-    //Notifies all listeners that have registered interest for notification on this event type.
-    //void fireTreeWillExpand(TreePath path);
-
     //Returns the path identified as the anchor.
     TreePath getAnchorSelectionPath(void) const;
 

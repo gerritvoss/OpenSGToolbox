@@ -87,30 +87,41 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    const Matrix& getViewMatrix(void);
 
-	void showAll(void);
+    void showAll(void);
     void lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up);
-	void set(const Matrix& m);
+    void set(const Matrix& m);
     void setMode(Navigator::Mode TheMode);
 
     virtual void mousePressed(const MouseEventUnrecPtr e);
-	virtual void keyTyped(const KeyEventUnrecPtr e);
+    virtual void keyTyped(const KeyEventUnrecPtr e);
     virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
-    
+
     void setMultipliers(Real32 YawMultiplier,Real32 PitchMultiplier,Real32 RollMultiplier);
     void setClamps(Vec2f YawClamp,Vec2f PitchClamp,Vec2f RollClamp);
     void setYaw(Real32 Yaw);
     void setRoll(Real32 Roll);
     void setPitch(Real32 Pitch);
+    Real32 getYaw(void) const;
+    Real32 getRoll(void) const;
+    Real32 getPitch(void) const;
 
     void setOffset(const Vec3f& Offset);
     void setOffsetMultipliers(const Vec3f& OffsetMultipliers);
     void setMinOffset(const Vec3f& MinOffset);
     void setMaxOffset(const Vec3f& MaxOffset);
+    const Vec3f& getOffset(void) const;
+    const Vec3f& getOffsetMultipliers(void) const;
+    const Vec3f& getMinOffset(void) const;
+    const Vec3f& getMaxOffset(void) const;
 
-	void updateNavigatorConnections(void);
+
+    void updateNavigatorConnections(void);
 
     virtual void detachFromEventProducer(void);
+
+    void copyView(const GLViewport& TheViewport);
     /*=========================  PROTECTED  ===============================*/
 
   protected:

@@ -99,7 +99,7 @@ void CardLayout::previous(const ComponentContainerRefPtr TheContainer)
 
 void CardLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
-    if(getCard() > Components->size())
+    if(getCard() >= Components->size())
     {
         SWARNING << "CardLayout::updateLayout: The Index set for Card is: "<< getCard() << ", but there are only "
             << Components->size() << " components in the container this layout is attached to" << std::endl;

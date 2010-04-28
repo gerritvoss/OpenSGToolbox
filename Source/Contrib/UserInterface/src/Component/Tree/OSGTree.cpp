@@ -149,7 +149,21 @@ void Tree::mousePressed(const MouseEventUnrecPtr e)
 			}
 		}
     }
-	ComponentContainer::mousePressed(e);
+    else
+    {
+        //Clicked outside of the rows
+        //Clear the selection
+        if(getParentWindow() != NULL &&
+           getParentWindow()->getDrawingSurface() != NULL &&
+           getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+        {
+            if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() == 0)
+            {
+                getSelectionModel()->clearSelection();
+            }
+        }
+    }
+    ComponentContainer::mousePressed(e);
 }
 
 void Tree::keyTyped(const KeyEventUnrecPtr e)
@@ -370,13 +384,13 @@ TreePath Tree::getPathForLocation(const Pnt2f& Loc) const
 
 Int32 Tree::getRowForLocation(const Pnt2f& Loc) const
 {
-    if(getModelLayout() != NULL)
+    if(getModelLayout() == NULL || getModelLayout()->getHeight() < Loc.y())
     {
-        return getModelLayout()->getRowForPath(getClosestPathForLocation(Loc));
+        return -1;
     }
     else
     {
-        return -1;
+        return getModelLayout()->getRowForPath(getClosestPathForLocation(Loc));
     }
 }
 
@@ -923,8 +937,15 @@ void Tree::getDrawnRows(Int32& Beginning, Int32& End) const
     Pnt2f ClipTopLeft, ClipBottomRight;
     getClipBounds(ClipTopLeft, ClipBottomRight);
 
-    Beginning = getRowForLocation(ClipTopLeft);
-    End = getRowForLocation(ClipBottomRight);
+ 	if(getModelLayout() != NULL)
+ 	{
+        Beginning = getModelLayout()->getRowForPath(getClosestPathForLocation(ClipTopLeft));
+        End       = getModelLayout()->getRowForPath(getClosestPathForLocation(ClipBottomRight));
+ 	}
+ 	else
+ 	{
+ 		Beginning = End = -1;
+ 	}
 }
 
 void Tree::updatePreferredSize(void)

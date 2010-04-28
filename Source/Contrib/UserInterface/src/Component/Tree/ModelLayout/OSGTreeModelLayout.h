@@ -175,10 +175,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelLayout : public TreeModelLayo
 	//Determines whether or not the root node from the TreeModel is visible.
 	virtual void setRootVisible(bool rootVisible) = 0;
 
-	//Sets the height of each cell.
-	virtual void setRowHeight(const Real32& rowHeight) = 0;
+    //Sets the height of each cell.
+    virtual void setRowHeight(const Real32& rowHeight) = 0;
 
-	//Sets the offset of each depth.
+    //Returns the height of the Layout.
+    virtual Real32 getHeight(void) const = 0;
+
+    //Sets the offset of each depth.
 	virtual void setDepthOffset(const Real32& depthOffset) = 0;
 
 	//Sets the TreeSelectionModel used to manage the selection to new LSM.
