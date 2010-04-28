@@ -74,6 +74,12 @@ public:
     };
 
     typedef std::vector<boost::any> PathVectorType;
+    
+    TreePath(const PathVectorType& path, TreeModelRefPtr theModel);
+
+    TreePath(const std::deque<boost::any>& path, TreeModelRefPtr theModel);
+
+    TreePath(const TreePath& p, UInt32 len);
 
 	//Tests two TreePaths for equality
 	bool operator==(const TreePath& Right) const;
@@ -129,11 +135,6 @@ public:
 
 private:
     friend class TreeModel;
-    
-    TreePath(const PathVectorType& path, TreeModelRefPtr theModel);
-    TreePath(const std::deque<boost::any>& path, TreeModelRefPtr theModel);
-
-    TreePath(const TreePath& p, UInt32 len);
 
 protected:
 

@@ -95,12 +95,6 @@ void Tree::collapseRow(const UInt32& row)
 }
 
 inline
-void Tree::expandPath(const TreePath& path)
-{
-    getModelLayout()->setExpanded(path, true);
-}
-
-inline
 void Tree::expandRow(const UInt32& row)
 {
     getModelLayout()->setExpanded(getModelLayout()->getPathForRow(row), true);

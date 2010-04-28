@@ -106,12 +106,20 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SceneGraphTreeModel : public SceneGrap
     //Get the NodeUnrecPtr to the Root Node
     NodeUnrecPtr getRootNode(void) const;
 
+    //Get the the path in the model to the given node
+    TreePath getPathForNode(NodeUnrecPtr theNode) const;
+
     //Returns true if these objects represent the same node in the tree
     virtual bool isEqual(const boost::any& left, const boost::any& right) const;
 
     void removeNode(const boost::any& nodeToBeRemoved);
 
     void addNode(const boost::any& parent,const boost::any& nodeToBeAdded);
+
+    void insertNode(const boost::any& parent,
+                    const boost::any& nodeToBeAdded,
+                    UInt32 Index);
+
 
     /*=========================  PROTECTED  ===============================*/
 

@@ -206,6 +206,29 @@ NodeUnrecPtr SceneGraphTreeModel::getRootNode(void) const
     return getInternalRoot();
 }
 
+TreePath SceneGraphTreeModel::getPathForNode(NodeUnrecPtr theNode) const
+{
+    std::deque<boost::any> ResultPath;
+
+    if(theNode != NULL &&
+       getInternalRoot() != NULL &&
+       theNode != getInternalRoot())
+    {
+
+        NodeUnrecPtr parentNode(theNode);
+        while(parentNode != NULL &&
+              parentNode != getInternalRoot())
+        {
+            ResultPath.push_front(boost::any(parentNode));
+            parentNode = parentNode->getParent();
+        }
+
+        ResultPath.push_front(boost::any(getInternalRoot()));
+    }
+
+    return TreePath(ResultPath, TreeModelUnrecPtr(const_cast<SceneGraphTreeModel*>(this)));
+}
+
 
 bool SceneGraphTreeModel::isEqual(const boost::any& left, const boost::any& right) const
 {
@@ -295,6 +318,40 @@ void SceneGraphTreeModel::addNode(const boost::any& parent,const boost::any& nod
         }
     }
 }	
+
+void SceneGraphTreeModel::insertNode(const boost::any& parent,
+                                     const boost::any& nodeToBeAdded,
+                                     UInt32 Index)
+{
+    NodeRefPtr parentNode;
+    NodeRefPtr nodeToBeAddedNode;
+    try
+    {
+        parentNode = boost::any_cast<NodeUnrecPtr>(parent);
+        nodeToBeAddedNode = boost::any_cast<NodeUnrecPtr>(nodeToBeAdded);
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return;
+    }
+    parentNode->insertChild(Index, nodeToBeAddedNode);
+    produceTreeNodesInserted(getPath(parent),std::vector<UInt32>(1, Index),std::vector<boost::any>(1, nodeToBeAdded));
+
+    if(parentNode->getNChildren() == 1)
+    {
+        if(parentNode->getParent() != NULL)
+        {
+            std::vector<UInt32> childIndices;
+            childIndices.push_back(parentNode->getParent()->findChild(parentNode));
+            std::vector<boost::any> ChildUserObjects;
+            for(UInt32 i(0) ; i< childIndices.size() ; ++i)
+            {
+                ChildUserObjects.push_back(boost::any(parentNode->getParent()->getChild(childIndices[i])));
+            }
+            produceTreeNodesChanged(getPath(boost::any(parentNode->getParent())), childIndices, ChildUserObjects);
+        }
+    }
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

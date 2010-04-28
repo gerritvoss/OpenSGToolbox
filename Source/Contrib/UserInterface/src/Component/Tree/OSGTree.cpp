@@ -323,8 +323,13 @@ void Tree::addSelectionRows(const std::vector<UInt32>& rows)
     addSelectionPaths(Paths);
 }
 
-
-
+void Tree::expandPath(const TreePath& path)
+{
+    for(UInt32 i(1) ; i<=path.getDepth() ; ++i)
+    {
+        getModelLayout()->setExpanded(TreePath(path,i), true);
+    }
+}
 
 void Tree::cancelEditing(void)
 {
