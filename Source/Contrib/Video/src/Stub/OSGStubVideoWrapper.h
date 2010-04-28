@@ -78,7 +78,7 @@ class OSG_CONTRIBVIDEO_DLLMAPPING StubVideoWrapper : public StubVideoWrapperBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool open(const std::string& ThePath);
+    virtual bool open(const std::string& ThePath, WindowUnrecPtr TheWindow);
 
     virtual bool seek(Int64 SeekPos);
     virtual bool jump(Int64 Amount);

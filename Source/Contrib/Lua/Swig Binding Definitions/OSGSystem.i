@@ -30,6 +30,9 @@
 #include "OSGEventProducerType.h"
 #include "OSGEventProducer.h"
 #include "OSGActivity.h"
+#include "OSGWindow.h"
+#include "OSGEvent.h"
+#include "OSGLuaActivity.h"
     
     int createFieldContainer(lua_State*L) // my native code
     {
@@ -2080,6 +2083,7 @@ namespace OSG {
     class CameraRefPtr;
     class Image;
     class ImageRefPtr;
+    class WindowRefPtr;
     class Matrix;
     class BoxVolume;
     class EventProducerType;
@@ -3029,6 +3033,11 @@ namespace OSG {
             return OSG::getEventProducer(*$self);
             
         }
+        bool isEventProducer(void) const
+        {
+            return (*$self != NULL) && OSG::isEventProducer(*$self);
+        }
+
         
      };
 
@@ -3791,6 +3800,79 @@ namespace OSG {
         {
             return OSG::dynamic_pointer_cast<OSG::TextureObjChunk>(oIn);
         }
+    };
+
+    /******************************************************/
+    /*                    EventPtr          */
+    /******************************************************/
+    class EventRefPtr : 
+        public FieldContainerRefPtr
+    {
+        public:
+
+            EventRefPtr(      void                          );
+            EventRefPtr(const EventRefPtr &source);
+            ~EventRefPtr(void);
+
+        protected:
+    };
+    %extend EventRefPtr
+    {
+        static EventRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            return OSG::dynamic_pointer_cast<OSG::Event>(oIn);
+        }
+    };
+
+    /******************************************************/
+    /*Event			                       */
+    /******************************************************/
+    class Event : public FieldContainer
+    {
+        public:
+
+        protected:
+            Event(void);
+            Event(const Event &obj);
+            virtual ~Event(void);
+    };
+    
+    /******************************************************/
+    /*                    LuaActivityPtr          */
+    /******************************************************/
+    class LuaActivityRefPtr : 
+        public AttachmentContainerRefPtr
+    {
+        public:
+
+            LuaActivityRefPtr(      void                          );
+            LuaActivityRefPtr(const LuaActivityRefPtr &source);
+            ~LuaActivityRefPtr(void);
+
+        protected:
+    };
+    %extend LuaActivityRefPtr
+    {
+        static LuaActivityRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            return OSG::dynamic_pointer_cast<OSG::LuaActivity>(oIn);
+        }
+    };
+
+    /******************************************************/
+    /*                 LuaActivity                        */
+    /******************************************************/
+    class LuaActivity : public AttachmentContainer
+    {
+        public:
+
+            static LuaActivityRefPtr addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, UInt32 producedMethodId);
+            static void removeLuaCallback(FieldContainerRefPtr producerObject, LuaActivityRefPtr toRemove, UInt32 producedMethodId);
+
+        protected:
+            LuaActivity(void);
+            LuaActivity(const LuaActivity &obj);
+            virtual ~LuaActivity(void);
     };
     
     /******************************************************/

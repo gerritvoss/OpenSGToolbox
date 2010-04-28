@@ -44,8 +44,7 @@
 
 #include "OSGVLCVideoWrapperBase.h"
 #include "OSGLock.h"
-
-#include "OSGVLCVideoWrapperBase.h"
+#include "OSGImageFields.h"
 
 #include <vlc/vlc.h>
 
@@ -83,8 +82,8 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VLCVideoWrapper : public VLCVideoWrapperBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-  	virtual bool open(BoostPath ThePath);
-    virtual bool open(const std::string& ThePath);
+  	virtual bool open(BoostPath ThePath, WindowUnrecPtr TheWindow);
+    virtual bool open(const std::string& ThePath, WindowUnrecPtr TheWindow);
     virtual bool seek(Int64 SeekPos);
     virtual bool jump(Int64 Amount);
     virtual bool setRate(Real32 Rate);
@@ -103,7 +102,7 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VLCVideoWrapper : public VLCVideoWrapperBase
 	virtual Int64 getPosition(void) const;
 	virtual Int64 getDuration(void) const;
 
-    virtual ImagePtr getCurrentFrame(void);
+    virtual ImageRefPtr getCurrentFrame(void);
     virtual bool updateImage(void);
     /*=========================  PROTECTED  ===============================*/
 

@@ -56,6 +56,8 @@
 #include "OSGEventProducerType.h"
 #include "OSGEventProducer.h"
 #include "OSGActivity.h"
+#include "OSGWindow.h"
+#include "OSGLuaActivity.h"
         
 %}
 
@@ -75,6 +77,7 @@ namespace OSG {
     class PhysicsBody;
     class PhysicsHandler;
     class PhysicsWorld;
+    class WindowRefPtr;
     
     /******************************************************/
     /*              WindowEventProducerRefPtr                             */
@@ -1095,7 +1098,7 @@ namespace OSG {
     {
       public:
         //virtual bool open(const BoostPath& ThePath);
-        virtual bool open(const std::string& ThePath) = 0;
+        virtual bool open(const std::string& ThePath, WindowRefPtr window) = 0;
     
         virtual bool seek(Int64 SeekPos) = 0;
         virtual bool jump(Int64 Amount) = 0;

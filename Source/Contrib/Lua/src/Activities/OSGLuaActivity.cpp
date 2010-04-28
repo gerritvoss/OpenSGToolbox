@@ -49,6 +49,7 @@
 #include "OSGLuaManager.h"
 #include "OSG_wrap.h"
 #include "OSGFilePathAttachment.h"
+#include "OSGContainerUtils.h"
 #include <fstream>
 #include <sstream>
 
@@ -106,6 +107,39 @@ FieldContainerTransitPtr LuaActivity::createLuaActivity( const BoostPath& FilePa
 
 }
 
+LuaActivityRefPtr LuaActivity::addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, UInt32 producedMethodId)
+{
+    if(isEventProducer(producerObject))
+    {
+        if(funcName.empty())
+        {
+            SWARNING << "LuaActivity::addLuaCallback(): Attempt to attach an empty function name." << std::endl;
+            return NULL;
+        }
+
+        LuaActivityUnrecPtr TheLuaActivity = LuaActivity::create();
+        TheLuaActivity->setEntryFunction(funcName);
+        getEventProducer(producerObject)->attachActivity(TheLuaActivity,producedMethodId);
+        return TheLuaActivity;
+    }
+    else
+    {
+        SWARNING << "LuaActivity::addLuaCallback(): Producer object is not an event producer." << std::endl;
+        return NULL;
+    }
+}
+
+void LuaActivity::removeLuaCallback(FieldContainerRefPtr producerObject,LuaActivityRefPtr toRemove, UInt32 producedMethodId)
+{
+    if(isEventProducer(producerObject))
+    {
+        getEventProducer(producerObject)->detachActivity(toRemove,producedMethodId);
+    }
+    else
+    {
+        SWARNING << "LuaActivity::removeLuaCallback(): Producer object is not an envent producer." << std::endl;
+    }
+}
 
 /***************************************************************************\
  *                           Instance methods                              *

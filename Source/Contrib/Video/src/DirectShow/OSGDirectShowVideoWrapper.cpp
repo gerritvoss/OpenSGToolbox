@@ -175,7 +175,7 @@ bool DirectShowVideoWrapper::isInitialized(void) const
     return videoInitialized;
 }
 
-bool DirectShowVideoWrapper::open(const std::string& ThePath)
+bool DirectShowVideoWrapper::open(const std::string& ThePath, WindowUnrecPtr TheWindow)
 {
     if (videoInitialized) {
         uninitVideo();

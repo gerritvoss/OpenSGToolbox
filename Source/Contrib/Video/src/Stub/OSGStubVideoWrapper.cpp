@@ -75,7 +75,7 @@ void StubVideoWrapper::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-bool StubVideoWrapper::open(const std::string& ThePath)
+bool StubVideoWrapper::open(const std::string& ThePath, WindowUnrecPtr TheWindow)
 {
     //The Stub Video Wrapper does nothing, intentionally
     return false;

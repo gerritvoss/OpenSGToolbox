@@ -76,12 +76,12 @@ void VideoWrapper::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool VideoWrapper::open(const BoostPath& ThePath)
+bool VideoWrapper::open(const BoostPath& ThePath, WindowUnrecPtr TheWindow)
 {
     //Check if the file exists
     if(boost::filesystem::exists(ThePath))
     {
-        return open(ThePath.file_string());
+        return open(ThePath.file_string(), TheWindow);
     }
     else
     {

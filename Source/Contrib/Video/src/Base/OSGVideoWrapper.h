@@ -86,8 +86,8 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapper : public VideoWrapperBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool open(const BoostPath& ThePath);
-    virtual bool open(const std::string& ThePath) = 0;
+    virtual bool open(const BoostPath& ThePath, WindowUnrecPtr TheWindow);
+    virtual bool open(const std::string& ThePath, WindowUnrecPtr TheWindow) = 0;
 
     virtual bool seek(Int64 SeekPos) = 0;
     virtual bool jump(Int64 Amount) = 0;

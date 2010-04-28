@@ -3,7 +3,7 @@
 SCRIPT_BASE_DIR=`dirname "$0"`
 
 #Location of swig.exe
-SWIG_EXE_PATH=swig
+SWIG_EXE_PATH=/usr/local/bin/swig
 
 #Location of the swig interface file
 INTERFACE_FILE_PATH=$SCRIPT_BASE_DIR/OSGSystem.i

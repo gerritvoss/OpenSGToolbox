@@ -1107,6 +1107,13 @@ namespace OSG {
           UInt32       getScanTypeId (void) const;
           bool         isPtrField    (void) const;
     };
+    %extend FieldType
+    {
+        static FieldType* dcast( TypeBase  *val ) throw(const char *)
+        {
+            return dynamic_cast<OSG::FieldType  *>(val);
+        }
+    };
 
     /******************************************************/
     /*              Field                                 */
