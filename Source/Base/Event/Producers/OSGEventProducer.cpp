@@ -152,7 +152,8 @@ EventConnection EventProducer::attachActivity(ActivityRefPtr TheActivity, UInt32
         SWARNING << "EventProducer::attachActivity(): Cannot attach a NULL Activity." << std::endl;
     }
 
-    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents() &&
+       _ProducerType->getMethodDescription(ProducedEventId) == NULL)
     {
         SWARNING << "EventProducer::attachActivity(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
     }
@@ -172,7 +173,8 @@ EventConnection EventProducer::attachActivity(ActivityRefPtr TheActivity, UInt32
 
 bool EventProducer::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
-    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents() &&
+       _ProducerType->getMethodDescription(ProducedEventId) == NULL)
     {
         SWARNING << "EventProducer::isActivityAttached(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
     }
@@ -187,7 +189,8 @@ void EventProducer::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEv
         SWARNING << "EventProducer::detachActivity(): Cannot dettach a NULL Activity." << std::endl;
     }
 
-    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents() &&
+       _ProducerType->getMethodDescription(ProducedEventId) == NULL)
     {
         SWARNING << "EventProducer::detachActivity(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
     }
@@ -265,7 +268,8 @@ EventConnection EventProducer::attachEventListener(EventListenerPtr TheEventList
         SWARNING << "EventProducer::attachEventListener(): Cannot attach a NULL EventListener." << std::endl;
     }
 
-    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents() &&
+       _ProducerType->getMethodDescription(ProducedEventId) == NULL)
     {
         SWARNING << "EventProducer::attachEventListener(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
     }
@@ -284,7 +288,8 @@ EventConnection EventProducer::attachEventListener(EventListenerPtr TheEventList
 
 bool EventProducer::isEventListenerAttached(EventListenerPtr TheEventListener, UInt32 ProducedEventId) const
 {
-    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents() &&
+       _ProducerType->getMethodDescription(ProducedEventId) == NULL)
     {
         SWARNING << "EventProducer::isEventListenerAttached(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
     }
@@ -299,7 +304,8 @@ void EventProducer::detachEventListener(EventListenerPtr TheEventListener, UInt3
         SWARNING << "EventProducer::detachEventListener(): Cannot dettach a NULL EventListener." << std::endl;
     }
 
-    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents() &&
+       _ProducerType->getMethodDescription(ProducedEventId) == NULL)
     {
         SWARNING << "EventProducer::detachEventListener(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
     }

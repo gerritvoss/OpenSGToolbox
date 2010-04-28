@@ -63,20 +63,42 @@ EventProducerType *EventProducerType::getParent(void) const
 inline
 MethodDescription *EventProducerType::getMethodDescription(UInt32 uiMethodId)
 {
-    if(uiMethodId - 1 < _vDescVec.size())
-        return _vDescVec[uiMethodId - 1];
-    else
-        return NULL;
+    MethodDescription *foundDesc = NULL;
+    MethodDescription *testDesc;
+    DescVecIt it;
+    for ( it=_vDescVec.begin() ; it < _vDescVec.end(); it++ )
+    {
+        testDesc = *it;
+        if(testDesc != NULL)
+        {
+            if(testDesc->getMethodId() == uiMethodId)
+            {
+                foundDesc = testDesc;
+            }
+        }
+    }
+    return foundDesc;
 }
 
 inline
 const MethodDescription *EventProducerType::getMethodDescription(
     UInt32 uiMethodId) const
 {
-    if(uiMethodId - 1 < _vDescVec.size())
-        return _vDescVec[uiMethodId - 1];
-    else
-        return NULL;
+    MethodDescription *foundDesc = NULL;
+    MethodDescription *testDesc;
+    DescVecConstIt it;
+    for ( it=_vDescVec.begin() ; it < _vDescVec.end(); it++ )
+    {
+        testDesc = *it;
+        if(testDesc != NULL)
+        {
+            if(testDesc->getMethodId() == uiMethodId)
+            {
+                foundDesc = testDesc;
+            }
+        }
+    }
+    return foundDesc;
 }
 
 inline
