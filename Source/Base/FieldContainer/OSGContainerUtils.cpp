@@ -189,7 +189,16 @@ bool isFieldContentDerivedFrom(const FieldType &TheFieldType, const FieldContain
 
 bool isEventProducer(const FieldContainerRefPtr TheFC)
 {
-    return TheFC->getField("EventProducer") != NULL;
+    GetFieldHandlePtr TheField(TheFC->getField("EventProducer"));
+
+    if(TheField != NULL)
+    {
+        return TheField->getType().getContentType() == FieldTraits<EventProducerPtr>::getType();
+    }
+    else
+    {
+        return false;
+    }
 }
 
 EventProducerPtr getEventProducer(const FieldContainerRefPtr TheFC)

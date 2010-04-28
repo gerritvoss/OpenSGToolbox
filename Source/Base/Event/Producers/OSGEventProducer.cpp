@@ -464,10 +464,9 @@ bool EventProducer::getFromCString(const Char8     *&inVal)
 
             if(Value == NULL)
             {
-                SWARNING <<
-                    "ERROR in EventProducer::getFromString(): Cannot attach a Activity to a produced event with name: "
-                     << FieldContainerIDString << " because there are Activities by that name."
-                     << std::endl;
+                SWARNING << "ERROR in EventProducer::getFromString(): Cannot attach a Activity to a produced event with name: "
+                         << FieldContainerIDString << " because there are no Activities by that name."
+                         << std::endl;
                 return false;
             }
         }
