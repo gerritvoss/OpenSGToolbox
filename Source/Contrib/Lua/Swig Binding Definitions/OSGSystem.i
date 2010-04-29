@@ -32,6 +32,7 @@
 #include "OSGActivity.h"
 #include "OSGWindow.h"
 #include "OSGEvent.h"
+#include "OSGGenericEvent.h"
 #include "OSGLuaActivity.h"
     
     int createFieldContainer(lua_State*L) // my native code
@@ -3835,6 +3836,40 @@ namespace OSG {
             Event(void);
             Event(const Event &obj);
             virtual ~Event(void);
+    };
+
+    /******************************************************/
+    /*                    GenericEventPtr          */
+    /******************************************************/
+    class GenericEventRefPtr : 
+        public EventRefPtr
+    {
+        public:
+
+            GenericEventRefPtr(      void                          );
+            GenericEventRefPtr(const GenericEventRefPtr &source);
+            ~GenericEventRefPtr(void);
+        protected:
+    };
+    %extend GenericEventRefPtr
+    {
+        static GenericEventRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            return OSG::dynamic_pointer_cast<OSG::GenericEvent>(oIn);
+        }
+    };
+
+    /******************************************************/
+    /*GenericEvent			                       */
+    /******************************************************/
+    class GenericEvent : public Event
+    {
+        public:
+
+        protected:
+            GenericEvent(void);
+            GenericEvent(const GenericEvent &obj);
+            virtual ~GenericEvent(void);
     };
     
     /******************************************************/
