@@ -67,7 +67,7 @@ class TutorialKeyListener : public KeyListener
 
     virtual void keyPressed(const KeyEventUnrecPtr e)
     {
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             TutorialWindow->closeWindow();
         }
@@ -161,27 +161,27 @@ itself
     //Edits MenuItems
     NewMenuItem->setText("New ...");
     NewMenuItem->setAcceleratorKey(KeyEvent::KEY_N);
-    NewMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+    NewMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
     NewMenuItem->setMnemonicKey(KeyEvent::KEY_N);
 
     OpenMenuItem->setText("Open ...");
     OpenMenuItem->setAcceleratorKey(KeyEvent::KEY_P);
-    OpenMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+    OpenMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
     OpenMenuItem->setMnemonicKey(KeyEvent::KEY_P);
 
     CloseMenuItem->setText("Close ...");
     CloseMenuItem->setAcceleratorKey(KeyEvent::KEY_W);
-    CloseMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+    CloseMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
     CloseMenuItem->setMnemonicKey(KeyEvent::KEY_C);
 
     ExitMenuItem->setText("Quit");
     ExitMenuItem->setAcceleratorKey(KeyEvent::KEY_Q);
-    ExitMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+    ExitMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
     ExitMenuItem->setMnemonicKey(KeyEvent::KEY_Q);
 
     UndoMenuItem->setText("Undo");
     UndoMenuItem->setAcceleratorKey(KeyEvent::KEY_Z);
-    UndoMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+    UndoMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
     UndoMenuItem->setMnemonicKey(KeyEvent::KEY_U);
     RedoMenuItem->setText("Redo");
     RedoMenuItem->setEnabled(false);

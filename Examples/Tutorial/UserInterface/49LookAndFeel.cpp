@@ -8,97 +8,97 @@
 // the Button causes it to appear pressed
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 // 49LookAndFeel Headers
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGCardLayout.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-//#include <OpenSG/UserInterface/OSGUIDefines.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGSeparator.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-#include <OpenSG/UserInterface/OSGGridBagLayout.h>
-#include <OpenSG/UserInterface/OSGTabPanel.h>
-#include <OpenSG/UserInterface/OSGRadioButton.h>
-#include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
-#include <OpenSG/UserInterface/OSGCheckboxButton.h>
-#include <OpenSG/UserInterface/OSGPasswordField.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGBorders.h>
-#include <OpenSG/UserInterface/OSGTextField.h>
-#include <OpenSG/UserInterface/OSGTextArea.h>
-#include <OpenSG/UserInterface/OSGTextField.h>
-#include <OpenSG/UserInterface/OSGSpinner.h>
-#include <OpenSG/UserInterface/OSGNumberSpinnerModel.h>
-#include <OpenSG/UserInterface/OSGGridBagLayout.h>
-#include <OpenSG/UserInterface/OSGGridBagLayoutConstraints.h>
+#include "OSGButton.h"
+#include "OSGBoxLayout.h"
+#include "OSGFlowLayout.h"
+#include "OSGCardLayout.h"
+#include "OSGLookAndFeelManager.h"
+//#include "OSGUIDefines.h"
+#include "OSGPanel.h"
+#include "OSGLabel.h"
+#include "OSGSeparator.h"
+#include "OSGToggleButton.h"
+#include "OSGGridBagLayout.h"
+#include "OSGTabPanel.h"
+#include "OSGRadioButton.h"
+#include "OSGRadioButtonGroup.h"
+#include "OSGCheckboxButton.h"
+#include "OSGPasswordField.h"
+#include "OSGLayers.h"
+#include "OSGBorders.h"
+#include "OSGTextField.h"
+#include "OSGTextArea.h"
+#include "OSGTextField.h"
+#include "OSGSpinner.h"
+#include "OSGNumberSpinnerModel.h"
+#include "OSGGridBagLayout.h"
+#include "OSGGridBagLayoutConstraints.h"
 #include <sstream>
-#include <OpenSG/UserInterface/OSGGridLayout.h>
-#include <OpenSG/UserInterface/OSGComboBox.h>
-#include <OpenSG/UserInterface/OSGDefaultMutableComboBoxModel.h>
-#include <OpenSG/UserInterface/OSGXMLLookAndFeel.h>
-#include <OpenSG/UserInterface/OSGProgressBar.h>
-#include <OpenSG/UserInterface/OSGDefaultBoundedRangeModel.h>
-#include <OpenSG/Input/OSGUpdateListener.h>
-#include <OpenSG/UserInterface/OSGScrollBar.h>
-#include <OpenSG/UserInterface/OSGSlider.h>
-#include <OpenSG/UserInterface/OSGPopupMenu.h>
-#include <OpenSG/UserInterface/OSGMenu.h>
-#include <OpenSG/UserInterface/OSGMenuItem.h>
-#include <OpenSG/UserInterface/OSGMenuBar.h>
-#include <OpenSG/UserInterface/OSGUIRectangle.h>
-#include <OpenSG/UserInterface/OSGList.h>
-#include <OpenSG/UserInterface/OSGDefaultListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
-#include <OpenSG/UserInterface/OSGScrollPanel.h>
-#include <OpenSG/UserInterface/OSGTable.h>
-#include <OpenSG/UserInterface/OSGAbstractTableModel.h>
-#include <OpenSG/UserInterface/OSGTree.h>
-#include <OpenSG/UserInterface/OSGDefaultTreeModel.h>
-#include <OpenSG/UserInterface/OSGFixedHeightTreeModelLayout.h>
-#include <OpenSG/UserInterface/OSGDefaultMutableTreeNode.h>
+#include "OSGGridLayout.h"
+#include "OSGComboBox.h"
+#include "OSGDefaultMutableComboBoxModel.h"
+#include "OSGXMLLookAndFeel.h"
+#include "OSGProgressBar.h"
+#include "OSGDefaultBoundedRangeModel.h"
+#include "OSGUpdateListener.h"
+#include "OSGScrollBar.h"
+#include "OSGSlider.h"
+#include "OSGPopupMenu.h"
+#include "OSGMenu.h"
+#include "OSGMenuItem.h"
+#include "OSGMenuBar.h"
+#include "OSGUIRectangle.h"
+#include "OSGList.h"
+#include "OSGDefaultListModel.h"
+#include "OSGDefaultListSelectionModel.h"
+#include "OSGScrollPanel.h"
+#include "OSGTable.h"
+#include "OSGAbstractTableModel.h"
+#include "OSGTree.h"
+#include "OSGDefaultTreeModel.h"
+#include "OSGFixedHeightTreeModelLayout.h"
+#include "OSGDefaultMutableTreeNode.h"
 
-RadioButtonGroupPtr DeselectedRadioButtonGroup;
-RadioButtonGroupPtr SelectedRadioButtonGroup;
-RadioButtonGroupPtr DisabledSelectedRadioButtonGroup;
-RadioButtonGroupPtr DisabledDeselectedRadioButtonGroup;
+RadioButtonGroupRefPtr DeselectedRadioButtonGroup;
+RadioButtonGroupRefPtr SelectedRadioButtonGroup;
+RadioButtonGroupRefPtr DisabledSelectedRadioButtonGroup;
+RadioButtonGroupRefPtr DisabledDeselectedRadioButtonGroup;
 Int32SpinnerModelPtr inactiveSpinnerModel(new Int32SpinnerModel());
 Int32SpinnerModelPtr activeSpinnerModel(new Int32SpinnerModel());
 Int32SpinnerModelPtr disabledInactiveSpinnerModel(new Int32SpinnerModel());
@@ -106,223 +106,207 @@ Int32SpinnerModelPtr disabledActiveSpinnerModel(new Int32SpinnerModel());
 
 
 
-DefaultMutableComboBoxModelPtr editableComboBoxModel;
-DefaultMutableComboBoxModelPtr noneditableComboBoxModel;
-DefaultMutableComboBoxModelPtr disabledEditableComboBoxModel;
-DefaultMutableComboBoxModelPtr disabledNoneditableComboBoxModel;
+DefaultMutableComboBoxModelRefPtr editableComboBoxModel;
+DefaultMutableComboBoxModelRefPtr noneditableComboBoxModel;
+DefaultMutableComboBoxModelRefPtr disabledEditableComboBoxModel;
+DefaultMutableComboBoxModelRefPtr disabledNoneditableComboBoxModel;
 
-UIDrawingSurfacePtr TutorialDrawingSurface;
-NodePtr ExampleUIRectangleNode;
-NodePtr scene;
-UIRectanglePtr ExampleUIRectangle;
+UIDrawingSurfaceRefPtr TutorialDrawingSurface;
+NodeRefPtr ExampleUIRectangleNode;
+NodeRefPtr scene;
+UIRectangleRefPtr ExampleUIRectangle;
 
-UIForegroundPtr TutorialUIForeground;
+UIForegroundRefPtr TutorialUIForeground;
 
-DefaultTreeModelPtr TheTreeModel;
+DefaultTreeModelRefPtr TheTreeModel;
 
 class StatePanelCreator
 {
-private:
-	PanelPtr _ThePanel;	
-	PanelPtr _WindowPanel;
-	PanelPtr _AdvancedPanel;
-	PanelPtr _ListPanel;
-	PanelPtr _TablePanel;
-	PanelPtr _TreePanel;
-    DefaultBoundedRangeModelPtr _ProgressBarBoundedRangeModel;	
-    DefaultBoundedRangeModelPtr _ScrollBarBoundedRangeModel;
-    DefaultBoundedRangeModelPtr _SliderBoundedRangeModel;
-    ToggleButtonPtr CreateNoTitlebarWindowButton;
-    
-    DefaultListModelPtr _ExampleListModel;
+  private:
+    PanelRefPtr _ThePanel;	
+    PanelRefPtr _WindowPanel;
+    PanelRefPtr _AdvancedPanel;
+    PanelRefPtr _ListPanel;
+    PanelRefPtr _TablePanel;
+    PanelRefPtr _TreePanel;
+    DefaultBoundedRangeModelRefPtr _ProgressBarBoundedRangeModel;	
+    DefaultBoundedRangeModelRefPtr _ScrollBarBoundedRangeModel;
+    DefaultBoundedRangeModelRefPtr _SliderBoundedRangeModel;
+    ToggleButtonRefPtr CreateNoTitlebarWindowButton;
+
+    DefaultListModelRefPtr _ExampleListModel;
     ListSelectionModelPtr _SelectionModel;
-		
-	class CreateWindowButtonActionListener : public ActionListener
-		{
-		public:
 
-		virtual void actionPerformed(const ActionEventPtr e)
-			{
-                //Create a window
-                InternalWindowPtr ExampleInternalWindow = osg::InternalWindow::create();
-	            beginEditCP(ExampleInternalWindow, InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
-                   // Assign the Button to the MainInternalWindow so it will be displayed
-                   // when the view is rendered.
-                   ExampleInternalWindow->setPosition(Pnt2f(0,0));
-                   ExampleInternalWindow->setPreferredSize(Vec2f(300,300));
-	               ExampleInternalWindow->setTitle(std::string("Example Window"));
-                endEditCP(ExampleInternalWindow, InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
+    class CreateWindowButtonActionListener : public ActionListener
+    {
+      public:
 
-	            TutorialDrawingSurface->openWindow(ExampleInternalWindow);
-			}
-		};
-	class CreateNoTitlebarWindowButtonSelectedListener : public ButtonSelectedListener
-		{
-        protected:
-            InternalWindowPtr ExampleInternalWindow;
-		public:
-        CreateNoTitlebarWindowButtonSelectedListener() : ExampleInternalWindow(NullFC)
+        virtual void actionPerformed(const ActionEventUnrecPtr e)
+        {
+            //Create a window
+            InternalWindowRefPtr ExampleInternalWindow = OSG::InternalWindow::create();
+            // Assign the Button to the MainInternalWindow so it will be displayed
+            // when the view is rendered.
+            ExampleInternalWindow->setPosition(Pnt2f(0,0));
+            ExampleInternalWindow->setPreferredSize(Vec2f(300,300));
+            ExampleInternalWindow->setTitle(std::string("Example Window"));
+
+            TutorialDrawingSurface->openWindow(ExampleInternalWindow);
+        }
+    };
+    class CreateNoTitlebarWindowButtonSelectedListener : public ButtonSelectedListener
+    {
+      protected:
+        InternalWindowRefPtr ExampleInternalWindow;
+      public:
+        CreateNoTitlebarWindowButtonSelectedListener() : ExampleInternalWindow(NULL)
         {
         }
 
-        virtual void buttonSelected(const ButtonSelectedEventPtr e)
-			{
-                //Create a window
-                ExampleInternalWindow = osg::InternalWindow::create();
-	            beginEditCP(ExampleInternalWindow, InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::TitleFieldMask);
-                   // Assign the Button to the MainInternalWindow so it will be displayed
-                   // when the view is rendered.
-                   ExampleInternalWindow->setPosition(Pnt2f(100,100));
-                   ExampleInternalWindow->setPreferredSize(Vec2f(400,400));
-	               ExampleInternalWindow->setTitle(std::string("Example No Titlebar Window"));
-	               ExampleInternalWindow->setDrawTitlebar(false);
-                endEditCP(ExampleInternalWindow, InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::TitleFieldMask);
+        virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
+        {
+            //Create a window
+            ExampleInternalWindow = OSG::InternalWindow::create();
+            // Assign the Button to the MainInternalWindow so it will be displayed
+            // when the view is rendered.
+            ExampleInternalWindow->setPosition(Pnt2f(100,100));
+            ExampleInternalWindow->setPreferredSize(Vec2f(400,400));
+            ExampleInternalWindow->setTitle(std::string("Example No Titlebar Window"));
+            ExampleInternalWindow->setDrawTitlebar(false);
 
-	            TutorialDrawingSurface->openWindow(ExampleInternalWindow);
-			}
-        virtual void buttonDeselected(const ButtonSelectedEventPtr e)
-			{
-                if(ExampleInternalWindow != NullFC)
-                {
-                    ExampleInternalWindow->close();
-                }
-                ExampleInternalWindow = NullFC;
-			}
-		};
-			
-	CreateWindowButtonActionListener _CreateWindowButtonActionListener;
+            TutorialDrawingSurface->openWindow(ExampleInternalWindow);
+        }
+        virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
+        {
+            if(ExampleInternalWindow != NULL)
+            {
+                ExampleInternalWindow->close();
+            }
+            ExampleInternalWindow = NULL;
+        }
+    };
+
+    CreateWindowButtonActionListener _CreateWindowButtonActionListener;
     CreateNoTitlebarWindowButtonSelectedListener _CreateNoTitlebarWindowButtonSelectedListener;
 
 
-	PanelPtr createStatePanel(void);
-	PanelPtr createWindowPanel(void);
-	PanelPtr createAdvancedPanel(void);
-	PanelPtr createListPanel(void);
-	PanelPtr createTablePanel(void);
-	PanelPtr createTreePanel(void);
-	
-	
+    PanelRefPtr createStatePanel(void);
+    PanelRefPtr createWindowPanel(void);
+    PanelRefPtr createAdvancedPanel(void);
+    PanelRefPtr createListPanel(void);
+    PanelRefPtr createTablePanel(void);
+    PanelRefPtr createTreePanel(void);
 
-public:
+
+
+  public:
     StatePanelCreator(void) : _SelectionModel(new DefaultListSelectionModel())
     {
-	    _ThePanel = createStatePanel();
-	    _WindowPanel = createWindowPanel();
-	    _AdvancedPanel = createAdvancedPanel();
-	    _ListPanel = createListPanel();
+        _ThePanel = createStatePanel();
+        _WindowPanel = createWindowPanel();
+        _AdvancedPanel = createAdvancedPanel();
+        _ListPanel = createListPanel();
         _TablePanel = createTablePanel();
-		_TreePanel = createTreePanel();
+        _TreePanel = createTreePanel();
     }
 
-	PanelPtr getPanel(void) const
+    PanelRefPtr getPanel(void) const
     {
-	    return _ThePanel;
+        return _ThePanel;
     }
-	PanelPtr getWindowPanel(void) const
+    PanelRefPtr getWindowPanel(void) const
     {
-	    return _WindowPanel;
+        return _WindowPanel;
     }
-	PanelPtr getAdvancedPanel(void) const
+    PanelRefPtr getAdvancedPanel(void) const
     {
-	    return _AdvancedPanel;
+        return _AdvancedPanel;
     }
-	PanelPtr getListPanel(void) const
+    PanelRefPtr getListPanel(void) const
     {
-	    return _ListPanel;
+        return _ListPanel;
     }
-	PanelPtr getTablePanel(void) const
+    PanelRefPtr getTablePanel(void) const
     {
-	    return _TablePanel;
+        return _TablePanel;
     }
-	PanelPtr getTreePanel(void) const
+    PanelRefPtr getTreePanel(void) const
     {
-	    return _TreePanel;
+        return _TreePanel;
     }
 };
 
-//PanelPtr createStatePanel(void);
+//PanelRefPtr createStatePanel(void);
 
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-       {
-            TutorialWindowEventProducer->closeWindow();
-       }
-       if(e->getKey() == KeyEvent::KEY_F1)
-       {
-            ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-            beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-                TutorialViewport->getForegrounds().clear();
-                TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-            beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+        {
+            TutorialWindow->closeWindow();
+        }
+        if(e->getKey() == KeyEvent::KEY_F1)
+        {
+            ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+            TutorialViewport->clearForegrounds();
+            TutorialViewport->addForeground(TutorialUIForeground);
 
-            
-            beginEditCP(scene, Node::ChildrenFieldMask);
-                // Add the UIRectangle as a child to the scene
-                scene->subChild(ExampleUIRectangleNode);
-            endEditCP(scene, Node::ChildrenFieldMask);
 
-            beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-                TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-            endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-       }
-       if(e->getKey() == KeyEvent::KEY_F2)
-       {
-            ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-            beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-                TutorialViewport->getForegrounds().clear();
-            beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-            
-            beginEditCP(scene, Node::ChildrenFieldMask);
-                // Add the UIRectangle as a child to the scene
-                scene->addChild(ExampleUIRectangleNode);
-            endEditCP(scene, Node::ChildrenFieldMask);
+            // Add the UIRectangle as a child to the scene
+            scene->subChild(ExampleUIRectangleNode);
 
-            beginEditCP(ExampleUIRectangle, UIRectangle::DrawingSurfaceFieldMask);
-                ExampleUIRectangle->setDrawingSurface(TutorialDrawingSurface);
-            endEditCP(ExampleUIRectangle, UIRectangle::DrawingSurfaceFieldMask);
-       }
-   }
+            TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        }
+        if(e->getKey() == KeyEvent::KEY_F2)
+        {
+            ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+            TutorialViewport->clearForegrounds();
 
-   virtual void keyReleased(const KeyEventPtr e)
-   {
-   }
+            // Add the UIRectangle as a child to the scene
+            scene->addChild(ExampleUIRectangleNode);
 
-   virtual void keyTyped(const KeyEventPtr e)
-   {
-   }
+            ExampleUIRectangle->setDrawingSurface(TutorialDrawingSurface);
+        }
+    }
+
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
+
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEventPtr e)
+    virtual void mouseClicked(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEventPtr e)
+    virtual void mouseEntered(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mouseExited(const MouseEventPtr e)
+    virtual void mouseExited(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mousePressed(const MouseEventPtr e)
+    virtual void mousePressed(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
             mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
-    virtual void mouseReleased(const MouseEventPtr e)
+    virtual void mouseReleased(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
-           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
+            mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
 };
@@ -330,17 +314,17 @@ class TutorialMouseListener : public MouseListener
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEventPtr e)
+    virtual void mouseMoved(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
             mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
     }
 
-    virtual void mouseDragged(const MouseEventPtr e)
+    virtual void mouseDragged(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
             mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
@@ -350,34 +334,37 @@ class TutorialMouseMotionListener : public MouseMotionListener
 // Create an ActionListener to Quit the application
 class QuitActionListener : public ActionListener
 {
-public:
+  public:
 
-   virtual void actionPerformed(const ActionEventPtr e)
+    virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
-            TutorialWindowEventProducer->closeWindow();
+        TutorialWindow->closeWindow();
     }
 };
+
+class ExampleTableModel;
+
+typedef TransitPtr   < ExampleTableModel > ExampleTableModelTransitPtr;
 
 class ExampleTableModel : public AbstractTableModel
 {
   public:
     typedef          AbstractTableModel Inherited;
     typedef          ExampleTableModel Self;
-	typedef          FCPtr<Inherited::Ptr,  Self      > PtrType;
 
-	OSG_FIELD_CONTAINER_DECL(PtrType)
-private:
+    OSG_GEN_INTERNALPTR(ExampleTableModel);
+  private:
     // Creates two vectors to store column/cell values in
     std::vector<boost::any> _ColumnValues;
     std::vector<boost::any> _CellValues;
 
-	friend class FieldContainer;
+    friend class FieldContainer;
 
     ExampleTableModel &operator =(const ExampleTableModel &source)
-	{
-		return *this;
-	}
-public:
+    {
+        return *this;
+    }
+  public:
 
     // Creates some functions to do what the Table requires to be done
     // and which are needed for a non-basic table
@@ -385,28 +372,28 @@ public:
     {
         return _ColumnValues.size();
     }
-    
+
     virtual boost::any getColumnValue(UInt32 columnIndex) const
     {
         return _ColumnValues[columnIndex];
     }
-    
+
     virtual UInt32 getRowCount(void) const
     {
         return _CellValues.size() / _ColumnValues.size();
     }
-    
+
     virtual boost::any getValueAt(UInt32 rowIndex, UInt32 columnIndex) const
     {
         return _CellValues[rowIndex*_ColumnValues.size() + columnIndex];
     }
-    
+
     virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const
     {
         // Only returns true if the column is 0; means cell is editable, otherwise, returns false and cell is not editable
         return columnIndex == 0;
     }
-    
+
     virtual void setValueAt(const boost::any& aValue, UInt32 rowIndex, UInt32 columnIndex)
     {
         // 
@@ -423,15 +410,15 @@ public:
 
     /******************************************************
 
-        Create the Table values
+      Create the Table values
 
-    ******************************************************/
+     ******************************************************/
 
-	static FieldContainerType  _type;
+    static FieldContainerType  _type;
 
-	ExampleTableModel(const ExampleTableModel& source) : Inherited(source),
-        _ColumnValues(source._ColumnValues),
-        _CellValues(source._CellValues)
+    ExampleTableModel(const ExampleTableModel& source) : Inherited(source),
+    _ColumnValues(source._ColumnValues),
+    _CellValues(source._CellValues)
     {
     }
 
@@ -443,19 +430,19 @@ public:
         _ColumnValues.push_back(boost::any(std::string("Column GLenum")));
         _ColumnValues.push_back(boost::any(std::string("Column Boolean")));
         _ColumnValues.push_back(boost::any(std::string("Column Pnt3f")));
-        
+
         _CellValues.push_back(boost::any(std::string("A")));
         _CellValues.push_back(boost::any(Int32(1)));
         _CellValues.push_back(boost::any(GLenum(GL_SRC_ALPHA)));
         _CellValues.push_back(boost::any(bool(true)));
         _CellValues.push_back(boost::any(Pnt3f(1.0,0.0,0.0)));
-        
+
         _CellValues.push_back(boost::any(std::string("B")));
         _CellValues.push_back(boost::any(Int32(2)));
         _CellValues.push_back(boost::any(GLenum(GL_NICEST)));
         _CellValues.push_back(boost::any(bool(false)));
         _CellValues.push_back(boost::any(Pnt3f(0.0,1.0,0.0)));
-        
+
         _CellValues.push_back(boost::any(std::string("C")));
         _CellValues.push_back(boost::any(Int32(3)));
         _CellValues.push_back(boost::any(GLenum(GL_CCW)));
@@ -472,19 +459,249 @@ public:
     ~ExampleTableModel()
     {
     }
+
+    static FieldContainerType &getClassType   (void)
+    {
+        return _type;
+    }
+
+    static UInt32              getClassTypeId (void)
+    {
+        return _type.getId();
+    }
+
+    static UInt16              getClassGroupId(void)
+    {
+        return _type.getGroupId();
+    }
+
+    virtual       FieldContainerType &getType         (void)
+    {
+        return _type;
+    }
+
+    virtual const FieldContainerType &getType         (void) const
+    {
+        return _type;
+    }
+
+	static ExampleTableModelTransitPtr create(void)
+	{
+		ExampleTableModelTransitPtr fc;
+
+		if(getClassType().getPrototype() != NULL)
+		{
+			FieldContainerTransitPtr tmpPtr =
+				getClassType().getPrototype()-> shallowCopy();
+
+			fc = dynamic_pointer_cast<ExampleTableModel>(tmpPtr);
+		}
+
+		return fc;
+	}
+
+	static ExampleTableModel *createEmpty(void)
+	{
+		ExampleTableModel *returnValue;
+
+		newPtr<ExampleTableModel>(returnValue, Thread::getCurrentLocalFlags());
+
+		returnValue->_pFieldFlags->_bNamespaceMask &=
+			~Thread::getCurrentLocalFlags();
+
+		return returnValue;
+	}
+
+	static ExampleTableModel *createEmptyLocal(BitVector bFlags)
+	{
+		ExampleTableModel *returnValue;
+
+		newPtr<ExampleTableModel>(returnValue, bFlags);
+
+		returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+		return returnValue;
+	}
+
+	FieldContainerTransitPtr shallowCopy(void) const
+	{
+		ExampleTableModel *tmpPtr;
+
+		newPtr(tmpPtr,
+			   dynamic_cast<const ExampleTableModel *>(this),
+			   Thread::getCurrentLocalFlags());
+
+		tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+		FieldContainerTransitPtr returnValue(tmpPtr);
+
+		return returnValue;
+	}
+
+    FieldContainerTransitPtr shallowCopyLocal(
+        BitVector bFlags) const
+    {
+        ExampleTableModel *tmpPtr;
+
+        newPtr(tmpPtr, dynamic_cast<const ExampleTableModel *>(this), bFlags);
+
+        FieldContainerTransitPtr returnValue(tmpPtr);
+
+        tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+        return returnValue;
+    }
+
+    FieldContainerTransitPtr shallowCopyDependent(
+        BitVector bFlags) const
+    {
+        ExampleTableModel *tmpPtr;
+
+        newPtr(tmpPtr, dynamic_cast<const ExampleTableModel *>(this), ~bFlags);
+
+        FieldContainerTransitPtr returnValue(tmpPtr);
+
+        tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+        return returnValue;
+    }
+
+    FieldContainer *createAspectCopy(
+        const FieldContainer *pRefAspect) const
+    {
+        ExampleTableModel *returnValue;
+
+        newAspectCopy(returnValue,
+                      dynamic_cast<const ExampleTableModel *>(pRefAspect),
+                      dynamic_cast<const ExampleTableModel *>(this));
+
+        return returnValue;
+    }
 };
 
-FieldContainerType ExampleTableModel::_type("ExampleTableModel",
-                                     "AbstractTableModel",
-                                      NULL,
-                                      (PrototypeCreateF) &ExampleTableModel::createEmpty,
-                                      NULL,
-									  NULL,
-                                      0);
 
-OSG_FIELD_CONTAINER_INL_DEF(ExampleTableModel::Self, ExampleTableModel::PtrType)
-OSG_FIELD_CONTAINER_DEF(ExampleTableModel::Self, ExampleTableModel::PtrType)
-typedef ExampleTableModel::PtrType ExampleTableModelPtr;
+ExampleTableModel::TypeObject ExampleTableModel::_type(
+    "ExampleTableModel",
+    "AbstractTableModel",
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ExampleTableModel::createEmptyLocal),
+    NULL,
+    NULL,
+    NULL,//reinterpret_cast<InitalInsertDescFunc>(&DefaultListComponentGenerator::classDescInserter),
+    false,
+    0,
+    "",
+    "ExampleTableModel"
+    );
+
+OSG_BEGIN_NAMESPACE
+
+OSG_GEN_CONTAINERPTR(ExampleTableModel);
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
+ */
+template <>
+struct FieldTraits<ExampleTableModel *> :
+    public FieldTraitsFCPtrBase<ExampleTableModel *>
+{
+  private:
+
+    static DataType             _type;
+
+  public:
+
+    typedef FieldTraits<ExampleTableModel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFExampleTableModelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFExampleTableModelPtr"; }
+};
+
+template<> inline
+const Char8 *FieldTraits<ExampleTableModel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecExampleTableModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ExampleTableModel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecExampleTableModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ExampleTableModel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakExampleTableModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ExampleTableModel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdExampleTableModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ExampleTableModel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecExampleTableModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ExampleTableModel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecExampleTableModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ExampleTableModel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakExampleTableModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ExampleTableModel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdExampleTableModelPtr"; 
+}
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ExampleTableModel *,
+                      RecordedRefCountPolicy  > SFRecExampleTableModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ExampleTableModel *,
+                      UnrecordedRefCountPolicy> SFUnrecExampleTableModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ExampleTableModel *,
+                      WeakRefCountPolicy      > SFWeakExampleTableModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ExampleTableModel *,
+                      NoRefCountPolicy        > SFUncountedExampleTableModelPtr;
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ExampleTableModel *,
+                      RecordedRefCountPolicy  > MFRecExampleTableModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ExampleTableModel *,
+                      UnrecordedRefCountPolicy> MFUnrecExampleTableModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ExampleTableModel *,
+                      WeakRefCountPolicy      > MFWeakExampleTableModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ExampleTableModel *,
+                      NoRefCountPolicy        > MFUncountedExampleTableModelPtr;
+OSG_END_NAMESPACE
 
 
 int main(int argc, char **argv)
@@ -493,46 +710,44 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
     TutorialMouseListener TheTutorialMouseListener;
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
-    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
+    TutorialWindow->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
 
 
     // Make Torus Node
-    NodePtr SceneGeometryNode(NullFC);
+    NodeRefPtr SceneGeometryNode(NULL);
 
-    SceneGeometryNode = SceneFileHandler::the().read(".//MesophyllCell.osb");
-    if(SceneGeometryNode == NullFC)
+    SceneGeometryNode = SceneFileHandler::the()->read(".//MesophyllCell.osb");
+    if(SceneGeometryNode == NULL)
     {
         SceneGeometryNode = makeTorus(150, 600, 32, 32);
     }
 
     // Make Main Scene Node and add the Torus
-    scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
-        scene->addChild(SceneGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    scene = OSG::Node::create();
+    scene->setCore(OSG::Group::create());
+    scene->addChild(SceneGeometryNode);
 
     // Create the Graphics
-    GraphicsPtr graphics = osg::Graphics2D::create();
+    GraphicsRefPtr graphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     if(argc > 1)
     {
-        Path XMLFile(argv[1]);
-        LookAndFeelPtr TheLookAndFeel = XMLLookAndFeel::create(XMLFile);
+        BoostPath XMLFile(argv[1]);
+        LookAndFeelRefPtr TheLookAndFeel = XMLLookAndFeel::create(XMLFile);
 
-        if(TheLookAndFeel != NullFC)
+        if(TheLookAndFeel != NULL)
         {
             LookAndFeelManager::the()->setLookAndFeel(TheLookAndFeel);
         }
@@ -542,119 +757,93 @@ int main(int argc, char **argv)
 
     /******************************************************
 
-            Create Button Components to be used with 
-            TabPanel and specify their characteristics
+      Create Button Components to be used with 
+      TabPanel and specify their characteristics
 
-    ******************************************************/
-    LabelPtr StateTabPanelTab = osg::Label::create();
-    beginEditCP(StateTabPanelTab, Label::TextFieldMask);
-        StateTabPanelTab->setText("Basic Components");
-    endEditCP(StateTabPanelTab, Label::TextFieldMask);
+     ******************************************************/
+    LabelRefPtr StateTabPanelTab = OSG::Label::create();
+    StateTabPanelTab->setText("Basic Components");
 
-    LabelPtr WindowTabPanelTab = osg::Label::create();
-    beginEditCP(WindowTabPanelTab, Label::TextFieldMask);
-        WindowTabPanelTab->setText("Windows");
-    endEditCP(WindowTabPanelTab, Label::TextFieldMask);
+    LabelRefPtr WindowTabPanelTab = OSG::Label::create();
+    WindowTabPanelTab->setText("Windows");
 
-    LabelPtr AdvancedTabPanelTab = osg::Label::create();
-    beginEditCP(AdvancedTabPanelTab, Label::TextFieldMask);
-        AdvancedTabPanelTab->setText("Advanced Components");
-    endEditCP(AdvancedTabPanelTab, Label::TextFieldMask);
-    
-    LabelPtr ListTabPanelTab = osg::Label::create();
-    beginEditCP(ListTabPanelTab, Label::TextFieldMask);
-        ListTabPanelTab->setText("List Component");
-    endEditCP(ListTabPanelTab, Label::TextFieldMask);
+    LabelRefPtr AdvancedTabPanelTab = OSG::Label::create();
+    AdvancedTabPanelTab->setText("Advanced Components");
 
-    LabelPtr TableTabPanelTab = osg::Label::create();
-    beginEditCP(TableTabPanelTab, Label::TextFieldMask);
-        TableTabPanelTab->setText("Table Component");
-    endEditCP(TableTabPanelTab, Label::TextFieldMask);
+    LabelRefPtr ListTabPanelTab = OSG::Label::create();
+    ListTabPanelTab->setText("List Component");
 
-	LabelPtr TreeTabPanelTab = osg::Label::create();
-    beginEditCP(TreeTabPanelTab, Label::TextFieldMask);
-        TreeTabPanelTab->setText("Tree Component");
-    endEditCP(TreeTabPanelTab, Label::TextFieldMask);
-   
+    LabelRefPtr TableTabPanelTab = OSG::Label::create();
+    TableTabPanelTab->setText("Table Component");
+
+    LabelRefPtr TreeTabPanelTab = OSG::Label::create();
+    TreeTabPanelTab->setText("Tree Component");
+
     /******************************************************
 
-            Create TabPanel.  
-    ******************************************************/
-	StatePanelCreator TheStatePanelCreator;
-	PanelPtr StatePanel = TheStatePanelCreator.getPanel();
-	PanelPtr WindowPanel = TheStatePanelCreator.getWindowPanel();
-    TabPanelPtr MainTabPanel = osg::TabPanel::create();
-    beginEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
-        MainTabPanel->setPreferredSize(Vec2f(600,600));
-        MainTabPanel->addTab(StateTabPanelTab, StatePanel);
-        MainTabPanel->addTab(WindowTabPanelTab, WindowPanel);
-        MainTabPanel->addTab(AdvancedTabPanelTab, TheStatePanelCreator.getAdvancedPanel());
-        MainTabPanel->addTab(ListTabPanelTab, TheStatePanelCreator.getListPanel());
-        MainTabPanel->addTab(TableTabPanelTab, TheStatePanelCreator.getTablePanel());
-        MainTabPanel->addTab(TreeTabPanelTab, TheStatePanelCreator.getTreePanel());
-        MainTabPanel->setTabAlignment(0.5f);
-        MainTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
-    endEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
+      Create TabPanel.  
+     ******************************************************/
+    StatePanelCreator TheStatePanelCreator;
+    PanelRefPtr StatePanel = TheStatePanelCreator.getPanel();
+    PanelRefPtr WindowPanel = TheStatePanelCreator.getWindowPanel();
+    TabPanelRefPtr MainTabPanel = OSG::TabPanel::create();
+    MainTabPanel->setPreferredSize(Vec2f(600,600));
+    MainTabPanel->addTab(StateTabPanelTab, StatePanel);
+    MainTabPanel->addTab(WindowTabPanelTab, WindowPanel);
+    MainTabPanel->addTab(AdvancedTabPanelTab, TheStatePanelCreator.getAdvancedPanel());
+    MainTabPanel->addTab(ListTabPanelTab, TheStatePanelCreator.getListPanel());
+    MainTabPanel->addTab(TableTabPanelTab, TheStatePanelCreator.getTablePanel());
+    MainTabPanel->addTab(TreeTabPanelTab, TheStatePanelCreator.getTreePanel());
+    MainTabPanel->setTabAlignment(0.5f);
+    MainTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
 
     MainTabPanel->setSelectedIndex(0);
 
-	// Creates MenuItems as in 25PopupMenu
-    MenuItemPtr NewMenuItem = MenuItem::create();
-    MenuItemPtr OpenMenuItem = MenuItem::create();
-    MenuItemPtr CloseMenuItem = MenuItem::create();
-    MenuItemPtr ExitMenuItem = MenuItem::create();
-    MenuItemPtr UndoMenuItem = MenuItem::create();
-    MenuItemPtr RedoMenuItem = MenuItem::create();
+    // Creates MenuItems as in 25PopupMenu
+    MenuItemRefPtr NewMenuItem = MenuItem::create();
+    MenuItemRefPtr OpenMenuItem = MenuItem::create();
+    MenuItemRefPtr CloseMenuItem = MenuItem::create();
+    MenuItemRefPtr ExitMenuItem = MenuItem::create();
+    MenuItemRefPtr UndoMenuItem = MenuItem::create();
+    MenuItemRefPtr RedoMenuItem = MenuItem::create();
 
     //Edits MenuItems
-    beginEditCP(NewMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
-        NewMenuItem->setText("New ...");
-        NewMenuItem->setAcceleratorKey(KeyEvent::KEY_N);
-        NewMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
-        NewMenuItem->setMnemonicKey(KeyEvent::KEY_N);
-    endEditCP(NewMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
-    
-    beginEditCP(OpenMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
-        OpenMenuItem->setText("Open ...");
-        OpenMenuItem->setAcceleratorKey(KeyEvent::KEY_P);
-        OpenMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
-        OpenMenuItem->setMnemonicKey(KeyEvent::KEY_P);
-    endEditCP(OpenMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
-    
-    beginEditCP(CloseMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
-        CloseMenuItem->setText("Close ...");
-        CloseMenuItem->setAcceleratorKey(KeyEvent::KEY_W);
-        CloseMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
-        CloseMenuItem->setMnemonicKey(KeyEvent::KEY_C);
-    endEditCP(CloseMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
-    
-    beginEditCP(ExitMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
-        ExitMenuItem->setText("Quit");
-        ExitMenuItem->setAcceleratorKey(KeyEvent::KEY_Q);
-        ExitMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
-        ExitMenuItem->setMnemonicKey(KeyEvent::KEY_Q);
-    endEditCP(ExitMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+    NewMenuItem->setText("New ...");
+    NewMenuItem->setAcceleratorKey(KeyEvent::KEY_N);
+    NewMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
+    NewMenuItem->setMnemonicKey(KeyEvent::KEY_N);
 
-    beginEditCP(UndoMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
-        UndoMenuItem->setText("Undo");
-        UndoMenuItem->setAcceleratorKey(KeyEvent::KEY_Z);
-        UndoMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
-        UndoMenuItem->setMnemonicKey(KeyEvent::KEY_U);
-    endEditCP(UndoMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
-    beginEditCP(RedoMenuItem, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask | MenuItem::EnabledFieldMask);
-        RedoMenuItem->setText("Redo");
-        RedoMenuItem->setEnabled(false);
-        RedoMenuItem->setMnemonicKey(KeyEvent::KEY_R);
-    endEditCP(RedoMenuItem, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask | MenuItem::EnabledFieldMask);
-    
+    OpenMenuItem->setText("Open ...");
+    OpenMenuItem->setAcceleratorKey(KeyEvent::KEY_P);
+    OpenMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
+    OpenMenuItem->setMnemonicKey(KeyEvent::KEY_P);
+
+    CloseMenuItem->setText("Close ...");
+    CloseMenuItem->setAcceleratorKey(KeyEvent::KEY_W);
+    CloseMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
+    CloseMenuItem->setMnemonicKey(KeyEvent::KEY_C);
+
+    ExitMenuItem->setText("Quit");
+    ExitMenuItem->setAcceleratorKey(KeyEvent::KEY_Q);
+    ExitMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
+    ExitMenuItem->setMnemonicKey(KeyEvent::KEY_Q);
+
+    UndoMenuItem->setText("Undo");
+    UndoMenuItem->setAcceleratorKey(KeyEvent::KEY_Z);
+    UndoMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_COMMAND);
+    UndoMenuItem->setMnemonicKey(KeyEvent::KEY_U);
+    RedoMenuItem->setText("Redo");
+    RedoMenuItem->setEnabled(false);
+    RedoMenuItem->setMnemonicKey(KeyEvent::KEY_R);
+
     // Create an ActionListener and assign it to ExitMenuItem
     // This is defined above, and will cause the program to quit
     // when that MenuItem is selected or Control + Q hit 
     QuitActionListener TheQuitActionListener;
     ExitMenuItem->addActionListener( &TheQuitActionListener);
-        
+
     // Create a File menu and adds its MenuItems
-    MenuPtr FileMenu = Menu::create();
+    MenuRefPtr FileMenu = Menu::create();
     FileMenu->addItem(NewMenuItem);
     FileMenu->addItem(OpenMenuItem);
     FileMenu->addItem(CloseMenuItem);
@@ -662,100 +851,82 @@ int main(int argc, char **argv)
     FileMenu->addItem(ExitMenuItem);
 
     // Labels the File Menu
-    beginEditCP(FileMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
-        FileMenu->setText("File");
-        FileMenu->setMnemonicKey(KeyEvent::KEY_F);
-    endEditCP(FileMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
-    
+    FileMenu->setText("File");
+    FileMenu->setMnemonicKey(KeyEvent::KEY_F);
+
     // Creates an Edit menu and adds its MenuItems
-    MenuPtr EditMenu = Menu::create();
+    MenuRefPtr EditMenu = Menu::create();
     EditMenu->addItem(UndoMenuItem);
     EditMenu->addItem(RedoMenuItem);
 
     // Labels the Edit Menu
-    beginEditCP(EditMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
-        EditMenu->setText("Edit");
-        EditMenu->setMnemonicKey(KeyEvent::KEY_E);
-    endEditCP(EditMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
-    
+    EditMenu->setText("Edit");
+    EditMenu->setMnemonicKey(KeyEvent::KEY_E);
+
     // Creates two Backgrounds
 
-    MenuBarPtr MainMenuBar = MenuBar::create();
+    MenuBarRefPtr MainMenuBar = MenuBar::create();
     // Adds the two Menus to the MainMenuBar
     MainMenuBar->addMenu(FileMenu);
     MainMenuBar->addMenu(EditMenu);
 
     // Create The Main InternalWindow
-	CardLayoutPtr MainInternalWindowLayout = osg::CardLayout::create();
+    CardLayoutRefPtr MainInternalWindowLayout = OSG::CardLayout::create();
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::MenuBarFieldMask | InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(MainTabPanel);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setMenuBar(MainMenuBar);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.65f,0.65f));
-	   MainInternalWindow->setDrawTitlebar(true);
-	   MainInternalWindow->setResizable(true);
-    endEditCP(MainInternalWindow, InternalWindow::MenuBarFieldMask | InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+    MainInternalWindow->pushToChildren(MainTabPanel);
+    MainInternalWindow->setLayout(MainInternalWindowLayout);
+    MainInternalWindow->setMenuBar(MainMenuBar);
+    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.65f,0.65f));
+    MainInternalWindow->setDrawTitlebar(true);
+    MainInternalWindow->setResizable(true);
 
     // Create the Drawing Surface
     TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask  | Component::ConstraintsFieldMask);
-        TutorialDrawingSurface->setGraphics(graphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask  | Component::ConstraintsFieldMask);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    TutorialDrawingSurface->setGraphics(graphics);
+    TutorialDrawingSurface->setEventProducer(TutorialWindow);
+
+    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     //Make A 3D Rectangle to draw the UI on
     ExampleUIRectangle = UIRectangle::create();
-    beginEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask);
-        ExampleUIRectangle->setPoint(Pnt3f(-640,-512,750));
-        ExampleUIRectangle->setWidth(1280);
-        ExampleUIRectangle->setHeight(1024);
-    endEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask);
- 	
-    ExampleUIRectangleNode = osg::Node::create();
-    beginEditCP(ExampleUIRectangleNode, Node::CoreFieldMask);
-        ExampleUIRectangleNode->setCore(ExampleUIRectangle);
-    endEditCP(ExampleUIRectangleNode, Node::CoreFieldMask);
-    addRefCP(ExampleUIRectangleNode);
+    ExampleUIRectangle->setPoint(Pnt3f(-640,-512,750));
+    ExampleUIRectangle->setWidth(1280);
+    ExampleUIRectangle->setHeight(1024);
+
+    ExampleUIRectangleNode = OSG::Node::create();
+    ExampleUIRectangleNode->setCore(ExampleUIRectangle);
 
     // Create the UI Foreground Object
-    TutorialUIForeground = osg::UIForeground::create();
+    TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask  | Component::ConstraintsFieldMask);
-        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask  | Component::ConstraintsFieldMask);
-    
-    addRefCP(TutorialUIForeground);
+    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
-            WinSize,
-            "49LookAndFeel");
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
+                               WinSize,
+                               "49LookAndFeel");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 
@@ -763,726 +934,544 @@ int main(int argc, char **argv)
 }
 
 
-PanelPtr StatePanelCreator::createStatePanel(void)
+PanelRefPtr StatePanelCreator::createStatePanel(void)
 {
     /******************************************************
 
-            Create a Panel and its Layout
+      Create a Panel and its Layout
 
-    ******************************************************/
+     ******************************************************/
 
-    GridBagLayoutPtr statePanelLayout = osg::GridBagLayout::create();
-    beginEditCP(statePanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask  | Component::ConstraintsFieldMask);
-        statePanelLayout->setRows(12);
-        statePanelLayout->setColumns(5);
-    endEditCP(statePanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask  | Component::ConstraintsFieldMask);
-    
-    PanelPtr statePanel = osg::Panel::create();
+    GridBagLayoutRefPtr statePanelLayout = OSG::GridBagLayout::create();
+    statePanelLayout->setRows(12);
+    statePanelLayout->setColumns(5);
+
+    PanelRefPtr statePanel = OSG::Panel::create();
 
     /******************************************************
-            LayoutConstraints
-                Note: 0506 represents a Constraint 
-                    at X = 5, Y = 6
-            
-    ******************************************************/
-    
-    GridBagLayoutConstraintsPtr Constraint0000 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0100 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0200 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0300 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0400 = osg::GridBagLayoutConstraints::create();
+      LayoutConstraints
+      Note: 0506 represents a Constraint 
+      at X = 5, Y = 6
 
-    beginEditCP(Constraint0000, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0000->setGridX(0);
-        Constraint0000->setGridY(0);
-    endEditCP(Constraint0000, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0100, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0100->setGridX(1);
-        Constraint0100->setGridY(0);
-    endEditCP(Constraint0100, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0200, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0200->setGridX(2);
-        Constraint0200->setGridY(0);
-    endEditCP(Constraint0200, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+     ******************************************************/
 
-    beginEditCP(Constraint0300, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0300->setGridX(3);
-        Constraint0300->setGridY(0);
-    endEditCP(Constraint0300, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    GridBagLayoutConstraintsRefPtr Constraint0000 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0100 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0200 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0300 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0400 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0400, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0400->setGridX(4);
-        Constraint0400->setGridY(0);
-    endEditCP(Constraint0400, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0000->setGridX(0);
+    Constraint0000->setGridY(0);
+
+    Constraint0100->setGridX(1);
+    Constraint0100->setGridY(0);
+
+    Constraint0200->setGridX(2);
+    Constraint0200->setGridY(0);
+
+    Constraint0300->setGridX(3);
+    Constraint0300->setGridY(0);
+
+    Constraint0400->setGridX(4);
+    Constraint0400->setGridY(0);
 
     /******************************************************
-                            Row1
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0001 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0101 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0201 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0301 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0401 = osg::GridBagLayoutConstraints::create();
+      Row1
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0001 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0101 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0201 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0301 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0401 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0001, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0001->setGridX(0);
-        Constraint0001->setGridY(1);
-    endEditCP(Constraint0001, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0101, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0101->setGridX(1);
-        Constraint0101->setGridY(1);
-    endEditCP(Constraint0101, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0201, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0201->setGridX(2);
-        Constraint0201->setGridY(1);
-    endEditCP(Constraint0201, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0001->setGridX(0);
+    Constraint0001->setGridY(1);
 
-    beginEditCP(Constraint0301, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0301->setGridX(3);
-        Constraint0301->setGridY(1);
-    endEditCP(Constraint0301, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0101->setGridX(1);
+    Constraint0101->setGridY(1);
 
-    beginEditCP(Constraint0401, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0401->setGridX(4);
-        Constraint0401->setGridY(1);
-    endEditCP(Constraint0401, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0201->setGridX(2);
+    Constraint0201->setGridY(1);
+
+    Constraint0301->setGridX(3);
+    Constraint0301->setGridY(1);
+
+    Constraint0401->setGridX(4);
+    Constraint0401->setGridY(1);
     /******************************************************
-                            Row2
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0002 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0102 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0202 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0302 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0402 = osg::GridBagLayoutConstraints::create();
-    
-    beginEditCP(Constraint0002, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0002->setGridX(0);
-        Constraint0002->setGridY(2);
-    endEditCP(Constraint0002, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0102, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0102->setGridX(1);
-        Constraint0102->setGridY(2);
-    endEditCP(Constraint0102, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0202, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0202->setGridX(2);
-        Constraint0202->setGridY(2);
-    endEditCP(Constraint0202, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row2
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0002 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0102 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0202 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0302 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0402 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0302, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0302->setGridX(3);
-        Constraint0302->setGridY(2);
-    endEditCP(Constraint0302, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0002->setGridX(0);
+    Constraint0002->setGridY(2);
 
-    beginEditCP(Constraint0402, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0402->setGridX(4);
-        Constraint0402->setGridY(2);
-    endEditCP(Constraint0402, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0102->setGridX(1);
+    Constraint0102->setGridY(2);
+
+    Constraint0202->setGridX(2);
+    Constraint0202->setGridY(2);
+
+    Constraint0302->setGridX(3);
+    Constraint0302->setGridY(2);
+
+    Constraint0402->setGridX(4);
+    Constraint0402->setGridY(2);
     /******************************************************
-                            Row3
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0003 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0103 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0203 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0303 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0403 = osg::GridBagLayoutConstraints::create();
-    
-    beginEditCP(Constraint0003, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0003->setGridX(0);
-        Constraint0003->setGridY(3);
-    endEditCP(Constraint0003, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0103, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0103->setGridX(1);
-        Constraint0103->setGridY(3);
-    endEditCP(Constraint0103, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0203, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0203->setGridX(2);
-        Constraint0203->setGridY(3);
-    endEditCP(Constraint0203, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row3
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0003 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0103 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0203 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0303 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0403 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0303, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0303->setGridX(3);
-        Constraint0303->setGridY(3);
-    endEditCP(Constraint0303, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0003->setGridX(0);
+    Constraint0003->setGridY(3);
 
-    beginEditCP(Constraint0403, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0403->setGridX(4);
-        Constraint0403->setGridY(3);
-    endEditCP(Constraint0403, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0103->setGridX(1);
+    Constraint0103->setGridY(3);
+
+    Constraint0203->setGridX(2);
+    Constraint0203->setGridY(3);
+
+    Constraint0303->setGridX(3);
+    Constraint0303->setGridY(3);
+
+    Constraint0403->setGridX(4);
+    Constraint0403->setGridY(3);
     /******************************************************
-                            Row4
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0004 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0104 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0204 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0304 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0404 = osg::GridBagLayoutConstraints::create();
-        
-    beginEditCP(Constraint0004, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0004->setGridX(0);
-        Constraint0004->setGridY(4);
-    endEditCP(Constraint0004, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0104, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0104->setGridX(1);
-        Constraint0104->setGridY(4);
-    endEditCP(Constraint0104, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0204, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0204->setGridX(2);
-        Constraint0204->setGridY(4);
-    endEditCP(Constraint0204, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row4
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0004 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0104 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0204 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0304 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0404 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0304, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0304->setGridX(3);
-        Constraint0304->setGridY(4);
-    endEditCP(Constraint0304, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0004->setGridX(0);
+    Constraint0004->setGridY(4);
 
-    beginEditCP(Constraint0404, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0404->setGridX(4);
-        Constraint0404->setGridY(4);
-    endEditCP(Constraint0404, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0104->setGridX(1);
+    Constraint0104->setGridY(4);
+
+    Constraint0204->setGridX(2);
+    Constraint0204->setGridY(4);
+
+    Constraint0304->setGridX(3);
+    Constraint0304->setGridY(4);
+
+    Constraint0404->setGridX(4);
+    Constraint0404->setGridY(4);
     /******************************************************
-                            Row5
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0005 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0105 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0205 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0305 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0405 = osg::GridBagLayoutConstraints::create();
-            
-    beginEditCP(Constraint0005, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0005->setGridX(0);
-        Constraint0005->setGridY(5);
-    endEditCP(Constraint0005, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0105, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0105->setGridX(1);
-        Constraint0105->setGridY(5);
-    endEditCP(Constraint0105, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0205, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0205->setGridX(2);
-        Constraint0205->setGridY(5);
-    endEditCP(Constraint0205, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row5
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0005 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0105 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0205 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0305 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0405 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0305, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0305->setGridX(3);
-        Constraint0305->setGridY(5);
-    endEditCP(Constraint0305, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0005->setGridX(0);
+    Constraint0005->setGridY(5);
 
-    beginEditCP(Constraint0405, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0405->setGridX(4);
-        Constraint0405->setGridY(5);
-    endEditCP(Constraint0405, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0105->setGridX(1);
+    Constraint0105->setGridY(5);
+
+    Constraint0205->setGridX(2);
+    Constraint0205->setGridY(5);
+
+    Constraint0305->setGridX(3);
+    Constraint0305->setGridY(5);
+
+    Constraint0405->setGridX(4);
+    Constraint0405->setGridY(5);
     /******************************************************
-                            Row6
-    ******************************************************/    
-    GridBagLayoutConstraintsPtr Constraint0006 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0106 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0206 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0306 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0406 = osg::GridBagLayoutConstraints::create();
-            
-    beginEditCP(Constraint0006, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0006->setGridX(0);
-        Constraint0006->setGridY(6);
-    endEditCP(Constraint0006, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0106, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0106->setGridX(1);
-        Constraint0106->setGridY(6);
-    endEditCP(Constraint0106, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0206, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0206->setGridX(2);
-        Constraint0206->setGridY(6);
-    endEditCP(Constraint0206, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row6
+     ******************************************************/    
+    GridBagLayoutConstraintsRefPtr Constraint0006 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0106 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0206 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0306 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0406 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0306, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0306->setGridX(3);
-        Constraint0306->setGridY(6);
-    endEditCP(Constraint0306, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0006->setGridX(0);
+    Constraint0006->setGridY(6);
 
-    beginEditCP(Constraint0406, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0406->setGridX(4);
-        Constraint0406->setGridY(6);
-    endEditCP(Constraint0406, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0106->setGridX(1);
+    Constraint0106->setGridY(6);
+
+    Constraint0206->setGridX(2);
+    Constraint0206->setGridY(6);
+
+    Constraint0306->setGridX(3);
+    Constraint0306->setGridY(6);
+
+    Constraint0406->setGridX(4);
+    Constraint0406->setGridY(6);
     /******************************************************
-                            Row7
-    ******************************************************/    
-    GridBagLayoutConstraintsPtr Constraint0007 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0107 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0207 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0307 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0407 = osg::GridBagLayoutConstraints::create();
-            
-    beginEditCP(Constraint0007, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0007->setGridX(0);
-        Constraint0007->setGridY(7);
-    endEditCP(Constraint0007, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0107, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0107->setGridX(1);
-        Constraint0107->setGridY(7);
-    endEditCP(Constraint0107, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0207, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0207->setGridX(2);
-        Constraint0207->setGridY(7);
-    endEditCP(Constraint0207, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row7
+     ******************************************************/    
+    GridBagLayoutConstraintsRefPtr Constraint0007 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0107 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0207 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0307 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0407 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0307, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0307->setGridX(3);
-        Constraint0307->setGridY(7);
-    endEditCP(Constraint0307, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0007->setGridX(0);
+    Constraint0007->setGridY(7);
 
-    beginEditCP(Constraint0407, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0407->setGridX(4);
-        Constraint0407->setGridY(7);
-    endEditCP(Constraint0407, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0107->setGridX(1);
+    Constraint0107->setGridY(7);
+
+    Constraint0207->setGridX(2);
+    Constraint0207->setGridY(7);
+
+    Constraint0307->setGridX(3);
+    Constraint0307->setGridY(7);
+
+    Constraint0407->setGridX(4);
+    Constraint0407->setGridY(7);
     /******************************************************
-                            Row8
-    ******************************************************/    
-    GridBagLayoutConstraintsPtr Constraint0008 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0108 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0208 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0308 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0408 = osg::GridBagLayoutConstraints::create();
-            
-    beginEditCP(Constraint0008, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0008->setGridX(0);
-        Constraint0008->setGridY(8);
-    endEditCP(Constraint0008, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0108, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0108->setGridX(1);
-        Constraint0108->setGridY(8);
-    endEditCP(Constraint0108, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0208, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0208->setGridX(2);
-        Constraint0208->setGridY(8);
-    endEditCP(Constraint0208, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row8
+     ******************************************************/    
+    GridBagLayoutConstraintsRefPtr Constraint0008 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0108 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0208 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0308 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0408 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0308, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0308->setGridX(3);
-        Constraint0308->setGridY(8);
-    endEditCP(Constraint0308, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0008->setGridX(0);
+    Constraint0008->setGridY(8);
 
-    beginEditCP(Constraint0408, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0408->setGridX(4);
-        Constraint0408->setGridY(8);
-    endEditCP(Constraint0408, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0108->setGridX(1);
+    Constraint0108->setGridY(8);
+
+    Constraint0208->setGridX(2);
+    Constraint0208->setGridY(8);
+
+    Constraint0308->setGridX(3);
+    Constraint0308->setGridY(8);
+
+    Constraint0408->setGridX(4);
+    Constraint0408->setGridY(8);
     /******************************************************
-                            Row9
-    ******************************************************/    
-    GridBagLayoutConstraintsPtr Constraint0009 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0109 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0209 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0309 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0409 = osg::GridBagLayoutConstraints::create();
-            
-    beginEditCP(Constraint0009, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0009->setGridX(0);
-        Constraint0009->setGridY(9);
-    endEditCP(Constraint0009, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0109, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0109->setGridX(1);
-        Constraint0109->setGridY(9);
-    endEditCP(Constraint0109, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0209, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0209->setGridX(2);
-        Constraint0209->setGridY(9);
-    endEditCP(Constraint0209, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row9
+     ******************************************************/    
+    GridBagLayoutConstraintsRefPtr Constraint0009 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0109 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0209 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0309 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0409 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0309, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0309->setGridX(3);
-        Constraint0309->setGridY(9);
-    endEditCP(Constraint0309, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0009->setGridX(0);
+    Constraint0009->setGridY(9);
 
-    beginEditCP(Constraint0409, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0409->setGridX(4);
-        Constraint0409->setGridY(9);
-    endEditCP(Constraint0409, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0109->setGridX(1);
+    Constraint0109->setGridY(9);
+
+    Constraint0209->setGridX(2);
+    Constraint0209->setGridY(9);
+
+    Constraint0309->setGridX(3);
+    Constraint0309->setGridY(9);
+
+    Constraint0409->setGridX(4);
+    Constraint0409->setGridY(9);
     /******************************************************
-                            Row10
-    ******************************************************/    
-    GridBagLayoutConstraintsPtr Constraint0010 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0110 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0210 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0310 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0410 = osg::GridBagLayoutConstraints::create();
-            
-    beginEditCP(Constraint0010, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0010->setGridX(0);
-        Constraint0010->setGridY(10);
-    endEditCP(Constraint0010, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0110, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0110->setGridX(1);
-        Constraint0110->setGridY(10);
-    endEditCP(Constraint0110, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0210, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0210->setGridX(2);
-        Constraint0210->setGridY(10);
-    endEditCP(Constraint0210, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row10
+     ******************************************************/    
+    GridBagLayoutConstraintsRefPtr Constraint0010 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0110 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0210 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0310 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0410 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0310, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0310->setGridX(3);
-        Constraint0310->setGridY(10);
-    endEditCP(Constraint0310, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0010->setGridX(0);
+    Constraint0010->setGridY(10);
 
-    beginEditCP(Constraint0410, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0410->setGridX(4);
-        Constraint0410->setGridY(10);
-    endEditCP(Constraint0410, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0110->setGridX(1);
+    Constraint0110->setGridY(10);
+
+    Constraint0210->setGridX(2);
+    Constraint0210->setGridY(10);
+
+    Constraint0310->setGridX(3);
+    Constraint0310->setGridY(10);
+
+    Constraint0410->setGridX(4);
+    Constraint0410->setGridY(10);
     /******************************************************
-                            Row11 
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0011 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0111 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0211 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0311 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0411 = osg::GridBagLayoutConstraints::create();
-            
-    beginEditCP(Constraint0011, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0011->setGridX(0);
-        Constraint0011->setGridY(11);
-    endEditCP(Constraint0011, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0111, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0111->setGridX(1);
-        Constraint0111->setGridY(11);
-    endEditCP(Constraint0111, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0211, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0211->setGridX(2);
-        Constraint0211->setGridY(11);
-    endEditCP(Constraint0211, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+      Row11 
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0011 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0111 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0211 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0311 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0411 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0311, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0311->setGridX(3);
-        Constraint0311->setGridY(11);
-    endEditCP(Constraint0311, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0011->setGridX(0);
+    Constraint0011->setGridY(11);
 
-    beginEditCP(Constraint0411, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0411->setGridX(4);
-        Constraint0411->setGridY(11);
-    endEditCP(Constraint0411, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-   
+    Constraint0111->setGridX(1);
+    Constraint0111->setGridY(11);
+
+    Constraint0211->setGridX(2);
+    Constraint0211->setGridY(11);
+
+    Constraint0311->setGridX(3);
+    Constraint0311->setGridY(11);
+
+    Constraint0411->setGridX(4);
+    Constraint0411->setGridY(11);
+
     /******************************************************
 
-            Create Components to add to Panel
+      Create Components to add to Panel
 
     /******************************************************
-                        Labels
-    ******************************************************/
-    LabelPtr normalLabel = osg::Label::create();
-    LabelPtr theDisabledLabel = osg::Label::create();
+    Labels
+     ******************************************************/
+    LabelRefPtr normalLabel = OSG::Label::create();
+    LabelRefPtr theDisabledLabel = OSG::Label::create();
 
-	beginEditCP(normalLabel, Label::TextFieldMask | Label::ConstraintsFieldMask| Label::MaxSizeFieldMask);
-        normalLabel->setText("Normal");
-        normalLabel->setConstraints(Constraint0110);
-        normalLabel->setMaxSize(Vec2f(75, 23));
-    endEditCP(normalLabel, Label::TextFieldMask | Label::ConstraintsFieldMask| Label::MaxSizeFieldMask);
+    normalLabel->setText("Normal");
+    normalLabel->setConstraints(Constraint0110);
+    normalLabel->setMaxSize(Vec2f(75, 23));
 
-	beginEditCP(theDisabledLabel, Label::EnabledFieldMask | Label::TextFieldMask | Label::ConstraintsFieldMask| Label::MaxSizeFieldMask);
-        theDisabledLabel->setText("Disabled");
-        theDisabledLabel->setConstraints(Constraint0310);
-        theDisabledLabel->setMaxSize(Vec2f(75, 23));
-        theDisabledLabel->setEnabled(false);
-    endEditCP(theDisabledLabel, Label::EnabledFieldMask | Label::TextFieldMask | Label::ConstraintsFieldMask| Label::MaxSizeFieldMask);
+    theDisabledLabel->setText("Disabled");
+    theDisabledLabel->setConstraints(Constraint0310);
+    theDisabledLabel->setMaxSize(Vec2f(75, 23));
+    theDisabledLabel->setEnabled(false);
     /******************************************************
-                        Buttons
-    ******************************************************/
-    ButtonPtr inactiveButton = osg::Button::create();
-    ButtonPtr activeButton = osg::Button::create();
-    ButtonPtr disabledInactiveButton = osg::Button::create();
-    ButtonPtr disabledActiveButton = osg::Button::create();
+      Buttons
+     ******************************************************/
+    ButtonRefPtr inactiveButton = OSG::Button::create();
+    ButtonRefPtr activeButton = OSG::Button::create();
+    ButtonRefPtr disabledInactiveButton = OSG::Button::create();
+    ButtonRefPtr disabledActiveButton = OSG::Button::create();
 
-	beginEditCP(inactiveButton, Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask | Button::ToolTipTextFieldMask);
-        inactiveButton->setActive(false);
-        inactiveButton->setText("Inactive");
-        inactiveButton->setToolTipText("Inactive Button Tooltip");
-        inactiveButton->setConstraints(Constraint0101);
-        inactiveButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(inactiveButton, Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask | Button::ToolTipTextFieldMask);
-    
-    beginEditCP(activeButton, Button::TextFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask | Button::ToolTipTextFieldMask);
-        activeButton->setText("RolledOver");
-        activeButton->setToolTipText("RolledOver Button Tooltip");
-		activeButton->setBorder(activeButton->getRolloverBorder());
-        activeButton->setConstraints(Constraint0201);
-        activeButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(activeButton, Button::TextFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask | Button::ToolTipTextFieldMask);
+    inactiveButton->setActive(false);
+    inactiveButton->setText("Inactive");
+    inactiveButton->setToolTipText("Inactive Button Tooltip");
+    inactiveButton->setConstraints(Constraint0101);
+    inactiveButton->setMaxSize(Vec2f(75, 23));
 
-    beginEditCP(disabledInactiveButton, Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
-        disabledInactiveButton->setActive(false);
-        disabledInactiveButton->setEnabled(false);
-        disabledInactiveButton->setText("Disabled/Inactive");
-        disabledInactiveButton->setConstraints(Constraint0301);
-        disabledInactiveButton->setMaxSize(Vec2f(110, 23));
-    endEditCP(disabledInactiveButton, Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
-    
-    beginEditCP(disabledActiveButton, Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
-        disabledActiveButton->setEnabled(false);
-        disabledActiveButton->setText("Disabled");
-        disabledActiveButton->setConstraints(Constraint0401);
-        disabledActiveButton->setMaxSize(Vec2f(90, 23));
-    endEditCP(disabledActiveButton, Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
-    
-    /******************************************************
-                        ToggleButtons
-    ******************************************************/
-    ToggleButtonPtr nonSelectedToggleButton = osg::ToggleButton::create();
-    ToggleButtonPtr selectedToggleButton = osg::ToggleButton::create();
-    ToggleButtonPtr disabledSelectedToggleButton = osg::ToggleButton::create();
-    ToggleButtonPtr disabledNonselectedToggleButton = osg::ToggleButton::create();
-    
-    beginEditCP(nonSelectedToggleButton, ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
-        nonSelectedToggleButton->setText("NonSelected");
-        nonSelectedToggleButton->setConstraints(Constraint0102);
-        nonSelectedToggleButton->setPreferredSize(Vec2f(100, 23));		
-        nonSelectedToggleButton->setMaxSize(Vec2f(100, 23));
-    endEditCP(nonSelectedToggleButton, ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
+    activeButton->setText("RolledOver");
+    activeButton->setToolTipText("RolledOver Button Tooltip");
+    activeButton->setBorder(activeButton->getRolloverBorder());
+    activeButton->setConstraints(Constraint0201);
+    activeButton->setMaxSize(Vec2f(75, 23));
 
-    beginEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
-        selectedToggleButton->setSelected(true);
-        selectedToggleButton->setText("Selected");
-        selectedToggleButton->setConstraints(Constraint0202);
-        selectedToggleButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
-    
-    beginEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
-        disabledSelectedToggleButton->setSelected(true);
-        disabledSelectedToggleButton->setEnabled(false);
-        disabledSelectedToggleButton->setText("Disabled/Selected");
-        disabledSelectedToggleButton->setConstraints(Constraint0302);
-        disabledSelectedToggleButton->setMaxSize(Vec2f(110, 23));
-    endEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
-    
-    beginEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
-        disabledNonselectedToggleButton->setSelected(false);
-        disabledNonselectedToggleButton->setEnabled(false);
-        disabledNonselectedToggleButton->setText("Disabled");
-        disabledNonselectedToggleButton->setConstraints(Constraint0402);
-        disabledNonselectedToggleButton->setMaxSize(Vec2f(90, 23));
-    endEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
+    disabledInactiveButton->setActive(false);
+    disabledInactiveButton->setEnabled(false);
+    disabledInactiveButton->setText("Disabled/Inactive");
+    disabledInactiveButton->setConstraints(Constraint0301);
+    disabledInactiveButton->setMaxSize(Vec2f(110, 23));
+
+    disabledActiveButton->setEnabled(false);
+    disabledActiveButton->setText("Disabled");
+    disabledActiveButton->setConstraints(Constraint0401);
+    disabledActiveButton->setMaxSize(Vec2f(90, 23));
 
     /******************************************************
-                        RadioButtons
-    ******************************************************/
-    RadioButtonPtr deselectedRadioButton = osg::RadioButton::create();
-    RadioButtonPtr selectedRadioButton = osg::RadioButton::create();
-    RadioButtonPtr disabledDeselectedRadioButton = osg::RadioButton::create();
-    RadioButtonPtr disabledSelectedRadioButton = osg::RadioButton::create();
+      ToggleButtons
+     ******************************************************/
+    ToggleButtonRefPtr nonSelectedToggleButton = OSG::ToggleButton::create();
+    ToggleButtonRefPtr selectedToggleButton = OSG::ToggleButton::create();
+    ToggleButtonRefPtr disabledSelectedToggleButton = OSG::ToggleButton::create();
+    ToggleButtonRefPtr disabledNonselectedToggleButton = OSG::ToggleButton::create();
+
+    nonSelectedToggleButton->setText("NonSelected");
+    nonSelectedToggleButton->setConstraints(Constraint0102);
+    nonSelectedToggleButton->setPreferredSize(Vec2f(100, 23));		
+    nonSelectedToggleButton->setMaxSize(Vec2f(100, 23));
+
+    selectedToggleButton->setSelected(true);
+    selectedToggleButton->setText("Selected");
+    selectedToggleButton->setConstraints(Constraint0202);
+    selectedToggleButton->setMaxSize(Vec2f(75, 23));
+
+    disabledSelectedToggleButton->setSelected(true);
+    disabledSelectedToggleButton->setEnabled(false);
+    disabledSelectedToggleButton->setText("Disabled/Selected");
+    disabledSelectedToggleButton->setConstraints(Constraint0302);
+    disabledSelectedToggleButton->setMaxSize(Vec2f(110, 23));
+
+    disabledNonselectedToggleButton->setSelected(false);
+    disabledNonselectedToggleButton->setEnabled(false);
+    disabledNonselectedToggleButton->setText("Disabled");
+    disabledNonselectedToggleButton->setConstraints(Constraint0402);
+    disabledNonselectedToggleButton->setMaxSize(Vec2f(90, 23));
+
+    /******************************************************
+      RadioButtons
+     ******************************************************/
+    RadioButtonRefPtr deselectedRadioButton = OSG::RadioButton::create();
+    RadioButtonRefPtr selectedRadioButton = OSG::RadioButton::create();
+    RadioButtonRefPtr disabledDeselectedRadioButton = OSG::RadioButton::create();
+    RadioButtonRefPtr disabledSelectedRadioButton = OSG::RadioButton::create();
 
 
-    DeselectedRadioButtonGroup = osg::RadioButtonGroup::create();
+    DeselectedRadioButtonGroup = OSG::RadioButtonGroup::create();
     DeselectedRadioButtonGroup->addButton(deselectedRadioButton);
 
-    SelectedRadioButtonGroup = osg::RadioButtonGroup::create();
+    SelectedRadioButtonGroup = OSG::RadioButtonGroup::create();
     SelectedRadioButtonGroup->addButton(selectedRadioButton);
-    
-    DisabledDeselectedRadioButtonGroup = osg::RadioButtonGroup::create();
+
+    DisabledDeselectedRadioButtonGroup = OSG::RadioButtonGroup::create();
     DisabledDeselectedRadioButtonGroup->addButton(disabledDeselectedRadioButton);
-    
-    DisabledSelectedRadioButtonGroup = osg::RadioButtonGroup::create();
+
+    DisabledSelectedRadioButtonGroup = OSG::RadioButtonGroup::create();
     DisabledSelectedRadioButtonGroup->addButton(disabledSelectedRadioButton);
 
-    beginEditCP(deselectedRadioButton, RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
-        deselectedRadioButton->setText("Deselected");
-        deselectedRadioButton->setConstraints(Constraint0103);
-        deselectedRadioButton->setMaxSize(Vec2f(100, 23));
-    endEditCP(deselectedRadioButton, RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
+    deselectedRadioButton->setText("Deselected");
+    deselectedRadioButton->setConstraints(Constraint0103);
+    deselectedRadioButton->setMaxSize(Vec2f(100, 23));
 
-    beginEditCP(selectedRadioButton, RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
-        selectedRadioButton->setSelected(true);
-        selectedRadioButton->setText("Selected");
-        selectedRadioButton->setConstraints(Constraint0203);
-        selectedRadioButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(selectedRadioButton, RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
+    selectedRadioButton->setSelected(true);
+    selectedRadioButton->setText("Selected");
+    selectedRadioButton->setConstraints(Constraint0203);
+    selectedRadioButton->setMaxSize(Vec2f(75, 23));
 
-    beginEditCP(disabledDeselectedRadioButton, RadioButton::EnabledFieldMask | RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
-        disabledDeselectedRadioButton->setEnabled(false);
-        disabledDeselectedRadioButton->setSelected(false);
-        disabledDeselectedRadioButton->setText("Disabled");
-        disabledDeselectedRadioButton->setConstraints(Constraint0303);
-        disabledDeselectedRadioButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(disabledDeselectedRadioButton, RadioButton::EnabledFieldMask | RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
-    
-    beginEditCP(disabledSelectedRadioButton, RadioButton::EnabledFieldMask | RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
-        disabledSelectedRadioButton->setEnabled(false);
-        disabledSelectedRadioButton->setSelected(true);
-        disabledSelectedRadioButton->setText("Disabled/Selected");
-        disabledSelectedRadioButton->setConstraints(Constraint0403);
-        disabledSelectedRadioButton->setMaxSize(Vec2f(165, 23));
-    endEditCP(disabledSelectedRadioButton, RadioButton::EnabledFieldMask | RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
-    
-    
-    /******************************************************
-                        CheckboxButtons
-    ******************************************************/
-    CheckboxButtonPtr deselectedCheckboxButton = osg::CheckboxButton::create();
-    CheckboxButtonPtr selectedCheckboxButton = osg::CheckboxButton::create();
-    CheckboxButtonPtr disabledDeselectedCheckboxButton = osg::CheckboxButton::create();
-    CheckboxButtonPtr disabledSelectedCheckboxButton = osg::CheckboxButton::create();
+    disabledDeselectedRadioButton->setEnabled(false);
+    disabledDeselectedRadioButton->setSelected(false);
+    disabledDeselectedRadioButton->setText("Disabled");
+    disabledDeselectedRadioButton->setConstraints(Constraint0303);
+    disabledDeselectedRadioButton->setMaxSize(Vec2f(75, 23));
 
-    beginEditCP(deselectedCheckboxButton, CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
-        deselectedCheckboxButton->setText("Deselected");
-        deselectedCheckboxButton->setConstraints(Constraint0104);
-        deselectedCheckboxButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(deselectedCheckboxButton, CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
+    disabledSelectedRadioButton->setEnabled(false);
+    disabledSelectedRadioButton->setSelected(true);
+    disabledSelectedRadioButton->setText("Disabled/Selected");
+    disabledSelectedRadioButton->setConstraints(Constraint0403);
+    disabledSelectedRadioButton->setMaxSize(Vec2f(165, 23));
 
-    beginEditCP(selectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
-        selectedCheckboxButton->setSelected(true);
-        selectedCheckboxButton->setText("Selected");
-        selectedCheckboxButton->setConstraints(Constraint0204);
-        selectedCheckboxButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(selectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
-
-    beginEditCP(disabledDeselectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::EnabledFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
-        disabledDeselectedCheckboxButton->setSelected(false);
-        disabledDeselectedCheckboxButton->setEnabled(false);
-        disabledDeselectedCheckboxButton->setText("Disabled");
-        disabledDeselectedCheckboxButton->setConstraints(Constraint0304);
-        disabledDeselectedCheckboxButton->setMaxSize(Vec2f(75, 23));
-    endEditCP(disabledDeselectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::EnabledFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
-
-    beginEditCP(disabledSelectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::EnabledFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
-        disabledSelectedCheckboxButton->setSelected(true);
-        disabledSelectedCheckboxButton->setEnabled(false);
-        disabledSelectedCheckboxButton->setText("Disabled/Selected");
-        disabledSelectedCheckboxButton->setConstraints(Constraint0404);
-        disabledSelectedCheckboxButton->setMaxSize(Vec2f(150, 23));
-    endEditCP(disabledSelectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::EnabledFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
-    /******************************************************
-                        TextFields
-    ******************************************************/
-    TextFieldPtr editableTextField = osg::TextField::create();
-    TextFieldPtr noneditableTextField = osg::TextField::create();
-    TextFieldPtr disabledEditableTextField = osg::TextField::create();
-    TextFieldPtr disabledNoneditableTextField = osg::TextField::create();
-
-    beginEditCP(editableTextField, TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
-        editableTextField->setText("Editable");
-        editableTextField->setConstraints(Constraint0105);
-        editableTextField->setMaxSize(Vec2f(75, 23));
-        editableTextField->setEmptyDescText("Type in me");
-    endEditCP(editableTextField, TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
-
-    beginEditCP(noneditableTextField, TextField::EditableFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
-        noneditableTextField->setEditable(false);
-        noneditableTextField->setText("Noneditable");
-        noneditableTextField->setConstraints(Constraint0205);
-        noneditableTextField->setMaxSize(Vec2f(75, 23));
-    endEditCP(noneditableTextField, TextField::EditableFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
-    
-    beginEditCP(disabledEditableTextField, TextField::EnabledFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
-        disabledEditableTextField->setEnabled(false);
-        disabledEditableTextField->setText("Disabled");
-        disabledEditableTextField->setConstraints(Constraint0305);
-        disabledEditableTextField->setMaxSize(Vec2f(75, 23));
-    endEditCP(disabledEditableTextField, TextField::EnabledFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
-    
-    beginEditCP(disabledNoneditableTextField, TextField::EditableFieldMask | TextField::EnabledFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
-        disabledNoneditableTextField->setEditable(false);
-        disabledNoneditableTextField->setEnabled(false);
-        disabledNoneditableTextField->setText("Disabled/Noneditable");
-        disabledNoneditableTextField->setConstraints(Constraint0405);
-        disabledNoneditableTextField->setMaxSize(Vec2f(125, 23));
-    endEditCP(disabledNoneditableTextField, TextField::EditableFieldMask | TextField::EnabledFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
-    /******************************************************
-                        TextAreas
-    ******************************************************/    
-    TextAreaPtr editableTextArea = osg::TextArea::create();
-    TextAreaPtr noneditableTextArea = osg::TextArea::create();
-    TextAreaPtr disabledEditableTextArea = osg::TextArea::create();
-    TextAreaPtr disabledNoneditableTextArea = osg::TextArea::create();
-
-    beginEditCP(editableTextArea, TextArea::TextFieldMask | TextArea::ConstraintsFieldMask);
-        editableTextArea->setText("Editable");
-        editableTextArea->setConstraints(Constraint0106);
-		editableTextArea->setMaxSize(Vec2f(100,50));
-    endEditCP(editableTextArea, TextArea::TextFieldMask | TextArea::ConstraintsFieldMask);
-
-    beginEditCP(noneditableTextArea, TextArea::EditableFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
-        noneditableTextArea->setEditable(false);
-        noneditableTextArea->setText("Uneditable");
-        noneditableTextArea->setConstraints(Constraint0206);
-		noneditableTextArea->setMaxSize(Vec2f(100,50));
-    endEditCP(noneditableTextArea, TextArea::EditableFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
-    
-    beginEditCP(disabledEditableTextArea, TextArea::EnabledFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
-        disabledEditableTextArea->setEnabled(false);
-        disabledEditableTextArea->setText("Disabled");
-        disabledEditableTextArea->setConstraints(Constraint0306);
-		disabledEditableTextArea->setMaxSize(Vec2f(100,50));
-    endEditCP(disabledEditableTextArea, TextArea::EnabledFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
-    
-    beginEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | TextArea::EnabledFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
-        disabledNoneditableTextArea->setEditable(false);
-        disabledNoneditableTextArea->setEnabled(false);
-        disabledNoneditableTextArea->setText("Disabled");
-        disabledNoneditableTextArea->setConstraints(Constraint0406);
-		disabledNoneditableTextArea->setMaxSize(Vec2f(100,50));
-    endEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | TextArea::EnabledFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
 
     /******************************************************
-                        PasswordFields
-    ******************************************************/    
-    PasswordFieldPtr editablePasswordField = osg::PasswordField::create();
-    PasswordFieldPtr nonEditablePasswordField = osg::PasswordField::create();
-    PasswordFieldPtr disabledInactivePasswordField = osg::PasswordField::create();
-    PasswordFieldPtr disabledActivePasswordField = osg::PasswordField::create(); 
-    
-    beginEditCP(editablePasswordField, PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
-        editablePasswordField->setText("editable");
-        editablePasswordField->setConstraints(Constraint0107);
-		editablePasswordField->setMaxSize(Vec2f(75,23));
-        editablePasswordField->setEmptyDescText("password");
-    endEditCP(editablePasswordField, PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
+      CheckboxButtons
+     ******************************************************/
+    CheckboxButtonRefPtr deselectedCheckboxButton = OSG::CheckboxButton::create();
+    CheckboxButtonRefPtr selectedCheckboxButton = OSG::CheckboxButton::create();
+    CheckboxButtonRefPtr disabledDeselectedCheckboxButton = OSG::CheckboxButton::create();
+    CheckboxButtonRefPtr disabledSelectedCheckboxButton = OSG::CheckboxButton::create();
 
-    beginEditCP(nonEditablePasswordField, PasswordField::EditableFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
-        nonEditablePasswordField->setEditable(false);
-        nonEditablePasswordField->setText("editable");
-        nonEditablePasswordField->setConstraints(Constraint0207);
-		nonEditablePasswordField->setMaxSize(Vec2f(75,23));
-    endEditCP(nonEditablePasswordField, PasswordField::EditableFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
-    
-    beginEditCP(disabledInactivePasswordField, PasswordField::EnabledFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
-        disabledInactivePasswordField->setEnabled(false);
-        disabledInactivePasswordField->setText("editable");
-        disabledInactivePasswordField->setConstraints(Constraint0307);
-		disabledInactivePasswordField->setMaxSize(Vec2f(75,23));
-    endEditCP(disabledInactivePasswordField, PasswordField::EnabledFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
-    
-    beginEditCP(disabledActivePasswordField, PasswordField::EditableFieldMask | PasswordField::EnabledFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
-        disabledActivePasswordField->setEditable(false);
-        disabledActivePasswordField->setEnabled(false);
-        disabledActivePasswordField->setText("editable");
-        disabledActivePasswordField->setConstraints(Constraint0407);
-		disabledActivePasswordField->setMaxSize(Vec2f(75,23));
-    endEditCP(disabledActivePasswordField, PasswordField::EditableFieldMask | PasswordField::EnabledFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
+    deselectedCheckboxButton->setText("Deselected");
+    deselectedCheckboxButton->setConstraints(Constraint0104);
+    deselectedCheckboxButton->setMaxSize(Vec2f(75, 23));
+
+    selectedCheckboxButton->setSelected(true);
+    selectedCheckboxButton->setText("Selected");
+    selectedCheckboxButton->setConstraints(Constraint0204);
+    selectedCheckboxButton->setMaxSize(Vec2f(75, 23));
+
+    disabledDeselectedCheckboxButton->setSelected(false);
+    disabledDeselectedCheckboxButton->setEnabled(false);
+    disabledDeselectedCheckboxButton->setText("Disabled");
+    disabledDeselectedCheckboxButton->setConstraints(Constraint0304);
+    disabledDeselectedCheckboxButton->setMaxSize(Vec2f(75, 23));
+
+    disabledSelectedCheckboxButton->setSelected(true);
+    disabledSelectedCheckboxButton->setEnabled(false);
+    disabledSelectedCheckboxButton->setText("Disabled/Selected");
+    disabledSelectedCheckboxButton->setConstraints(Constraint0404);
+    disabledSelectedCheckboxButton->setMaxSize(Vec2f(150, 23));
+    /******************************************************
+      TextFields
+     ******************************************************/
+    TextFieldRefPtr editableTextField = OSG::TextField::create();
+    TextFieldRefPtr noneditableTextField = OSG::TextField::create();
+    TextFieldRefPtr disabledEditableTextField = OSG::TextField::create();
+    TextFieldRefPtr disabledNoneditableTextField = OSG::TextField::create();
+
+    editableTextField->setText("Editable");
+    editableTextField->setConstraints(Constraint0105);
+    editableTextField->setMaxSize(Vec2f(75, 23));
+    editableTextField->setEmptyDescText("Type in me");
+
+    noneditableTextField->setEditable(false);
+    noneditableTextField->setText("Noneditable");
+    noneditableTextField->setConstraints(Constraint0205);
+    noneditableTextField->setMaxSize(Vec2f(75, 23));
+
+    disabledEditableTextField->setEnabled(false);
+    disabledEditableTextField->setText("Disabled");
+    disabledEditableTextField->setConstraints(Constraint0305);
+    disabledEditableTextField->setMaxSize(Vec2f(75, 23));
+
+    disabledNoneditableTextField->setEditable(false);
+    disabledNoneditableTextField->setEnabled(false);
+    disabledNoneditableTextField->setText("Disabled/Noneditable");
+    disabledNoneditableTextField->setConstraints(Constraint0405);
+    disabledNoneditableTextField->setMaxSize(Vec2f(125, 23));
+    /******************************************************
+      TextAreas
+     ******************************************************/    
+    TextAreaRefPtr editableTextArea = OSG::TextArea::create();
+    TextAreaRefPtr noneditableTextArea = OSG::TextArea::create();
+    TextAreaRefPtr disabledEditableTextArea = OSG::TextArea::create();
+    TextAreaRefPtr disabledNoneditableTextArea = OSG::TextArea::create();
+
+    editableTextArea->setText("Editable");
+    editableTextArea->setConstraints(Constraint0106);
+    editableTextArea->setMaxSize(Vec2f(100,50));
+
+    noneditableTextArea->setEditable(false);
+    noneditableTextArea->setText("Uneditable");
+    noneditableTextArea->setConstraints(Constraint0206);
+    noneditableTextArea->setMaxSize(Vec2f(100,50));
+
+    disabledEditableTextArea->setEnabled(false);
+    disabledEditableTextArea->setText("Disabled");
+    disabledEditableTextArea->setConstraints(Constraint0306);
+    disabledEditableTextArea->setMaxSize(Vec2f(100,50));
+
+    disabledNoneditableTextArea->setEditable(false);
+    disabledNoneditableTextArea->setEnabled(false);
+    disabledNoneditableTextArea->setText("Disabled");
+    disabledNoneditableTextArea->setConstraints(Constraint0406);
+    disabledNoneditableTextArea->setMaxSize(Vec2f(100,50));
 
     /******************************************************
-                        Spinners
-    ******************************************************/
-    SpinnerPtr inactiveSpinner = osg::Spinner::create();
-    SpinnerPtr activeSpinner = osg::Spinner::create();
-    SpinnerPtr disabledInactiveSpinner = osg::Spinner::create();
-    SpinnerPtr disabledActiveSpinner = osg::Spinner::create();
+      PasswordFields
+     ******************************************************/    
+    PasswordFieldRefPtr editablePasswordField = OSG::PasswordField::create();
+    PasswordFieldRefPtr nonEditablePasswordField = OSG::PasswordField::create();
+    PasswordFieldRefPtr disabledInactivePasswordField = OSG::PasswordField::create();
+    PasswordFieldRefPtr disabledActivePasswordField = OSG::PasswordField::create(); 
+
+    editablePasswordField->setText("editable");
+    editablePasswordField->setConstraints(Constraint0107);
+    editablePasswordField->setMaxSize(Vec2f(75,23));
+    editablePasswordField->setEmptyDescText("password");
+
+    nonEditablePasswordField->setEditable(false);
+    nonEditablePasswordField->setText("editable");
+    nonEditablePasswordField->setConstraints(Constraint0207);
+    nonEditablePasswordField->setMaxSize(Vec2f(75,23));
+
+    disabledInactivePasswordField->setEnabled(false);
+    disabledInactivePasswordField->setText("editable");
+    disabledInactivePasswordField->setConstraints(Constraint0307);
+    disabledInactivePasswordField->setMaxSize(Vec2f(75,23));
+
+    disabledActivePasswordField->setEditable(false);
+    disabledActivePasswordField->setEnabled(false);
+    disabledActivePasswordField->setText("editable");
+    disabledActivePasswordField->setConstraints(Constraint0407);
+    disabledActivePasswordField->setMaxSize(Vec2f(75,23));
+
+    /******************************************************
+      Spinners
+     ******************************************************/
+    SpinnerRefPtr inactiveSpinner = OSG::Spinner::create();
+    SpinnerRefPtr activeSpinner = OSG::Spinner::create();
+    SpinnerRefPtr disabledInactiveSpinner = OSG::Spinner::create();
+    SpinnerRefPtr disabledActiveSpinner = OSG::Spinner::create();
 
     inactiveSpinnerModel->setMaximum(10);
     inactiveSpinnerModel->setMinimum(-10);
@@ -1505,281 +1494,219 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     disabledInactiveSpinner->setModel(disabledInactiveSpinnerModel);
     disabledActiveSpinner->setModel(disabledActiveSpinnerModel);
 
-    beginEditCP(activeSpinner, Spinner::ConstraintsFieldMask | Spinner::MaxSizeFieldMask);
-        activeSpinner->setConstraints(Constraint0108);
-        activeSpinner->setMaxSize(Vec2f(50,25));
-    endEditCP(activeSpinner, Spinner::ConstraintsFieldMask | Spinner::MaxSizeFieldMask);
+    activeSpinner->setConstraints(Constraint0108);
+    activeSpinner->setMaxSize(Vec2f(50,25));
 
-    beginEditCP(inactiveSpinner, Spinner::ConstraintsFieldMask | Spinner::MaxSizeFieldMask);
-        inactiveSpinner->setConstraints(Constraint0208);
-        inactiveSpinner->setMaxSize(Vec2f(50,25));
-    endEditCP(inactiveSpinner, Spinner::ConstraintsFieldMask | Spinner::MaxSizeFieldMask);
+    inactiveSpinner->setConstraints(Constraint0208);
+    inactiveSpinner->setMaxSize(Vec2f(50,25));
     inactiveSpinner->setEditable(false);
 
-    beginEditCP(disabledActiveSpinner, Spinner::ConstraintsFieldMask | Spinner::EnabledFieldMask | Spinner::MaxSizeFieldMask);
-        disabledActiveSpinner->setConstraints(Constraint0308);
-        disabledActiveSpinner->setEnabled(false);
-        disabledActiveSpinner->setMaxSize(Vec2f(50,25));
-    endEditCP(disabledActiveSpinner, Spinner::ConstraintsFieldMask | Spinner::EnabledFieldMask | Spinner::MaxSizeFieldMask);
+    disabledActiveSpinner->setConstraints(Constraint0308);
+    disabledActiveSpinner->setEnabled(false);
+    disabledActiveSpinner->setMaxSize(Vec2f(50,25));
 
-    beginEditCP(disabledInactiveSpinner, Spinner::ConstraintsFieldMask | Component::EnabledFieldMask | Spinner::MaxSizeFieldMask);
-        disabledInactiveSpinner->setConstraints(Constraint0408);
-        disabledInactiveSpinner->setEnabled(false);
-        disabledInactiveSpinner->setMaxSize(Vec2f(50,25));
-    endEditCP(disabledInactiveSpinner, Spinner::ConstraintsFieldMask | Component::EnabledFieldMask | Spinner::MaxSizeFieldMask);
+    disabledInactiveSpinner->setConstraints(Constraint0408);
+    disabledInactiveSpinner->setEnabled(false);
+    disabledInactiveSpinner->setMaxSize(Vec2f(50,25));
     disabledInactiveSpinner->setEditable(false);
 
     /******************************************************
-                        ComboBoxes
-    ******************************************************/
+      ComboBoxes
+     ******************************************************/
 
-    ComboBoxPtr editableComboBox = osg::ComboBox::create();
-    ComboBoxPtr noneditableComboBox = osg::ComboBox::create();
-    ComboBoxPtr disabledEditableComboBox = osg::ComboBox::create();
-    ComboBoxPtr disabledNoneditableComboBox = osg::ComboBox::create();
+    ComboBoxRefPtr editableComboBox = OSG::ComboBox::create();
+    ComboBoxRefPtr noneditableComboBox = OSG::ComboBox::create();
+    ComboBoxRefPtr disabledEditableComboBox = OSG::ComboBox::create();
+    ComboBoxRefPtr disabledNoneditableComboBox = OSG::ComboBox::create();
 
-	// Create Models
-	editableComboBoxModel = DefaultMutableComboBoxModel::create();
-	editableComboBoxModel->addElement(boost::any(std::string("Editable")));
-	editableComboBoxModel->addElement(boost::any(std::string("These")));
-	editableComboBoxModel->addElement(boost::any(std::string("Can")));
-	editableComboBoxModel->addElement(boost::any(std::string("Be")));
-	editableComboBoxModel->addElement(boost::any(std::string("Typed")));
-	editableComboBoxModel->addElement(boost::any(std::string("Over")));
-	
-
-	noneditableComboBoxModel = DefaultMutableComboBoxModel::create();
-	noneditableComboBoxModel->addElement(boost::any(std::string("Noneditable")));
-	noneditableComboBoxModel->addElement(boost::any(std::string("These")));
-	noneditableComboBoxModel->addElement(boost::any(std::string("Can")));
-	noneditableComboBoxModel->addElement(boost::any(std::string("NOT")));
-	noneditableComboBoxModel->addElement(boost::any(std::string("Be")));
-	noneditableComboBoxModel->addElement(boost::any(std::string("Typed")));
-	noneditableComboBoxModel->addElement(boost::any(std::string("Over")));
+    // Create Models
+    editableComboBoxModel = DefaultMutableComboBoxModel::create();
+    editableComboBoxModel->addElement(boost::any(std::string("Editable")));
+    editableComboBoxModel->addElement(boost::any(std::string("These")));
+    editableComboBoxModel->addElement(boost::any(std::string("Can")));
+    editableComboBoxModel->addElement(boost::any(std::string("Be")));
+    editableComboBoxModel->addElement(boost::any(std::string("Typed")));
+    editableComboBoxModel->addElement(boost::any(std::string("Over")));
 
 
-	// Create simple Models for disabled ComboBoxes
-	disabledEditableComboBoxModel = DefaultMutableComboBoxModel::create();
-	disabledEditableComboBoxModel->addElement(boost::any(std::string("Editable")));
+    noneditableComboBoxModel = DefaultMutableComboBoxModel::create();
+    noneditableComboBoxModel->addElement(boost::any(std::string("Noneditable")));
+    noneditableComboBoxModel->addElement(boost::any(std::string("These")));
+    noneditableComboBoxModel->addElement(boost::any(std::string("Can")));
+    noneditableComboBoxModel->addElement(boost::any(std::string("NOT")));
+    noneditableComboBoxModel->addElement(boost::any(std::string("Be")));
+    noneditableComboBoxModel->addElement(boost::any(std::string("Typed")));
+    noneditableComboBoxModel->addElement(boost::any(std::string("Over")));
 
 
-	disabledNoneditableComboBoxModel = DefaultMutableComboBoxModel::create();
-	disabledNoneditableComboBoxModel->addElement(boost::any(std::string("Noneditable")));
+    // Create simple Models for disabled ComboBoxes
+    disabledEditableComboBoxModel = DefaultMutableComboBoxModel::create();
+    disabledEditableComboBoxModel->addElement(boost::any(std::string("Editable")));
 
 
-    beginEditCP(editableComboBox, ComboBox::ConstraintsFieldMask | ComboBox::ModelFieldMask);
-        editableComboBox->setConstraints(Constraint0109);
-		editableComboBox->setMaxSize(Vec2f(75, 23));
-		editableComboBox->setModel(editableComboBoxModel);
-    endEditCP(editableComboBox, ComboBox::ConstraintsFieldMask | ComboBox::ModelFieldMask);
-	editableComboBox->setSelectedIndex(0);
-	editableComboBox->setEmptyDescText("Type Selection");
+    disabledNoneditableComboBoxModel = DefaultMutableComboBoxModel::create();
+    disabledNoneditableComboBoxModel->addElement(boost::any(std::string("Noneditable")));
 
-    beginEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
-        noneditableComboBox->setEditable(false);
-        noneditableComboBox->setConstraints(Constraint0209);
-		noneditableComboBox->setMaxSize(Vec2f(100, 23));
-		noneditableComboBox->setModel(noneditableComboBoxModel);
-    endEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
-	noneditableComboBox->setSelectedIndex(0);
 
-    beginEditCP(disabledEditableComboBox, ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
-        disabledEditableComboBox->setEnabled(false);
-        disabledEditableComboBox->setConstraints(Constraint0309);
-		disabledEditableComboBox->setMaxSize(Vec2f(75, 23));
-		disabledEditableComboBox->setModel(disabledEditableComboBoxModel);
-    endEditCP(disabledEditableComboBox, ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
-	disabledEditableComboBox->setSelectedIndex(0);
+    editableComboBox->setConstraints(Constraint0109);
+    editableComboBox->setMaxSize(Vec2f(75, 23));
+    editableComboBox->setModel(editableComboBoxModel);
+    editableComboBox->setSelectedIndex(0);
+    editableComboBox->setEmptyDescText("Type Selection");
 
-    beginEditCP(disabledNoneditableComboBox, ComboBox::EditableFieldMask | ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
-        disabledNoneditableComboBox->setEditable(false);
-        disabledNoneditableComboBox->setEnabled(false);
-        disabledNoneditableComboBox->setConstraints(Constraint0409);
-		disabledNoneditableComboBox->setMaxSize(Vec2f(100, 23));
-		disabledNoneditableComboBox->setModel(disabledNoneditableComboBoxModel);
-    endEditCP(disabledNoneditableComboBox, ComboBox::EditableFieldMask | ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
-	disabledNoneditableComboBox->setSelectedIndex(0);
+    noneditableComboBox->setEditable(false);
+    noneditableComboBox->setConstraints(Constraint0209);
+    noneditableComboBox->setMaxSize(Vec2f(100, 23));
+    noneditableComboBox->setModel(noneditableComboBoxModel);
+    noneditableComboBox->setSelectedIndex(0);
+
+    disabledEditableComboBox->setEnabled(false);
+    disabledEditableComboBox->setConstraints(Constraint0309);
+    disabledEditableComboBox->setMaxSize(Vec2f(75, 23));
+    disabledEditableComboBox->setModel(disabledEditableComboBoxModel);
+    disabledEditableComboBox->setSelectedIndex(0);
+
+    disabledNoneditableComboBox->setEditable(false);
+    disabledNoneditableComboBox->setEnabled(false);
+    disabledNoneditableComboBox->setConstraints(Constraint0409);
+    disabledNoneditableComboBox->setMaxSize(Vec2f(100, 23));
+    disabledNoneditableComboBox->setModel(disabledNoneditableComboBoxModel);
+    disabledNoneditableComboBox->setSelectedIndex(0);
 
     /******************************************************
-                        Separators
-    ******************************************************/
-    SeparatorPtr normalSeparator = osg::Separator::create();
-    SeparatorPtr disabledSeparator = osg::Separator::create();
+      Separators
+     ******************************************************/
+    SeparatorRefPtr normalSeparator = OSG::Separator::create();
+    SeparatorRefPtr disabledSeparator = OSG::Separator::create();
 
-	beginEditCP(normalSeparator, Separator::OrientationFieldMask | Separator::ConstraintsFieldMask| Separator::MaxSizeFieldMask);
-        normalSeparator->setConstraints(Constraint0111);
-        normalSeparator->setMaxSize(Vec2f(75, 23));
-		normalSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
-    endEditCP(normalSeparator,  Separator::OrientationFieldMask | Separator::ConstraintsFieldMask| Separator::MaxSizeFieldMask);
+    normalSeparator->setConstraints(Constraint0111);
+    normalSeparator->setMaxSize(Vec2f(75, 23));
+    normalSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
 
-	beginEditCP(disabledSeparator, Separator::EnabledFieldMask | Separator::OrientationFieldMask | Separator::ConstraintsFieldMask| Separator::MaxSizeFieldMask);
-        disabledSeparator->setConstraints(Constraint0311);
-        disabledSeparator->setMaxSize(Vec2f(75, 23));
-		disabledSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
-        disabledSeparator->setEnabled(false);
-    endEditCP(disabledSeparator,  Separator::EnabledFieldMask | Separator::OrientationFieldMask | Separator::ConstraintsFieldMask| Separator::MaxSizeFieldMask);
+    disabledSeparator->setConstraints(Constraint0311);
+    disabledSeparator->setMaxSize(Vec2f(75, 23));
+    disabledSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+    disabledSeparator->setEnabled(false);
     /******************************************************
-                        Labels
-    ******************************************************/
-    LabelPtr labelLabel = osg::Label::create();
-    LabelPtr buttonLabel = osg::Label::create();
-    LabelPtr toggleButtonLabel = osg::Label::create();
-    LabelPtr radioButtonLabel = osg::Label::create();
-    LabelPtr checkboxButtonLabel = osg::Label::create();
-    LabelPtr textFieldLabel = osg::Label::create();
-    LabelPtr textAreaLabel = osg::Label::create();
-    LabelPtr passwordFieldLabel = osg::Label::create();
-    LabelPtr spinnerLabel = osg::Label::create();
-	LabelPtr comboboxLabel = osg::Label::create();
-    LabelPtr separatorLabel = osg::Label::create();
-    LabelPtr enabledLabel = osg::Label::create();
-    LabelPtr disabledLabel = osg::Label::create();
-    EmptyLayerPtr labelBackground = osg::EmptyLayer::create();
-    EmptyBorderPtr labelBorder = osg::EmptyBorder::create();
-    beginEditCP(labelLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        labelLabel->setText("Labels");
-        labelLabel->setConstraints(Constraint0010);
-        labelLabel->setBackground(labelBackground);
-        labelLabel->setBorder(labelBorder);
-    endEditCP(labelLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+      Labels
+     ******************************************************/
+    LabelRefPtr labelLabel = OSG::Label::create();
+    LabelRefPtr buttonLabel = OSG::Label::create();
+    LabelRefPtr toggleButtonLabel = OSG::Label::create();
+    LabelRefPtr radioButtonLabel = OSG::Label::create();
+    LabelRefPtr checkboxButtonLabel = OSG::Label::create();
+    LabelRefPtr textFieldLabel = OSG::Label::create();
+    LabelRefPtr textAreaLabel = OSG::Label::create();
+    LabelRefPtr passwordFieldLabel = OSG::Label::create();
+    LabelRefPtr spinnerLabel = OSG::Label::create();
+    LabelRefPtr comboboxLabel = OSG::Label::create();
+    LabelRefPtr separatorLabel = OSG::Label::create();
+    LabelRefPtr enabledLabel = OSG::Label::create();
+    LabelRefPtr disabledLabel = OSG::Label::create();
+    EmptyLayerRefPtr labelBackground = OSG::EmptyLayer::create();
+    EmptyBorderRefPtr labelBorder = OSG::EmptyBorder::create();
+    labelLabel->setText("Labels");
+    labelLabel->setConstraints(Constraint0010);
+    labelLabel->setBackground(labelBackground);
+    labelLabel->setBorder(labelBorder);
 
-    beginEditCP(buttonLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        buttonLabel->setText("Buttons");
-        buttonLabel->setConstraints(Constraint0001);
-        buttonLabel->setBackground(labelBackground);
-        buttonLabel->setBorder(labelBorder);
-    endEditCP(buttonLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    buttonLabel->setText("Buttons");
+    buttonLabel->setConstraints(Constraint0001);
+    buttonLabel->setBackground(labelBackground);
+    buttonLabel->setBorder(labelBorder);
 
-    beginEditCP(toggleButtonLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        toggleButtonLabel->setText("ToggleButtons");
-        toggleButtonLabel->setConstraints(Constraint0002);
-        toggleButtonLabel->setBackground(labelBackground);
-        toggleButtonLabel->setBorder(labelBorder);
-    endEditCP(toggleButtonLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    toggleButtonLabel->setText("ToggleButtons");
+    toggleButtonLabel->setConstraints(Constraint0002);
+    toggleButtonLabel->setBackground(labelBackground);
+    toggleButtonLabel->setBorder(labelBorder);
 
-    beginEditCP(radioButtonLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        radioButtonLabel->setText("RadioButtons");
-        radioButtonLabel->setConstraints(Constraint0003);
-        radioButtonLabel->setBackground(labelBackground);
-        radioButtonLabel->setBorder(labelBorder);
-    endEditCP(radioButtonLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-    
-    beginEditCP(checkboxButtonLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        checkboxButtonLabel->setText("CheckboxButtons");
-        checkboxButtonLabel->setConstraints(Constraint0004);
-        checkboxButtonLabel->setBackground(labelBackground);
-        checkboxButtonLabel->setBorder(labelBorder);
-    endEditCP(checkboxButtonLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-    
-    beginEditCP(textFieldLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        textFieldLabel->setText("TextFields");
-        textFieldLabel->setConstraints(Constraint0005);
-        textFieldLabel->setBackground(labelBackground);
-        textFieldLabel->setBorder(labelBorder);
-    endEditCP(textFieldLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    radioButtonLabel->setText("RadioButtons");
+    radioButtonLabel->setConstraints(Constraint0003);
+    radioButtonLabel->setBackground(labelBackground);
+    radioButtonLabel->setBorder(labelBorder);
 
-    beginEditCP(textAreaLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        textAreaLabel->setText("TextAreas");
-        textAreaLabel->setConstraints(Constraint0006);
-        textAreaLabel->setBackground(labelBackground);
-        textAreaLabel->setBorder(labelBorder);
-    endEditCP(textAreaLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    checkboxButtonLabel->setText("CheckboxButtons");
+    checkboxButtonLabel->setConstraints(Constraint0004);
+    checkboxButtonLabel->setBackground(labelBackground);
+    checkboxButtonLabel->setBorder(labelBorder);
 
-    beginEditCP(passwordFieldLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        passwordFieldLabel->setText("PasswordFields");
-        passwordFieldLabel->setConstraints(Constraint0007);
-        passwordFieldLabel->setBackground(labelBackground);
-        passwordFieldLabel->setBorder(labelBorder);
-    endEditCP(passwordFieldLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    textFieldLabel->setText("TextFields");
+    textFieldLabel->setConstraints(Constraint0005);
+    textFieldLabel->setBackground(labelBackground);
+    textFieldLabel->setBorder(labelBorder);
 
-    beginEditCP(spinnerLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        spinnerLabel->setText("Spinners");
-        spinnerLabel->setConstraints(Constraint0008);
-        spinnerLabel->setBackground(labelBackground);
-        spinnerLabel->setBorder(labelBorder);
-    endEditCP(spinnerLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    textAreaLabel->setText("TextAreas");
+    textAreaLabel->setConstraints(Constraint0006);
+    textAreaLabel->setBackground(labelBackground);
+    textAreaLabel->setBorder(labelBorder);
 
-    beginEditCP(comboboxLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        comboboxLabel->setText("ComboBoxes");
-        comboboxLabel->setConstraints(Constraint0009);
-        comboboxLabel->setBackground(labelBackground);
-        comboboxLabel->setBorder(labelBorder);
-    endEditCP(comboboxLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-    beginEditCP(separatorLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        separatorLabel->setText("Separators");
-        separatorLabel->setConstraints(Constraint0011);
-        separatorLabel->setBackground(labelBackground);
-        separatorLabel->setBorder(labelBorder);
-    endEditCP(separatorLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    passwordFieldLabel->setText("PasswordFields");
+    passwordFieldLabel->setConstraints(Constraint0007);
+    passwordFieldLabel->setBackground(labelBackground);
+    passwordFieldLabel->setBorder(labelBorder);
 
-    beginEditCP(enabledLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        enabledLabel->setText("Enabled");
-        enabledLabel->setConstraints(Constraint0100);
-        enabledLabel->setBackground(labelBackground);
-        enabledLabel->setBorder(labelBorder);
-    endEditCP(enabledLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    spinnerLabel->setText("Spinners");
+    spinnerLabel->setConstraints(Constraint0008);
+    spinnerLabel->setBackground(labelBackground);
+    spinnerLabel->setBorder(labelBorder);
 
-    beginEditCP(disabledLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        disabledLabel->setText("Disabled");
-        disabledLabel->setConstraints(Constraint0300);
-        disabledLabel->setBackground(labelBackground);
-        disabledLabel->setBorder(labelBorder);
-    endEditCP(disabledLabel, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    comboboxLabel->setText("ComboBoxes");
+    comboboxLabel->setConstraints(Constraint0009);
+    comboboxLabel->setBackground(labelBackground);
+    comboboxLabel->setBorder(labelBorder);
+    separatorLabel->setText("Separators");
+    separatorLabel->setConstraints(Constraint0011);
+    separatorLabel->setBackground(labelBackground);
+    separatorLabel->setBorder(labelBorder);
+
+    enabledLabel->setText("Enabled");
+    enabledLabel->setConstraints(Constraint0100);
+    enabledLabel->setBackground(labelBackground);
+    enabledLabel->setBorder(labelBorder);
+
+    disabledLabel->setText("Disabled");
+    disabledLabel->setConstraints(Constraint0300);
+    disabledLabel->setBackground(labelBackground);
+    disabledLabel->setBorder(labelBorder);
 
     //PopupMenu
-    
-    MenuItemPtr MenuItem1 = MenuItem::create();
-    MenuItemPtr MenuItem2 = MenuItem::create();
-    MenuItemPtr MenuItem3 = MenuItem::create();
-    MenuItemPtr MenuItem4 = MenuItem::create();
-    MenuItemPtr SubMenuItem1 = MenuItem::create();
-    MenuItemPtr SubMenuItem2 = MenuItem::create();
-    MenuItemPtr SubMenuItem3 = MenuItem::create();
-    MenuPtr ExampleSubMenu = Menu::create();
-    
+
+    MenuItemRefPtr MenuItem1 = MenuItem::create();
+    MenuItemRefPtr MenuItem2 = MenuItem::create();
+    MenuItemRefPtr MenuItem3 = MenuItem::create();
+    MenuItemRefPtr MenuItem4 = MenuItem::create();
+    MenuItemRefPtr SubMenuItem1 = MenuItem::create();
+    MenuItemRefPtr SubMenuItem2 = MenuItem::create();
+    MenuItemRefPtr SubMenuItem3 = MenuItem::create();
+    MenuRefPtr ExampleSubMenu = Menu::create();
+
     /******************************************************
-            
-            Edit the MenuItems
 
-            -setText("TEXT"): Sets the text on the 
-                item to be TEXT
-            -setEnabled(Boolean): sets the menu item
-                to be either enabled or disabled
+      Edit the MenuItems
 
-    ******************************************************/
+      -setText("TEXT"): Sets the text on the 
+      item to be TEXT
+      -setEnabled(Boolean): sets the menu item
+      to be either enabled or disabled
 
-    beginEditCP(MenuItem1, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask);
-        MenuItem1->setText("Menu Item 1");
-    endEditCP(MenuItem1, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask);
-    
-    beginEditCP(MenuItem2, MenuItem::TextFieldMask);
-        MenuItem2->setText("Menu Item 2");
-    endEditCP(MenuItem2, MenuItem::TextFieldMask);
-    
-    beginEditCP(MenuItem3, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask);
-        MenuItem3->setText("Menu Item 3");
-    endEditCP(MenuItem3, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask);
-    
-    beginEditCP(MenuItem4, MenuItem::TextFieldMask | MenuItem::EnabledFieldMask);
-        MenuItem4->setText("Menu Item 4");
-        MenuItem4->setEnabled(false);
-    endEditCP(MenuItem4, MenuItem::TextFieldMask | MenuItem::EnabledFieldMask);
-    
-    beginEditCP(SubMenuItem1, MenuItem::TextFieldMask);
-        SubMenuItem1->setText("SubMenu Item 1");
-    endEditCP(SubMenuItem1, MenuItem::TextFieldMask);
-    
-    beginEditCP(SubMenuItem2, MenuItem::TextFieldMask);
-        SubMenuItem2->setText("SubMenu Item 2");
-    endEditCP(SubMenuItem2, MenuItem::TextFieldMask);
-    
-    beginEditCP(SubMenuItem3, MenuItem::TextFieldMask);
-        SubMenuItem3->setText("SubMenu Item 3");
-    endEditCP(SubMenuItem3, MenuItem::TextFieldMask);
-    
-    beginEditCP(ExampleSubMenu, MenuItem::TextFieldMask);
-        ExampleSubMenu->setText("Sub Menu");
-    endEditCP(ExampleSubMenu, MenuItem::TextFieldMask);
+     ******************************************************/
+
+    MenuItem1->setText("Menu Item 1");
+
+    MenuItem2->setText("Menu Item 2");
+
+    MenuItem3->setText("Menu Item 3");
+
+    MenuItem4->setText("Menu Item 4");
+    MenuItem4->setEnabled(false);
+
+    SubMenuItem1->setText("SubMenu Item 1");
+
+    SubMenuItem2->setText("SubMenu Item 2");
+
+    SubMenuItem3->setText("SubMenu Item 3");
+
+    ExampleSubMenu->setText("Sub Menu");
 
     // This adds three MenuItems to the Menu,
     // creating a submenu.  Note this does not
@@ -1788,98 +1715,94 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     ExampleSubMenu->addItem(SubMenuItem1);
     ExampleSubMenu->addItem(SubMenuItem2);
     ExampleSubMenu->addItem(SubMenuItem3);
-    
+
     /******************************************************
-            
-            Create the PopupMenu itself.
 
-            Items are added in the order in which
-            they will be displayed (top to bottom)
-            via addItem(ItemToBeAdded)
+      Create the PopupMenu itself.
 
-            The PopupMenu is attached to a 
-			Button below using 
-			setPopupMenu(PopupMenuName).  
-			
-			Note: PopupMenus can be added to any
-			Component.
+      Items are added in the order in which
+      they will be displayed (top to bottom)
+      via addItem(ItemToBeAdded)
 
-    ******************************************************/
-    PopupMenuPtr ExamplePopupMenu = PopupMenu::create();
+      The PopupMenu is attached to a 
+      Button below using 
+      setPopupMenu(PopupMenuName).  
+
+Note: PopupMenus can be added to any
+Component.
+
+     ******************************************************/
+    PopupMenuRefPtr ExamplePopupMenu = PopupMenu::create();
     ExamplePopupMenu->addItem(MenuItem1);
     ExamplePopupMenu->addItem(MenuItem2);
     ExamplePopupMenu->addItem(MenuItem3);
     ExamplePopupMenu->addSeparator();
     ExamplePopupMenu->addItem(ExampleSubMenu);
     ExamplePopupMenu->addItem(MenuItem4);
-    
-    beginEditCP(inactiveButton, Button::PopupMenuFieldMask);
-        inactiveButton->setPopupMenu(ExamplePopupMenu);
-    endEditCP(inactiveButton, Button::PopupMenuFieldMask);
 
-    beginEditCP(statePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask  | Panel::PreferredSizeFieldMask);
-        statePanel->getChildren().push_back(inactiveSpinner);
-        statePanel->getChildren().push_back(activeSpinner);
-        statePanel->getChildren().push_back(disabledInactiveSpinner);
-        statePanel->getChildren().push_back(disabledActiveSpinner);
-        statePanel->getChildren().push_back(inactiveButton);
-        statePanel->getChildren().push_back(activeButton);
-        statePanel->getChildren().push_back(disabledInactiveButton);
-        statePanel->getChildren().push_back(disabledActiveButton);
-        statePanel->getChildren().push_back(nonSelectedToggleButton);
-        statePanel->getChildren().push_back(selectedToggleButton);
-        statePanel->getChildren().push_back(disabledSelectedToggleButton);
-        statePanel->getChildren().push_back(disabledNonselectedToggleButton);
-        statePanel->getChildren().push_back(deselectedCheckboxButton);
-        statePanel->getChildren().push_back(selectedCheckboxButton);
-        statePanel->getChildren().push_back(disabledDeselectedCheckboxButton);
-        statePanel->getChildren().push_back(disabledSelectedCheckboxButton);
-        statePanel->getChildren().push_back(deselectedRadioButton);
-        statePanel->getChildren().push_back(selectedRadioButton);
-        statePanel->getChildren().push_back(disabledDeselectedRadioButton);
-        statePanel->getChildren().push_back(disabledSelectedRadioButton);
-        statePanel->getChildren().push_back(editableTextField);
-        statePanel->getChildren().push_back(noneditableTextField);
-        statePanel->getChildren().push_back(disabledEditableTextField);
-        statePanel->getChildren().push_back(disabledNoneditableTextField);
-        statePanel->getChildren().push_back(editableTextArea);
-        statePanel->getChildren().push_back(noneditableTextArea);
-        statePanel->getChildren().push_back(disabledEditableTextArea);
-        statePanel->getChildren().push_back(disabledNoneditableTextArea);
-        statePanel->getChildren().push_back(editablePasswordField);
-        statePanel->getChildren().push_back(nonEditablePasswordField);
-        statePanel->getChildren().push_back(disabledInactivePasswordField);
-        statePanel->getChildren().push_back(disabledActivePasswordField);
-        statePanel->getChildren().push_back(buttonLabel);
-        statePanel->getChildren().push_back(toggleButtonLabel);
-        statePanel->getChildren().push_back(radioButtonLabel);
-        statePanel->getChildren().push_back(checkboxButtonLabel);
-        statePanel->getChildren().push_back(textFieldLabel);
-        statePanel->getChildren().push_back(textAreaLabel);
-        statePanel->getChildren().push_back(passwordFieldLabel);
-        statePanel->getChildren().push_back(spinnerLabel);
-        statePanel->getChildren().push_back(comboboxLabel);
-        statePanel->getChildren().push_back(enabledLabel);
-        statePanel->getChildren().push_back(disabledLabel);
-		statePanel->getChildren().push_back(editableComboBox);
-        statePanel->getChildren().push_back(noneditableComboBox);
-        statePanel->getChildren().push_back(disabledEditableComboBox);
-        statePanel->getChildren().push_back(disabledNoneditableComboBox);
-        statePanel->getChildren().push_back(normalLabel);
-        statePanel->getChildren().push_back(labelLabel);
-        statePanel->getChildren().push_back(theDisabledLabel);
-        statePanel->getChildren().push_back(normalSeparator);
-        statePanel->getChildren().push_back(separatorLabel);
-        statePanel->getChildren().push_back(disabledSeparator);
-        statePanel->setLayout(statePanelLayout);
-        statePanel->setPreferredSize(Vec2f(500,800));
-    beginEditCP(statePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask  | Panel::PreferredSizeFieldMask);
+    inactiveButton->setPopupMenu(ExamplePopupMenu);
+
+    statePanel->pushToChildren(inactiveSpinner);
+    statePanel->pushToChildren(activeSpinner);
+    statePanel->pushToChildren(disabledInactiveSpinner);
+    statePanel->pushToChildren(disabledActiveSpinner);
+    statePanel->pushToChildren(inactiveButton);
+    statePanel->pushToChildren(activeButton);
+    statePanel->pushToChildren(disabledInactiveButton);
+    statePanel->pushToChildren(disabledActiveButton);
+    statePanel->pushToChildren(nonSelectedToggleButton);
+    statePanel->pushToChildren(selectedToggleButton);
+    statePanel->pushToChildren(disabledSelectedToggleButton);
+    statePanel->pushToChildren(disabledNonselectedToggleButton);
+    statePanel->pushToChildren(deselectedCheckboxButton);
+    statePanel->pushToChildren(selectedCheckboxButton);
+    statePanel->pushToChildren(disabledDeselectedCheckboxButton);
+    statePanel->pushToChildren(disabledSelectedCheckboxButton);
+    statePanel->pushToChildren(deselectedRadioButton);
+    statePanel->pushToChildren(selectedRadioButton);
+    statePanel->pushToChildren(disabledDeselectedRadioButton);
+    statePanel->pushToChildren(disabledSelectedRadioButton);
+    statePanel->pushToChildren(editableTextField);
+    statePanel->pushToChildren(noneditableTextField);
+    statePanel->pushToChildren(disabledEditableTextField);
+    statePanel->pushToChildren(disabledNoneditableTextField);
+    statePanel->pushToChildren(editableTextArea);
+    statePanel->pushToChildren(noneditableTextArea);
+    statePanel->pushToChildren(disabledEditableTextArea);
+    statePanel->pushToChildren(disabledNoneditableTextArea);
+    statePanel->pushToChildren(editablePasswordField);
+    statePanel->pushToChildren(nonEditablePasswordField);
+    statePanel->pushToChildren(disabledInactivePasswordField);
+    statePanel->pushToChildren(disabledActivePasswordField);
+    statePanel->pushToChildren(buttonLabel);
+    statePanel->pushToChildren(toggleButtonLabel);
+    statePanel->pushToChildren(radioButtonLabel);
+    statePanel->pushToChildren(checkboxButtonLabel);
+    statePanel->pushToChildren(textFieldLabel);
+    statePanel->pushToChildren(textAreaLabel);
+    statePanel->pushToChildren(passwordFieldLabel);
+    statePanel->pushToChildren(spinnerLabel);
+    statePanel->pushToChildren(comboboxLabel);
+    statePanel->pushToChildren(enabledLabel);
+    statePanel->pushToChildren(disabledLabel);
+    statePanel->pushToChildren(editableComboBox);
+    statePanel->pushToChildren(noneditableComboBox);
+    statePanel->pushToChildren(disabledEditableComboBox);
+    statePanel->pushToChildren(disabledNoneditableComboBox);
+    statePanel->pushToChildren(normalLabel);
+    statePanel->pushToChildren(labelLabel);
+    statePanel->pushToChildren(theDisabledLabel);
+    statePanel->pushToChildren(normalSeparator);
+    statePanel->pushToChildren(separatorLabel);
+    statePanel->pushToChildren(disabledSeparator);
+    statePanel->setLayout(statePanelLayout);
+    statePanel->setPreferredSize(Vec2f(500,800));
 
     return statePanel;
 
-    }
+}
 
-    // Callback functions
+// Callback functions
 
 
 // Redraw the window
@@ -1894,177 +1817,133 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-PanelPtr StatePanelCreator::createWindowPanel(void)
+PanelRefPtr StatePanelCreator::createWindowPanel(void)
 {
     //Button that creates an empty window
-    ButtonPtr CreateWindowButton = Button::create();
-    beginEditCP(CreateWindowButton, Button::TextFieldMask);
-        CreateWindowButton->setText("Create Window");
-        CreateWindowButton->setPreferredSize(Vec2f(100.0f,20.0f));
-    endEditCP(CreateWindowButton, Button::TextFieldMask);
+    ButtonRefPtr CreateWindowButton = Button::create();
+    CreateWindowButton->setText("Create Window");
+    CreateWindowButton->setPreferredSize(Vec2f(100.0f,20.0f));
     CreateWindowButton->addActionListener(&_CreateWindowButtonActionListener);
-    
+
     CreateNoTitlebarWindowButton = ToggleButton::create();
-    beginEditCP(CreateNoTitlebarWindowButton, ToggleButton::TextFieldMask);
-        CreateNoTitlebarWindowButton->setText("Create No Titlebar Window");
-        CreateNoTitlebarWindowButton->setPreferredSize(Vec2f(175.0f,20.0f));
-    endEditCP(CreateNoTitlebarWindowButton, ToggleButton::TextFieldMask);
+    CreateNoTitlebarWindowButton->setText("Create No Titlebar Window");
+    CreateNoTitlebarWindowButton->setPreferredSize(Vec2f(175.0f,20.0f));
     CreateNoTitlebarWindowButton->addButtonSelectedListener(&_CreateNoTitlebarWindowButtonSelectedListener);
 
-    PanelPtr WindowPanel = Panel::create();
-    FlowLayoutPtr WindowPanelLayout = FlowLayout::create();
+    PanelRefPtr WindowPanel = Panel::create();
+    FlowLayoutRefPtr WindowPanelLayout = FlowLayout::create();
 
-    beginEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
-        WindowPanel->setLayout(WindowPanelLayout);
-        WindowPanel->getChildren().push_back(CreateWindowButton);
-        WindowPanel->getChildren().push_back(CreateNoTitlebarWindowButton);
-        WindowPanel->setPreferredSize(Vec2f(500,800));
-    endEditCP(WindowPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
+    WindowPanel->setLayout(WindowPanelLayout);
+    WindowPanel->pushToChildren(CreateWindowButton);
+    WindowPanel->pushToChildren(CreateNoTitlebarWindowButton);
+    WindowPanel->setPreferredSize(Vec2f(500,800));
 
 
     return WindowPanel;
 }
 
-PanelPtr StatePanelCreator::createAdvancedPanel(void)
+PanelRefPtr StatePanelCreator::createAdvancedPanel(void)
 {
-    GridBagLayoutPtr AdvancedPanelLayout = osg::GridBagLayout::create();
-    beginEditCP(AdvancedPanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask  | Component::ConstraintsFieldMask);
-        AdvancedPanelLayout->setRows(6);
-        AdvancedPanelLayout->setColumns(3);
-    endEditCP(AdvancedPanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask  | Component::ConstraintsFieldMask);
-    
-    /******************************************************
-                            Row0
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0000 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0100 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0200 = osg::GridBagLayoutConstraints::create();
-
-    beginEditCP(Constraint0000, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0000->setGridX(0);
-        Constraint0000->setGridY(0);
-    endEditCP(Constraint0000, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0100, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0100->setGridX(1);
-        Constraint0100->setGridY(0);
-    endEditCP(Constraint0100, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0200, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0200->setGridX(2);
-        Constraint0200->setGridY(0);
-    endEditCP(Constraint0200, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-	
-    /******************************************************
-                            Row1
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0001 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0101 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0201 = osg::GridBagLayoutConstraints::create();
-
-    beginEditCP(Constraint0001, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0001->setGridX(0);
-        Constraint0001->setGridY(1);
-    endEditCP(Constraint0001, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0101, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0101->setGridX(1);
-        Constraint0101->setGridY(1);
-    endEditCP(Constraint0101, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0201, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0201->setGridX(2);
-        Constraint0201->setGridY(1);
-    endEditCP(Constraint0201, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    GridBagLayoutRefPtr AdvancedPanelLayout = OSG::GridBagLayout::create();
+    AdvancedPanelLayout->setRows(6);
+    AdvancedPanelLayout->setColumns(3);
 
     /******************************************************
-                            Row2
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0002 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0102 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0202 = osg::GridBagLayoutConstraints::create();
+      Row0
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0000 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0100 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0200 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0002, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0002->setGridX(0);
-        Constraint0002->setGridY(2);
-    endEditCP(Constraint0002, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0102, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0102->setGridX(1);
-        Constraint0102->setGridY(2);
-    endEditCP(Constraint0102, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0202, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0202->setGridX(2);
-        Constraint0202->setGridY(2);
-    endEditCP(Constraint0202, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0000->setGridX(0);
+    Constraint0000->setGridY(0);
 
-	
+    Constraint0100->setGridX(1);
+    Constraint0100->setGridY(0);
+
+    Constraint0200->setGridX(2);
+    Constraint0200->setGridY(0);
+
     /******************************************************
-                            Row3
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0003 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0103 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0203 = osg::GridBagLayoutConstraints::create();
+      Row1
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0001 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0101 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0201 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0003, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0003->setGridX(0);
-        Constraint0003->setGridY(3);
-    endEditCP(Constraint0003, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0103, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0103->setGridX(1);
-        Constraint0103->setGridY(3);
-    endEditCP(Constraint0103, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0203, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0203->setGridX(2);
-        Constraint0203->setGridY(3);
-    endEditCP(Constraint0203, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-	
+    Constraint0001->setGridX(0);
+    Constraint0001->setGridY(1);
+
+    Constraint0101->setGridX(1);
+    Constraint0101->setGridY(1);
+
+    Constraint0201->setGridX(2);
+    Constraint0201->setGridY(1);
+
     /******************************************************
-                            Row4
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0004 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0104 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0204 = osg::GridBagLayoutConstraints::create();
+      Row2
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0002 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0102 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0202 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0004, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0004->setGridX(0);
-        Constraint0004->setGridY(4);
-    endEditCP(Constraint0004, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0104, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0104->setGridX(1);
-        Constraint0104->setGridY(4);
-    endEditCP(Constraint0104, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0204, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0204->setGridX(2);
-        Constraint0204->setGridY(4);
-    endEditCP(Constraint0204, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-	
+    Constraint0002->setGridX(0);
+    Constraint0002->setGridY(2);
+
+    Constraint0102->setGridX(1);
+    Constraint0102->setGridY(2);
+
+    Constraint0202->setGridX(2);
+    Constraint0202->setGridY(2);
+
+
     /******************************************************
-                            Row5
-    ******************************************************/
-    GridBagLayoutConstraintsPtr Constraint0005 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0105 = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr Constraint0205 = osg::GridBagLayoutConstraints::create();
+      Row3
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0003 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0103 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0203 = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(Constraint0005, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0005->setGridX(0);
-        Constraint0005->setGridY(5);
-    endEditCP(Constraint0005, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0105, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0105->setGridX(1);
-        Constraint0105->setGridY(5);
-    endEditCP(Constraint0105, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-    
-    beginEditCP(Constraint0205, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        Constraint0205->setGridX(2);
-        Constraint0205->setGridY(5);
-    endEditCP(Constraint0205, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    Constraint0003->setGridX(0);
+    Constraint0003->setGridY(3);
+
+    Constraint0103->setGridX(1);
+    Constraint0103->setGridY(3);
+
+    Constraint0203->setGridX(2);
+    Constraint0203->setGridY(3);
+
+    /******************************************************
+      Row4
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0004 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0104 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0204 = OSG::GridBagLayoutConstraints::create();
+
+    Constraint0004->setGridX(0);
+    Constraint0004->setGridY(4);
+
+    Constraint0104->setGridX(1);
+    Constraint0104->setGridY(4);
+
+    Constraint0204->setGridX(2);
+    Constraint0204->setGridY(4);
+
+    /******************************************************
+      Row5
+     ******************************************************/
+    GridBagLayoutConstraintsRefPtr Constraint0005 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0105 = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr Constraint0205 = OSG::GridBagLayoutConstraints::create();
+
+    Constraint0005->setGridX(0);
+    Constraint0005->setGridY(5);
+
+    Constraint0105->setGridX(1);
+    Constraint0105->setGridY(5);
+
+    Constraint0205->setGridX(2);
+    Constraint0205->setGridY(5);
 
     //Progress Bar
     _ProgressBarBoundedRangeModel = DefaultBoundedRangeModel::create();
@@ -2073,27 +1952,23 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
     _ProgressBarBoundedRangeModel->setValue(50);
     _ProgressBarBoundedRangeModel->setExtent(0);
 
-	// Create the ProgressBar
-    ProgressBarPtr ExampleProgressBar = ProgressBar::create();
-	
-	// Add its BoundedRangeModel
-	beginEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask | ProgressBar::RangeModelFieldMask);
-        ExampleProgressBar->setEnableProgressString(true);
-        ExampleProgressBar->setIndeterminate(false);
-        ExampleProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
-		ExampleProgressBar->setProgressString("Loading...");
-        ExampleProgressBar->setConstraints(Constraint0101);
-        ExampleProgressBar->setMaxSize(ExampleProgressBar->getPreferredSize());
-        ExampleProgressBar->setRangeModel(_ProgressBarBoundedRangeModel);
-    endEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask | ProgressBar::RangeModelFieldMask);
+    // Create the ProgressBar
+    ProgressBarRefPtr ExampleProgressBar = ProgressBar::create();
+
+    // Add its BoundedRangeModel
+    ExampleProgressBar->setEnableProgressString(true);
+    ExampleProgressBar->setIndeterminate(false);
+    ExampleProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
+    ExampleProgressBar->setProgressString("Loading...");
+    ExampleProgressBar->setConstraints(Constraint0101);
+    ExampleProgressBar->setMaxSize(ExampleProgressBar->getPreferredSize());
+    ExampleProgressBar->setRangeModel(_ProgressBarBoundedRangeModel);
 
 
-	ProgressBarPtr DisabledProgressBar = ProgressBar::Ptr::dcast(ExampleProgressBar->shallowCopy());
-	beginEditCP(DisabledProgressBar, ProgressBar::EnabledFieldMask | ProgressBar::ConstraintsFieldMask | ProgressBar::RangeModelFieldMask);
-        DisabledProgressBar->setConstraints(Constraint0201);
-        DisabledProgressBar->setEnabled(false);
-        DisabledProgressBar->setRangeModel(_ProgressBarBoundedRangeModel);
-	endEditCP(DisabledProgressBar, ProgressBar::EnabledFieldMask | ProgressBar::ConstraintsFieldMask | ProgressBar::RangeModelFieldMask);
+    ProgressBarRefPtr DisabledProgressBar = dynamic_pointer_cast<ProgressBar>(ExampleProgressBar->shallowCopy());
+    DisabledProgressBar->setConstraints(Constraint0201);
+    DisabledProgressBar->setEnabled(false);
+    DisabledProgressBar->setRangeModel(_ProgressBarBoundedRangeModel);
 
     //Scrollbars
     _ScrollBarBoundedRangeModel = DefaultBoundedRangeModel::create();
@@ -2102,36 +1977,28 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
     _ScrollBarBoundedRangeModel->setValue(10);
     _ScrollBarBoundedRangeModel->setExtent(20);
 
-    ScrollBarPtr ExampleVerticalScrollBar = ScrollBar::create();
+    ScrollBarRefPtr ExampleVerticalScrollBar = ScrollBar::create();
     //ExampleScrollPanel->getHorizontalScrollBar()
-    beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask |ScrollBar::RangeModelFieldMask);
-        ExampleVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
-        ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
-        ExampleVerticalScrollBar->setConstraints(Constraint0102);
-        ExampleVerticalScrollBar->setMaxSize(ExampleVerticalScrollBar->getPreferredSize());
-        ExampleVerticalScrollBar->setRangeModel(_ScrollBarBoundedRangeModel);
-    endEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask |ScrollBar::RangeModelFieldMask);
-	
-	ScrollBarPtr DisabledVerticalScrollBar = ScrollBar::Ptr::dcast(ExampleVerticalScrollBar->shallowCopy());
-	beginEditCP(DisabledVerticalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
-        DisabledVerticalScrollBar->setConstraints(Constraint0202);
-        DisabledVerticalScrollBar->setEnabled(false);
-	endEditCP(DisabledVerticalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
+    ExampleVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
+    ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
+    ExampleVerticalScrollBar->setConstraints(Constraint0102);
+    ExampleVerticalScrollBar->setMaxSize(ExampleVerticalScrollBar->getPreferredSize());
+    ExampleVerticalScrollBar->setRangeModel(_ScrollBarBoundedRangeModel);
 
-    ScrollBarPtr ExampleHorizontalScrollBar = ScrollBar::create();
-    beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask |ScrollBar::RangeModelFieldMask);
-        ExampleHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
-        ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
-        ExampleHorizontalScrollBar->setConstraints(Constraint0103);
-        ExampleHorizontalScrollBar->setMaxSize(ExampleHorizontalScrollBar->getPreferredSize());
-        ExampleHorizontalScrollBar->setRangeModel(_ScrollBarBoundedRangeModel);
-    endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask |ScrollBar::RangeModelFieldMask);
-	
-	ScrollBarPtr DisabledHorizontalScrollBar = ScrollBar::Ptr::dcast(ExampleHorizontalScrollBar->shallowCopy());
-	beginEditCP(DisabledHorizontalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
-        DisabledHorizontalScrollBar->setConstraints(Constraint0203);
-        DisabledHorizontalScrollBar->setEnabled(false);
-	endEditCP(DisabledHorizontalScrollBar, ScrollBar::EnabledFieldMask | ScrollBar::ConstraintsFieldMask);
+    ScrollBarRefPtr DisabledVerticalScrollBar = dynamic_pointer_cast<ScrollBar>(ExampleVerticalScrollBar->shallowCopy());
+    DisabledVerticalScrollBar->setConstraints(Constraint0202);
+    DisabledVerticalScrollBar->setEnabled(false);
+
+    ScrollBarRefPtr ExampleHorizontalScrollBar = ScrollBar::create();
+    ExampleHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
+    ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
+    ExampleHorizontalScrollBar->setConstraints(Constraint0103);
+    ExampleHorizontalScrollBar->setMaxSize(ExampleHorizontalScrollBar->getPreferredSize());
+    ExampleHorizontalScrollBar->setRangeModel(_ScrollBarBoundedRangeModel);
+
+    ScrollBarRefPtr DisabledHorizontalScrollBar = dynamic_pointer_cast<ScrollBar>(ExampleHorizontalScrollBar->shallowCopy());
+    DisabledHorizontalScrollBar->setConstraints(Constraint0203);
+    DisabledHorizontalScrollBar->setEnabled(false);
 
     //The Slider
     _SliderBoundedRangeModel = DefaultBoundedRangeModel::create();
@@ -2139,150 +2006,123 @@ PanelPtr StatePanelCreator::createAdvancedPanel(void)
     _SliderBoundedRangeModel->setMaximum(110);
     _SliderBoundedRangeModel->setValue(60);
     _SliderBoundedRangeModel->setExtent(0);
-    
+
     //Create the slider
-    LabelPtr TempLabel;
-    SliderPtr TheSliderVertical = Slider::create();
-    beginEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask |Slider::RangeModelFieldMask);
-        TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
-        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Min"); endEditCP(TempLabel, Label::TextFieldMask);
-        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel->getMinimum()] = TempLabel;
-        
-        TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
-        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Low"); endEditCP(TempLabel, Label::TextFieldMask);
-        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel->getMinimum() + (_SliderBoundedRangeModel->getMaximum() - _SliderBoundedRangeModel->getMinimum())/10] = TempLabel;
+    LabelRefPtr TempLabel;
+    SliderRefPtr TheSliderVertical = Slider::create();
+    TempLabel = dynamic_pointer_cast<Label>(TheSliderVertical->getLabelPrototype()->shallowCopy());
+    TheSliderVertical->editLabelMap()[_SliderBoundedRangeModel->getMinimum()] = TempLabel;
 
-        TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
-        beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Max"); endEditCP(TempLabel, Label::TextFieldMask);
-        TheSliderVertical->getLabelMap()[_SliderBoundedRangeModel->getMaximum()] = TempLabel;
+    TempLabel = dynamic_pointer_cast<Label>(TheSliderVertical->getLabelPrototype()->shallowCopy());
+    TheSliderVertical->editLabelMap()[_SliderBoundedRangeModel->getMinimum() + (_SliderBoundedRangeModel->getMaximum() - _SliderBoundedRangeModel->getMinimum())/10] = TempLabel;
+
+    TempLabel = dynamic_pointer_cast<Label>(TheSliderVertical->getLabelPrototype()->shallowCopy());
+    TheSliderVertical->editLabelMap()[_SliderBoundedRangeModel->getMaximum()] = TempLabel;
 
 
-        TheSliderVertical->setPreferredSize(Vec2f(100, 300));
-        TheSliderVertical->setSnapToTicks(true);
-        TheSliderVertical->setMajorTickSpacing(10);
-        TheSliderVertical->setMinorTickSpacing(5);
-        TheSliderVertical->setOrientation(Slider::VERTICAL_ORIENTATION);
-        TheSliderVertical->setInverted(true);
-        TheSliderVertical->setDrawLabels(true);
-        TheSliderVertical->setConstraints(Constraint0104);
-        TheSliderVertical->setMaxSize(TheSliderVertical->getPreferredSize());
-        TheSliderVertical->setRangeModel(_SliderBoundedRangeModel);
-    endEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask |Slider::RangeModelFieldMask);
-	
-	SliderPtr DisabledVerticalSlider = Slider::Ptr::dcast(TheSliderVertical->shallowCopy());
-	beginEditCP(DisabledVerticalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
-        DisabledVerticalSlider->setConstraints(Constraint0204);
-        DisabledVerticalSlider->setEnabled(false);
-	endEditCP(DisabledVerticalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
-    
-    SliderPtr TheSliderHorizontal = Slider::create();
-    beginEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask |Slider::RangeModelFieldMask);
-        TheSliderHorizontal->setPreferredSize(Vec2f(300, 100));
-        TheSliderHorizontal->setSnapToTicks(false);
-        TheSliderHorizontal->setMajorTickSpacing(10);
-        TheSliderHorizontal->setMinorTickSpacing(5);
-        TheSliderHorizontal->setOrientation(Slider::HORIZONTAL_ORIENTATION);
-        TheSliderHorizontal->setInverted(false);
-        TheSliderHorizontal->setDrawLabels(true);
-        TheSliderHorizontal->setConstraints(Constraint0105);
-        TheSliderHorizontal->setMaxSize(TheSliderHorizontal->getPreferredSize());
-        TheSliderHorizontal->setRangeModel(_SliderBoundedRangeModel);
-    endEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask |Slider::RangeModelFieldMask);
-	
-	SliderPtr DisabledHorizontalSlider = Slider::Ptr::dcast(TheSliderHorizontal->shallowCopy());
-	beginEditCP(DisabledHorizontalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
-        DisabledHorizontalSlider->setConstraints(Constraint0205);
-        DisabledHorizontalSlider->setEnabled(false);
-	endEditCP(DisabledHorizontalSlider, Slider::EnabledFieldMask | Slider::ConstraintsFieldMask);
+    TheSliderVertical->setPreferredSize(Vec2f(100, 300));
+    TheSliderVertical->setSnapToTicks(true);
+    TheSliderVertical->setMajorTickSpacing(10);
+    TheSliderVertical->setMinorTickSpacing(5);
+    TheSliderVertical->setOrientation(Slider::VERTICAL_ORIENTATION);
+    TheSliderVertical->setInverted(true);
+    TheSliderVertical->setDrawLabels(true);
+    TheSliderVertical->setConstraints(Constraint0104);
+    TheSliderVertical->setMaxSize(TheSliderVertical->getPreferredSize());
+    TheSliderVertical->setRangeModel(_SliderBoundedRangeModel);
 
-	//Labels
-    LabelPtr labelEnabled = osg::Label::create();
-    beginEditCP(labelEnabled, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        labelEnabled->setText("Enabled");
-        labelEnabled->setConstraints(Constraint0100);
-        labelEnabled->setBackground(NullFC);
-        labelEnabled->setBorder(NullFC);
-    endEditCP(labelEnabled, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-	
-    LabelPtr labelDisabled = osg::Label::create();
-    beginEditCP(labelDisabled, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        labelDisabled->setText("Disabled");
-        labelDisabled->setConstraints(Constraint0200);
-        labelDisabled->setBackground(NullFC);
-        labelDisabled->setBorder(NullFC);
-    endEditCP(labelDisabled, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    SliderRefPtr DisabledVerticalSlider = dynamic_pointer_cast<Slider>(TheSliderVertical->shallowCopy());
+    DisabledVerticalSlider->setConstraints(Constraint0204);
+    DisabledVerticalSlider->setEnabled(false);
 
-    LabelPtr labelProgressBar = osg::Label::create();
-    beginEditCP(labelProgressBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        labelProgressBar->setText("Progress Bars");
-        labelProgressBar->setConstraints(Constraint0001);
-        labelProgressBar->setBackground(NullFC);
-        labelProgressBar->setBorder(NullFC);
-    endEditCP(labelProgressBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-	
-    LabelPtr labelVerticalScrolBar = osg::Label::create();
-    beginEditCP(labelVerticalScrolBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        labelVerticalScrolBar->setText("Vertical Scroll Bars");
-        labelVerticalScrolBar->setConstraints(Constraint0002);
-        labelVerticalScrolBar->setBackground(NullFC);
-        labelVerticalScrolBar->setBorder(NullFC);
-    endEditCP(labelVerticalScrolBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-	
-    LabelPtr labelHorizontalScrolBar = osg::Label::create();
-    beginEditCP(labelHorizontalScrolBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        labelHorizontalScrolBar->setText("Horizontal Scroll Bars");
-        labelHorizontalScrolBar->setConstraints(Constraint0003);
-        labelHorizontalScrolBar->setBackground(NullFC);
-        labelHorizontalScrolBar->setBorder(NullFC);
-    endEditCP(labelHorizontalScrolBar, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-	
-    LabelPtr labelVerticalSlider = osg::Label::create();
-    beginEditCP(labelVerticalSlider, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        labelVerticalSlider->setText("Vertical Slider");
-        labelVerticalSlider->setConstraints(Constraint0004);
-        labelVerticalSlider->setBackground(NullFC);
-        labelVerticalSlider->setBorder(NullFC);
-    endEditCP(labelVerticalSlider, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-	
-    LabelPtr labelHorizontalSlider = osg::Label::create();
-    beginEditCP(labelHorizontalSlider, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
-        labelHorizontalSlider->setText("Horizontal Slider");
-        labelHorizontalSlider->setConstraints(Constraint0005);
-        labelHorizontalSlider->setBackground(NullFC);
-        labelHorizontalSlider->setBorder(NullFC);
-    endEditCP(labelHorizontalSlider, Label::TextFieldMask | Label::ConstraintsFieldMask | Label::BackgroundFieldMask);
+    SliderRefPtr TheSliderHorizontal = Slider::create();
+    TheSliderHorizontal->setPreferredSize(Vec2f(300, 100));
+    TheSliderHorizontal->setSnapToTicks(false);
+    TheSliderHorizontal->setMajorTickSpacing(10);
+    TheSliderHorizontal->setMinorTickSpacing(5);
+    TheSliderHorizontal->setOrientation(Slider::HORIZONTAL_ORIENTATION);
+    TheSliderHorizontal->setInverted(false);
+    TheSliderHorizontal->setDrawLabels(true);
+    TheSliderHorizontal->setConstraints(Constraint0105);
+    TheSliderHorizontal->setMaxSize(TheSliderHorizontal->getPreferredSize());
+    TheSliderHorizontal->setRangeModel(_SliderBoundedRangeModel);
+
+    SliderRefPtr DisabledHorizontalSlider = dynamic_pointer_cast<Slider>(TheSliderHorizontal->shallowCopy());
+    DisabledHorizontalSlider->setConstraints(Constraint0205);
+    DisabledHorizontalSlider->setEnabled(false);
+
+    //Labels
+    LabelRefPtr labelEnabled = OSG::Label::create();
+    labelEnabled->setText("Enabled");
+    labelEnabled->setConstraints(Constraint0100);
+    labelEnabled->setBackground(NULL);
+    labelEnabled->setBorder(NULL);
+
+    LabelRefPtr labelDisabled = OSG::Label::create();
+    labelDisabled->setText("Disabled");
+    labelDisabled->setConstraints(Constraint0200);
+    labelDisabled->setBackground(NULL);
+    labelDisabled->setBorder(NULL);
+
+    LabelRefPtr labelProgressBar = OSG::Label::create();
+    labelProgressBar->setText("Progress Bars");
+    labelProgressBar->setConstraints(Constraint0001);
+    labelProgressBar->setBackground(NULL);
+    labelProgressBar->setBorder(NULL);
+
+    LabelRefPtr labelVerticalScrolBar = OSG::Label::create();
+    labelVerticalScrolBar->setText("Vertical Scroll Bars");
+    labelVerticalScrolBar->setConstraints(Constraint0002);
+    labelVerticalScrolBar->setBackground(NULL);
+    labelVerticalScrolBar->setBorder(NULL);
+
+    LabelRefPtr labelHorizontalScrolBar = OSG::Label::create();
+    labelHorizontalScrolBar->setText("Horizontal Scroll Bars");
+    labelHorizontalScrolBar->setConstraints(Constraint0003);
+    labelHorizontalScrolBar->setBackground(NULL);
+    labelHorizontalScrolBar->setBorder(NULL);
+
+    LabelRefPtr labelVerticalSlider = OSG::Label::create();
+    labelVerticalSlider->setText("Vertical Slider");
+    labelVerticalSlider->setConstraints(Constraint0004);
+    labelVerticalSlider->setBackground(NULL);
+    labelVerticalSlider->setBorder(NULL);
+
+    LabelRefPtr labelHorizontalSlider = OSG::Label::create();
+    labelHorizontalSlider->setText("Horizontal Slider");
+    labelHorizontalSlider->setConstraints(Constraint0005);
+    labelHorizontalSlider->setBackground(NULL);
+    labelHorizontalSlider->setBorder(NULL);
 
     //The Panel
-    PanelPtr AdvancedPanel = Panel::create();
+    PanelRefPtr AdvancedPanel = Panel::create();
 
-    beginEditCP(AdvancedPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
-        AdvancedPanel->getChildren().push_back(labelEnabled);
-        AdvancedPanel->getChildren().push_back(labelDisabled);
-        AdvancedPanel->getChildren().push_back(labelProgressBar);
-        AdvancedPanel->getChildren().push_back(labelVerticalScrolBar);
-        AdvancedPanel->getChildren().push_back(labelHorizontalScrolBar);
-        AdvancedPanel->getChildren().push_back(labelVerticalSlider);
-        AdvancedPanel->getChildren().push_back(labelHorizontalSlider);
-        AdvancedPanel->getChildren().push_back(ExampleProgressBar);
-        AdvancedPanel->getChildren().push_back(ExampleVerticalScrollBar);
-        AdvancedPanel->getChildren().push_back(ExampleHorizontalScrollBar);
-        AdvancedPanel->getChildren().push_back(TheSliderVertical);
-        AdvancedPanel->getChildren().push_back(TheSliderHorizontal);
-        AdvancedPanel->getChildren().push_back(DisabledProgressBar);
-        AdvancedPanel->getChildren().push_back(DisabledVerticalScrollBar);
-        AdvancedPanel->getChildren().push_back(DisabledHorizontalScrollBar);
-        AdvancedPanel->getChildren().push_back(DisabledVerticalSlider);
-        AdvancedPanel->getChildren().push_back(DisabledHorizontalSlider);
-        AdvancedPanel->setLayout(AdvancedPanelLayout);
-        AdvancedPanel->setPreferredSize(Vec2f(500,800));
-    endEditCP(AdvancedPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask | Panel::PreferredSizeFieldMask);
+    AdvancedPanel->pushToChildren(labelEnabled);
+    AdvancedPanel->pushToChildren(labelDisabled);
+    AdvancedPanel->pushToChildren(labelProgressBar);
+    AdvancedPanel->pushToChildren(labelVerticalScrolBar);
+    AdvancedPanel->pushToChildren(labelHorizontalScrolBar);
+    AdvancedPanel->pushToChildren(labelVerticalSlider);
+    AdvancedPanel->pushToChildren(labelHorizontalSlider);
+    AdvancedPanel->pushToChildren(ExampleProgressBar);
+    AdvancedPanel->pushToChildren(ExampleVerticalScrollBar);
+    AdvancedPanel->pushToChildren(ExampleHorizontalScrollBar);
+    AdvancedPanel->pushToChildren(TheSliderVertical);
+    AdvancedPanel->pushToChildren(TheSliderHorizontal);
+    AdvancedPanel->pushToChildren(DisabledProgressBar);
+    AdvancedPanel->pushToChildren(DisabledVerticalScrollBar);
+    AdvancedPanel->pushToChildren(DisabledHorizontalScrollBar);
+    AdvancedPanel->pushToChildren(DisabledVerticalSlider);
+    AdvancedPanel->pushToChildren(DisabledHorizontalSlider);
+    AdvancedPanel->setLayout(AdvancedPanelLayout);
+    AdvancedPanel->setPreferredSize(Vec2f(500,800));
     return AdvancedPanel;
 }
 
-PanelPtr StatePanelCreator::createListPanel(void)
+PanelRefPtr StatePanelCreator::createListPanel(void)
 {
     // Add data to it
-	_ExampleListModel = DefaultListModel::create();
+    _ExampleListModel = DefaultListModel::create();
     _ExampleListModel->pushBack(boost::any(std::string("Red")));
     _ExampleListModel->pushBack(boost::any(std::string("Green")));
     _ExampleListModel->pushBack(boost::any(std::string("Blue")));
@@ -2298,84 +2138,75 @@ PanelPtr StatePanelCreator::createListPanel(void)
     _ExampleListModel->pushBack(boost::any(std::string("Violet")));
     _ExampleListModel->pushBack(boost::any(std::string("Mauve")));
     _ExampleListModel->pushBack(boost::any(std::string("Peach")));
-    
-    ListPtr ExampleList = List::create();
-	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
-        ExampleList->setPreferredSize(Vec2f(200, 300));
-        ExampleList->setOrientation(List::VERTICAL_ORIENTATION);
-        //ExampleList->setOrientation(List::HORIZONTAL_ORIENTATION);
-		ExampleList->setModel(_ExampleListModel);
-    endEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
+
+    ListRefPtr ExampleList = List::create();
+    ExampleList->setPreferredSize(Vec2f(200, 300));
+    ExampleList->setOrientation(List::VERTICAL_ORIENTATION);
+    //ExampleList->setOrientation(List::HORIZONTAL_ORIENTATION);
+    ExampleList->setModel(_ExampleListModel);
 
     ExampleList->setSelectionModel(_SelectionModel);
 
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
-    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
-        ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
+    ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
+    ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     ExampleScrollPanel->setViewComponent(ExampleList);
 
     //The Panel
-    PanelPtr ListPanel = Panel::create();
-    beginEditCP(ListPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
-        ListPanel->getChildren().push_back(ExampleScrollPanel);
-        ListPanel->setLayout(FlowLayout::create());
-    endEditCP(ListPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+    PanelRefPtr ListPanel = Panel::create();
+    ListPanel->pushToChildren(ExampleScrollPanel);
+    LayoutUnrecPtr ListPanelLayout = FlowLayout::create();
+    ListPanel->setLayout(ListPanelLayout);
     return ListPanel;
 }
 
-PanelPtr StatePanelCreator::createTablePanel(void)
+PanelRefPtr StatePanelCreator::createTablePanel(void)
 {
-    // Create TablePtr
-    TablePtr TheTable = Table::create();
-    beginEditCP(TheTable, Table::PreferredSizeFieldMask | Table::ModelFieldMask);
-        TheTable->setPreferredSize(Vec2f(500, 500));
-        TheTable->setModel(ExampleTableModel::create());
-    endEditCP(TheTable, Table::PreferredSizeFieldMask | Table::ModelFieldMask);
+    // Create TableRefPtr
+    TableRefPtr TheTable = Table::create();
+    TheTable->setPreferredSize(Vec2f(500, 500));
+    TableModelUnrecPtr TheExampleTableModel = ExampleTableModel::create();
+    TheTable->setModel(TheExampleTableModel);
     TheTable->updateLayout();
 
     /******************************************************
 
-        Create a ScrollPanel to display the Table
-        within (see 27ScrollPanel for more 
-        information).
+      Create a ScrollPanel to display the Table
+      within (see 27ScrollPanel for more 
+      information).
 
-    ******************************************************/
-    ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
-    beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        TheScrollPanel->setPreferredSize(Vec2f(402,200));
-        TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+     ******************************************************/
+    ScrollPanelRefPtr TheScrollPanel = ScrollPanel::create();
+    TheScrollPanel->setPreferredSize(Vec2f(402,200));
+    TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     TheScrollPanel->setViewComponent(TheTable);
-        
+
     //The Panel
-    PanelPtr TablePanel = Panel::create();
-    beginEditCP(TablePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
-        TablePanel->getChildren().push_back(TheScrollPanel);
-        TablePanel->setLayout(FlowLayout::create());
-    endEditCP(TablePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+    PanelRefPtr TablePanel = Panel::create();
+    TablePanel->pushToChildren(TheScrollPanel);
+    LayoutUnrecPtr TablePanelLayout = FlowLayout::create();
+    TablePanel->setLayout(TablePanelLayout);
 
     return TablePanel;
 }
 
-PanelPtr StatePanelCreator::createTreePanel(void)
+PanelRefPtr StatePanelCreator::createTreePanel(void)
 {
-	TreePtr TheTree;
+    TreeRefPtr TheTree;
 
-    DefaultMutableTreeNodePtr ANode = DefaultMutableTreeNode::create() ;
-    DefaultMutableTreeNodePtr BNode = DefaultMutableTreeNode::create() ;
-    DefaultMutableTreeNodePtr CNode = DefaultMutableTreeNode::create() ;
-    DefaultMutableTreeNodePtr DNode = DefaultMutableTreeNode::create() ;
-    DefaultMutableTreeNodePtr ENode = DefaultMutableTreeNode::create() ;
-    DefaultMutableTreeNodePtr FNode = DefaultMutableTreeNode::create() ;
-    DefaultMutableTreeNodePtr GNode = DefaultMutableTreeNode::create() ;
-    DefaultMutableTreeNodePtr HNode = DefaultMutableTreeNode::create() ;
-    DefaultMutableTreeNodePtr INode = DefaultMutableTreeNode::create() ;
-    DefaultMutableTreeNodePtr JNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr ANode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr BNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr CNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr DNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr ENode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr FNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr GNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr HNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr INode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodeRefPtr JNode = DefaultMutableTreeNode::create() ;
 
     ANode->setUserObject(boost::any(std::string("A")));
     BNode->setUserObject(boost::any(std::string("B")));
@@ -2391,47 +2222,43 @@ PanelPtr StatePanelCreator::createTreePanel(void)
     //A
     ANode->insert(BNode);
     ANode->insert(CNode);
-    
+
     //B
     BNode->insert(DNode);
     BNode->insert(ENode);
-    
+
     //C
     CNode->insert(FNode);
     CNode->insert(GNode);
-    
+
     //D
     DNode->insert(HNode);
     DNode->insert(INode);
 
-	//Tree Model
+    //Tree Model
     TheTreeModel = DefaultTreeModel::create();
     TheTreeModel->setRoot(ANode);
-    
+
     //Create the Tree
     TheTree = Tree::create();
 
-    beginEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
-        TheTree->setPreferredSize(Vec2f(100, 500));
-        TheTree->setModel(TheTreeModel);
-    endEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
+    TheTree->setPreferredSize(Vec2f(100.0f, 500.0f));
+    TheTree->setModel(TheTreeModel);
 
     //Layout Expansion
     TheTree->expandPath(TheTreeModel->getPath(ANode));
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
-    beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        TheScrollPanel->setPreferredSize(Vec2s(200,300));
-    endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    ScrollPanelRefPtr TheScrollPanel = ScrollPanel::create();
+    TheScrollPanel->setPreferredSize(Vec2f(200.0f,300.0f));
     TheScrollPanel->setViewComponent(TheTree);
-        
+
     //The Panel
-    PanelPtr TreePanel = Panel::create();
-    beginEditCP(TreePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
-        TreePanel->getChildren().push_back(TheScrollPanel);
-        TreePanel->setLayout(FlowLayout::create());
-    endEditCP(TreePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+    PanelRefPtr TreePanel = Panel::create();
+    TreePanel->pushToChildren(TheScrollPanel);
+    LayoutUnrecPtr TreePanelLayout = FlowLayout::create();
+    TreePanel->setLayout(TreePanelLayout);
 
     return TreePanel;
 }
+
