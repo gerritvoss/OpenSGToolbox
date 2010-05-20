@@ -80,7 +80,7 @@ void FilePathAttachment::initMethod(InitPhase ePhase)
 }
 
 
-const BoostPath* FilePathAttachment::getFilePath(      AttachmentContainerUnrecPtr  container)
+const BoostPath* FilePathAttachment::getFilePath(      const AttachmentContainer*  container)
 {
     if(container == NULL)
         return NULL;
@@ -102,8 +102,8 @@ const BoostPath* FilePathAttachment::getFilePath(      AttachmentContainerUnrecP
     return &(PathAttachment->getPath());
 }
 
-void   FilePathAttachment::setFilePath(      AttachmentContainerUnrecPtr  container, 
-        const BoostPath            &ThePath     )
+void   FilePathAttachment::setFilePath(      AttachmentContainer*  container, 
+                                             const BoostPath            &ThePath     )
 {
     if(container == NULL)
     {

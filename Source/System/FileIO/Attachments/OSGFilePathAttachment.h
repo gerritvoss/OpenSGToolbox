@@ -82,11 +82,11 @@ class OSG_TBFILEIO_DLLMAPPING FilePathAttachment : public FilePathAttachmentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static const BoostPath* getFilePath(      AttachmentContainerUnrecPtr  container);
+    static const BoostPath* getFilePath(const AttachmentContainer*  container);
     static FieldContainerUnrecPtr loadFromFilePath(BoostPath &LoadFilePath, const FieldContainerType &FCType);
 
-    static void   setFilePath(      AttachmentContainerUnrecPtr  container, 
-                         const BoostPath            &ThePath     );
+    static void   setFilePath(      AttachmentContainer*  container, 
+                                    const BoostPath            &ThePath     );
 
      static bool registerHandler(const FieldContainerType& TheType, FileAttachmentHandler TheHandler);
      static bool unregisterHandler(const FieldContainerType& TheType);
