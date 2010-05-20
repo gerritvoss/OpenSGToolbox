@@ -67,23 +67,23 @@ public:
 
     void traverse(NodeUnrecPtr root);
 
-    const std::vector<const PhysicsHandler*>&  getFoundHandlers(void) const;
-    const std::vector<const PhysicsWorld*>&    getFoundWorlds(void) const;
-    const std::vector<const PhysicsGeom*>&     getFoundGeoms(void) const;
-    const std::vector<const PhysicsSpace*>&    getFoundSpaces(void) const;
-    const std::vector<const PhysicsBody*>&     getFoundBodies(void) const;
-    const std::vector<const PhysicsJoint*>&    getFoundJoints(void) const;
+    const std::vector<PhysicsHandler*>&  getFoundHandlers(void) const;
+    const std::vector<PhysicsWorld*>&    getFoundWorlds(void) const;
+    const std::vector<PhysicsGeom*>&     getFoundGeoms(void) const;
+    const std::vector<PhysicsSpace*>&    getFoundSpaces(void) const;
+    const std::vector<PhysicsBody*>&     getFoundBodies(void) const;
+    const std::vector<PhysicsJoint*>&    getFoundJoints(void) const;
 
 private:
 
     Action::ResultE check(Node*& node);
 
-    std::vector<const PhysicsHandler*>  _FoundHandlers;
-    std::vector<const PhysicsWorld*>  _FoundWorlds;
-    std::vector<const PhysicsGeom*>  _FoundGeoms;
-    std::vector<const PhysicsSpace*>  _FoundSpaces;
-    std::vector<const PhysicsBody*>  _FoundBodies;
-    std::vector<const PhysicsJoint*>  _FoundJoints;
+    std::vector<PhysicsHandler*>  _FoundHandlers;
+    std::vector<PhysicsWorld*>  _FoundWorlds;
+    std::vector<PhysicsGeom*>  _FoundGeoms;
+    std::vector<PhysicsSpace*>  _FoundSpaces;
+    std::vector<PhysicsBody*>  _FoundBodies;
+    std::vector<PhysicsJoint*>  _FoundJoints;
 };
 
 Vec3f OSG_CONTRIBPHYSICS_DLLMAPPING calcMinGeometryBounds(GeometryUnrecPtr geo);
