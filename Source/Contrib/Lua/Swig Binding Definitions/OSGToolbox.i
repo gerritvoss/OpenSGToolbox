@@ -97,7 +97,7 @@ namespace OSG {
     {
         static WindowEventProducerRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::WindowEventProducer>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::WindowEventProducer>(oIn);
         }
     };
     
@@ -283,7 +283,7 @@ namespace OSG {
     {
         static PhysicsHandlerRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::PhysicsHandler>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::PhysicsHandler>(oIn);
         }
     };
 
@@ -321,7 +321,7 @@ namespace OSG {
     {
         static PhysicsWorldRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::PhysicsWorld>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::PhysicsWorld>(oIn);
         }
     };
 
@@ -363,7 +363,7 @@ namespace OSG {
     {
         static PhysicsBodyRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::PhysicsBody>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::PhysicsBody>(oIn);
         }
     };
 
@@ -476,7 +476,7 @@ namespace OSG {
     {
         static PhysicsSpaceRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::PhysicsSpace>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::PhysicsSpace>(oIn);
         }
     };
 
@@ -697,7 +697,7 @@ namespace OSG {
     {
         static ParticleSystemManagerRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::ParticleSystemManager>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::ParticleSystemManager>(oIn);
         }
     };
     
@@ -812,7 +812,7 @@ namespace OSG {
     {
         static ComponentRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Component>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Component>(oIn);
         }
     };
 
@@ -919,7 +919,7 @@ namespace OSG {
     {
         static SoundRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Sound>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Sound>(oIn);
         }
     };
     
@@ -1038,7 +1038,7 @@ namespace OSG {
     {
         static SoundGroupRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::SoundGroup>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::SoundGroup>(oIn);
         }
     };
 
@@ -1060,7 +1060,7 @@ namespace OSG {
     {
         static AnimationRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Animation>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Animation>(oIn);
         }
     };
     
@@ -1153,7 +1153,7 @@ namespace OSG {
     {
         static VideoWrapperRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::VideoWrapper>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::VideoWrapper>(oIn);
         }
     };
     
@@ -1205,7 +1205,7 @@ namespace OSG {
     {
         static Distribution1DRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Distribution1D>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Distribution1D>(oIn);
         }
     };
     
@@ -1242,7 +1242,7 @@ namespace OSG {
     {
         static Distribution2DRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Distribution2D>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Distribution2D>(oIn);
         }
     };
     
@@ -1278,7 +1278,7 @@ namespace OSG {
     {
         static Distribution3DRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Distribution3D>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Distribution3D>(oIn);
         }
     };
 }
