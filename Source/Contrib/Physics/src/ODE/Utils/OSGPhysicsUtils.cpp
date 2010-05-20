@@ -97,38 +97,38 @@ Action::ResultE PhysicsAttachmentsFinder::check(Node*& node)
 {
     AttachmentUnrecPtr Att;
     //Loop through all of the attachments on this node
-    for(AttachmentMap::const_iterator MapItor(node->getSFAttachments()->getValue().begin())
-            ; MapItor != node->getSFAttachments()->getValue().end()
+    for(AttachmentMap::iterator MapItor(const_cast<AttachmentContainer::SFAttachmentObjPtrMap*>(node->getSFAttachments())->getValue().begin())
+            ; MapItor != const_cast<AttachmentContainer::SFAttachmentObjPtrMap*>(node->getSFAttachments())->getValue().end()
             ; ++MapItor)
     {
         //Check for Physics Handlers
         if(MapItor->second->getType().isDerivedFrom(PhysicsHandler::getClassType()))
         {
-            _FoundHandlers.push_back(dynamic_cast<const PhysicsHandler*>(MapItor->second));
+            _FoundHandlers.push_back(dynamic_cast<PhysicsHandler*>(MapItor->second));
         }
 
         //Check for Physics Worlds
         if(MapItor->second->getType().isDerivedFrom(PhysicsWorld::getClassType()))
         {
-            _FoundWorlds.push_back(dynamic_cast<const PhysicsWorld*>(MapItor->second));
+            _FoundWorlds.push_back(dynamic_cast<PhysicsWorld*>(MapItor->second));
         }
 
         //Check for Physics Geoms
         if(MapItor->second->getType().isDerivedFrom(PhysicsGeom::getClassType()))
         {
-            _FoundGeoms.push_back(dynamic_cast<const PhysicsGeom*>(MapItor->second));
+            _FoundGeoms.push_back(dynamic_cast<PhysicsGeom*>(MapItor->second));
         }
 
         //Check for Physics Spaces
         if(MapItor->second->getType().isDerivedFrom(PhysicsSpace::getClassType()))
         {
-            _FoundSpaces.push_back(dynamic_cast<const PhysicsSpace*>(MapItor->second));
+            _FoundSpaces.push_back(dynamic_cast<PhysicsSpace*>(MapItor->second));
         }
 
         //Check for Physics Bodies
         if(MapItor->second->getType().isDerivedFrom(PhysicsBody::getClassType()))
         {
-            _FoundBodies.push_back(dynamic_cast<const PhysicsBody*>(MapItor->second));
+            _FoundBodies.push_back(dynamic_cast<PhysicsBody*>(MapItor->second));
 
             //Get the Physics Joints
             std::vector<PhysicsJointUnrecPtr> Joints(dynamic_cast<PhysicsBody*>(MapItor->second)->getJoints());
@@ -142,32 +142,32 @@ Action::ResultE PhysicsAttachmentsFinder::check(Node*& node)
     return Action::Continue;        
 }
 
-const std::vector<const PhysicsHandler*>&  PhysicsAttachmentsFinder::getFoundHandlers(void) const
+const std::vector<PhysicsHandler*>&  PhysicsAttachmentsFinder::getFoundHandlers(void) const
 {
     return _FoundHandlers;        
 }
 
-const std::vector<const PhysicsWorld*>&    PhysicsAttachmentsFinder::getFoundWorlds(void) const
+const std::vector<PhysicsWorld*>&    PhysicsAttachmentsFinder::getFoundWorlds(void) const
 {
     return _FoundWorlds;        
 }
 
-const std::vector<const PhysicsGeom*>&     PhysicsAttachmentsFinder::getFoundGeoms(void) const
+const std::vector<PhysicsGeom*>&     PhysicsAttachmentsFinder::getFoundGeoms(void) const
 {
     return _FoundGeoms;        
 }
 
-const std::vector<const PhysicsSpace*>&    PhysicsAttachmentsFinder::getFoundSpaces(void) const
+const std::vector<PhysicsSpace*>&    PhysicsAttachmentsFinder::getFoundSpaces(void) const
 {
     return _FoundSpaces;        
 }
 
-const std::vector<const PhysicsBody*>&     PhysicsAttachmentsFinder::getFoundBodies(void) const
+const std::vector<PhysicsBody*>&     PhysicsAttachmentsFinder::getFoundBodies(void) const
 {
     return _FoundBodies;        
 }
 
-const std::vector<const PhysicsJoint*>&    PhysicsAttachmentsFinder::getFoundJoints(void) const
+const std::vector<PhysicsJoint*>&    PhysicsAttachmentsFinder::getFoundJoints(void) const
 {
     return _FoundJoints;        
 }
