@@ -104,7 +104,7 @@ bool replacement(RawInterpFuncion& InterpFunc,
 
 //Matrix Replace
 template<class SFieldTypeT>
-bool OSG_TBANIMATION_DLLMAPPING matrixReplacement(RawInterpFuncion& InterpFunc,
+bool matrixReplacement(RawInterpFuncion& InterpFunc,
                               const Real32& time,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
@@ -182,7 +182,7 @@ std::string OSG_TBANIMATION_DLLMAPPING lerpAll( const std::string& From, const s
 
 //Generic Overwrite-only replace
 template<class SFieldTypeT,class MFieldTypeT>
-bool OSG_TBANIMATION_DLLMAPPING replacementOverwriteOnly(RawInterpFuncion& InterpFunc,
+bool replacementOverwriteOnly(RawInterpFuncion& InterpFunc,
                               const Real32& time,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
