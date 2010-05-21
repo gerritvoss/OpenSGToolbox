@@ -3093,7 +3093,7 @@ namespace OSG {
         bool isAttachment(void) const;
 
 
-        FieldContainer *getPrototype    (void) const;
+        FieldContainerRefPtr getPrototype    (void) const;
         std::string     getFcdXML       (void) const;
         std::string     getDocumentation(void) const;
 

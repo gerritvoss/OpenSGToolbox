@@ -28049,7 +28049,7 @@ fail:
 static int _wrap_FieldContainerType_getPrototype(lua_State* L) {
   int SWIG_arg = 0;
   OSG::FieldContainerType *arg1 = (OSG::FieldContainerType *) 0 ;
-  OSG::FieldContainer *result = 0 ;
+  OSG::FieldContainerRefPtr result;
   
   SWIG_check_num_args("getPrototype",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPrototype",1,"OSG::FieldContainerType const *");
@@ -28058,8 +28058,11 @@ static int _wrap_FieldContainerType_getPrototype(lua_State* L) {
     SWIG_fail_ptr("FieldContainerType_getPrototype",1,SWIGTYPE_p_OSG__FieldContainerType);
   }
   
-  result = (OSG::FieldContainer *)((OSG::FieldContainerType const *)arg1)->getPrototype();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__FieldContainer,0); SWIG_arg++; 
+  result = ((OSG::FieldContainerType const *)arg1)->getPrototype();
+  {
+    OSG::FieldContainerRefPtr * resultptr = new OSG::FieldContainerRefPtr((const OSG::FieldContainerRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1); SWIG_arg++;
+  }
   return SWIG_arg;
   
   if(0) SWIG_fail;
