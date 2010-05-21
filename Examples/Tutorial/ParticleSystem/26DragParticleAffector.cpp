@@ -78,7 +78,7 @@ class TutorialKeyListener : public KeyListener
             ExampleDragAffector->setMagnitude(OSG::osgClamp<Real32>(1.0f, ExampleDragAffector->getMagnitude() * 1.2, 1000.0f));
         }
 
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             TutorialWindow->closeWindow();
         }

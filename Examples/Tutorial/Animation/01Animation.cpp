@@ -47,6 +47,8 @@ void setupAnimation(void);
 void display(void);
 void reshape(Vec2f Size);
 
+void printAllStats(void);
+
 class TutorialAnimationListener : public AnimationListener
 {
 public:
@@ -107,7 +109,7 @@ public:
 
    virtual void keyPressed(const KeyEventUnrecPtr e)
    {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
            TutorialWindow->closeWindow();
        }
@@ -194,6 +196,7 @@ int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
+    printAllStats();
 
     {
 
@@ -348,8 +351,8 @@ void setupAnimation(void)
     //TheAnimator->setKeyframeSequence(VectorKeyframes);
     //TheAnimator->setKeyframeSequence(RotationKeyframes);
     //TheAnimator->setKeyframeSequence(ColorKeyframes);
-    //TheAnimator->setKeyframeSequence(TransformationKeyframes);
-    TheAnimator->setKeyframeSequence(NumberKeyframes);
+    TheAnimator->setKeyframeSequence(TransformationKeyframes);
+    //TheAnimator->setKeyframeSequence(NumberKeyframes);
     
     //Animation
     TheAnimation = FieldAnimation::create();
@@ -360,13 +363,26 @@ void setupAnimation(void)
     //TheAnimation->setAnimatedField(Trans, std::string("scale"));
     //TheAnimation->setAnimatedField(Trans, std::string("rotation"));
     //TheAnimation->setAnimatedField(TheTorusMaterial, std::string("diffuse"));
-    TheAnimation->setAnimatedField(TheTorusMaterial, std::string("shininess"));
-    //TheAnimation->setAnimatedField(TorusNodeTrans, std::string("matrix"));
+    //TheAnimation->setAnimatedField(TheTorusMaterial, std::string("shininess"));
+    TheAnimation->setAnimatedField(TorusNodeTrans, std::string("matrix"));
 
     //Animation Listener
     TheAnimation->addAnimationListener(&TheAnimationListener);
 
     TheAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
     TheAnimation->start();
+}
+
+#include "OSGStatElemDesc.h"
+void printAllStats(void)
+{
+    StatElemDescBase* Desc(NULL);
+    for(UInt32 i = 0; i < StatElemDescBase::getNumOfDescs(); ++i)
+    {
+        Desc = StatElemDescBase::getDesc(i);
+        std::cout << Desc->getID()          << ": "
+                  << Desc->getName()        << ": "
+                  << Desc->getDescription() << std::endl;
+    }
 }
 

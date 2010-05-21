@@ -161,7 +161,7 @@ class TutorialKeyListener : public KeyListener
 
     virtual void keyPressed(const KeyEventUnrecPtr e)
     {
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             TutorialWindow->closeWindow();
         }
@@ -192,7 +192,7 @@ class TutorialMouseListener : public MouseListener
     }
     virtual void mousePressed(const MouseEventUnrecPtr e)
     {
-        if(dynamic_cast<WindowEventProducer*>(e->getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(dynamic_cast<WindowEventProducer*>(e->getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
@@ -215,7 +215,7 @@ class TutorialMouseListener : public MouseListener
     }
     virtual void mouseReleased(const MouseEventUnrecPtr e)
     {
-        if(dynamic_cast<WindowEventProducer*>(e->getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(dynamic_cast<WindowEventProducer*>(e->getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }

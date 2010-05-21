@@ -74,7 +74,7 @@ class TutorialKeyListener : public KeyListener
             ExampleGravityAffector->setMagnitude(OSG::osgClamp<Real32>(1.0f,ExampleGravityAffector->getMagnitude() * 1.2,TypeTraits<Real32>::getMax())); 
 
         }
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             TutorialWindow->closeWindow();
         }

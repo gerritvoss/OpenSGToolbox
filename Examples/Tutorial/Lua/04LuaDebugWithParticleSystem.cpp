@@ -103,16 +103,16 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
             TutorialWindowEventProducer->closeWindow();
        }
-       if(e.getKey() == KeyEvent::KEY_E && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e.getKey() == KeyEvent::KEY_E && e.getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
            clearError();
            LuaManager::the()->runScript(CodeTextArea->getText());
        }
-       if(e.getKey() == KeyEvent::KEY_T && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e.getKey() == KeyEvent::KEY_T && e.getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
 		   beginEditCP(MainInternalWindow, InternalWindow::OpacityFieldMask);
 			   if(MainInternalWindow->getOpacity() < 1.0f)
@@ -125,7 +125,7 @@ public:
 			   }
 		   endEditCP(MainInternalWindow, InternalWindow::OpacityFieldMask);
        }
-	   if(e.getKey() == KeyEvent::KEY_D && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+	   if(e.getKey() == KeyEvent::KEY_D && e.getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
 	   {
 		   static bool moved = false;
 		   beginEditCP(MainInternalWindow);

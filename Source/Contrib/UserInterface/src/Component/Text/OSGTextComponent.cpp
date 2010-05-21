@@ -126,13 +126,13 @@ void TextComponent::removeCaretListener(CaretListenerPtr Listener)
 
 void TextComponent::keyTyped(const KeyEventUnrecPtr e)
 {
-    if(e->getKey() == KeyEvent::KEY_C && (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) &&
+    if(e->getKey() == KeyEvent::KEY_C && (e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND) &&
        getParentWindow() != NULL &&
        getParentWindow()->getDrawingSurface()->getEventProducer())
     {
         getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard(getSelectedText());
     }
-    else if(e->getKey() == KeyEvent::KEY_A && (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL))
+    else if(e->getKey() == KeyEvent::KEY_A && (e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND))
     {
         selectAll();
     }

@@ -20,6 +20,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGCluster 
                    OSGDrawable 
                    OSGFileIO 
+                   OSGTBFileIO 
                    OSGDynamics 
                    OSGGroup 
                    OSGImageFileIO

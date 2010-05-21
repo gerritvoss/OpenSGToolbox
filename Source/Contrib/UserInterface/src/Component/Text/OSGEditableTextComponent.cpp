@@ -146,25 +146,25 @@ void EditableTextComponent::keyTyped(const KeyEventUnrecPtr e)
         moveCaret(-1);
         break;
     case KeyEvent::KEY_V:
-        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             paste();
         }
         break;
     case KeyEvent::KEY_C:
-        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             copy();
         }
         break;
     case KeyEvent::KEY_X:
-        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             cut();
         }
         break;
     case KeyEvent::KEY_A:
-        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             selectAll();
         }

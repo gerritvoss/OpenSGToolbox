@@ -85,7 +85,7 @@ class TutorialKeyListener : public KeyListener
         {
             ExampleTurbulenceAffector->setFrequency(OSG::osgClamp<Real32>(0.0f,ExampleTurbulenceAffector->getFrequency() + 1.0, 10000.0f));
         }
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             TutorialWindow->closeWindow();
         }

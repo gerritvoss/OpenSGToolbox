@@ -222,6 +222,11 @@ void MenuItem::updateAcceleratorText(void)
     {
         _AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_CONTROL, 0) + "+";
     }
+    
+    if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_META)
+    {
+        _AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_META, 0) + "+";
+    }
     if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_ALT)
     {
         _AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_ALT, 0) + "+";

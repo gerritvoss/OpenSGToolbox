@@ -130,7 +130,7 @@ public:
     }
     virtual void keyTyped(const KeyEventUnrecPtr e)
     {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
            TheWindowEventProducer->closeWindow();
        }

@@ -274,7 +274,7 @@ void List::mousePressed(const MouseEventUnrecPtr e)
                 {
                     getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), getListIndexFromDrawnIndex(i));
                 }
-                else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+                else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
                 {
                     getSelectionModel()->removeSelectionInterval(getListIndexFromDrawnIndex(i),i);// this toggles the interval
                 }
@@ -326,7 +326,7 @@ void List::keyTyped(const KeyEventUnrecPtr e)
             }
             break;
         case KeyEvent::KEY_ENTER:
-            if (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+            if (e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
             {
                 getSelectionModel()->removeSelectionInterval(_FocusedIndex,_FocusedIndex);// this toggles the interval
             }

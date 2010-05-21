@@ -80,11 +80,11 @@ public:
 
    virtual void keyPressed(const KeyEventUnrecPtr e)
    {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
             TutorialWindow->closeWindow();
        }
-       if(e->getKey() == KeyEvent::KEY_E && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_E && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
            clearError();
            LuaManager::the()->runScript(CodeTextArea->getText());

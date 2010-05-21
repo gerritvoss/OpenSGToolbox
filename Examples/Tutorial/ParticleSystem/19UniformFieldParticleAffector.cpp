@@ -96,7 +96,7 @@ class TutorialKeyListener : public KeyListener
             ExampleUniformAffector->setDirection(Vec3f(1.0,0.0,0.0));
 
         }
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             TutorialWindow->closeWindow();
         }

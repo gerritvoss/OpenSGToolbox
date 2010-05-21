@@ -209,7 +209,7 @@ void Table::keyTyped(const KeyEventUnrecPtr e)
                             index = i;
                             UInt32 Row(index/getColumnModel()->getColumnCount()),
                                    Column(index%getColumnModel()->getColumnCount());
-                            if (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+                            if (e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
                             {
                                 changeSelection(Row,Column,true,true);
                             }
@@ -412,7 +412,7 @@ void Table::mousePressed(const MouseEventUnrecPtr e)
                     {
                         changeSelection(Row, Column, false, true);
                     }
-                    else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+                    else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
                     {
                         changeSelection(Row, Column, true, true);
                     }

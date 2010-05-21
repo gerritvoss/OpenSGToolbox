@@ -80,7 +80,7 @@ class TutorialKeyListener : public KeyListener
         {  // increase spread of field
             ExampleAirAffector->setSpread(OSG::osgClamp<Real32>(0.1f,ExampleAirAffector->getSpread() * 1.2,1.0f));
         }
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
         {
             TutorialWindow->closeWindow();
         }

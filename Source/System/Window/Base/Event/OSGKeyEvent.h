@@ -69,7 +69,13 @@ class OSG_SYSTEM_DLLMAPPING KeyEvent : public KeyEventBase
                          KEY_MODIFIER_META        = 8,
                          KEY_MODIFIER_CAPS_LOCK   = 16,
                          KEY_MODIFIER_NUM_LOCK    = 32,
-                         KEY_MODIFIER_SCROLL_LOCK = 64 };
+                         KEY_MODIFIER_SCROLL_LOCK = 64,
+#ifdef __APPLE__
+                         KEY_MODIFIER_COMMAND     = KEY_MODIFIER_META
+#else
+                         KEY_MODIFIER_COMMAND     = KEY_MODIFIER_CONTROL
+#endif
+     };
      enum Key
       {
          KEY_UNKNOWN = 0,
@@ -235,7 +241,12 @@ class OSG_SYSTEM_DLLMAPPING KeyEvent : public KeyEventBase
          KEY_NUMPAD_9      = 203 ,
          KEY_NUMPAD_EQUALS = 204 ,
 
-         KEY_UNDEFINED     = 205 ,
+#ifdef __APPLE__
+                         KEY_COMMAND     = KEY_META,
+#else
+                         KEY_COMMAND     = KEY_CONTROL,
+#endif
+         KEY_UNDEFINED     = KEY_COMMAND+1
       };
 
 	  enum KeyState

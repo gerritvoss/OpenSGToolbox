@@ -129,7 +129,7 @@ void Tree::mousePressed(const MouseEventUnrecPtr e)
 				getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionRow(), Row);
 				getSelectionModel()->setLeadSelectionRow(Row);
 			}
-			else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+			else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
 			{
                 // this toggles the interval
                 if(getSelectionModel()->isRowSelected(Row))
