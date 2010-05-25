@@ -319,7 +319,7 @@ class PhysicsGeomDrawWrapper
     {
         PhysicsGeomDrawWrapper * vdw = new PhysicsGeomDrawWrapper(geom, col, mat);
 
-        Material::DrawFunctor func;
+        DrawEnv::DrawFunctor func;
         func = boost::bind(&PhysicsGeomDrawWrapper::draw, vdw, _1);
     
         action->dropFunctor(func, vdw->_mat);

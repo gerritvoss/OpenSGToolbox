@@ -114,8 +114,17 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
     /*! \name                  Interpolation                               */
     /*! \{                                                                 */
 
-    bool interpolate(const UInt32& Type, const Real32& time, const Real32& prevTime, const UInt32& ReplacePolicy, bool isCyclic, Field& Result, UInt32 Index, Real32 Blend);
-    virtual void zeroField(Field& Result, UInt32 Index) const = 0;
+    bool interpolate(const UInt32& Type,
+                     const Real32& time,
+                     const Real32& prevTime,
+                     const UInt32& ReplacePolicy,
+                     bool isCyclic,
+                     EditFieldHandlePtr Result,
+                     UInt32 Index,
+                     Real32 Blend);
+
+    virtual void zeroField(EditFieldHandlePtr Result,
+                           UInt32 Index) const = 0;
     
     /*! \}                                                                 */
     

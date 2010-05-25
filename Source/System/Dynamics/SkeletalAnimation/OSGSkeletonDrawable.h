@@ -86,7 +86,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
     /*! \name                       Draw                                   */
     /*! \{                                                                 */
 
-    Action::ResultE     drawPrimitives(DrawEnv *pEnv);
+    void     drawPrimitives(DrawEnv *pEnv);
 
     Action::ResultE     renderActionEnterHandler (Action *action);
 

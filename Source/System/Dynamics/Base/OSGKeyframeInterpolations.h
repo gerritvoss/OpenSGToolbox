@@ -21,7 +21,7 @@ typedef boost::function<bool (RawInterpFuncion&,
                               const Real32&,
                               const UInt32&,
                               bool,
-                              Field&,
+                              EditFieldHandlePtr,
                               UInt32,
                               Real32)> ReplacementFuncion;
 
@@ -45,14 +45,14 @@ bool replacement(RawInterpFuncion& InterpFunc,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
                               bool isCyclic,
-                              Field& Result,
+                              EditFieldHandlePtr Result,
                               UInt32 Index, 
                               Real32 Blend)
 {
     SFieldTypeT Value;
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-   if(Result.getCardinality() == FieldType::SingleField)
+   if(Result->getCardinality() == FieldType::SingleField)
    {
         switch(ReplacePolicy)
         {
@@ -60,16 +60,16 @@ bool replacement(RawInterpFuncion& InterpFunc,
             {
                 SFieldTypeT PrevValue;
                 InterpFunc(prevtime, PrevValue,isCyclic);
-                static_cast<SFieldTypeT&>(Result).setValue(static_cast<SFieldTypeT&>(Result).getValue() + (Value.getValue() - PrevValue.getValue()) * Blend);
+                static_cast<SFieldTypeT&>(*Result->getField()).setValue(static_cast<SFieldTypeT&>(*Result->getField()).getValue() + (Value.getValue() - PrevValue.getValue()) * Blend);
                 break;
             }
         case Animator::ADDITIVE_ABSOLUTE:
             {
-                static_cast<SFieldTypeT&>(Result).setValue(static_cast<SFieldTypeT&>(Result).getValue() + (Value.getValue() * Blend));
+                static_cast<SFieldTypeT&>(*Result->getField()).setValue(static_cast<SFieldTypeT&>(*Result->getField()).getValue() + (Value.getValue() * Blend));
                 break;
             }
         case Animator::OVERWRITE:
-            static_cast<SFieldTypeT&>(Result).setValue(Value.getValue() * Blend);
+            static_cast<SFieldTypeT&>(*Result->getField()).setValue(Value.getValue() * Blend);
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -85,14 +85,14 @@ bool replacement(RawInterpFuncion& InterpFunc,
             {
                 SFieldTypeT PrevValue;
                 InterpFunc(prevtime, PrevValue,isCyclic);
-                static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] + (Value.getValue() - PrevValue.getValue()) * Blend, Index;
+                static_cast<MField<typename SFieldTypeT::StoredType>&>(*Result->getField())[Index] = static_cast<MField<typename SFieldTypeT::StoredType>&>(*Result->getField())[Index] + (Value.getValue() - PrevValue.getValue()) * Blend, Index;
                 break;
             }
         case Animator::ADDITIVE_ABSOLUTE:
-            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] + (Value.getValue() * Blend);
+            static_cast<MField<typename SFieldTypeT::StoredType>&>(*Result->getField())[Index] = static_cast<MField<typename SFieldTypeT::StoredType>&>(*Result->getField())[Index] + (Value.getValue() * Blend);
             break;
         case Animator::OVERWRITE:
-            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = Value.getValue() * Blend;
+            static_cast<MField<typename SFieldTypeT::StoredType>&>(*Result->getField())[Index] = Value.getValue() * Blend;
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -109,14 +109,14 @@ bool matrixReplacement(RawInterpFuncion& InterpFunc,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
                               bool isCyclic,
-                              Field& Result,
+                              EditFieldHandlePtr Result,
                               UInt32 Index, 
                               Real32 Blend)
 {
-    SFieldTypeT Value(static_cast<SFieldTypeT&>(Result).getValue());
+    SFieldTypeT Value(static_cast<SFieldTypeT&>(*Result->getField()).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
         switch(ReplacePolicy)
         {
@@ -128,16 +128,16 @@ bool matrixReplacement(RawInterpFuncion& InterpFunc,
                 DeltaSinceLast.invert();
                 DeltaSinceLast.mult(Value.getValue());
                 DeltaSinceLast.scale(Blend);
-                static_cast<SFieldTypeT&>(Result).getValue().mult( DeltaSinceLast );
+                static_cast<SFieldTypeT&>(*Result->getField()).getValue().mult( DeltaSinceLast );
                 break;
             }
         case Animator::ADDITIVE_ABSOLUTE:
             Value.getValue().scale(Blend);
-            static_cast<SFieldTypeT&>(Result).getValue().mult( Value.getValue() );
+            static_cast<SFieldTypeT&>(*Result->getField()).getValue().mult( Value.getValue() );
             break;
         case Animator::OVERWRITE:
             Value.getValue().scale(Blend);
-            static_cast<SFieldTypeT&>(Result).setValue(Value.getValue());
+            static_cast<SFieldTypeT&>(*Result->getField()).setValue(Value.getValue());
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -156,16 +156,16 @@ bool matrixReplacement(RawInterpFuncion& InterpFunc,
                 DeltaSinceLast.invert();
                 DeltaSinceLast.mult(Value.getValue());
                 DeltaSinceLast.scale(Blend);
-                static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index].mult( DeltaSinceLast );
+                static_cast<MField<typename SFieldTypeT::StoredType>&>(*Result->getField())[Index].mult( DeltaSinceLast );
                 break;
             }
         case Animator::ADDITIVE_ABSOLUTE:
             Value.getValue().scale(Blend);
-            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index].mult( Value.getValue() );
+            static_cast<MField<typename SFieldTypeT::StoredType>&>(*Result->getField())[Index].mult( Value.getValue() );
             break;
         case Animator::OVERWRITE:
             Value.getValue().scale(Blend);
-            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = Value.getValue();
+            static_cast<MField<typename SFieldTypeT::StoredType>&>(*Result->getField())[Index] = Value.getValue();
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -187,19 +187,19 @@ bool replacementOverwriteOnly(RawInterpFuncion& InterpFunc,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
                               bool isCyclic,
-                              Field& Result,
+                              EditFieldHandlePtr Result,
                               UInt32 Index, 
                               Real32 Blend)
 {
-    SFieldTypeT Value(static_cast<SFieldTypeT&>(Result).getValue());
+    SFieldTypeT Value(static_cast<SFieldTypeT&>(*Result->getField()).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
         switch(ReplacePolicy)
         {
         case Animator::OVERWRITE:
-            static_cast<SFieldTypeT&>(Result).setValue(Value.getValue());
+            static_cast<SFieldTypeT&>(*Result->getField()).setValue(Value.getValue());
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -211,7 +211,7 @@ bool replacementOverwriteOnly(RawInterpFuncion& InterpFunc,
         switch(ReplacePolicy)
         {
         case Animator::OVERWRITE:
-            static_cast<MFieldTypeT&>(Result)[Index] = Value.getValue();
+            static_cast<MFieldTypeT&>(*Result->getField())[Index] = Value.getValue();
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -228,7 +228,7 @@ bool OSG_TBANIMATION_DLLMAPPING replacement<SFString>(RawInterpFuncion& InterpFu
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
                               bool isCyclic,
-                              Field& Result,
+                              EditFieldHandlePtr Result,
                               UInt32 Index, 
                               Real32 Blend);
 
@@ -239,7 +239,7 @@ bool OSG_TBANIMATION_DLLMAPPING replacement<SFBoxVolume>(RawInterpFuncion& Inter
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
                               bool isCyclic,
-                              Field& Result,
+                              EditFieldHandlePtr Result,
                               UInt32 Index, 
                               Real32 Blend);
 //Generic Step

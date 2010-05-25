@@ -36,6 +36,14 @@
 #include <OpenSG/ImageProcessing/OSGFBOSourceTextureFilter.h>
 #include <OpenSG/ImageProcessing/OSGShaderTextureFilter.h>
 
+#ifndef GL_ARB_depth_texture
+    #define GL_DEPTH_COMPONENT16_ARB 0x81A5
+    #define GL_DEPTH_COMPONENT24_ARB 0x81A6
+    #define GL_DEPTH_COMPONENT32_ARB 0x81A7
+    #define GL_TEXTURE_DEPTH_SIZE_ARB 0x884A
+    #define GL_DEPTH_TEXTURE_MODE_ARB 0x884B
+#endif
+
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -55,7 +63,7 @@ public:
 
    virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
             TutorialWindowEventProducer->closeWindow();
        }
@@ -333,7 +341,7 @@ FBOViewportPtr createSceneFBO(void)
         TheDepthTextureChunk->setEnvMode(GL_REPLACE);
 
         TheDepthTextureChunk->setExternalFormat(GL_DEPTH_COMPONENT);
-        TheDepthTextureChunk->setInternalFormat(GL_DEPTH_COMPONENT32);
+        TheDepthTextureChunk->setInternalFormat(GL_DEPTH_COMPONENT32_ARB);
         //TheDepthTextureChunk->setCompareMode(GL_NONE);
         //TheDepthTextureChunk->setCompareFunc(GL_LEQUAL);
         //TheDepthTextureChunk->setDepthMode(GL_INTENSITY);

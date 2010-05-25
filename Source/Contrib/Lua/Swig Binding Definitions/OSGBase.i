@@ -1116,57 +1116,6 @@ namespace OSG {
     };
 
     /******************************************************/
-    /*              Field                                 */
-    /******************************************************/
-    class Field
-    {
-      public:
-        virtual ~Field(void);
-
-        virtual const FieldType              &getType       (void) const = 0;
-                /*const DataType               &getContentType(void) const;*/
-
-                      UInt32  getCardinality(void) const = 0;
-                      UInt32 getClass(void) const = 0;
-
-
-        virtual       UInt32                  getSize       (void) const = 0;
-
-
-      protected:
-
-        Field(void);
-        Field(const Field &source);
-    };
-
-    /*[>****************************************************<]*/
-    /*[>              FieldFactory                          <]*/
-    /*[>****************************************************<]*/
-    /*class FieldFactory */
-    /*{*/
-      /*public:*/
-        /*virtual ~FieldFactory (void);*/
-
-        /*Field *createField(      UInt32  typeId);*/
-        /*Field *createField(const Char8  *szName);*/
-
-        /*static UInt32     getNFieldTypes  (void                );*/
-        
-        /*static FieldType *getFieldType    (      UInt32  typeId);*/
-        /*static FieldType *getFieldType    (const Char8  *szName);*/
-
-        /*const  Char8     *getFieldTypeName(UInt32 typeId       );*/
-
-        /*static FieldFactory &the(void);*/
-
-      /*protected:*/
-
-        /*FieldFactory (void);*/
-      /*private:*/
-        /*FieldFactory(const FieldFactory &source);*/
-    /*};*/
-
-    /******************************************************/
     /*                   FactoryBase                      */
     /******************************************************/
     class FactoryBase

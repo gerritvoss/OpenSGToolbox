@@ -103,7 +103,7 @@ void ParticleSystemCore::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Action::ResultE ParticleSystemCore::drawPrimitives (DrawEnv *pEnv)
+void ParticleSystemCore::drawPrimitives (DrawEnv *pEnv)
 {
     //If I have a Drawer tell it to draw the particles
     if(getDrawer() != NULL && getSystem() != NULL)
@@ -125,8 +125,6 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawEnv *pEnv)
             FWARNING(("ParticleSystemCore::draw: ParticleSystem is Null."));
         }
     }
-
-    return Action::Continue;
 }
 
 std::vector<UInt32> ParticleSystemCore::intersectLine(const Line& Ray, Real32 IntersectionDistance) const

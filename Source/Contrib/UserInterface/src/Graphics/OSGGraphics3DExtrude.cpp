@@ -126,7 +126,7 @@ void Graphics3DExtrude::preDraw()
 	glEnable(GL_LIGHTING);
 	if(getMaterial() != NULL)
 	{
-		getMaterial()->finalize(0x000000)->getState()->activate(getDrawEnv());
+        getMaterial()->finalize(MaterialMapKey(),getDrawEnv()->getWindow())->getState()->activate(getDrawEnv());
 	}
 
 	//_depth = glIsEnabled(GL_DEPTH_TEST);
@@ -171,7 +171,7 @@ void Graphics3DExtrude::postDraw()
 	
 	if(getMaterial() != NULL)
 	{
-		getMaterial()->finalize(0x000000)->getState()->deactivate(getDrawEnv());
+        getMaterial()->finalize(MaterialMapKey(),getDrawEnv()->getWindow())->getState()->deactivate(getDrawEnv());
 	}
    glPopAttrib();
 }
@@ -378,15 +378,13 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 		glEnable(GL_BLEND);
 	}
 
-   StateUnrecPtr state = NULL;
-	if(Material != NULL)
-	{
-        state =
-            Material->finalize(0x000000)->getState();
+    StateUnrecPtr state = NULL;
+    if(Material != NULL)
+    {
+        state = Material->finalize(MaterialMapKey(),getDrawEnv()->getWindow())->getState();
 
-
-      state->activate(getDrawEnv());
-	}
+        state->activate(getDrawEnv());
+    }
 	
 	glBegin(GL_QUADS);
 	   glColor4f(1.0, 1.0, 1.0, Alpha );

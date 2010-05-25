@@ -82,11 +82,11 @@ public:
 
    virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
            TutorialWindowEventProducer->closeWindow();
        }
-       if(e->getKey() == KeyEvent::KEY_S && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_S && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
            TutorialStat = !TutorialStat;
            mgr->setStatistics(TutorialStat);

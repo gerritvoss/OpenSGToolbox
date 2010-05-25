@@ -123,11 +123,13 @@ LuaActivityRefPtr LuaActivity::addLuaCallback(FieldContainerRefPtr producerObjec
         {
             CheckActiviy = getEventProducer(producerObject)->getAttachedActivity(producedMethodId, i);
 
-            if(CheckActiviy->getType() == LuaActivity::getClassType() &&
-                dynamic_pointer_cast<LuaActivity>(CheckActiviy)->getEntryFunction().compare(funcName) == 0)
+            if(CheckActiviy != NULL && CheckActiviy->getType() == LuaActivity::getClassType())
             {
-                SWARNING << "Lua function: " << funcName << " is already attached to this produced method." << std::endl;
-                return dynamic_pointer_cast<LuaActivity>(CheckActiviy);
+                if(dynamic_pointer_cast<LuaActivity>(CheckActiviy)->getEntryFunction().compare(funcName) == 0)
+                {
+                    SWARNING << "Lua function: " << funcName << " is already attached to this produced method." << std::endl;
+                    return dynamic_pointer_cast<LuaActivity>(CheckActiviy);
+                }
             }
         }
 

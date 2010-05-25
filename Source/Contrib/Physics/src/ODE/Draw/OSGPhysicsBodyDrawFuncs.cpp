@@ -87,13 +87,14 @@ class PhysicsBodyDrawWrapper
     }
     
     ~PhysicsBodyDrawWrapper()
-    {}
+    {
+    }
 
     static void drop(RenderAction* action,const NodeUnrecPtr node, const PhysicsBodyUnrecPtr geom, MaterialUnrecPtr mat)
     {
         PhysicsBodyDrawWrapper * vdw = new PhysicsBodyDrawWrapper(node, geom, mat);
 
-        Material::DrawFunctor func;
+        DrawEnv::DrawFunctor func;
         func = boost::bind(&PhysicsBodyDrawWrapper::draw, vdw, _1);
     
         action->dropFunctor(func, vdw->_mat);

@@ -13,6 +13,7 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
 
     UInt32 NumFields;
     const FieldDescriptionBase* TheFieldDesc(NULL);
+    GetFieldHandlePtr TheFieldHandle;
     const Field* TheField(NULL);
 
     //Loop through all of the given containers
@@ -59,8 +60,9 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
             {
                 continue;
             }
-
-            TheField = (*ContainersItor)->getField(TheFieldDesc->getFieldId())->getField();
+            TheFieldHandle =
+                (*ContainersItor)->getField(TheFieldDesc->getFieldId());
+            TheField = TheFieldHandle->getField();
 
             if(!TheFieldDesc->isInternal())
             {
@@ -70,7 +72,7 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
 					TheFieldDesc->getFieldType().getClass() == FieldType::ChildPtrField)
                 {
                     //Determine the cardinality of the field
-                    if(TheField->getCardinality() == FieldType::SingleField)
+                    if(TheFieldHandle->getCardinality() == FieldType::SingleField)
                     {
                         //If the Ptr is NOT NULL and is NOT in the Containers already
                         if(static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue() != NULL &&
@@ -93,7 +95,7 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
                     }
                     else
                     {
-                        for(UInt32 i(0) ; i<TheField->getSize() ; ++i)
+                        for(UInt32 i(0) ; i<TheFieldHandle->size() ; ++i)
                         {
                             if(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](i) != NULL &&
                                 AllContainers.find(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](i)) == AllContainers.end() &&

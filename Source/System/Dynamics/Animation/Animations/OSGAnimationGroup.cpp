@@ -275,7 +275,7 @@ void AnimationGroup::changed(ConstFieldMaskArg whichField,
         for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
         {
             getAnimations(i)->setOffset(getOffset());
-            commitChanges();
+            //commitChanges();
         }
     }
     if((whichField & AnimationsFieldMask) || (whichField & SpanFieldMask))
@@ -283,7 +283,7 @@ void AnimationGroup::changed(ConstFieldMaskArg whichField,
         for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
         {
             getAnimations(i)->setSpan(getSpan());
-            commitChanges();
+            //commitChanges();
         }
     }
 }

@@ -88,7 +88,7 @@ void GridLayout::updateLayout(const MFUnrecComponentPtr* Components, const Compo
 	Real32 maxSizeX = 0;
 	Real32 maxSizeY = 0;
 	Real32 debug = 10;
-	Int32 numComp = Components->getSize();
+	Int32 numComp = Components->size();
 	Real32 buttonXSize, buttonYSize;
 
 	//set the size to the perfered sizes for the buttons

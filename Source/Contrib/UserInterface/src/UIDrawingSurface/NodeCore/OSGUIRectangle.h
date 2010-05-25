@@ -88,7 +88,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangle : public UIRectangleBase
 
     Action::ResultE renderActionLeaveHandler(Action  *action);
 
-    virtual Action::ResultE drawPrimitives          (DrawEnv *pEnv  );
+    virtual void drawPrimitives          (DrawEnv *pEnv  );
 
     virtual void fill(DrawableStatsAttachment *pStat);
 

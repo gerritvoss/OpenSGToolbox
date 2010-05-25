@@ -430,15 +430,15 @@ void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionDescBase>::g
 }
 
 template<> inline 
-void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFQuaternion&>(Result).setValue(Quaternion(0.0,0.0,0.0,1.0));
+        static_cast<SFQuaternion&>(*Result->getField()).setValue(Quaternion(0.0,0.0,0.0,1.0));
     }
     else
     {
-        static_cast<MFQuaternion&>(Result)[Index] = Quaternion(0.0,0.0,0.0,1.0);
+        static_cast<MFQuaternion&>(*Result->getField())[Index] = Quaternion(0.0,0.0,0.0,1.0);
     }
 }
 
@@ -551,15 +551,15 @@ void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>:
 }
 
 template<> inline 
-void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFQuaternionfx&>(Result).setValue(Quaternionfx(0.0f,0.0f,0.0f,1.0f));
+        static_cast<SFQuaternionfx&>(*Result->getField()).setValue(Quaternionfx(0.0f,0.0f,0.0f,1.0f));
     }
     else
     {
-        static_cast<MFQuaternionfx&>(Result)[Index] = Quaternionfx(0.0f,0.0f,0.0f,1.0f);
+        static_cast<MFQuaternionfx&>(*Result->getField())[Index] = Quaternionfx(0.0f,0.0f,0.0f,1.0f);
     }
 }
 
@@ -640,15 +640,15 @@ void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>:
 //}
 
 //template<> inline 
-//void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaterniondDescBase>::zeroField(Field& Result, UInt32 Index) const
+//void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaterniondDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 //{
-    //if(Result.getCardinality() == FieldType::SingleField)
+    //if(Result->getCardinality() == FieldType::SingleField)
     //{
-        //static_cast<SFQuaterniond&>(Result).setValue(Quaterniond(0.0,0.0,0.0,1.0));
+        //static_cast<SFQuaterniond&>(*Result->getField()).setValue(Quaterniond(0.0,0.0,0.0,1.0));
     //}
     //else
     //{
-        //static_cast<MFQuaterniond&>(Result)[Index] = Quaterniond(0.0,0.0,0.0,1.0);
+        //static_cast<MFQuaterniond&>(*Result->getField())[Index] = Quaterniond(0.0,0.0,0.0,1.0);
     //}
 //}
 

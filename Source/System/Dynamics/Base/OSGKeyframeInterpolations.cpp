@@ -179,19 +179,19 @@ bool replacement<SFString>(RawInterpFuncion& InterpFunc,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
                               bool isCyclic,
-                              Field& Result,
+                              EditFieldHandlePtr Result,
                               UInt32 Index, 
                               Real32 Blend)
 {
-    SFString Value(static_cast<SFString&>(Result).getValue());
+    SFString Value(static_cast<SFString&>(*Result->getField()).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
         switch(ReplacePolicy)
         {
         case Animator::OVERWRITE:
-            static_cast<SFString&>(Result).setValue(Value.getValue());
+            static_cast<SFString&>(*Result->getField()).setValue(Value.getValue());
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -203,7 +203,7 @@ bool replacement<SFString>(RawInterpFuncion& InterpFunc,
         switch(ReplacePolicy)
         {
         case Animator::OVERWRITE:
-            static_cast<MFString&>(Result)[Index] = Value.getValue();
+            static_cast<MFString&>(*Result->getField())[Index] = Value.getValue();
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -220,19 +220,19 @@ bool replacement<SFBoxVolume>(RawInterpFuncion& InterpFunc,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
                               bool isCyclic,
-                              Field& Result,
+                              EditFieldHandlePtr Result,
                               UInt32 Index, 
                               Real32 Blend)
 {
-    SFBoxVolume Value(static_cast<SFBoxVolume&>(Result).getValue());
+    SFBoxVolume Value(static_cast<SFBoxVolume&>(*Result->getField()).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
         switch(ReplacePolicy)
         {
         case Animator::OVERWRITE:
-            static_cast<SFBoxVolume&>(Result).setValue(Value.getValue());
+            static_cast<SFBoxVolume&>(*Result->getField()).setValue(Value.getValue());
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -244,7 +244,7 @@ bool replacement<SFBoxVolume>(RawInterpFuncion& InterpFunc,
         switch(ReplacePolicy)
         {
         case Animator::OVERWRITE:
-            static_cast<MFBoxVolume&>(Result)[Index] = Value.getValue();
+            static_cast<MFBoxVolume&>(*Result->getField())[Index] = Value.getValue();
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;

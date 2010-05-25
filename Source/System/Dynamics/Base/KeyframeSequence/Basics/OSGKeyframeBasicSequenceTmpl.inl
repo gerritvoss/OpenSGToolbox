@@ -432,15 +432,15 @@ void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceStringDescBase>::getKeyValue
 }
 
 template<> inline 
-void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceStringDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceStringDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFString&>(Result).setValue(std::string(""));
+        static_cast<SFString&>(*Result->getField()).setValue(std::string(""));
     }
     else
     {
-        static_cast<MFString&>(Result)[Index] = std::string("");
+        static_cast<MFString&>(*Result->getField())[Index] = std::string("");
     }
 }
 
@@ -520,15 +520,15 @@ void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::getKeyValue
 }
 
 template<> inline 
-void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFGLenum&>(Result).setValue(GL_NONE);
+        static_cast<SFGLenum&>(*Result->getField()).setValue(GL_NONE);
     }
     else
     {
-        static_cast<MFGLenum&>(Result)[Index] = GL_NONE;
+        static_cast<MFGLenum&>(*Result->getField())[Index] = GL_NONE;
     }
 }
 
@@ -614,15 +614,15 @@ void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoxVolumeDescBase>::getKeyVa
 }
 
 template<> inline 
-void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoxVolumeDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoxVolumeDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFBoxVolume&>(Result).getValue().setBounds(0.0f,0.0f,0.0f);
+        static_cast<SFBoxVolume&>(*Result->getField()).getValue().setBounds(0.0f,0.0f,0.0f);
     }
     else
     {
-        static_cast<MFBoxVolume&>(Result)[Index].setBounds(0.0f,0.0f,0.0f);
+        static_cast<MFBoxVolume&>(*Result->getField())[Index].setBounds(0.0f,0.0f,0.0f);
     }
 }
 

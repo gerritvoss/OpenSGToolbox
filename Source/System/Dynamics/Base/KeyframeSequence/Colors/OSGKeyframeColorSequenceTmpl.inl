@@ -430,15 +430,15 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3ubDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3ubDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3ubDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFColor3ub&>(Result).setValue(Color3ub(0,0,0));
+        static_cast<SFColor3ub&>(*Result->getField()).setValue(Color3ub(0,0,0));
     }
     else
     {
-        static_cast<MFColor3ub&>(Result)[Index] = Color3ub(0,0,0);
+        static_cast<MFColor3ub&>(*Result->getField())[Index] = Color3ub(0,0,0);
     }
 }
 
@@ -518,15 +518,15 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4ubDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4ubDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4ubDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFColor4ub&>(Result).setValue(Color4ub(0,0,0,0));
+        static_cast<SFColor4ub&>(*Result->getField()).setValue(Color4ub(0,0,0,0));
     }
     else
     {
-        static_cast<MFColor4ub&>(Result)[Index] = Color4ub(0,0,0,0);
+        static_cast<MFColor4ub&>(*Result->getField())[Index] = Color4ub(0,0,0,0);
     }
 }
 
@@ -607,15 +607,15 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFColor3f&>(Result).setValue(Color3f(0.0,0.0,0.0));
+        static_cast<SFColor3f&>(*Result->getField()).setValue(Color3f(0.0,0.0,0.0));
     }
     else
     {
-        static_cast<MFColor3f&>(Result)[Index] = Color3f(0.0,0.0,0.0);
+        static_cast<MFColor3f&>(*Result->getField())[Index] = Color3f(0.0,0.0,0.0);
     }
 }
 
@@ -695,15 +695,15 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFColor4f&>(Result).setValue(Color4f(0.0,0.0,0.0,0.0));
+        static_cast<SFColor4f&>(*Result->getField()).setValue(Color4f(0.0,0.0,0.0,0.0));
     }
     else
     {
-        static_cast<MFColor4f&>(Result)[Index] = Color4f(0.0,0.0,0.0,0.0);
+        static_cast<MFColor4f&>(*Result->getField())[Index] = Color4f(0.0,0.0,0.0,0.0);
     }
 }
 
@@ -823,15 +823,15 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFColor3fx&>(Result).setValue(Color3fx(0.0f,0.0f,0.0f));
+        static_cast<SFColor3fx&>(*Result->getField()).setValue(Color3fx(0.0f,0.0f,0.0f));
     }
     else
     {
-        static_cast<MFColor3fx&>(Result)[Index] = Color3fx(0.0f,0.0f,0.0f);
+        static_cast<MFColor3fx&>(*Result->getField())[Index] = Color3fx(0.0f,0.0f,0.0f);
     }
 }
 
@@ -951,15 +951,15 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFColor4fx&>(Result).setValue(Color4fx(0.0f,0.0f,0.0f,0.0f));
+        static_cast<SFColor4fx&>(*Result->getField()).setValue(Color4fx(0.0f,0.0f,0.0f,0.0f));
     }
     else
     {
-        static_cast<MFColor4fx&>(Result)[Index] = Color4fx(0.0f,0.0f,0.0f,0.0f);
+        static_cast<MFColor4fx&>(*Result->getField())[Index] = Color4fx(0.0f,0.0f,0.0f,0.0f);
     }
 }
 

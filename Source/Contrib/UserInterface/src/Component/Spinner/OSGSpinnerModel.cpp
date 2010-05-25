@@ -104,7 +104,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(TypeTraits<Int8>::getMin());
             TheModel->setMaximum(TypeTraits<Int8>::getMax());
             TheModel->setStepSize(TypeTraits<Int8>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<Int8>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<Int8>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
@@ -114,7 +114,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(TypeTraits<Int16>::getMin());
             TheModel->setMaximum(TypeTraits<Int16>::getMax());
             TheModel->setStepSize(TypeTraits<Int16>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<Int16>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<Int16>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
@@ -124,7 +124,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(TypeTraits<Int32>::getMin());
             TheModel->setMaximum(TypeTraits<Int32>::getMax());
             TheModel->setStepSize(TypeTraits<Int32>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<Int32>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<Int32>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
@@ -134,7 +134,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(TypeTraits<Int64>::getMin());
             TheModel->setMaximum(TypeTraits<Int64>::getMax());
             TheModel->setStepSize(TypeTraits<Int64>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<Int64>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<Int64>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
@@ -144,7 +144,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(TypeTraits<UInt8>::getMin());
             TheModel->setMaximum(TypeTraits<UInt8>::getMax());
             TheModel->setStepSize(TypeTraits<UInt8>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<UInt8>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<UInt8>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
@@ -154,7 +154,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(TypeTraits<UInt16>::getMin());
             TheModel->setMaximum(TypeTraits<UInt16>::getMax());
             TheModel->setStepSize(TypeTraits<UInt16>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<UInt16>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<UInt16>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
@@ -164,7 +164,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(TypeTraits<UInt32>::getMin());
             TheModel->setMaximum(TypeTraits<UInt32>::getMax());
             TheModel->setStepSize(TypeTraits<UInt32>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<UInt32>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<UInt32>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
@@ -174,7 +174,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(TypeTraits<UInt64>::getMin());
             TheModel->setMaximum(TypeTraits<UInt64>::getMax());
             TheModel->setStepSize(TypeTraits<UInt64>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<UInt64>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<UInt64>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
@@ -184,7 +184,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
           TheModel->setMinimum(-TypeTraits<Real16>::getMax());
           TheModel->setMaximum(TypeTraits<Real16>::getMax());
           TheModel->setStepSize(TypeTraits<Real16>::getOneElement());
-          TheModel->setValue(dynamic_cast<SField< Real16 >*>(TheField)->getValue());
+          TheModel->setValue(static_cast<SField< Real16 >*>(TheField)->getValue());
 
           return TheModel;
           }*/
@@ -194,7 +194,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(-TypeTraits<Real32>::getMax());
             TheModel->setMaximum(TypeTraits<Real32>::getMax());
             TheModel->setStepSize(TypeTraits<Real32>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<Real32>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<Real32>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }
@@ -204,7 +204,7 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
             TheModel->setMinimum(-TypeTraits<Real64>::getMax());
             TheModel->setMaximum(TypeTraits<Real64>::getMax());
             TheModel->setStepSize(TypeTraits<Real64>::getOneElement());
-            TheModel->setValue(dynamic_cast<const SField<Real64>*>(TheFieldHandle->getField())->getValue());
+            TheModel->setValue(static_cast<const SField<Real64>*>(TheFieldHandle->getField())->getValue());
 
             return TheModel;
         }

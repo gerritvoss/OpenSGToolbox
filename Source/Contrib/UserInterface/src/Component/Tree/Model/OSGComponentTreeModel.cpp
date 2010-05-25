@@ -125,7 +125,7 @@ UInt32 ComponentTreeModel::getChildCount(const boost::any& parent) const
 		ComponentContainerRefPtr TheContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(parent));
         if(TheContainer != NULL)
         {
-            return TheContainer->getMFChildren()->getSize();
+            return TheContainer->getMFChildren()->size();
         }
         else
         {

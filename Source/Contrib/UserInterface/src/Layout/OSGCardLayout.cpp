@@ -84,17 +84,17 @@ void CardLayout::first(const ComponentContainerRefPtr TheContainer)
 
 void CardLayout::last(const ComponentContainerRefPtr TheContainer)
 {
-    setCard(TheContainer->getMFChildren()->getSize()-1);
+    setCard(TheContainer->getMFChildren()->size()-1);
 }
 
 void CardLayout::next(const ComponentContainerRefPtr TheContainer)
 {	
-    setCard((getCard()+1)%TheContainer->getMFChildren()->getSize());
+    setCard((getCard()+1)%TheContainer->getMFChildren()->size());
 }
 
 void CardLayout::previous(const ComponentContainerRefPtr TheContainer)
 {   
-    setCard((getCard()-1)%TheContainer->getMFChildren()->getSize());
+    setCard((getCard()-1)%TheContainer->getMFChildren()->size());
 }
 
 void CardLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
@@ -116,7 +116,7 @@ void CardLayout::updateLayout(const MFUnrecComponentPtr* Components, const Compo
     Vec2f size(borderSize),offset;
     ComponentRefPtr curCard((*Components)[getCard()]);
 
-    for(UInt32 i(0) ; i<Components->getSize() ; ++i)
+    for(UInt32 i(0) ; i<Components->size() ; ++i)
     {
         if((*Components)[i] != curCard)
         {

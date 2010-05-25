@@ -404,7 +404,8 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                             !FieldValue.empty())
                         {
                             std::vector< std::string > SplitVec;
-                            boost::algorithm::split( SplitVec, FieldValue, boost::algorithm::is_any_of(std::string(";")) );
+                            boost::algorithm::split( SplitVec, FieldValue,
+                                                     boost::algorithm::is_any_of(std::string(";,")) );
                             for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
                             {
                                 FieldContainerUnrecPtr TheFC;
@@ -490,7 +491,8 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                             !FieldValue.empty())
                         {
                             std::vector< std::string > SplitVec;
-                            boost::algorithm::split( SplitVec, FieldValue, boost::algorithm::is_any_of(std::string(";")) );
+                            boost::algorithm::split( SplitVec, FieldValue,
+                                                     boost::algorithm::is_any_of(std::string(";,")) );
                             for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
                             {
                                 if(Desc->getFieldType() == MFBoostPath::getClassType())
@@ -734,6 +736,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
         UInt32 NumFields(TheFCType.getNumFieldDescs());
         const FieldDescriptionBase* Desc;
         std::string FieldValue("");
+        GetFieldHandlePtr TheFieldHandle;
         const Field* TheField(NULL);
         for(UInt32 i(1) ; i<NumFields+1 ; ++i)
         {
@@ -758,13 +761,14 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             {
                 continue;
             }
-            TheField = (*FCItor)->getField(i)->getField();
+            TheFieldHandle = (*FCItor)->getField(i);
+            TheField = TheFieldHandle->getField();
             if(Desc->getFieldType().getClass() == FieldType::PtrField ||
 				Desc->getFieldType().getClass() == FieldType::ParentPtrField ||
 				Desc->getFieldType().getClass() == FieldType::ChildPtrField)
             {
                 OSGOutputStream << "\t\t" << Desc->getCName() << "=\"";
-                if(TheField->getCardinality() == FieldType::SingleField)
+                if(TheFieldHandle->getCardinality() == FieldType::SingleField)
                 {
                     if(static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue() == NULL ||
                         std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue()->getTypeId()) != IgnoreTypes.end())
@@ -776,9 +780,9 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                         TypeTraits<UInt32>::putToStream(static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue()->getId(),OSGOutputStream);
                     }
                 }
-                else if(TheField->getCardinality() == FieldType::MultiField)
+                else if(TheFieldHandle->getCardinality() == FieldType::MultiField)
                 {
-                    for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
+                    for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
                     {
                         if(Index!=0)
                         {
@@ -797,7 +801,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                 }
                 OSGOutputStream << "\"" << std::endl;
             }
-            else if(TheField->getType() == SFBoostPath::getClassType())
+            else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
             {
                 FieldValue.clear();
                 //Path RootPath = boost::filesystem::system_complete(RootPath);
@@ -806,13 +810,13 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                 //FieldValue = RelativePath.string();//TheField->getValueByStr(FieldValue);
                 OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" << FilePath.string()  << "\"" << std::endl;
             }
-            else if(TheField->getType() == MFBoostPath::getClassType())
+            else if(TheFieldHandle->getType() == MFBoostPath::getClassType())
             {
                 OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" ;
                 //Path RootPath = boost::filesystem::system_complete(RootPath);
                 BoostPath FilePath;
                 //Path RelativePath;
-                for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
+                for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
                 {
                     FieldValue.clear();
                     FilePath = boost::filesystem::system_complete((*static_cast<const MFBoostPath*>(TheField))[Index]);
@@ -828,33 +832,33 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             }
             else
             {
-                if(TheField->getCardinality() == FieldType::SingleField)
-                {
+                //if(TheFieldHandle->getCardinality() == FieldType::SingleField)
+                //{
                     //FieldValue.clear();
                     //TheField->pushValueToString(FieldValue);
                     //boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of(std::string("\"")));
                     //OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" << FieldValue << "\"" << std::endl;
                     OSGOutputStream << "\t\t" << Desc->getCName() << "=\"";
-                    TheField->pushValueToStream(OSGOutputStream);
+                    TheFieldHandle->pushValueToStream(OSGOutputStream);
                     OSGOutputStream << "\"" << std::endl;
-                }
-                else if(TheField->getCardinality() == FieldType::MultiField)
-                {
-                    OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" ;
-                    for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
-                    {
-                        //FieldValue.clear();
-                        //TheField->pushValueToString(FieldValue, Index);
-                        //boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of(std::string("\"")));
-                        if(Index!=0)
-                        {
-                            OSGOutputStream << ";";
-                        }
-                        //OSGOutputStream << FieldValue;
-                        TheField->pushValueToStream(OSGOutputStream, Index);
-                    }
-                    OSGOutputStream << "\"" << std::endl;
-                }
+                //}
+                //else if(TheFieldHandle->getCardinality() == FieldType::MultiField)
+                //{
+                    //OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" ;
+                    //for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
+                    //{
+                        ////FieldValue.clear();
+                        ////TheField->pushValueToString(FieldValue, Index);
+                        ////boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of(std::string("\"")));
+                        //if(Index!=0)
+                        //{
+                            //OSGOutputStream << ";";
+                        //}
+                        ////OSGOutputStream << FieldValue;
+                        //TheFieldHandle->pushValueToStream(OSGOutputStream, Index);
+                    //}
+                    //OSGOutputStream << "\"" << std::endl;
+                //}
             }
         }
 

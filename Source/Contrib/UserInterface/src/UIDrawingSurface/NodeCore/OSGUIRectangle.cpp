@@ -106,7 +106,7 @@ Action::ResultE UIRectangle::renderActionEnterHandler(Action *action)
 {
     RenderAction *a = dynamic_cast<RenderAction *>(action);
 
-    Material::DrawFunctor func;
+    DrawEnv::DrawFunctor func;
 
     func = boost::bind(&UIRectangle::drawPrimitives, this, _1);
 
@@ -133,7 +133,7 @@ Action::ResultE UIRectangle::renderActionLeaveHandler(Action *action)
     return Action::Continue;
 }
 
-Action::ResultE UIRectangle::drawPrimitives          (DrawEnv *pEnv  )
+void UIRectangle::drawPrimitives          (DrawEnv *pEnv  )
 {
     glPushMatrix();
 
@@ -155,18 +155,31 @@ Action::ResultE UIRectangle::drawPrimitives          (DrawEnv *pEnv  )
 	getDrawingSurface()->getGraphics()->postDraw();
     glPopMatrix();
 	
+    glPushMatrix();
+
+    glTranslatef(getPoint().x(),getPoint().y()+getHeight(),getPoint().z());
+    glScalef(1.0,-1.0,1.0);
+
 	getRectColorMask()->activate(pEnv);
 	getRectPolygon()->activate(pEnv);
+    Pnt2f TopLeft,BottomRight;
 	glBegin(GL_QUADS);
-	   glVertex3fv(getPoint().getValues());
-	   glVertex3f(getPoint().x(), getPoint().y()+getHeight(), getPoint().z());
-	   glVertex3f(getPoint().x()+getWidth(), getPoint().y()+getHeight(), getPoint().z());
-	   glVertex3f(getPoint().x()+getWidth(), getPoint().y(), getPoint().z());
+        //Draw all of the InternalWindows
+        for(UInt32 i(0) ; i<getDrawingSurface()->getMFInternalWindows()->size() ; ++i)
+        {
+            TopLeft = getDrawingSurface()->getInternalWindows(i)->getPosition();
+            BottomRight = TopLeft +
+                getDrawingSurface()->getInternalWindows(i)->getSize();
+
+            glVertex2fv(TopLeft.getValues());
+            glVertex2f(TopLeft.x(), BottomRight.y());
+            glVertex2fv(BottomRight.getValues());
+            glVertex2f(BottomRight.x(), TopLeft.y());
+        }
 	glEnd();
 	getRectPolygon()->deactivate(pEnv);
 	getRectColorMask()->deactivate(pEnv);
-
-    return Action::Continue;
+    glPopMatrix();
 }
 
 Action::ResultE UIRectangle::intersect( Action* action )

@@ -86,7 +86,7 @@ bool KeyframeAnimator::animate(UInt32 InterpType,
 {
    if( getKeyframeSequence() != NULL)
    {
-      return getKeyframeSequence()->interpolate(InterpType, time, prevTime, ReplacementPolicy, Cycling, *(Result->getField()), Index, 1.0f);
+      return getKeyframeSequence()->interpolate(InterpType, time, prevTime, ReplacementPolicy, Cycling, Result, Index, 1.0f);
    }
    else
    {

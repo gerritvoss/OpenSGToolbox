@@ -92,7 +92,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleS
     /*! \name                       Draw                                   */
     /*! \{                                                                 */
 
-    Action::ResultE     drawPrimitives(DrawEnv *pEnv);
+    void     drawPrimitives(DrawEnv *pEnv);
 
     /*! \}*/
 

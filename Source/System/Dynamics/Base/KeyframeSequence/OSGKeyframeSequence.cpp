@@ -77,7 +77,7 @@ void KeyframeSequence::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool KeyframeSequence::interpolate(const UInt32& Type, const Real32& time, const Real32& prevTime, const UInt32& ReplacePolicy, bool isCyclic, Field& Result, UInt32 Index, Real32 Blend)
+bool KeyframeSequence::interpolate(const UInt32& Type, const Real32& time, const Real32& prevTime, const UInt32& ReplacePolicy, bool isCyclic, EditFieldHandlePtr Result, UInt32 Index, Real32 Blend)
 {
     RawInterpFuncion InterpFunc(bindInterpFunction(Type));
     if(InterpFunc.empty())

@@ -83,7 +83,7 @@ void DefaultTableColumnModel::addColumn(TableColumnRefPtr aColumn)
     pushToInternalColumns(aColumn);
     recalcWidthCache();
     //aColumn->addFieldChangeListener(&_TableFieldChangeListener);
-    produceColumnAdded(getMFInternalColumns()->getSize());
+    produceColumnAdded(getMFInternalColumns()->size());
 }
 
 TableColumnRefPtr DefaultTableColumnModel::getColumn(const UInt32& columnIndex) const
@@ -100,17 +100,17 @@ TableColumnRefPtr DefaultTableColumnModel::getColumn(const UInt32& columnIndex) 
 
 UInt32 DefaultTableColumnModel::getColumnCount(void) const
 {
-    return getMFInternalColumns()->getSize();
+    return getMFInternalColumns()->size();
 }
 
 Int32 DefaultTableColumnModel::getColumnIndexAtX(UInt32 xPosition) const
 {
     UInt32 CumulativeColumnWidth = 0;
 
-    for(UInt32 Index(0) ; Index<getMFInternalColumns()->getSize() ; ++Index)
+    for(UInt32 Index(0) ; Index<getMFInternalColumns()->size() ; ++Index)
     {
         CumulativeColumnWidth += getInternalColumns(Index)->getWidth();
-        if(Index != getMFInternalColumns()->getSize()-1)
+        if(Index != getMFInternalColumns()->size()-1)
         {
             CumulativeColumnWidth += getColumnMargin();
         }
@@ -138,7 +138,7 @@ UInt32 DefaultTableColumnModel::getSelectedColumnCount(void) const
     if(_ColumnSelectionAllowed && _SelectionModel != NULL)
     {
         UInt32 SelectedCount(0);
-        for(UInt32 i(0) ; i<getMFInternalColumns()->getSize() ; ++i)
+        for(UInt32 i(0) ; i<getMFInternalColumns()->size() ; ++i)
         {
             if(_SelectionModel->isSelectedIndex(i))
             {
@@ -158,7 +158,7 @@ std::vector<UInt32> DefaultTableColumnModel::getSelectedColumns(void) const
     if(_ColumnSelectionAllowed)
     {
         std::vector<UInt32> SelectedVector;
-        for(UInt32 i(0) ; i<getMFInternalColumns()->getSize() ; ++i)
+        for(UInt32 i(0) ; i<getMFInternalColumns()->size() ; ++i)
         {
             if(_SelectionModel->isSelectedIndex(i))
             {
@@ -187,8 +187,8 @@ void DefaultTableColumnModel::moveColumn(const UInt32& columnIndex, const UInt32
 {
     //Check the validity of the parameters
     if(columnIndex == newIndex ||
-       columnIndex < getMFInternalColumns()->getSize() || 
-       newIndex < getMFInternalColumns()->getSize())
+       columnIndex < getMFInternalColumns()->size() || 
+       newIndex < getMFInternalColumns()->size())
     {
         return;
     }
@@ -220,14 +220,14 @@ void DefaultTableColumnModel::removeColumn(TableColumnRefPtr column)
     //Find the Column
     UInt32 FindIndex(0);
     MFInternalColumnsType::iterator Itor(editMFInternalColumns()->begin());
-    while(FindIndex < getMFInternalColumns()->getSize() && column !=
+    while(FindIndex < getMFInternalColumns()->size() && column !=
           getInternalColumns(FindIndex))
     {
         ++FindIndex;
         ++Itor;
     }
 
-    if(FindIndex != getMFInternalColumns()->getSize())
+    if(FindIndex != getMFInternalColumns()->size())
     {
         //Erase
         editMFInternalColumns()->erase(Itor);
@@ -266,7 +266,7 @@ void DefaultTableColumnModel::recalcWidthCache(void)
 {
     _TotalColumnWidth = 0;
 
-    for(UInt32 i(0) ; i != getMFInternalColumns()->getSize() ; ++i)
+    for(UInt32 i(0) ; i != getMFInternalColumns()->size() ; ++i)
     {
         _TotalColumnWidth += getInternalColumns(i)->getWidth();
         if(i != 0)

@@ -95,7 +95,7 @@ void SkeletonDrawable::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Action::ResultE SkeletonDrawable::drawPrimitives (DrawEnv *pEnv)
+void SkeletonDrawable::drawPrimitives (DrawEnv *pEnv)
 {
     if(getSkeleton() == NULL)
     {
@@ -109,8 +109,6 @@ Action::ResultE SkeletonDrawable::drawPrimitives (DrawEnv *pEnv)
 			drawJointHierarchy(getSkeleton()->getRootJoints(i), pEnv);
 		}
     }
-
-    return Action::Continue;
 }
 
 void SkeletonDrawable::drawJointHierarchy(JointUnrecPtr TheJoint, DrawEnv *pEnv)

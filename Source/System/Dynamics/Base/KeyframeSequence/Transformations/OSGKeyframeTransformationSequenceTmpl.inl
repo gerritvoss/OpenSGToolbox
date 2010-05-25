@@ -446,15 +446,15 @@ void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fDe
 }
 
 template<> inline 
-void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFMatrix&>(Result).setValue(Matrix::identity());
+        static_cast<SFMatrix&>(*Result->getField()).setValue(Matrix::identity());
     }
     else
     {
-        static_cast<MFMatrix&>(Result)[Index].setValue(Matrix::identity());
+        static_cast<MFMatrix&>(*Result->getField())[Index].setValue(Matrix::identity());
     }
 }
 
@@ -596,15 +596,15 @@ void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fxD
 }
 
 template<> inline 
-void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fxDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFMatrix4fx&>(Result).setValue(Matrix4fx::identity());
+        static_cast<SFMatrix4fx&>(*Result->getField()).setValue(Matrix4fx::identity());
     }
     else
     {
-        static_cast<MFMatrix4fx&>(Result)[Index] = Matrix4fx::identity();
+        static_cast<MFMatrix4fx&>(*Result->getField())[Index] = Matrix4fx::identity();
     }
 }
 
@@ -713,15 +713,15 @@ void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4dDe
 }
 
 template<> inline 
-void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4dDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4dDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFMatrix4d&>(Result).setValue(Matrix4d::identity());
+        static_cast<SFMatrix4d&>(*Result->getField()).setValue(Matrix4d::identity());
     }
     else
     {
-        static_cast<MFMatrix4d&>(Result)[Index].setValue(Matrix4d::identity());
+        static_cast<MFMatrix4d&>(*Result->getField())[Index].setValue(Matrix4d::identity());
     }
 }
 

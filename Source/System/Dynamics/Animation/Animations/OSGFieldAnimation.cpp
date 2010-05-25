@@ -185,7 +185,7 @@ void FieldAnimation::changed(ConstFieldMaskArg whichField,
 		    else
 		    {
                 setFieldId(f->getFieldId());
-                commitChanges();
+                //commitChanges();
 		    }
 	    }
 	    else
@@ -240,17 +240,17 @@ void FieldAnimation::changed(ConstFieldMaskArg whichField,
                        SWARNING << "The data type of the field: " << getContainer()->getFieldDescription(getFieldId())->getName() << " with type: "  << getContainer()->getFieldDescription(getFieldId())->getFieldType().getContentType().getCName() << " connected to this animation is not the same data type: " << getAnimator()->getDataType().getCName() << ", that the animator works on."  << std::endl;
                        return;
                    }
-                   const Field* TheField = getContainer()->getField( getFieldId() )->getField();
+                   GetFieldHandlePtr TheFieldHandle = getContainer()->getField( getFieldId() );
 
                    if( getIndex() >= 0 &&
-                       TheField->getCardinality() != FieldType::MultiField &&
-                       getIndex() < TheField->getSize())
+                       TheFieldHandle->getCardinality() != FieldType::MultiField &&
+                       getIndex() < TheFieldHandle->size())
                    {
 					     SWARNING << "If the Index for the field animation is > 0 then the animated field must be a multi field and the index must be less than the size of this field." << getAnimator()->getDataType().getCName() << "."  << std::endl;
 					     return;
                    }
                    else if( getIndex() < 0 &&
-                       TheField->getCardinality() != FieldType::SingleField)
+                       TheFieldHandle->getCardinality() != FieldType::SingleField)
                    {
 					     SWARNING << "If the Index for the field animation is < 0 then the animated field must be a single field." << getAnimator()->getDataType().getCName()  << std::endl;
                    }

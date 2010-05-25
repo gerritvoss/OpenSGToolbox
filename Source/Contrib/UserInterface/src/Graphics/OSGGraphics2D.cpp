@@ -294,8 +294,7 @@ void Graphics2D::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, con
     StateUnrecPtr state = NULL;
     if(Material != NULL)
     {
-        state =
-            Material->finalize(0x000000)->getState();
+        state = Material->finalize(MaterialMapKey(),getDrawEnv()->getWindow())->getState();
 
         state->activate(getDrawEnv());
     }

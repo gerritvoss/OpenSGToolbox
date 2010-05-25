@@ -78,11 +78,11 @@ void QuadParticleSystemDrawer::initMethod(InitPhase ePhase)
 
 Action::ResultE QuadParticleSystemDrawer::draw(DrawEnv *pEnv, ParticleSystemUnrecPtr System, const MFUInt32& Sort)
 {
-    bool isSorted(Sort.getSize() > 0);
+    bool isSorted(Sort.size() > 0);
     UInt32 NumParticles;
     if(isSorted)
     {
-        NumParticles = Sort.getSize();
+        NumParticles = Sort.size();
     }
     else
     {
@@ -189,7 +189,7 @@ void QuadParticleSystemDrawer::fill(DrawableStatsAttachment *pStat,
 
     if(Sort.size() > 0)
     {
-        NumParticles = Sort.getSize();
+        NumParticles = Sort.size();
     }
     else
     {

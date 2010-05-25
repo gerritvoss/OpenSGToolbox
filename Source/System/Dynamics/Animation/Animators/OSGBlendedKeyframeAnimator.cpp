@@ -91,7 +91,7 @@ bool BlendedKeyframeAnimator::animate(UInt32 InterpType,
         if(ReplacementPolicy == OVERWRITE)
         {
             //Zero out the value of the Field
-            getMFKeyframeSequences()->front()->zeroField(*(Result->getField()), Index);
+            getMFKeyframeSequences()->front()->zeroField(Result, Index);
             BlendRepPol = ADDITIVE_ABSOLUTE;
         }
         else
@@ -101,7 +101,7 @@ bool BlendedKeyframeAnimator::animate(UInt32 InterpType,
         bool RetValue(true);
         for(UInt32 i(0) ; i< getMFKeyframeSequences()->size() ; ++i)
         {
-            RetValue = RetValue && getKeyframeSequences(i)->interpolate(InterpType, time, prevTime, BlendRepPol, Cycling, *(Result->getField()), Index, getBlendAmounts(i));
+            RetValue = RetValue && getKeyframeSequences(i)->interpolate(InterpType, time, prevTime, BlendRepPol, Cycling, Result, Index, getBlendAmounts(i));
         }
         return RetValue;
     }

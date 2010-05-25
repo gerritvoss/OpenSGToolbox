@@ -430,15 +430,16 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2sDescBase>::getKey
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2sDescBase>::zeroField(Field& Result, UInt32 Index) const
+void
+KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2sDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt2s&>(Result).setValue(Pnt2s(0,0));
+        static_cast<SFPnt2s&>(*Result->getField()).setValue(Pnt2s(0,0));
     }
     else
     {
-        static_cast<MFPnt2s&>(Result)[Index] = Pnt2s(0,0);
+        static_cast<MFPnt2s&>(*Result->getField())[Index] = Pnt2s(0,0);
     }
 }
 
@@ -518,15 +519,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3sDescBase>::getKey
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3sDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3sDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt3s&>(Result).setValue(Pnt3s(0,0,0));
+        static_cast<SFPnt3s&>(*Result->getField()).setValue(Pnt3s(0,0,0));
     }
     else
     {
-        static_cast<MFPnt3s&>(Result)[Index] = Pnt3s(0,0,0);
+        static_cast<MFPnt3s&>(*Result->getField())[Index] = Pnt3s(0,0,0);
     }
 }
 
@@ -606,15 +607,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4sDescBase>::getKey
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4sDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4sDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt4s&>(Result).setValue(Pnt4s(0,0,0,0));
+        static_cast<SFPnt4s&>(*Result->getField()).setValue(Pnt4s(0,0,0,0));
     }
     else
     {
-        static_cast<MFPnt4s&>(Result)[Index] = Pnt4s(0,0,0,0);
+        static_cast<MFPnt4s&>(*Result->getField())[Index] = Pnt4s(0,0,0,0);
     }
 }
 
@@ -695,15 +696,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fDescBase>::getKey
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt2f&>(Result).setValue(Pnt2f(0.0,0.0));
+        static_cast<SFPnt2f&>(*Result->getField()).setValue(Pnt2f(0.0,0.0));
     }
     else
     {
-        static_cast<MFPnt2f&>(Result)[Index] = Pnt2f(0.0,0.0);
+        static_cast<MFPnt2f&>(*Result->getField())[Index] = Pnt2f(0.0,0.0);
     }
 }
 
@@ -783,15 +784,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fDescBase>::getKey
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt3f&>(Result).setValue(Pnt3f(0.0,0.0,0.0));
+        static_cast<SFPnt3f&>(*Result->getField()).setValue(Pnt3f(0.0,0.0,0.0));
     }
     else
     {
-        static_cast<MFPnt3f&>(Result)[Index] = Pnt3f(0.0,0.0,0.0);
+        static_cast<MFPnt3f&>(*Result->getField())[Index] = Pnt3f(0.0,0.0,0.0);
     }
 }
 
@@ -871,15 +872,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fDescBase>::getKey
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt4f&>(Result).setValue(Pnt4f(0.0,0.0,0.0,0.0));
+        static_cast<SFPnt4f&>(*Result->getField()).setValue(Pnt4f(0.0,0.0,0.0,0.0));
     }
     else
     {
-        static_cast<MFPnt4f&>(Result)[Index] = Pnt4f(0.0,0.0,0.0,0.0);
+        static_cast<MFPnt4f&>(*Result->getField())[Index] = Pnt4f(0.0,0.0,0.0,0.0);
     }
 }
 
@@ -984,15 +985,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fxDescBase>::getKe
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fxDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt2fx&>(Result).setValue(Pnt2fx(0.0f,0.0f));
+        static_cast<SFPnt2fx&>(*Result->getField()).setValue(Pnt2fx(0.0f,0.0f));
     }
     else
     {
-        static_cast<MFPnt2fx&>(Result)[Index] = Pnt2fx(0.0f,0.0f);
+        static_cast<MFPnt2fx&>(*Result->getField())[Index] = Pnt2fx(0.0f,0.0f);
     }
 }
 
@@ -1096,15 +1097,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fxDescBase>::getKe
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fxDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt3fx&>(Result).setValue(Pnt3fx(0.0f,0.0f,0.0f));
+        static_cast<SFPnt3fx&>(*Result->getField()).setValue(Pnt3fx(0.0f,0.0f,0.0f));
     }
     else
     {
-        static_cast<MFPnt3fx&>(Result)[Index] = Pnt3fx(0.0f,0.0f,0.0f);
+        static_cast<MFPnt3fx&>(*Result->getField())[Index] = Pnt3fx(0.0f,0.0f,0.0f);
     }
 }
 
@@ -1216,15 +1217,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fxDescBase>::getKe
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fxDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt4fx&>(Result).setValue(Pnt4fx(0.0f,0.0f,0.0f,0.0f));
+        static_cast<SFPnt4fx&>(*Result->getField()).setValue(Pnt4fx(0.0f,0.0f,0.0f,0.0f));
     }
     else
     {
-        static_cast<MFPnt4fx&>(Result)[Index] = Pnt4fx(0.0f,0.0f,0.0f,0.0f);
+        static_cast<MFPnt4fx&>(*Result->getField())[Index] = Pnt4fx(0.0f,0.0f,0.0f,0.0f);
     }
 }
 
@@ -1305,15 +1306,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2dDescBase>::getKey
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2dDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2dDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt2d&>(Result).setValue(Pnt2d(0.0,0.0));
+        static_cast<SFPnt2d&>(*Result->getField()).setValue(Pnt2d(0.0,0.0));
     }
     else
     {
-        static_cast<MFPnt2d&>(Result)[Index] = Pnt2d(0.0,0.0);
+        static_cast<MFPnt2d&>(*Result->getField())[Index] = Pnt2d(0.0,0.0);
     }
 }
 
@@ -1393,15 +1394,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3dDescBase>::getKey
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3dDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3dDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt3d&>(Result).setValue(Pnt3d(0.0,0.0,0.0));
+        static_cast<SFPnt3d&>(*Result->getField()).setValue(Pnt3d(0.0,0.0,0.0));
     }
     else
     {
-        static_cast<MFPnt3d&>(Result)[Index] = Pnt3d(0.0,0.0,0.0);
+        static_cast<MFPnt3d&>(*Result->getField())[Index] = Pnt3d(0.0,0.0,0.0);
     }
 }
 
@@ -1481,15 +1482,15 @@ void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4dDescBase>::getKey
 }
 
 template<> inline 
-void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4dDescBase>::zeroField(Field& Result, UInt32 Index) const
+void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4dDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<SFPnt4d&>(Result).setValue(Pnt4d(0.0,0.0,0.0,0.0));
+        static_cast<SFPnt4d&>(*Result->getField()).setValue(Pnt4d(0.0,0.0,0.0,0.0));
     }
     else
     {
-        static_cast<MFPnt4d&>(Result)[Index] = Pnt4d(0.0,0.0,0.0,0.0);
+        static_cast<MFPnt4d&>(*Result->getField())[Index] = Pnt4d(0.0,0.0,0.0,0.0);
     }
 }
 

@@ -153,19 +153,19 @@ public:
                 break;
         }
 		if(e->getKey() == KeyEvent::KEY_L &&
-			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+			e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
 		{
             TheWindowEventProducer->setShowCursor(false);
             TheWindowEventProducer->setAttachMouseToCursor(false);
         }
 		if(e->getKey() == KeyEvent::KEY_U &&
-			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+			e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
 		{
             TheWindowEventProducer->setShowCursor(true);
             TheWindowEventProducer->setAttachMouseToCursor(true);
         }
 		if(e->getKey() == KeyEvent::KEY_O &&
-			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+			e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
 		{
             std::vector<WindowEventProducer::FileDialogFilter> Filters;
             Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
@@ -184,7 +184,7 @@ public:
             }
 		}
 		if(e->getKey() == KeyEvent::KEY_S &&
-			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+			e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
 		{
 			std::vector<WindowEventProducer::FileDialogFilter> Filters;
             Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));

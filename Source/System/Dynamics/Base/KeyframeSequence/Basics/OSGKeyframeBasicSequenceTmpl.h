@@ -147,7 +147,7 @@ class KeyframeBasicSequenceTmpl : public KeyframeBasicSequence
     virtual void        shrink   (void                     );
 
     bool interpolate(const UInt32& Type, const Real32& time, const Real32& prevTime, const UInt32& ReplacePolicy, bool isCyclic, Field& Result, UInt32 Index, Real32 Blend);
-    virtual void zeroField(Field& Result, UInt32 Index) const;
+    virtual void zeroField(EditFieldHandlePtr Result, UInt32 Index) const;
 
     //virtual       SequenceTransitPtr  clone        (void);
     

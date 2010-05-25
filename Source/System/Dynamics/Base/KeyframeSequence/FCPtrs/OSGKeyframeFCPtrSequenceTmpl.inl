@@ -415,15 +415,15 @@ void KeyframeFCPtrSequenceTmpl<SequenceDesc>::getKeyValue (GenericType &val,
 }
 
 template <class SequenceDesc> inline
-void KeyframeFCPtrSequenceTmpl<SequenceDesc>::zeroField(Field& Result, UInt32 Index) const
+void KeyframeFCPtrSequenceTmpl<SequenceDesc>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    if(Result.getCardinality() == FieldType::SingleField)
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        static_cast<typename SequenceDesc::SingleFieldType&>(Result).setValue(NULL);
+        static_cast<typename SequenceDesc::SingleFieldType&>(*Result->getField()).setValue(NULL);
     }
     else
     {
-        static_cast<typename SequenceDesc::StoredFieldType&>(Result)[Index] = NULL;
+        static_cast<typename SequenceDesc::StoredFieldType&>(*Result->getField())[Index] = NULL;
     }
 }
 

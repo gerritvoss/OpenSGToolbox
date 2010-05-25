@@ -248,7 +248,7 @@ void LineParticleSystemDrawer::fill(DrawableStatsAttachment *pStat,
 
     if(Sort.size() > 0)
     {
-        NumParticles = Sort.getSize();
+        NumParticles = Sort.size();
     }
     else
     {
