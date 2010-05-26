@@ -26818,3 +26818,10 @@ void SWIG_init_user(lua_State* L)
   SWIG_Lua_dostring(L,SWIG_LUACODE);
 }
 
+
+#include "OSGToolbox_wrap.h"
+#include <boost/bind.hpp>
+OSG::LuaManager::OpenBoundLuaLibFunctor getOSGToolboxLuaBindingsLibFunctor(void)
+{
+    return boost::bind(&luaopen_OSGToolbox, _1);
+}
