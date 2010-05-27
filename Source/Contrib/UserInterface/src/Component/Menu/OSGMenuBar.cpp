@@ -386,7 +386,7 @@ void MenuBar::MenuSelectionListener::keyTyped(const KeyEventUnrecPtr e)
         {
             if(dynamic_cast<MenuItem*>(_MenuBar->getChildren(i))->getMnemonicKey() == e->getKey() )
             {
-                std::cout << e->getKeyChar() << std::endl;
+                //std::cout << e->getKeyChar() << std::endl;
             }
         }
     }

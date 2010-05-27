@@ -3577,7 +3577,6 @@ void WindowsLookAndFeel::init(void)
     WindowsSlider->setDrawLabels(true);
     WindowsSlider->setInverted(false);
     WindowsSlider->setLabelPrototype(WindowsSliderPrototypeLabel);
-    std::cout << "WindowsSlider->setLabelPrototype " << WindowsSliderPrototypeLabel << std::endl;
     WindowsSlider->setTrackDrawObject(WindowsSliderTrackCanvas);
     WindowsSlider->setMinTrackDrawObject(NULL);
     WindowsSlider->setMaxTrackDrawObject(NULL);

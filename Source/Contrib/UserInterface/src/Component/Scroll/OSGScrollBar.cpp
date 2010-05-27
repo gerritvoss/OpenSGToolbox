@@ -657,7 +657,6 @@ void ScrollBar::ScrollBarDraggedListener::mouseDragged(const MouseEventUnrecPtr 
     Pnt2f ComponentMousePosition(ViewportToComponent(e->getLocation(), _ScrollBar, e->getViewport()));
 
     _ScrollBar->setMajorAxisScrollBarPosition(_InitialScrollBarPosition + (ComponentMousePosition - _InitialMousePosition));
-    //std::cout << "Diff "<< _InitialMousePosition[AxisIndex] - ComponentMousePosition[AxisIndex] << std::endl;
 }
 
 

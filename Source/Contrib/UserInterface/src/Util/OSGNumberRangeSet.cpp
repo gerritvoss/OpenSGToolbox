@@ -29,6 +29,7 @@
 #include "OSGNumberRangeSet.h"
 
 #include "OSGBaseFunctions.h"
+#include "OSGLog.h"
 #include <iostream>
 
 OSG_BEGIN_NAMESPACE
@@ -429,7 +430,7 @@ void NumberSet::print(void) const
 	RangeListTypeConstItor ListItor;
     for (ListItor = _List.begin() ; ListItor != _List.end() ; ++ListItor )
 	{
-        std::cout << "   " << ListItor->getMin() << " - " << ListItor->getMax() << std::endl;
+        SLOG << "   " << ListItor->getMin() << " - " << ListItor->getMax() << std::endl;
     }
 }
 

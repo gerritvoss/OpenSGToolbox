@@ -112,12 +112,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SceneGraphTreeModel : public SceneGrap
     //Returns true if these objects represent the same node in the tree
     virtual bool isEqual(const boost::any& left, const boost::any& right) const;
 
-    void removeNode(const boost::any& nodeToBeRemoved);
+    void removeNode(NodeUnrecPtr nodeToBeRemoved);
 
-    void addNode(const boost::any& parent,const boost::any& nodeToBeAdded);
+    void addNode(NodeUnrecPtr parent,NodeUnrecPtr nodeToBeAdded);
 
-    void insertNode(const boost::any& parent,
-                    const boost::any& nodeToBeAdded,
+    void insertNode(NodeUnrecPtr parent,
+                    NodeUnrecPtr nodeToBeAdded,
                     UInt32 Index);
 
 
