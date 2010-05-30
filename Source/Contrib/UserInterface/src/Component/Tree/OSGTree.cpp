@@ -968,14 +968,17 @@ void Tree::updatePreferredSize(void)
 void Tree::updateExpandedPath(const TreePath& Path)
 {
     Int32 Row(getModelLayout()->getRowForPath(Path));
-    if(Row>=0 && Row <= _BottomDrawnRow)
+    if(Row <= _BottomDrawnRow)
     {
-        _DrawnRows[Row-_TopDrawnRow] =createRowComponent(Row);
-    }
-    UInt32 VisibleChildren = getModelLayout()->getVisibleChildCount(Path);
-    if(VisibleChildren > 0)
-    {
-        updateInsertedRows(Row+1,VisibleChildren);
+        if(Row>=0 && Row>=_TopDrawnRow)
+        {
+            _DrawnRows[Row-_TopDrawnRow] =createRowComponent(Row);
+        }
+        UInt32 VisibleChildren = getModelLayout()->getVisibleChildCount(Path);
+        if(VisibleChildren > 0)
+        {
+            updateInsertedRows(Row+1,VisibleChildren);
+        }
     }
 }
 
