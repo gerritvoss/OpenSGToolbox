@@ -275,9 +275,9 @@ void SceneGraphTreeModel::removeNode(NodeUnrecPtr nodeToBeRemoved)
                 std::vector<boost::any> ChildUserObjects;
                 for(UInt32 i(0) ; i< childIndices.size() ; ++i)
                 {
-                    ChildUserObjects.push_back(boost::any(parent->getParent()->getChild(childIndices[i])));
+                    ChildUserObjects.push_back(boost::any(NodeUnrecPtr(parent->getParent()->getChild(childIndices[i]))));
                 }
-                produceTreeNodesChanged(getPath(boost::any(parent->getParent())), childIndices, ChildUserObjects);
+                produceTreeNodesChanged(getPath(boost::any(NodeUnrecPtr(parent->getParent()))), childIndices, ChildUserObjects);
             }
         }
     }
