@@ -322,11 +322,14 @@ void AbstractTreeModelLayout::insertVisiblePath(const TreePath& Path)
 {
     _VisiblePathSet.insert(Path);
     //Insert all visible decendents of Path
-    std::vector<TreePath> VisibleDecendants;
-    getVisibleDecendants(Path, VisibleDecendants);
-    for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+    if(isExpanded(Path))
     {
-        _VisiblePathSet.insert(VisibleDecendants[i]);
+        std::vector<TreePath> VisibleDecendants;
+        getVisibleDecendants(Path, VisibleDecendants);
+        for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+        {
+            _VisiblePathSet.insert(VisibleDecendants[i]);
+        }
     }
 }
 
