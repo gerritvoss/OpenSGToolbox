@@ -1986,7 +1986,7 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
               lua_pushfstring(L,"Error in getFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               goto fail;
           }
-          if(TheFieldHandle->getCardinality() == OSG::FieldType::MultiField)
+          if(TheFieldHandle->getCardinality() != OSG::FieldType::MultiField)
           {
               lua_pushfstring(L,"Error in getFieldValue field of name '%s' on type '%s' is a single-field, you do not need to supply an index..",arg2,(*arg1)->getTypeName());
               goto fail;
