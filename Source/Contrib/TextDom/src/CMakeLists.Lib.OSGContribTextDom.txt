@@ -1,0 +1,54 @@
+
+OSG_ADD_PROJECT("OSGContribTextDom")
+OSG_SELECT_PROJECT()
+
+##############################################################################
+# dependencies
+##############################################################################
+
+# dependencies - OpenSG
+SET(${PROJECT_NAME}_DEP_OSG_LIB OSGDrawable
+                                OSGGroup
+                                OSGText
+                                OSGWindow
+                                OSGSystem
+                                OSGBase
+                                OSGUtil
+                                OSGTBFileIO
+                                OSGState
+                                OSGContribUserInterface)
+
+SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB )
+
+# dependencies - External
+# SET(${PROJECT_NAME}_DEP_LIB)
+# SET(${PROJECT_NAME}_DEP_LIBDIR)
+# SET(${PROJECT_NAME}_DEP_INCDIR)
+
+# SET(${PROJECT_NAME}_DEP_TEST_LIB)
+# SET(${PROJECT_NAME}_DEP_TEST_LIBDIR)
+# SET(${PROJECT_NAME}_DEP_TEST_INCDIR OSG_GLUT_INC_DIR)
+
+# dependencies - Additional
+# SET(${PROJECT_NAME}_DEP_ADD_INCDIR)
+
+SET(${PROJECT_NAME}_CXXFLAGS ${OSG_ADD_CXX_FLAGS})
+
+OSG_STORE_PROJECT_DEPENDENCIES()
+
+##############################################################################
+# collect sources
+##############################################################################
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}")
+
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents")
+
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/Base")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/Plain")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/Styled")
+
+##############################################################################
+# setup build
+##############################################################################
+
+OSG_SETUP_PROJECT("OSG_COMPILECONTRIBTEXTDOMLIB")
