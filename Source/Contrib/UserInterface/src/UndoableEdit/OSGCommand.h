@@ -62,12 +62,16 @@ protected:
 
 	//This command should be overriden by sub-classes
 	virtual void execute(void) = 0;
+
+    static CommandType _Type;
 public:
 
 	//A human readable string that describes the command
 	virtual std::string getCommandDescription(void) const = 0;
 	
     virtual const CommandType &getType(void) const = 0;
+	
+    static const CommandType &getClassType(void);
 	
 	virtual ~Command(void);
 };

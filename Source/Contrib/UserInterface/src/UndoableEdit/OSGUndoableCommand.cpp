@@ -63,7 +63,7 @@ A UndoableCommand.
  *                           Class variables                               *
 \***************************************************************************/
 
-CommandType UndoableCommand::_Type("UndoableCommand", "CommandType");
+CommandType UndoableCommand::_Type("UndoableCommand", "Command");
 
 /***************************************************************************\
  *                           Class methods                                 *

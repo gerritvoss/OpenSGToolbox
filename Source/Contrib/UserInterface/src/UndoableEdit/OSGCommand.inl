@@ -17,5 +17,11 @@ inline
 void Command::operator =(const Command& source)
 {
 }
+    
+inline
+const CommandType &Command::getClassType(void)
+{
+    return _Type;
+}
 
 OSG_END_NAMESPACE
