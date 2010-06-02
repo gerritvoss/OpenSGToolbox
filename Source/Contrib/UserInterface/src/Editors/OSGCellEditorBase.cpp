@@ -118,8 +118,8 @@ void CellEditorBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&CellEditor::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&CellEditor::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&CellEditor::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&CellEditor::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -281,6 +281,32 @@ CellEditorBase::~CellEditorBase(void)
 {
 }
 
+
+
+GetFieldHandlePtr CellEditorBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<CellEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CellEditorBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

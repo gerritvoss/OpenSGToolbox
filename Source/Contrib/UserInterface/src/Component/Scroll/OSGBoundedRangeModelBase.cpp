@@ -118,8 +118,8 @@ void BoundedRangeModelBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&BoundedRangeModel::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&BoundedRangeModel::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&BoundedRangeModel::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&BoundedRangeModel::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -271,6 +271,32 @@ BoundedRangeModelBase::~BoundedRangeModelBase(void)
 {
 }
 
+
+
+GetFieldHandlePtr BoundedRangeModelBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<BoundedRangeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoundedRangeModelBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

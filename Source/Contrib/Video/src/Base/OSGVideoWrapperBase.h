@@ -187,6 +187,9 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapperBase : public AttachmentContainer
     /*! \name                    Event Producer                            */
     /*! \{                                                                 */
     EventProducer _Producer;
+    
+    GetFieldHandlePtr  getHandleEventProducer        (void) const;
+    EditFieldHandlePtr editHandleEventProducer       (void);
 
     /*! \}                                                                 */
 

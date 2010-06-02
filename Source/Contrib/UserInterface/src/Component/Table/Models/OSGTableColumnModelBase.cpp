@@ -118,8 +118,8 @@ void TableColumnModelBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&TableColumnModel::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&TableColumnModel::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&TableColumnModel::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&TableColumnModel::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -311,6 +311,32 @@ TableColumnModelBase::~TableColumnModelBase(void)
 {
 }
 
+
+
+GetFieldHandlePtr TableColumnModelBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<TableColumnModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnModelBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

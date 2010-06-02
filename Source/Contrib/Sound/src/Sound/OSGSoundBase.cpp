@@ -262,8 +262,8 @@ void SoundBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&Sound::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&Sound::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&Sound::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&Sound::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -1027,6 +1027,32 @@ EditFieldHandlePtr SoundBase::editHandleEnable3D       (void)
 
 
     editSField(Enable3DFieldMask);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr SoundBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<SoundBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SoundBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

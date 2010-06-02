@@ -304,6 +304,9 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     /*! \name                    Event Producer                            */
     /*! \{                                                                 */
     EventProducer _Producer;
+    
+    GetFieldHandlePtr  getHandleEventProducer        (void) const;
+    EditFieldHandlePtr editHandleEventProducer       (void);
 
     /*! \}                                                                 */
 

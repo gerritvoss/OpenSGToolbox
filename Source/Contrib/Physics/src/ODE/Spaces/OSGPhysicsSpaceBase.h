@@ -279,6 +279,9 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
     /*! \name                    Event Producer                            */
     /*! \{                                                                 */
     EventProducer _Producer;
+    
+    GetFieldHandlePtr  getHandleEventProducer        (void) const;
+    EditFieldHandlePtr editHandleEventProducer       (void);
 
     /*! \}                                                                 */
 

@@ -198,8 +198,8 @@ void WindowEventProducerBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&WindowEventProducer::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&WindowEventProducer::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&WindowEventProducer::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&WindowEventProducer::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -853,6 +853,32 @@ EditFieldHandlePtr WindowEventProducerBase::editHandleLockCursor     (void)
 
 
     editSField(LockCursorFieldMask);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr WindowEventProducerBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr WindowEventProducerBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

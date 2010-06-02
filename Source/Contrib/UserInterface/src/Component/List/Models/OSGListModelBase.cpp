@@ -118,8 +118,8 @@ void ListModelBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&ListModel::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&ListModel::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&ListModel::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&ListModel::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -291,6 +291,32 @@ ListModelBase::~ListModelBase(void)
 {
 }
 
+
+
+GetFieldHandlePtr ListModelBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<ListModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListModelBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

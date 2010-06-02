@@ -396,6 +396,9 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     /*! \name                    Event Producer                            */
     /*! \{                                                                 */
     EventProducer _Producer;
+    
+    GetFieldHandlePtr  getHandleEventProducer        (void) const;
+    EditFieldHandlePtr editHandleEventProducer       (void);
 
     /*! \}                                                                 */
 

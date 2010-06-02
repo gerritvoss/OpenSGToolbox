@@ -622,8 +622,8 @@ void ComponentBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&Component::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&Component::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&Component::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&Component::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -2967,6 +2967,32 @@ EditFieldHandlePtr ComponentBase::editHandleCursor         (void)
 
 
     editSField(CursorFieldMask);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr ComponentBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGContribTextDomDef.h"
+#include "OSGContribUserInterfaceDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -76,7 +76,7 @@ class DocumentEvent;
 
 //! \brief DocumentEvent Base Class.
 
-class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentEventBase : public Event
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DocumentEventBase : public Event
 {
   public:
 

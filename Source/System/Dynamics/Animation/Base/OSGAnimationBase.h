@@ -258,6 +258,9 @@ class OSG_TBANIMATION_DLLMAPPING AnimationBase : public AttachmentContainer
     /*! \name                    Event Producer                            */
     /*! \{                                                                 */
     EventProducer _Producer;
+    
+    GetFieldHandlePtr  getHandleEventProducer        (void) const;
+    EditFieldHandlePtr editHandleEventProducer       (void);
 
     /*! \}                                                                 */
 

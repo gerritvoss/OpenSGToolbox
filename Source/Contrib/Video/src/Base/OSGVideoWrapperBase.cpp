@@ -118,8 +118,8 @@ void VideoWrapperBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&VideoWrapper::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&VideoWrapper::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&VideoWrapper::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&VideoWrapper::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -350,6 +350,32 @@ VideoWrapperBase::~VideoWrapperBase(void)
 {
 }
 
+
+
+GetFieldHandlePtr VideoWrapperBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<VideoWrapperBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr VideoWrapperBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

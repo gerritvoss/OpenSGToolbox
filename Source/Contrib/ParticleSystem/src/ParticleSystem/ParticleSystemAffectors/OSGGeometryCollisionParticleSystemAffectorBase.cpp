@@ -152,8 +152,8 @@ void GeometryCollisionParticleSystemAffectorBase::classDescInserter(TypeObject &
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&GeometryCollisionParticleSystemAffector::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&GeometryCollisionParticleSystemAffector::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&GeometryCollisionParticleSystemAffector::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&GeometryCollisionParticleSystemAffector::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -631,6 +631,32 @@ EditFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::editHandleCollis
                     static_cast<GeometryCollisionParticleSystemAffector *>(this), _1));
 
     editSField(CollisionNodeFieldMask);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<GeometryCollisionParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

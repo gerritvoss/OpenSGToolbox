@@ -177,7 +177,7 @@ DocumentEventBase::TypeObject DocumentEventBase::_type(
     "<FieldContainer\n"
     "\tname=\"DocumentEvent\"\n"
     "\tparent=\"Event\"\n"
-    "    library=\"ContribTextDom\"\n"
+    "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "    systemcomponent=\"true\"\n"

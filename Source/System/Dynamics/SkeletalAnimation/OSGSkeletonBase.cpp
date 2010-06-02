@@ -135,8 +135,8 @@ void SkeletonBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&Skeleton::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&Skeleton::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&Skeleton::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&Skeleton::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -546,6 +546,32 @@ EditFieldHandlePtr SkeletonBase::editHandleRootJoints     (void)
                     static_cast<Skeleton *>(this)));
 
     editMField(RootJointsFieldMask, _mfRootJoints);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr SkeletonBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<SkeletonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

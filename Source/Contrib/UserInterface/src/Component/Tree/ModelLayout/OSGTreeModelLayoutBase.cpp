@@ -118,8 +118,8 @@ void TreeModelLayoutBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&TreeModelLayout::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&TreeModelLayout::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&TreeModelLayout::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&TreeModelLayout::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -351,6 +351,32 @@ TreeModelLayoutBase::~TreeModelLayoutBase(void)
 {
 }
 
+
+
+GetFieldHandlePtr TreeModelLayoutBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<TreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeModelLayoutBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

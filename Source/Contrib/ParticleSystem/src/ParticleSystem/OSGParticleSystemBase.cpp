@@ -494,8 +494,8 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&ParticleSystem::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&ParticleSystem::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&ParticleSystem::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&ParticleSystem::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -2372,6 +2372,32 @@ EditFieldHandlePtr ParticleSystemBase::editHandleMaxParticleSize(void)
 
 
     editSField(MaxParticleSizeFieldMask);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr ParticleSystemBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

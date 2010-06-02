@@ -231,8 +231,8 @@ void TableColumnBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&TableColumn::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&TableColumn::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&TableColumn::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&TableColumn::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -945,6 +945,32 @@ EditFieldHandlePtr TableColumnBase::editHandleCellEditor     (void)
                     static_cast<TableColumn *>(this), _1));
 
     editSField(CellEditorFieldMask);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr TableColumnBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<TableColumnBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableColumnBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

@@ -151,8 +151,8 @@ void CollisionParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&CollisionParticleSystemAffector::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&CollisionParticleSystemAffector::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&CollisionParticleSystemAffector::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&CollisionParticleSystemAffector::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -625,6 +625,32 @@ EditFieldHandlePtr CollisionParticleSystemAffectorBase::editHandleSecondaryColli
                     static_cast<CollisionParticleSystemAffector *>(this)));
 
     editMField(SecondaryCollisionSystemsFieldMask, _mfSecondaryCollisionSystems);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr CollisionParticleSystemAffectorBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<CollisionParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CollisionParticleSystemAffectorBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

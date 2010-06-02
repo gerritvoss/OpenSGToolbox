@@ -183,6 +183,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModelBase : public FieldCon
     /*! \name                    Event Producer                            */
     /*! \{                                                                 */
     EventProducer _Producer;
+    
+    GetFieldHandlePtr  getHandleEventProducer        (void) const;
+    EditFieldHandlePtr editHandleEventProducer       (void);
 
     /*! \}                                                                 */
 

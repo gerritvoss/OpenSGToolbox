@@ -180,6 +180,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CellEditorBase : public FieldContainer
     /*! \name                    Event Producer                            */
     /*! \{                                                                 */
     EventProducer _Producer;
+    
+    GetFieldHandlePtr  getHandleEventProducer        (void) const;
+    EditFieldHandlePtr editHandleEventProducer       (void);
 
     /*! \}                                                                 */
 

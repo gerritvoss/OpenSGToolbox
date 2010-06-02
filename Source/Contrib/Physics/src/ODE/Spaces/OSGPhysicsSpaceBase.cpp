@@ -232,8 +232,8 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&PhysicsSpace::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&PhysicsSpace::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&PhysicsSpace::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&PhysicsSpace::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -1022,6 +1022,32 @@ EditFieldHandlePtr PhysicsSpaceBase::editHandleCategoryCollisionParameters(void)
                     static_cast<PhysicsSpace *>(this)));
 
     editMField(CategoryCollisionParametersFieldMask, _mfCategoryCollisionParameters);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr PhysicsSpaceBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<PhysicsSpaceBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PhysicsSpaceBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

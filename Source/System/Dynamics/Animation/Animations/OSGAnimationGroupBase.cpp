@@ -183,8 +183,8 @@ void AnimationGroupBase::classDescInserter(TypeObject &oType)
         EventProducerFieldId,EventProducerFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&AnimationGroup::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&AnimationGroup::invalidGetField));
+        static_cast     <FieldEditMethodSig>(&AnimationGroup::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&AnimationGroup::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -830,6 +830,32 @@ EditFieldHandlePtr AnimationGroupBase::editHandleSpan           (void)
 
 
     editSField(SpanFieldMask);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr AnimationGroupBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<AnimationGroupBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AnimationGroupBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }
