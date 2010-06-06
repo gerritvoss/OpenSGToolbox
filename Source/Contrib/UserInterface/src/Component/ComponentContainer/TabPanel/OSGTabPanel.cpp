@@ -454,6 +454,7 @@ void TabPanel::updateLayout(void)
     // first layout all of the tabs
     // naturally the alignments and such is necessary
     // on the first sweep, get the maximum size and cumLength
+    const Real32 TabMajorAxisSpacing(5.0f);
     for (UInt32 i=0; i < getMFTabs()->size(); ++i)
     {
         cumMajorAxis += getTabs(i)->getRequestedSize()[AxisIndex];
@@ -462,6 +463,7 @@ void TabPanel::updateLayout(void)
             largestMinorAxis = getTabs(i)->getRequestedSize()[(AxisIndex+1)%2];
         }
     }
+    cumMajorAxis += TabMajorAxisSpacing * 2.0f * getMFTabs()->size();
     cumMajorAxis += static_cast<Real32>(getMFTabs()->size()) * (TabBorderTopLeftWidth[AxisIndex] + TabBorderBottomRightWidth[AxisIndex]);
     largestMinorAxis += (TabBorderTopLeftWidth[(AxisIndex+1)%2] + TabBorderBottomRightWidth[(AxisIndex+1)%2]);
 
@@ -491,7 +493,7 @@ void TabPanel::updateLayout(void)
     for (UInt32 i=0; i < getMFTabs()->size(); ++i)
     {
         offset[AxisIndex] += TabBorderTopLeftWidth[AxisIndex];
-        getTabs(i)->setSize(getTabs(i)->getRequestedSize());
+        getTabs(i)->setSize(getTabs(i)->getRequestedSize() + 2.0f * TabMajorAxisSpacing);
         getTabs(i)->setPosition(alignOffset + offset);
         offset[AxisIndex] += getTabs(i)->getSize()[AxisIndex] + TabBorderBottomRightWidth[AxisIndex];
     }
