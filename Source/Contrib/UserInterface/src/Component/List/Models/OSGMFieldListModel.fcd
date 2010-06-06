@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="MFieldListModel"
+	parent="AbstractListModel"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+A UI MFieldListModel.
+	<Field
+		name="Container"
+		type="FieldContainer"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NULL"
+		access="public"
+		>
+	</Field>
+	<Field
+		name="FieldId"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0"
+		access="public"
+		>
+	</Field>
+</FieldContainer>
