@@ -58,6 +58,7 @@
 #include "OSGActivity.h"
 #include "OSGWindow.h"
 #include "OSGLuaActivity.h"
+#include "OSGGenericEvent.h"
         
 %}
 
@@ -495,11 +496,12 @@ namespace OSG {
                              KEY_MODIFIER_CAPS_LOCK   = 16,
                              KEY_MODIFIER_NUM_LOCK    = 32,
                              KEY_MODIFIER_SCROLL_LOCK = 64,
-#ifdef __APPLE__
-                         KEY_MODIFIER_COMMAND     = KEY_MODIFIER_META
-#else
+//#ifdef __APPLE__
+//                         KEY_MODIFIER_COMMAND     = KEY_MODIFIER_META
+//#else
                          KEY_MODIFIER_COMMAND     = KEY_MODIFIER_CONTROL
-#endif };
+//#endif
+         };
          enum Key
           {
              KEY_UNKNOWN = 0,
@@ -791,6 +793,8 @@ namespace OSG {
     
         bool attachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
         void dettachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
+        void attachUpdateProducer(EventProducerPtr TheProducer);
+        void detachUpdateProducer(void);
         
         std::vector<UInt32> intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort = false, NodeRefPtr Beacon = NullFC) const;
         std::vector<UInt32> intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodeRefPtr Beacon = NullFC) const;
