@@ -46,7 +46,11 @@
 #include <OSGConfig.h>
 
 #include "OSGMFieldListModel.h"
+#include "OSGPointerMFieldBase.h"
+#include "OSGFieldContainerMFieldHandle.h"
+#include "OSGFieldContainerFactory.h"
 #include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -136,13 +140,23 @@ boost::any MFieldListModel::getElementAt(UInt32 index) const
                  << " because that field has size " << TheFieldHandle->size() << std::endl;
         return 0;
     }
+    std::string Value("");
+    if(TheFieldHandle->isPointerField())
+    {
+        GetMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<GetMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
+        Value = boost::lexical_cast<std::string>(TheHandle->get(index)->getId());
+    }
+    else
+    {
+        std::ostringstream StrStream;
+        OutStream TheOutStream(StrStream);
 
-    std::ostringstream StrStream;
-    OutStream TheOutStream(StrStream);
+        //Get the from index value
+        TheFieldHandle->pushIndexedValueToStream(TheOutStream, index);
+        Value = StrStream.str();
+    }
 
-    //Get the from index value
-    TheFieldHandle->pushIndexedValueToStream(TheOutStream, index);
-    return boost::any(StrStream.str());
+    return boost::any(Value);
 }
 
 void MFieldListModel::containerChanged(FieldContainer * container, ConstFieldMaskArg whichField)
