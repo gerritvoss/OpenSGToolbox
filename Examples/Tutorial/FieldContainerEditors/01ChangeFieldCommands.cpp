@@ -1093,10 +1093,10 @@ public:
 PanelUnrecPtr createMultiPtrFieldPanel(void)
 {
     //Buttons for Inner Panel
-    ButtonPtr AButton = Button::create();
+    ButtonRefPtr AButton = Button::create();
     AButton->setText("A");
 
-    ButtonPtr BButton = Button::create();
+    ButtonRefPtr BButton = Button::create();
     BButton->setText("B");
 
     //Inner Panel
