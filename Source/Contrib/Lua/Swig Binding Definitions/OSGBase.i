@@ -1,6 +1,11 @@
 %include <lua/std_string.i>
 %module OSG
 %native(version) int OSGVersion(lua_State*L);  // registers native_function() with SWIG
+%native(LOG) int OSGLogLOG(lua_State*L);  // registers native_function() with SWIG
+%native(FATAL) int OSGLogFATAL(lua_State*L);  // registers native_function() with SWIG
+%native(WARNING) int OSGLogWARNING(lua_State*L);  // registers native_function() with SWIG
+%native(NOTICE) int OSGLogNOTICE(lua_State*L);  // registers native_function() with SWIG
+%native(INFO) int OSGLogINFO(lua_State*L);  // registers native_function() with SWIG
 %{
 #include "OSGConfig.h"
 #include "OSGBaseFunctions.h"
@@ -20,6 +25,7 @@
 #include "OSGVolume.h"
 #include "OSGBoxVolume.h"
 #include "OSGReal16.h"
+#include "OSGLog.h"
 
     int OSGVersion(lua_State*L) // my native code
     {
@@ -31,6 +37,96 @@
       return SWIG_arg;
       
       if(0) SWIG_fail;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    
+    int OSGLogLOG(lua_State*L)
+    {
+      int SWIG_arg = 0;
+      OSG::Char8 *arg1 = (OSG::Char8 *) 0 ;
+      
+      SWIG_check_num_args("LOG",1,1)
+      if(!lua_isstring(L,1)) SWIG_fail_arg("LOG",1,"string");
+      
+      arg1 = (OSG::Char8 *)lua_tostring(L, 1);
+      
+      SLOG << arg1 << std::endl;
+      return SWIG_arg;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    
+    int OSGLogFATAL(lua_State*L)
+    {
+      int SWIG_arg = 0;
+      OSG::Char8 *arg1 = (OSG::Char8 *) 0 ;
+      
+      SWIG_check_num_args("FATAL",1,1)
+      if(!lua_isstring(L,1)) SWIG_fail_arg("FATAL",1,"string");
+      
+      arg1 = (OSG::Char8 *)lua_tostring(L, 1);
+      
+      SFATAL << arg1 << std::endl;
+      return SWIG_arg;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    
+    int OSGLogWARNING(lua_State*L)
+    {
+      int SWIG_arg = 0;
+      OSG::Char8 *arg1 = (OSG::Char8 *) 0 ;
+      
+      SWIG_check_num_args("WARNING",1,1)
+      if(!lua_isstring(L,1)) SWIG_fail_arg("WARNING",1,"string");
+      
+      arg1 = (OSG::Char8 *)lua_tostring(L, 1);
+      
+      SWARNING << arg1 << std::endl;
+      return SWIG_arg;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    
+    int OSGLogNOTICE(lua_State*L)
+    {
+      int SWIG_arg = 0;
+      OSG::Char8 *arg1 = (OSG::Char8 *) 0 ;
+      
+      SWIG_check_num_args("NOTICE",1,1)
+      if(!lua_isstring(L,1)) SWIG_fail_arg("NOTICE",1,"string");
+      
+      arg1 = (OSG::Char8 *)lua_tostring(L, 1);
+      
+      SNOTICE << arg1 << std::endl;
+      return SWIG_arg;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    
+    int OSGLogINFO(lua_State*L)
+    {
+      int SWIG_arg = 0;
+      OSG::Char8 *arg1 = (OSG::Char8 *) 0 ;
+      
+      SWIG_check_num_args("INFO",1,1)
+      if(!lua_isstring(L,1)) SWIG_fail_arg("INFO",1,"string");
+      
+      arg1 = (OSG::Char8 *)lua_tostring(L, 1);
+      
+      SINFO << arg1 << std::endl;
+      return SWIG_arg;
       
     fail:
       lua_error(L);
