@@ -115,8 +115,11 @@ void EditableTextComponent::keyTyped(const KeyEventUnrecPtr e)
 			{	
                 //erase at the current caret position
                 Int32 DeleteIndex(getCaretPosition());
-                moveCaret(-1);
-                deleteRange(DeleteIndex-1, DeleteIndex);
+                if(DeleteIndex != 0)
+                {
+                    moveCaret(-1);
+                    deleteRange(DeleteIndex-1, DeleteIndex);
+                }
 			}
 		}
 		if(e->getKey()== e->KEY_DELETE)
