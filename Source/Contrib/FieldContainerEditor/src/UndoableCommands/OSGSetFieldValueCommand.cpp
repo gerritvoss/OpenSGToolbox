@@ -136,13 +136,19 @@ void SetFieldValueCommand::execute(void)
     {
         if(TheFieldHandle->isPointerField())
         {
-            _PrevValue = boost::lexical_cast<UInt32>(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index)->getId());
+            _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index)->getId());
         }
         else
         {
             TheFieldHandle->pushIndexedValueToStream(TheOutStream, _Index);
             _PrevValue = StrStream.str();
         }
+    }
+
+    //Remove quotes from strings
+    if(TheFieldHandle->getType().getContentType() == FieldTraits<std::string>::getType())
+    {
+        _PrevValue = _PrevValue.substr(1,StrStream.str().size()-2);
     }
 
     //Set the value

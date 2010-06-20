@@ -85,13 +85,13 @@ void GridLayout::updateLayout(const MFUnrecComponentPtr* Components, const Compo
 
 	Real32 Xpos = 0;
 	Real32 Ypos = 0;
-	Real32 maxSizeX = 0;
-	Real32 maxSizeY = 0;
+	Real32 maxSizeX = (borderSize.x()-getHorizontalGap()*(getColumns()-1)) / static_cast<Real32>(getColumns());
+	Real32 maxSizeY = (borderSize.y()-getVerticalGap()*(getRows()-1)) / static_cast<Real32>(getRows());
 	Real32 debug = 10;
 	Int32 numComp = Components->size();
 	Real32 buttonXSize, buttonYSize;
 
-	//set the size to the perfered sizes for the buttons
+	//set the size to the perfered sizes
 	for(UInt16 i = 0; i<Components->size(); i++){
 		if ((*Components)[i] != NULL) 
 		{

@@ -41,35 +41,8 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void FieldEditorComponent::setCommandManager(CommandManagerPtr manager)
+NumberSpinnerFieldEditor::SpinnerListener::SpinnerListener(NumberSpinnerFieldEditor * ptr) : _NumberSpinnerFieldEditor(ptr)
 {
-    _CmdManager = manager;
-}
-
-inline
-CommandManagerPtr FieldEditorComponent::getCommandManager(void) const
-{
-    return _CmdManager;
-}
-
-inline
-void FieldEditorComponent::attachFieldCallback(void)
-{
-    if(getEditingFC() != NULL)
-    {
-        //Attach to the Changed function callback for the container
-        getEditingFC()->addChangedFunctor(boost::bind(&FieldEditorComponent::fieldChanged, this, _1, _2),"");
-    }
-}
-
-inline
-void FieldEditorComponent::dettachFieldCallback(void)
-{
-    if(getEditingFC() != NULL)
-    {
-        //Dettach from the Changed function callback for the container
-        getEditingFC()->subChangedFunctor(boost::bind(&FieldEditorComponent::fieldChanged, this, _1, _2));
-    }
 }
 
 OSG_END_NAMESPACE

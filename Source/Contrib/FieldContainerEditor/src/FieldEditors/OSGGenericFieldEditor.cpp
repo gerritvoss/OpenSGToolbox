@@ -50,6 +50,13 @@
 #include "OSGTypeFactory.h"
 #include "OSGFieldEditorFactory.h"
 #include <sstream>
+#include "OSGAttachmentMapFieldTraits.h"
+#include "OSGChangedFunctorFieldTraits.h"
+#include "OSGPointerSFieldBase.h"
+#include "OSGFieldContainerSFieldHandle.h"
+#include "OSGPointerMFieldBase.h"
+#include "OSGFieldContainerMFieldHandle.h"
+#include <boost/lexical_cast.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,10 +87,12 @@ void GenericFieldEditor::initMethod(InitPhase ePhase)
         for(UInt32 i(0) ; i<NumTypes; ++i)
         {
             type = dynamic_cast<DataType*>(TypeFactory::the()->findType(i));
-            if(type != NULL)
+            if(type != NULL &&
+                *type != FieldTraits<AttachmentMap>::getType() &&
+                *type != FieldTraits<ChangedFunctorCallback>::getType())
             {
                 _EditableTypes.push_back(type);
-                FieldEditorFactory::the()->setDefaultEditor(type, &getClassType());
+                FieldEditorFactory::the()->setEditorType(type, &getClassType(), "Generic");
             }
         }
     }
@@ -97,18 +106,58 @@ void GenericFieldEditor::internalFieldChanged (void)
 {
     GetFieldHandlePtr TheFieldHandle = getEditingFC()->getField(getEditingFieldId());
 
-    std::ostringstream StrStream;
-    OutStream TheOutStream(StrStream);
-    if(TheFieldHandle->getCardinality() == FieldType::SingleField)
+    if(TheFieldHandle->isPointerField())
     {
-        TheFieldHandle->pushValueToStream(TheOutStream);
+        if(TheFieldHandle->getCardinality() == FieldType::SingleField)
+        {
+            GetSFieldHandle<FieldContainerPtrSFieldBase>* ThePtrFieldHandle(dynamic_cast<GetSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get()));
+            if(ThePtrFieldHandle->get() != NULL)
+            {
+                _EditingTextField->setText(boost::lexical_cast<std::string>(ThePtrFieldHandle->get()->getId()));
+            }
+            else
+            {
+                _EditingTextField->setText("0");
+            }
+        }
+        else
+        {
+            GetMFieldHandle<FieldContainerPtrMFieldBase>* ThePtrFieldHandle(dynamic_cast<GetMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
+            if(ThePtrFieldHandle->size() > getEditingFieldIndex() &&
+               ThePtrFieldHandle->get(getEditingFieldIndex()) != NULL)
+            {
+                _EditingTextField->setText(boost::lexical_cast<std::string>(ThePtrFieldHandle->get(getEditingFieldIndex())->getId()));
+            }
+            else
+            {
+                _EditingTextField->setText("0");
+            }
+        }
     }
     else
     {
-        TheFieldHandle->pushIndexedValueToStream(TheOutStream, getEditingFieldIndex());
+        std::ostringstream StrStream;
+        OutStream TheOutStream(StrStream);
+        if(TheFieldHandle->getCardinality() == FieldType::SingleField)
+        {
+            TheFieldHandle->pushValueToStream(TheOutStream);
+        }
+        else
+        {
+            TheFieldHandle->pushIndexedValueToStream(TheOutStream, getEditingFieldIndex());
+        }
+
+        //Remove quotes from strings
+        if(TheFieldHandle->getType().getContentType() == FieldTraits<std::string>::getType())
+        {
+            _EditingTextField->setText(StrStream.str().substr(1,StrStream.str().size()-2));
+        }
+        else
+        {
+            _EditingTextField->setText(StrStream.str());
+        }
     }
 
-    _EditingTextField->setText(StrStream.str());
 }
 
 void GenericFieldEditor::internalStartEditing (void)

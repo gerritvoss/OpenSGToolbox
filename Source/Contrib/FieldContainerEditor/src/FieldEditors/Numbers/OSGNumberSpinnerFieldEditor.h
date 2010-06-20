@@ -36,22 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFIELDEDITORCOMPONENT_H_
-#define _OSGFIELDEDITORCOMPONENT_H_
+#ifndef _OSGNUMBERSPINNERFIELDEDITOR_H_
+#define _OSGNUMBERSPINNERFIELDEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGFieldEditorComponentBase.h"
-#include "OSGCommandManager.h"
+#include "OSGNumberSpinnerFieldEditorBase.h"
+#include "OSGSpinner.h"
+#include "OSGNumberSpinnerModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FieldEditorComponent class. See \ref
-           PageContribFieldContainerEditorFieldEditorComponent for a description.
+/*! \brief NumberSpinnerFieldEditor class. See \ref
+           PageContribFieldContainerEditorNumberSpinnerFieldEditor for a description.
 */
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponent : public FieldEditorComponentBase
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING NumberSpinnerFieldEditor : public NumberSpinnerFieldEditorBase
 {
   protected:
 
@@ -59,8 +60,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponent : public F
 
   public:
 
-    typedef FieldEditorComponentBase Inherited;
-    typedef FieldEditorComponent     Self;
+    typedef NumberSpinnerFieldEditorBase Inherited;
+    typedef NumberSpinnerFieldEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -79,40 +80,28 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponent : public F
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    virtual void startEditing (void);
-    virtual void stopEditing  (void);
-    virtual void cancelEditing(void);
-    virtual bool isEditing    (void) const;
-
-    virtual const std::vector<const DataType*>& getEditableTypes(void) const = 0;
-    bool isTypeEditable(const DataType& type) const;
-
-    bool attachField (FieldContainer* fc, UInt32 fieldId, UInt32 index = 0);
-    bool dettachField(void);
-
-    void              setCommandManager(CommandManagerPtr manager);
-    CommandManagerPtr getCommandManager(void                     ) const;
+    
+    virtual const std::vector<const DataType*>& getEditableTypes(void) const;
 
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in FieldEditorComponentBase.
+    // Variables should all be in NumberSpinnerFieldEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    FieldEditorComponent(void);
-    FieldEditorComponent(const FieldEditorComponent &source);
+    NumberSpinnerFieldEditor(void);
+    NumberSpinnerFieldEditor(const NumberSpinnerFieldEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FieldEditorComponent(void);
+    virtual ~NumberSpinnerFieldEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -122,38 +111,54 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponent : public F
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-            void fieldChanged         (FieldContainer *fc, 
-                                       ConstFieldMaskArg whichField);
-    virtual void internalFieldChanged (void                        ) = 0;
-    virtual void internalStartEditing (void                        ) = 0;
-    virtual void internalStopEditing  (void                        ) = 0;
-    virtual void internalCancelEditing(void                        ) = 0;
-
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const NumberSpinnerFieldEditor *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+    virtual void internalFieldChanged (void);
+    virtual void internalStartEditing (void);
+    virtual void internalStopEditing  (void);
+    virtual void internalCancelEditing(void);
     virtual bool internalAttachField (FieldContainer* fc, UInt32 fieldId, UInt32 index);
-    virtual bool internalDettachField(void);
+    virtual void updateLayout         (void);
+    void         runCommand           (void);
 
+    static std::vector<const DataType*> _EditableTypes;
+    SpinnerRefPtr   _EditingSpinner;
+    SpinnerModelPtr _EditingSpinnerModel;
+    
+    class SpinnerListener : public ChangeListener
+    {
+      public :
+           SpinnerListener(NumberSpinnerFieldEditor * ptr);
+           virtual void stateChanged(const ChangeEventUnrecPtr e);
 
-    void attachFieldCallback (void);
-    void dettachFieldCallback(void);
+      protected :
+        NumberSpinnerFieldEditor *_NumberSpinnerFieldEditor ;
+    };
 
-    CommandManagerPtr _CmdManager;
-    bool              _isEditing;
+    friend class SpinnerListener;
+
+    SpinnerListener _SpinnerListener;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class FieldEditorComponentBase;
+    friend class NumberSpinnerFieldEditorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const FieldEditorComponent &source);
+    void operator =(const NumberSpinnerFieldEditor &source);
 };
 
-typedef FieldEditorComponent *FieldEditorComponentP;
+typedef NumberSpinnerFieldEditor *NumberSpinnerFieldEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFieldEditorComponentBase.inl"
-#include "OSGFieldEditorComponent.inl"
+#include "OSGNumberSpinnerFieldEditorBase.inl"
+#include "OSGNumberSpinnerFieldEditor.inl"
 
-#endif /* _OSGFIELDEDITORCOMPONENT_H_ */
+#endif /* _OSGNUMBERSPINNERFIELDEDITOR_H_ */

@@ -106,6 +106,13 @@ bool FieldEditorComponent::attachField(FieldContainer* fc, UInt32 fieldId, UInt3
 
     //Check that this is a valid index
     GetFieldHandlePtr TheFieldHandle = fc->getField(fieldId);
+    if(!TheFieldHandle.get())
+    {
+        SWARNING << "Cannot attach to field " << Desc->getCName() 
+                 << ", on a FieldContainer with type " << fc->getType().getCName() << " because no GetFieldHandle is defined for that field type." << std::endl;
+        return false;
+    }
+
     if(TheFieldHandle->getCardinality() != FieldType::MultiField &&
        index != 0)
     {
@@ -122,16 +129,23 @@ bool FieldEditorComponent::attachField(FieldContainer* fc, UInt32 fieldId, UInt3
         return false;
     }
 
+    if(!internalAttachField(fc, fieldId, index))
+    {
+        return false;
+    }
+
     //Attach to the field
     setEditingFC(fc);
     setEditingFieldId(fieldId);
     setEditingFieldIndex(index);
 
+    //Tell the Editor that the field has changed
+    fieldChanged(fc, Desc->getFieldMask());
+
     //Attach to the Changed function callback for the container
     attachFieldCallback();
 
-    //Tell the Editor that the field has changed
-    fieldChanged(fc, Desc->getFieldMask());
+    return true;
 }
 
 bool FieldEditorComponent::dettachField(void)
@@ -147,6 +161,16 @@ bool FieldEditorComponent::dettachField(void)
     //Dettach from the Changed function callback for the container
     dettachFieldCallback();
 
+    return internalDettachField();
+}
+
+bool FieldEditorComponent::internalAttachField (FieldContainer* fc, UInt32 fieldId, UInt32 index)
+{
+    return true;
+}
+
+bool FieldEditorComponent::internalDettachField(void)
+{
     return true;
 }
 

@@ -83,7 +83,17 @@ bool FieldEditorFactoryBase::addDefaultEditor(const DataType* type, const FieldC
 
 const FieldContainerType* FieldEditorFactoryBase::getDefaultEditorType(const DataType* type) const
 {
-    return getEditorType(type, "Default");
+    const FieldContainerType* editorType(getEditorType(type, "Default"));
+    if(editorType == NULL)
+    {
+        EditorMap::const_iterator OuterMapItor(_Editors.find(type));
+        if(OuterMapItor != _Editors.end() &&
+            OuterMapItor->second.size() > 0)
+        {
+            editorType = OuterMapItor->second.begin()->second;
+        }
+    }
+    return editorType;
 }
 
 bool FieldEditorFactoryBase::removeDefaultEditor(const DataType* type)
@@ -179,7 +189,18 @@ FieldEditorComponentTransitPtr FieldEditorFactoryBase::createDefaultEditor(Field
                                                                          CommandManagerPtr CmdManager,
                                                                          UInt32 FieldIndex) const
 {
-    return createEditor(fc, FieldId, CmdManager, FieldIndex, "Default");
+    const FieldContainerType* EditorType(getDefaultEditorType(&(fc->getFieldDescription(FieldId)->getFieldType().getContentType())));
+
+    if(EditorType == NULL)
+    {
+        return FieldEditorComponentTransitPtr(NULL);
+    }
+
+    FieldEditorComponentTransitPtr comp = dynamic_pointer_cast<FieldEditorComponent>(EditorType->createContainer());
+    comp->setCommandManager(CmdManager);
+    comp->attachField(fc,FieldId, FieldIndex);
+
+    return comp;
 }
 
 FieldEditorComponentTransitPtr FieldEditorFactoryBase::createEditor(FieldContainer* fc, 
@@ -197,7 +218,7 @@ FieldEditorComponentTransitPtr FieldEditorFactoryBase::createEditor(FieldContain
 
     FieldEditorComponentTransitPtr comp = dynamic_pointer_cast<FieldEditorComponent>(EditorType->createContainer());
     comp->setCommandManager(CmdManager);
-    comp->attachField(fc,FieldId);
+    comp->attachField(fc,FieldId, FieldIndex);
 
     return comp;
 }

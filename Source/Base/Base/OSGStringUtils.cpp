@@ -106,6 +106,10 @@ std::string lexical_cast(const boost::any& Source)
     {
         return boost::lexical_cast<std::string>(boost::any_cast<Int64>(Source));
     }
+    else if(Source.type() == typeid(Real16))   //Real16
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Real16>(Source));
+    }
     else if(Source.type() == typeid(Real32))   //Real32
     {
         return boost::lexical_cast<std::string>(boost::any_cast<Real32>(Source));
@@ -117,6 +121,10 @@ std::string lexical_cast(const boost::any& Source)
     else if(Source.type() == typeid(Real128))   //Real128
     {
         return boost::lexical_cast<std::string>(boost::any_cast<Real128>(Source));
+    }
+    else if(Source.type() == typeid(Fixed32))   //Fixed32
+    {
+        return boost::lexical_cast<std::string>(boost::any_cast<Fixed32>(Source));
     }
     
     else if(Source.type() == typeid(Char8))   //Char8
