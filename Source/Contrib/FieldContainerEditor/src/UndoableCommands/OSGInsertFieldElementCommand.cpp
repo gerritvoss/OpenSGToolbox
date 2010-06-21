@@ -133,6 +133,7 @@ void InsertFieldElementCommand::execute(void)
         TheFieldHandle->insertIndexedValueFromCString(_Value.c_str(), _Index);
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
 }
 

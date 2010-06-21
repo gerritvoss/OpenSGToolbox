@@ -121,7 +121,7 @@ bool FieldEditorComponent::attachField(FieldContainer* fc, UInt32 fieldId, UInt3
                  << ", on a FieldContainer with type " << fc->getType().getCName() << " because that is not a multi-field." << std::endl;
         return false;
     }
-    if(TheFieldHandle->size() < index)
+    if(TheFieldHandle->size() <= index)
     {
         SWARNING << "Cannot attach to index " << index 
                  <<", of field with id" << fieldId 

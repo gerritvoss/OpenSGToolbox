@@ -162,6 +162,7 @@ void GenericFieldEditor::internalFieldChanged (void)
 
 void GenericFieldEditor::internalStartEditing (void)
 {
+    _InitialValue =  _EditingTextField->getText();
 }
 
 void GenericFieldEditor::internalStopEditing  (void)
@@ -174,6 +175,7 @@ void GenericFieldEditor::internalStopEditing  (void)
 
 void GenericFieldEditor::internalCancelEditing(void)
 {
+    _EditingTextField->setText(_InitialValue);
 }
 
 const std::vector<const DataType*>& GenericFieldEditor::getEditableTypes(void) const
@@ -250,7 +252,7 @@ void GenericFieldEditor::TextFieldListener::focusGained    (const FocusEventUnre
 
 void GenericFieldEditor::TextFieldListener::focusLost      (const FocusEventUnrecPtr  e)
 {
-    _GenericFieldEditor->cancelEditing();
+    _GenericFieldEditor->stopEditing();
 }
 
 void GenericFieldEditor::TextFieldListener::actionPerformed(const ActionEventUnrecPtr e)
@@ -264,6 +266,7 @@ void GenericFieldEditor::TextFieldListener::keyTyped       (const KeyEventUnrecP
     if(e->getKey() == KeyEvent::KEY_ESCAPE)
     {
         _GenericFieldEditor->cancelEditing();
+        _GenericFieldEditor->startEditing();
     }
 }
 

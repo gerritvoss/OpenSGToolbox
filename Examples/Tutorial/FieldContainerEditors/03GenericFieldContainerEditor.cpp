@@ -52,6 +52,7 @@
 #include "OSGUIDrawUtils.h"
 #include "OSGFieldContainerEditorFactory.h"
 #include "OSGNameAttachment.h"
+#include "OSGDialogWindow.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -131,7 +132,7 @@ public:
 
 	virtual void stateChanged(const ChangeEventUnrecPtr e)
 	{
-		while(UndoRedoListModel->getSize() > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
+		while(UndoRedoListModel->getSize()-1 > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 		{
 			UndoRedoListModel->popBack();
 		}
@@ -258,8 +259,9 @@ int main(int argc, char **argv)
     UndoRedoScrollPanel->setViewComponent(UndoRedoList);
 
     //Background Editor Field
-    FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(TutorialBackground, TheCommandManager);
-    //FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(RedoButton, TheCommandManager);
+    //FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(TutorialBackground, TheCommandManager);
+    FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(RedoButton, TheCommandManager);
+    //FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(dynamic_cast<Geometry*>(TorusGeometryNode->getCore())->getMaterial(), TheCommandManager);
 
     ScrollPanelRefPtr EditorScrollPanel = ScrollPanel::create();
     EditorScrollPanel->setPreferredSize(Vec2f(300,400));

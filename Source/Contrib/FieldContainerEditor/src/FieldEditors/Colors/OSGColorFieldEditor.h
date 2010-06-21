@@ -36,22 +36,24 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGGENERICFIELDEDITOR_H_
-#define _OSGGENERICFIELDEDITOR_H_
+#ifndef _OSGCOLORFIELDEDITOR_H_
+#define _OSGCOLORFIELDEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGGenericFieldEditorBase.h"
-#include "OSGTextField.h"
+#include "OSGColorFieldEditorBase.h"
+#include "OSGButton.h"
+#include "OSGColorSelectionModel.h"
+#include "OSGDialogWindowListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief GenericFieldEditor class. See \ref
-           PageContribFieldContainerEditorGenericFieldEditor for a description.
+/*! \brief ColorFieldEditor class. See \ref
+           PageContribFieldContainerEditorColorFieldEditor for a description.
 */
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldEditor : public GenericFieldEditorBase
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ColorFieldEditor : public ColorFieldEditorBase
 {
   protected:
 
@@ -59,8 +61,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldEditor : public Gen
 
   public:
 
-    typedef GenericFieldEditorBase Inherited;
-    typedef GenericFieldEditor     Self;
+    typedef ColorFieldEditorBase Inherited;
+    typedef ColorFieldEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -84,21 +86,21 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldEditor : public Gen
 
   protected:
 
-    // Variables should all be in GenericFieldEditorBase.
+    // Variables should all be in ColorFieldEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    GenericFieldEditor(void);
-    GenericFieldEditor(const GenericFieldEditor &source);
+    ColorFieldEditor(void);
+    ColorFieldEditor(const ColorFieldEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GenericFieldEditor(void);
+    virtual ~ColorFieldEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -111,7 +113,7 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldEditor : public Gen
 	/*---------------------------------------------------------------------*/
 	/*! \name                   Class Specific                             */
 	/*! \{                                                                 */
-	void onCreate(const GenericFieldEditor *Id = NULL);
+	void onCreate(const ColorFieldEditor *Id = NULL);
 	void onDestroy();
 	
 	/*! \}                                                                 */
@@ -119,44 +121,59 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldEditor : public Gen
     virtual void internalStartEditing (void);
     virtual void internalStopEditing  (void);
     virtual void internalCancelEditing(void);
-    virtual void updateLayout(void);
+    virtual void updateLayout         (void);
+    void         runCommand           (void);
 
     static std::vector<const DataType*> _EditableTypes;
-    TextFieldRefPtr _EditingTextField;
-    std::string _InitialValue;
+    ButtonRefPtr _EditingButton;
+    ColorSelectionModelPtr _ColorModel;
     
-    class TextFieldListener : public FocusListener, public ActionListener, public KeyAdapter
+    class ButtonListener : public ActionListener
     {
       public :
-           TextFieldListener(GenericFieldEditor * ptr);
-           virtual void focusGained    (const FocusEventUnrecPtr  e);
-           virtual void focusLost      (const FocusEventUnrecPtr  e);
+           ButtonListener(ColorFieldEditor * ptr);
            virtual void actionPerformed(const ActionEventUnrecPtr e);
-           virtual void keyTyped       (const KeyEventUnrecPtr    e);
 
       protected :
-        GenericFieldEditor *_GenericFieldEditor ;
+        ColorFieldEditor *_ColorFieldEditor ;
     };
 
-    friend class TextFieldListener;
+    friend class ButtonListener;
 
-    TextFieldListener _TextFieldListener;
+    ButtonListener _ButtonListener;
+    
+    class DialogListener : public DialogWindowListener
+    {
+      public :
+          DialogListener(ColorFieldEditor * ptr);
+          virtual void dialogClosing(const DialogWindowEventUnrecPtr e);
+          virtual void dialogClosed(const DialogWindowEventUnrecPtr e);
+
+      protected :
+        ColorFieldEditor *_ColorFieldEditor ;
+    };
+
+    friend class DialogListener;
+
+    DialogListener _DialogListener;
+
+    Color4f getValueAsColor4f(void) const;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class GenericFieldEditorBase;
+    friend class ColorFieldEditorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const GenericFieldEditor &source);
+    void operator =(const ColorFieldEditor &source);
 };
 
-typedef GenericFieldEditor *GenericFieldEditorP;
+typedef ColorFieldEditor *ColorFieldEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGGenericFieldEditorBase.inl"
-#include "OSGGenericFieldEditor.inl"
+#include "OSGColorFieldEditorBase.inl"
+#include "OSGColorFieldEditor.inl"
 
-#endif /* _OSGGENERICFIELDEDITOR_H_ */
+#endif /* _OSGCOLORFIELDEDITOR_H_ */

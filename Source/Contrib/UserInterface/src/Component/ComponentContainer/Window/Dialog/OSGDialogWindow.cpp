@@ -169,7 +169,7 @@ void DialogWindow::removeDialogWindowListener(DialogWindowListenerPtr Listener)
     }
 }
 
-DialogWindowRefPtr DialogWindow::createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText, const std::string& CancelBtnText)
+DialogWindowUnrecPtr DialogWindow::createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText, const std::string& CancelBtnText)
 {
     int DialogHeight = 175;
     DialogWindowRefPtr TheDialog = DialogWindow::create();
@@ -341,7 +341,7 @@ DialogWindowRefPtr DialogWindow::createInputDialog(const std::string& Title, con
     return TheDialog;
 }
 
-DialogWindowRefPtr DialogWindow::createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText, const std::string& CancelBtnText)
+DialogWindowUnrecPtr DialogWindow::createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText, const std::string& CancelBtnText)
 {
     ImageComponentRefPtr TheIcon = ImageComponent::create();
     LineBorderRefPtr TempIconBorder = OSG::LineBorder::create();
@@ -497,6 +497,103 @@ TextAreaRefPtr DialogWindow::createTransparentTextArea(const std::string& Messag
     TransparentTextArea->setEditable(false);
 
     return TransparentTextArea;
+}
+
+DialogWindowUnrecPtr DialogWindow::createColorChooserDialog(const std::string& Title, 
+                                                           const std::string& Message, 
+                                                           bool showAlpha,
+                                                           ColorSelectionModelPtr colorModel,
+                                                           bool showCancel, 
+                                                           const std::string& ConfirmBtnText, 
+                                                           const std::string& CancelBtnText)
+{
+    ButtonRefPtr ConfirmationButton = OSG::Button::create();
+    ButtonRefPtr CancelButton;
+
+    //Confirm Button
+    ConfirmationButton->setText(ConfirmBtnText);
+    ConfirmationButton->setMinSize(ConfirmationButton->getPreferredSize());
+    ConfirmationButton->setPreferredSize(ConfirmationButton->getRequestedSize());
+
+    if(showCancel)
+    {
+        //Cancel Button
+        CancelButton = OSG::Button::create();
+        CancelButton->setText(CancelBtnText);
+        CancelButton->setMinSize(CancelButton->getPreferredSize());
+        CancelButton->setPreferredSize(CancelButton->getRequestedSize());
+    }
+
+    // Create Panel for top half of SplitPanel
+    TextAreaRefPtr MessagePanelText = OSG::TextArea::create();
+
+    MessagePanelText->setBorders(NULL);
+    MessagePanelText->setPreferredSize(Vec2f(100.0f, 100.0f));
+    MessagePanelText->setBackgrounds(NULL);
+    MessagePanelText->setWrapStyleWord(true);
+    MessagePanelText->setText(Message);
+    MessagePanelText->setEditable(false);
+
+    // Create Panel for bottom half of SplitPanel
+    PanelRefPtr MessageButtonPanel = OSG::Panel::createEmpty();
+    FlowLayoutRefPtr MessagePanelBottomLayout = OSG::FlowLayout::create();
+    MessageButtonPanel->pushToChildren(ConfirmationButton);
+    if(showCancel) 
+        MessageButtonPanel->pushToChildren(CancelButton);
+    MessageButtonPanel->setLayout(MessagePanelBottomLayout);
+    MessageButtonPanel->setPreferredSize(Vec2f(450,75));
+
+    PanelRefPtr MessagePanel = OSG::Panel::createEmpty();
+    SpringLayoutRefPtr MessagePanelLayout = SpringLayout::create();
+    MessagePanel->pushToChildren(MessagePanelText);
+    MessagePanel->pushToChildren(MessageButtonPanel);
+    MessagePanel->setLayout(MessagePanelLayout);
+
+
+    ColorChooserRefPtr TheColorChooser = ColorChooser::create();
+    TheColorChooser->setSelectionModel(colorModel);
+
+    //Internals Layout and constraints
+
+    DialogWindowUnrecPtr TheDialog = DialogWindow::create();
+    SpringLayoutRefPtr DialogLayout = SpringLayout::create();
+
+    //Message Text
+    DialogLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5, SpringLayoutConstraints::NORTH_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5, SpringLayoutConstraints::EAST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 5, SpringLayoutConstraints::WEST_EDGE, TheDialog);
+
+    //Color Chooser
+    DialogLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheColorChooser, 5, SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText);
+    DialogLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, TheColorChooser, -5, SpringLayoutConstraints::EAST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheColorChooser, 5, SpringLayoutConstraints::WEST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, TheColorChooser, -5, SpringLayoutConstraints::NORTH_EDGE, MessageButtonPanel);
+
+    //Button Panel
+    DialogLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::WEST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::EAST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, 20, SpringLayoutConstraints::SOUTH_EDGE, TheDialog);
+
+    //Create the Dialog box
+    TheDialog->setLayout(DialogLayout);
+    TheDialog->setPreferredSize(Vec2f(350,400));
+    TheDialog->pushToChildren(MessagePanelText);
+    TheDialog->pushToChildren(TheColorChooser);
+    TheDialog->pushToChildren(MessageButtonPanel);
+    TheDialog->setTitle(Title);
+
+    //Attach listener to the Confirm button
+    ConfirmButtonListener* ConfirmListener = new ConfirmButtonListener(TheDialog);
+    ConfirmationButton->addActionListener(ConfirmListener);
+
+    if(showCancel)
+    {
+        //Attach listener to the Cancel button
+        CancelButtonListener* CancelListener = new CancelButtonListener(TheDialog);
+        CancelButton->addActionListener(CancelListener);
+    }
+
+    return DialogWindowTransitPtr(TheDialog);
 }
 
 /*-------------------------------------------------------------------------*\

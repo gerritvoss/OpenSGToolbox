@@ -3989,33 +3989,33 @@ void WindowsLookAndFeel::init(void)
     WindowsRGBColorChooserPanel->setIncludeAlpha(true);
 
     //************************** HSVColorChooserPanel *****************************
-    HSVColorChooserPanelRefPtr WindowsHSVColorChooserPanel = HSVColorChooserPanel::create();
-    WindowsHSVColorChooserPanel->setEnabled(true);
-    WindowsHSVColorChooserPanel->setVisible(true);
+    //HSVColorChooserPanelRefPtr WindowsHSVColorChooserPanel = HSVColorChooserPanel::create();
+    //WindowsHSVColorChooserPanel->setEnabled(true);
+    //WindowsHSVColorChooserPanel->setVisible(true);
 
-    WindowsHSVColorChooserPanel->setConstraints(NULL);
+    //WindowsHSVColorChooserPanel->setConstraints(NULL);
 
-    //Sizes
-    WindowsHSVColorChooserPanel->setMinSize(Vec2f(0,0));
-    WindowsHSVColorChooserPanel->setMaxSize(Vec2f(32767,32767)); //2^15
-    WindowsHSVColorChooserPanel->setPreferredSize(Vec2f(100,100));
+    ////Sizes
+    //WindowsHSVColorChooserPanel->setMinSize(Vec2f(0,0));
+    //WindowsHSVColorChooserPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+    //WindowsHSVColorChooserPanel->setPreferredSize(Vec2f(100,100));
 
-    //Border
-    WindowsHSVColorChooserPanel->setBorder(WindowsEmptyBorder);
-    WindowsHSVColorChooserPanel->setRolloverBorder(WindowsEmptyBorder);
-    WindowsHSVColorChooserPanel->setFocusedBorder(WindowsEmptyBorder);
-    WindowsHSVColorChooserPanel->setDisabledBorder(WindowsEmptyBorder);
+    ////Border
+    //WindowsHSVColorChooserPanel->setBorder(WindowsEmptyBorder);
+    //WindowsHSVColorChooserPanel->setRolloverBorder(WindowsEmptyBorder);
+    //WindowsHSVColorChooserPanel->setFocusedBorder(WindowsEmptyBorder);
+    //WindowsHSVColorChooserPanel->setDisabledBorder(WindowsEmptyBorder);
 
-    //Background
-    WindowsHSVColorChooserPanel->setBackground(WindowsEmptyBackground);
-    WindowsHSVColorChooserPanel->setRolloverBackground(WindowsEmptyBackground);
-    WindowsHSVColorChooserPanel->setFocusedBackground(WindowsEmptyBackground);
-    WindowsHSVColorChooserPanel->setDisabledBackground(WindowsEmptyBackground);
+    ////Background
+    //WindowsHSVColorChooserPanel->setBackground(WindowsEmptyBackground);
+    //WindowsHSVColorChooserPanel->setRolloverBackground(WindowsEmptyBackground);
+    //WindowsHSVColorChooserPanel->setFocusedBackground(WindowsEmptyBackground);
+    //WindowsHSVColorChooserPanel->setDisabledBackground(WindowsEmptyBackground);
 
-    //Opacity
-    WindowsHSVColorChooserPanel->setOpacity(1.0);
+    ////Opacity
+    //WindowsHSVColorChooserPanel->setOpacity(1.0);
 
-    WindowsHSVColorChooserPanel->setIncludeAlpha(true);
+    //WindowsHSVColorChooserPanel->setIncludeAlpha(true);
 
     //************************** ColorChooser *****************************
 
@@ -4046,7 +4046,7 @@ void WindowsLookAndFeel::init(void)
 
     //ColorChooser Values
     WindowsColorChooser->addChooserPanel(WindowsRGBColorChooserPanel);
-    WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
+    //WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
     WindowsColorChooser->setPreviewPanel(NULL);
 
     initUndefinedPrototypes();

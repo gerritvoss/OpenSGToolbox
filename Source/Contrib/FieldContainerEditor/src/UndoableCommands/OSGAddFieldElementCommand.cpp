@@ -124,6 +124,7 @@ void AddFieldElementCommand::execute(void)
         TheFieldHandle->pushValueFromCString(_Value.c_str());
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
 }
 

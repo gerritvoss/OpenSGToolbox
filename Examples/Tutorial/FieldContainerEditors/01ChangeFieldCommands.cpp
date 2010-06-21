@@ -223,7 +223,7 @@ public:
 
 	virtual void stateChanged(const ChangeEventUnrecPtr e)
 	{
-		while(UndoRedoListModel->getSize() > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
+		while(UndoRedoListModel->getSize()-1 > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 		{
 			UndoRedoListModel->popBack();
 		}

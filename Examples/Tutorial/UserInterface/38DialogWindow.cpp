@@ -37,18 +37,6 @@
 #include "OSGLabel.h"
 #include "OSGPanel.h"
 #include "OSGBoxLayout.h"
-// Activate the OpenSG namespace
-OSG_USING_NAMESPACE
-
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-LabelRefPtr OutputLabel;
-std::vector<std::string> inputValues;
-
-// Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
 
 // 01 Button Headers
 #include "OSGButton.h"
@@ -56,6 +44,20 @@ void reshape(Vec2f Size);
 #include "OSGColorLayer.h"
 #include "OSGFlowLayout.h"
 #include "OSGDialogWindowListener.h"
+#include "OSGDefaultColorSelectionModel.h"
+// Activate the OpenSG namespace
+OSG_USING_NAMESPACE
+
+// The SimpleSceneManager to manage simple applications
+SimpleSceneManager *mgr;
+WindowEventProducerRefPtr TutorialWindow;
+DefaultColorSelectionModelPtr ColorModel(new DefaultColorSelectionModel());
+LabelRefPtr OutputLabel;
+std::vector<std::string> inputValues;
+
+// Forward declaration so we can have the interesting stuff upfront
+void display(void);
+void reshape(Vec2f Size);
 
 // Create a class to allow for the use of the Escape
 // key to exit
@@ -132,8 +134,14 @@ class CreateMessageBoxButtonActionListener : public ActionListener
         if(e->getSource()->getType().isDerivedFrom(Component::getClassType()))
         {
             buttonText = dynamic_cast<Button*>(e->getSource())->getText();
-            if (buttonText == "Message")
+            if (buttonText.compare("Message") == 0)
+            {
                 TheDialog = DialogWindow::createMessageDialog("Error", "Error 404: Page Not Found!", DialogWindow::MSG_ERROR,true);
+            }
+            else if(buttonText.compare("Color Chooser") == 0)
+            {
+                TheDialog = DialogWindow::createColorChooserDialog("Choose a color", "Choose a color", true, ColorSelectionModelPtr(ColorModel),true);
+            }
             else
             {
                 inputValues.clear();
@@ -193,6 +201,7 @@ int main(int argc, char **argv)
     ButtonRefPtr InputComboDialogButton = OSG::Button::create();
     ButtonRefPtr InputTextDialogButton = OSG::Button::create();
     ButtonRefPtr InputBtnsDialogButton = OSG::Button::create();
+    ButtonRefPtr ColorChooserDialogButton = OSG::Button::create();
 
     MessageDialogButton->setMinSize(Vec2f(50, 25));
     MessageDialogButton->setMaxSize(Vec2f(200, 100));
@@ -224,13 +233,21 @@ int main(int argc, char **argv)
     InputBtnsDialogButton->setText("Input Textbox");
 
     //CreateMessageBoxButtonActionListener TheExampleButtonActionListener;
-    InputBtnsDialogButton->addActionListener(&TheExampleButtonActionListener);
+
+    ColorChooserDialogButton->addActionListener(&TheExampleButtonActionListener);
+    ColorChooserDialogButton->setMinSize(Vec2f(50, 25));
+    ColorChooserDialogButton->setMaxSize(Vec2f(200, 100));
+    ColorChooserDialogButton->setPreferredSize(Vec2f(100, 50));
+    ColorChooserDialogButton->setText("Color Chooser");
+
+    ColorChooserDialogButton->addActionListener(&TheExampleButtonActionListener);
 
     LayoutRefPtr ButtonPanelLayout = OSG::FlowLayout::create();
     ButtonPanel->pushToChildren(MessageDialogButton);
     ButtonPanel->pushToChildren(InputComboDialogButton);
     ButtonPanel->pushToChildren(InputTextDialogButton);
     ButtonPanel->pushToChildren(InputBtnsDialogButton);
+    ButtonPanel->pushToChildren(ColorChooserDialogButton);
     ButtonPanel->setLayout(ButtonPanelLayout);
     ButtonPanel->setPreferredSize(Vec2f(600,75));
 

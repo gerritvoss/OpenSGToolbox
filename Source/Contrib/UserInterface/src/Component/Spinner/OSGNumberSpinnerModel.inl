@@ -77,12 +77,12 @@ boost::any NumberSpinnerModel<NumberTypeT>::getNextValue(void)
 {
     try
     {
-        NumberType NewVal(boost::any_cast<NumberType>(_Value) + _StepSize);
         //Check if we would go past the Maximum
-        if(NewVal > _Maximum)
+        if(_Maximum - boost::any_cast<NumberType>(_Value) < _StepSize)
         {
             return boost::any();
         }
+        NumberType NewVal(boost::any_cast<NumberType>(_Value) + _StepSize);
         return NewVal;
     }
     catch(boost::bad_any_cast &)
@@ -96,12 +96,12 @@ boost::any NumberSpinnerModel<NumberTypeT>::getPreviousValue(void)
 {
     try
     {
-        NumberType NewVal(boost::any_cast<NumberType>(_Value) - _StepSize);
         //Check if we would go past the Minimum
-        if(NewVal < _Minimum)
+        if(boost::any_cast<NumberType>(_Value) - _Minimum < _StepSize)
         {
             return boost::any();
         }
+        NumberType NewVal(boost::any_cast<NumberType>(_Value) - _StepSize);
         return NewVal;
     }
     catch(boost::bad_any_cast &)

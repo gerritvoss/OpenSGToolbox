@@ -124,7 +124,14 @@ void SetFieldValueCommand::execute(void)
         if(TheFieldHandle->isPointerField())
         {
             _PrevPtrValue = dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get();
-            _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get()->getId());
+            if(dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get())
+            {
+                _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get()->getId());
+            }
+            else
+            {
+                _PrevValue = "0";
+            }
         }
         else
         {
@@ -136,7 +143,15 @@ void SetFieldValueCommand::execute(void)
     {
         if(TheFieldHandle->isPointerField())
         {
-            _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index)->getId());
+            _PrevPtrValue = dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get();
+            if(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index))
+            {
+                _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index)->getId());
+            }
+            else
+            {
+                _PrevValue = "0";
+            }
         }
         else
         {
@@ -159,7 +174,8 @@ void SetFieldValueCommand::execute(void)
             _PtrValue = FieldContainerFactory::the()->getContainer(boost::lexical_cast<UInt32>(_Value));
             
             //Check the pointer types match
-            if(!isFieldContentDerivedFrom(TheFieldHandle->getType(),&_PtrValue->getType()))
+            if(_PtrValue != NULL &&
+                !isFieldContentDerivedFrom(TheFieldHandle->getType(),&_PtrValue->getType()))
             {
                 SWARNING << "Cannot set the value of field " << TheFieldHandle->getDescription()->getName() 
                          << ", on FieldContianer of type " << _FC->getType().getName()
@@ -195,7 +211,52 @@ void SetFieldValueCommand::execute(void)
         }
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
+}
+
+bool SetFieldValueCommand::isSignificant(void) const
+{
+    GetFieldHandlePtr TheFieldHandle = _FC->getField(_FieldId);
+    if(TheFieldHandle->isPointerField())
+    {
+        return _PrevPtrValue != _PtrValue;
+    }
+    else
+    {
+        return _Value.compare(_PrevValue) != 0;
+    }
+}
+
+bool SetFieldValueCommand::replaceEdit(const UndoableEditPtr anEdit) const
+{
+    dynamic_cast<const SetFieldValueCommand*>(anEdit.get());
+    if(dynamic_cast<const SetFieldValueCommand*>(anEdit.get()))
+    {
+        const SetFieldValueCommand* otherEdit(dynamic_cast<const SetFieldValueCommand*>(anEdit.get()));
+        const UndoableCommand* otherCommand(dynamic_cast<const UndoableCommand*>(anEdit.get()));
+        return (otherEdit->_FC == _FC &&
+                otherEdit->_FieldId == _FieldId &&
+                otherEdit->_Index == _Index &&
+                (::OSG::getSystemTime() - otherCommand->getTime() ) < getMaxReplaceTime());
+    }
+
+    return false;
+}
+
+bool SetFieldValueCommand::addEdit(const UndoableEditPtr anEdit)
+{
+    dynamic_cast<const SetFieldValueCommand*>(anEdit.get());
+    if(dynamic_cast<const SetFieldValueCommand*>(anEdit.get()))
+    {
+        const SetFieldValueCommand* otherEdit(dynamic_cast<const SetFieldValueCommand*>(anEdit.get()));
+        return (otherEdit->_FC == _FC &&
+                otherEdit->_FieldId == _FieldId &&
+                otherEdit->_Index == _Index &&
+                otherEdit->_Value.compare(_Value) == 0);
+    }
+
+    return false;
 }
 
 std::string SetFieldValueCommand::getCommandDescription(void) const
