@@ -1768,6 +1768,9 @@ SWIGINTERN OSG::PhysicsBodyRefPtr OSG_PhysicsBodyRefPtr_dcast(OSG::FieldContaine
 SWIGINTERN OSG::PhysicsSpaceRefPtr OSG_PhysicsSpaceRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
             return OSG::dynamic_pointer_cast<OSG::PhysicsSpace>(oIn);
         }
+SWIGINTERN OSG::ParticleSystemRefPtr OSG_ParticleSystemRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
+            return OSG::dynamic_pointer_cast<OSG::ParticleSystem>(oIn);
+        }
 SWIGINTERN OSG::ComponentRefPtr OSG_ComponentRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
             return OSG::dynamic_pointer_cast<OSG::Component>(oIn);
         }
@@ -7753,6 +7756,35 @@ fail:
 }
 
 
+static int _wrap_ParticleSystemRefPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::FieldContainerRefPtr arg1 ;
+  OSG::FieldContainerRefPtr *argp1 ;
+  OSG::ParticleSystemRefPtr result;
+  
+  SWIG_check_num_args("OSG_ParticleSystemRefPtr_dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG_ParticleSystemRefPtr_dcast",1,"OSG::FieldContainerRefPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_OSG__FieldContainerRefPtr,0))){
+    SWIG_fail_ptr("ParticleSystemRefPtr_dcast",1,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+  }
+  arg1 = *argp1;
+  
+  result = OSG_ParticleSystemRefPtr_dcast(arg1);
+  {
+    OSG::ParticleSystemRefPtr * resultptr = new OSG::ParticleSystemRefPtr((const OSG::ParticleSystemRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__ParticleSystemRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_ParticleSystemRefPtr_getNumParticles(lua_State* L) {
   int SWIG_arg = 0;
   OSG::ParticleSystemRefPtr *arg1 = (OSG::ParticleSystemRefPtr *) 0 ;
@@ -9533,6 +9565,59 @@ fail:
 }
 
 
+static int _wrap_ParticleSystemRefPtr_attachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ParticleSystemRefPtr *arg1 = (OSG::ParticleSystemRefPtr *) 0 ;
+  OSG::EventProducerPtr arg2 = (OSG::EventProducerPtr) 0 ;
+  
+  SWIG_check_num_args("attachUpdateProducer",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("attachUpdateProducer",1,"OSG::ParticleSystemRefPtr *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("attachUpdateProducer",2,"OSG::EventProducerPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ParticleSystemRefPtr,0))){
+    SWIG_fail_ptr("ParticleSystemRefPtr_attachUpdateProducer",1,SWIGTYPE_p_OSG__ParticleSystemRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__EventProducer,0))){
+    SWIG_fail_ptr("ParticleSystemRefPtr_attachUpdateProducer",2,SWIGTYPE_p_OSG__EventProducer);
+  }
+  
+  (*arg1)->attachUpdateProducer(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemRefPtr_detachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ParticleSystemRefPtr *arg1 = (OSG::ParticleSystemRefPtr *) 0 ;
+  
+  SWIG_check_num_args("detachUpdateProducer",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("detachUpdateProducer",1,"OSG::ParticleSystemRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ParticleSystemRefPtr,0))){
+    SWIG_fail_ptr("ParticleSystemRefPtr_detachUpdateProducer",1,SWIGTYPE_p_OSG__ParticleSystemRefPtr);
+  }
+  
+  (*arg1)->detachUpdateProducer();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_ParticleSystemRefPtr_intersect__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   OSG::ParticleSystemRefPtr *arg1 = (OSG::ParticleSystemRefPtr *) 0 ;
@@ -10972,6 +11057,8 @@ static swig_lua_method swig_OSG_ParticleSystemRefPtr_methods[] = {
     {"killParticle", _wrap_ParticleSystemRefPtr_killParticle}, 
     {"attachUpdateListener", _wrap_ParticleSystemRefPtr_attachUpdateListener}, 
     {"dettachUpdateListener", _wrap_ParticleSystemRefPtr_dettachUpdateListener}, 
+    {"attachUpdateProducer", _wrap_ParticleSystemRefPtr_attachUpdateProducer}, 
+    {"detachUpdateProducer", _wrap_ParticleSystemRefPtr_detachUpdateProducer}, 
     {"intersect", _wrap_ParticleSystemRefPtr_intersect}, 
     {"addAttachment", _wrap_ParticleSystemRefPtr_addAttachment}, 
     {"subAttachment", _wrap_ParticleSystemRefPtr_subAttachment}, 
@@ -12767,6 +12854,59 @@ fail:
 }
 
 
+static int _wrap_ParticleSystem_attachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ParticleSystem *arg1 = (OSG::ParticleSystem *) 0 ;
+  OSG::EventProducerPtr arg2 = (OSG::EventProducerPtr) 0 ;
+  
+  SWIG_check_num_args("attachUpdateProducer",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("attachUpdateProducer",1,"OSG::ParticleSystem *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("attachUpdateProducer",2,"OSG::EventProducerPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_attachUpdateProducer",1,SWIGTYPE_p_OSG__ParticleSystem);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__EventProducer,0))){
+    SWIG_fail_ptr("ParticleSystem_attachUpdateProducer",2,SWIGTYPE_p_OSG__EventProducer);
+  }
+  
+  (arg1)->attachUpdateProducer(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_detachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ParticleSystem *arg1 = (OSG::ParticleSystem *) 0 ;
+  
+  SWIG_check_num_args("detachUpdateProducer",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("detachUpdateProducer",1,"OSG::ParticleSystem *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_detachUpdateProducer",1,SWIGTYPE_p_OSG__ParticleSystem);
+  }
+  
+  (arg1)->detachUpdateProducer();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_ParticleSystem_intersect__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   OSG::ParticleSystem *arg1 = (OSG::ParticleSystem *) 0 ;
@@ -13632,6 +13772,8 @@ static swig_lua_method swig_OSG_ParticleSystem_methods[] = {
     {"killParticle", _wrap_ParticleSystem_killParticle}, 
     {"attachUpdateListener", _wrap_ParticleSystem_attachUpdateListener}, 
     {"dettachUpdateListener", _wrap_ParticleSystem_dettachUpdateListener}, 
+    {"attachUpdateProducer", _wrap_ParticleSystem_attachUpdateProducer}, 
+    {"detachUpdateProducer", _wrap_ParticleSystem_detachUpdateProducer}, 
     {"intersect", _wrap_ParticleSystem_intersect}, 
     {0,0}
 };
@@ -25624,6 +25766,7 @@ static const struct luaL_reg swig_commands[] = {
     { "PhysicsBodyRefPtr_dcast", _wrap_PhysicsBodyRefPtr_dcast},
     { "PhysicsBody_create", _wrap_PhysicsBody_create},
     { "PhysicsSpaceRefPtr_dcast", _wrap_PhysicsSpaceRefPtr_dcast},
+    { "ParticleSystemRefPtr_dcast", _wrap_ParticleSystemRefPtr_dcast},
     { "ComponentRefPtr_dcast", _wrap_ComponentRefPtr_dcast},
     { "SoundRefPtr_dcast", _wrap_SoundRefPtr_dcast},
     { "Sound_create", _wrap_Sound_create},
@@ -25661,6 +25804,7 @@ static swig_lua_const_info swig_constants[] = {
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_CAPS_LOCK", (long) OSG::KeyEvent::KEY_MODIFIER_CAPS_LOCK, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_NUM_LOCK", (long) OSG::KeyEvent::KEY_MODIFIER_NUM_LOCK, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_SCROLL_LOCK", (long) OSG::KeyEvent::KEY_MODIFIER_SCROLL_LOCK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_COMMAND", (long) OSG::KeyEvent::KEY_MODIFIER_COMMAND, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_UNKNOWN", (long) OSG::KeyEvent::KEY_UNKNOWN, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_BACK_SPACE", (long) OSG::KeyEvent::KEY_BACK_SPACE, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_TAB", (long) OSG::KeyEvent::KEY_TAB, 0, 0, 0},
@@ -25810,6 +25954,7 @@ static swig_lua_const_info swig_constants[] = {
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_8", (long) OSG::KeyEvent::KEY_NUMPAD_8, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_9", (long) OSG::KeyEvent::KEY_NUMPAD_9, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_EQUALS", (long) OSG::KeyEvent::KEY_NUMPAD_EQUALS, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_COMMAND", (long) OSG::KeyEvent::KEY_COMMAND, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_UNDEFINED", (long) OSG::KeyEvent::KEY_UNDEFINED, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_STATE_UP", (long) OSG::KeyEvent::KEY_STATE_UP, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"KeyEvent_KEY_STATE_DOWN", (long) OSG::KeyEvent::KEY_STATE_DOWN, 0, 0, 0},
