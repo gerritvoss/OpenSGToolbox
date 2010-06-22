@@ -51,6 +51,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include "OSGSingletonHolder.ins"
+#include "OSGImageFileHandler.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -258,6 +259,8 @@ std::vector<std::string> FCFileHandlerBase::getSuffixList(UInt32 flags) const
 		return Result;
 	 }
 
+	 std::string filename = initPathHandler(FilePath.string().c_str());
+
 	 //Determine the file extension
 	 std::string Extension(boost::filesystem::extension(FilePath));
 	 boost::algorithm::trim_if(Extension,boost::is_any_of("."));
@@ -429,12 +432,47 @@ void FCFileHandlerBase::readProgress(void *data)
         FCFileHandler::the()->_ReadProgressFP(100);
 }
 
+std::string FCFileHandlerBase::initPathHandler(const Char8 *filename) 
+{
+	std::string fullFilePath;
+	if(_pathHandler != NULL)
+    {
+        // Set an image path handler if not set.
+		if(ImageFileHandler::the()->getPathHandler() == NULL)
+        {
+            ImageFileHandler::the()->setPathHandler(_pathHandler);
+        }
+		fullFilePath = _pathHandler->findFile(filename);
+    }
+    else
+    {	
+        // Set a default image path handler if not set.
+        if(ImageFileHandler::the()->getPathHandler() == NULL)
+        {
+            ImageFileHandler::the()->setPathHandler(&_defaultPathHandler);
+        }
+
+        _defaultPathHandler.clearPathList();
+        _defaultPathHandler.clearBaseFile();
+
+        _defaultPathHandler.push_frontCurrentDir(        );
+
+		std::string fullFilePath = _defaultPathHandler.findFile(filename);
+
+        _defaultPathHandler.setBaseFile(fullFilePath.c_str());
+    }
+
+	return fullFilePath;
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 FCFileHandlerBase::FCFileHandlerBase(void) :
     _ReadProgressFP(NULL),
     _ProgressData(),
-    _ReadReady(false)
+    _ReadReady(false),
+	_pathHandler(NULL),
+    _defaultPathHandler()
 {
 }
 

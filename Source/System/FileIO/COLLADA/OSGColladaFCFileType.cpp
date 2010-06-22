@@ -44,155 +44,86 @@
 
 #include "OSGConfig.h"
 
-#include "OSGFCFileType.h"
-#include "OSGFCFileHandler.h"
-#include "OSGLog.h"
+#include "OSGColladaFCFileType.h"
 
-#ifndef OSG_EMBEDDED
-#include "OSGFCFileHandler.h"
-#endif
-#include "OSGBaseInitFunctions.h"
+#include "OSGColladaGlobal.h"
+#include "OSGImageFileHandler.h"
 
 OSG_BEGIN_NAMESPACE
+
+/*----------------------- constructors & destructors ----------------------*/
+
+ColladaFCFileType::ColladaFCFileType(void) : Inherited(FCFileType::ExtensionVector(1, std::string("dae")),
+        false,
+        50,
+        FCFileType::OSG_READ_SUPPORTED)
+{
+}
+
+ColladaFCFileType::ColladaFCFileType(const ColladaFCFileType &obj) 
+		: Inherited(obj)
+{
+}
+
+ColladaFCFileType::~ColladaFCFileType(void)
+{
+}
 
 /***************************************************************************\
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::FCFileType
-A FCFileType. 
+/*! \class osg::XMLFCFileType
+A XMLFCFileType. 
 */
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-/***************************************************************************\
- *                           Class methods                                 *
-\***************************************************************************/
+ColladaFCFileType*  ColladaFCFileType::_the(new ColladaFCFileType());
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
- FCFileType::FCPtrStore FCFileType::read(std::istream &is,
+ 
+ /*---------------------------------------------------------------------*/
+ColladaFCFileType::FCPtrStore ColladaFCFileType::read(std::istream &is,
 	                     const std::string& fileNameOrExtension) const
 {
-	FWARNING (("STREAM INTERFACE NOT IMPLEMENTED!\n"));
-	FCPtrStore Result;
+	ColladaGlobal::ObjTransitPtr colladaReader = ColladaGlobal::create();
+	ColladaOptionsRefPtr colOpts   = ColladaOptions::create();
+	colOpts->setInvertTransparency(false);
+	colOpts->setCreateNameAttachments(false);
+	colOpts->setFlattenNodeXForms(false);
+	colOpts->setReadAnimations(true);
+	colladaReader->setOptions(colOpts);
 
-	return Result;
+	//NodeTransitPtr colRoot = colladaReader->read(is,fileNameOrExtension);
+	//FCPtrStore store;
+	//store.insert(colRoot);
+	//return store;
+	
+	return colladaReader->readAll(is,fileNameOrExtension);
 }
 
-bool FCFileType::write(const FCPtrStore &Containers, std::ostream &os,
-        const std::string& fileNameOrExtension, const FCTypeVector& IgnoreTypes) const
+ /*---------------------------------------------------------------------*/
+
+bool ColladaFCFileType::write(const FCPtrStore &Containers, std::ostream &os,
+                    const std::string& fileNameOrExtension, const FCTypeVector& IgnoreTypes) const
 {
-    FWARNING (("STREAM INTERFACE NOT IMPLEMENTED!\n"));
-
-    return false;
+	SWARNING << "In ColladaFCFileType: Write support for COLLADA files NIY." << std::endl;
+	return false;
 }
 
-/*! Print supported suffixes to osgLog. */
-void FCFileType::print(void)
+
+std::string ColladaFCFileType::getName(void) const
 {
-    std::vector<std::string>::iterator sI;
-
-    osgLog() << getName();
-
-    if (_suffixList.empty())
-    {
-        osgLog() << "NONE";
-    }
-    else
-    {
-        for (sI = _suffixList.begin(); sI != _suffixList.end(); sI++)
-        {
-            osgLog().stream(OSG::LOG_DEBUG) << sI->c_str() << " ";
-        }
-    }
-    osgLog() << std::endl;
+	return std::string("ColladaFCFileType");
 }
 
-//---------------------------------------------------------
 
-bool FCFileType::doOverride(void)
-{
-    return _override;
-}
-
-//---------------------------------------------------------
-
-UInt32 FCFileType::getOverridePriority(void)
-{
-    return _overridePriority;
-}
-
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
-/*----------------------- constructors & destructors ----------------------*/
-
-/**
- * Constructor for FCFileType.
- *
- * \param suffixArray     Raw char buffer of supported suffix values.
- * \param suffixByteCount Length of suffix strings to extract.
- * \param override
- * \param overridePriority Priority of this file handler in overload resolution.
- * \param flags    Combination of OSG_READ_SUPPORTED and OSG_WRITE_SUPPORTED to say what
- *                 this handler supports.
- */
-FCFileType::FCFileType(const ExtensionVector&  suffixArray,
-                        bool    override,
-                        UInt32  overridePriority,
-                        UInt32  flags)
-    : Inherited        (flags           ),
-      _suffixList      (suffixArray     ),
-      _override        (override        ),
-      _overridePriority(overridePriority)
-{
-    SINFO << "Init FieldContainer File Type " <<  _suffixList[0] << std::endl;
-
-#ifndef OSG_EMBEDDED 
-	FCFileHandler::the()->addFCFileType(FCFileTypeP(this));
-#endif
-}
-
-FCFileType::FCFileType(const FCFileType &obj)
-    : Inherited        (obj           )
-{
-	SWARNING << "In FCFileType copy constructor" << std::endl;
-}
-
-FCFileType::~FCFileType(void)
-{
-#ifndef OSG_EMBEDDED
-    if(GlobalSystemState < OSG::Shutdown)
-        FCFileHandler::the()->subFCFileType(FCFileTypeP(this));
-#endif
-}
-
-void FCFileType::terminate(void)
-{
-}
-
-/*----------------------------- class specific ----------------------------*/
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 
