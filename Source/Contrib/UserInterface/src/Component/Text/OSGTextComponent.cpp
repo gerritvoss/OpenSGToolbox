@@ -216,6 +216,7 @@ void TextComponent::deleteRange(UInt32 Start, UInt32 End)
 void TextComponent::clear(void)
 {
     setText("");
+    setCaretPosition(0);
 }
 
 void TextComponent::insert(const std::string& Text, UInt32 Position)

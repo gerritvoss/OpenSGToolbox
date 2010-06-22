@@ -50,6 +50,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Command
    /*=========================  PUBLIC  ===============================*/
 protected:
 	friend class CommandManager;
+	friend class CompoundUndoableCommand;
 
     typedef CommandPtr  Ptr;
     typedef Command  Self;
