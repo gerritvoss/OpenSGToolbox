@@ -159,17 +159,13 @@ bool isFieldContentDerivedFrom(const FieldType &TheFieldType, const FieldContain
 {
     if(TheFieldType.isPtrField())
     {
-        std::string FieldPtrTypeName(TheFieldType.getName());
+        std::string FieldPtrTypeName(TheFieldType.getContentType().getName());
         switch(TheFieldType.getClass())
         {
             case FieldType::PtrField:
-                FieldPtrTypeName = FieldPtrTypeName.substr(7,FieldPtrTypeName.size()-10);
-                break;
             case FieldType::ParentPtrField:
-                FieldPtrTypeName = FieldPtrTypeName.substr(13,FieldPtrTypeName.size()-16);
-                break;
             case FieldType::ChildPtrField:
-                FieldPtrTypeName = FieldPtrTypeName.substr(12,FieldPtrTypeName.size()-15);
+                FieldPtrTypeName = FieldPtrTypeName.substr(0,FieldPtrTypeName.size()-3);
                 break;
             default:
             case FieldType::ValueField:
