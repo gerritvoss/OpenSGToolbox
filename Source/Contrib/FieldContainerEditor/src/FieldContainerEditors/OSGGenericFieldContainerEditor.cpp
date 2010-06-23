@@ -101,7 +101,7 @@ Vec2f GenericFieldContainerEditor::getContentRequestedSize(void) const
 {
     GridLayoutRefPtr TheLayout = dynamic_cast<GridLayout*>(getLayout());
 
-    return Vec2f(getPreferredSize().x(), (20.0f + TheLayout->getVerticalGap()) * (getMFChildren()->size()/2+11));
+    return TheLayout->preferredLayoutSize(getMFChildren(), this);//Vec2f(getPreferredSize().x(), (20.0f + TheLayout->getVerticalGap()) * (getMFChildren()->size()/+1));
 }
 
 const std::vector<const FieldContainerType*>& GenericFieldContainerEditor::getEditableTypes(void) const
@@ -157,7 +157,7 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
         }
     }
     //Set the number of rows for the grid layout
-    dynamic_cast<GridLayout*>(getLayout())->setRows(getMFEditors()->size());
+    dynamic_cast<GridLayout*>(getLayout())->setRows(getMFChildren()->size()/2);
 
     return true;
 }
@@ -258,7 +258,7 @@ void GenericFieldContainerEditor::onCreate(const GenericFieldContainerEditor *Id
         TheLayout->setRows(0);
         TheLayout->setColumns(2);
         TheLayout->setHorizontalGap(1);
-        TheLayout->setVerticalGap(1);
+        TheLayout->setVerticalGap(3);
         setLayout(TheLayout);
 
         _NameEditTextField = TextField::create();
@@ -275,6 +275,12 @@ void GenericFieldContainerEditor::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if( (whichField & ChildrenFieldMask))
+    {
+        //Layout needs to be recalculated for my parent ComponentContainer
+        updateContainerLayout();
+    }
 }
 
 void GenericFieldContainerEditor::dump(      UInt32    ,

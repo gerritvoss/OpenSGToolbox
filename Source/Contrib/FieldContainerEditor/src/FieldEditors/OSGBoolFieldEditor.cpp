@@ -192,6 +192,7 @@ void BoolFieldEditor::onCreate(const BoolFieldEditor *Id)
     if(Id != NULL)
     {
         _EditingCheckbox = CheckboxButton::create();
+        _EditingCheckbox->setAlignment(Vec2f(0.05f, 0.5f));
         pushToChildren(_EditingCheckbox);
     }
 }
