@@ -86,13 +86,13 @@ void GridLayout::updateLayout(const MFUnrecComponentPtr* Components, const Compo
 	Real32 Xpos = 0;
 	Real32 Ypos = 0;
 	Real32 maxSizeX = (borderSize.x()-getHorizontalGap()*(getColumns()-1)) / static_cast<Real32>(getColumns());
-	Real32 maxSizeY = (borderSize.y()-getVerticalGap()*(getRows()-1)) / static_cast<Real32>(getRows());
-	Real32 debug = 10;
+	Real32 maxSizeY = 0.0f;//(borderSize.y()-getVerticalGap()*getRows()) / static_cast<Real32>(getRows());
 	Int32 numComp = Components->size();
 	Real32 buttonXSize, buttonYSize;
 
 	//set the size to the perfered sizes
-	for(UInt16 i = 0; i<Components->size(); i++){
+	for(UInt16 i = 0; i<Components->size(); i++)
+    {
 		if ((*Components)[i] != NULL) 
 		{
 			if((*Components)[i]->getPreferredSize().x()>maxSizeX)
@@ -102,7 +102,8 @@ void GridLayout::updateLayout(const MFUnrecComponentPtr* Components, const Compo
 		}
 	}
 	//set the  size of the button
-	for(UInt16 i = 0; i < Components->size(); i++){
+	for(UInt16 i = 0; i < Components->size(); i++)
+    {
 		if ((*Components)[i] != NULL) 
 		{
 			if(maxSizeX < (*Components)[i]->getMaxSize().x())
@@ -118,14 +119,14 @@ void GridLayout::updateLayout(const MFUnrecComponentPtr* Components, const Compo
 	}
 
 
-	//position each button
-	for(UInt16 i = 0; i <= getRows()&& numComp>=0; i++){
+	//position each component
+	for(UInt16 i = 0; i < osgMin(getRows(), numComp/getColumns()); i++)
+    {
 		if ((*Components)[i] != NULL) 
 		{
-			for(UInt16 j = 0; j < getColumns()&& numComp>0; j++){
-				debug = i*getColumns()+j;
-                   (*Components)[i*getColumns()+j]->setPosition(borderTopLeft + Vec2f(Xpos, Ypos));
-				numComp--;
+			for(UInt16 j = 0; j < osgMin(getColumns(),numComp - i*getColumns()) ; j++)
+            {
+                (*Components)[i*getColumns()+j]->setPosition(borderTopLeft + Vec2f(Xpos, Ypos));
 				Xpos = Xpos + (maxSizeX+getHorizontalGap());
 			}
 			Xpos = 0;
@@ -153,8 +154,8 @@ Vec2f GridLayout::layoutSize(const MFUnrecComponentPtr* Components, const Compon
 		}
 	}
 
-    return Vec2f(maxSizeX * static_cast<Real32>(getRows()),
-                 maxSizeY * static_cast<Real32>(getColumns()));
+    return Vec2f(maxSizeX * static_cast<Real32>(getColumns()) + getHorizontalGap() * static_cast<Real32>(getColumns()-1),
+                 maxSizeY * static_cast<Real32>(getRows()) + getVerticalGap() * static_cast<Real32>(getRows()-1));
 }
 
 Vec2f GridLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
