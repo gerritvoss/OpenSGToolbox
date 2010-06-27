@@ -99,6 +99,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
 
     void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
 
+	virtual Vec2f getContentRequestedSize(void) const;
+
     //Adds the paths between index0 and index1, inclusive, to the selection.
     void addSelectionInterval(const UInt32& index0, const UInt32& index1);
 

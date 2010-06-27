@@ -89,6 +89,10 @@ void Tree::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+Vec2f Tree::getContentRequestedSize(void) const
+{
+    return Vec2f(getPreferredSize().x(), getModelLayout()->getRowCount()* getModelLayout()->getRowHeight());
+}
 
 void Tree::mousePressed(const MouseEventUnrecPtr e)
 {
@@ -558,7 +562,7 @@ void Tree::treeDidChange(void)
 Vec2f Tree::getPreferredScrollableViewportSize(void)
 {
     //TODO:Implement
-    return Vec2f();
+    return getRequestedSize();
 }
 
 Int32 Tree::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
@@ -955,14 +959,14 @@ void Tree::getDrawnRows(Int32& Beginning, Int32& End) const
 
 void Tree::updatePreferredSize(void)
 {
-        if(getModelLayout() != NULL)
-        {
-            setPreferredSize(Vec2f(getPreferredSize().x(), getModelLayout()->getRowCount()* getModelLayout()->getRowHeight()));
-        }
-        else
-        {
-            setPreferredSize(Vec2f(0,0));
-        }
+    if(getModelLayout() != NULL)
+    {
+        setPreferredSize(Vec2f(getPreferredSize().x(), getModelLayout()->getRowCount()* getModelLayout()->getRowHeight()));
+    }
+    else
+    {
+        setPreferredSize(Vec2f(0,0));
+    }
 }
 
 void Tree::updateExpandedPath(const TreePath& Path)

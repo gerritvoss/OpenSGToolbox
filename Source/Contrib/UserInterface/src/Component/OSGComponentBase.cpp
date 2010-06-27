@@ -525,7 +525,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
         "ParentWindow",
         "",
         ParentWindowFieldId, ParentWindowFieldMask,
-        false,
+        true,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&Component::editHandleParentWindow),
         static_cast<FieldGetMethodSig >(&Component::getHandleParentWindow));
