@@ -144,7 +144,7 @@ void SetFieldValueCommand::execute(void)
         if(TheFieldHandle->isPointerField())
         {
             _PrevPtrValue = dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index);
-            if(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index))
+            if(_PrevPtrValue)
             {
                 _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index)->getId());
             }

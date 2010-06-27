@@ -56,6 +56,7 @@
 #include "OSGFieldContainerSFieldHandle.h"
 #include "OSGPointerMFieldBase.h"
 #include "OSGFieldContainerMFieldHandle.h"
+#include "OSGMaterialMapFields.h"
 #include <boost/lexical_cast.hpp>
 
 OSG_BEGIN_NAMESPACE
@@ -94,6 +95,7 @@ void GenericFieldEditor::initMethod(InitPhase ePhase)
                 _EditableTypes.push_back(type);
                 FieldEditorFactory::the()->setEditorType(type, &getClassType(), "Generic");
             }
+            FieldEditorFactory::the()->removeEditorType(&FieldTraits<MaterialMap>::getType(), "Generic");
         }
     }
 }
