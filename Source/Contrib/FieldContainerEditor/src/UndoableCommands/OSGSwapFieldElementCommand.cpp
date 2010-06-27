@@ -147,6 +147,7 @@ void SwapFieldElementCommand::execute(void)
         TheFieldHandle->pushIndexedValueFromCString(FromValue.c_str(), _ToIndex);
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
 }
 

@@ -155,6 +155,7 @@ void MoveFieldElementCommand::execute(void)
         }
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
 }
 

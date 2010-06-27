@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FieldEditorComponent"
+	parent="ComponentContainer"
+    library="ContribFieldContainerEditor"
+    pointerfieldtypes="both"
+	structure="abstract"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+	decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+A UI Panel.
+	<Field
+		name="EditingFC"
+		type="FieldContainer"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="NULL"
+	>
+	</Field>
+	<Field
+		name="EditingFieldId"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="EditingFieldIndex"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+	>
+	</Field>
+</FieldContainer>

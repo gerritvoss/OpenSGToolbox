@@ -104,7 +104,7 @@ int main(int argc, char **argv)
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
     ColorChooserRefPtr TheColorChooser = ColorChooser::create();
-    TheColorChooser->setColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+    TheColorChooser->setColor(Color4f(1.0f,0.0f,0.0f,1.0f));
 
     // Create Background to be used with the MainInternalWindow
     ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();

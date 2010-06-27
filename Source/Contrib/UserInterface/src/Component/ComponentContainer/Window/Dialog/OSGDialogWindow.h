@@ -56,6 +56,7 @@
 #include "OSGEventConnection.h"
 #include "OSGComboBox.h"
 #include "OSGTextField.h"
+#include "OSGColorChooser.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -122,9 +123,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
 	
 	virtual void close(UInt32 intOption, std::string strInput);
     
-	static DialogWindowRefPtr createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
-	static DialogWindowRefPtr createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
+	static DialogWindowUnrecPtr createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
+	static DialogWindowUnrecPtr createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
 	
+    static DialogWindowUnrecPtr createColorChooserDialog(const std::string& Title, 
+                                                           const std::string& Message, 
+                                                           bool showAlpha,
+                                                           ColorSelectionModelPtr colorModel,
+                                                           bool showCancel, 
+                                                           const std::string& ConfirmBtnText = "OK", 
+                                                           const std::string& CancelBtnText = "Cancel");
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

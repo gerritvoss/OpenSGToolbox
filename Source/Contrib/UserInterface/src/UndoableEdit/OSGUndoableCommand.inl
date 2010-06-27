@@ -36,4 +36,23 @@ const CommandType &UndoableCommand::getClassType(void)
 {
     return _Type;
 }
+
+inline
+const Time& UndoableCommand::getTime(void) const
+{
+    return _ExecuteTime;
+}
+
+inline
+const Time& UndoableCommand::getMaxReplaceTime(void)
+{
+    return _MaxReplaceTime;
+}
+
+inline
+void UndoableCommand::setMaxReplaceTime(const Time& t)
+{
+    _MaxReplaceTime = t;
+}
+
 OSG_END_NAMESPACE

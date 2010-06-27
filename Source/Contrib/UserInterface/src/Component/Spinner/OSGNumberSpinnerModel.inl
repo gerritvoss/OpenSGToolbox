@@ -56,13 +56,19 @@ std::string NumberSpinnerModel<NumberTypeT>::getModelName(void) const
 
 template<class NumberTypeT> inline
 NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(void) :
-    _Value(NumberType(0))
+    _Value(NumberType(0.0)),
+    _Maximum(100.0),
+    _Minimum(0.0),
+    _StepSize(1.0)
 {
 }
 
 template<class NumberTypeT> inline
 NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(const NumberType& value) :
-    _Value(value)
+    _Value(value),
+    _Maximum(100.0),
+    _Minimum(0.0),
+    _StepSize(1.0)
 {
 }
 
@@ -71,12 +77,12 @@ boost::any NumberSpinnerModel<NumberTypeT>::getNextValue(void)
 {
     try
     {
-        NumberType NewVal(boost::any_cast<NumberType>(_Value) + _StepSize);
         //Check if we would go past the Maximum
-        if(NewVal > _Maximum)
+        if(_Maximum - boost::any_cast<NumberType>(_Value) < _StepSize)
         {
             return boost::any();
         }
+        NumberType NewVal(boost::any_cast<NumberType>(_Value) + _StepSize);
         return NewVal;
     }
     catch(boost::bad_any_cast &)
@@ -90,12 +96,12 @@ boost::any NumberSpinnerModel<NumberTypeT>::getPreviousValue(void)
 {
     try
     {
-        NumberType NewVal(boost::any_cast<NumberType>(_Value) - _StepSize);
         //Check if we would go past the Minimum
-        if(NewVal < _Minimum)
+        if(boost::any_cast<NumberType>(_Value) - _Minimum < _StepSize)
         {
             return boost::any();
         }
+        NumberType NewVal(boost::any_cast<NumberType>(_Value) - _StepSize);
         return NewVal;
     }
     catch(boost::bad_any_cast &)
@@ -180,6 +186,12 @@ NumberTypeT NumberSpinnerModel<NumberTypeT>::getNumber(void) const
 NumberTypeT NumberSpinnerModel<NumberTypeT>::getStepSize(void)
 {
     return _StepSize;
+}
+
+template<class NumberTypeT> inline
+void NumberSpinnerModel<NumberTypeT>::setNumberValue(const NumberType& value)
+{
+    _Value = boost::any(value);
 }
 
     template<class NumberTypeT> inline

@@ -36,6 +36,7 @@
 
 #include "OSGCommand.h"
 #include "OSGAbstractUndoableEdit.h"
+#include "OSGTime.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -50,13 +51,22 @@ protected:
     typedef UndoableCommandPtr  Ptr;
     typedef UndoableCommand  Self;
 
+    friend class CompoundUndoableCommand;
+
 	UndoableCommand(void);
 
 	UndoableCommand(const UndoableCommand& source);
 	
     void operator =(const UndoableCommand& source);
 
-     static CommandType _Type;
+	virtual void execute(void);
+
+    Time _ExecuteTime;
+
+    static Time _MaxReplaceTime;
+
+    static CommandType _Type;
+
 public:
 	
     virtual const CommandType &getType(void) const;
@@ -64,6 +74,12 @@ public:
     static const CommandType &getClassType(void);
 
 	virtual ~UndoableCommand(void);
+
+    const Time& getTime(void) const;
+
+    static const Time& getMaxReplaceTime(void);
+
+    static void setMaxReplaceTime(const Time& t);
 };
 
 

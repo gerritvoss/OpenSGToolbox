@@ -133,6 +133,7 @@ void RemoveFieldElementCommand::execute(void)
         TheFieldHandle->removeIndex(_Index);
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
 }
 
