@@ -125,6 +125,16 @@
         >
     </Field>
     <Field
+        name="Modal"
+        type="bool"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        access="public"
+        defaultValue="false"
+        >
+    </Field>
+    <Field
         name="AllwaysOnTop"
         type="bool"
         category="data"

@@ -134,6 +134,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
                                                            const std::string& ConfirmBtnText = "OK", 
                                                            const std::string& CancelBtnText = "Cancel");
 
+    ActionListener* getConfirmButtonListener(void);
+    ActionListener* getCancelButtonListener (void);
+    ActionListener* getInputButtonListener  (void);
+    ActionListener* getComboButtonListener  (void);
+    ActionListener* getTextButtonListener   (void);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -170,6 +175,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    ConfirmButtonListener _ConfirmButtonListener;
 
     class CancelButtonListener : public ActionListener
     {
@@ -179,6 +185,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    CancelButtonListener _CancelButtonListener;
 
     class InputButtonListener : public ActionListener
     {
@@ -188,6 +195,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    InputButtonListener _InputButtonListener;
 
     class ComboButtonListener : public ActionListener
     {
@@ -197,6 +205,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    ComboButtonListener _ComboButtonListener;
 
     class TextButtonListener : public ActionListener
     {
@@ -206,6 +215,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    TextButtonListener _TextButtonListener;
 
     typedef std::set<DialogWindowListenerPtr> DialogWindowListenerSet;
     typedef DialogWindowListenerSet::iterator DialogWindowListenerSetItor;

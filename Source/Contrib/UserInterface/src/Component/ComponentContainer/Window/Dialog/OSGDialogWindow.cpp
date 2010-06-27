@@ -201,8 +201,7 @@ DialogWindowUnrecPtr DialogWindow::createInputDialog(const std::string& Title, c
                 InputButton->setText(*it);
                 InputButton->setMinSize(InputButton->getPreferredSize());
                 InputButton->setPreferredSize(InputButton->getRequestedSize());
-                InputButtonListener* InputListener = new InputButtonListener(TheDialog);
-                InputButton->addActionListener(InputListener);
+                InputButton->addActionListener(&TheDialog->_InputButtonListener);
                 InputPanel->pushToChildren(InputButton);
             }				
             break;
@@ -239,14 +238,14 @@ DialogWindowUnrecPtr DialogWindow::createInputDialog(const std::string& Title, c
         ConfirmationButton->setMinSize(ConfirmationButton->getPreferredSize());
         ConfirmationButton->setPreferredSize(ConfirmationButton->getRequestedSize());
 
-        ActionListener* ConfirmListener;
-
         if(Type == INPUT_TEXT)
-            ConfirmListener = new TextButtonListener(TheDialog);
+        {
+            ConfirmationButton->addActionListener(&TheDialog->_TextButtonListener);
+        }
         else
-            ConfirmListener = new ComboButtonListener(TheDialog);
-
-        ConfirmationButton->addActionListener(ConfirmListener);
+        {
+            ConfirmationButton->addActionListener(&TheDialog->_ComboButtonListener);
+        }
     }
 
     if(showCancel)
@@ -258,8 +257,7 @@ DialogWindowUnrecPtr DialogWindow::createInputDialog(const std::string& Title, c
         CancelButton->setPreferredSize(CancelButton->getRequestedSize());
 
         //Attach listener to the Cancel button
-        CancelButtonListener* CancelListener = new CancelButtonListener(TheDialog);
-        CancelButton->addActionListener(CancelListener);
+        CancelButton->addActionListener(&TheDialog->_CancelButtonListener);
     }
 
     // Create Panel for top half of SplitPanel
@@ -420,14 +418,12 @@ DialogWindowUnrecPtr DialogWindow::createMessageDialog(const std::string& Title,
     TheDialog->setTitle(Title);
 
     //Attach listener to the Confirm button
-    ConfirmButtonListener* ConfirmListener = new ConfirmButtonListener(TheDialog);
-    ConfirmationButton->addActionListener(ConfirmListener);
+    ConfirmationButton->addActionListener(&TheDialog->_ConfirmButtonListener);
 
     if(showCancel)
     {
         //Attach listener to the Cancel button
-        CancelButtonListener* CancelListener = new CancelButtonListener(TheDialog);
-        CancelButton->addActionListener(CancelListener);
+        CancelButton->addActionListener(&TheDialog->_CancelButtonListener);
     }
 
     return TheDialog;
@@ -435,7 +431,6 @@ DialogWindowUnrecPtr DialogWindow::createMessageDialog(const std::string& Title,
 
 DialogWindow::ConfirmButtonListener::ConfirmButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
-    _DialogWindow->addEventListener(this);
 }
 
 void DialogWindow::ConfirmButtonListener::actionPerformed(const ActionEventUnrecPtr e)
@@ -445,7 +440,6 @@ void DialogWindow::ConfirmButtonListener::actionPerformed(const ActionEventUnrec
 
 DialogWindow::CancelButtonListener::CancelButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
-    _DialogWindow->addEventListener(this);
 }
 
 void DialogWindow::CancelButtonListener::actionPerformed(const ActionEventUnrecPtr e)
@@ -455,7 +449,6 @@ void DialogWindow::CancelButtonListener::actionPerformed(const ActionEventUnrecP
 
 DialogWindow::InputButtonListener::InputButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
-    _DialogWindow->addEventListener(this);
 }
 
 void DialogWindow::InputButtonListener::actionPerformed(const ActionEventUnrecPtr e)
@@ -466,7 +459,6 @@ void DialogWindow::InputButtonListener::actionPerformed(const ActionEventUnrecPt
 
 DialogWindow::ComboButtonListener::ComboButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
-    _DialogWindow->addEventListener(this);
 }
 
 void DialogWindow::ComboButtonListener::actionPerformed(const ActionEventUnrecPtr e)
@@ -476,7 +468,6 @@ void DialogWindow::ComboButtonListener::actionPerformed(const ActionEventUnrecPt
 
 DialogWindow::TextButtonListener::TextButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
-    _DialogWindow->addEventListener(this);
 }
 
 void DialogWindow::TextButtonListener::actionPerformed(const ActionEventUnrecPtr e)
@@ -583,14 +574,12 @@ DialogWindowUnrecPtr DialogWindow::createColorChooserDialog(const std::string& T
     TheDialog->setTitle(Title);
 
     //Attach listener to the Confirm button
-    ConfirmButtonListener* ConfirmListener = new ConfirmButtonListener(TheDialog);
-    ConfirmationButton->addActionListener(ConfirmListener);
+    ConfirmationButton->addActionListener(&TheDialog->_ConfirmButtonListener);
 
     if(showCancel)
     {
         //Attach listener to the Cancel button
-        CancelButtonListener* CancelListener = new CancelButtonListener(TheDialog);
-        CancelButton->addActionListener(CancelListener);
+        CancelButton->addActionListener(&TheDialog->_CancelButtonListener);
     }
 
     return DialogWindowTransitPtr(TheDialog);
@@ -603,12 +592,22 @@ DialogWindowUnrecPtr DialogWindow::createColorChooserDialog(const std::string& T
 /*----------------------- constructors & destructors ----------------------*/
 
 DialogWindow::DialogWindow(void) :
-    Inherited()
+    Inherited(),
+    _ConfirmButtonListener(this),
+    _CancelButtonListener(this),
+    _InputButtonListener(this),
+    _ComboButtonListener(this),
+    _TextButtonListener(this)
 {
 }
 
 DialogWindow::DialogWindow(const DialogWindow &source) :
-    Inherited(source)
+    Inherited(source),
+    _ConfirmButtonListener(this),
+    _CancelButtonListener(this),
+    _InputButtonListener(this),
+    _ComboButtonListener(this),
+    _TextButtonListener(this)
 {
 }
 
