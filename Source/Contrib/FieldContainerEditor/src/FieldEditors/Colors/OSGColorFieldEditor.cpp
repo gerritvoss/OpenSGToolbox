@@ -158,7 +158,7 @@ Color4f ColorFieldEditor::getValueAsColor4f(void) const
 
 void ColorFieldEditor::internalFieldChanged (void)
 {
-    ColorLayerPtr ButtonBG = dynamic_cast<ColorLayer*>(_EditingButton->getBackground());
+    ColorLayerRefPtr ButtonBG = dynamic_cast<ColorLayer*>(_EditingButton->getBackground());
 
     ButtonBG->setColor(getValueAsColor4f());
 }
@@ -265,7 +265,7 @@ void ColorFieldEditor::onCreate(const ColorFieldEditor *Id)
         _EditingButton = Button::create();
         _EditingButton->addActionListener(&_ButtonListener);
 
-        ColorLayerPtr ButtonBG = ColorLayer::create();
+        ColorLayerRefPtr ButtonBG = ColorLayer::create();
         _EditingButton->setBackgrounds(ButtonBG);
         
         pushToChildren(_EditingButton);

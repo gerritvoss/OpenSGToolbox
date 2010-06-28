@@ -46,6 +46,14 @@
 #include "OSGFactoryController.h"
 #include "OSGSingletonHolder.ins"
 
+OSG_BEGIN_NAMESPACE
+
+OSG_SINGLETON_INST(FieldContainerEditorFactoryBase, addPostFactoryExitFunction)
+
+template class SingletonHolder<FieldContainerEditorFactoryBase>;
+
+OSG_END_NAMESPACE
+
 OSG_USING_NAMESPACE
 
 /***************************************************************************\
@@ -63,9 +71,6 @@ A FieldContainerEditorFactory.
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
-OSG_SINGLETON_INST(FieldContainerEditorFactoryBase, addPostFactoryExitFunction)
-
-template class SingletonHolder<FieldContainerEditorFactoryBase>;
 
 /***************************************************************************\
  *                           Instance methods                              *
