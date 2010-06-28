@@ -197,7 +197,7 @@ void AbstractTreeModelLayout::setModel(TreeModelRefPtr newModel)
     {
         _TreeModel->addTreeModelListener(&_ModelListener);
 
-        TreePath RootPath(_TreeModel->getPath(_TreeModel->getRoot()));
+        TreePath RootPath(_TreeModel->getRootPath());
         setExpanded(RootPath, true);
         if(isRootVisible())
         {
@@ -308,7 +308,7 @@ void AbstractTreeModelLayout::produceTreeWillExpand(const TreePath& Path)
 bool AbstractTreeModelLayout::areChildrenVisible(const TreePath& path) const
 {
     if(isRootVisible() ||
-       (!isRootVisible() && path != _TreeModel->getPath(_TreeModel->getRoot())))
+       (!isRootVisible() && path != _TreeModel->getRootPath()))
     {
         return isVisible(path) && isExpanded(path);
     }
@@ -384,7 +384,7 @@ void AbstractTreeModelLayout::getVisibleDecendants(const TreePath& Path, std::ve
     {
         Child = _TreeModel->getChild(Path.getLastPathComponent(), i);
 
-        ChildPath = _TreeModel->getPath(Child);
+        ChildPath = Path.getChildPath(Child);
         //Add This child to the Visible Decendants
         VisibleDecendants.push_back(ChildPath);
 
@@ -492,7 +492,7 @@ void AbstractTreeModelLayout::changed(ConstFieldMaskArg whichField,
     {
         if(getRootVisibleInternal())
         {
-            _VisiblePathSet.insert(_TreeModel->getPath(_TreeModel->getRoot()));
+            _VisiblePathSet.insert(_TreeModel->getRootPath());
         }
     }
 }
@@ -522,7 +522,7 @@ void AbstractTreeModelLayout::ModelListener::treeNodesInserted(const TreeModelEv
         for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
         {
             //Insert the path
-            _AbstractTreeModelLayout->insertVisiblePath( _AbstractTreeModelLayout->_TreeModel->getPath(e->getChildren()[i]) );
+            _AbstractTreeModelLayout->insertVisiblePath(e->getChildPath(i));
         }
     }
     _AbstractTreeModelLayout->produceTreeNodesInserted(e);
@@ -539,8 +539,8 @@ void AbstractTreeModelLayout::ModelListener::treeNodesWillBeRemoved(const TreeMo
         //remove the nodes from the visible set
         for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
         {
-            _AbstractTreeModelLayout->removeVisiblePath( _AbstractTreeModelLayout->_TreeModel->getPath(e->getChildren()[i]) );
-            _AbstractTreeModelLayout->removeExpandedPath( _AbstractTreeModelLayout->_TreeModel->getPath(e->getChildren()[i]) );
+            _AbstractTreeModelLayout->removeVisiblePath (e->getChildPath(i));
+            _AbstractTreeModelLayout->removeExpandedPath(e->getChildPath(i));
         }
     }
 }

@@ -203,7 +203,7 @@ void Tree::keyTyped(const KeyEventUnrecPtr e)
             }
             else if(getModel()->getChildCount(SelectedPath.getLastPathComponent()) > 0)
             {
-                TreePath ToPath = getModel()->getPath(getModel()->getChild(SelectedPath.getLastPathComponent(),0));
+                TreePath ToPath(SelectedPath.getChildPath(0));
                 getSelectionModel()->setSelectionPath(ToPath);
                 scrollPathToVisible(ToPath);
             }
@@ -1145,7 +1145,7 @@ void Tree::ModelListener::treeNodesChanged(const TreeModelEventUnrecPtr e)
     Int32 Row(-1);
     for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
     {
-        Row = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e->getChildren()[i]));
+        Row = _Tree->getModelLayout()->getRowForPath(e->getChildPath(i));
         if(Row != -1)
         {
             _Tree->updateRows(Row, 1);
@@ -1158,7 +1158,7 @@ void Tree::ModelListener::treeNodesInserted(const TreeModelEventUnrecPtr e)
     Int32 InsertedRow(-1);
     for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
     {
-        InsertedRow = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e->getChildren()[i]));
+        InsertedRow = _Tree->getModelLayout()->getRowForPath(e->getChildPath(i));
         if(InsertedRow != -1)
         {
             _Tree->updateInsertedRows(InsertedRow, 1);
@@ -1174,7 +1174,7 @@ void Tree::ModelListener::treeNodesWillBeRemoved(const TreeModelEventUnrecPtr e)
     TreePath ThePath;
     for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
     {
-        ThePath = _Tree->getModel()->getPath(e->getChildren()[i]);
+        ThePath = e->getChildPath(i);
         //Get the row for this path
         RemovedRow = _Tree->getModelLayout()->getRowForPath(ThePath);
         _RomovedNodeRows.insert(RemovedRow);

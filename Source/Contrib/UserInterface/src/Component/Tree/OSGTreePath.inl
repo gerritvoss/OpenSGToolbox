@@ -117,19 +117,41 @@ bool TreePath::DepthFirstFunctional::operator()(const TreePath& LeftPath,
 }
 
 inline
+TreePath TreePath::getChildPath(boost::any child) const
+{
+    return TreePath(*this, child);
+}
+
+inline
 TreePath::TreePath(const TreePath& p) :
   _Path(p._Path), _Model(p._Model)
 {
 }
 
 inline
-TreePath::TreePath(const PathVectorType& path, TreeModelRefPtr theModel) :
+TreePath::TreePath(const PathVectorType& path, TreeModel * const theModel) :
   _Path(path), _Model(theModel)
 {
 }
 
 inline
-TreePath::TreePath(const std::deque<boost::any>& path, TreeModelRefPtr theModel) :
+TreePath::TreePath(const TreePath& p, boost::any child) :
+    _Path(p._Path),
+    _Model(p._Model)
+{
+    _Path.push_back(child);
+}
+
+inline
+TreePath::TreePath(boost::any value, TreeModel * const theModel) :
+    _Path(1, value),
+    _Model(theModel)
+{
+}
+
+
+inline
+TreePath::TreePath(const std::deque<boost::any>& path, TreeModel * const theModel) :
   _Path(path.begin(), path.end()), _Model(theModel)
 {
 }

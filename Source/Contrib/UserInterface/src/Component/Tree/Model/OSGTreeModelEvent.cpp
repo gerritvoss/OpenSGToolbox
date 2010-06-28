@@ -105,6 +105,11 @@ TreeModelEventTransitPtr TreeModelEvent::create(  FieldContainerRefPtr Source,
  *                           Instance methods                              *
 \***************************************************************************/
 
+TreePath TreeModelEvent::getChildPath(UInt32 index) const
+{
+    return TreePath(getPath(), _Children[index]);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -113,25 +113,6 @@ boost::any DefaultTreeModel::getChild(const boost::any& parent, const UInt32& in
     return boost::any();
 }
 
-
-boost::any DefaultTreeModel::getParent(const boost::any& node) const
-{
-    try
-    {
-        ModelTreeNodeRefPtr Node = boost::any_cast<ModelTreeNodeRefPtr>(node);
-        if(Node != NULL &&
-           Node != getInternalRoot()  &&
-           Node->getParent() != NULL)
-        {
-            return boost::any(Node->getParent());
-        }
-    }
-    catch(boost::bad_any_cast &)
-    {
-    }
-    return boost::any();
-}
-
 UInt32 DefaultTreeModel::getChildCount(const boost::any& parent) const
 {
     try
@@ -220,6 +201,31 @@ void DefaultTreeModel::insertNodeInto(MutableTreeNodeRefPtr newChild, MutableTre
     }
 }
 
+TreePath DefaultTreeModel::createPath(ModelTreeNodeRefPtr node) const
+{
+    std::deque<boost::any> PathVec;
+    ModelTreeNodeRefPtr recNode(node);
+
+    if(recNode != NULL)
+    {
+        while(recNode != NULL && recNode != getRootNode())
+        {
+            PathVec.push_front(boost::any(recNode));
+            recNode = recNode->getParent();
+        }
+        if(recNode != NULL)
+        {
+            PathVec.push_front(boost::any(recNode));
+        }
+        else
+        {
+            return TreePath();
+        }
+    }
+
+    return TreePath(PathVec, const_cast<DefaultTreeModel*>(this));
+}
+
 void DefaultTreeModel::nodeChanged(ModelTreeNodeRefPtr node)
 {
     if(node->getParent() != NULL)
@@ -239,7 +245,7 @@ void DefaultTreeModel::nodesChanged(ModelTreeNodeRefPtr node, std::vector<UInt32
         ChildUserObjects.push_back(dynamic_pointer_cast<ModelTreeNode>(node->getChildAt(childIndices[i])));
     }
 
-    produceTreeNodesChanged(getPath(boost::any(node)), childIndices, ChildUserObjects);
+    produceTreeNodesChanged(createPath(node), childIndices, ChildUserObjects);
 }
 
 void DefaultTreeModel::nodeStructureChanged(ModelTreeNodeRefPtr node)
@@ -256,7 +262,7 @@ void DefaultTreeModel::nodesWereInserted(ModelTreeNodeRefPtr node, std::vector<U
     {
         InstertedChildUserObjects.push_back(dynamic_pointer_cast<ModelTreeNode>(node->getChildAt(childIndices[i])));
     }
-    produceTreeNodesInserted(getPath(boost::any(node)), childIndices, InstertedChildUserObjects);
+    produceTreeNodesInserted(createPath(node), childIndices, InstertedChildUserObjects);
 }
 
 void DefaultTreeModel::removeNodeFromParent(MutableTreeNodeRefPtr node)
@@ -269,9 +275,9 @@ void DefaultTreeModel::removeNodeFromParent(MutableTreeNodeRefPtr node)
     std::vector<boost::any> Children;
     Children.push_back(dynamic_pointer_cast<ModelTreeNode>(node));
 
-    produceTreeNodesWillBeRemoved(getPath(boost::any(Parent)), ChildIndicies, Children);
+    produceTreeNodesWillBeRemoved(createPath(Parent), ChildIndicies, Children);
     node->removeFromParent();
-    produceTreeNodesRemoved(getPath(boost::any(Parent)), ChildIndicies, Children);
+    produceTreeNodesRemoved(createPath(Parent), ChildIndicies, Children);
     if(Parent->getChildCount() == 0)
     {
         nodeChanged(Parent);

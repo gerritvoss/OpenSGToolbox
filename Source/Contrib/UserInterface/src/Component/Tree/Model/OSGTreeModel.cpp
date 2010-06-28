@@ -79,59 +79,6 @@ void TreeModel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-TreePath TreeModel::getPath(const boost::any& node) const
-{
-    std::deque<boost::any> PathVector;
-
-    boost::any RecNode(node);
-    while(!RecNode.empty())
-    {
-        PathVector.push_front(RecNode);
-        RecNode = getParent(RecNode);
-    }
-
-    return TreePath(PathVector, TreeModelRefPtr(const_cast<TreeModel*>(this)));
-}
-
-bool TreeModel::depthFirstLessThan(const boost::any& left, const boost::any& right) const
-{
-    TreePath LeftPath(getPath(left)),
-             RightPath(getPath(right));
-    return LeftPath.depthFirstLessThan(RightPath);
-}
-
-bool TreeModel::breadthFirstLessThan(const boost::any& left, const boost::any& right) const
-{
-    TreePath LeftPath(getPath(left)),
-             RightPath(getPath(right));
-    return LeftPath.breadthFirstLessThan(RightPath);
-}
-
-bool TreeModel::isEqual(const boost::any& left, const boost::any& right) const
-{
-    TreePath LeftPath(getPath(left)),
-             RightPath(getPath(right));
-
-    if(LeftPath.getPathCount() == RightPath.getPathCount())
-    {
-        for(UInt32 i(0) ; i<osgMin<UInt32>(LeftPath.getPathCount(), RightPath.getPathCount())-1 ; ++i)
-        {
-            if( getIndexOfChild(LeftPath.getPathComponent(i),LeftPath.getPathComponent(i+1))
-                !=
-                getIndexOfChild(RightPath.getPathComponent(i),RightPath.getPathComponent(i+1)))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
