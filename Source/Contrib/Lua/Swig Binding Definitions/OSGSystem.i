@@ -114,7 +114,8 @@
           arg2 = (OSG::Char8 *)lua_tostring(L, 2);
           
           const OSG::GetFieldHandlePtr TheFieldHandle((*arg1)->getField(arg2));
-          if(!TheFieldHandle->isValid())
+          if( !TheFieldHandle.get() ||
+              !TheFieldHandle->isValid())
           {
               lua_pushfstring(L,"Error in getFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               goto fail;
@@ -273,7 +274,16 @@
           else if(TheFieldHandle->isPointerField())
           {
             OSG::FieldContainerRefPtr * resultptr = new OSG::FieldContainerRefPtr(static_cast<const OSG::SFUnrecFieldContainerPtr *>(TheFieldHandle->getField())->getValue());
-            SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1); SWIG_arg++;
+            //check if the pointer is NULL
+            if(resultptr &&
+               *resultptr)
+            {
+                SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1); SWIG_arg++;
+            }
+            else
+            {
+                lua_pushnil(L); SWIG_arg++;
+            }
           }
           //bool
           else if(FieldContentType == OSG::FieldTraits<bool, 2>::getType() )
@@ -281,7 +291,7 @@
               lua_pushboolean(L,static_cast<const OSG::SFBool*>(TheFieldHandle->getField())->getValue()); SWIG_arg++;
           }
           //Volumes
-          //otherwize
+          //otherwise
           else
           {
               std::ostringstream TheSStream;
@@ -312,17 +322,33 @@
           arg2 = (OSG::Char8 *)lua_tostring(L, 2);
           arg3 = (OSG::UInt32)lua_tonumber(L, 3);
           
+          //Check that this is a valid field
           const OSG::GetFieldHandlePtr TheFieldHandle((*arg1)->getField(arg2));
-          if(!TheFieldHandle->isValid())
+          if( !TheFieldHandle.get() ||
+              !TheFieldHandle->isValid())
           {
               lua_pushfstring(L,"Error in getFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               goto fail;
           }
+
+          //Check that this is a MultiField
           if(TheFieldHandle->getCardinality() != OSG::FieldType::MultiField)
           {
               lua_pushfstring(L,"Error in getFieldValue field of name '%s' on type '%s' is a single-field, you do not need to supply an index..",arg2,(*arg1)->getTypeName());
               goto fail;
           }
+
+          //Check if the index is out of bounds
+          if(arg3 >= TheFieldHandle->size())
+          {
+              lua_pushfstring(L,"Error in getFieldValue: index %d out of bounds on field of name '%s' on type '%s' with size %d",
+                              arg3,
+                              arg2,
+                              (*arg1)->getTypeName(),
+                              TheFieldHandle->size());
+              goto fail;
+          }
+
           //Types
           const OSG::DataType& FieldContentType(TheFieldHandle->getType().getContentType());
           //string
@@ -471,7 +497,16 @@
           else if(TheFieldHandle->isPointerField())
           {
             OSG::FieldContainerRefPtr * resultptr = new OSG::FieldContainerRefPtr(static_cast<const OSG::MFUnrecFieldContainerPtr *>(TheFieldHandle->getField())->operator[](arg3));
-            SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1); SWIG_arg++;
+            //check if the pointer is NULL
+            if(resultptr &&
+               *resultptr)
+            {
+                SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1); SWIG_arg++;
+            }
+            else
+            {
+                lua_pushnil(L); SWIG_arg++;
+            }
           }
           //bool
           else if(FieldContentType == OSG::FieldTraits<bool, 2>::getType() )
@@ -559,7 +594,8 @@
           }
           //Check that the field referenced exists
           OSG::EditFieldHandlePtr TheFieldHandle((*arg1)->editField(arg2));
-          if(!TheFieldHandle->isValid())
+          if( !TheFieldHandle.get() ||
+              !TheFieldHandle->isValid())
           {
               lua_pushfstring(L,"Error in setFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               lua_error(L);
@@ -926,7 +962,8 @@
           }
           //Check that the field referenced exists
           OSG::EditFieldHandlePtr TheFieldHandle((*arg1)->editField(arg2));
-          if(!TheFieldHandle->isValid())
+          if( !TheFieldHandle.get() ||
+              !TheFieldHandle->isValid())
           {
               lua_pushfstring(L,"Error in setFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               lua_error(L);
@@ -935,6 +972,18 @@
           if(TheFieldHandle->getCardinality() == OSG::FieldType::SingleField)
           {
               lua_pushfstring(L,"Error in setFieldValue field of name '%s' on type '%s' is a single-field, you do not need to supply an index..",arg2,(*arg1)->getTypeName());
+              lua_error(L);
+              return SWIG_arg;
+          }
+
+          //Check if the index is out of bounds
+          if(arg4 >= TheFieldHandle->size())
+          {
+              lua_pushfstring(L,"Error in setFieldValue: index %d out of bounds on field of name '%s' on type '%s' with size %d",
+                              arg4,
+                              arg2,
+                              (*arg1)->getTypeName(),
+                              TheFieldHandle->size());
               lua_error(L);
               return SWIG_arg;
           }
@@ -1295,7 +1344,8 @@
           }
           //Check that the field referenced exists
           OSG::EditFieldHandlePtr TheFieldHandle((*arg1)->editField(arg2));
-          if(!TheFieldHandle->isValid())
+          if( !TheFieldHandle.get() ||
+              !TheFieldHandle->isValid())
           {
               lua_pushfstring(L,"Error in pushFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               lua_error(L);
@@ -1674,7 +1724,8 @@
           }
           //Check that the field referenced exists
           OSG::EditFieldHandlePtr TheFieldHandle((*arg1)->editField(arg2));
-          if(!TheFieldHandle->isValid())
+          if( !TheFieldHandle.get() ||
+              !TheFieldHandle->isValid())
           {
               lua_pushfstring(L,"Error in insertFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               lua_error(L);
@@ -1686,10 +1737,15 @@
               lua_error(L);
               return SWIG_arg;
           }
-          //Make sure the index is in range
+
+          //Check if the index is out of bounds
           if(arg4 > TheFieldHandle->size())
           {
-              lua_pushfstring(L,"Error in insertFieldValue: arg4 out of range. Attempted to insert before index: %s, on a field %s of size %s.",arg4,arg2,TheFieldHandle->size());
+              lua_pushfstring(L,"Error in insertFieldValue: index %d out of bounds on field of name '%s' on type '%s' with size %d",
+                              arg4,
+                              arg2,
+                              (*arg1)->getTypeName(),
+                              TheFieldHandle->size());
               lua_error(L);
               return SWIG_arg;
           }
@@ -2300,7 +2356,8 @@ namespace OSG {
         {
               //Check that the field referenced exists
               OSG::GetFieldHandlePtr TheFieldHandle((*$self)->getField(FieldName));
-              if(!TheFieldHandle->isValid())
+              if( !TheFieldHandle.get() ||
+                  !TheFieldHandle->isValid())
               {
                   std::string ErrorString = "Error in getFieldCardinality: there is no field of name '";
                   ErrorString += FieldName;
@@ -2321,7 +2378,8 @@ namespace OSG {
         {
               //Check that the field referenced exists
               OSG::GetFieldHandlePtr TheFieldHandle((*$self)->getField(FieldName));
-              if(!TheFieldHandle->isValid())
+              if( !TheFieldHandle.get() ||
+                  !TheFieldHandle->isValid())
               {
                   std::string ErrorString = "Error in getFieldSize: there is no field of name '";
                   ErrorString += FieldName;
@@ -2337,7 +2395,8 @@ namespace OSG {
         {
               //Check that the field referenced exists
               OSG::EditFieldHandlePtr TheFieldHandle((*$self)->editField(FieldName));
-              if(!TheFieldHandle->isValid())
+              if( !TheFieldHandle.get() ||
+                  !TheFieldHandle->isValid())
               {
                   std::string ErrorString = "Error in clear there is no field of name '";
                   ErrorString += FieldName;
@@ -2528,7 +2587,8 @@ namespace OSG {
         void removeFieldValue(Char8* FieldName, UInt32 Index) throw(const char *)
         {
               OSG::EditFieldHandlePtr TheFieldHandle((*$self)->editField(FieldName));
-              if(!TheFieldHandle->isValid())
+              if( !TheFieldHandle.get() ||
+                  !TheFieldHandle->isValid())
               {
                   std::string ErrorString = "Error in removeFieldValue: there is no field of name '";
                   ErrorString += FieldName;
