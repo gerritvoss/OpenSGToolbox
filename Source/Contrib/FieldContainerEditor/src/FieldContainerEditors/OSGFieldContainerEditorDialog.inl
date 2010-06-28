@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), Mark Stenerson             *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -41,45 +41,18 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool DialogWindow::isDialogWindowListenerAttached(DialogWindowListenerPtr Listener) const
+DialogWindowTransitPtr createDefaultFCEditorDialog(FieldContainer* fc, 
+                                                                                     CommandManagerPtr CmdManager)
 {
-    return _DialogWindowListeners.find(Listener) != _DialogWindowListeners.end();
+    return createFCEditorDialog(fc, CmdManager, "Default");
 }
 
 inline
-bool DialogWindow::isEventListenerAttached(EventListenerPtr Listener) const
+DialogWindowUnrecPtr openDefaultFCEditorDialog(FieldContainer* fc, 
+                                                     CommandManagerPtr CmdManager,
+                                                     UIDrawingSurfaceUnrecPtr DrawingSurface)
 {
-    return _EventListeners.find(Listener) != _EventListeners.end();
-}
-
-inline
-ActionListener* DialogWindow::getConfirmButtonListener(void)
-{
-    return &_ConfirmButtonListener;
-}
-
-inline
-ActionListener* DialogWindow::getCancelButtonListener(void)
-{
-    return &_CancelButtonListener;
-}
-
-inline
-ActionListener* DialogWindow::getInputButtonListener(void)
-{
-    return &_InputButtonListener;
-}
-
-inline
-ActionListener* DialogWindow::getComboButtonListener(void)
-{
-    return &_ComboButtonListener;
-}
-
-inline
-ActionListener* DialogWindow::getTextButtonListener(void)
-{
-    return &_TextButtonListener;
+    return openFCEditorDialog(fc, CmdManager, "Default", DrawingSurface);
 }
 
 OSG_END_NAMESPACE

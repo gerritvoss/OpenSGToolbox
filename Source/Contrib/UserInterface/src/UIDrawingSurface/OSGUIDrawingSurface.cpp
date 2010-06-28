@@ -189,7 +189,8 @@ void UIDrawingSurface::setWindowToLayer(InternalWindowRefPtr TheWindow, const UI
 void UIDrawingSurface::moveWindowUp(InternalWindowRefPtr TheWindow)
 {
     Int32 WindowLayer(getWindowLayer(TheWindow));
-    if(WindowLayer < getMFInternalWindows()->size())
+    if(WindowLayer < getMFInternalWindows()->size() &&
+        TheWindow->getAllwaysOnTop() == getInternalWindows(WindowLayer)->getAllwaysOnTop())
     {
         setWindowToLayer(TheWindow,  WindowLayer+1);
     }
@@ -198,7 +199,9 @@ void UIDrawingSurface::moveWindowUp(InternalWindowRefPtr TheWindow)
 void UIDrawingSurface::moveWindowDown(InternalWindowRefPtr TheWindow)
 {
     Int32 WindowLayer(getWindowLayer(TheWindow));
-    if(WindowLayer > 0)
+    if(WindowLayer > 0 && 
+       (!TheWindow->getModal() ||
+        TheWindow->getAllwaysOnTop() == getInternalWindows(WindowLayer)->getAllwaysOnTop()))
     {
         setWindowToLayer(TheWindow,  WindowLayer-1);
     }
@@ -219,14 +222,15 @@ void UIDrawingSurface::moveWindowToTop(InternalWindowRefPtr TheWindow)
         editMFInternalWindows()->erase(RemovalItor);
 
         MFInternalWindowsType::iterator InsertItor(editMFInternalWindows()->begin());
-        if(TheWindow->getAllwaysOnTop())
+        if(TheWindow->getAllwaysOnTop() || TheWindow->getModal())
         {
             InsertItor = editMFInternalWindows()->end();
         }
         else
         {
             while(InsertItor != editMFInternalWindows()->end() &&
-                  !(*InsertItor)->getAllwaysOnTop())
+                  !(*InsertItor)->getAllwaysOnTop() &&
+                  !(*InsertItor)->getModal())
             {
                 ++InsertItor;
             }

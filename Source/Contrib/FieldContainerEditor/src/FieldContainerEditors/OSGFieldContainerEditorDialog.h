@@ -4,7 +4,9 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), Mark Stenerson             *
+ *                            www.opensg.org                                 *
+ *                                                                           *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -34,52 +36,39 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGFIELDCONTAINEREDITORDIALOG_H_
+#define _OSGFIELDCONTAINEREDITORDIALOG_H_
+#ifdef __sgi
+#pragma once
+#endif
+
+#include "OSGConfig.h"
+#include "OSGContribFieldContainerEditorDef.h"
+
+#include "OSGDialogWindow.h"
+#include "OSGCommandManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool DialogWindow::isDialogWindowListenerAttached(DialogWindowListenerPtr Listener) const
-{
-    return _DialogWindowListeners.find(Listener) != _DialogWindowListeners.end();
-}
+DialogWindowTransitPtr OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING createDefaultFCEditorDialog(FieldContainer* fc, 
+                                                                                       CommandManagerPtr CmdManager);
 
-inline
-bool DialogWindow::isEventListenerAttached(EventListenerPtr Listener) const
-{
-    return _EventListeners.find(Listener) != _EventListeners.end();
-}
+DialogWindowTransitPtr OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING createFCEditorDialog       (FieldContainer* fc, 
+                                                                                       CommandManagerPtr CmdManager,
+                                                                                       const std::string& editorName = "Dialog");
 
-inline
-ActionListener* DialogWindow::getConfirmButtonListener(void)
-{
-    return &_ConfirmButtonListener;
-}
 
-inline
-ActionListener* DialogWindow::getCancelButtonListener(void)
-{
-    return &_CancelButtonListener;
-}
+DialogWindowUnrecPtr OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING openDefaultFCEditorDialog(FieldContainer* fc, 
+                                                                                   CommandManagerPtr CmdManager,
+                                                                                   UIDrawingSurfaceUnrecPtr DrawingSurface);
 
-inline
-ActionListener* DialogWindow::getInputButtonListener(void)
-{
-    return &_InputButtonListener;
-}
-
-inline
-ActionListener* DialogWindow::getComboButtonListener(void)
-{
-    return &_ComboButtonListener;
-}
-
-inline
-ActionListener* DialogWindow::getTextButtonListener(void)
-{
-    return &_TextButtonListener;
-}
+DialogWindowUnrecPtr OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING openFCEditorDialog(FieldContainer* fc, 
+                                                                            CommandManagerPtr CmdManager,
+                                                                            const std::string& editorName,
+                                                                            UIDrawingSurfaceUnrecPtr DrawingSurface);
 
 OSG_END_NAMESPACE
+
+#include "OSGFieldContainerEditorDialog.inl"
+
+#endif /* _OSGFIELDCONTAINEREDITORDIALOG_H_ */

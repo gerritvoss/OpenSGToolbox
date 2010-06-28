@@ -130,19 +130,19 @@ ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponent(TreeRefPtr Paren
 ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponentText(TreeRefPtr Parent, const std::string& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
     LabelRefPtr TheLabel = dynamic_pointer_cast<Label>(getNodeLabelPrototype()->shallowCopy());
-        if(IsSelected)
-        {
-            TheLabel->setTextColors(getSelectedTextColor());
-            TheLabel->setBackgrounds(getSelectedBackground());
-            TheLabel->setBorders(getSelectedBorder());
-        }
-        else
-        {
-            TheLabel->setTextColors(getNonSelectedTextColor());
-            TheLabel->setBackgrounds(getNonSelectedBackground());
-            TheLabel->setBorders(EmptyBorder::create());
-        }
-        TheLabel->setText(Value);
+    if(IsSelected)
+    {
+        TheLabel->setTextColors(getSelectedTextColor());
+        TheLabel->setBackgrounds(getSelectedBackground());
+        TheLabel->setBorders(getSelectedBorder());
+    }
+    else
+    {
+        TheLabel->setTextColors(getNonSelectedTextColor());
+        TheLabel->setBackgrounds(getNonSelectedBackground());
+        TheLabel->setBorders(EmptyBorder::create());
+    }
+    TheLabel->setText(Value);
 
     //Create the panel, set its children and layout
     /*PanelRefPtr ThePanel = dynamic_pointer_cast<Panel>(getNodePanelPrototype()->shallowCopy());

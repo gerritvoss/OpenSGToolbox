@@ -904,7 +904,7 @@ void WindowsLookAndFeel::init(void)
     WindowsDialogWindow->setResizable(false);
     WindowsDialogWindow->setTitle(std::string(""));
     WindowsDialogWindow->setDesktopIcon(NULL);
-    WindowsDialogWindow->setAllwaysOnTop(false);
+    WindowsDialogWindow->setAllwaysOnTop(true);
     WindowsDialogWindow->setDrawTitlebar(true);
     WindowsDialogWindow->setDrawDecorations(true);
     WindowsDialogWindow->setAlignmentInDrawingSurface(Vec2f(-1.0f,-1.0f));
@@ -3157,7 +3157,7 @@ void WindowsLookAndFeel::init(void)
     ButtonRefPtr WindowsSpinnerNextButton = Button::create();
     WindowsSpinnerNextButton->setPreferredSize(Vec2f(17,17));
     WindowsSpinnerNextButton->setEnableActionOnMouseDownTime(true);
-    WindowsSpinnerNextButton->setActionOnMouseDownRate(0.2);
+    WindowsSpinnerNextButton->setActionOnMouseDownRate(0.1);
 
     //Border
     WindowsSpinnerNextButton->setBorder(WindowsScrollBarButtonBorder);
@@ -3203,7 +3203,7 @@ void WindowsLookAndFeel::init(void)
     ButtonRefPtr WindowsSpinnerPreviousButton = Button::create();
     WindowsSpinnerPreviousButton->setPreferredSize(Vec2f(17,17));
     WindowsSpinnerPreviousButton->setEnableActionOnMouseDownTime(true);
-    WindowsSpinnerPreviousButton->setActionOnMouseDownRate(0.2);
+    WindowsSpinnerPreviousButton->setActionOnMouseDownRate(0.1);
     //Border
     WindowsSpinnerPreviousButton->setBorder(WindowsScrollBarButtonBorder);
     WindowsSpinnerPreviousButton->setRolloverBorder(WindowsScrollBarButtonBorder);
