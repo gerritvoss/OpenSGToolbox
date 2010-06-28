@@ -552,18 +552,40 @@ void AbstractTreeModelLayout::ModelListener::treeNodesRemoved(const TreeModelEve
 
 void AbstractTreeModelLayout::ModelListener::treeStructureChanged(const TreeModelEventUnrecPtr e)
 {
+    bool isExpanded(_AbstractTreeModelLayout->isExpanded(e->getPath()));
+
     //If the node that the changes are rooted at is expanded then
-    //redo the visibility calculations on the parent node
-    if(_AbstractTreeModelLayout->areChildrenVisible(e->getPath()))
+    if(isExpanded)
     {
-        //Add the newly inserted nodes into the visible set
-        _AbstractTreeModelLayout->setExpanded(e->getPath(), false);
-        _AbstractTreeModelLayout->setExpanded(e->getPath(), true);
+
+        //collapse the node
+        _AbstractTreeModelLayout->_ExpandedPathSet.erase(e->getPath());
+
+        //remove all of the nodes that were visible decendents of the root of the change
+        if(_AbstractTreeModelLayout->isVisible(e->getPath()) || _AbstractTreeModelLayout->_TreeModel->getRootPath() == e->getPath())
+        {
+            //Remove all visible decendents of Path
+            std::vector<TreePath> VisibleDecendants;
+            TreePathSet::iterator Itor(_AbstractTreeModelLayout->_VisiblePathSet.begin());
+            for( ; Itor!=_AbstractTreeModelLayout->_VisiblePathSet.end() ; ++Itor)
+            {
+                if(Itor->isAncestor(e->getPath()))
+                {
+                    VisibleDecendants.push_back(*Itor);
+                }
+            }
+
+            for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+            {
+                _AbstractTreeModelLayout->_VisiblePathSet.erase(VisibleDecendants[i]);
+            }
+        }
     }
+
     _AbstractTreeModelLayout->produceTreeStructureChanged(e);
 
     //If is root node
-    if(e->getPath().getDepth() == 1)
+    if(e->getPath().getDepth() == 1 || isExpanded)
     {
         _AbstractTreeModelLayout->setExpanded(e->getPath(), true);
     }

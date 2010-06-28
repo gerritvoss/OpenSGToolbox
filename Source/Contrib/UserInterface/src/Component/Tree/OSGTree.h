@@ -517,10 +517,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
 
     void updateRows(const UInt32& Begining, const UInt32& NumRows);
 
-    void updateExpandedPath(const TreePath& Path);
+    void updateExpandedPath (const TreePath& Path);
     void updateCollapsedPath(const TreePath& Path);
-    void updateChildren(void);
-
+    void updateChangedNode  (const TreePath& Path);
+    
+    void updateChildren (void);
+    void clearRowsDrawn (void);
     void updateRowsDrawn(void);
 
     struct TreeRowComponents
