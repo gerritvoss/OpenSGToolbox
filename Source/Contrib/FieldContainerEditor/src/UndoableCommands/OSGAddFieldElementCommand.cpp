@@ -130,7 +130,7 @@ void AddFieldElementCommand::execute(void)
 
 std::string AddFieldElementCommand::getCommandDescription(void) const
 {
-    EditFieldHandlePtr TheFieldHandle = _FC->editField(_FieldId);
+    GetFieldHandlePtr TheFieldHandle = _FC->getField(_FieldId);
 
 	std::string Description("");
 
