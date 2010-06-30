@@ -920,7 +920,9 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
 {
     if( ((whichField & FocusedFieldMask) ||
          (whichField & TitlebarFieldMask))&&
-        getTitlebar() != NULL)
+         getTitlebar() != NULL &&
+         getDrawTitlebar() &&
+         !getTitlebar()->getEnabled())
     {
         getTitlebar()->setEnabled(getFocused());
     }
