@@ -55,4 +55,19 @@ DialogWindowUnrecPtr openDefaultFCEditorDialog(FieldContainer* fc,
     return openFCEditorDialog(fc, CmdManager, "Default", DrawingSurface);
 }
 
+inline
+DialogWindowTransitPtr createDefaultFCTreeEditorDialog(FieldContainer* fc, 
+                                                                                     CommandManagerPtr CmdManager)
+{
+    return createFCTreeEditorDialog(fc, CmdManager, "Default");
+}
+
+inline
+DialogWindowUnrecPtr openDefaultFCTreeEditorDialog(FieldContainer* fc, 
+                                                     CommandManagerPtr CmdManager,
+                                                     UIDrawingSurfaceUnrecPtr DrawingSurface)
+{
+    return openFCTreeEditorDialog(fc, CmdManager, "Default", DrawingSurface);
+}
+
 OSG_END_NAMESPACE

@@ -51,6 +51,7 @@
 #include "OSGSolidBackground.h"
 #include "OSGUIDrawUtils.h"
 #include "OSGFieldContainerEditorFactory.h"
+#include "OSGFieldContainerEditorDialog.h"
 #include "OSGNameAttachment.h"
 #include "OSGDialogWindow.h"
 
@@ -67,6 +68,7 @@ CommandManagerPtr TheCommandManager;
 DefaultListModelRefPtr UndoRedoListModel;
 ButtonRefPtr UndoButton;
 ButtonRefPtr RedoButton;
+ViewportRefPtr TutorialViewport;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -82,6 +84,10 @@ public:
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
             TutorialWindow->closeWindow();
+       }
+       if(e->getKey() == KeyEvent::KEY_E && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+       {
+           openDefaultFCTreeEditorDialog(TutorialViewport, TheCommandManager, UndoRedoList->getParentWindow()->getDrawingSurface());
        }
    }
 
@@ -304,7 +310,7 @@ int main(int argc, char **argv)
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    TutorialViewport = mgr->getWindow()->getPort(0);
     TutorialViewport->addForeground(TutorialUIForeground);
     TutorialViewport->setBackground(TutorialBackground);
 
