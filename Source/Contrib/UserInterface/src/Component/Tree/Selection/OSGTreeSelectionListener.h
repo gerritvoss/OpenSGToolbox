@@ -52,6 +52,7 @@ public:
 };
 
 typedef TreeSelectionListener* TreeSelectionListenerPtr;
+typedef boost::shared_ptr<TreeSelectionListener> TreeSelectionListenerRefPtr;
 
 OSG_END_NAMESPACE
 

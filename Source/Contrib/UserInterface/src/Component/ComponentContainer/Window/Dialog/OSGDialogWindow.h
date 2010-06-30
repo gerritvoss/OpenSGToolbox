@@ -57,6 +57,7 @@
 #include "OSGComboBox.h"
 #include "OSGTextField.h"
 #include "OSGColorChooser.h"
+#include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,6 +95,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
 
     typedef DialogWindowBase Inherited;
     typedef DialogWindow     Self;
+
+    typedef std::vector<boost::any> TransientObjectVector;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -139,6 +142,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
     ActionListener* getInputButtonListener  (void);
     ActionListener* getComboButtonListener  (void);
     ActionListener* getTextButtonListener   (void);
+
+    void addTransientObject(const boost::any& obj);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -237,6 +242,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
 
 	static TextAreaRefPtr createTransparentTextArea(const std::string& Message);
 	static void handleInputButton(const ButtonRefPtr& btn);
+
+    TransientObjectVector _TransientObjects;
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -82,4 +82,10 @@ ActionListener* DialogWindow::getTextButtonListener(void)
     return &_TextButtonListener;
 }
 
+inline
+void DialogWindow::addTransientObject(const boost::any& obj)
+{
+    _TransientObjects.push_back(obj);
+}
+
 OSG_END_NAMESPACE
