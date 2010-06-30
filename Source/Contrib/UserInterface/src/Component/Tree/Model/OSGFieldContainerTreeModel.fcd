@@ -25,6 +25,16 @@ A UI ComponentTreeModel.
 	>
    </Field>
 	<Field
+		name="ShowInternalFields"
+		type="bool"
+        category="data"
+		cardinality="single"
+        visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+   </Field>
+	<Field
 		name="ShowMultiFields"
 		type="bool"
         category="data"

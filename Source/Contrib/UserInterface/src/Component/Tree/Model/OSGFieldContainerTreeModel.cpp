@@ -96,7 +96,7 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
             UInt32 NumFields(0);
             for( ; FieldId<=ThePair._Container->getNumFields() ; ++FieldId)
             {
-                if(isFieldAllowed(ThePair._Container->getFieldDescription(FieldId)->getFieldType()))
+                if(isFieldAllowed(ThePair._Container->getFieldDescription(FieldId)))
                 {
                     ++NumFields;
                     if(NumFields == index+1)
@@ -114,7 +114,9 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
         {
             const FieldType& fcType(ThePair._Container->getFieldDescription(ThePair._FieldID)->getFieldType());
            
-            if(fcType.getClass() == FieldType::PtrField)
+            if((fcType.getClass() == FieldType::PtrField      ) ||
+               (fcType.getClass() == FieldType::ParentPtrField) ||
+               (fcType.getClass() == FieldType::ChildPtrField ))
             {
                 if(fcType.getCardinality() == FieldType::MultiField )
                 {
@@ -161,13 +163,17 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
     }
 }
 
-bool FieldContainerTreeModel::isFieldAllowed(const FieldType& fcType) const
+bool FieldContainerTreeModel::isFieldAllowed(const FieldDescriptionBase* fieldDesc) const
 {
+    const FieldType&       fcType(fieldDesc->getFieldType());
     FieldType::Cardinality fieldCardinality(fcType.getCardinality());
     FieldType::Class       fieldClass(fcType.getClass());
-    const DataType&       contentType(fcType.getContentType());
+    const DataType&        contentType(fcType.getContentType());
 
-    if( (!getShowMultiFields ()    && fieldCardinality == FieldType::MultiField ) ||
+    if( (!getShowInternalFields()    && fieldDesc->isInternal() ) ||
+        
+        
+        (!getShowMultiFields ()    && fieldCardinality == FieldType::MultiField ) ||
         (!getShowSingleFields()    && fieldCardinality == FieldType::SingleField) ||
 
         (!getShowDataFields()      && fieldClass == FieldType::ValueField       ) ||
@@ -196,7 +202,7 @@ UInt32 FieldContainerTreeModel::getIndexFromFieldId(const FieldContainer* contai
     UInt32 index(0);
     for(UInt32 i(1) ; i<=fieldId ; ++i)
     {
-        if(isFieldAllowed(container->getFieldDescription(i)->getFieldType()))
+        if(isFieldAllowed(container->getFieldDescription(i)))
         {
             ++index;
         }
@@ -218,7 +224,7 @@ UInt32 FieldContainerTreeModel::getChildCount(const boost::any& parent) const
                 UInt32 NumFields(0);
                 for(UInt32 i(1) ; i<=ThePair._Container->getNumFields() ; ++i)
                 {
-                    if(isFieldAllowed(ThePair._Container->getFieldDescription(i)->getFieldType()))
+                    if(isFieldAllowed(ThePair._Container->getFieldDescription(i)))
                     {
                         ++NumFields;
                     }
@@ -236,8 +242,10 @@ UInt32 FieldContainerTreeModel::getChildCount(const boost::any& parent) const
         {
             const FieldType& fcType(ThePair._Container->getFieldDescription(ThePair._FieldID)->getFieldType());
            
-            if(isFieldAllowed(fcType) &&
-               fcType.getClass() == FieldType::PtrField)
+            if(isFieldAllowed(ThePair._Container->getFieldDescription(ThePair._FieldID)) &&
+               ((fcType.getClass() == FieldType::PtrField      ) ||
+               (fcType.getClass() == FieldType::ParentPtrField) ||
+               (fcType.getClass() == FieldType::ChildPtrField )))
             {
                 if(fcType.getCardinality() == FieldType::MultiField )
                 {
@@ -273,7 +281,9 @@ UInt32 FieldContainerTreeModel::getIndexOfChild(const boost::any& parent, const 
         {
             const FieldType& fcType(ParentPair._Container->getFieldDescription(ParentPair._FieldID)->getFieldType());
            
-            if(fcType.getClass() == FieldType::PtrField)
+            if((fcType.getClass() == FieldType::PtrField      ) ||
+               (fcType.getClass() == FieldType::ParentPtrField) ||
+               (fcType.getClass() == FieldType::ChildPtrField ))
             {
                 if(fcType.getCardinality() == FieldType::MultiField )
                 {
@@ -331,7 +341,9 @@ bool FieldContainerTreeModel::isLeaf(const boost::any& node) const
         {
             const FieldType& fcType(ThePair._Container->getFieldDescription(ThePair._FieldID)->getFieldType());
            
-            return fcType.getClass() != FieldType::PtrField;
+            return !((fcType.getClass() == FieldType::PtrField      ) ||
+                     (fcType.getClass() == FieldType::ParentPtrField) ||
+                     (fcType.getClass() == FieldType::ChildPtrField ));
         }
     }
     catch(const boost::bad_any_cast &ex)
@@ -397,6 +409,7 @@ void FieldContainerTreeModel::changed(ConstFieldMaskArg whichField,
     Inherited::changed(whichField, origin, details);
 
     if(whichField & (InternalRootFieldContainerFieldMask |
+                     ShowInternalFieldsFieldMask |
                      ShowMultiFieldsFieldMask |
                      ShowSingleFieldsFieldMask |
                      ShowPtrFieldsFieldMask |

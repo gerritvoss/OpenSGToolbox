@@ -89,6 +89,31 @@ void FieldContainerTreeModelBase::setInternalRootFieldContainer(FieldContainer *
 
     _sfInternalRootFieldContainer.setValue(value);
 }
+//! Get the value of the FieldContainerTreeModel::_sfShowInternalFields field.
+
+inline
+bool &FieldContainerTreeModelBase::editShowInternalFields(void)
+{
+    editSField(ShowInternalFieldsFieldMask);
+
+    return _sfShowInternalFields.getValue();
+}
+
+//! Get the value of the FieldContainerTreeModel::_sfShowInternalFields field.
+inline
+      bool  FieldContainerTreeModelBase::getShowInternalFields(void) const
+{
+    return _sfShowInternalFields.getValue();
+}
+
+//! Set the value of the FieldContainerTreeModel::_sfShowInternalFields field.
+inline
+void FieldContainerTreeModelBase::setShowInternalFields(const bool value)
+{
+    editSField(ShowInternalFieldsFieldMask);
+
+    _sfShowInternalFields.setValue(value);
+}
 //! Get the value of the FieldContainerTreeModel::_sfShowMultiFields field.
 
 inline
@@ -303,6 +328,9 @@ void FieldContainerTreeModelBase::execSync (      FieldContainerTreeModelBase *p
 
     if(FieldBits::NoField != (InternalRootFieldContainerFieldMask & whichField))
         _sfInternalRootFieldContainer.syncWith(pFrom->_sfInternalRootFieldContainer);
+
+    if(FieldBits::NoField != (ShowInternalFieldsFieldMask & whichField))
+        _sfShowInternalFields.syncWith(pFrom->_sfShowInternalFields);
 
     if(FieldBits::NoField != (ShowMultiFieldsFieldMask & whichField))
         _sfShowMultiFields.syncWith(pFrom->_sfShowMultiFields);

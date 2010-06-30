@@ -85,6 +85,7 @@ CheckboxButtonRefPtr ShowParentPtrFieldsButton;
 CheckboxButtonRefPtr ShowChildPtrFieldsButton;
 CheckboxButtonRefPtr ShowAttachmentsButton;
 CheckboxButtonRefPtr ShowCallbackFunctorsButton;
+CheckboxButtonRefPtr ShowInternalFieldsButton;
 
 class ShowCheckboxesListener : public ButtonSelectedListener
 {
@@ -99,6 +100,7 @@ class ShowCheckboxesListener : public ButtonSelectedListener
         ShowChildPtrFieldsButton->setSelected(TheTreeModel->getShowChildPtrFields());
         ShowAttachmentsButton->setSelected(TheTreeModel->getShowAttachments());
         ShowCallbackFunctorsButton->setSelected(TheTreeModel->getShowCallbackFunctors());
+        ShowInternalFieldsButton->setSelected(TheTreeModel->getShowInternalFields());
     }
 
     virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
@@ -145,6 +147,10 @@ class ShowCheckboxesListener : public ButtonSelectedListener
         else if(button == ShowCallbackFunctorsButton)
         {
             TheTreeModel->setShowCallbackFunctors(selected);
+        }
+        else if(button == ShowInternalFieldsButton)
+        {
+            TheTreeModel->setShowInternalFields(selected);
         }
     }
 };
@@ -220,7 +226,7 @@ int main(int argc, char **argv)
     }
     //Tree Model
     TheTreeModel = FieldContainerTreeModel::create();
-    TheTreeModel->setRoot(StoreWindows.back());
+    TheTreeModel->setRoot(StoreWindows.front());
     //TheTreeModel->setShowPtrFields(false);
     //TheTreeModel->setShowDataFields(false);
     //TheTreeModel->setShowParentPtrFields(false);
@@ -257,6 +263,7 @@ int main(int argc, char **argv)
     ShowChildPtrFieldsButton = CheckboxButton::create();
     ShowAttachmentsButton = CheckboxButton::create();
     ShowCallbackFunctorsButton = CheckboxButton::create();
+    ShowInternalFieldsButton = CheckboxButton::create();
 
     ShowMultiFieldsButton->setText("Multi Fields");
     ShowMultiFieldsButton->setPreferredSize(Vec2f(120.0f,ShowMultiFieldsButton->getPreferredSize().y()));
@@ -282,6 +289,9 @@ int main(int argc, char **argv)
     ShowCallbackFunctorsButton->setText("Callback Functors");
     ShowCallbackFunctorsButton->setPreferredSize(Vec2f(120.0f,ShowCallbackFunctorsButton->getPreferredSize().y()));
     ShowCallbackFunctorsButton->setAlignment(Vec2f(0.0f,0.5f));
+    ShowInternalFieldsButton->setText("Internal Fields");
+    ShowInternalFieldsButton->setPreferredSize(Vec2f(120.0f,ShowInternalFieldsButton->getPreferredSize().y()));
+    ShowInternalFieldsButton->setAlignment(Vec2f(0.0f,0.5f));
 
     ShowCheckboxesListener TheShowCheckboxesListener;
     TheShowCheckboxesListener.init();
@@ -293,6 +303,7 @@ int main(int argc, char **argv)
     ShowChildPtrFieldsButton->addButtonSelectedListener(&TheShowCheckboxesListener);
     ShowAttachmentsButton->addButtonSelectedListener(&TheShowCheckboxesListener);
     ShowCallbackFunctorsButton->addButtonSelectedListener(&TheShowCheckboxesListener);
+    ShowInternalFieldsButton->addButtonSelectedListener(&TheShowCheckboxesListener);
 
     PanelRefPtr OptionsPanel = Panel::create();
     FlowLayoutRefPtr OptionsPanelLayout = FlowLayout::create();
@@ -302,6 +313,7 @@ int main(int argc, char **argv)
     OptionsPanel->pushToChildren(ShowSingleFieldsButton);
     OptionsPanel->pushToChildren(ShowPtrFieldsButton);
     OptionsPanel->pushToChildren(ShowDataFieldsButton);
+    OptionsPanel->pushToChildren(ShowInternalFieldsButton);
     OptionsPanel->pushToChildren(ShowParentPtrFieldsButton);
     OptionsPanel->pushToChildren(ShowChildPtrFieldsButton);
     OptionsPanel->pushToChildren(ShowAttachmentsButton);

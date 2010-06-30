@@ -87,6 +87,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var bool            FieldContainerTreeModelBase::_sfShowInternalFields
+    
+*/
+
 /*! \var bool            FieldContainerTreeModelBase::_sfShowMultiFields
     
 */
@@ -156,6 +160,18 @@ void FieldContainerTreeModelBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&FieldContainerTreeModel::editHandleInternalRootFieldContainer),
         static_cast<FieldGetMethodSig >(&FieldContainerTreeModel::getHandleInternalRootFieldContainer));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ShowInternalFields",
+        "",
+        ShowInternalFieldsFieldId, ShowInternalFieldsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&FieldContainerTreeModel::editHandleShowInternalFields),
+        static_cast<FieldGetMethodSig >(&FieldContainerTreeModel::getHandleShowInternalFields));
 
     oType.addInitialDesc(pDesc);
 
@@ -295,6 +311,16 @@ FieldContainerTreeModelBase::TypeObject FieldContainerTreeModelBase::_type(
     "\t>\n"
     "   </Field>\n"
     "\t<Field\n"
+    "\t\tname=\"ShowInternalFields\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
     "\t\tname=\"ShowMultiFields\"\n"
     "\t\ttype=\"bool\"\n"
     "        category=\"data\"\n"
@@ -410,6 +436,19 @@ SFUnrecFieldContainerPtr *FieldContainerTreeModelBase::editSFInternalRootFieldCo
 
     return &_sfInternalRootFieldContainer;
 }
+
+SFBool *FieldContainerTreeModelBase::editSFShowInternalFields(void)
+{
+    editSField(ShowInternalFieldsFieldMask);
+
+    return &_sfShowInternalFields;
+}
+
+const SFBool *FieldContainerTreeModelBase::getSFShowInternalFields(void) const
+{
+    return &_sfShowInternalFields;
+}
+
 
 SFBool *FieldContainerTreeModelBase::editSFShowMultiFields(void)
 {
@@ -529,6 +568,10 @@ UInt32 FieldContainerTreeModelBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfInternalRootFieldContainer.getBinSize();
     }
+    if(FieldBits::NoField != (ShowInternalFieldsFieldMask & whichField))
+    {
+        returnValue += _sfShowInternalFields.getBinSize();
+    }
     if(FieldBits::NoField != (ShowMultiFieldsFieldMask & whichField))
     {
         returnValue += _sfShowMultiFields.getBinSize();
@@ -574,6 +617,10 @@ void FieldContainerTreeModelBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfInternalRootFieldContainer.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ShowInternalFieldsFieldMask & whichField))
+    {
+        _sfShowInternalFields.copyToBin(pMem);
+    }
     if(FieldBits::NoField != (ShowMultiFieldsFieldMask & whichField))
     {
         _sfShowMultiFields.copyToBin(pMem);
@@ -616,6 +663,10 @@ void FieldContainerTreeModelBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (InternalRootFieldContainerFieldMask & whichField))
     {
         _sfInternalRootFieldContainer.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ShowInternalFieldsFieldMask & whichField))
+    {
+        _sfShowInternalFields.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ShowMultiFieldsFieldMask & whichField))
     {
@@ -775,6 +826,7 @@ FieldContainerTransitPtr FieldContainerTreeModelBase::shallowCopy(void) const
 FieldContainerTreeModelBase::FieldContainerTreeModelBase(void) :
     Inherited(),
     _sfInternalRootFieldContainer(NULL),
+    _sfShowInternalFields     (bool(true)),
     _sfShowMultiFields        (bool(true)),
     _sfShowSingleFields       (bool(true)),
     _sfShowPtrFields          (bool(true)),
@@ -789,6 +841,7 @@ FieldContainerTreeModelBase::FieldContainerTreeModelBase(void) :
 FieldContainerTreeModelBase::FieldContainerTreeModelBase(const FieldContainerTreeModelBase &source) :
     Inherited(source),
     _sfInternalRootFieldContainer(NULL),
+    _sfShowInternalFields     (source._sfShowInternalFields     ),
     _sfShowMultiFields        (source._sfShowMultiFields        ),
     _sfShowSingleFields       (source._sfShowSingleFields       ),
     _sfShowPtrFields          (source._sfShowPtrFields          ),
@@ -843,6 +896,31 @@ EditFieldHandlePtr FieldContainerTreeModelBase::editHandleInternalRootFieldConta
                     static_cast<FieldContainerTreeModel *>(this), _1));
 
     editSField(InternalRootFieldContainerFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr FieldContainerTreeModelBase::getHandleShowInternalFields (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfShowInternalFields,
+             this->getType().getFieldDesc(ShowInternalFieldsFieldId),
+             const_cast<FieldContainerTreeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr FieldContainerTreeModelBase::editHandleShowInternalFields(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfShowInternalFields,
+             this->getType().getFieldDesc(ShowInternalFieldsFieldId),
+             this));
+
+
+    editSField(ShowInternalFieldsFieldMask);
 
     return returnValue;
 }

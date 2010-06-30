@@ -145,7 +145,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModel : public Field
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    bool isFieldAllowed(const FieldType& fcType) const;
+    bool isFieldAllowed(const FieldDescriptionBase* fieldDesc) const;
     UInt32 getIndexFromFieldId(const FieldContainer* container, UInt32 index) const;
     /*==========================  PRIVATE  ================================*/
 

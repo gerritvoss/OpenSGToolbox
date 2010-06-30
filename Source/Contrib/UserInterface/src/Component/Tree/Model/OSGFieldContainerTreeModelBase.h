@@ -66,7 +66,7 @@
 #include "OSGAbstractTreeModel.h" // Parent
 
 #include "OSGFieldContainerFields.h"    // InternalRootFieldContainer type
-#include "OSGSysFields.h"               // ShowMultiFields type
+#include "OSGSysFields.h"               // ShowInternalFields type
 
 #include "OSGFieldContainerTreeModelFields.h"
 
@@ -95,7 +95,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
     enum
     {
         InternalRootFieldContainerFieldId = Inherited::NextFieldId,
-        ShowMultiFieldsFieldId = InternalRootFieldContainerFieldId + 1,
+        ShowInternalFieldsFieldId = InternalRootFieldContainerFieldId + 1,
+        ShowMultiFieldsFieldId = ShowInternalFieldsFieldId + 1,
         ShowSingleFieldsFieldId = ShowMultiFieldsFieldId + 1,
         ShowPtrFieldsFieldId = ShowSingleFieldsFieldId + 1,
         ShowDataFieldsFieldId = ShowPtrFieldsFieldId + 1,
@@ -108,6 +109,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
 
     static const OSG::BitVector InternalRootFieldContainerFieldMask =
         (TypeTraits<BitVector>::One << InternalRootFieldContainerFieldId);
+    static const OSG::BitVector ShowInternalFieldsFieldMask =
+        (TypeTraits<BitVector>::One << ShowInternalFieldsFieldId);
     static const OSG::BitVector ShowMultiFieldsFieldMask =
         (TypeTraits<BitVector>::One << ShowMultiFieldsFieldId);
     static const OSG::BitVector ShowSingleFieldsFieldMask =
@@ -128,6 +131,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecFieldContainerPtr SFInternalRootFieldContainerType;
+    typedef SFBool            SFShowInternalFieldsType;
     typedef SFBool            SFShowMultiFieldsType;
     typedef SFBool            SFShowSingleFieldsType;
     typedef SFBool            SFShowPtrFieldsType;
@@ -161,6 +165,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
     /*! \{                                                                 */
 
 
+                  SFBool              *editSFShowInternalFields(void);
+            const SFBool              *getSFShowInternalFields (void) const;
+
                   SFBool              *editSFShowMultiFields(void);
             const SFBool              *getSFShowMultiFields (void) const;
 
@@ -185,6 +192,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
                   SFBool              *editSFShowCallbackFunctors(void);
             const SFBool              *getSFShowCallbackFunctors (void) const;
 
+
+                  bool                &editShowInternalFields(void);
+                  bool                 getShowInternalFields (void) const;
 
                   bool                &editShowMultiFields(void);
                   bool                 getShowMultiFields (void) const;
@@ -215,6 +225,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+            void setShowInternalFields(const bool value);
             void setShowMultiFields(const bool value);
             void setShowSingleFields(const bool value);
             void setShowPtrFields  (const bool value);
@@ -288,6 +299,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
     /*! \{                                                                 */
 
     SFUnrecFieldContainerPtr _sfInternalRootFieldContainer;
+    SFBool            _sfShowInternalFields;
     SFBool            _sfShowMultiFields;
     SFBool            _sfShowSingleFields;
     SFBool            _sfShowPtrFields;
@@ -326,6 +338,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
 
     GetFieldHandlePtr  getHandleInternalRootFieldContainer (void) const;
     EditFieldHandlePtr editHandleInternalRootFieldContainer(void);
+    GetFieldHandlePtr  getHandleShowInternalFields (void) const;
+    EditFieldHandlePtr editHandleShowInternalFields(void);
     GetFieldHandlePtr  getHandleShowMultiFields (void) const;
     EditFieldHandlePtr editHandleShowMultiFields(void);
     GetFieldHandlePtr  getHandleShowSingleFields (void) const;
