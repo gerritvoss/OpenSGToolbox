@@ -86,7 +86,7 @@ void DefaultTreeComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponent(TreeRefPtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+ComponentTransitPtr DefaultTreeComponentGenerator::getTreeComponent(Tree* const Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
     boost::any ValueToUse;
     try
@@ -127,7 +127,7 @@ ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponent(TreeRefPtr Paren
     return getTreeComponentText(Parent, LabelText, IsSelected, Expanded, Leaf, Row, HasFocus);
 }
 
-ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponentText(TreeRefPtr Parent, const std::string& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+ComponentTransitPtr DefaultTreeComponentGenerator::getTreeComponentText(Tree* const Parent, const std::string& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
     LabelRefPtr TheLabel = dynamic_pointer_cast<Label>(getNodeLabelPrototype()->shallowCopy());
     if(IsSelected)
@@ -140,7 +140,8 @@ ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponentText(TreeRefPtr P
     {
         TheLabel->setTextColors(getNonSelectedTextColor());
         TheLabel->setBackgrounds(getNonSelectedBackground());
-        TheLabel->setBorders(EmptyBorder::create());
+        EmptyBorderUnrecPtr TheBorder(EmptyBorder::create());
+        TheLabel->setBorders(TheBorder);
     }
     TheLabel->setText(Value);
 
@@ -151,10 +152,10 @@ ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponentText(TreeRefPtr P
         ThePanel->setLayout(TheLayout);
         ThePanel->pushToChildren(TheLabel);*/
 
-    return TheLabel;
+    return ComponentTransitPtr(TheLabel.get());
 }
 
-ComponentRefPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(TreeRefPtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+ComponentTransitPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(Tree* const Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
 {
     //If node is not a leaf expanded
     if(!Leaf)
@@ -168,9 +169,9 @@ ComponentRefPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(TreeRefP
         {
             ExpandedCanvas = dynamic_pointer_cast<UIDrawObjectCanvas>(getNotExpandedDrawObjectPrototype()->shallowCopy());
         }
-        return ExpandedCanvas;
+        return ComponentTransitPtr(ExpandedCanvas.get());
     }
-    return NULL;
+    return ComponentTransitPtr(NULL);
 }
 
 /*-------------------------------------------------------------------------*\

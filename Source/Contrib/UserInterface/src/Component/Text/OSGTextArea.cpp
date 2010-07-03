@@ -85,7 +85,7 @@ void TextArea::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TextArea::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void TextArea::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {	
     //Text Color
     Color4f TextColor = getDrawnTextColor();
@@ -208,10 +208,10 @@ void TextArea::scrollToLine(const UInt32& line)
 void TextArea::focusGained(const FocusEventUnrecPtr e)
 {
 	if( getParentWindow() != NULL &&
-		getParentWindow()->getDrawingSurface() != NULL &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+		getParentWindow()->getParentDrawingSurface() != NULL &&
+		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
+		getParentWindow()->getParentDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
 	}
 	Inherited::focusGained(e);
 }
@@ -219,8 +219,8 @@ void TextArea::focusGained(const FocusEventUnrecPtr e)
 void TextArea::focusLost(const FocusEventUnrecPtr e)
 {
 	if( getParentWindow() != NULL &&
-		getParentWindow()->getDrawingSurface() != NULL &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+		getParentWindow()->getParentDrawingSurface() != NULL &&
+		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
         _CaretUpdateListener.disconnect();
 	}
@@ -289,8 +289,8 @@ void TextArea::moveCaretLine(Int32 delta)
             {
                     setCaretPosition(NewPosition);
             }
-            if(getParentWindow() != NULL && getParentWindow()->getDrawingSurface()!=NULL&&getParentWindow()->getDrawingSurface()->getEventProducer() != NULL 
-                && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+            if(getParentWindow() != NULL && getParentWindow()->getParentDrawingSurface()!=NULL&&getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL 
+                && getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
             {
                 if(OriginalPosition == _TextSelectionEnd)
                 {
@@ -363,7 +363,7 @@ void TextArea::mouseClicked(const MouseEventUnrecPtr e)
 		{
 
 			//set caret position to proper place
-			Position = findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaRefPtr(this)));
+			Position = findTextPosition(DrawingSurfaceToComponent(e->getLocation(), this));
 			if(isPunctuationChar(getText()[Position]))
 			{
 				EndWord = Position + 1;
@@ -401,16 +401,16 @@ void TextArea::mousePressed(const MouseEventUnrecPtr e)
 	if(e->getButton() == e->BUTTON1)
 	{
 		//set caret position to proper place
-			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaRefPtr(this))));
+			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), this)));
 
 		_TextSelectionEnd = getCaretPosition();
 		_TextSelectionStart = getCaretPosition();
 	}
-	if(getParentWindow() != NULL && getParentWindow()->getDrawingSurface()!=NULL&& getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+	if(getParentWindow() != NULL && getParentWindow()->getParentDrawingSurface()!=NULL&& getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 	{
-        getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseDownListener);
-        getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseDownListener);
-        getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseDownListener);
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(&_MouseDownListener);
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addKeyListener(&_MouseDownListener);
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseDownListener);
     }
 	Inherited::mousePressed(e);
 }
@@ -422,7 +422,7 @@ void TextArea::mouseDraggedAfterArming(const MouseEventUnrecPtr e)
 	{
 		//set caret position to proper place
 		
-			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaRefPtr(this))));
+			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), this)));
 		if(getCaretPosition() < OriginalPosition)
 		{
 			if(getCaretPosition() < _TextSelectionStart)
@@ -729,7 +729,7 @@ void TextArea::CaretUpdateListener::update(const UpdateEventUnrecPtr e)
 
 void TextArea::CaretUpdateListener::disconnect(void)
 {
-    _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+    _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(this);
 }
 
 
@@ -738,7 +738,7 @@ void TextArea::MouseDownListener::keyTyped(const KeyEventUnrecPtr e)
 {
     if(e->getKey() == KeyEvent::KEY_ESCAPE)
     {
-	    if(_TextArea->getParentWindow() != NULL && _TextArea->getParentWindow()->getDrawingSurface()!=NULL&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+	    if(_TextArea->getParentWindow() != NULL && _TextArea->getParentWindow()->getParentDrawingSurface()!=NULL&& _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 	    {
             disconnect();
         }
@@ -747,7 +747,7 @@ void TextArea::MouseDownListener::keyTyped(const KeyEventUnrecPtr e)
 
 void TextArea::MouseDownListener::mouseReleased(const MouseEventUnrecPtr e)
 {
-	if(_TextArea->getParentWindow() != NULL && _TextArea->getParentWindow()->getDrawingSurface()!=NULL&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+	if(_TextArea->getParentWindow() != NULL && _TextArea->getParentWindow()->getParentDrawingSurface()!=NULL&& _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 	{
         disconnect();
     }
@@ -760,9 +760,9 @@ void TextArea::MouseDownListener::mouseDragged(const MouseEventUnrecPtr e)
 
 void TextArea::MouseDownListener::disconnect(void)
 {
-    _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-    _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
-    _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseListener(this);
+    _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeKeyListener(this);
+    _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
 }
 
 OSG_END_NAMESPACE

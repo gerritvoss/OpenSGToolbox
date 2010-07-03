@@ -78,11 +78,11 @@ void TreeComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr TreeComponentGenerator::getComponent(ComponentRefPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
+ComponentTransitPtr TreeComponentGenerator::getComponent(Component* const Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
 {
     if(Parent->getType().isDerivedFrom(Tree::getClassType()))
     {
-        return getTreeComponent(dynamic_pointer_cast<Tree>(Parent), Value, IsSelected, false, true, PrimaryAxisIndex, HasFocus);
+        return getTreeComponent(dynamic_cast<Tree* const>(Parent), Value, IsSelected, false, true, PrimaryAxisIndex, HasFocus);
     }
     else
     {

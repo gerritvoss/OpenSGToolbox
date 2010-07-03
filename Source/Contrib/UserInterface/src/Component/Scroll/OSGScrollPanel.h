@@ -110,7 +110,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollPanel : public ScrollPanelBase
     
     virtual void updateLayout(void);
 
-    void setViewComponent(ComponentRefPtr TheComponent);
+    void setViewComponent(Component* const TheComponent);
     Component * getViewComponent  (void) const;
 
     //Mouse Wheel Events
@@ -155,10 +155,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollPanel : public ScrollPanelBase
     class ViewportChangeListener : public ChangeListener
     {
       public:
-        ViewportChangeListener(ScrollPanelRefPtr TheScrollPanel);
+        ViewportChangeListener(ScrollPanel* const TheScrollPanel);
         virtual void stateChanged(const ChangeEventUnrecPtr e);
       private:
-        ScrollPanelRefPtr _ScrollPanel;
+        ScrollPanel* _ScrollPanel;
     };
 
     friend class ViewportChangeListener;
@@ -169,10 +169,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollPanel : public ScrollPanelBase
     class ViewportRangeModelChangeListener : public ChangeListener
     {
       public:
-        ViewportRangeModelChangeListener(ScrollPanelRefPtr TheScrollPanel);
+        ViewportRangeModelChangeListener(ScrollPanel* const TheScrollPanel);
         virtual void stateChanged(const ChangeEventUnrecPtr e);
       private:
-        ScrollPanelRefPtr _ScrollPanel;
+        ScrollPanel* _ScrollPanel;
     };
 
     friend class ViewportRangeModelChangeListener;
@@ -181,9 +181,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollPanel : public ScrollPanelBase
 
     void updateRangeModels(void);
 
-    ScrollBarRefPtr getVerticalScrollBar(void);
+    ScrollBar* getVerticalScrollBar(void);
 
-    ScrollBarRefPtr getHorizontalScrollBar(void);
+    ScrollBar* getHorizontalScrollBar(void);
     /*==========================  PRIVATE  ================================*/
 
   private:

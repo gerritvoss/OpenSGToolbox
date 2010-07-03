@@ -80,7 +80,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableCellEditor : public TableCellEdit
 
     /*! \}                                                                 */
 
-	virtual ComponentRefPtr getTableCellEditorComponent(TableRefPtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column) = 0;
+	virtual ComponentTransitPtr getTableCellEditorComponent(Table* const table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column) = 0;
 
     /*=========================  PROTECTED  ===============================*/
 

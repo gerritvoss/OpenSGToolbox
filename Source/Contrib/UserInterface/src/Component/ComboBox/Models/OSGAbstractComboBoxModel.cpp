@@ -96,7 +96,7 @@ void AbstractComboBoxModel::removeListDataListener(ListDataListenerPtr l)
     }
 }
 
-void AbstractComboBoxModel::produceListDataContentsChanged(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
+void AbstractComboBoxModel::produceListDataContentsChanged(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
     const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
@@ -107,7 +107,7 @@ void AbstractComboBoxModel::produceListDataContentsChanged(FieldContainerRefPtr 
     _Producer.produceEvent(ListDataContentsChangedMethodId,e);
 }
 
-void AbstractComboBoxModel::produceListDataIntervalAdded(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
+void AbstractComboBoxModel::produceListDataIntervalAdded(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
     const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
@@ -118,7 +118,7 @@ void AbstractComboBoxModel::produceListDataIntervalAdded(FieldContainerRefPtr So
     _Producer.produceEvent(ListDataIntervalAddedMethodId,e);
 }
 
-void AbstractComboBoxModel::produceListDataIntervalRemoved(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
+void AbstractComboBoxModel::produceListDataIntervalRemoved(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
     const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
@@ -146,7 +146,7 @@ void AbstractComboBoxModel::removeSelectionListener(ComboBoxSelectionListenerPtr
     }
 }
 
-void AbstractComboBoxModel::produceSelectionChanged(FieldContainerRefPtr Source, const Int32& CurrentIndex, const Int32& PreviousIndex)
+void AbstractComboBoxModel::produceSelectionChanged(FieldContainer* const Source, const Int32& CurrentIndex, const Int32& PreviousIndex)
 {
     const ComboBoxSelectionEventUnrecPtr e = ComboBoxSelectionEvent::create(Source, getSystemTime(), CurrentIndex, PreviousIndex);
     ComboBoxSelectionListenerSet SelectionListenerSet(_SelectionListeners);

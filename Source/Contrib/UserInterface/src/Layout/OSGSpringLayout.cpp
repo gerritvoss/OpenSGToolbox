@@ -192,7 +192,7 @@ bool SpringLayout::xmlWriteHandler (const FieldContainerRefPtr& SpringLayoutFC)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void SpringLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+void SpringLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
 	Pnt2f ParentInsetsTopLeft, ParentInsetsBottomRight;
 	dynamic_cast<const ComponentContainer*>(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetsBottomRight);
@@ -222,7 +222,7 @@ void SpringLayout::updateLayout(const MFUnrecComponentPtr* Components, const Com
 }
 
 
-Vec2f SpringLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f SpringLayout::minimumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     /*SpringLayoutConstraintsRefPtr TheConstraints = getConstraint( ParentComponent );
     Real32 width = getDecycledSpring(TheConstraints->getWidth())->getMinimumValue();
@@ -232,7 +232,7 @@ Vec2f SpringLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Compone
     return ParentComponent->getMinSize();
 }
 
-Vec2f SpringLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f SpringLayout::requestedContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     /*SpringLayoutConstraintsRefPtr TheConstraints = getConstraint( ParentComponent );
     Real32 width = getDecycledSpring(TheConstraints->getWidth())->getPreferredValue();
@@ -242,7 +242,7 @@ Vec2f SpringLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Compo
     return ParentComponent->getPreferredSize();
 }
 
-Vec2f SpringLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f SpringLayout::preferredContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     /*SpringLayoutConstraintsRefPtr TheConstraints = getConstraint( ParentComponent );
     Real32 width = getDecycledSpring(TheConstraints->getWidth())->getPreferredValue();
@@ -252,7 +252,7 @@ Vec2f SpringLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Compo
     return ParentComponent->getPreferredSize();
 }
 
-Vec2f SpringLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f SpringLayout::maximumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     /*SpringLayoutConstraintsRefPtr TheConstraints = getConstraint( ParentComponent );
     Real32 width = getDecycledSpring(TheConstraints->getWidth())->getMaximumValue();

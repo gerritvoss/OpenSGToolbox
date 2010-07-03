@@ -78,7 +78,7 @@ void ToolTip::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ToolTip::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void ToolTip::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
     if(getText() != "" && getFont() != NULL)
     {

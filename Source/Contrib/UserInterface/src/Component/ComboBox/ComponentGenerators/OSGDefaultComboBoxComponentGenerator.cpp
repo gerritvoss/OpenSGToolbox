@@ -79,10 +79,10 @@ void DefaultComboBoxComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBoxRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentTransitPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBox* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
 	if(Value.empty()){
-		return NULL;
+		return ComponentTransitPtr(NULL);
 	}
 
 	ComponentRefPtr TheComponent = dynamic_pointer_cast<Component>(getDrawObjectPrototype()->shallowCopy());
@@ -155,7 +155,7 @@ ComponentRefPtr DefaultComboBoxComponentGenerator::getComboBoxComponent(ComboBox
 			TheComponent->setBackgrounds(getFocusedBackground());
 			TheComponent->setForegrounds(getFocusedForeground());
 	}
-	return TheComponent;
+	return ComponentTransitPtr(TheComponent.get());
 }
 
 /*-------------------------------------------------------------------------*\

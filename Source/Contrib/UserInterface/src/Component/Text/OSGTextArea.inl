@@ -41,13 +41,13 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-TextArea::CaretUpdateListener::CaretUpdateListener(TextAreaRefPtr TheTextArea) :
+TextArea::CaretUpdateListener::CaretUpdateListener(TextArea* const TheTextArea) :
 									_TextArea(TheTextArea)
 {
 }
 
 inline
-TextArea::MouseDownListener::MouseDownListener(TextAreaRefPtr TheTextArea) :
+TextArea::MouseDownListener::MouseDownListener(TextArea* const TheTextArea) :
 _TextArea(TheTextArea)
 {
 }

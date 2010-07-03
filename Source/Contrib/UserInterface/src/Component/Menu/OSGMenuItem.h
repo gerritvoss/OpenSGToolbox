@@ -98,6 +98,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
 
     virtual void detachFromEventProducer(void);
 
+    void setParentWindow(InternalWindow* const parent);
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -127,7 +129,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
 
     /*! \}                                                                 */
 
-	virtual void drawText(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
+	virtual void drawText(Graphics* const TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
     
     virtual void actionPreformed(const ActionEventUnrecPtr e);
 	
@@ -136,10 +138,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
 	class MenuItemKeyAcceleratorListener : public KeyAcceleratorListener
 	{
 	public:
-		MenuItemKeyAcceleratorListener(MenuItemRefPtr TheMenuItem);
+		MenuItemKeyAcceleratorListener(MenuItem* const TheMenuItem);
         virtual void acceleratorTyped(const KeyAcceleratorEventUnrecPtr e);
 	private:
-		MenuItemRefPtr _MenuItem;
+		MenuItem* _MenuItem;
 	};
 
 	friend class MenuItemKeyAcceleratorListener;
@@ -149,12 +151,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
 	class KeyAcceleratorMenuFlashUpdateListener : public UpdateListener
 	{
 	public:
-		KeyAcceleratorMenuFlashUpdateListener(MenuItemRefPtr TheMenuItem);
+		KeyAcceleratorMenuFlashUpdateListener(MenuItem* const TheMenuItem);
         virtual void update(const UpdateEventUnrecPtr e);
         void reset(void);
         void disconnect(void);
 	private:
-		MenuItemRefPtr _MenuItem;
+		MenuItem* _MenuItem;
 	    Time _FlashElps;
 	};
 
@@ -162,7 +164,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
 
 	KeyAcceleratorMenuFlashUpdateListener _KeyAcceleratorMenuFlashUpdateListener;
 
-    MenuRefPtr getTopLevelMenu(void) const;
+    Menu* getTopLevelMenu(void) const;
     bool _DrawAsThoughSelected;
     std::string _AcceleratorText;
     Int32 _MnemonicTextPosition;

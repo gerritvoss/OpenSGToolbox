@@ -166,19 +166,19 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
 
     /*! \}                                                                 */
 
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
     
 	mutable Time _CurrentCaretBlinkElps;
 
 	class CaretUpdateListener : public UpdateListener
 	{
 	public:
-		CaretUpdateListener(TextAreaRefPtr TheTextArea);
+		CaretUpdateListener(TextArea* const TheTextArea);
         virtual void update(const UpdateEventUnrecPtr e);
 
         void disconnect(void);
 	private:
-		TextAreaRefPtr _TextArea;
+		TextArea* _TextArea;
 	};
 
 	friend class CarentUpdateListener;
@@ -188,7 +188,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
 	class MouseDownListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
 	{
 	public :
-		MouseDownListener(TextAreaRefPtr TheTextArea);
+		MouseDownListener(TextArea* const TheTextArea);
 		
         virtual void keyTyped(const KeyEventUnrecPtr e);
 
@@ -197,7 +197,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
 
         void disconnect(void);
 	protected :
-		TextAreaRefPtr _TextArea;
+		TextArea* _TextArea;
 	};
 
 	friend class MouseDownListener;

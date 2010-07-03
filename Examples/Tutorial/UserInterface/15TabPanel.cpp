@@ -118,7 +118,7 @@ class AddTabActionListener : public ActionListener
 
         // Determine if the number of Tabs is 6 and 
         // if so, add a 7th Tab
-        if( ExampleTabPanel->getMFTabs()->getSize() == 6) 
+        if( ExampleTabPanel->getMFTabs()->size() == 6) 
         {
             ExampleTabPanel->addTab(AddedTabLabel, AddedTabContent);
 
@@ -152,7 +152,7 @@ number
          ******************************************************/		
         // If the number of Tabs is 7 (one was added)
         // then remove it
-        if( ExampleTabPanel->getMFTabs()->getSize() == 7) 
+        if( ExampleTabPanel->getMFTabs()->size() == 7) 
         {
             ExampleTabPanel->removeTab(6);
 

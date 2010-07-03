@@ -76,7 +76,7 @@ void ArcUIDrawObject::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ArcUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void ArcUIDrawObject::draw(Graphics* const Graphics, Real32 Opacity) const
 {
 	Graphics->drawArc(getCenter(),getWidth(),getHeight(), getStartAngleRad(), getEndAngleRad(), getLineWidth(), getSubDivisions(), getColor(),getOpacity()*Opacity);
 }

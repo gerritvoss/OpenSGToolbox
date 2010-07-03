@@ -47,13 +47,13 @@ bool InternalWindow::isKeyAcceleratorAttached(KeyEvent::Key TheKey, UInt32 Modif
 }
 
 inline
-InternalWindow::PopupMenuInteractionListener::PopupMenuInteractionListener(InternalWindowRefPtr TheInternalWindow) :
+InternalWindow::PopupMenuInteractionListener::PopupMenuInteractionListener(InternalWindow* const TheInternalWindow) :
 _InternalWindow(TheInternalWindow)
 {
 }
 
 inline
-InternalWindow::TitlebarDraggedListener::TitlebarDraggedListener(InternalWindowRefPtr TheInternalWindow) :
+InternalWindow::TitlebarDraggedListener::TitlebarDraggedListener(InternalWindow* const TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
@@ -71,7 +71,7 @@ void InternalWindow::TitlebarDraggedListener::setMouseStartPosition(const Pnt2f&
 }
 
 inline
-InternalWindow::BorderDraggedListener::BorderDraggedListener(InternalWindowRefPtr TheInternalWindow) :
+InternalWindow::BorderDraggedListener::BorderDraggedListener(InternalWindow* const TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
@@ -101,25 +101,25 @@ void InternalWindow::BorderDraggedListener::setBorderDragged(const WindowArea Va
 }
 
 inline
-InternalWindow::TitlebarStartDragListener::TitlebarStartDragListener(InternalWindowRefPtr TheInternalWindow) :
+InternalWindow::TitlebarStartDragListener::TitlebarStartDragListener(InternalWindow* const TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
 	
 inline
-InternalWindow::CloseButtonListener::CloseButtonListener(InternalWindowRefPtr TheInternalWindow) :
+InternalWindow::CloseButtonListener::CloseButtonListener(InternalWindow* const TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
 
 inline
-InternalWindow::MaximizeButtonListener::MaximizeButtonListener(InternalWindowRefPtr TheInternalWindow) :
+InternalWindow::MaximizeButtonListener::MaximizeButtonListener(InternalWindow* const TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
 
 inline
-InternalWindow::IconifyButtonListener::IconifyButtonListener(InternalWindowRefPtr TheInternalWindow) :
+InternalWindow::IconifyButtonListener::IconifyButtonListener(InternalWindow* const TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }

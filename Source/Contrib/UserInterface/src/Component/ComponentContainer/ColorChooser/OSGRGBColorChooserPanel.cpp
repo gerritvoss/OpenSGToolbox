@@ -218,7 +218,7 @@ void RGBColorChooserPanel::buildChooser(void)
     _RedSliderTrackBackground->setEndPosition(Vec2f(1.0f,0.0f));
 
     UIDrawObjectCanvasRefPtr RedSliderTrackCanvas = UIDrawObjectCanvas::create();
-    RedSliderTrackCanvas->setPreferredSize(Vec2f(15,15));
+    RedSliderTrackCanvas->setPreferredSize(Vec2f(15.0f,15.0f));
     RedSliderTrackCanvas->setBorders(NULL);
     RedSliderTrackCanvas->setBackgrounds(_RedSliderTrackBackground);
 
@@ -236,7 +236,7 @@ void RGBColorChooserPanel::buildChooser(void)
     _GreenSliderTrackBackground->setEndPosition(Vec2f(1.0f,0.0f));
 
     UIDrawObjectCanvasRefPtr GreenSliderTrackCanvas = UIDrawObjectCanvas::create();
-    GreenSliderTrackCanvas->setPreferredSize(Vec2f(15,15));
+    GreenSliderTrackCanvas->setPreferredSize(Vec2f(15.0f,15.0f));
     GreenSliderTrackCanvas->setBorders(NULL);
     GreenSliderTrackCanvas->setBackgrounds(_GreenSliderTrackBackground);
 
@@ -254,7 +254,7 @@ void RGBColorChooserPanel::buildChooser(void)
     _BlueSliderTrackBackground->setEndPosition(Vec2f(1.0f,0.0f));
 
     UIDrawObjectCanvasRefPtr BlueSliderTrackCanvas = UIDrawObjectCanvas::create();
-    BlueSliderTrackCanvas->setPreferredSize(Vec2f(15,15));
+    BlueSliderTrackCanvas->setPreferredSize(Vec2f(15.0f,15.0f));
     BlueSliderTrackCanvas->setBorders(NULL);
     BlueSliderTrackCanvas->setBackgrounds(_BlueSliderTrackBackground);
 
@@ -273,7 +273,7 @@ void RGBColorChooserPanel::buildChooser(void)
         _AlphaSliderTrackBackground->setEndPosition(Vec2f(1.0f,0.0f));
 
         UIDrawObjectCanvasRefPtr AlphaSliderTrackCanvas = UIDrawObjectCanvas::create();
-        AlphaSliderTrackCanvas->setPreferredSize(Vec2f(15,15));
+        AlphaSliderTrackCanvas->setPreferredSize(Vec2f(15.0f,15.0f));
         AlphaSliderTrackCanvas->setBorders(NULL);
         AlphaSliderTrackCanvas->setBackgrounds(_AlphaSliderTrackBackground);
 
@@ -319,81 +319,81 @@ void RGBColorChooserPanel::buildChooser(void)
 
     //Red
     //Label
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, RedLabel, 5, SpringLayoutConstraints::WEST_EDGE, RGBColorChooserPanelRefPtr(this));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, RedLabel, 5, SpringLayoutConstraints::NORTH_EDGE, RGBColorChooserPanelRefPtr(this));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, RedLabel, LayoutSpring::width(RedLabel));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, RedLabel, LayoutSpring::height(RedLabel));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, RedLabel, 5.0f, SpringLayoutConstraints::WEST_EDGE, this);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, RedLabel, 5.0f, SpringLayoutConstraints::NORTH_EDGE, this);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, RedLabel, LayoutSpringUnrecPtr(LayoutSpring::width(RedLabel)));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, RedLabel, LayoutSpringUnrecPtr(LayoutSpring::height(RedLabel)));
 
     //Slider
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _RedSlider, 5, SpringLayoutConstraints::EAST_EDGE, RedLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _RedSlider, -5, SpringLayoutConstraints::WEST_EDGE, _RedSpinner);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _RedSlider, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, RedLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _RedSlider, LayoutSpring::height(_RedSlider));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _RedSlider, 5.0f, SpringLayoutConstraints::EAST_EDGE, RedLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _RedSlider, -5.0f, SpringLayoutConstraints::WEST_EDGE, _RedSpinner);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _RedSlider, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, RedLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _RedSlider, LayoutSpringUnrecPtr(LayoutSpring::height(_RedSlider)));
 
     //Spinner
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _RedSpinner, -5, SpringLayoutConstraints::EAST_EDGE, RGBColorChooserPanelRefPtr(this));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _RedSpinner, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, RedLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _RedSpinner, LayoutSpring::width(_RedSpinner));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _RedSpinner, LayoutSpring::height(_RedSpinner));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _RedSpinner, -5.0f, SpringLayoutConstraints::EAST_EDGE, this);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _RedSpinner, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, RedLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _RedSpinner, LayoutSpringUnrecPtr(LayoutSpring::width(_RedSpinner)));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _RedSpinner, LayoutSpringUnrecPtr(LayoutSpring::height(_RedSpinner)));
 
     //Green
     //Label
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, GreenLabel, 5, SpringLayoutConstraints::WEST_EDGE, RGBColorChooserPanelRefPtr(this));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, GreenLabel, 5, SpringLayoutConstraints::SOUTH_EDGE, RedLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, GreenLabel, LayoutSpring::width(GreenLabel));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, GreenLabel, LayoutSpring::height(GreenLabel));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, GreenLabel, 5.0f, SpringLayoutConstraints::WEST_EDGE, this);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, GreenLabel, 5.0f, SpringLayoutConstraints::SOUTH_EDGE, RedLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, GreenLabel, LayoutSpringUnrecPtr(LayoutSpring::width(GreenLabel)));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, GreenLabel, LayoutSpringUnrecPtr(LayoutSpring::height(GreenLabel)));
 
     //Slider
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _GreenSlider, 5, SpringLayoutConstraints::EAST_EDGE, GreenLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _GreenSlider, -5, SpringLayoutConstraints::WEST_EDGE, _GreenSpinner);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _GreenSlider, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, GreenLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _GreenSlider, LayoutSpring::height(_GreenSlider));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _GreenSlider, 5.0f, SpringLayoutConstraints::EAST_EDGE, GreenLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _GreenSlider, -5.0f, SpringLayoutConstraints::WEST_EDGE, _GreenSpinner);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _GreenSlider, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, GreenLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _GreenSlider, LayoutSpringUnrecPtr(LayoutSpring::height(_GreenSlider)));
 
     //Spinner
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _GreenSpinner, -5, SpringLayoutConstraints::EAST_EDGE, RGBColorChooserPanelRefPtr(this));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _GreenSpinner, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, GreenLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _GreenSpinner, LayoutSpring::width(_GreenSpinner));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _GreenSpinner, LayoutSpring::height(_GreenSpinner));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _GreenSpinner, -5.0f, SpringLayoutConstraints::EAST_EDGE, this);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _GreenSpinner, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, GreenLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _GreenSpinner, LayoutSpringUnrecPtr(LayoutSpring::width(_GreenSpinner)));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _GreenSpinner, LayoutSpringUnrecPtr(LayoutSpring::height(_GreenSpinner)));
 
     //Blue
     //Label
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, BlueLabel, 5, SpringLayoutConstraints::WEST_EDGE, RGBColorChooserPanelRefPtr(this));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, BlueLabel, 5, SpringLayoutConstraints::SOUTH_EDGE, GreenLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, BlueLabel, LayoutSpring::width(BlueLabel));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, BlueLabel, LayoutSpring::height(BlueLabel));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, BlueLabel, 5.0f, SpringLayoutConstraints::WEST_EDGE, this);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, BlueLabel, 5.0f, SpringLayoutConstraints::SOUTH_EDGE, GreenLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, BlueLabel, LayoutSpringUnrecPtr(LayoutSpring::width(BlueLabel)));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, BlueLabel, LayoutSpringUnrecPtr(LayoutSpring::height(BlueLabel)));
 
     //Slider
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _BlueSlider, 5, SpringLayoutConstraints::EAST_EDGE, BlueLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _BlueSlider, -5, SpringLayoutConstraints::WEST_EDGE, _BlueSpinner);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _BlueSlider, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, BlueLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _BlueSlider, LayoutSpring::height(_BlueSlider));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _BlueSlider, 5.0f, SpringLayoutConstraints::EAST_EDGE, BlueLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _BlueSlider, -5.0f, SpringLayoutConstraints::WEST_EDGE, _BlueSpinner);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _BlueSlider, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, BlueLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _BlueSlider, LayoutSpringUnrecPtr(LayoutSpring::height(_BlueSlider)));
 
     //Spinner
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _BlueSpinner, -5, SpringLayoutConstraints::EAST_EDGE, RGBColorChooserPanelRefPtr(this));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _BlueSpinner, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, BlueLabel);
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _BlueSpinner, LayoutSpring::width(_BlueSpinner));
-    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _BlueSpinner, LayoutSpring::height(_BlueSpinner));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _BlueSpinner, -5.0f, SpringLayoutConstraints::EAST_EDGE, this);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _BlueSpinner, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, BlueLabel);
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _BlueSpinner, LayoutSpringUnrecPtr(LayoutSpring::width(_BlueSpinner)));
+    RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _BlueSpinner, LayoutSpringUnrecPtr(LayoutSpring::height(_BlueSpinner)));
 
     if(getIncludeAlpha())
     {
         //Alpha
         //Label
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, AlphaLabel, 5, SpringLayoutConstraints::WEST_EDGE, RGBColorChooserPanelRefPtr(this));
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, AlphaLabel, 5, SpringLayoutConstraints::SOUTH_EDGE, BlueLabel);
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, AlphaLabel, LayoutSpring::width(AlphaLabel));
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, AlphaLabel, LayoutSpring::height(AlphaLabel));
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, AlphaLabel, 5.0f, SpringLayoutConstraints::WEST_EDGE, this);
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, AlphaLabel, 5.0f, SpringLayoutConstraints::SOUTH_EDGE, BlueLabel);
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, AlphaLabel, LayoutSpringUnrecPtr(LayoutSpring::width(AlphaLabel)));
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, AlphaLabel, LayoutSpringUnrecPtr(LayoutSpring::height(AlphaLabel)));
 
         //Slider
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _AlphaSlider, 5, SpringLayoutConstraints::EAST_EDGE, AlphaLabel);
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _AlphaSlider, -5, SpringLayoutConstraints::WEST_EDGE, _AlphaSpinner);
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _AlphaSlider, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, AlphaLabel);
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _AlphaSlider, LayoutSpring::height(_AlphaSlider));
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _AlphaSlider, 5.0f, SpringLayoutConstraints::EAST_EDGE, AlphaLabel);
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _AlphaSlider, -5.0f, SpringLayoutConstraints::WEST_EDGE, _AlphaSpinner);
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _AlphaSlider, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, AlphaLabel);
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _AlphaSlider, LayoutSpringUnrecPtr(LayoutSpring::height(_AlphaSlider)));
 
         //Spinner
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _AlphaSpinner, -5, SpringLayoutConstraints::EAST_EDGE, RGBColorChooserPanelRefPtr(this));
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _AlphaSpinner, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, AlphaLabel);
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _AlphaSpinner, LayoutSpring::width(_AlphaSpinner));
-        RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _AlphaSpinner, LayoutSpring::height(_AlphaSpinner));
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _AlphaSpinner, -5, SpringLayoutConstraints::EAST_EDGE, this);
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _AlphaSpinner, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, AlphaLabel);
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _AlphaSpinner, LayoutSpringUnrecPtr(LayoutSpring::width(_AlphaSpinner)));
+        RGBPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _AlphaSpinner, LayoutSpringUnrecPtr(LayoutSpring::height(_AlphaSpinner)));
     }
 
     clearChildren();

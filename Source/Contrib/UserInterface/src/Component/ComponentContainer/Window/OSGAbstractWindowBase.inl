@@ -86,22 +86,6 @@ OSG::UInt16 AbstractWindowBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
-
-//! Get the value of the AbstractWindow::_sfDrawingSurface field.
-inline
-UIDrawingSurface * AbstractWindowBase::getDrawingSurface(void) const
-{
-    return _sfDrawingSurface.getValue();
-}
-
-//! Set the value of the AbstractWindow::_sfDrawingSurface field.
-inline
-void AbstractWindowBase::setDrawingSurface(UIDrawingSurface * const value)
-{
-    editSField(DrawingSurfaceFieldMask);
-
-    _sfDrawingSurface.setValue(value);
-}
 //! Get the value of the AbstractWindow::_sfClosable field.
 
 inline
@@ -555,8 +539,8 @@ void AbstractWindowBase::execSync (      AbstractWindowBase *pFrom,
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
-        _sfDrawingSurface.syncWith(pFrom->_sfDrawingSurface);
+    if(FieldBits::NoField != (ParentDrawingSurfaceFieldMask & whichField))
+        _sfParentDrawingSurface.syncWith(pFrom->_sfParentDrawingSurface);
 
     if(FieldBits::NoField != (ClosableFieldMask & whichField))
         _sfClosable.syncWith(pFrom->_sfClosable);

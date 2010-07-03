@@ -88,7 +88,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayout : public SpringLayoutBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+    virtual void updateLayout(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
 
     bool isCyclic(const LayoutSpring* TheSpring) const;
 
@@ -105,10 +105,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayout : public SpringLayoutBase
     void putConstraint(const UInt32 e1, ComponentRefPtr c1, LayoutSpringRefPtr s, const UInt32 e2, ComponentRefPtr c2);
 
     void putConstraint(const UInt32 e, ComponentRefPtr c, LayoutSpringRefPtr s);
-    virtual Vec2f minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
-	virtual Vec2f requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
-	virtual Vec2f preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
-	virtual Vec2f maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+    virtual Vec2f minimumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f requestedContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f preferredContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f maximumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
 
 	static bool xmlReadHandler (rapidxml::xml_node<char>&, const XMLFCFileType::IDLookupMap&,const FieldContainerRefPtr&);
 	static bool xmlWriteHandler (const FieldContainerRefPtr&);

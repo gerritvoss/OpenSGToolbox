@@ -148,7 +148,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuButton : public MenuButtonBase
 	class MenuButtonEventsListener : public PopupMenuListener, public ActionListener
 	{
 	public:
-		MenuButtonEventsListener(MenuButtonRefPtr TheMenuButton);
+		MenuButtonEventsListener(MenuButton* const TheMenuButton);
 
 		virtual void popupMenuCanceled(const PopupMenuEventUnrecPtr e);
 		virtual void popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e);
@@ -157,7 +157,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuButton : public MenuButtonBase
         
         virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		MenuButtonRefPtr _MenuButton;
+		MenuButton* _MenuButton;
 	};
 
 	friend class MenuButtonEventsListener;

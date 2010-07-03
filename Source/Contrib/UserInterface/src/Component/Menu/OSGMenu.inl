@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-MenuItemRefPtr Menu::getItem(const UInt32& Index)
+MenuItem* Menu::getItem(const UInt32& Index)
 {
     return getInternalPopupMenu()->getItem(Index);
 }
@@ -59,7 +59,7 @@ bool Menu::getPopupVisible(void) const
 }
 
 inline
-Menu::PopupUpdateListener::PopupUpdateListener(MenuRefPtr TheMenu) :
+Menu::PopupUpdateListener::PopupUpdateListener(Menu* const TheMenu) :
 									_Menu(TheMenu),
 									_PopupElps(0.0)
 {

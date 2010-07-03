@@ -94,7 +94,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxEditor : public ComboBoxEditor
 	virtual void removeActionListener(ActionListenerPtr Listener) = 0;
 
 	//Return the component that should be added to the tree hierarchy for this editor
-	virtual ComponentRefPtr getEditorComponent(void) = 0;
+	virtual Component* getEditorComponent(void) = 0;
 
 	//Return the edited item
 	virtual boost::any getItem(void) = 0;

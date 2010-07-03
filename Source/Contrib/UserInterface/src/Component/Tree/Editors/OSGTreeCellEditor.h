@@ -108,7 +108,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeCellEditor : public TreeCellEditor
 
     /*! \}                                                                 */
 
-	virtual ComponentRefPtr getTreeCellEditorComponent(TreeRefPtr TheTree,
+	virtual ComponentTransitPtr getTreeCellEditorComponent(Tree* const TheTree,
                                                        const boost::any& Value,
                                                        bool IsSelected,
                                                        bool IsExpanded,

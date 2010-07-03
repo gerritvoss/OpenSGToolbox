@@ -49,7 +49,7 @@ bool BoundedRangeSpinnerModel::isChangeListenerAttached(ChangeListenerPtr Listen
 }
 
 inline
-BoundedRangeModelRefPtr BoundedRangeSpinnerModel::getBoundedRangeModel(void)
+BoundedRangeModel* BoundedRangeSpinnerModel::getBoundedRangeModel(void)
 {
 	return _TheBoundedRangeModel;
 }

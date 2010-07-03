@@ -12,7 +12,8 @@ SET(${PROJECT_NAME}_DEP_OSG_LIB OSGGroup OSGTBFileIO OSGFileIO OSGDrawable
                                 OSGUtil OSGWindow OSGImageFileIO OSGContribPhysics
                                 OSGTBAnimation OSGContribVideo
                                 OSGContribUserInterface
-                                OSGContribParticleSystem OSGContribSound OSGContribLua)
+                                OSGContribParticleSystem OSGContribSound OSGContribLua
+                                OSGContribFieldContainerEditor)
 SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB)
 
 # dependencies - External

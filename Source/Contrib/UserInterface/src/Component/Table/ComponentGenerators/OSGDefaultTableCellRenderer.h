@@ -57,7 +57,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableCellRenderer : public Tabl
 {
     /*==========================  PUBLIC  =================================*/
   public:
-	virtual ComponentRefPtr getTableCellRendererComponent(TableRefPtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column);
+	virtual ComponentTransitPtr getTableCellRendererComponent(Table* const table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

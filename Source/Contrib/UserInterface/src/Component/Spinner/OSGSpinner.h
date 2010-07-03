@@ -167,16 +167,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Spinner : public SpinnerBase
     SpinnerModelPtr _Model;
     
     //This method is called by the constructors to create the JComponent that displays the current value of the sequence.
-    ComponentRefPtr createEditor(SpinnerModelPtr model);
+    ComponentTransitPtr createEditor(SpinnerModelPtr model);
 
     //Next Button Action Listener
 	class NextButtonActionListener : public ActionListener
 	{
 	public:
-		NextButtonActionListener(SpinnerRefPtr TheSpinner);
+		NextButtonActionListener(Spinner* const TheSpinner);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		SpinnerRefPtr _Spinner;
+		Spinner* _Spinner;
 	};
 
 	friend class NextButtonActionListener;
@@ -187,10 +187,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Spinner : public SpinnerBase
 	class PreviousButtonActionListener : public ActionListener
 	{
 	public:
-		PreviousButtonActionListener(SpinnerRefPtr TheSpinner);
+		PreviousButtonActionListener(Spinner* const TheSpinner);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		SpinnerRefPtr _Spinner;
+		Spinner* _Spinner;
 	};
 
 	friend class PreviousButtonActionListener;

@@ -76,7 +76,7 @@ void TexturedQuadUIDrawObject::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TexturedQuadUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void TexturedQuadUIDrawObject::draw(Graphics* const Graphics, Real32 Opacity) const
 {
     //TODO: add Color Field to TexturedQuadUIDrawObject
 	Graphics->drawQuad(getPoint1(),getPoint2(),getPoint3(),getPoint4(),

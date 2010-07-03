@@ -82,10 +82,10 @@ void DefaultTableCellEditor::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr DefaultTableCellEditor::getTableCellEditorComponent(TableRefPtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column)
+ComponentTransitPtr DefaultTableCellEditor::getTableCellEditorComponent(Table* const table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column)
 {
     if(value.empty()){
-        return NULL;
+        return ComponentTransitPtr(NULL);
     }
     TextFieldRefPtr TheTextField = TextField::create();
     std::string tempString;
@@ -125,12 +125,12 @@ ComponentRefPtr DefaultTableCellEditor::getTableCellEditorComponent(TableRefPtr 
     getDefaultStringEditor()->addActionListener(&_DefaultStringEditorListener);
     getDefaultStringEditor()->addFocusListener(&_DefaultStringEditorListener);
     getDefaultStringEditor()->addKeyListener(&_DefaultStringEditorListener);
-    return getDefaultStringEditor();
+    return ComponentTransitPtr(getDefaultStringEditor());
 }
 
-ComponentRefPtr DefaultTableCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
+ComponentTransitPtr DefaultTableCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
 {
-    return getTableCellEditorComponent(TableRefPtr(NULL), Value, IsSelected, 0, 0);
+    return getTableCellEditorComponent(NULL, Value, IsSelected, 0, 0);
 }
 
 void DefaultTableCellEditor::cancelCellEditing(void)

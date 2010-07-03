@@ -83,6 +83,11 @@ void AbstractWindow::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+UIDrawingSurface* AbstractWindow::getParentDrawingSurface(void) const
+{
+    return dynamic_cast<UIDrawingSurface*>(_sfParentDrawingSurface.getValue());
+}
+
 EventConnection AbstractWindow::addWindowListener(WindowListenerPtr Listener)
 {
    _WindowListeners.insert(Listener);
@@ -108,7 +113,7 @@ void AbstractWindow::updateContainerLayout(void)
 void AbstractWindow::updateClipBounds(void)
 {
 	Pnt2f TopLeft, BottomRight;
-	if( getDrawingSurface() == NULL )
+	if( getParentDrawingSurface() == NULL )
 	{
 		//If I have no parent container use my bounds
 		getBounds(TopLeft, BottomRight);
@@ -123,7 +128,7 @@ void AbstractWindow::updateClipBounds(void)
         getBounds(MyTopLeft,MyBottomRight);
 
 		//Get Parent Container's Clip Bounds
-		Pnt2f ContainerClipTopLeft(0,0), ContainerClipBottomRight(getDrawingSurface()->getSize());
+		Pnt2f ContainerClipTopLeft(0,0), ContainerClipBottomRight(getParentDrawingSurface()->getSize());
 		
         //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
@@ -141,7 +146,7 @@ void AbstractWindow::updateClipBounds(void)
 		setClipBottomRight(BottomRight);
 }
 
-BorderRefPtr AbstractWindow::getDrawnBorder(void) const
+Border* AbstractWindow::getDrawnBorder(void) const
 {
     if(getDrawDecorations())
     {
@@ -171,7 +176,7 @@ BorderRefPtr AbstractWindow::getDrawnBorder(void) const
     }
 }
 
-LayerRefPtr AbstractWindow::getDrawnBackground(void) const
+Layer* AbstractWindow::getDrawnBackground(void) const
 {
 	if(getDrawDecorations())
     {
@@ -201,7 +206,7 @@ LayerRefPtr AbstractWindow::getDrawnBackground(void) const
 	}
 }
 
-LayerRefPtr AbstractWindow::getDrawnForeground(void) const
+Layer* AbstractWindow::getDrawnForeground(void) const
 {
 	if(getDrawDecorations())
     {
@@ -234,7 +239,7 @@ LayerRefPtr AbstractWindow::getDrawnForeground(void) const
 
 void AbstractWindow::produceWindowOpened(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowOpened(TheEvent);
@@ -244,7 +249,7 @@ void AbstractWindow::produceWindowOpened(void)
 
 void AbstractWindow::produceWindowClosing(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosing(TheEvent);
@@ -254,7 +259,7 @@ void AbstractWindow::produceWindowClosing(void)
 
 void AbstractWindow::produceWindowClosed(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( NULL, getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosed(TheEvent);
@@ -264,7 +269,7 @@ void AbstractWindow::produceWindowClosed(void)
 
 void AbstractWindow::produceWindowIconified(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowIconified(TheEvent);
@@ -274,7 +279,7 @@ void AbstractWindow::produceWindowIconified(void)
 
 void AbstractWindow::produceWindowDeiconified(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeiconified(TheEvent);
@@ -284,7 +289,7 @@ void AbstractWindow::produceWindowDeiconified(void)
 
 void AbstractWindow::produceWindowActivated(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowActivated(TheEvent);
@@ -294,7 +299,7 @@ void AbstractWindow::produceWindowActivated(void)
 
 void AbstractWindow::produceWindowDeactivated(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeactivated(TheEvent);
@@ -304,7 +309,7 @@ void AbstractWindow::produceWindowDeactivated(void)
 
 void AbstractWindow::produceWindowEntered(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowEntered(TheEvent);
@@ -314,7 +319,7 @@ void AbstractWindow::produceWindowEntered(void)
 
 void AbstractWindow::produceWindowExited(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowExited(TheEvent);

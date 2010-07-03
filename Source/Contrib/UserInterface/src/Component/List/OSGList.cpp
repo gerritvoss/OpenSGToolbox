@@ -103,7 +103,7 @@ Vec2f List::getContentRequestedSize(void) const
     }
 }
 
-ComponentRefPtr List::getComponentAtPoint(const MouseEventUnrecPtr e)
+Component* List::getComponentAtPoint(const MouseEventUnrecPtr e)
 {
     Pnt2f PointInComponent(ViewportToComponent(e->getLocation(), this, e->getViewport()));
 
@@ -190,12 +190,11 @@ void List::initItem(const UInt32& Index)
 
         _DrawnIndices[Index]->setPosition(Pos);
         _DrawnIndices[Index]->setSize(Size);
-        _DrawnIndices[Index]->setParentContainer(this);
         _DrawnIndices[Index]->setParentWindow(getParentWindow());
 
         //_DrawnIndices[Index]->updateClipBounds();
 
-        ((*editMFChildren())[Index]) = _DrawnIndices[Index];
+        replaceInChildren(Index, _DrawnIndices[Index]);
     }
 }
 
@@ -212,38 +211,30 @@ void List::selectionChanged(const ListSelectionEventUnrecPtr e)
 void List::focusGained(const FocusEventUnrecPtr e)
 {
     //Find this component
-    List::MFChildrenType::iterator Child =
-        editMFChildren()->find(ComponentUnrecPtr(dynamic_cast<Component*>(e->getSource())));
-    if(Child != getMFChildren()->end())
+    Component* Child = dynamic_cast<Component*>(e->getSource());
+    UInt32 index(0);
+    for( ; index< getMFChildren()->size(); ++index)
     {
-        UInt32 index(0);
-        for( ; index< getMFChildren()->size(); ++index)
+        if(Child == getChildren(index))
         {
-            if((*Child) == getChildren(index))
-            {
-                break;
-            }
+            updateItem(index);
+            return;
         }
-        updateItem(index);
     }
 }
 
 void List::focusLost(const FocusEventUnrecPtr e)
 {
     //Find this component
-    List::MFChildrenType::iterator Child =
-        editMFChildren()->find(ComponentUnrecPtr(dynamic_cast<Component*>(e->getSource())));
-    if(Child != getMFChildren()->end())
+    Component* Child = dynamic_cast<Component*>(e->getSource());
+    UInt32 index(0);
+    for( ; index< getMFChildren()->size(); ++index)
     {
-        UInt32 index(0);
-        for( ; index< getMFChildren()->size(); ++index)
+        if(Child == getChildren(index))
         {
-            if((*Child) == getChildren(index))
-            {
-                break;
-            }
+            updateItem(index);
+            return;
         }
-        updateItem(index);
     }
 }
 
@@ -287,14 +278,14 @@ void List::mousePressed(const MouseEventUnrecPtr e)
             //if(!getChildren(i)->getType().isDerivedFrom(ComponentContainer::getClassType()))
             //{
             if(getParentWindow() != NULL &&
-               getParentWindow()->getDrawingSurface() != NULL &&
-               getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+               getParentWindow()->getParentDrawingSurface() != NULL &&
+               getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
             {
-                if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+                if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
                 {
                     getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), getListIndexFromDrawnIndex(i));
                 }
-                else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+                else if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
                 {
                     getSelectionModel()->removeSelectionInterval(getListIndexFromDrawnIndex(i),i);// this toggles the interval
                 }
@@ -803,7 +794,7 @@ Int32 List::getIndexForLocation(const Pnt2f& Location) const
 
 }
 
-ComponentRefPtr List::createIndexComponent(const UInt32& Index)
+ComponentTransitPtr List::createIndexComponent(const UInt32& Index)
 {
     if(getModel() != NULL && getCellGenerator() != NULL)
     {
@@ -828,7 +819,7 @@ ComponentRefPtr List::createIndexComponent(const UInt32& Index)
     }
     else
     {
-        return NULL;
+        return ComponentTransitPtr(NULL);
     }
 }
 
@@ -939,7 +930,7 @@ void List::scrollToSelection(void)
     }
 }
 
-ComponentRefPtr List::getComponentAtIndex(const UInt32& Index)
+Component* List::getComponentAtIndex(const UInt32& Index)
 {
     if(getModel() != NULL && Index < getModel()->getSize())
     {

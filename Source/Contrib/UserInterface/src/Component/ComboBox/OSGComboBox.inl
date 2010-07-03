@@ -107,13 +107,13 @@ void ComboBox::hidePopup(void)
 }
 
 inline
-ComboBox::ExpandButtonSelectedListener::ExpandButtonSelectedListener(ComboBoxRefPtr TheComboBox) :
+ComboBox::ExpandButtonSelectedListener::ExpandButtonSelectedListener(ComboBox* const TheComboBox) :
    _ComboBox(TheComboBox)
 {
 }
 
 inline
-ComboBox::EditorListener::EditorListener(ComboBoxRefPtr TheComboBox) :
+ComboBox::EditorListener::EditorListener(ComboBox* const TheComboBox) :
    _ComboBox(TheComboBox)
 {
 }

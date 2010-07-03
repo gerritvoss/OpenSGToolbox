@@ -113,7 +113,7 @@ void DerivedFieldContainerComboBoxModel::setSelectedItem(const Int32& index)
 
         if(_SelectedIndex != PreviousIndex)
         {
-            produceSelectionChanged(DerivedFieldContainerComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
+            produceSelectionChanged(this, _SelectedIndex, PreviousIndex);
         }
     }
 }
@@ -149,7 +149,7 @@ void DerivedFieldContainerComboBoxModel::setSelectedItem(const boost::any& anObj
 
         if(_SelectedIndex != PreviousIndex)
         {
-            produceSelectionChanged(DerivedFieldContainerComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
+            produceSelectionChanged(this, _SelectedIndex, PreviousIndex);
         }
     }
 }
@@ -219,7 +219,7 @@ void DerivedFieldContainerComboBoxModel::changed(ConstFieldMaskArg whichField,
             _FieldList.push_back(boost::any(FieldContainerFactory::the()->findType(getInternalFieldContainerTypes(i))));
         }
 
-        produceListDataContentsChanged(DerivedFieldContainerComboBoxModelRefPtr(this), 0, osgMax<UInt32>(PreListSize,_FieldList.size()));
+        produceListDataContentsChanged(this, 0, osgMax<UInt32>(PreListSize,_FieldList.size()));
         setSelectedItem(-1);
     }
 }

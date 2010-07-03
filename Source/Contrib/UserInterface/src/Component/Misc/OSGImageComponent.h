@@ -90,16 +90,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponent
 
     /*! \}                                                                 */
 
-	void setImage(ImageRefPtr Image);
+	void setImage(Image* const Image);
 	void setImage(const char *fileName, const char *mimeType = 0);
 	
-	void setRolloverImage(ImageRefPtr Image);
+	void setRolloverImage(Image* const Image);
 	void setRolloverImage(const char *fileName, const char *mimeType = 0);
 
-	void setDisabledImage(ImageRefPtr Image);
+	void setDisabledImage(Image* const Image);
 	void setDisabledImage(const char *fileName, const char *mimeType = 0);
 	
-	void setFocusedImage(ImageRefPtr Image);
+	void setFocusedImage(Image* const Image);
 	void setFocusedImage(const char *fileName, const char *mimeType = 0);
     /*=========================  PROTECTED  ===============================*/
 
@@ -130,9 +130,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponent
 
     /*! \}                                                                 */
 
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
-    virtual TextureObjChunkRefPtr getDrawnTexture(void) const;
-    static TextureObjChunkTransitPtr createTexture(ImageWeakPtr Image);
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
+    virtual TextureObjChunk* getDrawnTexture(void) const;
+    static TextureObjChunkTransitPtr createTexture(Image* Image);
     
     /*==========================  PRIVATE  ================================*/
 

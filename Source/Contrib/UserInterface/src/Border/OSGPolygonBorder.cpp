@@ -77,7 +77,7 @@ void PolygonBorder::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void PolygonBorder::draw(const GraphicsWeakPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
+void PolygonBorder::draw(Graphics* const g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
     if(Clipping)
     {
@@ -161,7 +161,7 @@ void PolygonBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bo
     Left=Right=Top=Bottom = getWidth(); //wrong, but what else are you supposed to do?
 }
 
-void PolygonBorder::activateInternalDrawConstraints(const GraphicsWeakPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void PolygonBorder::activateInternalDrawConstraints(Graphics* const g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     GLenum DepthTextEnabled = glIsEnabled(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -231,7 +231,7 @@ void PolygonBorder::activateInternalDrawConstraints(const GraphicsWeakPtr g, con
     if(DepthTextEnabled) {glEnable(GL_DEPTH_TEST);}
 }
 
-void PolygonBorder::deactivateInternalDrawConstraints(const GraphicsWeakPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void PolygonBorder::deactivateInternalDrawConstraints(Graphics* const g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     g->decrDrawBounderiesNestring();
 

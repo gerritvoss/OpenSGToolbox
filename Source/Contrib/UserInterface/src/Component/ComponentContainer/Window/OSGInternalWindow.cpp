@@ -43,7 +43,7 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include <OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGInternalWindow.h"
 #include "OSGUIDrawingSurface.h"
@@ -120,7 +120,7 @@ void InternalWindow::setMaximize(bool Maximize)
         _PreviousSize = getSize();
         setIsMaximized(Maximize);
         setPosition(Pnt2f(0,0));
-        setPreferredSize(Vec2f(getDrawingSurface()->getSize().x(),getDrawingSurface()->getSize().x()));
+        setPreferredSize(Vec2f(getParentDrawingSurface()->getSize().x(),getParentDrawingSurface()->getSize().x()));
     }
     else if(!Maximize && getIsMaximized())
     {
@@ -150,23 +150,23 @@ void InternalWindow::close(void)
 
     produceWindowClosing();
 
-    if(!_VetoWindowClose && getDrawingSurface() != NULL)
+    if(!_VetoWindowClose && getParentDrawingSurface() != NULL)
     {
-        getDrawingSurface()->closeWindow(this);
+        getParentDrawingSurface()->closeWindow(this);
         produceWindowClosed();
     }
 }
 
-bool InternalWindow::giveFocus(ComponentRefPtr NewFocusedComponent, bool Temporary)
+bool InternalWindow::giveFocus(Component* const NewFocusedComponent, bool Temporary)
 {
-    if(ComponentRefPtr(this) == NewFocusedComponent)
+    if(this == NewFocusedComponent)
     {
         return true;
     }
     else
     {
         setFocused(false);
-        focusLost(FocusEvent::create(ComponentRefPtr(this),getSystemTime(),Temporary, NewFocusedComponent));
+        focusLost(FocusEvent::create(this,getSystemTime(),Temporary, NewFocusedComponent));
         return true;
     }
 }
@@ -175,35 +175,40 @@ bool InternalWindow::takeFocus(bool Temporary)
 {
 
     if(getFocused() &&
-       getDrawingSurface() != NULL &&
-       getDrawingSurface()->getFocusedWindow() == InternalWindowRefPtr(this))
+       getParentDrawingSurface() != NULL &&
+       getParentDrawingSurface()->getFocusedWindow() == this)
     {
         return true;
     }
     setFocused(true);
-    if(Temporary || getDrawingSurface() == NULL)
+    if(Temporary || getParentDrawingSurface() == NULL)
     {
-        focusGained(FocusEvent::create(ComponentRefPtr(this),getSystemTime(),Temporary, NULL));
+        focusGained(FocusEvent::create(this,getSystemTime(),Temporary, NULL));
     }
     else
     {
-        if(getDrawingSurface()->getFocusedWindow() != NULL)
+        if(getParentDrawingSurface()->getFocusedWindow() != NULL)
         {
-            getDrawingSurface()->getFocusedWindow()->giveFocus(this);
+            getParentDrawingSurface()->getFocusedWindow()->giveFocus(this);
         }
-        getDrawingSurface()->setFocusedWindow(this);
-        focusGained(FocusEvent::create(ComponentRefPtr(this),getSystemTime(),Temporary, getDrawingSurface()->getFocusedWindow()));
+        getParentDrawingSurface()->setFocusedWindow(this);
+        focusGained(FocusEvent::create(this,getSystemTime(),Temporary, getParentDrawingSurface()->getFocusedWindow()));
     }
     return true;
 }
 
 InternalWindow* InternalWindow::getParentWindow(void) const
 {
-    if(Component::getParentWindow() != this)
+    if(_ParentWindow != this)
     {
-        const_cast<InternalWindow*>(this)->setParentWindow(const_cast<InternalWindow*>(this));
+        const_cast<InternalWindow*>(this)->_ParentWindow = const_cast<InternalWindow*>(this);
     }
-    return Component::getParentWindow();
+    return _ParentWindow;
+}
+
+void InternalWindow::setParentWindow(InternalWindow* const parent)
+{
+    _ParentWindow = this;
 }
 
 void InternalWindow::keyPressed(const KeyEventUnrecPtr e)
@@ -218,7 +223,7 @@ void InternalWindow::keyPressed(const KeyEventUnrecPtr e)
         KeyAcceleratorMapItor MapItor = _KeyAcceleratorMap.find(KeyEvent::getHashable(e->getKey(), RelevantModifiers));
         if(MapItor != _KeyAcceleratorMap.end())
         {
-            (*MapItor).second->acceleratorTyped(KeyAcceleratorEvent::create(InternalWindowRefPtr(this), e->getTimeStamp(), e->getKey(), e->getModifiers()));
+            (*MapItor).second->acceleratorTyped(KeyAcceleratorEvent::create(this, e->getTimeStamp(), e->getKey(), e->getModifiers()));
         }
         //Send Key event to Component that has Focus
         //If there is not Focused Component then do nothing
@@ -245,12 +250,12 @@ void InternalWindow::keyReleased(const KeyEventUnrecPtr e)
         //Send Key event to Component that has Focus
         //If there is not Focused Component then do nothing
         if(getFocusedComponent() != NULL &&
-           getFocusedComponent() != ComponentRefPtr(this))
+           getFocusedComponent() != this)
         {
             getFocusedComponent()->keyReleased(e);
             ComponentContainerRefPtr ParentContainer(getFocusedComponent()->getParentContainer());
             while(ParentContainer != NULL &&
-                  ParentContainer != ComponentContainerRefPtr(this))
+                  ParentContainer != this)
             {
                 ParentContainer->keyReleased(e);
                 ParentContainer = dynamic_cast<ComponentContainer*>(ParentContainer->getParentContainer());
@@ -267,12 +272,12 @@ void InternalWindow::keyTyped(const KeyEventUnrecPtr e)
         //Send Key event to Component that has Focus
         //If there is not Focused Component then do nothing
         if(getFocusedComponent() != NULL &&
-           getFocusedComponent() != ComponentRefPtr(this))
+           getFocusedComponent() != this)
         {
             getFocusedComponent()->keyTyped(e);
             ComponentContainerRefPtr ParentContainer(getFocusedComponent()->getParentContainer());
             while(ParentContainer != NULL &&
-                  ParentContainer != ComponentContainerRefPtr(this))
+                  ParentContainer != this)
             {
                 ParentContainer->keyTyped(e);
                 ParentContainer = dynamic_cast<ComponentContainer*>(ParentContainer->getParentContainer());
@@ -350,9 +355,9 @@ void InternalWindow::mouseExited(const MouseEventUnrecPtr e)
     }
     if(!getLockInput())
     {
-        if(getDrawingSurface() != NULL && getDrawingSurface()->getEventProducer() != NULL)
+        if(getParentDrawingSurface() != NULL && getParentDrawingSurface()->getEventProducer() != NULL)
         {
-            getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+            getParentDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
         }
         ComponentContainer::mouseExited(e);
     }
@@ -385,9 +390,9 @@ void InternalWindow::mousePressed(const MouseEventUnrecPtr e)
                     _BorderDraggedListener.setMouseStartPosition(e->getLocation());
                     _BorderDraggedListener.setBorderDragged(TheArea);
 
-                    getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_BorderDraggedListener);
-                    getDrawingSurface()->getEventProducer()->addMouseListener(&_BorderDraggedListener);
-                    getDrawingSurface()->getEventProducer()->addKeyListener(&_BorderDraggedListener);
+                    getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_BorderDraggedListener);
+                    getParentDrawingSurface()->getEventProducer()->addMouseListener(&_BorderDraggedListener);
+                    getParentDrawingSurface()->getEventProducer()->addKeyListener(&_BorderDraggedListener);
                     break;
             }
         }
@@ -473,7 +478,7 @@ void InternalWindow::getTitlebarBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
     if(getDrawDecorations() && getDrawTitlebar() && getDrawnBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
     {
-        dynamic_pointer_cast<WindowBorder>(getDrawnBorder())->getTitlebarBounds(0, 0, getSize().x(), getSize().y(), TopLeft, BottomRight);
+        dynamic_cast<WindowBorder*>(getDrawnBorder())->getTitlebarBounds(0, 0, getSize().x(), getSize().y(), TopLeft, BottomRight);
     }
     else
     {
@@ -700,7 +705,7 @@ void InternalWindow::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
     }
 }
 
-void InternalWindow::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void InternalWindow::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
     Inherited::drawInternal(TheGraphics, Opacity);
 
@@ -717,7 +722,7 @@ void InternalWindow::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opac
     }
 }
 
-void InternalWindow::drawUnclipped(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void InternalWindow::drawUnclipped(Graphics* const TheGraphics, Real32 Opacity) const
 {
     Inherited::drawUnclipped(TheGraphics, Opacity);
 
@@ -938,19 +943,17 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
     {
         for(UInt32 i(0) ; i<getMFActivePopupMenus()->size() ; ++i)
         {
-            getActivePopupMenus(i)->setParentContainer(this);
             getActivePopupMenus(i)->setParentWindow(this);
         }
 
-        getDrawingSurface()->getEventProducer()->addMouseListener(&_PopupMenuInteractionListener);
-        getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_PopupMenuInteractionListener);
-        getDrawingSurface()->getEventProducer()->addKeyListener(&_PopupMenuInteractionListener);
+        getParentDrawingSurface()->getEventProducer()->addMouseListener(&_PopupMenuInteractionListener);
+        getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_PopupMenuInteractionListener);
+        getParentDrawingSurface()->getEventProducer()->addKeyListener(&_PopupMenuInteractionListener);
         setLockInput(true);
     }
 
     if( (whichField & MenuBarFieldMask) && getMenuBar() != NULL)
     {
-        getMenuBar()->setParentContainer(this);
         getMenuBar()->setParentWindow(this);
     }
 
@@ -966,7 +969,6 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
 
     if( (whichField & TitlebarFieldMask) && getTitlebar() != NULL)
     {
-        getTitlebar()->setParentContainer(this);
         getTitlebar()->setParentWindow(this);
     }
 
@@ -1155,11 +1157,11 @@ void InternalWindow::PopupMenuInteractionListener::keyPressed(const KeyEventUnre
 void InternalWindow::PopupMenuInteractionListener::disconnect(void)
 {
     //Remove the listener
-    if(_InternalWindow->getDrawingSurface()->getEventProducer() != NULL)
+    if(_InternalWindow->getParentDrawingSurface()->getEventProducer() != NULL)
     {
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeMouseListener(this);
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeKeyListener(this);
     }
 }
 
@@ -1168,18 +1170,18 @@ void InternalWindow::TitlebarStartDragListener::mousePressed(const MouseEventUnr
     _InternalWindow->_TitlebarDraggedListener.setWindowStartPosition(_InternalWindow->getPosition());
     _InternalWindow->_TitlebarDraggedListener.setMouseStartPosition(e->getLocation());
 
-    _InternalWindow->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
-    _InternalWindow->getDrawingSurface()->getEventProducer()->addMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
-    _InternalWindow->getDrawingSurface()->getEventProducer()->addKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
+    _InternalWindow->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
+    _InternalWindow->getParentDrawingSurface()->getEventProducer()->addMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
+    _InternalWindow->getParentDrawingSurface()->getEventProducer()->addKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
 }
 
 void InternalWindow::TitlebarDraggedListener::mouseReleased(const MouseEventUnrecPtr e)
 {
-    if(_InternalWindow->getDrawingSurface() != NULL)
+    if(_InternalWindow->getParentDrawingSurface() != NULL)
     {
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
 
         _InternalWindow->setLockInput(false);
     }
@@ -1205,9 +1207,9 @@ void InternalWindow::TitlebarDraggedListener::disconnect(void)
 {
     if(_InternalWindow->getParentWindow() != NULL)
     {
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
 
         _InternalWindow->setLockInput(false);
     }
@@ -1217,9 +1219,9 @@ void InternalWindow::BorderDraggedListener::disconnect(void)
 {
     if(_InternalWindow->getParentWindow() != NULL)
     {
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_BorderDraggedListener));
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_BorderDraggedListener));
-        _InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_BorderDraggedListener));
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_BorderDraggedListener));
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_BorderDraggedListener));
+        _InternalWindow->getParentDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_BorderDraggedListener));
 
         _InternalWindow->setLockInput(false);
     }

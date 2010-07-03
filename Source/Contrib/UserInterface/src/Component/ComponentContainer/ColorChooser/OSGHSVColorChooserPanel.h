@@ -142,11 +142,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING HSVColorChooserPanel : public HSVColor
     class BoundedRangeSpinnerChangeListener : public ChangeListener
     {
       public :
-        BoundedRangeSpinnerChangeListener(HSVColorChooserPanelRefPtr TheHSVColorChooserPanel);
+        BoundedRangeSpinnerChangeListener(HSVColorChooserPanel* const TheHSVColorChooserPanel);
 
         virtual void stateChanged(const ChangeEventUnrecPtr e);
       private:
-        HSVColorChooserPanelRefPtr _HSVColorChooserPanel;
+        HSVColorChooserPanel* _HSVColorChooserPanel;
     };
 
     friend class BoundedRangeSpinnerChangeListener;

@@ -56,6 +56,7 @@
 #include "OSGGLViewport.h"
 #include "OSGUIDrawUtils.h"
 #include "OSGCameraUtils.h"
+#include "OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -112,7 +113,7 @@ const Matrix& GLViewport::getViewMatrix(void)
 }
  
 
-void GLViewport::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void GLViewport::drawInternal(Graphics* const Graphics, Real32 Opacity) const
 {
     if(getPort() != NULL &&
        getPort()->getRoot() != NULL &&
@@ -136,12 +137,12 @@ void GLViewport::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) co
 
 
         if( getParentWindow() != NULL &&
-            getParentWindow()->getDrawingSurface() != NULL &&
-            getParentWindow()->getDrawingSurface()->getEventProducer() != NULL &&
-            getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+            getParentWindow()->getParentDrawingSurface() != NULL &&
+            getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL &&
+            getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
         {
 
-            WindowRefPtr TheWindow = getParentWindow()->getDrawingSurface()->getEventProducer();
+            WindowRefPtr TheWindow = getParentWindow()->getParentDrawingSurface()->getEventProducer();
 
             //Clamp Viewport Bounds with Window size
             if(InsideInsetTopLeftToWindow.x() < 0)
@@ -184,7 +185,7 @@ void GLViewport::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) co
                 _Navigator.updateCameraTransformation();
             }
 
-            getParentWindow()->getDrawingSurface()->getEventProducer()->addPort(getPort());
+            getParentWindow()->getParentDrawingSurface()->getEventProducer()->addPort(getPort());
             
             _Action->setWindow(getPort()->getParent());
 
@@ -219,7 +220,7 @@ void GLViewport::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) co
 
             glPopAttrib();
 
-            getParentWindow()->getDrawingSurface()->getEventProducer()->subPortByObj(getPort());
+            getParentWindow()->getParentDrawingSurface()->getEventProducer()->subPortByObj(getPort());
         }
 
     }
@@ -237,26 +238,26 @@ void GLViewport::mousePressed(const MouseEventUnrecPtr e)
             case MouseEvent::BUTTON1:
                 _MouseControlListener.setInitialMat(_Navigator.getMatrix());
                 _Navigator.buttonPress(Navigator::LEFT_MOUSE,e->getLocation().x(),e->getLocation().y());
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
 
                 MouseButtons = 1;
                 break;
             case MouseEvent::BUTTON2:
                 _MouseControlListener.setInitialMat(_Navigator.getMatrix());
                 _Navigator.buttonPress(Navigator::MIDDLE_MOUSE,e->getLocation().x(),e->getLocation().y());
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
                 MouseButtons = 2;
                 break;
             case MouseEvent::BUTTON3:
                 _MouseControlListener.setInitialMat(_Navigator.getMatrix());
                 _Navigator.buttonPress(Navigator::RIGHT_MOUSE,e->getLocation().x(),e->getLocation().y());
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
                 MouseButtons = 4;
                 break;
         }
@@ -268,9 +269,9 @@ void GLViewport::mousePressed(const MouseEventUnrecPtr e)
         _InitialYaw = _Yaw;
         _InitialPitch = _Pitch;
         _InitialRoll = _Roll;
-        getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-        getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-        getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
     }
 }
 
@@ -547,9 +548,9 @@ void GLViewport::dump(      UInt32    ,
 
 void GLViewport::MouseControlListener::disconnect(void)
 {
-    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+    _GLViewport->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseListener(this);
+    _GLViewport->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    _GLViewport->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeKeyListener(this);
 }
 
 void GLViewport::MouseControlListener::mouseReleased(const MouseEventUnrecPtr e)

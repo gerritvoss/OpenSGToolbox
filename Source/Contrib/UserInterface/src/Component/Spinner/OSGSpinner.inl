@@ -92,13 +92,13 @@ void Spinner::setValue(const boost::any& value)
 }
 
 inline
-Spinner::NextButtonActionListener::NextButtonActionListener(SpinnerRefPtr TheSpinner) :
+Spinner::NextButtonActionListener::NextButtonActionListener(Spinner* const TheSpinner) :
    _Spinner(TheSpinner)
 {
 }
 
 inline
-Spinner::PreviousButtonActionListener::PreviousButtonActionListener(SpinnerRefPtr TheSpinner) :
+Spinner::PreviousButtonActionListener::PreviousButtonActionListener(Spinner* const TheSpinner) :
    _Spinner(TheSpinner)
 {
 }

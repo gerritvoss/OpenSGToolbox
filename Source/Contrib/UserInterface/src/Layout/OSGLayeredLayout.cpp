@@ -77,7 +77,7 @@ void LayeredLayout::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LayeredLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+void LayeredLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     Pnt2f windowTopLeft, windowBottomRight;
     dynamic_cast<const ComponentContainer*>(ParentComponent)->getInsideInsetsBounds(windowTopLeft, windowBottomRight);
@@ -105,7 +105,7 @@ void LayeredLayout::updateLayout(const MFUnrecComponentPtr* Components, const Co
     }
 }
 
-Vec2f LayeredLayout::layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
+Vec2f LayeredLayout::layoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
 {
     Vec2f Result(0.0,0.0);
 
@@ -126,22 +126,22 @@ Vec2f LayeredLayout::layoutSize(const MFUnrecComponentPtr* Components, const Com
     return Result;
 }
 
-Vec2f LayeredLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f LayeredLayout::minimumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MIN_SIZE);
 }
 
-Vec2f LayeredLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f LayeredLayout::requestedContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
 }
 
-Vec2f LayeredLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f LayeredLayout::preferredContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
 }
 
-Vec2f LayeredLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f LayeredLayout::maximumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MAX_SIZE);
 }

@@ -98,7 +98,7 @@ void AbstractTableColumnModel::removeColumnModelListener(TableColumnModelListene
 
 void AbstractTableColumnModel::produceColumnAdded(const UInt32& ToIndex)
 {
-    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(TableColumnModelRefPtr(this), getSystemTime(), 0, ToIndex);
+    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(this, getSystemTime(), 0, ToIndex);
     TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
     for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
     {
@@ -108,7 +108,7 @@ void AbstractTableColumnModel::produceColumnAdded(const UInt32& ToIndex)
 }
 void AbstractTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex)
 {
-    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(TableColumnModelRefPtr(this), getSystemTime(), FromIndex, ToIndex);
+    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(this, getSystemTime(), FromIndex, ToIndex);
     TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
     for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
     {
@@ -119,7 +119,7 @@ void AbstractTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UI
 
 void AbstractTableColumnModel::produceColumnRemoved(const UInt32& FromIndex)
 {
-    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(TableColumnModelRefPtr(this), getSystemTime(), FromIndex, 0);
+    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(this, getSystemTime(), FromIndex, 0);
     TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
     for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
     {
@@ -130,7 +130,7 @@ void AbstractTableColumnModel::produceColumnRemoved(const UInt32& FromIndex)
 
 void AbstractTableColumnModel::produceColumnMarginChanged(void)
 {
-    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(TableColumnModelRefPtr(this), getSystemTime());
+    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(this, getSystemTime());
     TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
     for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
     {

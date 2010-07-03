@@ -74,6 +74,22 @@ OSG::UInt16 UIDrawingSurfaceBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
+//! Get the value of the UIDrawingSurface::_sfFocusedWindow field.
+inline
+InternalWindow * UIDrawingSurfaceBase::getFocusedWindow(void) const
+{
+    return _sfFocusedWindow.getValue();
+}
+
+//! Set the value of the UIDrawingSurface::_sfFocusedWindow field.
+inline
+void UIDrawingSurfaceBase::setFocusedWindow(InternalWindow * const value)
+{
+    editSField(FocusedWindowFieldMask);
+
+    _sfFocusedWindow.setValue(value);
+}
+
 //! Get the value of the UIDrawingSurface::_sfEventProducer field.
 inline
 WindowEventProducer * UIDrawingSurfaceBase::getEventProducer(void) const
@@ -145,6 +161,13 @@ void UIDrawingSurfaceBase::setSize(const Vec2f &value)
     editSField(SizeFieldMask);
 
     _sfSize.setValue(value);
+}
+
+//! Get the value of the \a index element the UIDrawingSurface::_mfInternalWindows field.
+inline
+InternalWindow * UIDrawingSurfaceBase::getInternalWindows(const UInt32 index) const
+{
+    return _mfInternalWindows[index];
 }
 
 

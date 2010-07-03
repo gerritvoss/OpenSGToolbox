@@ -146,6 +146,77 @@ const Char8 *FieldTraits<ComponentDecorator *, 0>::getMName<NoRefCountPolicy>(vo
 }
 
 
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+ */
+template <>
+struct FieldTraits<ComponentDecorator *, 1> :
+    public FieldTraitsFCPtrBase<ComponentDecorator *, 1>
+{
+  private:
+
+  public:
+    typedef FieldTraits<ComponentDecorator *, 1>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+};
+
+template<> inline
+const Char8 *FieldTraits<ComponentDecorator *, 1>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecChildComponentDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentDecorator *, 1>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecChildComponentDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentDecorator *, 1>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakChildComponentDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentDecorator *, 1>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdChildComponentDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentDecorator *, 1>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecChildComponentDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentDecorator *, 1>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecChildComponentDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentDecorator *, 1>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakChildComponentDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentDecorator *, 1>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdChildComponentDecoratorPtr"; 
+}
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribUserInterfaceFieldSFields */
 typedef PointerSField<ComponentDecorator *,
@@ -174,6 +245,13 @@ typedef PointerMField<ComponentDecorator *,
 typedef PointerMField<ComponentDecorator *,
                       NoRefCountPolicy        > MFUncountedComponentDecoratorPtr;
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef ChildPointerMField<
+          ComponentDecorator *, 
+          UnrecordedRefCountPolicy,
+          1             > MFUnrecChildComponentDecoratorPtr;
 
 
 
@@ -214,6 +292,14 @@ struct MFUncountedComponentDecoratorPtr :
     public PointerMField<ComponentDecorator *,
                          NoRefCountPolicy        > {};
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecChildComponentDecoratorPtr :
+    public ChildPointerMField<
+        ComponentDecorator *, 
+        UnrecordedRefCountPolicy,
+        1             > {};
 
 
 #endif // these are the doxygen hacks

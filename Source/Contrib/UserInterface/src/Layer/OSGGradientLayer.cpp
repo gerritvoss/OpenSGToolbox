@@ -78,7 +78,7 @@ void GradientLayer::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void GradientLayer::draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
+void GradientLayer::draw(Graphics* const TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
 	if(getMFColors()->size() == getMFStops()->size())
 	{
@@ -177,7 +177,7 @@ void GradientLayer::draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft
 	}
 }
 
-void GradientLayer::drawGradient(const GraphicsWeakPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Real32& Opacity) const
+void GradientLayer::drawGradient(Graphics* const TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Real32& Opacity) const
 {
 	glPushMatrix();
 	Matrix Transformation;
@@ -210,7 +210,7 @@ void GradientLayer::drawGradient(const GraphicsWeakPtr TheGraphics, const Pnt2f&
 	glPopMatrix();
 }
 
-void GradientLayer::drawPad(const GraphicsWeakPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Color4f Color, const Real32& Opacity) const
+void GradientLayer::drawPad(Graphics* const TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Color4f Color, const Real32& Opacity) const
 {
 	glPushMatrix();
 	Matrix Transformation;

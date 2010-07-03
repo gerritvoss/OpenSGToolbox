@@ -86,9 +86,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SplitPanel : public SplitPanelBase
 
     /*! \}                                                                 */
 
-	virtual void setDividerDrawObject( const UIDrawObjectCanvasRefPtr &value );
+	virtual void setDividerDrawObject( UIDrawObjectCanvas* const value );
 
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
     virtual void detachFromEventProducer(void);
 
@@ -133,7 +133,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SplitPanel : public SplitPanelBase
     class DividerListener : public MouseListener
     {
       public :
-        DividerListener(SplitPanelRefPtr ptr);
+        DividerListener(SplitPanel* const ptr);
         virtual void mouseClicked(const MouseEventUnrecPtr e);
         virtual void mouseEntered(const MouseEventUnrecPtr e);
         virtual void mouseExited(const MouseEventUnrecPtr e);
@@ -142,7 +142,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SplitPanel : public SplitPanelBase
 
         void cancel(void);
       protected :
-        SplitPanelRefPtr _SplitPanel;
+        SplitPanel* _SplitPanel;
     };
 
     friend class DividerListener;
@@ -151,7 +151,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SplitPanel : public SplitPanelBase
     class DividerDraggedListener : public MouseMotionListener, public MouseListener
     {
       public :
-        DividerDraggedListener(SplitPanelRefPtr ptr);
+        DividerDraggedListener(SplitPanel* const ptr);
         virtual void mouseMoved(const MouseEventUnrecPtr e);
         virtual void mouseDragged(const MouseEventUnrecPtr e);
 
@@ -163,7 +163,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SplitPanel : public SplitPanelBase
 
         void cancel(void);
       protected :
-        SplitPanelRefPtr _SplitPanel;
+        SplitPanel* _SplitPanel;
     };
 
     friend class DividerDraggedListener;

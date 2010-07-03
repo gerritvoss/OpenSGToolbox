@@ -90,7 +90,7 @@ EventConnection Slider::addChangeListener(ChangeListenerPtr l)
     return getRangeModel()->addChangeListener(l);
 }
 
-void Slider::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void Slider::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
 
     //Draw the Major Tick Marks
@@ -663,14 +663,14 @@ void Slider::KnobDraggedListener::mousePressed(const MouseEventUnrecPtr e)
     if(e->getButton() == e->BUTTON1 &&
 		_Slider->getEnabled() &&
        _Slider->getParentWindow() != NULL &&
-       _Slider->getParentWindow()->getDrawingSurface() != NULL &&
-       _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+       _Slider->getParentWindow()->getParentDrawingSurface() != NULL &&
+       _Slider->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
 		_InitialValue = _Slider->getValue();
         _Slider->getKnobButton()->removeMouseListener(this);
-        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(this);
-        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(this);
-        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(this);
+        _Slider->getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(this);
+        _Slider->getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(this);
+        _Slider->getParentWindow()->getParentDrawingSurface()->getEventProducer()->addKeyListener(this);
 		_Slider->getRangeModel()->setValueIsAdjusting(true);
     }
 }
@@ -679,8 +679,8 @@ void Slider::KnobDraggedListener::mouseReleased(const MouseEventUnrecPtr e)
 {
     if(e->getButton() == e->BUTTON1 &&
        _Slider->getParentWindow() != NULL &&
-       _Slider->getParentWindow()->getDrawingSurface() != NULL &&
-       _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+       _Slider->getParentWindow()->getParentDrawingSurface() != NULL &&
+       _Slider->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
         disconnect();
     }
@@ -697,10 +697,10 @@ void Slider::KnobDraggedListener::keyTyped(const KeyEventUnrecPtr e)
 
 void Slider::KnobDraggedListener::disconnect(void)
 {
-    _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    _Slider->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
     _Slider->getKnobButton()->addMouseListener(this);
-    _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-    _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+    _Slider->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseListener(this);
+    _Slider->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeKeyListener(this);
     _Slider->getRangeModel()->setValueIsAdjusting(false);
 }
 

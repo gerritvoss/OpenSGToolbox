@@ -56,16 +56,14 @@
 
 #include "OSGConfig.h"
 
-
+#include "OSGInternalWindowBase.h"
+#include "OSGInternalWindow.h"
 
 #include "OSGComponent.h"               // FocusedComponent Class
 #include "OSGPopupMenu.h"               // ActivePopupMenus Class
 #include "OSGToolTip.h"                 // ActiveToolTip Class
 #include "OSGMenuBar.h"                 // MenuBar Class
 #include "OSGTitlebar.h"                // Titlebar Class
-
-#include "OSGInternalWindowBase.h"
-#include "OSGInternalWindow.h"
 
 #include <boost/bind.hpp>
 
@@ -125,6 +123,18 @@ OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
 OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            InternalWindow *,
                            0);
+
+DataType &FieldTraits< InternalWindow *, 1 >::getType(void)
+{
+    return FieldTraits<InternalWindow *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_MFIELD(ChildPointerMField,
+                      InternalWindow *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
 
 /***************************************************************************\
  *                         Field Description                               *
@@ -222,6 +232,7 @@ InternalWindowBase::TypeObject InternalWindowBase::_type(
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    childFields=\"multi\"\n"
     "    >\n"
     "    A UI Internal Window.\n"
     "    <Field\n"

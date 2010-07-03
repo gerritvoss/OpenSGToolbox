@@ -99,10 +99,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentTreeModel : public ComponentT
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
 
     //Sets the root to root.
-    void setRoot(ComponentRefPtr root);
+    void setRoot(Component* const root);
 
-    //Get the NodeRefPtr to the Root Node
-    ComponentRefPtr getRootComponent(void) const;
+    //Get the Node* to the Root Node
+    Component* getRootComponent(void) const;
 
     //Returns true if these objects represent the same node in the tree
     virtual bool isEqual(const boost::any& left, const boost::any& right) const;

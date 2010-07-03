@@ -149,7 +149,7 @@ private:
 protected:
 
 	PathVectorType _Path;
-    TreeModelRefPtr _Model;
+    TreeModel* _Model;
 };
 
 typedef TreePath* TreePathPtr;

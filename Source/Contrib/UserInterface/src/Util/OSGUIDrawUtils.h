@@ -35,9 +35,10 @@
 #include "OSGConfig.h"
 #include "OSGContribUserInterfaceDef.h"
 #include "OSGVector.h"
-#include "OSGComponent.h"
-#include "OSGUIDrawingSurface.h"
+#include "OSGComponentFields.h"
+#include "OSGUIDrawingSurfaceFields.h"
 #include "OSGUIDrawObjectFields.h"
+#include "OSGViewport.h"
 
 OSG_BEGIN_NAMESPACE
 

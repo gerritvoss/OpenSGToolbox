@@ -78,7 +78,7 @@ void AbsoluteLayout::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbsoluteLayout::updateLayout(const MFUnrecComponentPtr* Components,
+void AbsoluteLayout::updateLayout(const MFUnrecChildComponentPtr* Components,
                                   const Component* ParentComponent) const
 {
     Pnt2f ParentInsetsTopLeft, ParentInsetBottomRight;
@@ -102,7 +102,7 @@ void AbsoluteLayout::updateLayout(const MFUnrecComponentPtr* Components,
 }
 
 
-Vec2f AbsoluteLayout::layoutSize(const MFUnrecComponentPtr* Components,
+Vec2f AbsoluteLayout::layoutSize(const MFUnrecChildComponentPtr* Components,
                                  const Component* ParentComponent,
                                  SizeType TheSizeType) const
 {
@@ -128,25 +128,25 @@ Vec2f AbsoluteLayout::layoutSize(const MFUnrecComponentPtr* Components,
     return Result;
 }
 
-Vec2f AbsoluteLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components,
+Vec2f AbsoluteLayout::minimumContentsLayoutSize(const MFUnrecChildComponentPtr* Components,
                                                 const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MIN_SIZE);
 }
 
-Vec2f AbsoluteLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components,
+Vec2f AbsoluteLayout::requestedContentsLayoutSize(const MFUnrecChildComponentPtr* Components,
                                                   const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
 }
 
-Vec2f AbsoluteLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components,
+Vec2f AbsoluteLayout::preferredContentsLayoutSize(const MFUnrecChildComponentPtr* Components,
                                                   const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
 }
 
-Vec2f AbsoluteLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components,
+Vec2f AbsoluteLayout::maximumContentsLayoutSize(const MFUnrecChildComponentPtr* Components,
                                                 const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MAX_SIZE);

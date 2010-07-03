@@ -80,7 +80,7 @@ void ComponentMenuItem::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ComponentMenuItem::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void ComponentMenuItem::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
     if(getComponent() != NULL)
     {

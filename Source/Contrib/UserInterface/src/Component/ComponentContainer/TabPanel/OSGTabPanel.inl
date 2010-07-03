@@ -47,7 +47,7 @@ bool TabPanel::isSelectionListenerAttached(SelectionListenerPtr Listener) const
 }
 
 inline
-TabPanel::TabSelectionListener::TabSelectionListener(TabPanelRefPtr TheTabPanel) :
+TabPanel::TabSelectionListener::TabSelectionListener(TabPanel* const TheTabPanel) :
 									_TabPanel(TheTabPanel)
 {
 }

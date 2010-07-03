@@ -81,16 +81,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CardLayout : public CardLayoutBase
 
     /*! \}                                                                 */
 
-    virtual void updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+    virtual void updateLayout(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
     
-	void first(ComponentContainerRefPtr TheContainer);
-	void last(ComponentContainerRefPtr TheContainer);
-	void next(ComponentContainerRefPtr TheContainer);
-	void previous(ComponentContainerRefPtr TheContainer);
-    virtual Vec2f minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
-	virtual Vec2f requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
-	virtual Vec2f preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
-	virtual Vec2f maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	void first(ComponentContainer* const TheContainer);
+	void last(ComponentContainer* const TheContainer);
+	void next(ComponentContainer* const TheContainer);
+	void previous(ComponentContainer* const TheContainer);
+    virtual Vec2f minimumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f requestedContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f preferredContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f maximumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const;
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -121,7 +121,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CardLayout : public CardLayoutBase
 
     /*! \}                                                                 */
 
-    virtual Vec2f layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const;
+    virtual Vec2f layoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const;
     
     /*==========================  PRIVATE  ================================*/
 

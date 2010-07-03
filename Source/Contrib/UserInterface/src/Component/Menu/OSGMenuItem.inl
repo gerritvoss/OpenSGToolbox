@@ -47,13 +47,13 @@ bool MenuItem::isActionListenerAttached(ActionListenerPtr Listener) const
 }
 
 inline
-MenuItem::MenuItemKeyAcceleratorListener::MenuItemKeyAcceleratorListener(MenuItemRefPtr TheMenuItem) :
+MenuItem::MenuItemKeyAcceleratorListener::MenuItemKeyAcceleratorListener(MenuItem* const TheMenuItem) :
 									_MenuItem(TheMenuItem)
 {
 }
 
 inline
-MenuItem::KeyAcceleratorMenuFlashUpdateListener::KeyAcceleratorMenuFlashUpdateListener(MenuItemRefPtr TheMenuItem) :
+MenuItem::KeyAcceleratorMenuFlashUpdateListener::KeyAcceleratorMenuFlashUpdateListener(MenuItem* const TheMenuItem) :
 									_MenuItem(TheMenuItem),
 									_FlashElps(0.0)
 {

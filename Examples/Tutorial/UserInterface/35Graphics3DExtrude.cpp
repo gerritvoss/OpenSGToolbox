@@ -24,7 +24,7 @@
 #include <OpenSG/OSGSceneFileHandler.h>
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+//#include <OpenSG/Input/OSGWindowUtils.h>
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>

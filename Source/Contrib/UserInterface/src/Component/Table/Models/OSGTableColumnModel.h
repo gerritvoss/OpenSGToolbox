@@ -91,10 +91,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModel : public TableColumnM
     virtual void removeColumnModelListener(TableColumnModelListenerPtr l) = 0;
 
     //Appends aColumn to the end of the tableColumns array.
-    virtual void addColumn(TableColumnRefPtr aColumn) = 0;
+    virtual void addColumn(TableColumn* const aColumn) = 0;
 
     //Returns the TableColumn object for the column at columnIndex.
-    virtual TableColumnRefPtr getColumn(const UInt32& columnIndex) const = 0;
+    virtual TableColumn* getColumn(const UInt32& columnIndex) const = 0;
 
     //Returns the number of columns in the model.
     virtual UInt32 getColumnCount(void) const = 0;
@@ -127,7 +127,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModel : public TableColumnM
     virtual void moveColumn(const UInt32& columnIndex, const UInt32& newIndex) = 0;
 
     //Deletes the TableColumn column from the tableColumns array.
-    virtual void removeColumn(TableColumnRefPtr column) = 0;
+    virtual void removeColumn(TableColumn* const column) = 0;
 
     //Sets the TableColumn's column margin to newMargin.
     virtual void setColumnMargin(const UInt32& newMargin) = 0;

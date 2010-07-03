@@ -43,25 +43,29 @@ OSG_BEGIN_NAMESPACE
 inline
 void ImageComponent::setImage(const char *fileName, const char *mimeType)
 {
-	setImage(ImageFileHandler::the()->read(fileName, mimeType));
+    ImageUnrecPtr temp(ImageFileHandler::the()->read(fileName, mimeType));
+    setImage(temp);
 }
 
 inline
 void ImageComponent::setRolloverImage(const char *fileName, const char *mimeType)
 {
-	setRolloverImage(ImageFileHandler::the()->read(fileName, mimeType));
+    ImageUnrecPtr temp(ImageFileHandler::the()->read(fileName, mimeType));
+	setRolloverImage(temp);
 }
 
 inline
 void ImageComponent::setDisabledImage(const char *fileName, const char *mimeType)
 {
-	setDisabledImage(ImageFileHandler::the()->read(fileName, mimeType));
+    ImageUnrecPtr temp(ImageFileHandler::the()->read(fileName, mimeType));
+	setDisabledImage(temp);
 }
 
 inline
 void ImageComponent::setFocusedImage(const char *fileName, const char *mimeType)
 {
-	setFocusedImage(ImageFileHandler::the()->read(fileName, mimeType));
+    ImageUnrecPtr temp(ImageFileHandler::the()->read(fileName, mimeType));
+	setFocusedImage(temp);
 }
 
 OSG_END_NAMESPACE

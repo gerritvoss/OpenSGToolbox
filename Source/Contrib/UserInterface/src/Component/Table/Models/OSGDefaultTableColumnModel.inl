@@ -41,13 +41,13 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-DefaultTableColumnModel::TableSelectionListener::TableSelectionListener(DefaultTableColumnModelRefPtr TheDefaultTableColumnModel) :
+DefaultTableColumnModel::TableSelectionListener::TableSelectionListener(DefaultTableColumnModel* const TheDefaultTableColumnModel) :
 _DefaultTableColumnModel(TheDefaultTableColumnModel)
 {
 }
 
 /*inline
-DefaultTableColumnModel::TableFieldChangeListener::TableFieldChangeListener(DefaultTableColumnModelRefPtr TheDefaultTableColumnModel) :
+DefaultTableColumnModel::TableFieldChangeListener::TableFieldChangeListener(DefaultTableColumnModel* const TheDefaultTableColumnModel) :
 _DefaultTableColumnModel(TheDefaultTableColumnModel)
 {
 }*/

@@ -31,6 +31,7 @@
 #include "OSGInternalWindow.h"
 #include "OSGRotatedComponent.h"
 #include "OSGUIDrawingSurface.h"
+#include "OSGComponent.h"
 #include "OSGUIDrawingSurfaceMouseTransformFunctor.h"
 #include "OSGUIDrawObject.h"
 
@@ -120,7 +121,7 @@ Pnt2f DrawingSurfaceToViewport(const Pnt2f& DrawingSurfacePoint,
 Pnt2f ViewportToComponent(const Pnt2f& ViewportPoint, const Component* Comp, const Viewport* TheViewport)
 {
     //Then get Viewport to component
-    return DrawingSurfaceToComponent(ViewportToDrawingSurface(ViewportPoint, Comp->getParentWindow()->getDrawingSurface(), TheViewport), Comp);
+    return DrawingSurfaceToComponent(ViewportToDrawingSurface(ViewportPoint, Comp->getParentWindow()->getParentDrawingSurface(), TheViewport), Comp);
 }
 
 Pnt2f ViewportToWindow(const Pnt2f& ViewportPoint, const Viewport* TheViewport)
@@ -130,7 +131,7 @@ Pnt2f ViewportToWindow(const Pnt2f& ViewportPoint, const Viewport* TheViewport)
 
 Pnt2f ComponentToViewport(const Pnt2f& ComponentPoint, const Component* Comp, const Viewport* TheViewport)
 {
-    return DrawingSurfaceToViewport(ComponentToDrawingSurface(ComponentPoint, Comp), Comp->getParentWindow()->getDrawingSurface(), TheViewport);
+    return DrawingSurfaceToViewport(ComponentToDrawingSurface(ComponentPoint, Comp), Comp->getParentWindow()->getParentDrawingSurface(), TheViewport);
 }
 
 Pnt2f ComponentToWindow(const Pnt2f& ComponentPoint, const Component* Comp, const Viewport* TheViewport)

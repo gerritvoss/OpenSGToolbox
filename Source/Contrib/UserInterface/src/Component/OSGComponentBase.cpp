@@ -63,8 +63,7 @@
 #include "OSGBorder.h"                  // Border Class
 #include "OSGLayer.h"                   // Background Class
 #include "OSGTransferHandler.h"         // TransferHandler Class
-#include "OSGComponentContainer.h"      // ParentContainer Class
-#include "OSGInternalWindow.h"          // ParentWindow Class
+#include "OSGFieldContainer.h"          // ParentContainer Class
 #include "OSGPopupMenu.h"               // PopupMenu Class
 
 #include "OSGComponentBase.h"
@@ -180,12 +179,8 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var ComponentContainer * ComponentBase::_sfParentContainer
-    
-*/
-
-/*! \var InternalWindow * ComponentBase::_sfParentWindow
-    
+/*! \var FieldContainer * ComponentBase::_sfParentContainer
+    The Component Container this Component is contained in.
 */
 
 /*! \var bool            ComponentBase::_sfClipping
@@ -234,6 +229,18 @@ OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
 OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            Component *,
                            0);
+
+DataType &FieldTraits< Component *, 1 >::getType(void)
+{
+    return FieldTraits<Component *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_MFIELD(ChildPointerMField,
+                      Component *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
 
 /***************************************************************************\
  *                         Field Description                               *
@@ -508,27 +515,15 @@ void ComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecComponentContainerPtr::Description(
-        SFUnrecComponentContainerPtr::getClassType(),
+    pDesc = new SFParentFieldContainerPtr::Description(
+        SFParentFieldContainerPtr::getClassType(),
         "ParentContainer",
-        "",
+        "The Component Container this Component is contained in.\n",
         ParentContainerFieldId, ParentContainerFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&Component::editHandleParentContainer),
-        static_cast<FieldGetMethodSig >(&Component::getHandleParentContainer));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new SFUnrecInternalWindowPtr::Description(
-        SFUnrecInternalWindowPtr::getClassType(),
-        "ParentWindow",
-        "",
-        ParentWindowFieldId, ParentWindowFieldMask,
-        true,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&Component::editHandleParentWindow),
-        static_cast<FieldGetMethodSig >(&Component::getHandleParentWindow));
+        static_cast     <FieldEditMethodSig>(&Component::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&Component::invalidGetField));
 
     oType.addInitialDesc(pDesc);
 
@@ -654,6 +649,7 @@ ComponentBase::TypeObject ComponentBase::_type(
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    childFields=\"multi\"\n"
     ">\n"
     "A UI Component Interface.\n"
     "\t<Field\n"
@@ -875,24 +871,16 @@ ComponentBase::TypeObject ComponentBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
-    "\t\tname=\"ParentContainer\"\n"
-    "\t\ttype=\"ComponentContainer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"ParentWindow\"\n"
-    "\t\ttype=\"InternalWindow\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
+    "\t   name=\"ParentContainer\"\n"
+    "\t   type=\"FieldContainer\"\n"
+    "\t   cardinality=\"single\"\n"
+    "\t   visibility=\"external\"\n"
+    "\t   access=\"none\"\n"
+    "       doRefCount=\"false\"\n"
+    "       passFieldMask=\"true\"\n"
+    "       category=\"parentpointer\"\n"
+    "\t   >\n"
+    "\t  The Component Container this Component is contained in.\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"Clipping\"\n"
@@ -1484,31 +1472,6 @@ const SFReal32 *ComponentBase::getSFOpacity(void) const
 }
 
 
-//! Get the Component::_sfParentContainer field.
-const SFUnrecComponentContainerPtr *ComponentBase::getSFParentContainer(void) const
-{
-    return &_sfParentContainer;
-}
-
-SFUnrecComponentContainerPtr *ComponentBase::editSFParentContainer(void)
-{
-    editSField(ParentContainerFieldMask);
-
-    return &_sfParentContainer;
-}
-
-//! Get the Component::_sfParentWindow field.
-const SFUnrecInternalWindowPtr *ComponentBase::getSFParentWindow(void) const
-{
-    return &_sfParentWindow;
-}
-
-SFUnrecInternalWindowPtr *ComponentBase::editSFParentWindow   (void)
-{
-    editSField(ParentWindowFieldMask);
-
-    return &_sfParentWindow;
-}
 
 SFBool *ComponentBase::editSFClipping(void)
 {
@@ -1703,10 +1666,6 @@ UInt32 ComponentBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfParentContainer.getBinSize();
     }
-    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
-    {
-        returnValue += _sfParentWindow.getBinSize();
-    }
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
     {
         returnValue += _sfClipping.getBinSize();
@@ -1840,10 +1799,6 @@ void ComponentBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfParentContainer.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
-    {
-        _sfParentWindow.copyToBin(pMem);
-    }
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
     {
         _sfClipping.copyToBin(pMem);
@@ -1975,10 +1930,6 @@ void ComponentBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfParentContainer.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
-    {
-        _sfParentWindow.copyFromBin(pMem);
-    }
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
     {
         _sfClipping.copyFromBin(pMem);
@@ -2044,7 +1995,6 @@ ComponentBase::ComponentBase(void) :
     _sfToolTipText            (),
     _sfOpacity                (Real32(1.0)),
     _sfParentContainer        (NULL),
-    _sfParentWindow           (NULL),
     _sfClipping               (bool(true)),
     _sfPopupMenu              (NULL),
     _sfFocusedForeground      (NULL),
@@ -2082,7 +2032,6 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfToolTipText            (source._sfToolTipText            ),
     _sfOpacity                (source._sfOpacity                ),
     _sfParentContainer        (NULL),
-    _sfParentWindow           (NULL),
     _sfClipping               (source._sfClipping               ),
     _sfPopupMenu              (NULL),
     _sfFocusedForeground      (NULL),
@@ -2100,6 +2049,77 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
 ComponentBase::~ComponentBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
+
+bool ComponentBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
+{
+    if(parentFieldId == ParentContainerFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            FieldContainer *pOldParent =
+                _sfParentContainer.getValue         ();
+
+            UInt16 oldChildFieldId =
+                _sfParentContainer.getParentFieldPos();
+
+            if(pOldParent != NULL)
+            {
+                pOldParent->unlinkChild(this, oldChildFieldId);
+            }
+
+            editSField(ParentContainerFieldMask);
+
+            _sfParentContainer.setValue(static_cast<FieldContainer *>(pParent), childFieldId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
+}
+
+bool ComponentBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
+{
+    if(parentFieldId == ParentContainerFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            if(_sfParentContainer.getValue() == pParent)
+            {
+                editSField(ParentContainerFieldMask);
+
+                _sfParentContainer.setValue(NULL, 0xFFFF);
+
+                return true;
+            }
+
+            FWARNING(("ComponentBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
 
 void ComponentBase::onCreate(const Component *source)
 {
@@ -2128,10 +2148,6 @@ void ComponentBase::onCreate(const Component *source)
         pThis->setRolloverBorder(source->getRolloverBorder());
 
         pThis->setRolloverBackground(source->getRolloverBackground());
-
-        pThis->setParentContainer(source->getParentContainer());
-
-        pThis->setParentWindow(source->getParentWindow());
 
         pThis->setPopupMenu(source->getPopupMenu());
 
@@ -2727,56 +2743,14 @@ EditFieldHandlePtr ComponentBase::editHandleOpacity        (void)
 
 GetFieldHandlePtr ComponentBase::getHandleParentContainer (void) const
 {
-    SFUnrecComponentContainerPtr::GetHandlePtr returnValue(
-        new  SFUnrecComponentContainerPtr::GetHandle(
-             &_sfParentContainer,
-             this->getType().getFieldDesc(ParentContainerFieldId),
-             const_cast<ComponentBase *>(this)));
+    SFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
 EditFieldHandlePtr ComponentBase::editHandleParentContainer(void)
 {
-    SFUnrecComponentContainerPtr::EditHandlePtr returnValue(
-        new  SFUnrecComponentContainerPtr::EditHandle(
-             &_sfParentContainer,
-             this->getType().getFieldDesc(ParentContainerFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&Component::setParentContainer,
-                    static_cast<Component *>(this), _1));
-
-    editSField(ParentContainerFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ComponentBase::getHandleParentWindow    (void) const
-{
-    SFUnrecInternalWindowPtr::GetHandlePtr returnValue(
-        new  SFUnrecInternalWindowPtr::GetHandle(
-             &_sfParentWindow,
-             this->getType().getFieldDesc(ParentWindowFieldId),
-             const_cast<ComponentBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ComponentBase::editHandleParentWindow   (void)
-{
-    SFUnrecInternalWindowPtr::EditHandlePtr returnValue(
-        new  SFUnrecInternalWindowPtr::EditHandle(
-             &_sfParentWindow,
-             this->getType().getFieldDesc(ParentWindowFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&Component::setParentWindow,
-                    static_cast<Component *>(this), _1));
-
-    editSField(ParentWindowFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
@@ -3040,10 +3014,6 @@ void ComponentBase::resolveLinks(void)
     static_cast<Component *>(this)->setRolloverBorder(NULL);
 
     static_cast<Component *>(this)->setRolloverBackground(NULL);
-
-    static_cast<Component *>(this)->setParentContainer(NULL);
-
-    static_cast<Component *>(this)->setParentWindow(NULL);
 
     static_cast<Component *>(this)->setPopupMenu(NULL);
 
@@ -3477,33 +3447,6 @@ void ComponentBase::setOpacity(const Real32 value)
     _sfOpacity.setValue(value);
 }
 
-//! Get the value of the Component::_sfParentContainer field.
-ComponentContainer * ComponentBase::getParentContainer(void) const
-{
-    return _sfParentContainer.getValue();
-}
-
-//! Set the value of the Component::_sfParentContainer field.
-void ComponentBase::setParentContainer(ComponentContainer * const value)
-{
-    editSField(ParentContainerFieldMask);
-
-    _sfParentContainer.setValue(value);
-}
-
-//! Get the value of the Component::_sfParentWindow field.
-InternalWindow * ComponentBase::getParentWindow(void) const
-{
-    return _sfParentWindow.getValue();
-}
-
-//! Set the value of the Component::_sfParentWindow field.
-void ComponentBase::setParentWindow(InternalWindow * const value)
-{
-    editSField(ParentWindowFieldMask);
-
-    _sfParentWindow.setValue(value);
-}
 //! Get the value of the Component::_sfClipping field.
 
 bool &ComponentBase::editClipping(void)

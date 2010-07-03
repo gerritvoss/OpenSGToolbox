@@ -115,7 +115,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Separator : public SeparatorBase
 
     /*! \}                                                                 */
 
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
     
     /*==========================  PRIVATE  ================================*/
 

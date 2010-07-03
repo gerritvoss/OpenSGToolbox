@@ -131,11 +131,11 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ColorFieldEditor : public Color
     class ButtonListener : public ActionListener
     {
       public :
-           ButtonListener(ColorFieldEditor * ptr);
+           ButtonListener(ColorFieldEditor * const ptr);
            virtual void actionPerformed(const ActionEventUnrecPtr e);
 
       protected :
-        ColorFieldEditor *_ColorFieldEditor ;
+        ColorFieldEditor* _ColorFieldEditor ;
     };
 
     friend class ButtonListener;
@@ -145,12 +145,12 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ColorFieldEditor : public Color
     class DialogListener : public DialogWindowListener
     {
       public :
-          DialogListener(ColorFieldEditor * ptr);
+          DialogListener(ColorFieldEditor * const ptr);
           virtual void dialogClosing(const DialogWindowEventUnrecPtr e);
           virtual void dialogClosed(const DialogWindowEventUnrecPtr e);
 
       protected :
-        ColorFieldEditor *_ColorFieldEditor ;
+        ColorFieldEditor* _ColorFieldEditor ;
     };
 
     friend class DialogListener;

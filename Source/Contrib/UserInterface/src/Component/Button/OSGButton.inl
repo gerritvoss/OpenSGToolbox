@@ -65,7 +65,7 @@ void Button::setActive(bool Value)
 }
 
 inline
-Button::ButtonArmedListener::ButtonArmedListener(ButtonRefPtr TheButton) :
+Button::ButtonArmedListener::ButtonArmedListener(Button* const TheButton) :
 _Button(TheButton)
 {
 }

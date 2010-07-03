@@ -128,14 +128,14 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldEditor : public Gen
     class TextFieldListener : public FocusListener, public ActionListener, public KeyAdapter
     {
       public :
-           TextFieldListener(GenericFieldEditor * ptr);
+           TextFieldListener(GenericFieldEditor * const ptr);
            virtual void focusGained    (const FocusEventUnrecPtr  e);
            virtual void focusLost      (const FocusEventUnrecPtr  e);
            virtual void actionPerformed(const ActionEventUnrecPtr e);
            virtual void keyTyped       (const KeyEventUnrecPtr    e);
 
       protected :
-        GenericFieldEditor *_GenericFieldEditor ;
+        GenericFieldEditor* _GenericFieldEditor ;
     };
 
     friend class TextFieldListener;

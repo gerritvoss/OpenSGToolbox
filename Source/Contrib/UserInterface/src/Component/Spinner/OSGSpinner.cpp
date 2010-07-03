@@ -142,7 +142,7 @@ void Spinner::updateLayout(void)
     }
 }
 
-ComponentRefPtr Spinner::createEditor(SpinnerModelPtr model)
+ComponentTransitPtr Spinner::createEditor(SpinnerModelPtr model)
 {
     //TODO: Implement
     SpinnerDefaultEditorRefPtr TheEditor;
@@ -158,14 +158,14 @@ ComponentRefPtr Spinner::createEditor(SpinnerModelPtr model)
     {
         TheEditor = SpinnerDefaultEditor::create();
     }
-    TheEditor->setSpinner(SpinnerRefPtr(this));
-    return TheEditor;
+    TheEditor->setSpinner(this);
+    return ComponentTransitPtr(TheEditor.get());
 }
 
 void Spinner::setModel(SpinnerModelPtr model)
 {
     _Model = model;
-    setEditor(createEditor(_Model));
+    setEditor(ComponentUnrecPtr(createEditor(_Model)));
 }
 
 void Spinner::setEditable(bool Editable)

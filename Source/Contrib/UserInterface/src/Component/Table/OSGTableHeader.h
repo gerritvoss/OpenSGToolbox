@@ -95,16 +95,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeader : public TableHeaderBase
     
     //Returns a pointer to the column that point lies in, or -1 if it lies out of bounds.
     //The point is assumed to be in TableHeader coordinate space
-    TableColumnRefPtr columnAtPoint(const Pnt2f& point) const;
+    TableColumn* columnAtPoint(const Pnt2f& point) const;
     
     //Returns the TableColumnModel that contains all column information of this table header.
-    //TableColumnModelRefPtr getColumnModel(void) const;
+    //TableColumnModel* getColumnModel(void) const;
     
     //Returns the default renderer used when no headerRenderer is defined by a TableColumn.
     TableCellRendererPtr getDefaultRenderer(void) const;
     
     //Returns the the dragged column, if and only if, a drag is in process, otherwise returns null.
-    TableColumnRefPtr getDraggedColumn(void) const;
+    TableColumn* getDraggedColumn(void) const;
     
     //Returns the column's horizontal distance from its original position, if and only if, a drag is in process.
     Real32 getDraggedDistance(void) const;
@@ -116,13 +116,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeader : public TableHeaderBase
     Int32 getResizingColumn(void) const;
     
     //Sets the column model for this table to newModel and registers for listener notifications from the new column model.
-    //void setColumnModel(TableColumnModelRefPtr columnModel);
+    //void setColumnModel(TableColumnModel* const columnModel);
     
     //Sets the default renderer to be used when no headerRenderer is defined by a TableColumn.
     void setDefaultRenderer(TableCellRendererPtr defaultRenderer);
     
     //Sets the header's draggedColumn to aColumn.
-    void setDraggedColumn(TableColumnRefPtr aColumn);
+    void setDraggedColumn(TableColumn* const aColumn);
     
     //Sets the header's draggedDistance to distance.
     void setDraggedDistance(const Real32& distance);
@@ -173,7 +173,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeader : public TableHeaderBase
     TableCellRendererPtr _DefaultTableHeaderRenderer;
     
     //The index of the column being dragged.
-    TableColumnRefPtr _DraggedColumn;
+    TableColumn* _DraggedColumn;
     
     //The distance from its original position the column has been dragged.
     Real32 _DraggedDistance;

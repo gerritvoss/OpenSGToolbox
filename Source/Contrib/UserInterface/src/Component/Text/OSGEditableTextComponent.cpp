@@ -177,7 +177,7 @@ void EditableTextComponent::keyTyped(const KeyEventUnrecPtr e)
 	Inherited::keyTyped(e);
 }
 
-LayerRefPtr EditableTextComponent::getDrawnBackground(void) const
+Layer* EditableTextComponent::getDrawnBackground(void) const
 {
 	if(getEditable())
 	{
@@ -189,7 +189,7 @@ LayerRefPtr EditableTextComponent::getDrawnBackground(void) const
 	}
 }
 
-LayerRefPtr EditableTextComponent::getDrawnForeground(void) const
+Layer* EditableTextComponent::getDrawnForeground(void) const
 {
 	if(getEditable())
 	{
@@ -201,7 +201,7 @@ LayerRefPtr EditableTextComponent::getDrawnForeground(void) const
 	}
 }
 
-BorderRefPtr EditableTextComponent::getDrawnBorder(void) const
+Border* EditableTextComponent::getDrawnBorder(void) const
 {
     return Inherited::getDrawnBorder();
 }
@@ -241,10 +241,10 @@ void EditableTextComponent::cut(void)
 void EditableTextComponent::paste(void)
 {
     if(getParentWindow() != NULL && 
-        getParentWindow()->getDrawingSurface() != NULL &&
-        getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+        getParentWindow()->getParentDrawingSurface() != NULL &&
+        getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
-        write(getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard());
+        write(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getClipboard());
     }
 }
 

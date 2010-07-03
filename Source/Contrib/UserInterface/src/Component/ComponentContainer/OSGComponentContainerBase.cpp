@@ -124,25 +124,25 @@ void ComponentContainerBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new MFUnrecComponentPtr::Description(
-        MFUnrecComponentPtr::getClassType(),
+    pDesc = new MFUnrecChildComponentPtr::Description(
+        MFUnrecChildComponentPtr::getClassType(),
         "Children",
         "",
         ChildrenFieldId, ChildrenFieldMask,
         false,
-        (Field::MFDefaultFlags | Field::FStdAccess),
+        (Field::MFDefaultFlags | Field::FNullCheckAccess),
         static_cast<FieldEditMethodSig>(&ComponentContainer::editHandleChildren),
         static_cast<FieldGetMethodSig >(&ComponentContainer::getHandleChildren));
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecLayoutPtr::Description(
-        SFUnrecLayoutPtr::getClassType(),
+    pDesc = new SFUnrecChildLayoutPtr::Description(
+        SFUnrecChildLayoutPtr::getClassType(),
         "Layout",
         "",
         LayoutFieldId, LayoutFieldMask,
         false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
+        (Field::SFDefaultFlags | Field::FNullCheckAccess),
         static_cast<FieldEditMethodSig>(&ComponentContainer::editHandleLayout),
         static_cast<FieldGetMethodSig >(&ComponentContainer::getHandleLayout));
 
@@ -192,19 +192,25 @@ ComponentContainerBase::TypeObject ComponentContainerBase::_type(
     "\t<Field\n"
     "\t\tname=\"Children\"\n"
     "\t\ttype=\"Component\"\n"
-    "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"multi\"\n"
+    "        category=\"childpointer\"\n"
+    "        childParentType=\"FieldContainer\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
+    "        ptrFieldAccess = \"nullCheck\"\n"
+    "        linkParentField=\"ParentContainer\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"Layout\"\n"
     "\t\ttype=\"Layout\"\n"
-    "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
+    "        category=\"childpointer\"\n"
+    "        childParentType=\"FieldContainer\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
+    "        ptrFieldAccess = \"nullCheck\"\n"
+    "        linkParentField=\"ParentContainer\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
     "\t>\n"
     "\t</Field>\n"
@@ -243,25 +249,18 @@ UInt32 ComponentContainerBase::getContainerSize(void) const
 
 
 //! Get the ComponentContainer::_mfChildren field.
-const MFUnrecComponentPtr *ComponentContainerBase::getMFChildren(void) const
+const MFUnrecChildComponentPtr *ComponentContainerBase::getMFChildren(void) const
 {
-    return &_mfChildren;
-}
-
-MFUnrecComponentPtr *ComponentContainerBase::editMFChildren       (void)
-{
-    editMField(ChildrenFieldMask, _mfChildren);
-
     return &_mfChildren;
 }
 
 //! Get the ComponentContainer::_sfLayout field.
-const SFUnrecLayoutPtr *ComponentContainerBase::getSFLayout(void) const
+const SFUnrecChildLayoutPtr *ComponentContainerBase::getSFLayout(void) const
 {
     return &_sfLayout;
 }
 
-SFUnrecLayoutPtr    *ComponentContainerBase::editSFLayout         (void)
+SFUnrecChildLayoutPtr *ComponentContainerBase::editSFLayout         (void)
 {
     editSField(LayoutFieldMask);
 
@@ -285,16 +284,19 @@ const SFVec4f *ComponentContainerBase::getSFInset(void) const
 
 void ComponentContainerBase::pushToChildren(Component * const value)
 {
+    if(value == NULL)
+        return;
+
     editMField(ChildrenFieldMask, _mfChildren);
 
     _mfChildren.push_back(value);
 }
 
-void ComponentContainerBase::assignChildren (const MFUnrecComponentPtr &value)
+void ComponentContainerBase::assignChildren (const MFUnrecChildComponentPtr &value)
 {
-    MFUnrecComponentPtr::const_iterator elemIt  =
+    MFUnrecChildComponentPtr::const_iterator elemIt  =
         value.begin();
-    MFUnrecComponentPtr::const_iterator elemEnd =
+    MFUnrecChildComponentPtr::const_iterator elemEnd =
         value.end  ();
 
     static_cast<ComponentContainer *>(this)->clearChildren();
@@ -304,6 +306,51 @@ void ComponentContainerBase::assignChildren (const MFUnrecComponentPtr &value)
         this->pushToChildren(*elemIt);
 
         ++elemIt;
+    }
+}
+
+void ComponentContainerBase::insertIntoChildren(UInt32               uiIndex,
+                                                   Component * const value   )
+{
+    if(value == NULL)
+        return;
+
+    editMField(ChildrenFieldMask, _mfChildren);
+
+    MFUnrecChildComponentPtr::iterator fieldIt = _mfChildren.begin_nc();
+
+    fieldIt += uiIndex;
+
+    _mfChildren.insert(fieldIt, value);
+}
+
+void ComponentContainerBase::replaceInChildren(UInt32               uiIndex,
+                                                       Component * const value   )
+{
+    if(value == NULL)
+        return;
+
+    if(uiIndex >= _mfChildren.size())
+        return;
+
+    editMField(ChildrenFieldMask, _mfChildren);
+
+    _mfChildren.replace(uiIndex, value);
+}
+
+void ComponentContainerBase::replaceObjInChildren(Component * const pOldElem,
+                                                        Component * const pNewElem)
+{
+    if(pNewElem == NULL)
+        return;
+
+    Int32  elemIdx = _mfChildren.findIndex(pOldElem);
+
+    if(elemIdx != -1)
+    {
+        editMField(ChildrenFieldMask, _mfChildren);
+
+        _mfChildren.replace(elemIdx, pNewElem);
     }
 }
 
@@ -405,16 +452,24 @@ void ComponentContainerBase::copyFromBin(BinaryDataHandler &pMem,
 
 ComponentContainerBase::ComponentContainerBase(void) :
     Inherited(),
-    _mfChildren               (),
-    _sfLayout                 (NULL),
+    _mfChildren               (this,
+                          ChildrenFieldId,
+                          Component::ParentContainerFieldId),
+    _sfLayout                 (this,
+                          LayoutFieldId,
+                          Layout::ParentContainersFieldId),
     _sfInset                  (Vec4f(0.0f,0.0f,0.0f,0.0f))
 {
 }
 
 ComponentContainerBase::ComponentContainerBase(const ComponentContainerBase &source) :
     Inherited(source),
-    _mfChildren               (),
-    _sfLayout                 (NULL),
+    _mfChildren               (this,
+                          ChildrenFieldId,
+                          Component::ParentContainerFieldId),
+    _sfLayout                 (this,
+                          LayoutFieldId,
+                          Layout::ParentContainersFieldId),
     _sfInset                  (source._sfInset                  )
 {
 }
@@ -426,6 +481,69 @@ ComponentContainerBase::~ComponentContainerBase(void)
 {
 }
 
+/*-------------------------------------------------------------------------*/
+/* Child linking                                                           */
+
+bool ComponentContainerBase::unlinkChild(
+    FieldContainer * const pChild,
+    UInt16           const childFieldId)
+{
+    if(childFieldId == ChildrenFieldId)
+    {
+        Component * pTypedChild =
+            dynamic_cast<Component *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            Int32 iChildIdx = _mfChildren.findIndex(pTypedChild);
+
+            if(iChildIdx != -1)
+            {
+                editMField(ChildrenFieldMask, _mfChildren);
+
+                _mfChildren.erase(iChildIdx);
+
+                return true;
+            }
+
+            FWARNING(("ComponentContainerBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    if(childFieldId == LayoutFieldId)
+    {
+        Layout * pTypedChild =
+            dynamic_cast<Layout *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            if(pTypedChild == _sfLayout.getValue())
+            {
+                editSField(LayoutFieldMask);
+
+                _sfLayout.setValue(NULL);
+
+                return true;
+            }
+
+            FWARNING(("ComponentContainerBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+
+    return Inherited::unlinkChild(pChild, childFieldId);
+}
+
 void ComponentContainerBase::onCreate(const ComponentContainer *source)
 {
     Inherited::onCreate(source);
@@ -434,14 +552,15 @@ void ComponentContainerBase::onCreate(const ComponentContainer *source)
     {
         ComponentContainer *pThis = static_cast<ComponentContainer *>(this);
 
-        MFUnrecComponentPtr::const_iterator ChildrenIt  =
+        MFUnrecChildComponentPtr::const_iterator ChildrenIt  =
             source->_mfChildren.begin();
-        MFUnrecComponentPtr::const_iterator ChildrenEnd =
+        MFUnrecChildComponentPtr::const_iterator ChildrenEnd =
             source->_mfChildren.end  ();
 
         while(ChildrenIt != ChildrenEnd)
         {
-            pThis->pushToChildren(*ChildrenIt);
+            ComponentUnrecPtr copy(dynamic_pointer_cast<Component>((*ChildrenIt)->shallowCopy()));
+            pThis->pushToChildren(copy);
 
             ++ChildrenIt;
         }
@@ -452,8 +571,8 @@ void ComponentContainerBase::onCreate(const ComponentContainer *source)
 
 GetFieldHandlePtr ComponentContainerBase::getHandleChildren        (void) const
 {
-    MFUnrecComponentPtr::GetHandlePtr returnValue(
-        new  MFUnrecComponentPtr::GetHandle(
+    MFUnrecChildComponentPtr::GetHandlePtr returnValue(
+        new  MFUnrecChildComponentPtr::GetHandle(
              &_mfChildren,
              this->getType().getFieldDesc(ChildrenFieldId),
              const_cast<ComponentContainerBase *>(this)));
@@ -463,8 +582,8 @@ GetFieldHandlePtr ComponentContainerBase::getHandleChildren        (void) const
 
 EditFieldHandlePtr ComponentContainerBase::editHandleChildren       (void)
 {
-    MFUnrecComponentPtr::EditHandlePtr returnValue(
-        new  MFUnrecComponentPtr::EditHandle(
+    MFUnrecChildComponentPtr::EditHandlePtr returnValue(
+        new  MFUnrecChildComponentPtr::EditHandle(
              &_mfChildren,
              this->getType().getFieldDesc(ChildrenFieldId),
              this));
@@ -472,6 +591,15 @@ EditFieldHandlePtr ComponentContainerBase::editHandleChildren       (void)
     returnValue->setAddMethod(
         boost::bind(&ComponentContainer::pushToChildren,
                     static_cast<ComponentContainer *>(this), _1));
+    returnValue->setInsertMethod(
+        boost::bind(&ComponentContainer::insertIntoChildren,
+                    static_cast<ComponentContainer *>(this), _1, _2));
+    returnValue->setReplaceMethod(
+        boost::bind(&ComponentContainer::replaceInChildren,
+                    static_cast<ComponentContainer *>(this), _1, _2));
+    returnValue->setReplaceObjMethod(
+        boost::bind(&ComponentContainer::replaceObjInChildren,
+                    static_cast<ComponentContainer *>(this), _1, _2));
     returnValue->setRemoveMethod(
         boost::bind(&ComponentContainer::removeFromChildren,
                     static_cast<ComponentContainer *>(this), _1));
@@ -489,8 +617,8 @@ EditFieldHandlePtr ComponentContainerBase::editHandleChildren       (void)
 
 GetFieldHandlePtr ComponentContainerBase::getHandleLayout          (void) const
 {
-    SFUnrecLayoutPtr::GetHandlePtr returnValue(
-        new  SFUnrecLayoutPtr::GetHandle(
+    SFUnrecChildLayoutPtr::GetHandlePtr returnValue(
+        new  SFUnrecChildLayoutPtr::GetHandle(
              &_sfLayout,
              this->getType().getFieldDesc(LayoutFieldId),
              const_cast<ComponentContainerBase *>(this)));
@@ -500,8 +628,8 @@ GetFieldHandlePtr ComponentContainerBase::getHandleLayout          (void) const
 
 EditFieldHandlePtr ComponentContainerBase::editHandleLayout         (void)
 {
-    SFUnrecLayoutPtr::EditHandlePtr returnValue(
-        new  SFUnrecLayoutPtr::EditHandle(
+    SFUnrecChildLayoutPtr::EditHandlePtr returnValue(
+        new  SFUnrecChildLayoutPtr::EditHandle(
              &_sfLayout,
              this->getType().getFieldDesc(LayoutFieldId),
              this));

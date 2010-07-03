@@ -122,7 +122,7 @@ void SpinnerDefaultEditor::cancelEdit(void)
     }
 }
 
-void SpinnerDefaultEditor::dismiss(SpinnerRefPtr spinner)
+void SpinnerDefaultEditor::dismiss(Spinner* const spinner)
 {
     if(getSpinner() != NULL)
     {

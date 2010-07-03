@@ -116,7 +116,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FixedHeightTreeModelLayout : public Fi
 	virtual void setExpanded(const TreePath& path, bool Expand);
     
 	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelRefPtr newModel);
+	virtual void setModel(TreeModel* const newModel);
 	
 	//Determines whether or not the root node from the TreeModel is visible.
 	virtual void setRootVisible(bool rootVisible);

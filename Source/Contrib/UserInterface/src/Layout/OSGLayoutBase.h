@@ -65,7 +65,7 @@
 
 #include "OSGAttachmentContainer.h" // Parent
 
-#include "OSGComponentContainerFields.h" // ParentContainer type
+#include "OSGFieldContainerFields.h"    // ParentContainers type
 
 #include "OSGLayoutFields.h"
 
@@ -93,16 +93,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutBase : public AttachmentContaine
 
     enum
     {
-        ParentContainerFieldId = Inherited::NextFieldId,
-        NextFieldId = ParentContainerFieldId + 1
+        ParentContainersFieldId = Inherited::NextFieldId,
+        NextFieldId = ParentContainersFieldId + 1
     };
 
-    static const OSG::BitVector ParentContainerFieldMask =
-        (TypeTraits<BitVector>::One << ParentContainerFieldId);
+    static const OSG::BitVector ParentContainersFieldMask =
+        (TypeTraits<BitVector>::One << ParentContainersFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecComponentContainerPtr SFParentContainerType;
+    typedef MFParentFieldContainerPtr MFParentContainersType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -121,34 +121,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutBase : public AttachmentContaine
     virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-            const SFUnrecComponentContainerPtr *getSFParentContainer(void) const;
-                  SFUnrecComponentContainerPtr *editSFParentContainer(void);
-
-
-                  ComponentContainer * getParentContainer(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-            void setParentContainer(ComponentContainer * const value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr Field Set                                 */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr MField Set                                */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,7 +148,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutBase : public AttachmentContaine
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecComponentContainerPtr _sfParentContainer;
+    MFParentFieldContainerPtr _mfParentContainers;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,15 +170,25 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutBase : public AttachmentContaine
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
-    void onCreate(const Layout *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleParentContainer (void) const;
-    EditFieldHandlePtr editHandleParentContainer(void);
+    GetFieldHandlePtr  getHandleParentContainers (void) const;
+    EditFieldHandlePtr editHandleParentContainers(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

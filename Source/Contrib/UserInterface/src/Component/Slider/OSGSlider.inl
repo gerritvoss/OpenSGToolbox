@@ -113,13 +113,13 @@ void Slider::setValueIsAdjusting(bool b)
 }
 
 inline
-Slider::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(SliderRefPtr TheSlider) :
+Slider::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(Slider* const TheSlider) :
    _Slider(TheSlider)
 {
 }
 
 inline
-Slider::KnobDraggedListener::KnobDraggedListener(SliderRefPtr TheSlider) :
+Slider::KnobDraggedListener::KnobDraggedListener(Slider* const TheSlider) :
    _Slider(TheSlider)
 {
 }

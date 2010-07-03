@@ -151,9 +151,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProgressBar : public ProgressBarBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+    virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
     virtual Color4f getDrawnTextColor(void) const;
-    virtual UIDrawObjectCanvasRefPtr getDrawnDrawObject(void) const;
+    virtual UIDrawObjectCanvas* getDrawnDrawObject(void) const;
 
     void setupProgressBar();
     void setupIndeterminateProgressBar(const Time& Elps);
@@ -162,10 +162,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProgressBar : public ProgressBarBase
     class ModelChangeListener : public ChangeListener
     {
       public:
-        ModelChangeListener(ProgressBarRefPtr TheProgressBar);
+        ModelChangeListener(ProgressBar* const TheProgressBar);
         virtual void stateChanged(const ChangeEventUnrecPtr e);
       private:
-        ProgressBarRefPtr _ProgressBar;
+        ProgressBar* _ProgressBar;
     };
 
     friend class ModelChangeListener;
@@ -176,10 +176,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProgressBar : public ProgressBarBase
     class IndeterminateUpdateListener : public UpdateListener
     {
       public:
-        IndeterminateUpdateListener(ProgressBarRefPtr TheProgressBar);
+        IndeterminateUpdateListener(ProgressBar* const TheProgressBar);
         virtual void update(const UpdateEventUnrecPtr e);
       private:
-        ProgressBarRefPtr _ProgressBar;
+        ProgressBar* _ProgressBar;
     };
 
     friend class IndeterminateUpdateListener;

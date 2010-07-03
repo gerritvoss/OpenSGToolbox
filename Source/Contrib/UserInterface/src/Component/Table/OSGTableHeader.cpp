@@ -86,7 +86,7 @@ void TableHeader::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-TableColumnRefPtr TableHeader::columnAtPoint(const Pnt2f& point) const
+TableColumn* TableHeader::columnAtPoint(const Pnt2f& point) const
 {
     Int32 ColumnIndex = getColumnModel()->getColumnIndexAtX(point.x());
     if(ColumnIndex == -1)
@@ -116,9 +116,8 @@ void TableHeader::updateColumnHeadersComponents(void)
             isSelected = (SearchItor != SelectedColumns.end());
 
             //TODO: Add Column Focusing
-            pushToColumnHeaders(
-            _DefaultTableHeaderRenderer->getTableCellRendererComponent(getTable(), getColumnModel()->getColumn(i)->getHeaderValue(), isSelected, false, 0, i)
-            );
+            ComponentUnrecPtr NewComp(_DefaultTableHeaderRenderer->getTableCellRendererComponent(getTable(), getColumnModel()->getColumn(i)->getHeaderValue(), isSelected, false, 0, i));
+            pushToColumnHeaders(NewComp);
         }
 
     
@@ -184,7 +183,7 @@ void TableHeader::mousePressed(const MouseEventUnrecPtr e)
 {
     if(getResizingAllowed())
     {
-		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderRefPtr(this), e->getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), this, e->getViewport());
         UInt32 CumulativeHeaderWidth(0);
         for(UInt32 i(0) ; i<getMFColumnHeaders()->size() ; ++i)
         {
@@ -192,8 +191,8 @@ void TableHeader::mousePressed(const MouseEventUnrecPtr e)
             if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
                MousePosInComponent.x() <= CumulativeHeaderWidth + getColumnModel()->getColumnMargin() + getResizingCursorDriftAllowance())
             {
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_MarginDraggedListener));
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_MarginDraggedListener));
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_MarginDraggedListener));
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(&(_MarginDraggedListener));
                 _ResizingColumn = i;
                 return;
             }
@@ -214,9 +213,9 @@ void TableHeader::mouseMoved(const MouseEventUnrecPtr e)
 
 void TableHeader::checkMouseMargins(const MouseEventUnrecPtr e)
 {
-    if(isContainedClipBounds(e->getLocation(), TableHeaderRefPtr(this)))
+    if(isContainedClipBounds(e->getLocation(), this))
     {
-		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderRefPtr(this), e->getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), this, e->getViewport());
         UInt32 CumulativeHeaderWidth(0);
         for(UInt32 i(0) ; i<getMFColumnHeaders()->size() ; ++i)
         {
@@ -224,13 +223,13 @@ void TableHeader::checkMouseMargins(const MouseEventUnrecPtr e)
             if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
                MousePosInComponent.x() <= CumulativeHeaderWidth + getColumnModel()->getColumnMargin() + getResizingCursorDriftAllowance())
             {
-                getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
                 return;
             }
             CumulativeHeaderWidth += getColumnModel()->getColumnMargin();
         }
     }
-    getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+    getParentWindow()->getParentDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
 }
 
 void TableHeader::detachFromEventProducer(void)
@@ -316,7 +315,7 @@ void TableHeader::dump(      UInt32    ,
 		
 void TableHeader::ColumnModelListener::columnAdded(const TableColumnModelEventUnrecPtr e)
 {
-    //Update the ComponentRefPtr vector of the headers
+    //Update the Component* vector of the headers
     _TableHeader->updateColumnHeadersComponents();
 }
 
@@ -328,13 +327,13 @@ void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEventUnre
 
 void TableHeader::ColumnModelListener::columnMoved(const TableColumnModelEventUnrecPtr e)
 {
-    //Update the ComponentRefPtr vector of the headers
+    //Update the Component* vector of the headers
     _TableHeader->updateColumnHeadersComponents();
 }
 
 void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEventUnrecPtr e)
 {
-    //Update the ComponentRefPtr vector of the headers
+    //Update the Component* vector of the headers
     _TableHeader->updateColumnHeadersComponents();
 }
 
@@ -352,7 +351,7 @@ void TableHeader::MarginDraggedListener::mouseDragged(const MouseEventUnrecPtr e
 {
 	if(e->getButton() == e->BUTTON1)
 	{
-		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderRefPtr(_TableHeader), e->getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), _TableHeader, e->getViewport());
 
 
         TableColumnRefPtr TheColumn(_TableHeader->getColumnModel()->getColumn(_TableHeader->_ResizingColumn));
@@ -405,8 +404,8 @@ void TableHeader::MarginDraggedListener::mouseReleased(const MouseEventUnrecPtr 
 void TableHeader::MarginDraggedListener::disconnect(void)
 {
     _TableHeader->_ResizingColumn = -1;
-    _TableHeader->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_TableHeader->_MarginDraggedListener));
-    _TableHeader->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_TableHeader->_MarginDraggedListener));
+    _TableHeader->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_TableHeader->_MarginDraggedListener));
+    _TableHeader->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseListener(&(_TableHeader->_MarginDraggedListener));
 }
 
 OSG_END_NAMESPACE

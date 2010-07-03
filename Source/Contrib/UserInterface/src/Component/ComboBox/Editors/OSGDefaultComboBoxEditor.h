@@ -91,7 +91,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultComboBoxEditor : public Default
 	virtual void removeActionListener(ActionListenerPtr Listener);
 
 	//Return the component that should be added to the tree hierarchy for this editor
-	virtual ComponentRefPtr getEditorComponent(void);
+	virtual Component* getEditorComponent(void);
 
 	//Return the edited item
 	virtual boost::any getItem(void);
@@ -142,12 +142,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultComboBoxEditor : public Default
     class TextFieldListener :public FocusListener
     {
       public:
-        TextFieldListener(DefaultComboBoxEditorRefPtr TheDefaultComboBoxEditor);
+        TextFieldListener(DefaultComboBoxEditor* const TheDefaultComboBoxEditor);
         virtual void focusGained(const FocusEventUnrecPtr e);
         virtual void focusLost(const FocusEventUnrecPtr e);
 
       private:
-        DefaultComboBoxEditorRefPtr _DefaultComboBoxEditor;
+        DefaultComboBoxEditor* _DefaultComboBoxEditor;
     };
 
     friend class TextFieldListener;

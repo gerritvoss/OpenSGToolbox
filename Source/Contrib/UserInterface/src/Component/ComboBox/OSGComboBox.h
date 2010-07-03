@@ -137,7 +137,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public
 	void addItem(const boost::any& anObject);
 
 	//Initializes the editor with the specified item.
-	void configureEditor(ComboBoxEditorRefPtr anEditor, const boost::any& anItem);
+	void configureEditor(ComboBoxEditor* const anEditor, const boost::any& anItem);
 
 	//Returns the action command that is included in the event sent to action listeners.
 	std::string getActionCommand(void) const;
@@ -268,7 +268,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public
     class ExpandButtonSelectedListener : public ButtonSelectedListener, public PopupMenuListener
     {
       public:
-        ExpandButtonSelectedListener(ComboBoxRefPtr TheComboBox);
+        ExpandButtonSelectedListener(ComboBox* const TheComboBox);
         virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e);
         virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e);
 
@@ -277,7 +277,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public
         virtual void popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e);
         virtual void popupMenuContentsChanged(const PopupMenuEventUnrecPtr e);
       private:
-        ComboBoxRefPtr _ComboBox;
+        ComboBox* _ComboBox;
     };
 
 	friend class ExpandButtonSelectedListener;
@@ -288,11 +288,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public
     class EditorListener : public ActionListener
     {
       public:
-        EditorListener(ComboBoxRefPtr TheComboBox);
+        EditorListener(ComboBox* const TheComboBox);
 
         virtual void actionPerformed(const ActionEventUnrecPtr e);
       private:
-        ComboBoxRefPtr _ComboBox;
+        ComboBox* _ComboBox;
     };
 
 	friend class EditorListener;

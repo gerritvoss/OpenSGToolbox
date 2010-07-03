@@ -72,8 +72,7 @@
 #include "OSGLayerFields.h"             // Background type
 #include "OSGTransferHandlerFields.h"   // TransferHandler type
 #include "OSGBaseFields.h"              // ToolTipText type
-#include "OSGComponentContainerFields.h" // ParentContainer type
-#include "OSGInternalWindowFields.h"    // ParentWindow type
+#include "OSGFieldContainerFields.h"    // ParentContainer type
 #include "OSGPopupMenuFields.h"         // PopupMenu type
 
 #include "OSGComponentFields.h"
@@ -131,8 +130,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         ToolTipTextFieldId = RolloverBackgroundFieldId + 1,
         OpacityFieldId = ToolTipTextFieldId + 1,
         ParentContainerFieldId = OpacityFieldId + 1,
-        ParentWindowFieldId = ParentContainerFieldId + 1,
-        ClippingFieldId = ParentWindowFieldId + 1,
+        ClippingFieldId = ParentContainerFieldId + 1,
         PopupMenuFieldId = ClippingFieldId + 1,
         FocusedForegroundFieldId = PopupMenuFieldId + 1,
         RolloverForegroundFieldId = FocusedForegroundFieldId + 1,
@@ -189,8 +187,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         (TypeTraits<BitVector>::One << OpacityFieldId);
     static const OSG::BitVector ParentContainerFieldMask =
         (TypeTraits<BitVector>::One << ParentContainerFieldId);
-    static const OSG::BitVector ParentWindowFieldMask =
-        (TypeTraits<BitVector>::One << ParentWindowFieldId);
     static const OSG::BitVector ClippingFieldMask =
         (TypeTraits<BitVector>::One << ClippingFieldId);
     static const OSG::BitVector PopupMenuFieldMask =
@@ -232,8 +228,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     typedef SFUnrecLayerPtr   SFRolloverBackgroundType;
     typedef SFString          SFToolTipTextType;
     typedef SFReal32          SFOpacityType;
-    typedef SFUnrecComponentContainerPtr SFParentContainerType;
-    typedef SFUnrecInternalWindowPtr SFParentWindowType;
+    typedef SFParentFieldContainerPtr SFParentContainerType;
     typedef SFBool            SFClippingType;
     typedef SFUnrecPopupMenuPtr SFPopupMenuType;
     typedef SFUnrecLayerPtr   SFFocusedForegroundType;
@@ -345,10 +340,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
 
     virtual       SFReal32            *editSFOpacity        (void);
     virtual const SFReal32            *getSFOpacity         (void) const;
-    virtual const SFUnrecComponentContainerPtr *getSFParentContainer(void) const;
-    virtual       SFUnrecComponentContainerPtr *editSFParentContainer(void);
-    virtual const SFUnrecInternalWindowPtr *getSFParentWindow   (void) const;
-    virtual       SFUnrecInternalWindowPtr *editSFParentWindow   (void);
 
     virtual       SFBool              *editSFClipping       (void);
     virtual const SFBool              *getSFClipping        (void) const;
@@ -420,10 +411,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual       Real32              &editOpacity        (void);
     virtual       Real32               getOpacity         (void) const;
 
-    virtual       ComponentContainer * getParentContainer(void) const;
-
-    virtual       InternalWindow * getParentWindow   (void) const;
-
     virtual       bool                &editClipping       (void);
     virtual       bool                 getClipping        (void) const;
 
@@ -466,8 +453,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual void setRolloverBackground(Layer * const value);
     virtual void setToolTipText    (const std::string &value);
     virtual void setOpacity        (const Real32 value);
-    virtual void setParentContainer(ComponentContainer * const value);
-    virtual void setParentWindow   (InternalWindow * const value);
     virtual void setClipping       (const bool value);
     virtual void setPopupMenu      (PopupMenu * const value);
     virtual void setFocusedForeground(Layer * const value);
@@ -567,8 +552,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     SFUnrecLayerPtr   _sfRolloverBackground;
     SFString          _sfToolTipText;
     SFReal32          _sfOpacity;
-    SFUnrecComponentContainerPtr _sfParentContainer;
-    SFUnrecInternalWindowPtr _sfParentWindow;
+    SFParentFieldContainerPtr _sfParentContainer;
     SFBool            _sfClipping;
     SFUnrecPopupMenuPtr _sfPopupMenu;
     SFUnrecLayerPtr   _sfFocusedForeground;
@@ -599,6 +583,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     /*! \{                                                                 */
 
     void onCreate(const Component *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -651,8 +646,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     EditFieldHandlePtr editHandleOpacity        (void);
     GetFieldHandlePtr  getHandleParentContainer (void) const;
     EditFieldHandlePtr editHandleParentContainer(void);
-    GetFieldHandlePtr  getHandleParentWindow    (void) const;
-    EditFieldHandlePtr editHandleParentWindow   (void);
     GetFieldHandlePtr  getHandleClipping        (void) const;
     EditFieldHandlePtr editHandleClipping       (void);
     GetFieldHandlePtr  getHandlePopupMenu       (void) const;

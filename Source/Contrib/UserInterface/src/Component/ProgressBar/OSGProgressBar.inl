@@ -101,13 +101,13 @@ void ProgressBar::removeChangeListener(ChangeListenerPtr Listener)
 }
 
 inline
-ProgressBar::ModelChangeListener::ModelChangeListener(ProgressBarRefPtr TheProgressBar) :
+ProgressBar::ModelChangeListener::ModelChangeListener(ProgressBar* const TheProgressBar) :
    _ProgressBar(TheProgressBar)
 {
 }
    
 inline
-ProgressBar::IndeterminateUpdateListener::IndeterminateUpdateListener(ProgressBarRefPtr TheProgressBar) :
+ProgressBar::IndeterminateUpdateListener::IndeterminateUpdateListener(ProgressBar* const TheProgressBar) :
    _ProgressBar(TheProgressBar)
 {
 }

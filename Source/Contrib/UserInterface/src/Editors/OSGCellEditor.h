@@ -107,7 +107,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CellEditor : public CellEditorBase
     virtual bool stopCellEditing(void) = 0;
     
     //Get the Editor Component
-    virtual ComponentRefPtr getCellEditor(const boost::any& Value, bool IsSelected) = 0;
+    virtual ComponentTransitPtr getCellEditor(const boost::any& Value, bool IsSelected) = 0;
 
     /*=========================  PROTECTED  ===============================*/
 

@@ -78,7 +78,7 @@ void RoundedCornerLineBorder::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void RoundedCornerLineBorder::draw(const GraphicsWeakPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
+void RoundedCornerLineBorder::draw(Graphics* const g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
     if(Clipping)
     {
@@ -104,7 +104,7 @@ void RoundedCornerLineBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,
     Left=Right=Top=Bottom = getWidth(); //wrong, but what else are you supposed to do?
 }
 
-void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsWeakPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void RoundedCornerLineBorder::activateInternalDrawConstraints(Graphics* const g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     g->incrDrawBounderiesNesting();
 
@@ -134,8 +134,8 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsWeak
     //Special case if the Graphics are 3dExtrude
     if(g->getType().isDerivedFrom(Graphics3DExtrude::getClassType()))
     {
-        Real32 ExtrudeLength(dynamic_pointer_cast<Graphics3DExtrude>(g)->getExtrudeLength());
-        dynamic_pointer_cast<Graphics3DExtrude>(g)->setExtrudeLength(0.0f);
+        Real32 ExtrudeLength(dynamic_cast<Graphics3DExtrude* const>(g)->getExtrudeLength());
+        dynamic_cast<Graphics3DExtrude*>(g)->setExtrudeLength(0.0f);
         //Front Side
         //draw corners
         g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 3.14159265, 4.71238898, 10, getColor(), getColor(), 1.0);
@@ -167,7 +167,7 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsWeak
         glPopMatrix();*/
 
 
-        dynamic_pointer_cast<Graphics3DExtrude>(g)->setExtrudeLength(ExtrudeLength);
+        dynamic_cast<Graphics3DExtrude*>(g)->setExtrudeLength(ExtrudeLength);
     }
     else
     {
@@ -188,7 +188,7 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsWeak
     g->activateDrawBounderiesTest();
 }
 
-void RoundedCornerLineBorder::deactivateInternalDrawConstraints(const GraphicsWeakPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void RoundedCornerLineBorder::deactivateInternalDrawConstraints(Graphics* const g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     g->decrDrawBounderiesNestring();
 

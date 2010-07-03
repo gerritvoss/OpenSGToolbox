@@ -82,10 +82,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     /*! \}                                                                 */
 
     //Appends aColumn to the end of the tableColumns array.
-    virtual void addColumn(TableColumnRefPtr aColumn);
+    virtual void addColumn(TableColumn* const aColumn);
 
     //Returns the TableColumn object for the column at columnIndex.
-    virtual TableColumnRefPtr getColumn(const UInt32& columnIndex) const;
+    virtual TableColumn* getColumn(const UInt32& columnIndex) const;
 
     //Returns the number of columns in the model.
     virtual UInt32 getColumnCount(void) const;
@@ -118,7 +118,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     virtual void moveColumn(const UInt32& columnIndex, const UInt32& newIndex);
 
     //Deletes the TableColumn column from the tableColumns array.
-    virtual void removeColumn(TableColumnRefPtr column);
+    virtual void removeColumn(TableColumn* const column);
 
     //Sets the TableColumn's column margin to newMargin.
     virtual void setColumnMargin(const UInt32& newMargin);
@@ -168,12 +168,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     class TableSelectionListener : public ListSelectionListener
     {
       public :
-        TableSelectionListener(DefaultTableColumnModelRefPtr TheDefaultTableColumnModel);
+        TableSelectionListener(DefaultTableColumnModel* const TheDefaultTableColumnModel);
 
         //A ListSelectionListener that forwards ListSelectionEvents when there is a column selection change
         virtual void selectionChanged(const ListSelectionEventUnrecPtr e);
       protected :
-        DefaultTableColumnModelRefPtr _DefaultTableColumnModel;
+        DefaultTableColumnModel* _DefaultTableColumnModel;
     };
 
 	friend class TableSelectionListener;
@@ -183,11 +183,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
 	/*class TableFieldChangeListener : public FieldChangeListener
 	{
 	public :
-		TableFieldChangeListener(DefaultTableColumnModelRefPtr TheDefaultTableColumnModel);
+		TableFieldChangeListener(DefaultTableColumnModel* const TheDefaultTableColumnModel);
 		
         virtual void fieldChanged(const FieldChangeEventUnrecPtr e);
 	protected :
-		DefaultTableColumnModelRefPtr _DefaultTableColumnModel;
+		DefaultTableColumnModel* _DefaultTableColumnModel;
 	};
 
 	friend class TableFieldChangeListener;

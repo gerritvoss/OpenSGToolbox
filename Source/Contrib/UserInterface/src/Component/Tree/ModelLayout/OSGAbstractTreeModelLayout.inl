@@ -53,7 +53,7 @@ bool AbstractTreeModelLayout::isTreeModelListenerAttached(TreeModelListenerPtr l
 }
 
 inline
-AbstractTreeModelLayout::ModelListener::ModelListener(AbstractTreeModelLayoutRefPtr TheAbstractTreeModelLayout) : _AbstractTreeModelLayout(TheAbstractTreeModelLayout)
+AbstractTreeModelLayout::ModelListener::ModelListener(AbstractTreeModelLayout* const TheAbstractTreeModelLayout) : _AbstractTreeModelLayout(TheAbstractTreeModelLayout)
 {
 }
 

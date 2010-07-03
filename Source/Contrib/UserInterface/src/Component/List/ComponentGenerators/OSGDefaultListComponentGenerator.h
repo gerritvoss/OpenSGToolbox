@@ -82,9 +82,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultListComponentGenerator : public
 
     /*! \}                                                                 */
 	
-	virtual ComponentRefPtr getListComponent(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus);
+	virtual ComponentTransitPtr getListComponent(List* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus);
 
-	virtual ComponentRefPtr getListComponentFromString(ListRefPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus);
+	virtual ComponentTransitPtr getListComponentFromString(List* const Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus);
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -115,9 +115,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultListComponentGenerator : public
 
     /*! \}                                                                 */
 
-	virtual void applyBordersAndBackground(ComponentRefPtr TheComponent, ListRefPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
-	virtual void applyTextColor(TextComponentRefPtr TheComponent, ListRefPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
-    virtual std::string getText(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
+	virtual void applyBordersAndBackground(Component* const TheComponent, List* const Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
+	virtual void applyTextColor(TextComponent* const TheComponent, List* const Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
+    virtual std::string getText(List* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) const;
 
     /*==========================  PRIVATE  ================================*/
 

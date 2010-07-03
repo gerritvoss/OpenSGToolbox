@@ -90,7 +90,7 @@ void UIFont::initText(void)
     // Create the font
 
     //Check if I have a FilePathAttachment
-    const BoostPath* FilePath(FilePathAttachment::getFilePath(UIFontRefPtr(this)));
+    const BoostPath* FilePath(FilePathAttachment::getFilePath(this));
     if(FilePath != NULL)
     {
         //Create the font from a file

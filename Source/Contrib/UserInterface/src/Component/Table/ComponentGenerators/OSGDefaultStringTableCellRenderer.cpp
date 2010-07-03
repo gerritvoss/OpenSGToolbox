@@ -77,10 +77,10 @@ A DefaultStringTableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr DefaultStringTableCellRenderer::getTableCellRendererComponent(TableRefPtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentTransitPtr DefaultStringTableCellRenderer::getTableCellRendererComponent(Table* const table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
     if(value.empty()){
-        return NULL;
+        return ComponentTransitPtr(NULL);
     }
     LabelRefPtr TheLabel = Label::create();
     std::string tempString;
@@ -120,7 +120,7 @@ ComponentRefPtr DefaultStringTableCellRenderer::getTableCellRendererComponent(Ta
         tempBorder = EmptyBorder::create();
         TheLabel->setBorders(tempBorder);
     }
-    return dynamic_pointer_cast<Component>(TheLabel);
+    return ComponentTransitPtr(TheLabel.get());
 
 
 }

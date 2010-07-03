@@ -155,7 +155,7 @@ void UIViewport::updateLayout(void)
         getViewComponent()->editPosition().setValues(-getViewPosition().x(),-getViewPosition().y());
         updateViewComponentSize();
 
-        produceStateChanged(ChangeEvent::create(UIViewportRefPtr(this), getSystemTime()));
+        produceStateChanged(ChangeEvent::create(this, getSystemTime()));
     }
 }
 
@@ -222,21 +222,21 @@ void UIViewport::changed(ConstFieldMaskArg whichField,
     {
         updateViewComponentSize();
 
-        produceStateChanged(ChangeEvent::create(UIViewportRefPtr(this), getSystemTime()));
+        produceStateChanged(ChangeEvent::create(this, getSystemTime()));
     }
 
     if((whichField & ViewPositionFieldMask) && getViewComponent() != NULL)
     {
         getViewComponent()->editPosition().setValues(-getViewPosition().x(),-getViewPosition().y());
 
-        produceStateChanged(ChangeEvent::create(UIViewportRefPtr(this), getSystemTime()));
+        produceStateChanged(ChangeEvent::create(this, getSystemTime()));
     }
 
     if((whichField & ViewSizeFieldMask) ||
        (whichField & ViewPositionFieldMask) ||
        (whichField & SizeFieldMask))
     {
-        produceStateChanged(ChangeEvent::create(UIViewportRefPtr(this), getSystemTime()));
+        produceStateChanged(ChangeEvent::create(this, getSystemTime()));
     }
 
     if(whichField & SizeFieldMask &&

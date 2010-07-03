@@ -84,9 +84,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBar : public MenuBarBase
 
     /*! \}                                                                 */
 
-    void addMenu(MenuRefPtr Menu);
-    void addMenu(MenuRefPtr Menu, const UInt32& Index);
-    void removeMenu(MenuRefPtr Menu);
+    void addMenu(Menu* const Menu);
+    void addMenu(Menu* const Menu, const UInt32& Index);
+    void removeMenu(Menu* const Menu);
     void removeMenu(const UInt32& Index);
     Menu* getMenu(const UInt32& Index);
     UInt32 getNumMenus(void) const;
@@ -97,6 +97,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBar : public MenuBarBase
 	virtual void updateClipBounds(void);
 
     virtual void detachFromEventProducer(void);
+
+    void setParentWindow(InternalWindow* const parent);
+
+    virtual ComponentContainer* getParentContainer(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -139,7 +143,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBar : public MenuBarBase
                                   public KeyAdapter
 	{
 	public:
-		MenuSelectionListener(MenuBarRefPtr ThePopupMenu);
+		MenuSelectionListener(MenuBar* const ThePopupMenu);
         virtual void selectionChanged(const SelectionEventUnrecPtr e);
         virtual void mouseMoved(const MouseEventUnrecPtr e);
         virtual void mouseDragged(const MouseEventUnrecPtr e);
@@ -149,7 +153,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBar : public MenuBarBase
 		virtual void popupMenuContentsChanged(const PopupMenuEventUnrecPtr e);
         virtual void keyTyped(const KeyEventUnrecPtr e);
 	private:
-		MenuBarRefPtr _MenuBar;
+		MenuBar* _MenuBar;
 	};
 
 	friend class MenuSelectionListener;

@@ -94,7 +94,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainer : public ComponentC
 	void setTopInset ( const Real32 &value );
 	void setBottomInset ( const Real32 &value );
 
-    virtual Int32 getChildIndex(ComponentRefPtr Child);
+    virtual Int32 getChildIndex(Component* const Child);
 
     virtual void updateLayout(void);
 	virtual Vec2f getContentRequestedSize(void) const;
@@ -115,6 +115,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainer : public ComponentC
     virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
 
     virtual void detachFromEventProducer(void);
+
+    virtual void setParentWindow(InternalWindow* const parent);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -143,11 +145,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainer : public ComponentC
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
-	void checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, ComponentRefPtr Comp, bool isMouseContained, ViewportRefPtr TheViewport);
-	virtual void produceMouseExitOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp);
-	virtual void produceMouseEnterOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp);
+	void checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, Component* const Comp, bool isMouseContained, Viewport* const TheViewport);
+	virtual void produceMouseExitOnComponent(const MouseEventUnrecPtr e, Component* const Comp);
+	virtual void produceMouseEnterOnComponent(const MouseEventUnrecPtr e, Component* const Comp);
     void removeMousePresenceOnComponents(void);
     /*==========================  PRIVATE  ================================*/
 

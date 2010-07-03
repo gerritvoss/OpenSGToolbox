@@ -79,7 +79,7 @@ void FieldContainerFieldPathComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr FieldContainerFieldPathComponentGenerator::getTreeComponent(TreeRefPtr Parent, 
+ComponentTransitPtr FieldContainerFieldPathComponentGenerator::getTreeComponent(Tree* const Parent, 
                                                                             const boost::any& Value, 
                                                                             bool IsSelected, 
                                                                             bool Expanded, 
@@ -95,7 +95,7 @@ ComponentRefPtr FieldContainerFieldPathComponentGenerator::getTreeComponent(Tree
     catch (boost::bad_any_cast &)
     {
         //Could not convert to FieldContinerFieldPath
-        return NULL;
+        return ComponentTransitPtr(NULL);
     }
 
     //Get the text for the label
@@ -106,7 +106,7 @@ ComponentRefPtr FieldContainerFieldPathComponentGenerator::getTreeComponent(Tree
         {
             if(ThePair._Container->getType().isDerivedFrom(AttachmentContainer::getClassType()))
             {
-                const Char8* name(getName(dynamic_pointer_cast<AttachmentContainer>(ThePair._Container)));
+                const Char8* name(getName(dynamic_cast<AttachmentContainer*>(ThePair._Container)));
                 if(name)
                 {
                     LabelText += std::string(name) + " ";

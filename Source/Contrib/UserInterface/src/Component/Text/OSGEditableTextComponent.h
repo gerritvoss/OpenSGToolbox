@@ -118,9 +118,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING EditableTextComponent : public Editabl
 
     /*! \}                                                                 */
 
-    virtual LayerRefPtr getDrawnBackground(void) const;
-    virtual LayerRefPtr getDrawnForeground(void) const;
-    virtual BorderRefPtr getDrawnBorder(void) const;
+    virtual Layer* getDrawnBackground(void) const;
+    virtual Layer* getDrawnForeground(void) const;
+    virtual Border* getDrawnBorder(void) const;
 
     void setupCursor(void);
     

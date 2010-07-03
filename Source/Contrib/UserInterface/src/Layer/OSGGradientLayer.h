@@ -90,7 +90,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GradientLayer : public GradientLayerBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const;
+	virtual void draw(Graphics* const TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -120,8 +120,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GradientLayer : public GradientLayerBa
 
     /*! \}                                                                 */
 
-	void drawGradient(const GraphicsWeakPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Real32& Opacity) const; 
-	void drawPad(const GraphicsWeakPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Color4f Color, const Real32& Opacity) const; 
+	void drawGradient(Graphics* const TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Real32& Opacity) const; 
+	void drawPad(Graphics* const TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Color4f Color, const Real32& Opacity) const; 
     
     /*==========================  PRIVATE  ================================*/
 

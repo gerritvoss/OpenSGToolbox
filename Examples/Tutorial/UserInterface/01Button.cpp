@@ -75,7 +75,6 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -93,14 +92,19 @@ void reshape(Vec2f Size);
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
+  protected:
+    WindowEventProducer* _TutorialWindow;
   public:
+    TutorialKeyListener(WindowEventProducer* const win) : _TutorialWindow(win)
+    {
+    }
 
     virtual void keyPressed(const KeyEventUnrecPtr e)
     {
         if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() &
            KeyEvent::KEY_MODIFIER_COMMAND)
         {
-            TutorialWindow->closeWindow();
+            _TutorialWindow->closeWindow();
         }
     }
 
@@ -135,22 +139,27 @@ int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
+    ButtonWeakPtr ExampleButtonWeak;
+    
+    {
 
     // Set up Window
+    WindowEventProducerRefPtr TutorialWindow;
     TutorialWindow = createNativeWindow();
     TutorialWindow->initWindow();
 
     TutorialWindow->setDisplayCallback(display);
     TutorialWindow->setReshapeCallback(reshape);
 
-    TutorialKeyListener TheKeyListener;
+    TutorialKeyListener TheKeyListener(TutorialWindow);
     TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+    SimpleSceneManager TheManager;
+    mgr = &TheManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
+    TheManager.setWindow(TutorialWindow);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -176,6 +185,7 @@ int main(int argc, char **argv)
 
      ******************************************************/
     ButtonRefPtr ExampleButton = OSG::Button::create();
+    ExampleButtonWeak = ExampleButton;
 
     UIFontRefPtr ExampleFont = OSG::UIFont::create();
     ExampleFont->setSize(16);
@@ -309,14 +319,14 @@ int main(int argc, char **argv)
 
     TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
-    mgr->setRoot(scene);
+    TheManager.setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    ViewportRefPtr TutorialViewport = TheManager.getWindow()->getPort(0);
     TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
-    mgr->showAll();
+    TheManager.showAll();
 
 
     //Open Window
@@ -330,6 +340,8 @@ int main(int argc, char **argv)
 
     //Enter main Loop
     TutorialWindow->mainLoop();
+
+    }
 
     osgExit();
 

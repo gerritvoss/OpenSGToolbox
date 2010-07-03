@@ -152,7 +152,6 @@ void WindowsLookAndFeel::initMethod(InitPhase ePhase)
 
 void WindowsLookAndFeel::init(void)
 {
-
     ButtonRefPtr WindowsButton = Button::create();
     LabelRefPtr WindowsLabel = Label::create();
     InternalWindowRefPtr WindowsInternalWindow = InternalWindow::create();
@@ -814,7 +813,6 @@ void WindowsLookAndFeel::init(void)
     WindowsInternalWindow->setOpacity(1.0);
 
     //AbstractWindow
-    WindowsInternalWindow->setDrawingSurface(NULL);
     WindowsInternalWindow->setClosable(true);
     WindowsInternalWindow->setIconable(true);
     WindowsInternalWindow->setMaximizable(true);
@@ -897,7 +895,6 @@ void WindowsLookAndFeel::init(void)
     WindowsDialogWindow->setOpacity(1.0);
 
     //AbstractWindow
-    WindowsDialogWindow->setDrawingSurface(NULL);
     WindowsDialogWindow->setClosable(true);
     WindowsDialogWindow->setIconable(false);
     WindowsDialogWindow->setMaximizable(false);

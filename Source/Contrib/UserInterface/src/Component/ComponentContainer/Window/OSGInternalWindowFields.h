@@ -146,6 +146,77 @@ const Char8 *FieldTraits<InternalWindow *, 0>::getMName<NoRefCountPolicy>(void)
 }
 
 
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+ */
+template <>
+struct FieldTraits<InternalWindow *, 1> :
+    public FieldTraitsFCPtrBase<InternalWindow *, 1>
+{
+  private:
+
+  public:
+    typedef FieldTraits<InternalWindow *, 1>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+};
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 1>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecChildInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 1>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecChildInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 1>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakChildInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 1>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdChildInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 1>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecChildInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 1>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecChildInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 1>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakChildInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 1>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdChildInternalWindowPtr"; 
+}
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribUserInterfaceFieldSFields */
 typedef PointerSField<InternalWindow *,
@@ -174,6 +245,13 @@ typedef PointerMField<InternalWindow *,
 typedef PointerMField<InternalWindow *,
                       NoRefCountPolicy        > MFUncountedInternalWindowPtr;
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef ChildPointerMField<
+          InternalWindow *, 
+          UnrecordedRefCountPolicy,
+          1             > MFUnrecChildInternalWindowPtr;
 
 
 
@@ -214,6 +292,14 @@ struct MFUncountedInternalWindowPtr :
     public PointerMField<InternalWindow *,
                          NoRefCountPolicy        > {};
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecChildInternalWindowPtr :
+    public ChildPointerMField<
+        InternalWindow *, 
+        UnrecordedRefCountPolicy,
+        1             > {};
 
 
 #endif // these are the doxygen hacks

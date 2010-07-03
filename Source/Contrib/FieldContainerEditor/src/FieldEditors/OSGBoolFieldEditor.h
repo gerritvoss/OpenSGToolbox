@@ -128,12 +128,12 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING BoolFieldEditor : public BoolFi
     class CheckboxListener : public ButtonSelectedListener
     {
       public :
-           CheckboxListener(BoolFieldEditor * ptr);
+           CheckboxListener(BoolFieldEditor* const ptr);
            virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e);
            virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e);
 
       protected :
-        BoolFieldEditor *_BoolFieldEditor ;
+        BoolFieldEditor* _BoolFieldEditor ;
     };
 
     friend class CheckboxListener;

@@ -97,19 +97,19 @@ bool Component::getMouseContained(void)
 }
 
 inline
-Component::ComponentUpdater::ComponentUpdater(ComponentRefPtr TheComponent) :
+Component::ComponentUpdater::ComponentUpdater(Component* const TheComponent) :
     _Component(TheComponent)
 {
 }
 
 inline
-Component::ActivateToolTipListener::ActivateToolTipListener(ComponentRefPtr TheComponent) :
+Component::ActivateToolTipListener::ActivateToolTipListener(Component* const TheComponent) :
     _Component(TheComponent)
 {
 }
 
 inline
-Component::DeactivateToolTipListener::DeactivateToolTipListener(ComponentRefPtr TheComponent) :
+Component::DeactivateToolTipListener::DeactivateToolTipListener(Component* const TheComponent) :
     _Component(TheComponent)
 {
 }

@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void DefaultMutableTreeNode::insert(MutableTreeNodeRefPtr child)
+void DefaultMutableTreeNode::insert(MutableTreeNode* const child)
 {
     insert(child, getMFChildrenInternal()->size());
 }

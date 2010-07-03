@@ -78,7 +78,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING EmptyLayer : public EmptyLayerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const;
+	virtual void draw(Graphics* const TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

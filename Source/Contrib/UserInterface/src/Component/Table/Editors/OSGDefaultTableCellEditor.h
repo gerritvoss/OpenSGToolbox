@@ -86,9 +86,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableCellEditor : public Defaul
 
     /*! \}                                                                 */
     
-	virtual ComponentRefPtr getTableCellEditorComponent(TableRefPtr table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column);
+	virtual ComponentTransitPtr getTableCellEditorComponent(Table* const table, const boost::any& value, bool isSelected, UInt32 row, UInt32 column);
 
-    virtual ComponentRefPtr getCellEditor(const boost::any& Value, bool IsSelected);
+    virtual ComponentTransitPtr getCellEditor(const boost::any& Value, bool IsSelected);
 
     //Tells the editor to cancel editing and not accept any partially edited value.
     virtual void cancelCellEditing(void);
@@ -106,7 +106,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableCellEditor : public Defaul
     virtual bool stopCellEditing(void);
 
     //Returns a reference to the editor component.
-    ComponentRefPtr getComponent(void) const;
+    Component* getComponent(void) const;
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -140,14 +140,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableCellEditor : public Defaul
     class DefaultStringEditorListener : public ActionListener,public FocusListener,public KeyAdapter
     {
       public :
-        DefaultStringEditorListener(DefaultTableCellEditorRefPtr TheDefaultTableCellEditor);
+        DefaultStringEditorListener(DefaultTableCellEditor* const TheDefaultTableCellEditor);
 
         virtual void actionPerformed(const ActionEventUnrecPtr e);
         virtual void focusGained(const FocusEventUnrecPtr e);
         virtual void focusLost(const FocusEventUnrecPtr e);
         virtual void keyPressed(const KeyEventUnrecPtr e);
       protected :
-        DefaultTableCellEditorRefPtr _DefaultTableCellEditor;
+        DefaultTableCellEditor* _DefaultTableCellEditor;
     };
 
 	friend class DefaultStringEditorListener;

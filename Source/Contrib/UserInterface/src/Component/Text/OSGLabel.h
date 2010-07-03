@@ -113,7 +113,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Label : public LabelBase
 
     /*! \}                                                                 */
 
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 	void calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2f& TopLeft, Pnt2f& BottomRight);
     
     /*==========================  PRIVATE  ================================*/

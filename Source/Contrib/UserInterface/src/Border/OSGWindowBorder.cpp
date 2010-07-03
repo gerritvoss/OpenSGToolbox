@@ -77,7 +77,7 @@ void WindowBorder::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void WindowBorder::draw(const GraphicsWeakPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
+void WindowBorder::draw(Graphics* const g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
     Real32 LeftIn, RightIn, BottomIn, UpperIn;
     getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
@@ -106,7 +106,7 @@ void WindowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bot
     }
 }
 
-void WindowBorder::activateInternalDrawConstraints(const GraphicsWeakPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void WindowBorder::activateInternalDrawConstraints(Graphics* const g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     Real32 LeftIn, RightIn, BottomIn, UpperIn;
     getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);

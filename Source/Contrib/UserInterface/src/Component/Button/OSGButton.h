@@ -111,17 +111,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
 	bool isMousePressedActionListenerAttached(ActionListenerPtr Listener) const;
     void removeMousePressedActionListener(ActionListenerPtr Listener);
 
-    void setTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setActiveTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setFocusedTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setRolloverTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setDisabledTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setActiveTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setFocusedTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setRolloverTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setDisabledTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
-    void setImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setActiveImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setFocusedImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setRolloverImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setDisabledImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setActiveImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setFocusedImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setRolloverImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setDisabledImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
     
     void setImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setActiveImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
@@ -134,11 +134,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
     bool getActive(void) const;
     void setActive(bool Value);
 
-	virtual void setBorders(BorderRefPtr TheBorder);
+	virtual void setBorders(Border* const TheBorder);
 
-	virtual void setBackgrounds(LayerRefPtr TheBackground);
+	virtual void setBackgrounds(Layer* const TheBackground);
     
-	virtual void setForegrounds(LayerRefPtr TheForeground);
+	virtual void setForegrounds(Layer* const TheForeground);
     
     virtual void setTextColors( const Color4f &value );
 
@@ -175,27 +175,27 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
     virtual void actionPreformed(const ActionEventUnrecPtr e);
     virtual void mousePressedActionPreformed(const ActionEventUnrecPtr e);
 
-	virtual void drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity = 1.0f) const;
-	virtual void drawText(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const TheGraphics, Real32 Opacity = 1.0f) const;
+	virtual void drawText(Graphics* const TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
 
     virtual Color4f getDrawnTextColor(void) const;
-    virtual BorderRefPtr getDrawnBorder(void) const;
-    virtual LayerRefPtr getDrawnBackground(void) const;
-    virtual LayerRefPtr getDrawnForeground(void) const;
-    virtual UIDrawObjectCanvasRefPtr getDrawnDrawObject(void) const;
-	virtual UIDrawObjectCanvasRefPtr getBaseDrawObject(void) const;
+    virtual Border* getDrawnBorder(void) const;
+    virtual Layer* getDrawnBackground(void) const;
+    virtual Layer* getDrawnForeground(void) const;
+    virtual UIDrawObjectCanvas* getDrawnDrawObject(void) const;
+	virtual UIDrawObjectCanvas* getBaseDrawObject(void) const;
     virtual Vec2f getDrawnOffset(void) const;
     
 	class ButtonArmedListener : public MouseAdapter,public UpdateListener
 	{
 	public :
-		ButtonArmedListener(ButtonRefPtr TheButton);
+		ButtonArmedListener(Button* const TheButton);
 		
 		virtual void mouseReleased(const MouseEventUnrecPtr e);
         virtual void update(const UpdateEventUnrecPtr e);
         void reset(void);
 	protected :
-		ButtonRefPtr _Button;
+		Button* _Button;
 	    Time _ActionFireElps;
 	};
 
@@ -204,7 +204,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
 	ButtonArmedListener _ButtonArmedListener;
     bool _Armed;
     
-    static UIDrawObjectCanvasRefPtr createTexturedDrawObjectCanvas(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    static UIDrawObjectCanvasTransitPtr createTexturedDrawObjectCanvas(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
     bool _Active;
     EventConnection   _ArmedUpdateEventConnection;

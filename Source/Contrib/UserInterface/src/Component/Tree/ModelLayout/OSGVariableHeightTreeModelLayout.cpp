@@ -158,7 +158,7 @@ void VariableHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expan
 	//TODO:Implement
 }
 
-void VariableHeightTreeModelLayout::setModel(TreeModelRefPtr newModel)
+void VariableHeightTreeModelLayout::setModel(TreeModel* const newModel)
 {
 	//TODO:Implement
 }

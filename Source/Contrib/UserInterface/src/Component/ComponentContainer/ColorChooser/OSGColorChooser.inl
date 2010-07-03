@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-ColorChooser::ColorSelectedChangeListener::ColorSelectedChangeListener(ColorChooserRefPtr TheColorChooser) :
+ColorChooser::ColorSelectedChangeListener::ColorSelectedChangeListener(ColorChooser* const TheColorChooser) :
 _ColorChooser(TheColorChooser)
 {
 }

@@ -76,7 +76,7 @@ void DiscUIDrawObject::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DiscUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void DiscUIDrawObject::draw(Graphics* const Graphics, Real32 Opacity) const
 {
 	Graphics->drawDisc(getCenter(), getWidth(), getHeight(), getStartAngleRad(), getEndAngleRad(), getSubDivisions(), getCenterColor(), getOuterColor(), getOpacity()*Opacity);
 }

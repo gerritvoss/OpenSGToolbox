@@ -47,13 +47,13 @@ bool ToggleButton::isButtonSelectedListenerAttached(ButtonSelectedListenerPtr Li
 }
 
     inline
-void ToggleButton::setSelectedBorder   ( const BorderRefPtr &value )
+void ToggleButton::setSelectedBorder   ( Border* const value )
 {
     setActiveBorder(value);
 }
 
     inline
-void ToggleButton::setSelectedBackground( const LayerRefPtr &value )
+void ToggleButton::setSelectedBackground( Layer* const value )
 {
     setActiveBackground(value);
 }
@@ -65,19 +65,19 @@ void ToggleButton::setSelectedTextColor( const Color4f &value )
 }
 
     inline
-void ToggleButton::setSelectedDrawObject( const UIDrawObjectCanvasRefPtr &value )
+void ToggleButton::setSelectedDrawObject( UIDrawObjectCanvas* const value )
 {
     setActiveDrawObject(value);
 }
 
     inline
-void ToggleButton::setSelectedImage(ImageRefPtr TheImage, Vec2f Size)
+void ToggleButton::setSelectedImage(Image* const TheImage, Vec2f Size)
 {
     setActiveImage(TheImage, Size);
 }
 
     inline
-void ToggleButton::setSelectedTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size)
+void ToggleButton::setSelectedTexture(TextureObjChunk* const TheTexture, Vec2f Size)
 {
     setActiveTexture(TheTexture, Size);
 }

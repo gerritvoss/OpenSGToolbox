@@ -235,7 +235,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
     }
 }
 
-void FixedHeightTreeModelLayout::setModel(TreeModelRefPtr newModel)
+void FixedHeightTreeModelLayout::setModel(TreeModel* const newModel)
 {
 	//TODO:Implement
     AbstractTreeModelLayout::setModel(newModel);

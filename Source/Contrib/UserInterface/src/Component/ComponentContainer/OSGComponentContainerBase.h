@@ -110,8 +110,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainerBase : public Compon
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef MFUnrecComponentPtr MFChildrenType;
-    typedef SFUnrecLayoutPtr  SFLayoutType;
+    typedef MFUnrecChildComponentPtr MFChildrenType;
+    typedef SFUnrecChildLayoutPtr SFLayoutType;
     typedef SFVec4f           SFInsetType;
 
     /*---------------------------------------------------------------------*/
@@ -137,10 +137,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainerBase : public Compon
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const MFUnrecComponentPtr *getMFChildren       (void) const;
-                  MFUnrecComponentPtr *editMFChildren       (void);
-            const SFUnrecLayoutPtr    *getSFLayout         (void) const;
-                  SFUnrecLayoutPtr    *editSFLayout         (void);
+            const MFUnrecChildComponentPtr *getMFChildren       (void) const;
+            const SFUnrecChildLayoutPtr *getSFLayout         (void) const;
+                  SFUnrecChildLayoutPtr *editSFLayout         (void);
 
                   SFVec4f             *editSFInset          (void);
             const SFVec4f             *getSFInset           (void) const;
@@ -172,10 +171,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainerBase : public Compon
     /*! \{                                                                 */
 
     void pushToChildren            (Component * const value   );
-    void assignChildren           (const MFUnrecComponentPtr &value);
+    void assignChildren           (const MFUnrecChildComponentPtr &value);
+    void clearChildren              (void                         );
+    void insertIntoChildren      (UInt32               uiIndex,
+                                             Component * const value   );
+    void replaceInChildren  (      UInt32         uiIndex,
+                                             Component * const value   );
+    void replaceObjInChildren (Component * const pOldElem,
+                                             Component * const pNewElem);
     void removeFromChildren (UInt32               uiIndex );
     void removeObjFromChildren(Component * const value   );
-    void clearChildren              (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,8 +208,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainerBase : public Compon
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFUnrecComponentPtr _mfChildren;
-    SFUnrecLayoutPtr  _sfLayout;
+    MFUnrecChildComponentPtr _mfChildren;
+    SFUnrecChildLayoutPtr _sfLayout;
     SFVec4f           _sfInset;
 
     /*! \}                                                                 */
@@ -228,6 +233,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainerBase : public Compon
     /*! \{                                                                 */
 
     void onCreate(const ComponentContainer *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Child linking                                                */
+    /*! \{                                                                 */
+
+    virtual bool unlinkChild(FieldContainer * const pChild,
+                             UInt16           const childFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

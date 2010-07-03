@@ -76,7 +76,7 @@ void PolygonUIDrawObject::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void PolygonUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void PolygonUIDrawObject::draw(Graphics* const Graphics, Real32 Opacity) const
 {
 	Graphics->drawPolygon(*getMFVerticies(), getColor(), getOpacity()*Opacity);
 }

@@ -129,7 +129,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING BoundedRangeSpinnerModel
     bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
     virtual void removeChangeListener(ChangeListenerPtr Listener);
 
-    BoundedRangeModelRefPtr getBoundedRangeModel(void);
+    BoundedRangeModel* getBoundedRangeModel(void);
 
     SpinnerModelPtr getSpinnerModel(void);
 

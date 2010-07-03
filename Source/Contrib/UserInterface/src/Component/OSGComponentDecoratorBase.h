@@ -209,10 +209,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
 
     virtual       SFReal32            *editSFOpacity        (void);
     virtual const SFReal32            *getSFOpacity         (void) const;
-    virtual const SFUnrecComponentContainerPtr *getSFParentContainer(void) const;
-    virtual       SFUnrecComponentContainerPtr *editSFParentContainer(void);
-    virtual const SFUnrecInternalWindowPtr *getSFParentWindow   (void) const;
-    virtual       SFUnrecInternalWindowPtr *editSFParentWindow   (void);
 
     virtual       SFBool              *editSFClipping       (void);
     virtual const SFBool              *getSFClipping        (void) const;
@@ -285,10 +281,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     virtual       Real32              &editOpacity        (void);
     virtual       Real32               getOpacity         (void) const;
 
-    virtual       ComponentContainer * getParentContainer(void) const;
-
-    virtual       InternalWindow * getParentWindow   (void) const;
-
     virtual       bool                &editClipping       (void);
     virtual       bool                 getClipping        (void) const;
 
@@ -332,8 +324,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     virtual void setRolloverBackground(Layer * const value);
     virtual void setToolTipText    (const std::string &value);
     virtual void setOpacity        (const Real32 value);
-    virtual void setParentContainer(ComponentContainer * const value);
-    virtual void setParentWindow   (InternalWindow * const value);
     virtual void setClipping       (const bool value);
     virtual void setPopupMenu      (PopupMenu * const value);
     virtual void setFocusedForeground(Layer * const value);
@@ -438,6 +428,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
@@ -490,8 +491,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     EditFieldHandlePtr editHandleOpacity        (void);
     GetFieldHandlePtr  getHandleParentContainer (void) const;
     EditFieldHandlePtr editHandleParentContainer(void);
-    GetFieldHandlePtr  getHandleParentWindow    (void) const;
-    EditFieldHandlePtr editHandleParentWindow   (void);
     GetFieldHandlePtr  getHandleClipping        (void) const;
     EditFieldHandlePtr editHandleClipping       (void);
     GetFieldHandlePtr  getHandlePopupMenu       (void) const;

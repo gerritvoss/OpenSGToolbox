@@ -80,7 +80,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Border : public BorderBase
 
     /*! \}                                                                 */
 
-	virtual void draw(const GraphicsWeakPtr g,
+	virtual void draw(Graphics* const g,
                       const Real32 x,
                       const Real32 y ,
                       const Real32 Width,
@@ -93,13 +93,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Border : public BorderBase
                            Real32& Top,
                            Real32& Bottom) const = 0;
 
-	virtual void activateInternalDrawConstraints(const GraphicsWeakPtr g,
+	virtual void activateInternalDrawConstraints(Graphics* const g,
                                                  const Real32& x,
                                                  const Real32& y ,
                                                  const Real32& Width,
                                                  const Real32& Height) const;
 
-	virtual void deactivateInternalDrawConstraints(const GraphicsWeakPtr g,
+	virtual void deactivateInternalDrawConstraints(Graphics* const g,
                                                    const Real32& x,
                                                    const Real32& y ,
                                                    const Real32& Width,

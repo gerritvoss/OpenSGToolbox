@@ -83,6 +83,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Titlebar : public TitlebarBase
 
 	void setTitle(const std::string& Title);
 	std::string getTitle(void) const;
+
+    void setParentWindow(InternalWindow* const parent);
+
+    virtual ComponentContainer* getParentContainer(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

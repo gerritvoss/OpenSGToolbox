@@ -59,6 +59,7 @@
 #include "OSGPopupMenu.h"
 #include "OSGScrollBar.h"
 #include "OSGLayoutConstraints.h"
+#include "OSGInternalWindow.h"
 
 #include "OSGRotatedComponent.h"
 
@@ -112,6 +113,20 @@ void Component::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+ComponentContainer* Component::getParentContainer(void) const
+{
+    return dynamic_cast<ComponentContainer*>(_sfParentContainer.getValue());
+}
+
+InternalWindow* Component::getParentWindow(void) const
+{
+    return _ParentWindow;
+}
+
+void Component::setParentWindow(InternalWindow* const parent)
+{
+    _ParentWindow = parent;
+}
 
 EventConnection Component::addKeyListener(KeyListenerPtr Listener)
 {
@@ -276,7 +291,7 @@ Vec2f Component::getBorderingLength(void) const
     return (BoundsBottomRight - BoundsTopLeft) - (InsideBorderBottomRight - InsideBorderTopLeft);
 }
 
-void Component::setBorders(BorderRefPtr TheBorder)
+void Component::setBorders(Border* const TheBorder)
 {
     setBorder(TheBorder);
     setDisabledBorder(TheBorder);
@@ -284,7 +299,7 @@ void Component::setBorders(BorderRefPtr TheBorder)
     setRolloverBorder(TheBorder);
 }
 
-void Component::setBackgrounds(LayerRefPtr TheBackground)
+void Component::setBackgrounds(Layer* const TheBackground)
 {
     setBackground(TheBackground);
     setDisabledBackground(TheBackground);
@@ -293,7 +308,7 @@ void Component::setBackgrounds(LayerRefPtr TheBackground)
 }
 
 
-void Component::setForegrounds(LayerRefPtr TheForeground)
+void Component::setForegrounds(Layer* const TheForeground)
 {
     setForeground(TheForeground);
     setDisabledForeground(TheForeground);
@@ -301,7 +316,7 @@ void Component::setForegrounds(LayerRefPtr TheForeground)
     setRolloverForeground(TheForeground);
 }
 
-BorderRefPtr Component::getDrawnBorder(void) const
+Border* Component::getDrawnBorder(void) const
 {
     if(getEnabled())
     {
@@ -324,7 +339,7 @@ BorderRefPtr Component::getDrawnBorder(void) const
     }
 }
 
-LayerRefPtr Component::getDrawnBackground(void) const
+Layer* Component::getDrawnBackground(void) const
 {
     if(getEnabled())
     {
@@ -347,7 +362,7 @@ LayerRefPtr Component::getDrawnBackground(void) const
     }
 }
 
-LayerRefPtr Component::getDrawnForeground(void) const
+Layer* Component::getDrawnForeground(void) const
 {
     if(getEnabled())
     {
@@ -373,7 +388,7 @@ LayerRefPtr Component::getDrawnForeground(void) const
 bool Component::isContained(const Pnt2f& p, bool TestAgainstClipBounds) const
 {
     Pnt2f PointInCompSpace(DrawingSurfaceToComponent(p,this));
-    BorderRefPtr DrawnBorder(getDrawnBorder());
+    Border* DrawnBorder(getDrawnBorder());
     Pnt2f TopLeft, BottomRight;
     if(TestAgainstClipBounds && getClipping())
     {
@@ -400,10 +415,10 @@ bool Component::isContained(const Pnt2f& p, bool TestAgainstClipBounds) const
 Pnt2f Component::getToolTipLocation(Pnt2f MousePosition)
 {
     //TODO:Implement
-    return DrawingSurfaceToComponent(MousePosition,ComponentRefPtr(this)) + Vec2f(5,20);
+    return DrawingSurfaceToComponent(MousePosition,this) + Vec2f(5,20);
 }
 
-ToolTipRefPtr Component::createToolTip(void)
+ToolTipTransitPtr Component::createToolTip(void)
 {
     return ToolTip::create();
 }
@@ -438,7 +453,7 @@ void Component::getBoundsRenderingSurfaceSpace(Pnt2f& TopLeft, Pnt2f& BottomRigh
     BottomRight = TopLeft + getSize();
 }
 
-void Component::drawBorder(const GraphicsWeakPtr TheGraphics, const BorderRefPtr Border, Real32 Opacity) const
+void Component::drawBorder(Graphics* const TheGraphics, const Border* Border, Real32 Opacity) const
 {
     if(Border != NULL)
     {
@@ -447,7 +462,7 @@ void Component::drawBorder(const GraphicsWeakPtr TheGraphics, const BorderRefPtr
     }
 }
 
-void Component::drawBackground(const GraphicsWeakPtr TheGraphics, const LayerRefPtr Background, Real32 Opacity) const
+void Component::drawBackground(Graphics* const TheGraphics, const Layer* Background, Real32 Opacity) const
 {
     //Draw the Background on the Inside of my border
     if(Background != NULL)
@@ -458,7 +473,7 @@ void Component::drawBackground(const GraphicsWeakPtr TheGraphics, const LayerRef
     }
 }
 
-void Component::drawForeground(const GraphicsWeakPtr TheGraphics, const LayerRefPtr Foreground, Real32 Opacity) const
+void Component::drawForeground(Graphics* const TheGraphics, const Layer* Foreground, Real32 Opacity) const
 {
     //Draw the Foreground on the Inside of my border
     if(Foreground != NULL)
@@ -469,7 +484,7 @@ void Component::drawForeground(const GraphicsWeakPtr TheGraphics, const LayerRef
     }
 }
 
-bool Component::setupClipping(const GraphicsWeakPtr Graphics) const
+bool Component::setupClipping(Graphics* const Graphics) const
 {
 
     if(getClipping())
@@ -509,7 +524,7 @@ bool Component::setupClipping(const GraphicsWeakPtr Graphics) const
     return true;
 }
 
-void Component::draw(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void Component::draw(Graphics* const TheGraphics, Real32 Opacity) const
 {
     if (!getVisible())
         return;
@@ -523,7 +538,7 @@ void Component::draw(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
     {
 
         //Activate My Border Drawing constraints
-        BorderRefPtr DrawnBorder = getDrawnBorder();
+        Border* DrawnBorder = getDrawnBorder();
         if(DrawnBorder != NULL)
         {
             DrawnBorder->activateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
@@ -551,7 +566,7 @@ void Component::draw(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 }
 
 
-void Component::drawUnclipped(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void Component::drawUnclipped(Graphics* const TheGraphics, Real32 Opacity) const
 {
     //Draw Border
     drawBorder(TheGraphics, getDrawnBorder(), Opacity);
@@ -634,7 +649,7 @@ void Component::mousePressed(const MouseEventUnrecPtr e)
     if(e->getButton() == MouseEvent::BUTTON3
        && getPopupMenu() != NULL)
     {
-        getPopupMenu()->setInvoker(ComponentRefPtr(this));
+        getPopupMenu()->setInvoker(this);
         getPopupMenu()->setVisible(true);
         getPopupMenu()->setPosition(ViewportToComponent(e->getLocation(),getParentWindow(),e->getViewport()));
 
@@ -651,9 +666,9 @@ void Component::mouseReleased(const MouseEventUnrecPtr e)
 void Component::mouseMoved(const MouseEventUnrecPtr e)
 {
 
-    if(getParentWindow() != NULL && getParentWindow()->getDrawingSurface()!=NULL&&getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+    if(getParentWindow() != NULL && getParentWindow()->getParentDrawingSurface()!=NULL&&getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
-        getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(queryCursor(e->getLocation()));
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->setCursorType(queryCursor(e->getLocation()));
     }
     produceMouseMoved(e);
 }
@@ -698,6 +713,9 @@ void Component::produceMouseWheelMoved(const MouseWheelEventUnrecPtr e)
 {
     for(MouseWheelListenerSetConstItor SetItor(_MouseWheelListeners.begin()) ; SetItor != _MouseWheelListeners.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->mouseWheelMoved(e);
     }
     _Producer.produceEvent(MouseWheelMovedMethodId,e);
@@ -707,6 +725,9 @@ void Component::produceMouseMoved(const MouseEventUnrecPtr e)
 {
     for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->mouseMoved(e);
     }
     _Producer.produceEvent(MouseMovedMethodId,e);
@@ -726,6 +747,9 @@ void Component::produceMouseClicked(const MouseEventUnrecPtr e)
     MouseListenerSet ListenerSet(_MouseListeners);
     for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->mouseClicked(e);
     }
     _Producer.produceEvent(MouseClickedMethodId,e);
@@ -736,6 +760,9 @@ void Component::produceMouseEntered(const MouseEventUnrecPtr e)
     MouseListenerSet ListenerSet(_MouseListeners);
     for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->mouseEntered(e);
     }
     _Producer.produceEvent(MouseEnteredMethodId,e);
@@ -746,6 +773,9 @@ void Component::produceMouseExited(const MouseEventUnrecPtr e)
     MouseListenerSet ListenerSet(_MouseListeners);
     for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->mouseExited(e);
     }
     _Producer.produceEvent(MouseExitedMethodId,e);
@@ -756,6 +786,9 @@ void Component::produceMousePressed(const MouseEventUnrecPtr e)
     MouseListenerSet ListenerSet(_MouseListeners);
     for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->mousePressed(e);
     }
     _Producer.produceEvent(MousePressedMethodId,e);
@@ -766,6 +799,9 @@ void Component::produceMouseReleased(const MouseEventUnrecPtr e)
     MouseListenerSet ListenerSet(_MouseListeners);
     for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->mouseReleased(e);
     }
     _Producer.produceEvent(MouseReleasedMethodId,e);
@@ -776,6 +812,9 @@ void Component::produceKeyPressed(const KeyEventUnrecPtr e)
     KeyListenerSet ListenerSet(_KeyListeners);
     for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->keyPressed(e);
     }
     _Producer.produceEvent(KeyPressedMethodId,e);
@@ -785,6 +824,9 @@ void Component::produceKeyReleased(const KeyEventUnrecPtr e)
 {
     for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->keyReleased(e);
     }
     _Producer.produceEvent(KeyReleasedMethodId,e);
@@ -794,6 +836,9 @@ void Component::produceKeyTyped(const KeyEventUnrecPtr e)
 {
     for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
     {
+        //If the event is consumed then stop sending the event
+        if(e->isConsumed()) break;
+
         (*SetItor)->keyTyped(e);
     }
     _Producer.produceEvent(KeyTypedMethodId,e);
@@ -873,7 +918,7 @@ void  Component::produceComponentDisabled(const ComponentEventUnrecPtr e)
     _Producer.produceEvent(ComponentDisabledMethodId,e);
 }
 
-bool Component::giveFocus(ComponentRefPtr NewFocusedComponent, bool Temporary)
+bool Component::giveFocus(Component* const NewFocusedComponent, bool Temporary)
 {
     if(this == NewFocusedComponent)
     {
@@ -882,7 +927,7 @@ bool Component::giveFocus(ComponentRefPtr NewFocusedComponent, bool Temporary)
     else
     {
         setFocused(false);
-        focusLost(FocusEvent::create(ComponentRefPtr(this),getSystemTime(),Temporary, NewFocusedComponent));
+        focusLost(FocusEvent::create(this,getSystemTime(),Temporary, NewFocusedComponent));
         return true;
     }
 }
@@ -991,6 +1036,7 @@ void Component::scrollToPoint(const Pnt2f& PointInComponent)
 Component::Component(void) :
     Inherited(),
     _MouseInComponentLastMouse(false),
+    _ParentWindow(NULL),
     _TimeSinceMouseEntered(0.0),
     _ComponentUpdater(this),
     _ActivateToolTipListener(this),
@@ -1001,6 +1047,7 @@ Component::Component(void) :
 Component::Component(const Component &source) :
     Inherited(source),
     _MouseInComponentLastMouse(false),
+    _ParentWindow(NULL),
     _TimeSinceMouseEntered(0.0),
     _ComponentUpdater(this),
     _ActivateToolTipListener(this),
@@ -1043,32 +1090,32 @@ void Component::changed(ConstFieldMaskArg whichField,
 
     if( (whichField & SizeFieldMask) )
     {
-        produceComponentResized( ComponentEvent::create(ComponentRefPtr(this),getSystemTime()) );
+        produceComponentResized( ComponentEvent::create(this,getSystemTime()) );
     }
     if( (whichField & PositionFieldMask) )
     {
-        produceComponentMoved( ComponentEvent::create(ComponentRefPtr(this),getSystemTime()) );
+        produceComponentMoved( ComponentEvent::create(this,getSystemTime()) );
     }
     if( (whichField & EnabledFieldMask) )
     {
         if(getEnabled())
         {
-            produceComponentEnabled( ComponentEvent::create(ComponentRefPtr(this),getSystemTime()) );    
+            produceComponentEnabled( ComponentEvent::create(this,getSystemTime()) );    
         }
         else
         {
-            produceComponentDisabled( ComponentEvent::create(ComponentRefPtr(this),getSystemTime()) );    
+            produceComponentDisabled( ComponentEvent::create(this,getSystemTime()) );    
         }
     }
     if( (whichField & VisibleFieldMask) )
     {
         if(getVisible())
         {
-            produceComponentVisible( ComponentEvent::create(ComponentRefPtr(this),getSystemTime()) );    
+            produceComponentVisible( ComponentEvent::create(this,getSystemTime()) );    
         }
         else
         {
-            produceComponentHidden( ComponentEvent::create(ComponentRefPtr(this),getSystemTime()) );    
+            produceComponentHidden( ComponentEvent::create(this,getSystemTime()) );    
         }
     }
 
@@ -1087,10 +1134,10 @@ void Component::changed(ConstFieldMaskArg whichField,
     if((whichField & CursorFieldMask) &&
        _MouseInComponentLastMouse &&
        getParentWindow() != NULL &&
-       getParentWindow()->getDrawingSurface() != NULL &&
-       getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+       getParentWindow()->getParentDrawingSurface() != NULL &&
+       getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
-        getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(getCursor());
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->setCursorType(getCursor());
     }
 }
 
@@ -1118,10 +1165,10 @@ void Component::ComponentUpdater::update(const UpdateEventUnrecPtr e)
         ToolTipRefPtr TheToolTip = _Component->createToolTip();
         TheToolTip->setTippedComponent(_Component);
         if(_Component->getParentWindow() != NULL &&
-           _Component->getParentWindow()->getDrawingSurface() != NULL)
+           _Component->getParentWindow()->getParentDrawingSurface() != NULL)
         {
             TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(
-                                                                                    _Component->getParentWindow()->getDrawingSurface()->getMousePosition()), _Component));
+                                                                                    _Component->getParentWindow()->getParentDrawingSurface()->getMousePosition()), _Component));
         }
         else
         {
@@ -1146,18 +1193,18 @@ void Component::ActivateToolTipListener::mouseEntered(const MouseEventUnrecPtr e
 {
     _Component->_TimeSinceMouseEntered = 0.0f;
     if( _Component->getParentWindow() != NULL &&
-        _Component->getParentWindow()->getDrawingSurface() != NULL &&
-        _Component->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+        _Component->getParentWindow()->getParentDrawingSurface() != NULL &&
+        _Component->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
-        _Component->getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_Component->_ComponentUpdater));
+        _Component->getParentWindow()->getParentDrawingSurface()->getEventProducer()->addUpdateListener(&(_Component->_ComponentUpdater));
     }
 }
 
 void Component::ActivateToolTipListener::mouseExited(const MouseEventUnrecPtr e)
 {
     if( _Component->getParentWindow() != NULL &&
-        _Component->getParentWindow()->getDrawingSurface() != NULL &&
-        _Component->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+        _Component->getParentWindow()->getParentDrawingSurface() != NULL &&
+        _Component->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
         disconnect();
     }
@@ -1165,7 +1212,7 @@ void Component::ActivateToolTipListener::mouseExited(const MouseEventUnrecPtr e)
 
 void Component::ActivateToolTipListener::disconnect(void)
 {
-    _Component->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&(_Component->_ComponentUpdater));
+    _Component->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(&(_Component->_ComponentUpdater));
 }
 
 void Component::ActivateToolTipListener::mousePressed(const MouseEventUnrecPtr e)

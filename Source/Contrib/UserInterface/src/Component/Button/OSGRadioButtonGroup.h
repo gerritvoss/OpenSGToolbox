@@ -80,12 +80,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RadioButtonGroup : public RadioButtonG
 
     /*! \}                                                                 */
 
-    void addButton(RadioButtonRefPtr Button);
-    void removeButton(RadioButtonRefPtr Button);
+    void addButton(RadioButton* const Button);
+    void removeButton(RadioButton* const Button);
     void removeButton(UInt32 Index);
     UInt32 getButtonCount(void) const;
 
-    bool isSelected(const RadioButtonRefPtr Button) const;
+    bool isSelected(const RadioButton* const Button) const;
 	virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e);
     virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e);
 

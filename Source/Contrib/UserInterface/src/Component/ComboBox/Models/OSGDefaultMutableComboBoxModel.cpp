@@ -113,7 +113,7 @@ void DefaultMutableComboBoxModel::setSelectedItem(const Int32& index)
 
 		if(_SelectedIndex != PreviousIndex)
 		{
-			produceSelectionChanged(DefaultMutableComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
+			produceSelectionChanged(this, _SelectedIndex, PreviousIndex);
 		}
 	}
 }
@@ -142,7 +142,7 @@ void DefaultMutableComboBoxModel::setSelectedItem(const boost::any& anObject)
 
 		if(_SelectedIndex != PreviousIndex)
 		{
-			produceSelectionChanged(DefaultMutableComboBoxModelRefPtr(this), _SelectedIndex, PreviousIndex);
+			produceSelectionChanged(this, _SelectedIndex, PreviousIndex);
 		}
 	}
     */
@@ -151,7 +151,7 @@ void DefaultMutableComboBoxModel::setSelectedItem(const boost::any& anObject)
 void DefaultMutableComboBoxModel::addElement(const boost::any& anObject)
 {
 	_FieldList.push_back(anObject);
-	produceListDataIntervalAdded(DefaultMutableComboBoxModelRefPtr(this),_FieldList.size()-1,_FieldList.size()-1);
+	produceListDataIntervalAdded(this,_FieldList.size()-1,_FieldList.size()-1);
 }
 
 void DefaultMutableComboBoxModel::insertElementAt(const boost::any& anObject, const UInt32& index)
@@ -159,7 +159,7 @@ void DefaultMutableComboBoxModel::insertElementAt(const boost::any& anObject, co
 	if(index < _FieldList.size())
 	{
 		_FieldList.insert(_FieldList.begin()+index, anObject);
-		produceListDataIntervalAdded(DefaultMutableComboBoxModelRefPtr(this),index,index);
+		produceListDataIntervalAdded(this,index,index);
 	}
 	else
 	{
@@ -171,7 +171,7 @@ void DefaultMutableComboBoxModel::removeAllElements(void)
 {
 	UInt32 Size(_FieldList.size());
 	_FieldList.clear();
-	produceListDataIntervalRemoved(DefaultMutableComboBoxModelRefPtr(this),0,Size-1);
+	produceListDataIntervalRemoved(this,0,Size-1);
 }
 
 void DefaultMutableComboBoxModel::removeElement(const boost::any& anObject)
@@ -183,7 +183,7 @@ void DefaultMutableComboBoxModel::removeElement(const boost::any& anObject)
 	{
 		UInt32 Index(SearchItor - _FieldList.begin());
 		_FieldList.erase(SearchItor);
-		produceListDataIntervalRemoved(DefaultMutableComboBoxModelRefPtr(this),Index,Index);
+		produceListDataIntervalRemoved(this,Index,Index);
 	}*/
 
 
@@ -194,7 +194,7 @@ void DefaultMutableComboBoxModel::removeElementAt(const UInt32& index)
 	if(index < _FieldList.size())
 	{
 		_FieldList.erase(_FieldList.begin()+index);
-		produceListDataIntervalRemoved(DefaultMutableComboBoxModelRefPtr(this),index,index);
+		produceListDataIntervalRemoved(this,index,index);
 	}
 }
 

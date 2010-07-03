@@ -164,9 +164,6 @@ void ComponentBase::execSync (      ComponentBase *pFrom,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
         _sfParentContainer.syncWith(pFrom->_sfParentContainer);
 
-    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
-        _sfParentWindow.syncWith(pFrom->_sfParentWindow);
-
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
         _sfClipping.syncWith(pFrom->_sfClipping);
 

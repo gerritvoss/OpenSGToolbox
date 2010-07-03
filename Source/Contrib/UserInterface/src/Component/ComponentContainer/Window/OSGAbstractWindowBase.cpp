@@ -58,7 +58,7 @@
 
 
 
-#include "OSGUIDrawingSurface.h"        // DrawingSurface Class
+#include "OSGFieldContainer.h"          // ParentDrawingSurface Class
 #include "OSGUIDrawObjectCanvas.h"      // DesktopIcon Class
 
 #include "OSGAbstractWindowBase.h"
@@ -86,8 +86,8 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var UIDrawingSurface * AbstractWindowBase::_sfDrawingSurface
-    
+/*! \var FieldContainer * AbstractWindowBase::_sfParentDrawingSurface
+    The DrawingSurface this Window is contained in.
 */
 
 /*! \var bool            AbstractWindowBase::_sfClosable
@@ -190,15 +190,15 @@ void AbstractWindowBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecUIDrawingSurfacePtr::Description(
-        SFUnrecUIDrawingSurfacePtr::getClassType(),
-        "DrawingSurface",
-        "",
-        DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
+    pDesc = new SFParentFieldContainerPtr::Description(
+        SFParentFieldContainerPtr::getClassType(),
+        "ParentDrawingSurface",
+        "The DrawingSurface this Window is contained in.\n",
+        ParentDrawingSurfaceFieldId, ParentDrawingSurfaceFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleDrawingSurface),
-        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleDrawingSurface));
+        static_cast     <FieldEditMethodSig>(&AbstractWindow::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&AbstractWindow::invalidGetField));
 
     oType.addInitialDesc(pDesc);
 
@@ -448,16 +448,18 @@ AbstractWindowBase::TypeObject AbstractWindowBase::_type(
     "    parentProducer=\"Component\"\n"
     "    >\n"
     "    A UI Abstract Window.\n"
-    "    <Field\n"
-    "        name=\"DrawingSurface\"\n"
-    "        type=\"UIDrawingSurface\"\n"
-    "        category=\"pointer\"\n"
-    "        cardinality=\"single\"\n"
-    "        visibility=\"external\"\n"
-    "        access=\"public\"\n"
-    "        defaultValue=\"NULL\"\n"
-    "        >\n"
-    "    </Field>\n"
+    "\t<Field\n"
+    "\t   name=\"ParentDrawingSurface\"\n"
+    "\t   type=\"FieldContainer\"\n"
+    "\t   cardinality=\"single\"\n"
+    "\t   visibility=\"external\"\n"
+    "\t   access=\"none\"\n"
+    "       doRefCount=\"false\"\n"
+    "       passFieldMask=\"true\"\n"
+    "       category=\"parentpointer\"\n"
+    "\t   >\n"
+    "\t  The DrawingSurface this Window is contained in.\n"
+    "\t</Field>\n"
     "    <Field\n"
     "        name=\"Closable\"\n"
     "        type=\"bool\"\n"
@@ -770,18 +772,6 @@ UInt32 AbstractWindowBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-//! Get the AbstractWindow::_sfDrawingSurface field.
-const SFUnrecUIDrawingSurfacePtr *AbstractWindowBase::getSFDrawingSurface(void) const
-{
-    return &_sfDrawingSurface;
-}
-
-SFUnrecUIDrawingSurfacePtr *AbstractWindowBase::editSFDrawingSurface (void)
-{
-    editSField(DrawingSurfaceFieldMask);
-
-    return &_sfDrawingSurface;
-}
 
 SFBool *AbstractWindowBase::editSFClosable(void)
 {
@@ -1027,9 +1017,9 @@ UInt32 AbstractWindowBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
+    if(FieldBits::NoField != (ParentDrawingSurfaceFieldMask & whichField))
     {
-        returnValue += _sfDrawingSurface.getBinSize();
+        returnValue += _sfParentDrawingSurface.getBinSize();
     }
     if(FieldBits::NoField != (ClosableFieldMask & whichField))
     {
@@ -1112,9 +1102,9 @@ void AbstractWindowBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
+    if(FieldBits::NoField != (ParentDrawingSurfaceFieldMask & whichField))
     {
-        _sfDrawingSurface.copyToBin(pMem);
+        _sfParentDrawingSurface.copyToBin(pMem);
     }
     if(FieldBits::NoField != (ClosableFieldMask & whichField))
     {
@@ -1195,9 +1185,9 @@ void AbstractWindowBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
+    if(FieldBits::NoField != (ParentDrawingSurfaceFieldMask & whichField))
     {
-        _sfDrawingSurface.copyFromBin(pMem);
+        _sfParentDrawingSurface.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ClosableFieldMask & whichField))
     {
@@ -1280,7 +1270,7 @@ void AbstractWindowBase::copyFromBin(BinaryDataHandler &pMem,
 
 AbstractWindowBase::AbstractWindowBase(void) :
     Inherited(),
-    _sfDrawingSurface         (NULL),
+    _sfParentDrawingSurface   (NULL),
     _sfClosable               (bool(true)),
     _sfIconable               (bool(true)),
     _sfMaximizable            (bool(true)),
@@ -1305,7 +1295,7 @@ AbstractWindowBase::AbstractWindowBase(void) :
 
 AbstractWindowBase::AbstractWindowBase(const AbstractWindowBase &source) :
     Inherited(source),
-    _sfDrawingSurface         (NULL),
+    _sfParentDrawingSurface   (NULL),
     _sfClosable               (source._sfClosable               ),
     _sfIconable               (source._sfIconable               ),
     _sfMaximizable            (source._sfMaximizable            ),
@@ -1333,6 +1323,77 @@ AbstractWindowBase::AbstractWindowBase(const AbstractWindowBase &source) :
 AbstractWindowBase::~AbstractWindowBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
+
+bool AbstractWindowBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
+{
+    if(parentFieldId == ParentDrawingSurfaceFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            FieldContainer *pOldParent =
+                _sfParentDrawingSurface.getValue         ();
+
+            UInt16 oldChildFieldId =
+                _sfParentDrawingSurface.getParentFieldPos();
+
+            if(pOldParent != NULL)
+            {
+                pOldParent->unlinkChild(this, oldChildFieldId);
+            }
+
+            editSField(ParentDrawingSurfaceFieldMask);
+
+            _sfParentDrawingSurface.setValue(static_cast<FieldContainer *>(pParent), childFieldId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
+}
+
+bool AbstractWindowBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
+{
+    if(parentFieldId == ParentDrawingSurfaceFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            if(_sfParentDrawingSurface.getValue() == pParent)
+            {
+                editSField(ParentDrawingSurfaceFieldMask);
+
+                _sfParentDrawingSurface.setValue(NULL, 0xFFFF);
+
+                return true;
+            }
+
+            FWARNING(("AbstractWindowBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
 
 void AbstractWindowBase::onCreate(const AbstractWindow *source)
 {
@@ -1342,36 +1403,20 @@ void AbstractWindowBase::onCreate(const AbstractWindow *source)
     {
         AbstractWindow *pThis = static_cast<AbstractWindow *>(this);
 
-        pThis->setDrawingSurface(source->getDrawingSurface());
-
         pThis->setDesktopIcon(source->getDesktopIcon());
     }
 }
 
-GetFieldHandlePtr AbstractWindowBase::getHandleDrawingSurface  (void) const
+GetFieldHandlePtr AbstractWindowBase::getHandleParentDrawingSurface (void) const
 {
-    SFUnrecUIDrawingSurfacePtr::GetHandlePtr returnValue(
-        new  SFUnrecUIDrawingSurfacePtr::GetHandle(
-             &_sfDrawingSurface,
-             this->getType().getFieldDesc(DrawingSurfaceFieldId),
-             const_cast<AbstractWindowBase *>(this)));
+    SFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
-EditFieldHandlePtr AbstractWindowBase::editHandleDrawingSurface (void)
+EditFieldHandlePtr AbstractWindowBase::editHandleParentDrawingSurface(void)
 {
-    SFUnrecUIDrawingSurfacePtr::EditHandlePtr returnValue(
-        new  SFUnrecUIDrawingSurfacePtr::EditHandle(
-             &_sfDrawingSurface,
-             this->getType().getFieldDesc(DrawingSurfaceFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&AbstractWindow::setDrawingSurface,
-                    static_cast<AbstractWindow *>(this), _1));
-
-    editSField(DrawingSurfaceFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
@@ -1852,8 +1897,6 @@ void AbstractWindowBase::execSyncV(      FieldContainer    &oFrom,
 void AbstractWindowBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
-
-    static_cast<AbstractWindow *>(this)->setDrawingSurface(NULL);
 
     static_cast<AbstractWindow *>(this)->setDesktopIcon(NULL);
 

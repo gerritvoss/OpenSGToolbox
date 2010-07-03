@@ -100,17 +100,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanel : public TabPanelBase, public
 
 	virtual void focusGained(const FocusEventUnrecPtr e);
 	virtual void focusLost(const FocusEventUnrecPtr e);
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
-	virtual void addTab(const ComponentRefPtr Tab, const ComponentRefPtr TabContent);
-	virtual void removeTab(const ComponentRefPtr Tab);
+	virtual void addTab(Component* const Tab, Component* const TabContent);
+	virtual void removeTab(Component* const Tab);
 	virtual void removeTab(const UInt32 TabIndex);
 	virtual void removeAllTabs(void);
-	virtual void insertTab(const ComponentRefPtr TabInsert, const ComponentRefPtr Tab, const ComponentRefPtr TabContent);
-	virtual void insertTab(const UInt32 TabIndex, const ComponentRefPtr Tab, const ComponentRefPtr TabContent);
+	virtual void insertTab(Component* const TabInsert, Component* const Tab, Component* const TabContent);
+	virtual void insertTab(const UInt32 TabIndex, Component* const Tab, Component* const TabContent);
     
     //Returns the currently selected component for this tabpanel.
-    ComponentRefPtr getSelectedComponent(void) const;
+    Component* getSelectedComponent(void) const;
 
     //Returns the currently selected index for this tabpanel.
     Int32 getSelectedIndex(void) const;
@@ -173,25 +173,25 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanel : public TabPanelBase, public
 	//Mouse Wheel Events
     virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
 
-	void calculateTabBorderLengths(BorderRefPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
+	void calculateTabBorderLengths(Border* const TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
 	void calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
 
-	void calculateContentBorderLengths(BorderRefPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
+	void calculateContentBorderLengths(Border* const TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
 
-    virtual BorderRefPtr getDrawnTabBorder(const UInt32& Index) const;
-    virtual LayerRefPtr getDrawnTabBackground(const UInt32& Index) const;
-    virtual BorderRefPtr getDrawnContentBorder(void) const;
-    virtual LayerRefPtr getDrawnContentBackground(void) const;
+    virtual Border* getDrawnTabBorder(const UInt32& Index) const;
+    virtual Layer* getDrawnTabBackground(const UInt32& Index) const;
+    virtual Border* getDrawnContentBorder(void) const;
+    virtual Layer* getDrawnContentBackground(void) const;
 
 	Int32 _MouseInTabLastMouse;
     
 	class TabSelectionListener : public SelectionListener
 	{
 	public:
-		TabSelectionListener(TabPanelRefPtr TheTabPanel);
+		TabSelectionListener(TabPanel* const TheTabPanel);
         virtual void selectionChanged(const SelectionEventUnrecPtr e);
 	private:
-		TabPanelRefPtr _TabPanel;
+		TabPanel* _TabPanel;
 	};
 
 	friend class TabSelectionListener;

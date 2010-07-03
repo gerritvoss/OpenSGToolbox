@@ -106,9 +106,9 @@ void MenuButton::showPopup(void)
         Pnt2f BorderTopLeft, BorderBottomRight;
         getBounds(BorderTopLeft, BorderBottomRight);
 
-        getMenuButtonPopupMenu()->setInvoker(ComponentRefPtr(this));
+        getMenuButtonPopupMenu()->setInvoker(this);
         getMenuButtonPopupMenu()->setVisible(true);
-        getMenuButtonPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentRefPtr(this)));
+        getMenuButtonPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), this));
         getMenuButtonPopupMenu()->setSelection(-1);
 
         getParentWindow()->pushToActivePopupMenus(getMenuButtonPopupMenu());
@@ -169,7 +169,7 @@ void MenuButton::updatePopupMenuConnections(void)
 
 void MenuButton::produceMenuActionPerformed(void)
 {
-    const ActionEventUnrecPtr e = ActionEvent::create(MenuButtonRefPtr(this), getTimeStamp());
+    const ActionEventUnrecPtr e = ActionEvent::create(this, getTimeStamp());
 	MenuActionListenerSet Listeners(_MenuActionListeners);
     for(MenuActionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {

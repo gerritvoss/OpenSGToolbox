@@ -76,7 +76,7 @@ void ImageComponent::initMethod(InitPhase ePhase)
 }
 
 
-TextureObjChunkTransitPtr ImageComponent::createTexture(ImageWeakPtr Image)
+TextureObjChunkTransitPtr ImageComponent::createTexture(Image* Image)
 {
     TextureObjChunk* TexChunk = TextureObjChunk::createEmpty();
 
@@ -94,7 +94,7 @@ TextureObjChunkTransitPtr ImageComponent::createTexture(ImageWeakPtr Image)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ImageComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void ImageComponent::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
 
     //Get Border Insets
@@ -209,7 +209,7 @@ void ImageComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opac
 }
 
 
-TextureObjChunkRefPtr ImageComponent::getDrawnTexture(void) const
+TextureObjChunk* ImageComponent::getDrawnTexture(void) const
 {
     TextureObjChunkRefPtr ReturnedTexture;
     if(getEnabled())
@@ -242,7 +242,7 @@ TextureObjChunkRefPtr ImageComponent::getDrawnTexture(void) const
     }
 }
 
-void ImageComponent::setImage(ImageRefPtr Image)
+void ImageComponent::setImage(Image* const Image)
 {
     if(getTexture() == NULL)
     {
@@ -255,7 +255,7 @@ void ImageComponent::setImage(ImageRefPtr Image)
     }
 }
 
-void ImageComponent::setRolloverImage(ImageRefPtr Image)
+void ImageComponent::setRolloverImage(Image* const Image)
 {
     if(getRolloverTexture() == NULL)
     {
@@ -268,7 +268,7 @@ void ImageComponent::setRolloverImage(ImageRefPtr Image)
     }
 }
 
-void ImageComponent::setDisabledImage(ImageRefPtr Image)
+void ImageComponent::setDisabledImage(Image* const Image)
 {
     if(getDisabledTexture() == NULL)
     {
@@ -281,7 +281,7 @@ void ImageComponent::setDisabledImage(ImageRefPtr Image)
     }
 }
 
-void ImageComponent::setFocusedImage(ImageRefPtr Image)
+void ImageComponent::setFocusedImage(Image* const Image)
 {
     if(getFocusedTexture() == NULL)
     {

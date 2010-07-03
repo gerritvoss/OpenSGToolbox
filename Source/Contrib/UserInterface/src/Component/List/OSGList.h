@@ -115,7 +115,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
     virtual void mousePressed(const MouseEventUnrecPtr e);
 	virtual void keyTyped(const KeyEventUnrecPtr e);
 
-    ComponentRefPtr getComponentAtPoint(const MouseEventUnrecPtr e);
+    Component* getComponentAtPoint(const MouseEventUnrecPtr e);
     boost::any getValueAtPoint(const MouseEventUnrecPtr e);
 
     //Returns the row for the specified location.
@@ -125,7 +125,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
 	
     Int32 getIndexClosestToLocation(const Pnt2f& Location) const;
 
-    ComponentRefPtr getComponentAtIndex(const UInt32& Index);
+    Component* getComponentAtIndex(const UInt32& Index);
     boost::any getValueAtIndex(const UInt32& Index);
     
 	
@@ -207,7 +207,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
 	void focusIndex(const Int32& Index);
 	
 	//Creates the component for the given Index
-    ComponentRefPtr createIndexComponent(const UInt32& Index);
+    ComponentTransitPtr createIndexComponent(const UInt32& Index);
 
 	
 	void updateItem(const UInt32& Index);

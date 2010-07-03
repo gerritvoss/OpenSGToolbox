@@ -74,22 +74,6 @@ OSG::UInt16 LayoutBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
-//! Get the value of the Layout::_sfParentContainer field.
-inline
-ComponentContainer * LayoutBase::getParentContainer(void) const
-{
-    return _sfParentContainer.getValue();
-}
-
-//! Set the value of the Layout::_sfParentContainer field.
-inline
-void LayoutBase::setParentContainer(ComponentContainer * const value)
-{
-    editSField(ParentContainerFieldMask);
-
-    _sfParentContainer.setValue(value);
-}
-
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -101,8 +85,11 @@ void LayoutBase::execSync (      LayoutBase *pFrom,
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
-        _sfParentContainer.syncWith(pFrom->_sfParentContainer);
+    if(FieldBits::NoField != (ParentContainersFieldMask & whichField))
+        _mfParentContainers.syncWith(pFrom->_mfParentContainers,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
 #endif
 

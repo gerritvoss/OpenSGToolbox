@@ -161,7 +161,7 @@ class CreateMessageBoxButtonActionListener : public ActionListener
 
             TheDialog->addDialogWindowListener(&CloseListener);
 
-            dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+            dynamic_cast<Component*>(e->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
         }
     }
 };

@@ -150,7 +150,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
     RenderAction* _Action;
 	mutable Navigator _Navigator;
@@ -172,7 +172,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
 	class MouseControlListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
 	{
 	public :
-		MouseControlListener(GLViewportRefPtr TheGLViewport);
+		MouseControlListener(GLViewport* const TheGLViewport);
 		
 		virtual void mouseReleased(const MouseEventUnrecPtr e);
 		virtual void mouseDragged(const MouseEventUnrecPtr e);
@@ -181,7 +181,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
 		void setInitialMat(const Matrix& Mat);
         void disconnect(void);
 	protected :
-		GLViewportRefPtr _GLViewport;
+		GLViewport* _GLViewport;
 		Matrix _InitialMat;
 	};
 

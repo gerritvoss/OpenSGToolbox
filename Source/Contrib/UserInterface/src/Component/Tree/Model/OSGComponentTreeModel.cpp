@@ -83,11 +83,11 @@ boost::any ComponentTreeModel::getChild(const boost::any& parent, const UInt32& 
 {
     try
     {
-		ComponentContainerRefPtr TheContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(parent));
+		ComponentContainerRefPtr TheContainer = dynamic_cast<ComponentContainer*>(boost::any_cast<Component*>(parent));
         if(TheContainer != NULL &&
            TheContainer->getMFChildren()->size() > index)
         {
-            return boost::any(ComponentWeakPtr(TheContainer->getChildren(index)));
+            return boost::any(TheContainer->getChildren(index));
         }
         else
         {
@@ -104,7 +104,7 @@ UInt32 ComponentTreeModel::getChildCount(const boost::any& parent) const
 {
     try
     {
-		ComponentContainerRefPtr TheContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(parent));
+		ComponentContainerRefPtr TheContainer = dynamic_cast<ComponentContainer*>(boost::any_cast<Component*>(parent));
         if(TheContainer != NULL)
         {
             return TheContainer->getMFChildren()->size();
@@ -124,8 +124,8 @@ UInt32 ComponentTreeModel::getIndexOfChild(const boost::any& parent, const boost
 {
     try
     {
-        ComponentContainerRefPtr ParentContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(parent));
-        ComponentWeakPtr ChildComponent = boost::any_cast<ComponentWeakPtr>(child);
+        ComponentContainerRefPtr ParentContainer = dynamic_cast<ComponentContainer*>(boost::any_cast<Component*>(parent));
+        Component* ChildComponent = boost::any_cast<Component*>(child);
         if(ParentContainer != NULL &&
            ChildComponent  != NULL)
         {
@@ -144,14 +144,14 @@ UInt32 ComponentTreeModel::getIndexOfChild(const boost::any& parent, const boost
 
 boost::any ComponentTreeModel::getRoot(void) const
 {
-    return boost::any(ComponentWeakPtr(getInternalRootComponent()));
+    return boost::any(getInternalRootComponent());
 }
 
 bool ComponentTreeModel::isLeaf(const boost::any& node) const
 {
     try
     {
-		ComponentContainerRefPtr TheContainer = dynamic_pointer_cast<ComponentContainer>(boost::any_cast<ComponentWeakPtr>(node));
+		ComponentContainerRefPtr TheContainer = dynamic_cast<ComponentContainer*>(boost::any_cast<Component*>(node));
         return TheContainer == NULL;
     }
     catch(boost::bad_any_cast &)
@@ -164,8 +164,8 @@ void ComponentTreeModel::valueForPathChanged(TreePath path, const boost::any& ne
 {
     try
     {
-        ComponentWeakPtr NewComponent = boost::any_cast<ComponentWeakPtr>(newValue);
-        ComponentWeakPtr OldComponent = boost::any_cast<ComponentWeakPtr>(path.getLastPathComponent());
+        Component* NewComponent = boost::any_cast<Component*>(newValue);
+        Component* OldComponent = boost::any_cast<Component*>(path.getLastPathComponent());
         if(NewComponent != NULL &&
            OldComponent  != NULL &&
            NewComponent != OldComponent &&
@@ -175,7 +175,7 @@ void ComponentTreeModel::valueForPathChanged(TreePath path, const boost::any& ne
             Int32 ChildIndex(ParentContainer->getChildIndex(OldComponent));
             if(ChildIndex >= 0)
             {
-                (*ParentContainer->editMFChildren())[ChildIndex] = NewComponent;
+                ParentContainer->replaceInChildren(ChildIndex, NewComponent);
                 produceTreeStructureChanged(path.getParentPath(),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, newValue));
             }
         }
@@ -185,7 +185,7 @@ void ComponentTreeModel::valueForPathChanged(TreePath path, const boost::any& ne
     }
 }
 
-void ComponentTreeModel::setRoot(ComponentRefPtr root)
+void ComponentTreeModel::setRoot(Component* const root)
 {
     setInternalRootComponent(root);
 }
@@ -195,8 +195,8 @@ bool ComponentTreeModel::isEqual(const boost::any& left, const boost::any& right
 {
     try
     {
-        ComponentWeakPtr LeftComponent = boost::any_cast<ComponentWeakPtr>(left);
-        ComponentWeakPtr RightComponent = boost::any_cast<ComponentWeakPtr>(right);
+        Component* LeftComponent = boost::any_cast<Component*>(left);
+        Component* RightComponent = boost::any_cast<Component*>(right);
 
         return LeftComponent == RightComponent;
     }

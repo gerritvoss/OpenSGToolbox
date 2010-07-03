@@ -14,7 +14,7 @@ LookAndFeelManager* LookAndFeelManager::the(void)
    return _the;
 }
 
-void LookAndFeelManager::setLookAndFeel(LookAndFeelRefPtr TheLookAndFeel)
+void LookAndFeelManager::setLookAndFeel(LookAndFeel* const TheLookAndFeel)
 {
 	if(TheLookAndFeel != NULL)
 	{

@@ -299,19 +299,19 @@ void Tree::setRootVisible(bool Visible)
 }
 
 inline
-Tree::ModelListener::ModelListener(TreeRefPtr TheTree) :
+Tree::ModelListener::ModelListener(Tree* const TheTree) :
 _Tree(TheTree)
 {
 }
 
 inline
-Tree::SelectionListener::SelectionListener(TreeRefPtr TheTree) :
+Tree::SelectionListener::SelectionListener(Tree* const TheTree) :
 _Tree(TheTree)
 {
 }
 
 inline
-Tree::ModelLayoutListener::ModelLayoutListener(TreeRefPtr TheTree) :
+Tree::ModelLayoutListener::ModelLayoutListener(Tree* const TheTree) :
 _Tree(TheTree)
 {
 }

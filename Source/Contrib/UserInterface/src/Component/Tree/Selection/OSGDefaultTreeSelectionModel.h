@@ -103,7 +103,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeSelectionModel : public Abs
 	virtual Int32 getMinSelectionRow(void) const;
 
 	//Returns the TreeRowMapper instance that is able to map a TreePath to a row.
-	virtual TreeRowMapperRefPtr getRowMapper(void) const;
+	virtual TreeRowMapper* getRowMapper(void) const;
 
 	//Returns the number of paths that are selected.
 	virtual UInt32 getSelectionCount(void) const;
@@ -143,7 +143,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeSelectionModel : public Abs
 	//virtual void resetRowSelection(void);
 
 	//Sets the TreeRowMapper instance.
-	virtual void setRowMapper(TreeRowMapperRefPtr newMapper);
+	virtual void setRowMapper(TreeRowMapper* const newMapper);
 
 	//Sets the selection model, which must be one of SINGLE_TREE_SELECTION, CONTIGUOUS_TREE_SELECTION or DISCONTIGUOUS_TREE_SELECTION.
 	virtual void setSelectionMode(const UInt32& mode);

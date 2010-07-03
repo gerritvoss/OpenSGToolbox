@@ -82,7 +82,7 @@ void Menu::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Menu::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void Menu::drawInternal(Graphics* const Graphics, Real32 Opacity) const
 {
     Inherited::drawInternal(Graphics, Opacity);
 
@@ -106,11 +106,11 @@ void Menu::setPopupVisible(bool Visible)
         //Make the Submenu visible
         if(getTopLevelMenu())
         {
-            getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2f(0,0),MenuRefPtr(this)) + Vec2f(0,getSize().y()));        
+            getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2f(0,0),this) + Vec2f(0,getSize().y()));        
         }
         else
         {
-            getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2f(0,0),MenuRefPtr(this)) + Vec2f(getSize().x(),0));
+            getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2f(0,0),this) + Vec2f(getSize().x(),0));
         }
         getParentWindow()->pushToActivePopupMenus(getInternalPopupMenu());
     }
@@ -125,7 +125,7 @@ void Menu::addSeparator(void)
     getInternalPopupMenu()->addSeparator();
 }
 
-void Menu::addSeparator(SeparatorRefPtr TheSeparator)
+void Menu::addSeparator(Separator* const TheSeparator)
 {
     getInternalPopupMenu()->addSeparator(TheSeparator);
 }
@@ -135,7 +135,7 @@ void Menu::removeSeparator(const UInt32&  Index)
     getInternalPopupMenu()->removeSeparator(Index);
 }
 
-void Menu::removeSeparator(SeparatorRefPtr TheSeparator)
+void Menu::removeSeparator(Separator* const TheSeparator)
 {
     getInternalPopupMenu()->removeSeparator(TheSeparator);
 }
@@ -151,11 +151,11 @@ UInt32 Menu::getNumSeparators(void) const
 }
 
 
-void Menu::addItem(MenuItemRefPtr Item)
+void Menu::addItem(MenuItem* const Item)
 {
     getInternalPopupMenu()->addItem(Item);
     pushToMenuItems(Item);
-    Item->setParentMenu(MenuRefPtr(this));
+    Item->setParentMenu(this);
     Item->setParentWindow(getParentWindow());
 }
 
@@ -165,7 +165,7 @@ void Menu::removeAllItems(void)
     clearMenuItems();
 }
 
-void Menu::addItem(MenuItemRefPtr Item, const UInt32& Index)
+void Menu::addItem(MenuItem* const Item, const UInt32& Index)
 {
     getInternalPopupMenu()->addItem(Item, Index);
 
@@ -173,11 +173,11 @@ void Menu::addItem(MenuItemRefPtr Item, const UInt32& Index)
     for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
     editMFMenuItems()->insert(Itor, Item);
 
-    Item->setParentMenu(MenuRefPtr(this));
+    Item->setParentMenu(this);
     Item->setParentWindow(getParentWindow());
 }
 
-void Menu::removeItem(MenuItemRefPtr Item)
+void Menu::removeItem(MenuItem* const Item)
 {
     getInternalPopupMenu()->removeItem(Item);
 
@@ -204,6 +204,18 @@ void Menu::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
     _PopupUpdateEventConnection.disconnect();
+}
+
+void Menu::setParentWindow(InternalWindow* const parent)
+{
+    Inherited::setParentWindow(parent);
+
+    getInternalPopupMenu()->setParentWindow(getParentWindow());
+
+    for(UInt32 i(0) ; i<getMFMenuItems()->size() ; ++i)
+    {
+        getMenuItems(i)->setParentWindow(getParentWindow());
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -253,42 +265,32 @@ void Menu::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-    if(whichField & ParentWindowFieldMask)
-    {
-        getInternalPopupMenu()->setParentWindow(getParentWindow());
-
-        for(UInt32 i(0) ; i<getMFMenuItems()->size() ; ++i)
-        {
-            getMenuItems(i)->setParentWindow(getParentWindow());
-        }
-    }
-
     if(whichField & SelectedFieldMask && getEnabled())
     {
         if(getSelected())
         {
             //setPopupVisible(false);
             if(getParentWindow() != NULL &&
-               getParentWindow()->getDrawingSurface() != NULL &&
-               getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+               getParentWindow()->getParentDrawingSurface() != NULL &&
+               getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
             {
                 _PopupUpdateListener.reset();
-                _PopupUpdateEventConnection = getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
+                _PopupUpdateEventConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
             }
         }
         else
         {
             setPopupVisible(false);
             if(getParentWindow() != NULL &&
-               getParentWindow()->getDrawingSurface() != NULL &&
-               getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+               getParentWindow()->getParentDrawingSurface() != NULL &&
+               getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
             {
-                getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_PopupUpdateListener);
+                getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(&_PopupUpdateListener);
             }
         }
     }
 
-    if(whichField & ExpandDrawObjectFieldMask)
+    if((whichField & ExpandDrawObjectFieldMask) && getExpandDrawObject() != NULL)
     {
         getExpandDrawObject()->setSize(getExpandDrawObject()->getRequestedSize());
     }
@@ -324,7 +326,7 @@ void Menu::PopupUpdateListener::update(const UpdateEventUnrecPtr e)
         //Tell the menu to popup the submenu
         _Menu->setPopupVisible(true);
         //Remove myself from the update
-		_Menu->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+		_Menu->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(this);
     }
 }
 

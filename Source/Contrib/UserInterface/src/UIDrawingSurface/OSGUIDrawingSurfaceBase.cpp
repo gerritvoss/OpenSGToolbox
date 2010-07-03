@@ -138,20 +138,20 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new MFUnrecInternalWindowPtr::Description(
-        MFUnrecInternalWindowPtr::getClassType(),
+    pDesc = new MFUnrecChildInternalWindowPtr::Description(
+        MFUnrecChildInternalWindowPtr::getClassType(),
         "InternalWindows",
         "",
         InternalWindowsFieldId, InternalWindowsFieldMask,
         false,
-        (Field::MFDefaultFlags | Field::FStdAccess),
+        (Field::MFDefaultFlags | Field::FNullCheckAccess),
         static_cast<FieldEditMethodSig>(&UIDrawingSurface::editHandleInternalWindows),
         static_cast<FieldGetMethodSig >(&UIDrawingSurface::getHandleInternalWindows));
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecInternalWindowPtr::Description(
-        SFUnrecInternalWindowPtr::getClassType(),
+    pDesc = new SFWeakInternalWindowPtr::Description(
+        SFWeakInternalWindowPtr::getClassType(),
         "FocusedWindow",
         "",
         FocusedWindowFieldId, FocusedWindowFieldMask,
@@ -162,8 +162,8 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecWindowEventProducerPtr::Description(
-        SFUnrecWindowEventProducerPtr::getClassType(),
+    pDesc = new SFWeakWindowEventProducerPtr::Description(
+        SFWeakWindowEventProducerPtr::getClassType(),
         "EventProducer",
         "",
         EventProducerFieldId, EventProducerFieldMask,
@@ -242,16 +242,19 @@ UIDrawingSurfaceBase::TypeObject UIDrawingSurfaceBase::_type(
     "\t<Field\n"
     "\t\tname=\"InternalWindows\"\n"
     "\t\ttype=\"InternalWindow\"\n"
-    "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"multi\"\n"
+    "        category=\"childpointer\"\n"
+    "        childParentType=\"FieldContainer\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
+    "        ptrFieldAccess = \"nullCheck\"\n"
+    "        linkParentField=\"ParentDrawingSurface\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"FocusedWindow\"\n"
     "\t\ttype=\"InternalWindow\"\n"
-    "\t\tcategory=\"pointer\"\n"
+    "\t\tcategory=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -261,7 +264,7 @@ UIDrawingSurfaceBase::TypeObject UIDrawingSurfaceBase::_type(
     "\t<Field\n"
     "\t\tname=\"EventProducer\"\n"
     "\t\ttype=\"WindowEventProducer\"\n"
-    "\t\tcategory=\"pointer\"\n"
+    "\t\tcategory=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -323,25 +326,18 @@ UInt32 UIDrawingSurfaceBase::getContainerSize(void) const
 
 
 //! Get the UIDrawingSurface::_mfInternalWindows field.
-const MFUnrecInternalWindowPtr *UIDrawingSurfaceBase::getMFInternalWindows(void) const
+const MFUnrecChildInternalWindowPtr *UIDrawingSurfaceBase::getMFInternalWindows(void) const
 {
-    return &_mfInternalWindows;
-}
-
-MFUnrecInternalWindowPtr *UIDrawingSurfaceBase::editMFInternalWindows(void)
-{
-    editMField(InternalWindowsFieldMask, _mfInternalWindows);
-
     return &_mfInternalWindows;
 }
 
 //! Get the UIDrawingSurface::_sfFocusedWindow field.
-const SFUnrecInternalWindowPtr *UIDrawingSurfaceBase::getSFFocusedWindow(void) const
+const SFWeakInternalWindowPtr *UIDrawingSurfaceBase::getSFFocusedWindow(void) const
 {
     return &_sfFocusedWindow;
 }
 
-SFUnrecInternalWindowPtr *UIDrawingSurfaceBase::editSFFocusedWindow  (void)
+SFWeakInternalWindowPtr *UIDrawingSurfaceBase::editSFFocusedWindow  (void)
 {
     editSField(FocusedWindowFieldMask);
 
@@ -349,12 +345,12 @@ SFUnrecInternalWindowPtr *UIDrawingSurfaceBase::editSFFocusedWindow  (void)
 }
 
 //! Get the UIDrawingSurface::_sfEventProducer field.
-const SFUnrecWindowEventProducerPtr *UIDrawingSurfaceBase::getSFEventProducer(void) const
+const SFWeakWindowEventProducerPtr *UIDrawingSurfaceBase::getSFEventProducer(void) const
 {
     return &_sfEventProducer;
 }
 
-SFUnrecWindowEventProducerPtr *UIDrawingSurfaceBase::editSFEventProducer  (void)
+SFWeakWindowEventProducerPtr *UIDrawingSurfaceBase::editSFEventProducer  (void)
 {
     editSField(EventProducerFieldMask);
 
@@ -404,16 +400,19 @@ const SFVec2f *UIDrawingSurfaceBase::getSFSize(void) const
 
 void UIDrawingSurfaceBase::pushToInternalWindows(InternalWindow * const value)
 {
+    if(value == NULL)
+        return;
+
     editMField(InternalWindowsFieldMask, _mfInternalWindows);
 
     _mfInternalWindows.push_back(value);
 }
 
-void UIDrawingSurfaceBase::assignInternalWindows(const MFUnrecInternalWindowPtr &value)
+void UIDrawingSurfaceBase::assignInternalWindows(const MFUnrecChildInternalWindowPtr &value)
 {
-    MFUnrecInternalWindowPtr::const_iterator elemIt  =
+    MFUnrecChildInternalWindowPtr::const_iterator elemIt  =
         value.begin();
-    MFUnrecInternalWindowPtr::const_iterator elemEnd =
+    MFUnrecChildInternalWindowPtr::const_iterator elemEnd =
         value.end  ();
 
     static_cast<UIDrawingSurface *>(this)->clearInternalWindows();
@@ -423,6 +422,51 @@ void UIDrawingSurfaceBase::assignInternalWindows(const MFUnrecInternalWindowPtr 
         this->pushToInternalWindows(*elemIt);
 
         ++elemIt;
+    }
+}
+
+void UIDrawingSurfaceBase::insertIntoInternalWindows(UInt32               uiIndex,
+                                                   InternalWindow * const value   )
+{
+    if(value == NULL)
+        return;
+
+    editMField(InternalWindowsFieldMask, _mfInternalWindows);
+
+    MFUnrecChildInternalWindowPtr::iterator fieldIt = _mfInternalWindows.begin_nc();
+
+    fieldIt += uiIndex;
+
+    _mfInternalWindows.insert(fieldIt, value);
+}
+
+void UIDrawingSurfaceBase::replaceInInternalWindows(UInt32               uiIndex,
+                                                       InternalWindow * const value   )
+{
+    if(value == NULL)
+        return;
+
+    if(uiIndex >= _mfInternalWindows.size())
+        return;
+
+    editMField(InternalWindowsFieldMask, _mfInternalWindows);
+
+    _mfInternalWindows.replace(uiIndex, value);
+}
+
+void UIDrawingSurfaceBase::replaceObjInInternalWindows(InternalWindow * const pOldElem,
+                                                        InternalWindow * const pNewElem)
+{
+    if(pNewElem == NULL)
+        return;
+
+    Int32  elemIdx = _mfInternalWindows.findIndex(pOldElem);
+
+    if(elemIdx != -1)
+    {
+        editMField(InternalWindowsFieldMask, _mfInternalWindows);
+
+        _mfInternalWindows.replace(elemIdx, pNewElem);
     }
 }
 
@@ -676,7 +720,9 @@ FieldContainerTransitPtr UIDrawingSurfaceBase::shallowCopy(void) const
 
 UIDrawingSurfaceBase::UIDrawingSurfaceBase(void) :
     Inherited(),
-    _mfInternalWindows        (),
+    _mfInternalWindows        (this,
+                          InternalWindowsFieldId,
+                          InternalWindow::ParentDrawingSurfaceFieldId),
     _sfFocusedWindow          (NULL),
     _sfEventProducer          (NULL),
     _sfGraphics               (NULL),
@@ -687,7 +733,9 @@ UIDrawingSurfaceBase::UIDrawingSurfaceBase(void) :
 
 UIDrawingSurfaceBase::UIDrawingSurfaceBase(const UIDrawingSurfaceBase &source) :
     Inherited(source),
-    _mfInternalWindows        (),
+    _mfInternalWindows        (this,
+                          InternalWindowsFieldId,
+                          InternalWindow::ParentDrawingSurfaceFieldId),
     _sfFocusedWindow          (NULL),
     _sfEventProducer          (NULL),
     _sfGraphics               (NULL),
@@ -703,6 +751,44 @@ UIDrawingSurfaceBase::~UIDrawingSurfaceBase(void)
 {
 }
 
+/*-------------------------------------------------------------------------*/
+/* Child linking                                                           */
+
+bool UIDrawingSurfaceBase::unlinkChild(
+    FieldContainer * const pChild,
+    UInt16           const childFieldId)
+{
+    if(childFieldId == InternalWindowsFieldId)
+    {
+        InternalWindow * pTypedChild =
+            dynamic_cast<InternalWindow *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            Int32 iChildIdx = _mfInternalWindows.findIndex(pTypedChild);
+
+            if(iChildIdx != -1)
+            {
+                editMField(InternalWindowsFieldMask, _mfInternalWindows);
+
+                _mfInternalWindows.erase(iChildIdx);
+
+                return true;
+            }
+
+            FWARNING(("UIDrawingSurfaceBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+
+    return Inherited::unlinkChild(pChild, childFieldId);
+}
+
 void UIDrawingSurfaceBase::onCreate(const UIDrawingSurface *source)
 {
     Inherited::onCreate(source);
@@ -711,9 +797,9 @@ void UIDrawingSurfaceBase::onCreate(const UIDrawingSurface *source)
     {
         UIDrawingSurface *pThis = static_cast<UIDrawingSurface *>(this);
 
-        MFUnrecInternalWindowPtr::const_iterator InternalWindowsIt  =
+        MFUnrecChildInternalWindowPtr::const_iterator InternalWindowsIt  =
             source->_mfInternalWindows.begin();
-        MFUnrecInternalWindowPtr::const_iterator InternalWindowsEnd =
+        MFUnrecChildInternalWindowPtr::const_iterator InternalWindowsEnd =
             source->_mfInternalWindows.end  ();
 
         while(InternalWindowsIt != InternalWindowsEnd)
@@ -735,8 +821,8 @@ void UIDrawingSurfaceBase::onCreate(const UIDrawingSurface *source)
 
 GetFieldHandlePtr UIDrawingSurfaceBase::getHandleInternalWindows (void) const
 {
-    MFUnrecInternalWindowPtr::GetHandlePtr returnValue(
-        new  MFUnrecInternalWindowPtr::GetHandle(
+    MFUnrecChildInternalWindowPtr::GetHandlePtr returnValue(
+        new  MFUnrecChildInternalWindowPtr::GetHandle(
              &_mfInternalWindows,
              this->getType().getFieldDesc(InternalWindowsFieldId),
              const_cast<UIDrawingSurfaceBase *>(this)));
@@ -746,8 +832,8 @@ GetFieldHandlePtr UIDrawingSurfaceBase::getHandleInternalWindows (void) const
 
 EditFieldHandlePtr UIDrawingSurfaceBase::editHandleInternalWindows(void)
 {
-    MFUnrecInternalWindowPtr::EditHandlePtr returnValue(
-        new  MFUnrecInternalWindowPtr::EditHandle(
+    MFUnrecChildInternalWindowPtr::EditHandlePtr returnValue(
+        new  MFUnrecChildInternalWindowPtr::EditHandle(
              &_mfInternalWindows,
              this->getType().getFieldDesc(InternalWindowsFieldId),
              this));
@@ -755,6 +841,15 @@ EditFieldHandlePtr UIDrawingSurfaceBase::editHandleInternalWindows(void)
     returnValue->setAddMethod(
         boost::bind(&UIDrawingSurface::pushToInternalWindows,
                     static_cast<UIDrawingSurface *>(this), _1));
+    returnValue->setInsertMethod(
+        boost::bind(&UIDrawingSurface::insertIntoInternalWindows,
+                    static_cast<UIDrawingSurface *>(this), _1, _2));
+    returnValue->setReplaceMethod(
+        boost::bind(&UIDrawingSurface::replaceInInternalWindows,
+                    static_cast<UIDrawingSurface *>(this), _1, _2));
+    returnValue->setReplaceObjMethod(
+        boost::bind(&UIDrawingSurface::replaceObjInInternalWindows,
+                    static_cast<UIDrawingSurface *>(this), _1, _2));
     returnValue->setRemoveMethod(
         boost::bind(&UIDrawingSurface::removeFromInternalWindows,
                     static_cast<UIDrawingSurface *>(this), _1));
@@ -772,8 +867,8 @@ EditFieldHandlePtr UIDrawingSurfaceBase::editHandleInternalWindows(void)
 
 GetFieldHandlePtr UIDrawingSurfaceBase::getHandleFocusedWindow   (void) const
 {
-    SFUnrecInternalWindowPtr::GetHandlePtr returnValue(
-        new  SFUnrecInternalWindowPtr::GetHandle(
+    SFWeakInternalWindowPtr::GetHandlePtr returnValue(
+        new  SFWeakInternalWindowPtr::GetHandle(
              &_sfFocusedWindow,
              this->getType().getFieldDesc(FocusedWindowFieldId),
              const_cast<UIDrawingSurfaceBase *>(this)));
@@ -783,8 +878,8 @@ GetFieldHandlePtr UIDrawingSurfaceBase::getHandleFocusedWindow   (void) const
 
 EditFieldHandlePtr UIDrawingSurfaceBase::editHandleFocusedWindow  (void)
 {
-    SFUnrecInternalWindowPtr::EditHandlePtr returnValue(
-        new  SFUnrecInternalWindowPtr::EditHandle(
+    SFWeakInternalWindowPtr::EditHandlePtr returnValue(
+        new  SFWeakInternalWindowPtr::EditHandle(
              &_sfFocusedWindow,
              this->getType().getFieldDesc(FocusedWindowFieldId),
              this));
@@ -800,8 +895,8 @@ EditFieldHandlePtr UIDrawingSurfaceBase::editHandleFocusedWindow  (void)
 
 GetFieldHandlePtr UIDrawingSurfaceBase::getHandleEventProducer   (void) const
 {
-    SFUnrecWindowEventProducerPtr::GetHandlePtr returnValue(
-        new  SFUnrecWindowEventProducerPtr::GetHandle(
+    SFWeakWindowEventProducerPtr::GetHandlePtr returnValue(
+        new  SFWeakWindowEventProducerPtr::GetHandle(
              &_sfEventProducer,
              this->getType().getFieldDesc(EventProducerFieldId),
              const_cast<UIDrawingSurfaceBase *>(this)));
@@ -811,8 +906,8 @@ GetFieldHandlePtr UIDrawingSurfaceBase::getHandleEventProducer   (void) const
 
 EditFieldHandlePtr UIDrawingSurfaceBase::editHandleEventProducer  (void)
 {
-    SFUnrecWindowEventProducerPtr::EditHandlePtr returnValue(
-        new  SFUnrecWindowEventProducerPtr::EditHandle(
+    SFWeakWindowEventProducerPtr::EditHandlePtr returnValue(
+        new  SFWeakWindowEventProducerPtr::EditHandle(
              &_sfEventProducer,
              this->getType().getFieldDesc(EventProducerFieldId),
              this));

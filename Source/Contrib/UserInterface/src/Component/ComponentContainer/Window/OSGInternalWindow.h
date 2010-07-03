@@ -46,6 +46,7 @@
 #include "OSGMouseAdapter.h"
 #include "OSGMouseMotionAdapter.h"
 #include "OSGKeyAdapter.h"
+#include "OSGKeyEvent.h"
 #include "OSGKeyAcceleratorListener.h"
 #include "OSGActionListener.h"
 
@@ -111,10 +112,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
     virtual void getTitlebarBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
     virtual void getContentPaneBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
-
-    virtual InternalWindow *            getParentWindow    (void) const;
-
-	bool giveFocus(ComponentRefPtr NewFocusedComponent, bool Temporary = false);
+	bool giveFocus(Component* const NewFocusedComponent, bool Temporary = false);
 	bool takeFocus(bool Temporary = false);
 
     EventConnection addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener);
@@ -139,6 +137,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	virtual void close(void);
 
     void detachFromEventProducer(void);
+
+    virtual InternalWindow* getParentWindow(void) const;
+
+    virtual void setParentWindow(InternalWindow* const parent);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -175,13 +177,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	
 	/*! \}                                                                 */
     
-	virtual void drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity = 1.0f) const;
-	virtual void drawUnclipped(const GraphicsWeakPtr TheGraphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const TheGraphics, Real32 Opacity = 1.0f) const;
+	virtual void drawUnclipped(Graphics* const TheGraphics, Real32 Opacity = 1.0f) const;
 	
 	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
 	{
 	public :
-		PopupMenuInteractionListener(InternalWindowRefPtr TheInternalWindow);
+		PopupMenuInteractionListener(InternalWindow* const TheInternalWindow);
 		
         virtual void mouseClicked(const MouseEventUnrecPtr e);
 		virtual void mousePressed(const MouseEventUnrecPtr e);
@@ -193,7 +195,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
         void disconnect(void);
 
 	protected :
-		InternalWindowRefPtr _InternalWindow;
+		InternalWindow* _InternalWindow;
 	};
 
 	friend class PopupMenuInteractionListener;
@@ -207,11 +209,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	class TitlebarStartDragListener : public MouseAdapter
 	{
 	public :
-		TitlebarStartDragListener(InternalWindowRefPtr TheInternalWindow);
+		TitlebarStartDragListener(InternalWindow* const TheInternalWindow);
 		
 		virtual void mousePressed(const MouseEventUnrecPtr e);
 	protected :
-		InternalWindowRefPtr _InternalWindow;
+		InternalWindow* _InternalWindow;
 	};
 
 	friend class TitlebarStartDragListener;
@@ -221,7 +223,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	class TitlebarDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
 	{
 	public :
-		TitlebarDraggedListener(InternalWindowRefPtr TheInternalWindow);
+		TitlebarDraggedListener(InternalWindow* const TheInternalWindow);
 		virtual void mouseDragged(const MouseEventUnrecPtr e);
 		
 		virtual void mouseReleased(const MouseEventUnrecPtr e);
@@ -233,7 +235,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 
         void disconnect(void);
 	protected :
-		InternalWindowRefPtr _InternalWindow;
+		InternalWindow* _InternalWindow;
 
 		Pnt2f _WindowStartPosition;
 		Pnt2f _MouseStartPosition;
@@ -246,7 +248,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	class BorderDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
 	{
 	public :
-		BorderDraggedListener(InternalWindowRefPtr TheInternalWindow);
+		BorderDraggedListener(InternalWindow* const TheInternalWindow);
 		virtual void mouseDragged(const MouseEventUnrecPtr e);
 		
 		virtual void mouseReleased(const MouseEventUnrecPtr e);
@@ -261,7 +263,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
         void disconnect(void);
 
 	protected :
-		InternalWindowRefPtr _InternalWindow;
+		InternalWindow* _InternalWindow;
 
 		Pnt2f _WindowStartPosition;
 		Vec2f _WindowStartSize;
@@ -279,11 +281,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	class CloseButtonListener : public ActionListener
 	{
 	public :
-		CloseButtonListener(InternalWindowRefPtr TheInternalWindow);
+		CloseButtonListener(InternalWindow* const TheInternalWindow);
 		
 		virtual void actionPerformed(const ActionEventUnrecPtr e);
 	protected :
-		InternalWindowRefPtr _InternalWindow;
+		InternalWindow* _InternalWindow;
 	};
 
 	friend class CloseButtonListener;
@@ -294,11 +296,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	class MaximizeButtonListener : public ActionListener
 	{
 	public :
-		MaximizeButtonListener(InternalWindowRefPtr TheInternalWindow);
+		MaximizeButtonListener(InternalWindow* const TheInternalWindow);
 		
 		virtual void actionPerformed(const ActionEventUnrecPtr e);
 	protected :
-		InternalWindowRefPtr _InternalWindow;
+		InternalWindow* _InternalWindow;
 	};
 
 	friend class MaximizeButtonListener;
@@ -309,11 +311,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	class IconifyButtonListener : public ActionListener
 	{
 	public :
-		IconifyButtonListener(InternalWindowRefPtr TheInternalWindow);
+		IconifyButtonListener(InternalWindow* const TheInternalWindow);
 		
 		virtual void actionPerformed(const ActionEventUnrecPtr e);
 	protected :
-		InternalWindowRefPtr _InternalWindow;
+		InternalWindow* _InternalWindow;
 	};
 
 	friend class IconifyButtonListener;

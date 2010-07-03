@@ -77,7 +77,7 @@ void CheckboxButton::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-UIDrawObjectCanvasRefPtr CheckboxButton::getDrawnDrawObject(void) const
+UIDrawObjectCanvas* CheckboxButton::getDrawnDrawObject(void) const
 {
     if(getEnabled())
     {
@@ -128,7 +128,7 @@ UIDrawObjectCanvasRefPtr CheckboxButton::getDrawnDrawObject(void) const
     }
 }
 
-UIDrawObjectCanvasRefPtr CheckboxButton::getBaseDrawObject(void) const
+UIDrawObjectCanvas* CheckboxButton::getBaseDrawObject(void) const
 {
 	return getCheckboxDrawObject();          
 }

@@ -40,7 +40,7 @@
 
 OSG_BEGIN_NAMESPACE
 inline
-void Table::addColumn(TableColumnRefPtr aColumn)
+void Table::addColumn(TableColumn* const aColumn)
 {
     getColumnModel()->addColumn(aColumn);
 }
@@ -64,7 +64,7 @@ Int32 Table::getEditingRow(void) const
 }
 
 inline
-ComponentRefPtr Table::getEditorComponent(void) const
+Component* Table::getEditorComponent(void) const
 {
     return _EditingComponent;
 }
@@ -164,7 +164,7 @@ const std::type_info& Table::getColumnType(const UInt32& column)
 }
 
 inline
-void Table::setDefaultEditor(const std::type_info& TheType, TableCellEditorRefPtr editor)
+void Table::setDefaultEditor(const std::type_info& TheType, TableCellEditor* const editor)
 {
     _DefaultCellEditorByTypeMap[std::string(TheType.name())] = editor;
 }
@@ -206,7 +206,7 @@ void Table::moveColumn(const UInt32& column, const UInt32& targetColumn)
 }
 
 inline
-void Table::removeColumn(TableColumnRefPtr aColumn)
+void Table::removeColumn(TableColumn* const aColumn)
 {
     getColumnModel()->removeColumn(aColumn);
 }

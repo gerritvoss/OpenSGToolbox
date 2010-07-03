@@ -124,10 +124,15 @@ void MenuBar::updateLayout(void)
     }
 }
 
+ComponentContainer* MenuBar::getParentContainer(void) const
+{
+    return getParentWindow();
+}
+
 void MenuBar::updateClipBounds(void)
 {
 	Pnt2f TopLeft, BottomRight;
-	if(getParentContainer() == NULL)
+	if(getParentWindow() == NULL)
 	{
 		//If I have no parent container use my bounds
 		getBounds(TopLeft, BottomRight);
@@ -142,7 +147,7 @@ void MenuBar::updateClipBounds(void)
         getBounds(MyTopLeft,MyBottomRight);
 
 		//Update my Parent ComponentContainer's Clip Bounds
-		//dynamic_cast<ComponentContainer*>(getParentContainer())->updateClipBounds();
+		//dynamic_cast<ComponentContainer*>(getParentWindow())->updateClipBounds();
 
 		//Get Parent ComponentContainer's Clip Bounds
 		Pnt2f ContainerClipTopLeft, ContainerClipBottomRight;
@@ -177,35 +182,28 @@ void MenuBar::updateClipBounds(void)
 		setClipBottomRight(BottomRight);
 }
 
-void MenuBar::addMenu(MenuRefPtr Menu)
+void MenuBar::addMenu(Menu* const Menu)
 {
     pushToChildren(Menu);
     Menu->setTopLevelMenu(true);
     Menu->getInternalPopupMenu()->addPopupMenuListener(&_MenuSelectionListener);
 }
 
-void MenuBar::addMenu(MenuRefPtr Menu, const UInt32& Index)
+void MenuBar::addMenu(Menu* const Menu, const UInt32& Index)
 {
     if(Index < getMFChildren()->size())
     {
-        MFChildrenType::iterator Itor = editMFChildren()->begin();
-        for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
-        
-        editMFChildren()->insert(Itor, Menu);
+        insertIntoChildren(Index, Menu);
         Menu->setTopLevelMenu(true);
         Menu->getInternalPopupMenu()->addPopupMenuListener(&_MenuSelectionListener);
     }
 }
 
-void MenuBar::removeMenu(MenuRefPtr Menu)
+void MenuBar::removeMenu(Menu* const Menu)
 {
-    MenuBar::MFChildrenType::iterator FindResult = editMFChildren()->find(Menu);
-    if(FindResult != editMFChildren()->end())
-    {
-        editMFChildren()->erase(FindResult);
-        Menu->setTopLevelMenu(false);
-        Menu->getInternalPopupMenu()->removePopupMenuListener(&_MenuSelectionListener);
-    }
+    removeObjFromChildren(Menu);
+    Menu->setTopLevelMenu(false);
+    Menu->getInternalPopupMenu()->removePopupMenuListener(&_MenuSelectionListener);
 }
 
 void MenuBar::removeMenu(const UInt32& Index)
@@ -228,7 +226,7 @@ void MenuBar::mousePressed(const MouseEventUnrecPtr e)
         if(getChildren(i)->isContained(e->getLocation(), true))
         {
             getSelectionModel()->setSelectedIndex(i);
-            _SelectionMouseEventConnection = getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
+            _SelectionMouseEventConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
             break;
         }
         ++i;
@@ -240,6 +238,21 @@ void MenuBar::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
     _SelectionMouseEventConnection.disconnect();
+}
+
+void MenuBar::setParentWindow(InternalWindow* const parent)
+{
+    if(getParentWindow() != NULL)
+    {
+        getParentWindow()->removeKeyListener(&_MenuSelectionListener);
+    }
+
+    Inherited::setParentWindow(parent);
+
+    if(getParentWindow() != NULL)
+    {
+        getParentWindow()->addKeyListener(&_MenuSelectionListener);
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -283,11 +296,6 @@ void MenuBar::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
-
-    if((whichField & ParentWindowFieldMask) && getParentWindow() != NULL)
-    {
-        getParentWindow()->addKeyListener(&_MenuSelectionListener);
-    }
 
     if(whichField & SelectionModelFieldMask && getSelectionModel() != NULL)
     {
@@ -350,9 +358,9 @@ void MenuBar::MenuSelectionListener::mouseDragged(const MouseEventUnrecPtr e)
 
 void MenuBar::MenuSelectionListener::popupMenuCanceled(const PopupMenuEventUnrecPtr e)
 {
-	if(_MenuBar->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+	if(_MenuBar->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 	{
-		_MenuBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+		_MenuBar->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
 	}
     
     _MenuBar->getSelectionModel()->clearSelection();

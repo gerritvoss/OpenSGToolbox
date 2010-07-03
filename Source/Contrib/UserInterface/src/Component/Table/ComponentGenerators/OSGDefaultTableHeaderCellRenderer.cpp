@@ -75,10 +75,10 @@ A DefaultTableHeaderCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(TableRefPtr table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentTransitPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(Table* const table, const boost::any& value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
     if(value.empty()){
-        return NULL;
+        return ComponentTransitPtr(NULL);
     }
     BevelBorderRefPtr DefaultBorder = BevelBorder::create();
     DefaultBorder->setRaised(true);
@@ -102,7 +102,7 @@ ComponentRefPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(Ta
     TheLabel->setPreferredSize(Vec2f(100,30));
     TheLabel->setBorders(DefaultBorder);
 
-    return dynamic_pointer_cast<Component>(TheLabel);
+    return ComponentTransitPtr(TheLabel.get());
 }
 
 /*-------------------------------------------------------------------------*\

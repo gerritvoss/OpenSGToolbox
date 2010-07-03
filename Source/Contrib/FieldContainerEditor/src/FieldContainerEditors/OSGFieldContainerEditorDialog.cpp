@@ -57,6 +57,7 @@
 #include "OSGTree.h"
 #include "OSGFieldContainerFieldPathComponentGenerator.h"
 #include "OSGSplitPanel.h"
+#include "OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -119,11 +120,11 @@ class TreeEditorSelectionListener : public TreeSelectionListener
 {
     /*=========================  PUBLIC  ===============================*/
   protected:
-    TreeRefPtr _EditorTree;
-    FieldContainerEditorComponentRefPtr _Editor;
+    Tree* _EditorTree;
+    FieldContainerEditorComponent* _Editor;
     
   public:
-    TreeEditorSelectionListener(TreeRefPtr tree, FieldContainerEditorComponentRefPtr editor) :
+    TreeEditorSelectionListener(Tree* const tree, FieldContainerEditorComponent* const editor) :
       _EditorTree(tree),
       _Editor(editor)
     {

@@ -107,7 +107,7 @@ void ComboBox::setEmptyDescText(const std::string& text)
        getEditor()->getEditorComponent() != NULL &&
        getEditor()->getEditorComponent()->getType().isDerivedFrom(TextField::getClassType()))
     {
-        dynamic_pointer_cast<TextField>(getEditor()->getEditorComponent())->setEmptyDescText(text);
+        dynamic_cast<TextField*>(getEditor()->getEditorComponent())->setEmptyDescText(text);
     }
 }
 
@@ -207,7 +207,7 @@ void ComboBox::addItem(const boost::any& anObject)
     }
 }
 
-void ComboBox::configureEditor(ComboBoxEditorRefPtr anEditor, const boost::any& anItem)
+void ComboBox::configureEditor(ComboBoxEditor* const anEditor, const boost::any& anItem)
 {
     //TODO:Implement
 }
@@ -313,9 +313,9 @@ void ComboBox::showPopup(void)
     Pnt2f BorderTopLeft, BorderBottomRight;
     getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
-    getComboListPopupMenu()->setInvoker(ComponentRefPtr(this));
+    getComboListPopupMenu()->setInvoker(this);
     getComboListPopupMenu()->setVisible(true);
-    getComboListPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentRefPtr(this)));
+    getComboListPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), this));
     getComboListPopupMenu()->setSelection(getModel()->getSelectedItemIndex());
 
     getParentWindow()->pushToActivePopupMenus(getComboListPopupMenu());
@@ -407,11 +407,13 @@ void ComboBox::updateComponentGeneratorSelectedItem(void)
     {
         if(getCellGenerator()->getType().isDerivedFrom(ComboBoxComponentGenerator::getClassType()))
         {
-            setComponentGeneratorSelectedItem(dynamic_cast<ComboBoxComponentGenerator*>(getCellGenerator())->getComboBoxComponent(ComboBoxRefPtr(this), getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), false, false));
+            ComponentUnrecPtr GeneratedComp(dynamic_cast<ComboBoxComponentGenerator*>(getCellGenerator())->getComboBoxComponent(this, getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), false, false));
+            setComponentGeneratorSelectedItem(GeneratedComp);
         }
         else
         {
-            setComponentGeneratorSelectedItem(getCellGenerator()->getComponent(ComboBoxRefPtr(this), getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), 0, false, false));
+            ComponentUnrecPtr GeneratedComp(getCellGenerator()->getComponent(this, getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), 0, false, false));
+            setComponentGeneratorSelectedItem(GeneratedComp);
         }
     }
 }

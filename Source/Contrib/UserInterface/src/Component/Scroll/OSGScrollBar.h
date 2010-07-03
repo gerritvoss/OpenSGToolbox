@@ -190,10 +190,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
 	class BoundedRangeModelChangeListener : public ChangeListener
 	{
 	public:
-		BoundedRangeModelChangeListener(ScrollBarRefPtr TheScrollBar);
+		BoundedRangeModelChangeListener(ScrollBar* const TheScrollBar);
         virtual void stateChanged(const ChangeEventUnrecPtr e);
 	private:
-		ScrollBarRefPtr _ScrollBar;
+		ScrollBar* _ScrollBar;
 	};
 
 	friend class BoundedRangeModelChangeListener;
@@ -206,10 +206,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
 	class MinButtonActionListener : public ActionListener
 	{
 	public:
-		MinButtonActionListener(ScrollBarRefPtr TheScrollBar);
+		MinButtonActionListener(ScrollBar* const TheScrollBar);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		ScrollBarRefPtr _ScrollBar;
+		ScrollBar* _ScrollBar;
 	};
 
 	friend class MinButtonActionListener;
@@ -220,10 +220,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
 	class MaxButtonActionListener : public ActionListener
 	{
 	public:
-		MaxButtonActionListener(ScrollBarRefPtr TheScrollBar);
+		MaxButtonActionListener(ScrollBar* const TheScrollBar);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		ScrollBarRefPtr _ScrollBar;
+		ScrollBar* _ScrollBar;
 	};
 
 	friend class MaxButtonActionListener;
@@ -234,10 +234,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
 	class ScrollBarListener : public MouseAdapter
 	{
 	public :
-		ScrollBarListener(ScrollBarRefPtr TheScrollBar);
+		ScrollBarListener(ScrollBar* const TheScrollBar);
 		virtual void mousePressed(const MouseEventUnrecPtr e);
 	protected :
-		ScrollBarRefPtr _ScrollBar;
+		ScrollBar* _ScrollBar;
 	};
 
 	friend class ScrollBarListener;
@@ -248,7 +248,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
 	class ScrollBarDraggedListener : public MouseAdapter, public MouseMotionAdapter
 	{
 	public :
-		ScrollBarDraggedListener(ScrollBarRefPtr TheScrollBar);
+		ScrollBarDraggedListener(ScrollBar* const TheScrollBar);
 		virtual void mouseReleased(const MouseEventUnrecPtr e);
         
 		virtual void mouseDragged(const MouseEventUnrecPtr e);
@@ -258,7 +258,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
         
         void disconnect(void);
 	protected :
-		ScrollBarRefPtr _ScrollBar;
+		ScrollBar* _ScrollBar;
         Pnt2f _InitialMousePosition;
         Pnt2f _InitialScrollBarPosition;
 	};
@@ -271,10 +271,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
 	class ScrollFieldListener : public ActionListener
 	{
 	public :
-		ScrollFieldListener(ScrollBarRefPtr TheScrollBar);
+		ScrollFieldListener(ScrollBar* const TheScrollBar);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
 	protected :
-		ScrollBarRefPtr _ScrollBar;
+		ScrollBar* _ScrollBar;
 	};
 
 	friend class ScrollFieldListener;

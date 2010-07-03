@@ -89,7 +89,7 @@ Vec2f Label::getContentRequestedSize(void) const
 	return (TextBottomRight - TextTopLeft) + Vec2f(2.0,2.0);
 }
 
-void Label::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void Label::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
     if(getText() != "" && getFont() != NULL)
     {
@@ -165,12 +165,12 @@ void Label::mouseClicked(const MouseEventUnrecPtr e)
 
 			    //set caret position to proper place
 			    //if the mouse is to the left of the text, set it to the begining.
-			    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this));
-			    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= TempPos.x())
+			    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), this);
+			    if(DrawingSurfaceToComponent(e->getLocation(), this).x() <= TempPos.x())
 			    {
 				    Position = 0;
 			    }//if the mouse is to the right of the text, set it to the end
-			    else if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+			    else if(DrawingSurfaceToComponent(e->getLocation(), this).x() >= TempPos.x()+BottomRightText.x())
 			    {
 				    Position = getText().size();
 			    }
@@ -180,8 +180,8 @@ void Label::mouseClicked(const MouseEventUnrecPtr e)
 				    {		
 					    calculateTextBounds(0,i, TopLeftText, BottomRightText);
 					    calculateTextBounds(0,i+1, TopLeftText1, BottomRightText1);
-					    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x()>BottomRightText.x()
-					       && DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+					    if(DrawingSurfaceToComponent(e->getLocation(), this).x()>BottomRightText.x()
+					       && DrawingSurfaceToComponent(e->getLocation(), this).x() <= BottomRightText1.x())//check to see if it's in the right spot
 					    {
 						    Position = i;
 						    break;
@@ -236,12 +236,12 @@ void Label::mousePressed(const MouseEventUnrecPtr e)
 	    {
 		    //set caret position to proper place
 		    //if the mouse is to the left of the text, set it to the begining.
-		    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this));
-		    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= TempPos.x())
+		    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), this);
+		    if(DrawingSurfaceToComponent(e->getLocation(), this).x() <= TempPos.x())
 		    {
 			    setCaretPosition(0);
 		    }		//if the mouse is to the right of the text, set it to the end
-		    else if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		    else if(DrawingSurfaceToComponent(e->getLocation(), this).x() >= TempPos.x()+BottomRightText.x())
 		    {
 			    setCaretPosition(getText().size());
 		    }
@@ -251,10 +251,10 @@ void Label::mousePressed(const MouseEventUnrecPtr e)
 			    {		
 				    calculateTextBounds(0,i, TopLeftText, BottomRightText);
 				    calculateTextBounds(0,i+1, TopLeftText1, BottomRightText1);
-				    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x()>BottomRightText.x()
-				       && DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				    if(DrawingSurfaceToComponent(e->getLocation(), this).x()>BottomRightText.x()
+				       && DrawingSurfaceToComponent(e->getLocation(), this).x() <= BottomRightText1.x())//check to see if it's in the right spot
 				    {
-					    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= (BottomRightText1.x()-BottomRightText.x())/2.0+0.5 + BottomRightText.x())
+					    if(DrawingSurfaceToComponent(e->getLocation(), this).x() <= (BottomRightText1.x()-BottomRightText.x())/2.0+0.5 + BottomRightText.x())
 					    {
 						    setCaretPosition(i);
 						    break;
@@ -290,12 +290,12 @@ void Label::mouseDragged(const MouseEventUnrecPtr e)
 	    {
 		    //set caret position to proper place
 		    //if the mouse is to the left of the text, set it to the begining.
-		    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this));
-		    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= TempPos.x())
+		    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), this);
+		    if(DrawingSurfaceToComponent(e->getLocation(), this).x() <= TempPos.x())
 		    {
 			    setCaretPosition(0);
 		    }		//if the mouse is to the right of the text, set it to the end
-		    else if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		    else if(DrawingSurfaceToComponent(e->getLocation(), this).x() >= TempPos.x()+BottomRightText.x())
 		    {
 			    setCaretPosition(getText().size());
 		    }
@@ -306,10 +306,10 @@ void Label::mouseDragged(const MouseEventUnrecPtr e)
 			    {		
 				    calculateTextBounds(0,i, TopLeftText, BottomRightText);
 				    calculateTextBounds(0,i+1, TopLeftText1, BottomRightText1);
-				    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x()>BottomRightText.x()
-				       && DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				    if(DrawingSurfaceToComponent(e->getLocation(), this).x()>BottomRightText.x()
+				       && DrawingSurfaceToComponent(e->getLocation(), this).x() <= BottomRightText1.x())//check to see if it's in the right spot
 				    {
-					    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() < (BottomRightText1.x()-BottomRightText.x())/2.0 + BottomRightText.x())
+					    if(DrawingSurfaceToComponent(e->getLocation(), this).x() < (BottomRightText1.x()-BottomRightText.x())/2.0 + BottomRightText.x())
 					    {
 
 						    setCaretPosition(i);

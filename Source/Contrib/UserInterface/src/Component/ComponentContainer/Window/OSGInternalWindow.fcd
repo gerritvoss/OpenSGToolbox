@@ -12,6 +12,7 @@
     useLocalIncludes="false"
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
+    childFields="multi"
     >
     A UI Internal Window.
     <Field

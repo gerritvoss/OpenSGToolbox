@@ -58,6 +58,8 @@
 #include "OSGComponentListener.h"
 
 #include "OSGToolTipFields.h"
+#include "OSGInternalWindowFields.h"
+#include "OSGComponentContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -95,7 +97,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void draw(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
     virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 	virtual void getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
@@ -168,7 +170,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
 
     //Returns the tooltip location in this component's coordinate system
     virtual Pnt2f getToolTipLocation(Pnt2f MousePosition);
-    virtual ToolTipRefPtr createToolTip(void);
+
+    virtual ToolTipTransitPtr createToolTip(void);
     
     //Scrollable Interface
     //Returns the preferred size of the viewport for a view component.
@@ -195,17 +198,23 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
 	virtual void scrollToPoint(const Pnt2f& PointInComponent);
 
     static const OSG::BitVector BordersFieldMask;
-	virtual void setBorders(BorderRefPtr TheBorder);
+	virtual void setBorders(Border * const TheBorder);
 
     static const OSG::BitVector BackgroundsFieldMask;
-	virtual void setBackgrounds(LayerRefPtr TheBackground);
+	virtual void setBackgrounds(Layer* const TheBackground);
     
     static const OSG::BitVector ForegroundsFieldMask;
-	virtual void setForegrounds(LayerRefPtr TheForeground);
+	virtual void setForegrounds(Layer* const TheForeground);
 
     virtual Pnt2f getParentToLocal(const Pnt2f& Location) const;
 
     virtual Pnt2f getLocalToParent(const Pnt2f& Location) const;
+
+    virtual InternalWindow* getParentWindow(void) const;
+
+    virtual void setParentWindow(InternalWindow* const parent);
+
+    virtual ComponentContainer* getParentContainer(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -235,33 +244,33 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
 
     /*! \}                                                                 */
 
-	virtual bool setupClipping(const GraphicsWeakPtr Graphics) const;
-    virtual void drawBorder(const GraphicsWeakPtr TheGraphics, const BorderRefPtr Border, Real32 Opacity) const;
-    virtual void drawBackground(const GraphicsWeakPtr TheGraphics, const LayerRefPtr Background, Real32 Opacity) const;
-    virtual void drawForeground(const GraphicsWeakPtr TheGraphics, const LayerRefPtr Foreground, Real32 Opacity) const;
+	virtual bool setupClipping(Graphics* const Graphics) const;
+    virtual void drawBorder(Graphics* const TheGraphics, const Border* Border, Real32 Opacity) const;
+    virtual void drawBackground(Graphics* const TheGraphics, const Layer* Background, Real32 Opacity) const;
+    virtual void drawForeground(Graphics* const TheGraphics, const Layer* Foreground, Real32 Opacity) const;
     
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const = 0;
-	virtual void drawUnclipped(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const = 0;
+	virtual void drawUnclipped(Graphics* const TheGraphics, Real32 Opacity) const;
 	
-    virtual bool giveFocus(ComponentRefPtr NewFocusedComponent, bool Temporary= false);
-    virtual BorderRefPtr getDrawnBorder(void) const;
-    virtual LayerRefPtr getDrawnBackground(void) const;
-    virtual LayerRefPtr getDrawnForeground(void) const;
+    virtual bool giveFocus(Component* const NewFocusedComponent, bool Temporary= false);
+    virtual Border* getDrawnBorder(void) const;
+    virtual Layer* getDrawnBackground(void) const;
+    virtual Layer* getDrawnForeground(void) const;
 
     class ComponentUpdater : public UpdateListener
     {
     public:
-        ComponentUpdater(ComponentRefPtr TheComponent);
+        ComponentUpdater(Component* const TheComponent);
 
         virtual void update(const UpdateEventUnrecPtr e);
     private:
-        ComponentRefPtr _Component;
+        Component* _Component;
     };
 
     class DeactivateToolTipListener : public MouseListener
     {
     public:
-        DeactivateToolTipListener(ComponentRefPtr TheComponent);
+        DeactivateToolTipListener(Component* const TheComponent);
 
         virtual void mouseClicked(const MouseEventUnrecPtr e);
         virtual void mouseEntered(const MouseEventUnrecPtr e);
@@ -269,13 +278,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
         virtual void mousePressed(const MouseEventUnrecPtr e);
         virtual void mouseReleased(const MouseEventUnrecPtr e);
     private:
-        ComponentRefPtr _Component;
+        Component* _Component;
     };
 
     class ActivateToolTipListener : public MouseListener
     {
     public:
-        ActivateToolTipListener(ComponentRefPtr TheComponent);
+        ActivateToolTipListener(Component* const TheComponent);
 
         virtual void mouseClicked(const MouseEventUnrecPtr e);
         virtual void mouseEntered(const MouseEventUnrecPtr e);
@@ -285,7 +294,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
 
         void disconnect(void);
     private:
-        ComponentRefPtr _Component;
+        Component* _Component;
     };
     
     friend class ComponentUpdater;
@@ -303,6 +312,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
     virtual Pnt2f               getClipBottomRight(void) const;
     virtual void setClipTopLeft    (const Pnt2f &value);
     virtual void setClipBottomRight(const Pnt2f &value);
+
+    InternalWindow* _ParentWindow;
 
     /*==========================  PRIVATE  ================================*/
 

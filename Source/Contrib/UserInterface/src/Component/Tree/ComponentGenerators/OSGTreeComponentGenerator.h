@@ -80,7 +80,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeComponentGenerator : public TreeCo
 
     /*! \}                                                                 */
 
-    virtual ComponentRefPtr getTreeExpandedComponent(TreeRefPtr Parent,
+    virtual ComponentTransitPtr getTreeExpandedComponent(Tree* const Parent,
                                                      const boost::any& Value,
                                                      bool IsSelected,
                                                      bool Expanded,
@@ -88,7 +88,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeComponentGenerator : public TreeCo
                                                      UInt32 Row,
                                                      bool HasFocus) = 0;
     
-	virtual ComponentRefPtr getTreeComponent(TreeRefPtr Parent,
+	virtual ComponentTransitPtr getTreeComponent(Tree* const Parent,
                                              const boost::any& Value,
                                              bool IsSelected,
                                              bool Expanded,
@@ -96,7 +96,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeComponentGenerator : public TreeCo
                                              UInt32 Row,
                                              bool HasFocus) = 0;
     
-	virtual ComponentRefPtr getComponent(ComponentRefPtr Parent,
+	virtual ComponentTransitPtr getComponent(Component* const Parent,
                                          const boost::any& Value,
                                          Int32 PrimaryAxisIndex,
                                          Int32 SecondaryAxisIndex,

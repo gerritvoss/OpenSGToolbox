@@ -104,7 +104,7 @@ void BoxLayout::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void BoxLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+void BoxLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
 	/*!
       totalMajorAxis will be the sum of the MajorAxis of all of the
@@ -213,7 +213,7 @@ void BoxLayout::updateLayout(const MFUnrecComponentPtr* Components, const Compon
 }
 
 
-Vec2f BoxLayout::layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
+Vec2f BoxLayout::layoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
 {
     Real32 MinorAxisMax(0.0f);
     Real32 MajorAxisSum(0.0f);
@@ -240,22 +240,22 @@ Vec2f BoxLayout::layoutSize(const MFUnrecComponentPtr* Components, const Compone
     return Result;
 }
 
-Vec2f BoxLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f BoxLayout::minimumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MIN_SIZE);
 }
 
-Vec2f BoxLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f BoxLayout::requestedContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
 }
 
-Vec2f BoxLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f BoxLayout::preferredContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
 }
 
-Vec2f BoxLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f BoxLayout::maximumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MAX_SIZE);
 }

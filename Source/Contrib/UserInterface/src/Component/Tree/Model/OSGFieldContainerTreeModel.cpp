@@ -123,7 +123,7 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
                     if(index < ThePair._Container->getField(ThePair._FieldID)->size())
                     {
                         GetFieldHandlePtr TempHandle(ThePair._Container->getField(ThePair._FieldID));
-                        FieldContainerWeakPtr TheContainer = dynamic_cast<GetMFieldHandle<FieldContainerPtrMFieldBase>*>(TempHandle.get())->get(index);
+                        FieldContainer* TheContainer = dynamic_cast<GetMFieldHandle<FieldContainerPtrMFieldBase>*>(TempHandle.get())->get(index);
 
                         return boost::any(ContainerFieldIdPair(TheContainer,0));
                     }
@@ -138,7 +138,7 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
                     if(index == 0)
                     {
                         GetFieldHandlePtr TempHandle(ThePair._Container->getField(ThePair._FieldID));
-                        FieldContainerWeakPtr TheContainer = dynamic_cast<GetSFieldHandle<FieldContainerPtrSFieldBase>*>(TempHandle.get())->get();
+                        FieldContainer* TheContainer = dynamic_cast<GetSFieldHandle<FieldContainerPtrSFieldBase>*>(TempHandle.get())->get();
 
                         return boost::any(ContainerFieldIdPair(TheContainer,0));
                     }
@@ -289,7 +289,7 @@ UInt32 FieldContainerTreeModel::getIndexOfChild(const boost::any& parent, const 
                 {
                     GetFieldHandlePtr TempHandle(ParentPair._Container->getField(ParentPair._FieldID));
                     GetMFieldHandle<FieldContainerPtrMFieldBase>* TheParentMField = dynamic_cast<GetMFieldHandle<FieldContainerPtrMFieldBase>*>(TempHandle.get());
-                    FieldContainerWeakPtr TheChildContainer = ChildPair._Container;
+                    FieldContainer* TheChildContainer = ChildPair._Container;
                     
                     for(UInt32 i(0) ; i<TheParentMField->size() ; ++i)
                     {
@@ -358,7 +358,7 @@ void FieldContainerTreeModel::valueForPathChanged(TreePath path, const boost::an
     //TODO
 }
 
-void FieldContainerTreeModel::setRoot(FieldContainerRefPtr root)
+void FieldContainerTreeModel::setRoot(FieldContainer* const root)
 {
     setInternalRootFieldContainer(root);
 }

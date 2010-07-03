@@ -96,7 +96,7 @@ void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
     }
 }
 
-void AbstractListModel::produceListDataContentsChanged(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
+void AbstractListModel::produceListDataContentsChanged(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
     const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
@@ -107,7 +107,7 @@ void AbstractListModel::produceListDataContentsChanged(FieldContainerRefPtr Sour
     _Producer.produceEvent(ListDataContentsChangedMethodId,e);
 }
 
-void AbstractListModel::produceListDataIntervalAdded(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
+void AbstractListModel::produceListDataIntervalAdded(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
     const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
@@ -118,7 +118,7 @@ void AbstractListModel::produceListDataIntervalAdded(FieldContainerRefPtr Source
     _Producer.produceEvent(ListDataIntervalAddedMethodId,e);
 }
 
-void AbstractListModel::produceListDataIntervalRemoved(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
+void AbstractListModel::produceListDataIntervalRemoved(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
     const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);

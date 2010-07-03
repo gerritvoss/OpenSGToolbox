@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-DefaultTableCellEditor::DefaultStringEditorListener::DefaultStringEditorListener(DefaultTableCellEditorRefPtr TheDefaultTableCellEditor) :
+DefaultTableCellEditor::DefaultStringEditorListener::DefaultStringEditorListener(DefaultTableCellEditor* const TheDefaultTableCellEditor) :
 _DefaultTableCellEditor(TheDefaultTableCellEditor)
 {
 }

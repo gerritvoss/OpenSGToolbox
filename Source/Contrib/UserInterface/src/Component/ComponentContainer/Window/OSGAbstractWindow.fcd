@@ -15,16 +15,18 @@
     parentProducer="Component"
     >
     A UI Abstract Window.
-    <Field
-        name="DrawingSurface"
-        type="UIDrawingSurface"
-        category="pointer"
-        cardinality="single"
-        visibility="external"
-        access="public"
-        defaultValue="NULL"
-        >
-    </Field>
+	<Field
+	   name="ParentDrawingSurface"
+	   type="FieldContainer"
+	   cardinality="single"
+	   visibility="external"
+	   access="none"
+       doRefCount="false"
+       passFieldMask="true"
+       category="parentpointer"
+	   >
+	  The DrawingSurface this Window is contained in.
+	</Field>
     <Field
         name="Closable"
         type="bool"

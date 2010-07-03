@@ -123,37 +123,37 @@ void ScrollBar::removeAdjustmentListener(AdjustmentListenerPtr Listener)
 }
 
 inline
-ScrollBar::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(ScrollBarRefPtr TheScrollBar) :
+ScrollBar::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(ScrollBar* const TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::MinButtonActionListener::MinButtonActionListener(ScrollBarRefPtr TheScrollBar) :
+ScrollBar::MinButtonActionListener::MinButtonActionListener(ScrollBar* const TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::MaxButtonActionListener::MaxButtonActionListener(ScrollBarRefPtr TheScrollBar) :
+ScrollBar::MaxButtonActionListener::MaxButtonActionListener(ScrollBar* const TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::ScrollBarListener::ScrollBarListener(ScrollBarRefPtr TheScrollBar) :
+ScrollBar::ScrollBarListener::ScrollBarListener(ScrollBar* const TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::ScrollBarDraggedListener::ScrollBarDraggedListener(ScrollBarRefPtr TheScrollBar) :
+ScrollBar::ScrollBarDraggedListener::ScrollBarDraggedListener(ScrollBar* const TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::ScrollFieldListener::ScrollFieldListener(ScrollBarRefPtr TheScrollBar) :
+ScrollBar::ScrollFieldListener::ScrollFieldListener(ScrollBar* const TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }

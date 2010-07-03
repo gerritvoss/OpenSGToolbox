@@ -178,10 +178,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Slider : public SliderBase
 	class BoundedRangeModelChangeListener : public ChangeListener
 	{
 	public:
-		BoundedRangeModelChangeListener(SliderRefPtr TheSlider);
+		BoundedRangeModelChangeListener(Slider* const TheSlider);
         virtual void stateChanged(const ChangeEventUnrecPtr e);
 	private:
-		SliderRefPtr _Slider;
+		Slider* _Slider;
 	};
 
 	friend class BoundedRangeModelChangeListener;
@@ -192,7 +192,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Slider : public SliderBase
 	class KnobDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
 	{
 	public :
-		KnobDraggedListener(SliderRefPtr TheSlider);
+		KnobDraggedListener(Slider* const TheSlider);
 		virtual void mouseDragged(const MouseEventUnrecPtr e);
 		
 		virtual void mousePressed(const MouseEventUnrecPtr e);
@@ -202,7 +202,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Slider : public SliderBase
 
 		void disconnect(void);
 	protected :
-		SliderRefPtr _Slider;
+		Slider* _Slider;
 		Int32 _InitialValue;
 	};
 
@@ -217,7 +217,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Slider : public SliderBase
 	Int32 getTrackMax(void) const;
 
 	Pnt2f calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size1, const Vec2f& Size2, const Real32& VAlign, const Real32& HAlign);
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
 	Pnt2f getSliderTrackTopLeft(void) const;
 	Vec2f getSliderTrackSize(void) const;

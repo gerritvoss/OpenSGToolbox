@@ -76,7 +76,7 @@ void LineUIDrawObject::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LineUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void LineUIDrawObject::draw(Graphics* const Graphics, Real32 Opacity) const
 {
 	Graphics->drawLine(getTopLeft(), getBottomRight(), getWidth(), getColor(), getOpacity()*Opacity);
 }

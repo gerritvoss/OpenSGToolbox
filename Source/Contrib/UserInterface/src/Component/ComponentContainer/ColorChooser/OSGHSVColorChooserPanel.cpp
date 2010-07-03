@@ -342,81 +342,81 @@ void HSVColorChooserPanel::buildChooser(void)
 	   
 	//Hue
 	//Label
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, HueLabel, 5, SpringLayoutConstraints::WEST_EDGE, HSVColorChooserPanelRefPtr(this));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, HueLabel, 5, SpringLayoutConstraints::NORTH_EDGE, HSVColorChooserPanelRefPtr(this));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, HueLabel, LayoutSpring::width(HueLabel));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, HueLabel, LayoutSpring::height(HueLabel));
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, HueLabel, 5.0f, SpringLayoutConstraints::WEST_EDGE, this);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, HueLabel, 5.0f, SpringLayoutConstraints::NORTH_EDGE, this);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, HueLabel, LayoutSpringUnrecPtr(LayoutSpring::width(HueLabel)));
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, HueLabel, LayoutSpringUnrecPtr(LayoutSpring::height(HueLabel)));
 
 	//Slider
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _HueSlider, 5, SpringLayoutConstraints::EAST_EDGE, HueLabel);
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _HueSlider, -5, SpringLayoutConstraints::WEST_EDGE, _HueSpinner);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _HueSlider, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, HueLabel);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _HueSlider, LayoutSpring::height(_HueSlider));
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _HueSlider, 5.0f, SpringLayoutConstraints::EAST_EDGE, HueLabel);
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _HueSlider, -5.0f, SpringLayoutConstraints::WEST_EDGE, _HueSpinner);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _HueSlider, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, HueLabel);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _HueSlider, LayoutSpringUnrecPtr(LayoutSpring::height(_HueSlider)));
 	
 	//Spinner
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _HueSpinner, -5, SpringLayoutConstraints::EAST_EDGE, HSVColorChooserPanelRefPtr(this));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _HueSpinner, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, HueLabel);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _HueSpinner, LayoutSpring::width(_HueSpinner));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _HueSpinner, LayoutSpring::height(_HueSpinner));
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _HueSpinner, -5.0f, SpringLayoutConstraints::EAST_EDGE, this);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _HueSpinner, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, HueLabel);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _HueSpinner, LayoutSpringUnrecPtr(LayoutSpring::width(_HueSpinner)));
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _HueSpinner, LayoutSpringUnrecPtr(LayoutSpring::height(_HueSpinner)));
 	 
 	//Saturation
 	//Label
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, SaturationLabel, 5, SpringLayoutConstraints::WEST_EDGE, HSVColorChooserPanelRefPtr(this));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, SaturationLabel, 5, SpringLayoutConstraints::SOUTH_EDGE, HueLabel);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, SaturationLabel, LayoutSpring::width(SaturationLabel));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, SaturationLabel, LayoutSpring::height(SaturationLabel));
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, SaturationLabel, 5.0f, SpringLayoutConstraints::WEST_EDGE, this);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, SaturationLabel, 5.0f, SpringLayoutConstraints::SOUTH_EDGE, HueLabel);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, SaturationLabel, LayoutSpringUnrecPtr(LayoutSpring::width(SaturationLabel)));
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, SaturationLabel, LayoutSpringUnrecPtr(LayoutSpring::height(SaturationLabel)));
 
 	//Slider
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _SaturationSlider, 5, SpringLayoutConstraints::EAST_EDGE, SaturationLabel);
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _SaturationSlider, -5, SpringLayoutConstraints::WEST_EDGE, _SaturationSpinner);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _SaturationSlider, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, SaturationLabel);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _SaturationSlider, LayoutSpring::height(_SaturationSlider));
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _SaturationSlider, 5.0f, SpringLayoutConstraints::EAST_EDGE, SaturationLabel);
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _SaturationSlider, -5.0f, SpringLayoutConstraints::WEST_EDGE, _SaturationSpinner);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _SaturationSlider, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, SaturationLabel);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _SaturationSlider, LayoutSpringUnrecPtr(LayoutSpring::height(_SaturationSlider)));
 	
 	//Spinner
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _SaturationSpinner, -5, SpringLayoutConstraints::EAST_EDGE, HSVColorChooserPanelRefPtr(this));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _SaturationSpinner, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, SaturationLabel);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _SaturationSpinner, LayoutSpring::width(_SaturationSpinner));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _SaturationSpinner, LayoutSpring::height(_SaturationSpinner));
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _SaturationSpinner, -5.0f, SpringLayoutConstraints::EAST_EDGE, this);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _SaturationSpinner, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, SaturationLabel);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _SaturationSpinner, LayoutSpringUnrecPtr(LayoutSpring::width(_SaturationSpinner)));
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _SaturationSpinner, LayoutSpringUnrecPtr(LayoutSpring::height(_SaturationSpinner)));
 	 
 	//Value
 	//Label
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ValueLabel, 5, SpringLayoutConstraints::WEST_EDGE, HSVColorChooserPanelRefPtr(this));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ValueLabel, 5, SpringLayoutConstraints::SOUTH_EDGE, SaturationLabel);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, ValueLabel, LayoutSpring::width(ValueLabel));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, ValueLabel, LayoutSpring::height(ValueLabel));
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ValueLabel, 5.0f, SpringLayoutConstraints::WEST_EDGE, this);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ValueLabel, 5.0f, SpringLayoutConstraints::SOUTH_EDGE, SaturationLabel);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, ValueLabel, LayoutSpringUnrecPtr(LayoutSpring::width(ValueLabel)));
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, ValueLabel, LayoutSpringUnrecPtr(LayoutSpring::height(ValueLabel)));
 
 	//Slider
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _ValueSlider, 5, SpringLayoutConstraints::EAST_EDGE, ValueLabel);
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _ValueSlider, -5, SpringLayoutConstraints::WEST_EDGE, _ValueSpinner);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _ValueSlider, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, ValueLabel);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _ValueSlider, LayoutSpring::height(_ValueSlider));
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _ValueSlider, 5.0f, SpringLayoutConstraints::EAST_EDGE, ValueLabel);
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _ValueSlider, -5.0f, SpringLayoutConstraints::WEST_EDGE, _ValueSpinner);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _ValueSlider, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, ValueLabel);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _ValueSlider, LayoutSpringUnrecPtr(LayoutSpring::height(_ValueSlider)));
 	
 	//Spinner
-    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _ValueSpinner, -5, SpringLayoutConstraints::EAST_EDGE, HSVColorChooserPanelRefPtr(this));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _ValueSpinner, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, ValueLabel);
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _ValueSpinner, LayoutSpring::width(_ValueSpinner));
-	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _ValueSpinner, LayoutSpring::height(_ValueSpinner));
+    HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _ValueSpinner, -5.0f, SpringLayoutConstraints::EAST_EDGE, this);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _ValueSpinner, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, ValueLabel);
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _ValueSpinner, LayoutSpringUnrecPtr(LayoutSpring::width(_ValueSpinner)));
+	HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _ValueSpinner, LayoutSpringUnrecPtr(LayoutSpring::height(_ValueSpinner)));
 	 
 	if(getIncludeAlpha())
 	{
 		//Alpha
 		//Label
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, AlphaLabel, 5, SpringLayoutConstraints::WEST_EDGE, HSVColorChooserPanelRefPtr(this));
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, AlphaLabel, 5, SpringLayoutConstraints::SOUTH_EDGE, ValueLabel);
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, AlphaLabel, LayoutSpring::width(AlphaLabel));
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, AlphaLabel, LayoutSpring::height(AlphaLabel));
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, AlphaLabel, 5.0f, SpringLayoutConstraints::WEST_EDGE, this);
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, AlphaLabel, 5.0f, SpringLayoutConstraints::SOUTH_EDGE, ValueLabel);
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, AlphaLabel, LayoutSpringUnrecPtr(LayoutSpring::width(AlphaLabel)));
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, AlphaLabel, LayoutSpringUnrecPtr(LayoutSpring::height(AlphaLabel)));
 
 		//Slider
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _AlphaSlider, 5, SpringLayoutConstraints::EAST_EDGE, AlphaLabel);
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _AlphaSlider, -5, SpringLayoutConstraints::WEST_EDGE, _AlphaSpinner);
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _AlphaSlider, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, AlphaLabel);
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _AlphaSlider, LayoutSpring::height(_AlphaSlider));
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _AlphaSlider, 5.0f, SpringLayoutConstraints::EAST_EDGE, AlphaLabel);
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _AlphaSlider, -5.0f, SpringLayoutConstraints::WEST_EDGE, _AlphaSpinner);
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _AlphaSlider, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, AlphaLabel);
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _AlphaSlider, LayoutSpringUnrecPtr(LayoutSpring::height(_AlphaSlider)));
 		
 		//Spinner
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _AlphaSpinner, -5, SpringLayoutConstraints::EAST_EDGE, HSVColorChooserPanelRefPtr(this));
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _AlphaSpinner, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, AlphaLabel);
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _AlphaSpinner, LayoutSpring::width(_AlphaSpinner));
-		HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _AlphaSpinner, LayoutSpring::height(_AlphaSpinner));
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _AlphaSpinner, -5.0f, SpringLayoutConstraints::EAST_EDGE, this);
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, _AlphaSpinner, 0.0f, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, AlphaLabel);
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, _AlphaSpinner, LayoutSpringUnrecPtr(LayoutSpring::width(_AlphaSpinner)));
+		HSVPanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, _AlphaSpinner, LayoutSpringUnrecPtr(LayoutSpring::height(_AlphaSpinner)));
 	}
 
 		clearChildren();

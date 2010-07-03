@@ -148,7 +148,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumn : public TableColumnBase
 	
     FieldChangeListenerSet       _FieldChangeListeners;
     
-    virtual void produceFieldChanged(FieldContainerWeakPtr TheFieldContainer, FieldDescriptionBase* TheDescription);
+    virtual void produceFieldChanged(FieldContainer* TheFieldContainer, FieldDescriptionBase* TheDescription);
     /*==========================  PRIVATE  ================================*/
 
   private:

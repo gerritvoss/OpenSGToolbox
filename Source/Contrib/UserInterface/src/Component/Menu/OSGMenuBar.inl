@@ -53,7 +53,7 @@ UInt32 MenuBar::getNumMenus(void) const
 }
 
 inline
-MenuBar::MenuSelectionListener::MenuSelectionListener(MenuBarRefPtr TheMenuBar) :
+MenuBar::MenuSelectionListener::MenuSelectionListener(MenuBar* const TheMenuBar) :
 									_MenuBar(TheMenuBar)
 {
 }

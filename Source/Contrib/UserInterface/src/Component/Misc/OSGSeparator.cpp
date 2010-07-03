@@ -77,7 +77,7 @@ void Separator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Separator::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void Separator::drawInternal(Graphics* const Graphics, Real32 Opacity) const
 {
     Pnt2f TopLeft, BottomRight;
     getInsideBorderBounds(TopLeft, BottomRight);

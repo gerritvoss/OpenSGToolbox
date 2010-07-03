@@ -77,11 +77,11 @@ void ListComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr ListComponentGenerator::getComponent(ComponentRefPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
+ComponentTransitPtr ListComponentGenerator::getComponent(Component* const Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
 {
     if(Parent->getType().isDerivedFrom(List::getClassType()))
     {
-        return getListComponent(dynamic_pointer_cast<List>(Parent), Value, PrimaryAxisIndex, IsSelected, HasFocus);
+        return getListComponent(dynamic_cast<List* const>(Parent), Value, PrimaryAxisIndex, IsSelected, HasFocus);
     }
     else
     {

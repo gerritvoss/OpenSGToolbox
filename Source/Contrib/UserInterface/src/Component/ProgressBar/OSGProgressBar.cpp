@@ -47,6 +47,7 @@
 
 #include "OSGProgressBar.h"
 #include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
 #include "OSGUIDrawUtils.h"
 #include <sstream>
 
@@ -104,7 +105,7 @@ Color4f ProgressBar::getDrawnTextColor(void) const
     }
 }
 
-UIDrawObjectCanvasRefPtr ProgressBar::getDrawnDrawObject(void) const
+UIDrawObjectCanvas* ProgressBar::getDrawnDrawObject(void) const
 {
     if(getEnabled())
     {
@@ -127,7 +128,7 @@ UIDrawObjectCanvasRefPtr ProgressBar::getDrawnDrawObject(void) const
     }
 }
 
-void ProgressBar::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void ProgressBar::drawInternal(Graphics* const Graphics, Real32 Opacity) const
 {
 
 	//Draw The ProgressBar
@@ -180,10 +181,10 @@ void ProgressBar::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
 	if(getParentWindow() != NULL &&
-		getParentWindow()->getDrawingSurface() != NULL &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+		getParentWindow()->getParentDrawingSurface() != NULL &&
+		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 	{
-        getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
 	}
 }
 
@@ -253,10 +254,10 @@ void ProgressBar::startIndeterminate(void)
         setIndeterminate(true);
     _IndeterminateBarPosition = 0;
 	if(getParentWindow() != NULL &&
-		getParentWindow()->getDrawingSurface() != NULL &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+		getParentWindow()->getParentDrawingSurface() != NULL &&
+		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 	{
-        getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_IndeterminateUpdateListener);
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addUpdateListener(&_IndeterminateUpdateListener);
 	}
 }
 
@@ -264,10 +265,10 @@ void ProgressBar::endIndeterminate(void)
 {
         setIndeterminate(false);
 	if(getParentWindow() != NULL &&
-		getParentWindow()->getDrawingSurface() != NULL &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+		getParentWindow()->getParentDrawingSurface() != NULL &&
+		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 	{
-        getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
 	}
     setupProgressBar();
 }

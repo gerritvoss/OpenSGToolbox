@@ -98,39 +98,39 @@ void DefaultListModel::set(UInt32 Index, const boost::any& v)
     if(Index < _FieldList.size())
     {
         _FieldList[Index] = v;
-        produceListDataContentsChanged(DefaultListModelRefPtr(this),Index,Index);
+        produceListDataContentsChanged(this,Index,Index);
     }
 }
 
 void DefaultListModel::pushBack(const boost::any& f)
 {
     _FieldList.push_back(f);
-    produceListDataIntervalAdded(DefaultListModelRefPtr(this),_FieldList.size()-1,_FieldList.size()-1);
+    produceListDataIntervalAdded(this,_FieldList.size()-1,_FieldList.size()-1);
 }
 
 void DefaultListModel::clear(void)
 {
     UInt32 Size(_FieldList.size());
     _FieldList.clear();
-    produceListDataIntervalRemoved(DefaultListModelRefPtr(this),0,Size-1);
+    produceListDataIntervalRemoved(this,0,Size-1);
 }
 
 void DefaultListModel::popBack(void)
 {
     _FieldList.pop_back();
-    produceListDataIntervalRemoved(DefaultListModelRefPtr(this),_FieldList.size(),_FieldList.size());
+    produceListDataIntervalRemoved(this,_FieldList.size(),_FieldList.size());
 }
 
 void DefaultListModel::pushFront(const boost::any& f)
 {
     _FieldList.push_front(f);
-    produceListDataIntervalAdded(DefaultListModelRefPtr(this),0,0);
+    produceListDataIntervalAdded(this,0,0);
 }
 
 void DefaultListModel::popFront(void)
 {
     _FieldList.pop_front();
-    produceListDataIntervalRemoved(DefaultListModelRefPtr(this),0,0);
+    produceListDataIntervalRemoved(this,0,0);
 }
 
 void DefaultListModel::insert(UInt32 Index, const boost::any& f)
@@ -138,7 +138,7 @@ void DefaultListModel::insert(UInt32 Index, const boost::any& f)
     if(Index < _FieldList.size())
     {
         _FieldList.insert(_FieldList.begin() + Index, f);
-        produceListDataIntervalAdded(DefaultListModelRefPtr(this),Index,Index);
+        produceListDataIntervalAdded(this,Index,Index);
     }
     else
     {
@@ -153,7 +153,7 @@ void DefaultListModel::erase(UInt32 Index)
         FieldList::iterator SearchItor(_FieldList.begin());
         for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
         _FieldList.erase(SearchItor);
-        produceListDataIntervalRemoved(DefaultListModelRefPtr(this),Index,Index);
+        produceListDataIntervalRemoved(this,Index,Index);
     }
 }
 

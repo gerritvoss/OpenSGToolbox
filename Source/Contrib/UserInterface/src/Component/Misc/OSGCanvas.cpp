@@ -76,7 +76,7 @@ void Canvas::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Canvas::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void Canvas::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
     //Do Nothing
 }

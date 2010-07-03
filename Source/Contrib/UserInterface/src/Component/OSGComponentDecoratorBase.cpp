@@ -63,8 +63,7 @@
 #include "OSGBorder.h"                  // Border Class
 #include "OSGLayer.h"                   // Background Class
 #include "OSGTransferHandler.h"         // TransferHandler Class
-#include "OSGComponentContainer.h"      // ParentContainer Class
-#include "OSGInternalWindow.h"          // ParentWindow Class
+#include "OSGFieldContainer.h"          // ParentContainer Class
 #include "OSGPopupMenu.h"               // PopupMenu Class
 
 #include "OSGComponentDecoratorBase.h"
@@ -113,6 +112,18 @@ OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
 OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            ComponentDecorator *,
                            0);
+
+DataType &FieldTraits< ComponentDecorator *, 1 >::getType(void)
+{
+    return FieldTraits<ComponentDecorator *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_MFIELD(ChildPointerMField,
+                      ComponentDecorator *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
 
 /***************************************************************************\
  *                         Field Description                               *
@@ -172,6 +183,7 @@ ComponentDecoratorBase::TypeObject ComponentDecoratorBase::_type(
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    childFields=\"multi\"\n"
     ">\n"
     "A UI Component Interface.\n"
     "\t<Field\n"
@@ -393,24 +405,16 @@ ComponentDecoratorBase::TypeObject ComponentDecoratorBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
-    "\t\tname=\"ParentContainer\"\n"
-    "\t\ttype=\"ComponentContainer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"ParentWindow\"\n"
-    "\t\ttype=\"InternalWindow\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
+    "\t   name=\"ParentContainer\"\n"
+    "\t   type=\"FieldContainer\"\n"
+    "\t   cardinality=\"single\"\n"
+    "\t   visibility=\"external\"\n"
+    "\t   access=\"none\"\n"
+    "       doRefCount=\"false\"\n"
+    "       passFieldMask=\"true\"\n"
+    "       category=\"parentpointer\"\n"
+    "\t   >\n"
+    "\t  The Component Container this Component is contained in.\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"Clipping\"\n"
@@ -1258,55 +1262,6 @@ const SFReal32 *ComponentDecoratorBase::getSFOpacity(void) const
     }
 }
 
-//! Get the ComponentDecorator::_sfParentContainer field.
-const SFUnrecComponentContainerPtr *ComponentDecoratorBase::getSFParentContainer(void) const
-{
-    if(_sfDecoratee.getValue() != NULL)
-    {
-        return getDecoratee()->getSFParentContainer();
-    }
-    else
-    {
-        return NULL;
-    }
-}
-//! Get the ComponentDecorator::_sfParentContainer field.
-SFUnrecComponentContainerPtr *ComponentDecoratorBase::editSFParentContainer(void)
-{
-    if(_sfDecoratee.getValue() != NULL)
-    {
-        return getDecoratee()->editSFParentContainer();
-    }
-    else
-    {
-        return NULL;
-    }
-}
-
-//! Get the ComponentDecorator::_sfParentWindow field.
-const SFUnrecInternalWindowPtr *ComponentDecoratorBase::getSFParentWindow(void) const
-{
-    if(_sfDecoratee.getValue() != NULL)
-    {
-        return getDecoratee()->getSFParentWindow();
-    }
-    else
-    {
-        return NULL;
-    }
-}
-//! Get the ComponentDecorator::_sfParentWindow field.
-SFUnrecInternalWindowPtr *ComponentDecoratorBase::editSFParentWindow(void)
-{
-    if(_sfDecoratee.getValue() != NULL)
-    {
-        return getDecoratee()->editSFParentWindow();
-    }
-    else
-    {
-        return NULL;
-    }
-}
 
 SFBool *ComponentDecoratorBase::editSFClipping(void)
 {
@@ -1549,6 +1504,77 @@ ComponentDecoratorBase::ComponentDecoratorBase(const ComponentDecoratorBase &sou
 ComponentDecoratorBase::~ComponentDecoratorBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
+
+bool ComponentDecoratorBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
+{
+    if(parentFieldId == ParentContainerFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            FieldContainer *pOldParent =
+                _sfParentContainer.getValue         ();
+
+            UInt16 oldChildFieldId =
+                _sfParentContainer.getParentFieldPos();
+
+            if(pOldParent != NULL)
+            {
+                pOldParent->unlinkChild(this, oldChildFieldId);
+            }
+
+            editSField(ParentContainerFieldMask);
+
+            _sfParentContainer.setValue(static_cast<FieldContainer *>(pParent), childFieldId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
+}
+
+bool ComponentDecoratorBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
+{
+    if(parentFieldId == ParentContainerFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            if(_sfParentContainer.getValue() == pParent)
+            {
+                editSField(ParentContainerFieldMask);
+
+                _sfParentContainer.setValue(NULL, 0xFFFF);
+
+                return true;
+            }
+
+            FWARNING(("ComponentDecoratorBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
 
 void ComponentDecoratorBase::onCreate(const ComponentDecorator *source)
 {
@@ -1577,10 +1603,6 @@ void ComponentDecoratorBase::onCreate(const ComponentDecorator *source)
         pThis->setRolloverBorder(source->getRolloverBorder());
 
         pThis->setRolloverBackground(source->getRolloverBackground());
-
-        pThis->setParentContainer(source->getParentContainer());
-
-        pThis->setParentWindow(source->getParentWindow());
 
         pThis->setPopupMenu(source->getPopupMenu());
 
@@ -2203,56 +2225,14 @@ EditFieldHandlePtr ComponentDecoratorBase::editHandleOpacity        (void)
 
 GetFieldHandlePtr ComponentDecoratorBase::getHandleParentContainer (void) const
 {
-    SFUnrecComponentContainerPtr::GetHandlePtr returnValue(
-        new  SFUnrecComponentContainerPtr::GetHandle(
-             &_sfParentContainer,
-             this->getType().getFieldDesc(ParentContainerFieldId),
-             const_cast<ComponentDecoratorBase *>(this)));
+    SFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
 EditFieldHandlePtr ComponentDecoratorBase::editHandleParentContainer(void)
 {
-    SFUnrecComponentContainerPtr::EditHandlePtr returnValue(
-        new  SFUnrecComponentContainerPtr::EditHandle(
-             &_sfParentContainer,
-             this->getType().getFieldDesc(ParentContainerFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&ComponentDecorator::setParentContainer,
-                    static_cast<ComponentDecorator *>(this), _1));
-
-    editSField(ParentContainerFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ComponentDecoratorBase::getHandleParentWindow    (void) const
-{
-    SFUnrecInternalWindowPtr::GetHandlePtr returnValue(
-        new  SFUnrecInternalWindowPtr::GetHandle(
-             &_sfParentWindow,
-             this->getType().getFieldDesc(ParentWindowFieldId),
-             const_cast<ComponentDecoratorBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ComponentDecoratorBase::editHandleParentWindow   (void)
-{
-    SFUnrecInternalWindowPtr::EditHandlePtr returnValue(
-        new  SFUnrecInternalWindowPtr::EditHandle(
-             &_sfParentWindow,
-             this->getType().getFieldDesc(ParentWindowFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&ComponentDecorator::setParentWindow,
-                    static_cast<ComponentDecorator *>(this), _1));
-
-    editSField(ParentWindowFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
@@ -2518,10 +2498,6 @@ void ComponentDecoratorBase::resolveLinks(void)
     static_cast<ComponentDecorator *>(this)->setRolloverBorder(NULL);
 
     static_cast<ComponentDecorator *>(this)->setRolloverBackground(NULL);
-
-    static_cast<ComponentDecorator *>(this)->setParentContainer(NULL);
-
-    static_cast<ComponentDecorator *>(this)->setParentWindow(NULL);
 
     static_cast<ComponentDecorator *>(this)->setPopupMenu(NULL);
 
@@ -3276,58 +3252,6 @@ void ComponentDecoratorBase::setOpacity(const Real32 value)
     else
     {
         Inherited::setOpacity(value);
-    }
-}
-
-//! Get the value of the ComponentDecorator::_sfParentContainer field.
-ComponentContainer * ComponentDecoratorBase::getParentContainer(void) const
-{
-    if(_sfDecoratee.getValue() != NULL)
-    {
-        return getDecoratee()->getParentContainer();
-    }
-    else
-    {
-        return Inherited::getParentContainer();
-    }
-}
-
-//! Set the value of the ComponentDecorator::_sfParentContainer field.
-void ComponentDecoratorBase::setParentContainer(ComponentContainer * const value)
-{
-    if(_sfDecoratee.getValue() != NULL)
-    {
-        getDecoratee()->setParentContainer(value);
-    }
-    else
-    {
-        Inherited::setParentContainer(value);
-    }
-}
-
-//! Get the value of the ComponentDecorator::_sfParentWindow field.
-InternalWindow * ComponentDecoratorBase::getParentWindow(void) const
-{
-    if(_sfDecoratee.getValue() != NULL)
-    {
-        return getDecoratee()->getParentWindow();
-    }
-    else
-    {
-        return Inherited::getParentWindow();
-    }
-}
-
-//! Set the value of the ComponentDecorator::_sfParentWindow field.
-void ComponentDecoratorBase::setParentWindow(InternalWindow * const value)
-{
-    if(_sfDecoratee.getValue() != NULL)
-    {
-        getDecoratee()->setParentWindow(value);
-    }
-    else
-    {
-        Inherited::setParentWindow(value);
     }
 }
 

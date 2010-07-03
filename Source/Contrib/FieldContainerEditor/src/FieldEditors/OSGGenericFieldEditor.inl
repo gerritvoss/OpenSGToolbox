@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-GenericFieldEditor::TextFieldListener::TextFieldListener(GenericFieldEditor * ptr) : _GenericFieldEditor(ptr)
+GenericFieldEditor::TextFieldListener::TextFieldListener(GenericFieldEditor * const ptr) : _GenericFieldEditor(ptr)
 {
 }
 

@@ -80,17 +80,17 @@ void DefaultListComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr DefaultListComponentGenerator::getListComponent(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentTransitPtr DefaultListComponentGenerator::getListComponent(List* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
 	if(Value.empty()){
-		return NULL;
+		return ComponentTransitPtr(NULL);
 	}
 
     std::string Text(getText(Parent, Value, Index, IsSelected, HasFocus));
 	return getListComponentFromString(Parent, Text, Index, IsSelected, HasFocus);
 }
 
-ComponentRefPtr DefaultListComponentGenerator::getListComponentFromString(ListRefPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentTransitPtr DefaultListComponentGenerator::getListComponentFromString(List* const Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
 	ComponentRefPtr TheComponent;
 
@@ -112,10 +112,10 @@ ComponentRefPtr DefaultListComponentGenerator::getListComponentFromString(ListRe
 
     applyBordersAndBackground(TheComponent, Parent, Value, Index, IsSelected, HasFocus);
 
-	return TheComponent;
+	return ComponentTransitPtr(TheComponent.get());
 }
 
-std::string DefaultListComponentGenerator::getText(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
+std::string DefaultListComponentGenerator::getText(List* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
 {
 	if(Value.empty()){
 		return std::string("");
@@ -133,7 +133,7 @@ std::string DefaultListComponentGenerator::getText(ListRefPtr Parent, const boos
     return ValueString;
 }
 	
-void DefaultListComponentGenerator::applyBordersAndBackground(ComponentRefPtr TheComponent, ListRefPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
+void DefaultListComponentGenerator::applyBordersAndBackground(Component* const TheComponent, List* const Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
 {
 	if(IsSelected && HasFocus)
 	{
@@ -166,7 +166,7 @@ void DefaultListComponentGenerator::applyBordersAndBackground(ComponentRefPtr Th
 	}
 }
 
-void DefaultListComponentGenerator::applyTextColor(TextComponentRefPtr TheComponent, ListRefPtr Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
+void DefaultListComponentGenerator::applyTextColor(TextComponent* const TheComponent, List* const Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
 {
     if(IsSelected && HasFocus)
     {

@@ -79,7 +79,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextUIDrawObject : public TextUIDrawOb
 
     /*! \}                                                                 */
 
-	virtual void draw(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void draw(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
     virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 

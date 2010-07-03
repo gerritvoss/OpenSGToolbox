@@ -342,7 +342,6 @@ int main(int argc, char **argv)
     GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->setLookAndFeel(WindowsLookAndFeel::create());
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
         

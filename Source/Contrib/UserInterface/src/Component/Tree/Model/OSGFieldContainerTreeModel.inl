@@ -41,13 +41,13 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-FieldContainerRefPtr FieldContainerTreeModel::getRootFieldContainer(void) const
+FieldContainer* FieldContainerTreeModel::getRootFieldContainer(void) const
 {
     return getInternalRootFieldContainer();
 }
 
 inline
-FieldContainerTreeModel::ContainerFieldIdPair::ContainerFieldIdPair(FieldContainerWeakPtr container, UInt32 fieldId) :
+FieldContainerTreeModel::ContainerFieldIdPair::ContainerFieldIdPair(FieldContainer* container, UInt32 fieldId) :
 _Container(container),
 _FieldID(fieldId)
 {

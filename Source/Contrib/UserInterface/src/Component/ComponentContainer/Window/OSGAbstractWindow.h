@@ -51,6 +51,7 @@
 #include "OSGWindowListener.h"
 
 #include "OSGEventConnection.h"
+#include "OSGUIDrawingSurfaceFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -109,6 +110,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindow : public AbstractWindow
 	virtual void open(void) = 0;
 
 	virtual void close(void) = 0;
+
+    UIDrawingSurface* getParentDrawingSurface(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -138,9 +141,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindow : public AbstractWindow
 
     /*! \}                                                                 */
     
-    virtual BorderRefPtr getDrawnBorder(void) const;
-    virtual LayerRefPtr getDrawnBackground(void) const;
-    virtual LayerRefPtr getDrawnForeground(void) const;
+    virtual Border* getDrawnBorder(void) const;
+    virtual Layer* getDrawnBackground(void) const;
+    virtual Layer* getDrawnForeground(void) const;
 	
 	typedef std::set<WindowListenerPtr> WindowListenerSet;
     typedef WindowListenerSet::iterator WindowListenerSetItor;
@@ -178,7 +181,6 @@ typedef AbstractWindow *AbstractWindowP;
 OSG_END_NAMESPACE
 
 #include "OSGUIDrawObjectCanvas.h"
-#include "OSGUIDrawingSurface.h"
 
 #include "OSGAbstractWindowBase.inl"
 #include "OSGAbstractWindow.inl"

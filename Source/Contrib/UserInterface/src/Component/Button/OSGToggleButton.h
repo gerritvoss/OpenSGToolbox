@@ -99,12 +99,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ToggleButton : public ToggleButtonBase
 	bool isButtonSelectedListenerAttached(ButtonSelectedListenerPtr Listener) const;
     void removeButtonSelectedListener(ButtonSelectedListenerPtr Listener);
 
-    void setSelectedBorder   ( const BorderRefPtr &value );
-    void setSelectedBackground( const LayerRefPtr &value );
+    void setSelectedBorder   ( Border* const value );
+    void setSelectedBackground( Layer* const value );
     void setSelectedTextColor( const Color4f &value );
-    void setSelectedDrawObject( const UIDrawObjectCanvasRefPtr &value );
-    void setSelectedImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setSelectedTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setSelectedDrawObject( UIDrawObjectCanvas* const value );
+    void setSelectedImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setSelectedTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setSelectedImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
     Border * getSelectedBorder   (void) const;
@@ -156,9 +156,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ToggleButton : public ToggleButtonBase
     void produceButtonSelected(const ButtonSelectedEventUnrecPtr e);
     void produceButtonDeselected(const ButtonSelectedEventUnrecPtr e);
     
-    virtual BorderRefPtr getDrawnBorder(void) const;
-    virtual LayerRefPtr getDrawnBackground(void) const;
-    virtual LayerRefPtr getDrawnForeground(void) const;
+    virtual Border* getDrawnBorder(void) const;
+    virtual Layer* getDrawnBackground(void) const;
+    virtual Layer* getDrawnForeground(void) const;
     virtual Color4f getDrawnTextColor(void) const;
     virtual Vec2f getDrawnOffset(void) const;
     /*==========================  PRIVATE  ================================*/

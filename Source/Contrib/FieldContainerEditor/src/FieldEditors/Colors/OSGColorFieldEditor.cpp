@@ -53,6 +53,7 @@
 #include "OSGDefaultColorSelectionModel.h"
 #include "OSGDialogWindow.h"
 #include "OSGUIDrawUtils.h"
+#include "OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -173,7 +174,7 @@ void ColorFieldEditor::internalStartEditing (void)
 
     TheDialog->addDialogWindowListener(&_DialogListener);
 
-    getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+    getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
 }
 
 void ColorFieldEditor::internalStopEditing  (void)

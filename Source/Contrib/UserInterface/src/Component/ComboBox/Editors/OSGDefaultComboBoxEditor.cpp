@@ -102,7 +102,7 @@ bool DefaultComboBoxEditor::isActionListenerAttached(ActionListenerPtr Listener)
 	}
 }
 
-ComponentRefPtr DefaultComboBoxEditor::getEditorComponent(void)
+Component* DefaultComboBoxEditor::getEditorComponent(void)
 {
 	return getEditor();
 }
@@ -114,7 +114,6 @@ boost::any DefaultComboBoxEditor::getItem(void)
 
 void DefaultComboBoxEditor::selectAll(void)
 {
-	//TODO: Implement
 	if(getEditor() != NULL)
 	{
 		getEditor()->selectAll();

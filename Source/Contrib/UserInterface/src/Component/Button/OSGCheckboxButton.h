@@ -107,8 +107,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CheckboxButton : public CheckboxButton
 
     /*! \}                                                                 */
 
-    virtual UIDrawObjectCanvasRefPtr getDrawnDrawObject(void) const;        
-    virtual UIDrawObjectCanvasRefPtr getBaseDrawObject(void) const;
+    virtual UIDrawObjectCanvas* getDrawnDrawObject(void) const;        
+    virtual UIDrawObjectCanvas* getBaseDrawObject(void) const;
     
     /*==========================  PRIVATE  ================================*/
 

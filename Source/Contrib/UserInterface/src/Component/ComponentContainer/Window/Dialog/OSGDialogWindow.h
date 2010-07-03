@@ -175,50 +175,50 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
     class ConfirmButtonListener : public ActionListener
     {
       public :
-        ConfirmButtonListener(DialogWindowRefPtr TheDialogWindow);
+        ConfirmButtonListener(DialogWindow* const TheDialogWindow);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
       protected :
-        DialogWindowRefPtr _DialogWindow;
+        DialogWindow* _DialogWindow;
     };
     ConfirmButtonListener _ConfirmButtonListener;
 
     class CancelButtonListener : public ActionListener
     {
       public :
-        CancelButtonListener(DialogWindowRefPtr TheDialogWindow);
+        CancelButtonListener(DialogWindow* const TheDialogWindow);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
       protected :
-        DialogWindowRefPtr _DialogWindow;
+        DialogWindow* _DialogWindow;
     };
     CancelButtonListener _CancelButtonListener;
 
     class InputButtonListener : public ActionListener
     {
       public :
-        InputButtonListener(DialogWindowRefPtr TheDialogWindow);
+        InputButtonListener(DialogWindow* const TheDialogWindow);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
       protected :
-        DialogWindowRefPtr _DialogWindow;
+        DialogWindow* _DialogWindow;
     };
     InputButtonListener _InputButtonListener;
 
     class ComboButtonListener : public ActionListener
     {
       public :
-        ComboButtonListener(DialogWindowRefPtr TheDialogWindow);
+        ComboButtonListener(DialogWindow* const TheDialogWindow);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
       protected :
-        DialogWindowRefPtr _DialogWindow;
+        DialogWindow* _DialogWindow;
     };
     ComboButtonListener _ComboButtonListener;
 
     class TextButtonListener : public ActionListener
     {
       public :
-        TextButtonListener(DialogWindowRefPtr TheDialogWindow);
+        TextButtonListener(DialogWindow* const TheDialogWindow);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
       protected :
-        DialogWindowRefPtr _DialogWindow;
+        DialogWindow* _DialogWindow;
     };
     TextButtonListener _TextButtonListener;
 
@@ -240,8 +240,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
     ComboBoxRefPtr _InputComboBox;
     TextFieldRefPtr _InputTextField;
 
-	static TextAreaRefPtr createTransparentTextArea(const std::string& Message);
-	static void handleInputButton(const ButtonRefPtr& btn);
+	static TextAreaTransitPtr createTransparentTextArea(const std::string& Message);
+	static void handleInputButton(Button* const btn);
 
     TransientObjectVector _TransientObjects;
     /*==========================  PRIVATE  ================================*/

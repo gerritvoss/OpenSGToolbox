@@ -79,12 +79,12 @@ void DefaultTreeCellEditor::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr DefaultTreeCellEditor::getTreeCellEditorComponent(TreeRefPtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row)
+ComponentTransitPtr DefaultTreeCellEditor::getTreeCellEditorComponent(Tree* const TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row)
 {
     _EditingValue = Value;
 
     if(_EditingValue.empty()){
-        return NULL;
+        return ComponentTransitPtr(NULL);
     }
 
     if(_EditingValue.type() == typeid(std::string))
@@ -107,7 +107,7 @@ ComponentRefPtr DefaultTreeCellEditor::getTreeCellEditorComponent(TreeRefPtr The
         getDefaultStringEditor()->addFocusListener(&_DefaultTextFieldEditorListener);
         getDefaultStringEditor()->addKeyListener(&_DefaultTextFieldEditorListener);
 
-        return getDefaultStringEditor();
+        return ComponentTransitPtr(getDefaultStringEditor());
     }
     else
     {
@@ -121,11 +121,11 @@ ComponentRefPtr DefaultTreeCellEditor::getTreeCellEditorComponent(TreeRefPtr The
         getDefaultEditor()->addFocusListener(&_DefaultTextFieldEditorListener);
         getDefaultEditor()->addKeyListener(&_DefaultTextFieldEditorListener);
 
-        return getDefaultEditor();
+        return ComponentTransitPtr(getDefaultEditor());
     }
 }
 
-ComponentRefPtr DefaultTreeCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
+ComponentTransitPtr DefaultTreeCellEditor::getCellEditor(const boost::any& Value, bool IsSelected)
 {
     return getTreeCellEditorComponent(NULL, Value, IsSelected, false, 0);
 }
@@ -198,15 +198,15 @@ bool DefaultTreeCellEditor::stopCellEditing(void)
     return Inherited::stopCellEditing();
 }
 
-ComponentRefPtr DefaultTreeCellEditor::getComponent(void) const
+ComponentTransitPtr DefaultTreeCellEditor::getComponent(void) const
 {
     if(_EditingValue.type() == typeid(std::string))
     {
-        return getDefaultStringEditor();
+        return ComponentTransitPtr(getDefaultStringEditor());
     }
     else
     {
-        return getDefaultEditor();
+        return ComponentTransitPtr(getDefaultEditor());
     }
 }
 

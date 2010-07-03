@@ -89,16 +89,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ModelTreeNode : public ModelTreeNodeBa
 	virtual bool getAllowsChildren(void) const = 0;
 
 	//Returns the child ModelTreeNode at index childIndex.
-	virtual ModelTreeNodeRefPtr getChildAt(const UInt32& childIndex) const = 0;
+	virtual ModelTreeNode* getChildAt(const UInt32& childIndex) const = 0;
 
 	//Returns the number of children ModelTreeNodes the receiver contains.
 	virtual UInt32 getChildCount(void) const = 0;
 
 	//Returns the index of node in the receivers children.
-	virtual Int32 getIndex(ModelTreeNodeRefPtr node) const = 0;
+	virtual Int32 getIndex(ModelTreeNode* const node) const = 0;
 
 	//Returns the parent ModelTreeNode of the receiver.
-	virtual ModelTreeNodeRefPtr getParent(void) const = 0;
+	virtual ModelTreeNode* getParent(void) const = 0;
 
 	//Returns true if the receiver is a leaf.
 	virtual bool isLeaf(void) const = 0;

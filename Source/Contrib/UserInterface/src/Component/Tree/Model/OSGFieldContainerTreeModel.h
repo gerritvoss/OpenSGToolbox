@@ -64,10 +64,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModel : public Field
     struct ContainerFieldIdPair
     {
       public:
-        ContainerFieldIdPair(FieldContainerWeakPtr container, UInt32 fieldId);
+        ContainerFieldIdPair(FieldContainer* container, UInt32 fieldId);
         ContainerFieldIdPair(void);
 
-        FieldContainerWeakPtr _Container;
+        FieldContainer* _Container;
         UInt32                _FieldID;
 
         bool operator==(const ContainerFieldIdPair& right) const;
@@ -110,10 +110,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModel : public Field
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
 
     //Sets the root to root.
-    void setRoot(FieldContainerRefPtr root);
+    void setRoot(FieldContainer* const root);
 
-    //Get the NodeRefPtr to the Root Node
-    FieldContainerRefPtr getRootFieldContainer(void) const;
+    //Get the Node* to the Root Node
+    FieldContainer* getRootFieldContainer(void) const;
 
     //Returns true if these objects represent the same node in the tree
     virtual bool isEqual(const boost::any& left, const boost::any& right) const;

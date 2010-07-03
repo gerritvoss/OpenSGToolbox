@@ -96,7 +96,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditor : public SpinnerD
     virtual void cancelEdit(void);
 
     //Disconnect this editor from the specified JSpinner.
-    virtual void dismiss(SpinnerRefPtr spinner);
+    virtual void dismiss(Spinner* const spinner);
 
     //Called by the JTextField PropertyChangeListener.
     //void propertyChange(PropertyChangeEvent e);
@@ -149,13 +149,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditor : public SpinnerD
     class EditorTextFieldListener : public ActionListener, public FocusListener, public KeyAdapter
     {
       public:
-        EditorTextFieldListener(SpinnerDefaultEditorRefPtr TheSpinnerDefaultEditor);
+        EditorTextFieldListener(SpinnerDefaultEditor* const TheSpinnerDefaultEditor);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
         virtual void focusGained(const FocusEventUnrecPtr e);
         virtual void focusLost(const FocusEventUnrecPtr e);
         virtual void keyPressed(const KeyEventUnrecPtr e);
       private:
-        SpinnerDefaultEditorRefPtr _SpinnerDefaultEditor;
+        SpinnerDefaultEditor* _SpinnerDefaultEditor;
     };
 
     friend class EditorTextFieldListener;

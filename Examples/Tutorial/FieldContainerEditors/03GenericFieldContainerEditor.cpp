@@ -87,7 +87,7 @@ public:
        }
        if(e->getKey() == KeyEvent::KEY_E && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
        {
-           openDefaultFCTreeEditorDialog(TutorialViewport, TheCommandManager, UndoRedoList->getParentWindow()->getDrawingSurface());
+           openDefaultFCTreeEditorDialog(TutorialViewport, TheCommandManager, UndoRedoList->getParentWindow()->getParentDrawingSurface());
        }
    }
 

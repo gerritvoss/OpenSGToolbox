@@ -82,9 +82,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeCellEditor : public Default
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual ComponentRefPtr getTreeCellEditorComponent(TreeRefPtr TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row);
+	virtual ComponentTransitPtr getTreeCellEditorComponent(Tree* const TheTree, const boost::any& Value, bool IsSelected, bool IsExpanded, UInt32 row);
     
-    virtual ComponentRefPtr getCellEditor(const boost::any& Value, bool IsSelected);
+    virtual ComponentTransitPtr getCellEditor(const boost::any& Value, bool IsSelected);
     
     //Tells the editor to cancel editing and not accept any partially edited value.
     virtual void cancelCellEditing(void);
@@ -102,7 +102,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeCellEditor : public Default
     virtual bool stopCellEditing(void);
 
     //Returns a reference to the editor component.
-    ComponentRefPtr getComponent(void) const;
+    ComponentTransitPtr getComponent(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -135,14 +135,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeCellEditor : public Default
     class DefaultTextFieldEditorListener : public ActionListener,public FocusListener,public KeyAdapter
     {
       public :
-        DefaultTextFieldEditorListener(DefaultTreeCellEditorRefPtr TheDefaultTreeCellEditor);
+        DefaultTextFieldEditorListener(DefaultTreeCellEditor* const TheDefaultTreeCellEditor);
 
         virtual void actionPerformed(const ActionEventUnrecPtr e);
         virtual void focusGained(const FocusEventUnrecPtr e);
         virtual void focusLost(const FocusEventUnrecPtr e);
         virtual void keyPressed(const KeyEventUnrecPtr e);
       protected :
-        DefaultTreeCellEditorRefPtr _DefaultTreeCellEditor;
+        DefaultTreeCellEditor* _DefaultTreeCellEditor;
     };
 
 	friend class DefaultTextFieldEditorListener;

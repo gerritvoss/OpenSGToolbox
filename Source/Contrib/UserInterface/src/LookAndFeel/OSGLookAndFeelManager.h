@@ -16,8 +16,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelManager
 public:
    static LookAndFeelManager* the(void);
 
-   LookAndFeelRefPtr getLookAndFeel(void);
-   void setLookAndFeel(LookAndFeelRefPtr TheLookAndFeel);
+   LookAndFeel* getLookAndFeel(void) const;
+   void setLookAndFeel(LookAndFeel* const TheLookAndFeel);
    
    ~LookAndFeelManager(void);
 private:

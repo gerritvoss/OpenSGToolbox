@@ -120,16 +120,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractComboBoxModel : public Abstrac
 	typedef ListDataListenerSet::const_iterator ListDataListenerSetConstIter;
 	ListDataListenerSet _DataListeners;
 
-	void produceListDataContentsChanged(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1);
-	void produceListDataIntervalAdded(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1);
-	void produceListDataIntervalRemoved(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1);
+	void produceListDataContentsChanged(FieldContainer* const Source, UInt32 index0, UInt32 index1);
+	void produceListDataIntervalAdded(FieldContainer* const Source, UInt32 index0, UInt32 index1);
+	void produceListDataIntervalRemoved(FieldContainer* const Source, UInt32 index0, UInt32 index1);
 
 	typedef std::set<ComboBoxSelectionListenerPtr> ComboBoxSelectionListenerSet;
 	typedef ComboBoxSelectionListenerSet::iterator ComboBoxSelectionListenerSetIter;
 	typedef ComboBoxSelectionListenerSet::const_iterator ComboBoxSelectionListenerSetConstIter;
 	ComboBoxSelectionListenerSet _SelectionListeners;
 
-	void produceSelectionChanged(FieldContainerRefPtr Source, const Int32& CurrentIndex, const Int32& PreviousIndex);
+	void produceSelectionChanged(FieldContainer* const Source, const Int32& CurrentIndex, const Int32& PreviousIndex);
     
     /*==========================  PRIVATE  ================================*/
 

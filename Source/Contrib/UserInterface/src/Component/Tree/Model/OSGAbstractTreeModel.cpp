@@ -108,7 +108,7 @@ void AbstractTreeModel::removeTreeModelListener(TreeModelListenerPtr l)
 
 void AbstractTreeModel::produceTreeNodesChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(this, getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -119,7 +119,7 @@ void AbstractTreeModel::produceTreeNodesChanged(TreePath Parent, const std::vect
 
 void AbstractTreeModel::produceTreeNodesInserted(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(this, getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -130,7 +130,7 @@ void AbstractTreeModel::produceTreeNodesInserted(TreePath Parent, const std::vec
 
 void AbstractTreeModel::produceTreeNodesWillBeRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(this, getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -141,7 +141,7 @@ void AbstractTreeModel::produceTreeNodesWillBeRemoved(TreePath Parent, const std
 
 void AbstractTreeModel::produceTreeNodesRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(this, getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -152,7 +152,7 @@ void AbstractTreeModel::produceTreeNodesRemoved(TreePath Parent, const std::vect
 
 void AbstractTreeModel::produceTreeStructureChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(AbstractTreeModelRefPtr(this), getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventUnrecPtr TheEvent = TreeModelEvent::create(this, getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {

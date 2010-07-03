@@ -54,6 +54,7 @@
 #include "OSGSeparator.h"
 #include "OSGSingleSelectionModel.h"
 #include "OSGMenuItem.h"
+#include "OSGInternalWindow.h"
 
 #include <boost/bind.hpp>
 
@@ -150,56 +151,53 @@ void PopupMenu::updateClipBounds(void)
 		setClipBottomRight(BottomRight);
 }
 
-void PopupMenu::addItem(MenuItemRefPtr Item)
+ComponentContainer* PopupMenu::getParentContainer(void) const
+{
+    return getParentWindow();
+}
+
+void PopupMenu::addItem(MenuItem* const Item)
 {
     pushToChildren(Item);
-	producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
+	producePopupMenuContentsChanged(PopupMenuEvent::create(this, getSystemTime()));
 }
 
-void PopupMenu::addItem(MenuItemRefPtr Item, const UInt32& Index)
+void PopupMenu::addItem(MenuItem* const Item, const UInt32& Index)
 {
-    if(Index < getMFChildren()->size())
+    UInt32 ItemCount(0);
+    UInt32 i(0);
+    for( ; i<getMFChildren()->size() ; ++i)
     {
-        MFChildrenType::iterator InsertItor(editMFChildren()->begin());
-        UInt32 ItemCount(0);
-        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+        if(getChildren(i)->getType() != Separator::getClassType())
         {
-            if(getChildren(i)->getType() != Separator::getClassType())
-            {
-                ++ItemCount;
-            }
-            if(ItemCount == Index)
-            {
-                break;
-            }
-            ++InsertItor;
+            ++ItemCount;
         }
+        if(ItemCount == Index)
+        {
+            break;
+        }
+    }
 
-        if(InsertItor != editMFChildren()->end())
-        {
-                editMFChildren()->insert(InsertItor, Item);
-	        producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
-        }
+    if(i < getMFChildren()->size())
+    {
+        insertIntoChildren(i, Item);
+        producePopupMenuContentsChanged(PopupMenuEvent::create(this, getSystemTime()));
     }
 }
 
-void PopupMenu::removeItem(MenuItemRefPtr Item)
+void PopupMenu::removeItem(MenuItem* const Item)
 {
-    MFChildrenType::iterator FindResult = editMFChildren()->find(Item);
-    if(FindResult != editMFChildren()->end())
-    {
-            editMFChildren()->erase(FindResult);
-	    producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
-    }
+    removeObjFromChildren(Item);
+    producePopupMenuContentsChanged(PopupMenuEvent::create(this, getSystemTime()));
 }
 
 void PopupMenu::removeItem(const UInt32& Index)
 {
     if(Index < getMFChildren()->size())
     {
-        MFChildrenType::iterator RemoveItor(editMFChildren()->begin());
         UInt32 ItemCount(0);
-        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+        UInt32 i(0);
+        for( ; i<getMFChildren()->size() ; ++i)
         {
             if(getChildren(i)->getType() != Separator::getClassType())
             {
@@ -209,12 +207,11 @@ void PopupMenu::removeItem(const UInt32& Index)
             //{
                 //break;
             //}
-            ++RemoveItor;
         }
-        if(RemoveItor != editMFChildren()->end())
+        if(i<getMFChildren()->size())
         {
-                editMFChildren()->erase(RemoveItor);
-	        producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
+            removeFromChildren(i);
+	        producePopupMenuContentsChanged(PopupMenuEvent::create(this, getSystemTime()));
         }
     }
 }
@@ -248,25 +245,25 @@ void PopupMenu::addSeparator(void)
     {
         TheSeparator = Separator::create();
     }
-        TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+    TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
 
-        pushToChildren(TheSeparator);
+    pushToChildren(TheSeparator);
 }
 
-void PopupMenu::addSeparator(SeparatorRefPtr TheSeparator)
+void PopupMenu::addSeparator(Separator* const TheSeparator)
 {
-        TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+    TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
 
-        pushToChildren(TheSeparator);
+    pushToChildren(TheSeparator);
 }
 
 void PopupMenu::removeSeparator(const UInt32&  Index)
 {
     if(Index < getNumSeparators())
     {
-        MFChildrenType::iterator RemoveItor(editMFChildren()->begin());
         UInt32 SeparatorCount(0);
-        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+        UInt32 i(0);
+        for( ; i<getMFChildren()->size() ; ++i)
         {
             if(getChildren(i)->getType() == Separator::getClassType())
             {
@@ -276,20 +273,15 @@ void PopupMenu::removeSeparator(const UInt32&  Index)
             {
                 break;
             }
-            ++RemoveItor;
         }
 
-            editMFChildren()->erase(RemoveItor);
+        removeFromChildren(i);
     }
 }
 
-void PopupMenu::removeSeparator(SeparatorRefPtr TheSeparator)
+void PopupMenu::removeSeparator(Separator* const TheSeparator)
 {
-    MFChildrenType::iterator RemoveItor(editMFChildren()->find(TheSeparator));
-    if(RemoveItor != editMFChildren()->end())
-    {
-            editMFChildren()->erase(RemoveItor);
-    }
+    removeObjFromChildren(TheSeparator);
 }
 
 void PopupMenu::removeAllSeparators(void)
@@ -386,7 +378,7 @@ void PopupMenu::cancel(void)
     {
         clearSelection();
             setVisible(false);
-        producePopupMenuCanceled(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
+        producePopupMenuCanceled(PopupMenuEvent::create(this, getSystemTime()));
     }
 }
 
@@ -529,11 +521,11 @@ void PopupMenu::changed(ConstFieldMaskArg whichField,
     {
         if(getVisible())
         {
-            producePopupMenuWillBecomeVisible(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
+            producePopupMenuWillBecomeVisible(PopupMenuEvent::create(this, getSystemTime()));
         }
         else
         {
-            producePopupMenuWillBecomeInvisible(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
+            producePopupMenuWillBecomeInvisible(PopupMenuEvent::create(this, getSystemTime()));
             if(getSelectionModel() != NULL)
             {
                 getSelectionModel()->clearSelection();

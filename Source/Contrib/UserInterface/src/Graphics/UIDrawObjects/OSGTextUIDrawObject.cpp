@@ -76,7 +76,7 @@ void TextUIDrawObject::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TextUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void TextUIDrawObject::draw(Graphics* const Graphics, Real32 Opacity) const
 {
 	Graphics->drawText(getPosition(), getText(), getFont(), getColor(), getOpacity()*Opacity);
 }

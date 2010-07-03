@@ -78,7 +78,7 @@ void DefaultTableColumnModel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DefaultTableColumnModel::addColumn(TableColumnRefPtr aColumn)
+void DefaultTableColumnModel::addColumn(TableColumn* const aColumn)
 {
     pushToInternalColumns(aColumn);
     recalcWidthCache();
@@ -86,7 +86,7 @@ void DefaultTableColumnModel::addColumn(TableColumnRefPtr aColumn)
     produceColumnAdded(getMFInternalColumns()->size());
 }
 
-TableColumnRefPtr DefaultTableColumnModel::getColumn(const UInt32& columnIndex) const
+TableColumn* DefaultTableColumnModel::getColumn(const UInt32& columnIndex) const
 {
 	if(columnIndex < getColumnCount())
 	{
@@ -215,7 +215,7 @@ void DefaultTableColumnModel::moveColumn(const UInt32& columnIndex, const UInt32
     produceColumnMoved(columnIndex, newIndex);
 }
 
-void DefaultTableColumnModel::removeColumn(TableColumnRefPtr column)
+void DefaultTableColumnModel::removeColumn(TableColumn* const column)
 {
     //Find the Column
     UInt32 FindIndex(0);

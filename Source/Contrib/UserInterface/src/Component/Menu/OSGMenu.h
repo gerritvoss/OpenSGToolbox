@@ -83,18 +83,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Menu : public MenuBase
 
     /*! \}                                                                 */
 
-    void addItem(MenuItemRefPtr Item);
-    void addItem(MenuItemRefPtr Item, const UInt32& Index);
-    void removeItem(MenuItemRefPtr Item);
+    void addItem(MenuItem* const Item);
+    void addItem(MenuItem* const Item, const UInt32& Index);
+    void removeItem(MenuItem* const Item);
     void removeItem(const UInt32& Index);
     void removeAllItems(void);
-    MenuItemRefPtr getItem(const UInt32& Index);
+    MenuItem* getItem(const UInt32& Index);
     UInt32 getNumItems(void) const;
 
     void addSeparator(void);
-    void addSeparator(SeparatorRefPtr TheSeparator);
+    void addSeparator(Separator* const TheSeparator);
     void removeSeparator(const UInt32&  Index);
-    void removeSeparator(SeparatorRefPtr TheSeparator);
+    void removeSeparator(Separator* const TheSeparator);
     void removeAllSeparators(void);
     UInt32 getNumSeparators(void) const;
 
@@ -105,6 +105,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Menu : public MenuBase
     virtual void activate(void);
 
     virtual void detachFromEventProducer(void);
+
+    void setParentWindow(InternalWindow* const parent);
     
     /*=========================  PROTECTED  ===============================*/
 
@@ -142,7 +144,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Menu : public MenuBase
 	
 	/*! \}                                                                 */
 
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 	
     void setPopupVisible(bool Visible);
     
@@ -151,11 +153,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Menu : public MenuBase
 	class PopupUpdateListener : public UpdateListener
 	{
 	public:
-		PopupUpdateListener(MenuRefPtr TheMenu);
+		PopupUpdateListener(Menu* const TheMenu);
         virtual void update(const UpdateEventUnrecPtr e);
         void reset(void);
 	private:
-		MenuRefPtr _Menu;
+		Menu* _Menu;
 	    Time _PopupElps;
 	};
 

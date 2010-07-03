@@ -70,7 +70,7 @@ bool MenuButton::isPopupVisible(void) const
 }
 
 inline
-MenuButton::MenuButtonEventsListener::MenuButtonEventsListener(MenuButtonRefPtr TheMenuButton) : _MenuButton(TheMenuButton)
+MenuButton::MenuButtonEventsListener::MenuButtonEventsListener(MenuButton* const TheMenuButton) : _MenuButton(TheMenuButton)
 {
 }
 

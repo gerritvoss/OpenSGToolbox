@@ -45,6 +45,7 @@
 #include "OSGLayoutBase.h"
 #include "OSGGraphics.h"
 #include "OSGComponent.h"
+#include "OSGComponentContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,25 +81,25 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Layout : public LayoutBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void updateLayout(const MFUnrecComponentPtr* Components,
+    virtual void updateLayout(const MFUnrecChildComponentPtr* Components,
                               const Component* ParentComponent) const = 0;
 
-    virtual Vec2f minimumLayoutSize(const MFUnrecComponentPtr* Components,
+    virtual Vec2f minimumLayoutSize(const MFUnrecChildComponentPtr* Components,
                                     const Component* ParentComponent) const;
-    virtual Vec2f requestedLayoutSize(const MFUnrecComponentPtr* Components,
+    virtual Vec2f requestedLayoutSize(const MFUnrecChildComponentPtr* Components,
                                       const Component* ParentComponent) const;
-    virtual Vec2f preferredLayoutSize(const MFUnrecComponentPtr* Components,
+    virtual Vec2f preferredLayoutSize(const MFUnrecChildComponentPtr* Components,
                                       const Component* ParentComponent) const;
-    virtual Vec2f maximumLayoutSize(const MFUnrecComponentPtr* Components,
+    virtual Vec2f maximumLayoutSize(const MFUnrecChildComponentPtr* Components,
                                     const Component* ParentComponent) const;
 
-    virtual Vec2f minimumContentsLayoutSize(const MFUnrecComponentPtr* Components,
+    virtual Vec2f minimumContentsLayoutSize(const MFUnrecChildComponentPtr* Components,
                                             const Component* ParentComponent) const = 0;
-    virtual Vec2f requestedContentsLayoutSize(const MFUnrecComponentPtr* Components,
+    virtual Vec2f requestedContentsLayoutSize(const MFUnrecChildComponentPtr* Components,
                                               const Component* ParentComponent) const = 0;
-    virtual Vec2f preferredContentsLayoutSize(const MFUnrecComponentPtr* Components,
+    virtual Vec2f preferredContentsLayoutSize(const MFUnrecChildComponentPtr* Components,
                                               const Component* ParentComponent) const = 0;
-    virtual Vec2f maximumContentsLayoutSize(const MFUnrecComponentPtr* Components,
+    virtual Vec2f maximumContentsLayoutSize(const MFUnrecChildComponentPtr* Components,
                                             const Component* ParentComponent) const = 0;
     /*=========================  PROTECTED  ===============================*/
 
@@ -138,6 +139,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Layout : public LayoutBase
     /*! \}                                                                 */
 
     static Vec2f getComponentSize(const Component* TheComponent, SizeType TheSizeType);
+
+    ComponentContainer* getParentContainer(UInt32 index) const;
+
+    UInt32 getNumParentContainers(void) const;
 
     /*==========================  PRIVATE  ================================*/
 

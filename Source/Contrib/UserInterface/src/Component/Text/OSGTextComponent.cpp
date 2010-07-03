@@ -128,9 +128,9 @@ void TextComponent::keyTyped(const KeyEventUnrecPtr e)
 {
     if(e->getKey() == KeyEvent::KEY_C && (e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND) &&
        getParentWindow() != NULL &&
-       getParentWindow()->getDrawingSurface()->getEventProducer())
+       getParentWindow()->getParentDrawingSurface()->getEventProducer())
     {
-        getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard(getSelectedText());
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->putClipboard(getSelectedText());
     }
     else if(e->getKey() == KeyEvent::KEY_A && (e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND))
     {
@@ -231,8 +231,8 @@ void TextComponent::moveCaret(Int32 delta)
     UInt32 NewCaretPosition(getCaretPosition());
     if(delta > 0)
     {
-        if(getParentWindow() != NULL && getParentWindow()->getDrawingSurface()!=NULL&&getParentWindow()->getDrawingSurface()->getEventProducer() != NULL 
-           && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+        if(getParentWindow() != NULL && getParentWindow()->getParentDrawingSurface()!=NULL&&getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL 
+           && getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
         {
             if(_TextSelectionEnd > _TextSelectionStart && _TextSelectionEnd < getText().size() && getCaretPosition()>_TextSelectionStart)
             {
@@ -267,8 +267,8 @@ void TextComponent::moveCaret(Int32 delta)
     }
     else if(delta < 0)
     {
-        if(getParentWindow() != NULL && getParentWindow()->getDrawingSurface()!=NULL&&getParentWindow()->getDrawingSurface()->getEventProducer() != NULL
-           && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+        if(getParentWindow() != NULL && getParentWindow()->getParentDrawingSurface()!=NULL&&getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL
+           && getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
         {
             if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size() && getCaretPosition()>_TextSelectionStart && getCaretPosition()>0)
             {
@@ -330,10 +330,10 @@ void TextComponent::moveCaretToBegin(void)
 void TextComponent::copy(void) const
 {
     if(getParentWindow() != NULL && 
-       getParentWindow()->getDrawingSurface() != NULL &&
-       getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+       getParentWindow()->getParentDrawingSurface() != NULL &&
+       getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
-        getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard(getSelectedText());
+        getParentWindow()->getParentDrawingSurface()->getEventProducer()->putClipboard(getSelectedText());
     }
 }
 
@@ -408,11 +408,11 @@ void TextComponent::changed(ConstFieldMaskArg whichField,
 		{
 			_TextSelectionEnd = getText().size();
 		}
-		produceTextValueChanged(TextEvent::create(TextComponentRefPtr(this), getTimeStamp()));
+		produceTextValueChanged(TextEvent::create(this, getTimeStamp()));
 	}
     if(whichField & CaretPositionFieldMask)
     {
-        produceCaretChanged(CaretEvent::create(TextComponentRefPtr(this), getSystemTime(), getCaretPosition()));
+        produceCaretChanged(CaretEvent::create(this, getSystemTime(), getCaretPosition()));
     }
 }
 

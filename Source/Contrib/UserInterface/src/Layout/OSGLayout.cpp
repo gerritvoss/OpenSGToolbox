@@ -46,6 +46,7 @@
 #include <OSGConfig.h>
 
 #include "OSGLayout.h"
+#include "OSGComponentContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,23 +76,32 @@ void Layout::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+ComponentContainer* Layout::getParentContainer(UInt32 index) const
+{
+    return dynamic_cast<ComponentContainer*>(_mfParentContainers[index]);
+}
 
-Vec2f Layout::minimumLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+UInt32 Layout::getNumParentContainers(void) const
+{
+    return _mfParentContainers.size();
+}
+
+Vec2f Layout::minimumLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return minimumContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
 }
 
-Vec2f Layout::requestedLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f Layout::requestedLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return requestedContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
 }
 
-Vec2f Layout::preferredLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f Layout::preferredLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return preferredContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
 }
 
-Vec2f Layout::maximumLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f Layout::maximumLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return maximumContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
 }

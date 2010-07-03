@@ -87,7 +87,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerEditor : public SpinnerEditorBa
     virtual void cancelEdit(void) = 0;
 
     //Disconnect this editor from the specified JSpinner.
-    virtual void dismiss(SpinnerRefPtr spinner) = 0;
+    virtual void dismiss(Spinner* const spinner) = 0;
 
 	//Set whether or not this Editor is Editable
 	virtual void setEditable(bool Editable) = 0;

@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-DefaultTreeCellEditor::DefaultTextFieldEditorListener::DefaultTextFieldEditorListener(DefaultTreeCellEditorRefPtr TheDefaultTreeCellEditor) :
+DefaultTreeCellEditor::DefaultTextFieldEditorListener::DefaultTextFieldEditorListener(DefaultTreeCellEditor* const TheDefaultTreeCellEditor) :
 _DefaultTreeCellEditor(TheDefaultTreeCellEditor)
 {
 }

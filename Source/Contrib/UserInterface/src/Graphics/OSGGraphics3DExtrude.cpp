@@ -82,23 +82,23 @@ void Graphics3DExtrude::initMethod(InitPhase ePhase)
 }
 
 
-MaterialUnrecPtr Graphics3DExtrude::createDefaultMaterial(void)
+MaterialTransitPtr Graphics3DExtrude::createDefaultMaterial(void)
 {
 	MaterialChunkUnrecPtr TheMaterialChunk = MaterialChunk::create();
 
-		TheMaterialChunk->setAmbient(Color4f(0.4,0.4,0.4,1.0));
-		TheMaterialChunk->setDiffuse(Color4f(0.8,0.8,0.8,1.0));
-		TheMaterialChunk->setSpecular(Color4f(0.85,0.85,0.85,1.0));
-		TheMaterialChunk->setEmission(Color4f(0.0,0.0,0.0,1.0));
-		TheMaterialChunk->setShininess(50.0);
-		TheMaterialChunk->setLit(true);
-		TheMaterialChunk->setColorMaterial(true);
+	TheMaterialChunk->setAmbient(Color4f(0.4,0.4,0.4,1.0));
+	TheMaterialChunk->setDiffuse(Color4f(0.8,0.8,0.8,1.0));
+	TheMaterialChunk->setSpecular(Color4f(0.85,0.85,0.85,1.0));
+	TheMaterialChunk->setEmission(Color4f(0.0,0.0,0.0,1.0));
+	TheMaterialChunk->setShininess(50.0);
+	TheMaterialChunk->setLit(true);
+	TheMaterialChunk->setColorMaterial(true);
 	
-	ChunkMaterialUnrecPtr TheMaterial = ChunkMaterial::create();
+	ChunkMaterial* TheMaterial = ChunkMaterial::createEmpty();
 
     TheMaterial->addChunk(TheMaterialChunk);
 
-	return TheMaterial;
+	return MaterialTransitPtr(TheMaterial);
 }
 
 /***************************************************************************\
@@ -326,7 +326,7 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 
 void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-						const Color4f& color, const TextureObjChunkUnrecPtr Texture,
+						const Color4f& color, TextureObjChunk* const Texture,
 						const Real32& Opacity) const
 {
 	Real32 Alpha( Opacity * getOpacity() * color.alpha());
@@ -367,7 +367,7 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 
 void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-						const MaterialUnrecPtr Material,
+						Material* const Material,
 						const Real32& Opacity) const
 {
 	Real32 Alpha( Opacity * getOpacity());
@@ -634,7 +634,7 @@ void Graphics3DExtrude::drawArc(const Pnt2f& Center, const Real32& Width, const 
    glLineWidth(previousLineWidth);
 }
 
-void Graphics3DExtrude::drawTextUnderline(const Pnt2f& Position, const std::string& Text, const UIFontUnrecPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawTextUnderline(const Pnt2f& Position, const std::string& Text, UIFont* const TheFont, const Color4f& Color, const Real32& Opacity) const
 {
     Pnt2f TextTopLeft, TextBottomRight;
     TheFont->getBounds(Text, TextTopLeft, TextBottomRight);
@@ -650,7 +650,7 @@ void Graphics3DExtrude::drawTextUnderline(const Pnt2f& Position, const std::stri
     drawRect(LineStart, LineEnd, Color, Opacity);
 }
 
-void Graphics3DExtrude::drawText(const Pnt2f& Position, const std::string& Text, const UIFontUnrecPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawText(const Pnt2f& Position, const std::string& Text, UIFont* const TheFont, const Color4f& Color, const Real32& Opacity) const
 {
    TextLayoutParam layoutParam;
    layoutParam.spacing = 1.1;
@@ -682,7 +682,7 @@ void Graphics3DExtrude::drawText(const Pnt2f& Position, const std::string& Text,
    glPopAttrib();
 }
 
-void Graphics3DExtrude::drawCharacters( const TextLayoutResult& layoutResult, const UIFontUnrecPtr TheFont) const
+void Graphics3DExtrude::drawCharacters( const TextLayoutResult& layoutResult, UIFont* const TheFont) const
 {
     glBegin(GL_QUADS);
 

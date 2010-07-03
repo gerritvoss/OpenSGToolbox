@@ -71,7 +71,7 @@ void EmptyLayer::initMethod(InitPhase ePhase)
     }
 }
 
-void EmptyLayer::draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
+void EmptyLayer::draw(Graphics* const TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
 	//Do Nothing
 	//Empty Background

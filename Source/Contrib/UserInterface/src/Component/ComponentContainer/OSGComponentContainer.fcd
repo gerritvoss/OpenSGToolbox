@@ -17,19 +17,25 @@ A UI Container.
 	<Field
 		name="Children"
 		type="Component"
-		category="pointer"
 		cardinality="multi"
+        category="childpointer"
+        childParentType="FieldContainer"
 		visibility="external"
 		access="public"
+        ptrFieldAccess = "nullCheck"
+        linkParentField="ParentContainer"
 	>
 	</Field>
 	<Field
 		name="Layout"
 		type="Layout"
-		category="pointer"
 		cardinality="single"
+        category="childpointer"
+        childParentType="FieldContainer"
 		visibility="external"
 		access="public"
+        ptrFieldAccess = "nullCheck"
+        linkParentField="ParentContainers"
 		defaultValue="NULL"
 	>
 	</Field>

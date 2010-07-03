@@ -100,14 +100,14 @@ ColorSelectionModelPtr AbstractColorChooserPanel::getColorSelectionModel(void)
     }
 }
 
-void AbstractColorChooserPanel::installChooserPanel(ColorChooserRefPtr enclosingChooser)
+void AbstractColorChooserPanel::installChooserPanel(ColorChooser* const enclosingChooser)
 {
     setParentChooser(enclosingChooser);
 
     buildChooser();
 }
 
-void AbstractColorChooserPanel::uninstallChooserPanel(ColorChooserRefPtr enclosingChooser)
+void AbstractColorChooserPanel::uninstallChooserPanel(ColorChooser* const enclosingChooser)
 {
     setParentChooser(NULL);
 }

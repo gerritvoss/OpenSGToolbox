@@ -401,7 +401,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
     class ModelListener : public TreeModelListener
     {
       public :
-        ModelListener(TreeRefPtr TheTree);
+        ModelListener(Tree* const TheTree);
 
         virtual void treeNodesChanged(const TreeModelEventUnrecPtr e);
 
@@ -413,7 +413,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
 
         virtual void treeStructureChanged(const TreeModelEventUnrecPtr e);
       protected :
-        TreeRefPtr _Tree;
+        Tree* _Tree;
         std::set<Int32> _RomovedNodeRows;
     };
 
@@ -424,14 +424,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
     class SelectionListener : public TreeSelectionListener
     {
       public :
-        SelectionListener(TreeRefPtr TheTree);
+        SelectionListener(Tree* const TheTree);
 
         //Called whenever elements are added to the selection
         virtual void selectionAdded(const TreeSelectionEventUnrecPtr e);
         //Called whenever elements are removed to the selection
         virtual void selectionRemoved(const TreeSelectionEventUnrecPtr e);
       protected :
-        TreeRefPtr _Tree;
+        Tree* _Tree;
     };
 
     friend class SelectionListener;
@@ -441,7 +441,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
     class ModelLayoutListener : public TreeModelLayoutListener
     {
       public :
-        ModelLayoutListener(TreeRefPtr TheTree);
+        ModelLayoutListener(Tree* const TheTree);
 
         //Called whenever an item in the tree has been collapsed.
         virtual void treeCollapsed(const TreeModelLayoutEventUnrecPtr e);
@@ -456,7 +456,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
         virtual void treeWillExpand(const TreeModelLayoutEventUnrecPtr e);
 
       protected :
-        TreeRefPtr _Tree;
+        Tree* _Tree;
     };
 
     friend class ModelLayoutListener;
@@ -467,7 +467,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
     void clearToggledPaths(void);
 
     //Returns a TreeModel wrapping the specified object.
-    //static TreeModelRefPtr createTreeModel(Object value);
+    //static TreeModel* createTreeModel(Object value);
 
     //Creates and returns an instance of TreeModelHandler.
     //TreeModelListenerPtr createTreeModelListener(void);
@@ -476,7 +476,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
     //void fireValueChanged(TreeSelectionEvent e);
 
     //Creates and returns a sample TreeModel.
-    static TreeModelRefPtr getDefaultTreeModel(void);
+    static TreeModel* getDefaultTreeModel(void);
 
     //Returns an Enumeration of TreePaths that have been expanded that are descendants of parent.
     std::vector<TreePath> getDescendantToggledPaths(const TreePath& parent);
@@ -495,7 +495,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
 
     bool isParentAViewport(void) const;
 
-    UIViewportRefPtr getParentViewport(void) const;
+    UIViewport* getParentViewport(void) const;
 
     //Some non-structural properties of a path has changed.  So update
     //how the row for this path is drawn
@@ -528,8 +528,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
     struct TreeRowComponents
     {
         TreeRowComponents(void);
-        TreeRowComponents(ComponentRefPtr ExpandedComponent, ComponentRefPtr ValueComponent, Int32 Row);
-        ComponentRefPtr _ExpandedComponent, _ValueComponent;
+        TreeRowComponents(Component* const ExpandedComponent, Component* const ValueComponent, Int32 Row);
+        ComponentUnrecPtr _ExpandedComponent, _ValueComponent;
         Int32 _Row;
     };
 

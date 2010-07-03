@@ -48,6 +48,7 @@
 #include "OSGRotatedComponent.h"
 #include "OSGUIDrawUtils.h"
 #include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -99,7 +100,7 @@ Pnt2f RotatedComponent::getLocalToParent(const Pnt2f& Location) const
     return Result;
 }
 
-void RotatedComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
+void RotatedComponent::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
     if(getInternalComponent() != NULL)
     {
@@ -373,11 +374,11 @@ void RotatedComponent::changed(ConstFieldMaskArg whichField,
 
 			//Check the Mouse
 			if( getParentWindow() != NULL &&
-				getParentWindow()->getDrawingSurface() != NULL &&
-				getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+				getParentWindow()->getParentDrawingSurface() != NULL &&
+				getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 			{
-				Pnt2f MouseLoc(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition());
-				const MouseEventUnrecPtr e = MouseEvent::create(getParentWindow()->getDrawingSurface()->getEventProducer(),getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NULL);
+				Pnt2f MouseLoc(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getMousePosition());
+				const MouseEventUnrecPtr e = MouseEvent::create(getParentWindow()->getParentDrawingSurface()->getEventProducer(),getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NULL);
 				checkMouseEnterExit(e,e->getLocation(),getInternalComponent(),getInternalComponent()->isContained(MouseLoc, true),e->getViewport());
 			}
         }

@@ -107,9 +107,11 @@ void DialogWindow::close(UInt32 intOption, std::string strInput)
     produceDialogWindowClosing(intOption,strInput);
     produceWindowClosing();
 
-    if(!_VetoWindowClose && getDrawingSurface() != NULL)
+    if(!_VetoWindowClose && getParentDrawingSurface() != NULL)
     {
-        getDrawingSurface()->closeWindow(DialogWindowRefPtr(this));
+        DialogWindowWeakPtr temp(this);
+
+        getParentDrawingSurface()->closeWindow(this);
         produceDialogWindowClosed(intOption,strInput);
         produceWindowClosed();
     }
@@ -127,7 +129,7 @@ void DialogWindow::produceDialogWindowClosing(UInt32 intOption, std::string strI
 
 void DialogWindow::produceDialogWindowClosed(UInt32 intOption, std::string strInput)
 {
-    const DialogWindowEventUnrecPtr TheEvent = DialogWindowEvent::create( this,getSystemTime(),intOption,strInput);
+    const DialogWindowEventUnrecPtr TheEvent = DialogWindowEvent::create( NULL,getSystemTime(),intOption,strInput);
     for(DialogWindowListenerSetConstItor SetItor(_DialogWindowListeners.begin()) ; SetItor != _DialogWindowListeners.end() ; ++SetItor)
     {
         (*SetItor)->dialogClosed(TheEvent);
@@ -208,16 +210,16 @@ DialogWindowUnrecPtr DialogWindow::createInputDialog(const std::string& Title, c
         case INPUT_COMBO:
         default:
             TheDialog->_InputComboBox = OSG::ComboBox::create();
-            DefaultMutableComboBoxModelRefPtr _InputComboBoxModel;
-            _InputComboBoxModel = DefaultMutableComboBoxModel::create();
+            DefaultMutableComboBoxModelRefPtr InputComboBoxModel;
+            InputComboBoxModel = DefaultMutableComboBoxModel::create();
 
             for (std::vector<std::string>::const_iterator it = InputValues.begin(); it!=InputValues.end(); ++it)
             {
-                _InputComboBoxModel->addElement(boost::any(std::string(*it)));
+                InputComboBoxModel->addElement(boost::any(std::string(*it)));
             }
 
             TheDialog->_InputComboBox->setPreferredSize(Vec2f(150, 23));
-            TheDialog->_InputComboBox->setModel(_InputComboBoxModel);
+            TheDialog->_InputComboBox->setModel(InputComboBoxModel);
             TheDialog->_InputComboBox->setSelectedIndex(0);
 
             InputPanel->pushToChildren(TheDialog->_InputComboBox);
@@ -293,29 +295,29 @@ DialogWindowUnrecPtr DialogWindow::createInputDialog(const std::string& Title, c
 
     //MessagePanelLayout
     //Icon
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheIcon, 10, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, TheIcon, LayoutSpring::width(TheIcon));
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheIcon, 10, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, TheIcon, LayoutSpring::height(TheIcon));
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheIcon, 10.0f, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, TheIcon, LayoutSpringUnrecPtr(LayoutSpring::width(TheIcon)));
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheIcon, 10.0f, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, TheIcon, LayoutSpringUnrecPtr(LayoutSpring::height(TheIcon)));
 
     //Message
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 10, SpringLayoutConstraints::EAST_EDGE, TheIcon);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText, 20, SpringLayoutConstraints::NORTH_EDGE, InputPanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5.0f, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5.0f, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 10.0f, SpringLayoutConstraints::EAST_EDGE, TheIcon);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText, 20.0f, SpringLayoutConstraints::NORTH_EDGE, InputPanel);
 
     //Input Panel
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, InputPanel, 0, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, InputPanel, 0, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, InputPanel, 0.0f, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, InputPanel, 0.0f, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
 
     if(Type != INPUT_BTNS)
     {
         MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, InputPanel, 40, SpringLayoutConstraints::NORTH_EDGE, MessageButtonPanel);
         //Button Panel
-        MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, MessageButtonPanel, LayoutSpring::height(MessageButtonPanel));
-        MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
-        MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
-        MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, 20, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, MessageButtonPanel, LayoutSpringUnrecPtr(LayoutSpring::height(MessageButtonPanel)));
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0.0f, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0.0f, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+        MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, 20.0f, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
     }
     else
     {
@@ -386,21 +388,21 @@ DialogWindowUnrecPtr DialogWindow::createMessageDialog(const std::string& Title,
 
     //MessagePanelLayout
     //Icon
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheIcon, 10, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, TheIcon, LayoutSpring::width(TheIcon));
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheIcon, 10, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, TheIcon, LayoutSpring::height(TheIcon));
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheIcon, 10.0f, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, TheIcon, LayoutSpringUnrecPtr(LayoutSpring::width(TheIcon)));
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheIcon, 10.0f, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, TheIcon, LayoutSpringUnrecPtr(LayoutSpring::height(TheIcon)));
 
     //Message
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 10, SpringLayoutConstraints::EAST_EDGE, TheIcon);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText, -30, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5.0f, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5.0f, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 10.0f, SpringLayoutConstraints::EAST_EDGE, TheIcon);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText, -30.0f, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
 
     //Button Panel
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
-    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, 20, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0.0f, SpringLayoutConstraints::WEST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0.0f, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, 20.0f, SpringLayoutConstraints::SOUTH_EDGE, MessagePanel);
 
     //Internals Layout and constraints
     BorderLayoutConstraintsRefPtr MessagePanelConstraints = BorderLayoutConstraints::create();
@@ -429,7 +431,7 @@ DialogWindowUnrecPtr DialogWindow::createMessageDialog(const std::string& Title,
     return TheDialog;
 }
 
-DialogWindow::ConfirmButtonListener::ConfirmButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::ConfirmButtonListener::ConfirmButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -438,7 +440,7 @@ void DialogWindow::ConfirmButtonListener::actionPerformed(const ActionEventUnrec
     _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_OK,"");
 }
 
-DialogWindow::CancelButtonListener::CancelButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::CancelButtonListener::CancelButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -447,7 +449,7 @@ void DialogWindow::CancelButtonListener::actionPerformed(const ActionEventUnrecP
     _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_CANCEL,"");
 }
 
-DialogWindow::InputButtonListener::InputButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::InputButtonListener::InputButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -457,7 +459,7 @@ void DialogWindow::InputButtonListener::actionPerformed(const ActionEventUnrecPt
 }
 
 
-DialogWindow::ComboButtonListener::ComboButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::ComboButtonListener::ComboButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -466,7 +468,7 @@ void DialogWindow::ComboButtonListener::actionPerformed(const ActionEventUnrecPt
     _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_OK,boost::any_cast<std::string> (_DialogWindow->_InputComboBox->getSelectedItem()));
 }
 
-DialogWindow::TextButtonListener::TextButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::TextButtonListener::TextButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -475,7 +477,7 @@ void DialogWindow::TextButtonListener::actionPerformed(const ActionEventUnrecPtr
     _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_OK,_DialogWindow->_InputTextField->getText());
 }
 
-TextAreaRefPtr DialogWindow::createTransparentTextArea(const std::string& Message)
+TextAreaTransitPtr DialogWindow::createTransparentTextArea(const std::string& Message)
 {
     TextAreaRefPtr TransparentTextArea = OSG::TextArea::create();
     EmptyLayerRefPtr TransparentTextAreaBackground = OSG::EmptyLayer::create();
@@ -487,7 +489,7 @@ TextAreaRefPtr DialogWindow::createTransparentTextArea(const std::string& Messag
     TransparentTextArea->setText(Message);
     TransparentTextArea->setEditable(false);
 
-    return TransparentTextArea;
+    return TextAreaTransitPtr(TransparentTextArea.get());
 }
 
 DialogWindowUnrecPtr DialogWindow::createColorChooserDialog(const std::string& Title, 
@@ -550,20 +552,20 @@ DialogWindowUnrecPtr DialogWindow::createColorChooserDialog(const std::string& T
     SpringLayoutRefPtr DialogLayout = SpringLayout::create();
 
     //Message Text
-    DialogLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5, SpringLayoutConstraints::NORTH_EDGE, TheDialog);
-    DialogLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5, SpringLayoutConstraints::EAST_EDGE, TheDialog);
-    DialogLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 5, SpringLayoutConstraints::WEST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5.0f, SpringLayoutConstraints::NORTH_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5.0f, SpringLayoutConstraints::EAST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 5.0f, SpringLayoutConstraints::WEST_EDGE, TheDialog);
 
     //Color Chooser
-    DialogLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheColorChooser, 5, SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText);
-    DialogLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, TheColorChooser, -5, SpringLayoutConstraints::EAST_EDGE, TheDialog);
-    DialogLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheColorChooser, 5, SpringLayoutConstraints::WEST_EDGE, TheDialog);
-    DialogLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, TheColorChooser, -5, SpringLayoutConstraints::NORTH_EDGE, MessageButtonPanel);
+    DialogLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheColorChooser, 5.0f, SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText);
+    DialogLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, TheColorChooser, -5.0f, SpringLayoutConstraints::EAST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheColorChooser, 5.0f, SpringLayoutConstraints::WEST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, TheColorChooser, -5.0f, SpringLayoutConstraints::NORTH_EDGE, MessageButtonPanel);
 
     //Button Panel
-    DialogLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::WEST_EDGE, TheDialog);
-    DialogLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0, SpringLayoutConstraints::EAST_EDGE, TheDialog);
-    DialogLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, 20, SpringLayoutConstraints::SOUTH_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessageButtonPanel, 0.0f, SpringLayoutConstraints::WEST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessageButtonPanel, 0.0f, SpringLayoutConstraints::EAST_EDGE, TheDialog);
+    DialogLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessageButtonPanel, 20.0f, SpringLayoutConstraints::SOUTH_EDGE, TheDialog);
 
     //Create the Dialog box
     TheDialog->setLayout(DialogLayout);

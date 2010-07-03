@@ -102,7 +102,7 @@ void GLViewport::setMaxOffset(const Vec3f& MaxOffset)
 
 
 inline
-GLViewport::MouseControlListener::MouseControlListener(GLViewportRefPtr TheGLViewport) :
+GLViewport::MouseControlListener::MouseControlListener(GLViewport* const TheGLViewport) :
 _GLViewport(TheGLViewport)
 {
 }

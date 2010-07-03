@@ -134,7 +134,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextField : public TextFieldBase
 
     /*! \}                                                                 */
     
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 	void calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2f& TopLeft, Pnt2f& BottomRight);
 
 	typedef std::set<ActionListenerPtr> ActionListenerSet;
@@ -150,12 +150,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextField : public TextFieldBase
 	class CaretUpdateListener : public UpdateListener
 	{
 	public:
-		CaretUpdateListener(TextFieldRefPtr TheTextField);
+		CaretUpdateListener(TextField* const TheTextField);
         virtual void update(const UpdateEventUnrecPtr e);
 
         void disconnect(void);
 	private:
-		TextFieldRefPtr _TextField;
+		TextField* _TextField;
 	};
 
 	friend class CarentUpdateListener;
@@ -165,7 +165,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextField : public TextFieldBase
 	class MouseDownListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
 	{
 	public :
-		MouseDownListener(TextFieldRefPtr TheTextField);
+		MouseDownListener(TextField* const TheTextField);
 		
         virtual void keyTyped(const KeyEventUnrecPtr e);
 
@@ -174,7 +174,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextField : public TextFieldBase
 
         void disconnect(void);
 	protected :
-		TextFieldRefPtr _TextField;
+		TextField* _TextField;
 	};
 
 	friend class MouseDownListener;

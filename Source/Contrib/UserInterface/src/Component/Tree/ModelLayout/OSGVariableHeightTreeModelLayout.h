@@ -122,7 +122,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING VariableHeightTreeModelLayout : public
 	virtual void setExpanded(const TreePath& path, bool Expand);
 
 	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelRefPtr newModel);
+	virtual void setModel(TreeModel* const newModel);
 	
 	//Sets the renderer that is responsible for drawing nodes in the tree and which is threfore responsible for calculating the dimensions of individual nodes.
 	//virtual void setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);

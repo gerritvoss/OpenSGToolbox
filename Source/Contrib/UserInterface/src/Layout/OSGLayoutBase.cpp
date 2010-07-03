@@ -58,7 +58,7 @@
 
 
 
-#include "OSGComponentContainer.h"      // ParentContainer Class
+#include "OSGFieldContainer.h"          // ParentContainers Class
 
 #include "OSGLayoutBase.h"
 #include "OSGLayout.h"
@@ -83,8 +83,9 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var ComponentContainer * LayoutBase::_sfParentContainer
-    
+/*! \var FieldContainer * LayoutBase::_mfParentContainers
+    Parents of this layout. Layouts can have more than one parent, i.e. in general
+    they may be used in more than one place in the UI Component-graph.
 */
 
 
@@ -106,6 +107,18 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            Layout *,
                            0);
 
+DataType &FieldTraits< Layout *, 1 >::getType(void)
+{
+    return FieldTraits<Layout *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_SFIELD(ChildPointerSField,
+                      Layout *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
+
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
@@ -115,15 +128,16 @@ void LayoutBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecComponentContainerPtr::Description(
-        SFUnrecComponentContainerPtr::getClassType(),
-        "ParentContainer",
-        "",
-        ParentContainerFieldId, ParentContainerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&Layout::editHandleParentContainer),
-        static_cast<FieldGetMethodSig >(&Layout::getHandleParentContainer));
+    pDesc = new MFParentFieldContainerPtr::Description(
+        MFParentFieldContainerPtr::getClassType(),
+        "ParentContainers",
+        "Parents of this layout. Layouts can have more than one parent, i.e. in general\n"
+        "they may be used in more than one place in the UI Component-graph.\n",
+        ParentContainersFieldId, ParentContainersFieldMask,
+        true,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&Layout::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&Layout::invalidGetField));
 
     oType.addInitialDesc(pDesc);
 }
@@ -154,18 +168,20 @@ LayoutBase::TypeObject LayoutBase::_type(
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    childFields=\"single\"\n"
     ">\n"
     "A UI Layout Interface.\n"
-    "\t<Field\n"
-    "\t\tname=\"ParentContainer\"\n"
-    "\t\ttype=\"ComponentContainer\"\n"
-    "        category=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
+    "  <Field\n"
+    "     name=\"ParentContainers\"\n"
+    "     category=\"parentpointer\"\n"
+    "     type=\"FieldContainer\"\n"
+    "     cardinality=\"multi\"\n"
+    "     access=\"none\"\n"
+    "     visibility=\"internal\"\n"
+    "     >\n"
+    "    Parents of this layout. Layouts can have more than one parent, i.e. in general\n"
+    "    they may be used in more than one place in the UI Component-graph.\n"
+    "  </Field>\n"
     "</FieldContainer>\n",
     "A UI Layout Interface.\n"
     );
@@ -190,18 +206,6 @@ UInt32 LayoutBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-//! Get the Layout::_sfParentContainer field.
-const SFUnrecComponentContainerPtr *LayoutBase::getSFParentContainer(void) const
-{
-    return &_sfParentContainer;
-}
-
-SFUnrecComponentContainerPtr *LayoutBase::editSFParentContainer(void)
-{
-    editSField(ParentContainerFieldMask);
-
-    return &_sfParentContainer;
-}
 
 
 
@@ -213,9 +217,9 @@ UInt32 LayoutBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    if(FieldBits::NoField != (ParentContainersFieldMask & whichField))
     {
-        returnValue += _sfParentContainer.getBinSize();
+        returnValue += _mfParentContainers.getBinSize();
     }
 
     return returnValue;
@@ -226,9 +230,9 @@ void LayoutBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    if(FieldBits::NoField != (ParentContainersFieldMask & whichField))
     {
-        _sfParentContainer.copyToBin(pMem);
+        _mfParentContainers.copyToBin(pMem);
     }
 }
 
@@ -237,9 +241,9 @@ void LayoutBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    if(FieldBits::NoField != (ParentContainersFieldMask & whichField))
     {
-        _sfParentContainer.copyFromBin(pMem);
+        _mfParentContainers.copyFromBin(pMem);
     }
 }
 
@@ -250,13 +254,13 @@ void LayoutBase::copyFromBin(BinaryDataHandler &pMem,
 
 LayoutBase::LayoutBase(void) :
     Inherited(),
-    _sfParentContainer        (NULL)
+    _mfParentContainers       ()
 {
 }
 
 LayoutBase::LayoutBase(const LayoutBase &source) :
     Inherited(source),
-    _sfParentContainer        (NULL)
+    _mfParentContainers       ()
 {
 }
 
@@ -266,43 +270,80 @@ LayoutBase::LayoutBase(const LayoutBase &source) :
 LayoutBase::~LayoutBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
 
-void LayoutBase::onCreate(const Layout *source)
+bool LayoutBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
 {
-    Inherited::onCreate(source);
-
-    if(source != NULL)
+    if(parentFieldId == ParentContainersFieldId)
     {
-        Layout *pThis = static_cast<Layout *>(this);
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
 
-        pThis->setParentContainer(source->getParentContainer());
+        if(pTypedParent != NULL)
+        {
+            editMField(ParentContainersFieldMask, _mfParentContainers);
+
+            _mfParentContainers.push_back(pParent, childFieldId);
+
+            return true;
+        }
+
+        return false;
     }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
 }
 
-GetFieldHandlePtr LayoutBase::getHandleParentContainer (void) const
+bool LayoutBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
 {
-    SFUnrecComponentContainerPtr::GetHandlePtr returnValue(
-        new  SFUnrecComponentContainerPtr::GetHandle(
-             &_sfParentContainer,
-             this->getType().getFieldDesc(ParentContainerFieldId),
-             const_cast<LayoutBase *>(this)));
+    if(parentFieldId == ParentContainersFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            Int32 iParentIdx = _mfParentContainers.findIndex(pParent);
+
+            if(iParentIdx != -1)
+            {
+                editMField(ParentContainersFieldMask, _mfParentContainers);
+
+                _mfParentContainers.erase(iParentIdx);
+
+                return true;
+            }
+
+            FWARNING(("LayoutBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
+
+
+GetFieldHandlePtr LayoutBase::getHandleParentContainers (void) const
+{
+    MFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
-EditFieldHandlePtr LayoutBase::editHandleParentContainer(void)
+EditFieldHandlePtr LayoutBase::editHandleParentContainers(void)
 {
-    SFUnrecComponentContainerPtr::EditHandlePtr returnValue(
-        new  SFUnrecComponentContainerPtr::EditHandle(
-             &_sfParentContainer,
-             this->getType().getFieldDesc(ParentContainerFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&Layout::setParentContainer,
-                    static_cast<Layout *>(this), _1));
-
-    editSField(ParentContainerFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
@@ -330,8 +371,6 @@ void LayoutBase::execSyncV(      FieldContainer    &oFrom,
 void LayoutBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
-
-    static_cast<Layout *>(this)->setParentContainer(NULL);
 
 
 }

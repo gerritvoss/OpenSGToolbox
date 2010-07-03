@@ -83,37 +83,37 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNode : public Defaul
 	virtual bool getAllowsChildren(void) const;
 
 	//Returns the child TreeNode at index childIndex.
-	virtual ModelTreeNodeRefPtr getChildAt(const UInt32& childIndex) const;
+	virtual ModelTreeNode* getChildAt(const UInt32& childIndex) const;
 
 	//Returns the number of children TreeNodes the receiver contains.
 	virtual UInt32 getChildCount(void) const;
 
 	//Returns the index of node in the receivers children.
-	virtual Int32 getIndex(ModelTreeNodeRefPtr node) const;
+	virtual Int32 getIndex(ModelTreeNode* const node) const;
 
 	//Returns the parent TreeNode of the receiver.
-	virtual ModelTreeNodeRefPtr getParent(void) const;
+	virtual ModelTreeNode* getParent(void) const;
 
 	//Returns true if the receiver is a leaf.
 	virtual bool isLeaf(void) const;
 
 	//Adds child to the receiver at index.
-	virtual void insert(MutableTreeNodeRefPtr child, const UInt32& index);
+	virtual void insert(MutableTreeNode* const child, const UInt32& index);
     
 	//Adds child to the receiver as the last child
-	virtual void insert(MutableTreeNodeRefPtr child);
+	virtual void insert(MutableTreeNode* const child);
 
 	//Removes the child at index from the receiver.
 	virtual void remove(const UInt32& index);
 
 	//Removes node from the receiver.
-	virtual void remove(MutableTreeNodeRefPtr node);
+	virtual void remove(MutableTreeNode* const node);
 
 	//Removes the receiver from its parent.
 	virtual void removeFromParent(void);
 
 	//Sets the parent of the receiver to newParent.
-	virtual void setParent(MutableTreeNodeRefPtr newParent);
+	virtual void setParent(MutableTreeNode* const newParent);
 
 	//Resets the user object of the receiver to object.
 	virtual void setUserObject(const boost::any& object);
@@ -121,7 +121,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNode : public Defaul
 	
 	
 	//Removes newChild from its parent and makes it a child of this node by adding it to the end of this node's child array.
-	void add(MutableTreeNodeRefPtr newChild);
+	void add(MutableTreeNode* const newChild);
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in breadth-first order.
     void breadthFirst(std::vector<DefaultMutableTreeNodeRefPtr>& Result)const;
@@ -130,25 +130,25 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNode : public Defaul
     void heightFirst(std::vector<DefaultMutableTreeNodeRefPtr>& Result) const;
 
 	//Returns the child in this node's child array that immediately follows aChild, which must be a child of this node.
-	MutableTreeNodeRefPtr getChildAfter(MutableTreeNodeRefPtr aChild) const;
+	MutableTreeNode* getChildAfter(MutableTreeNode* const aChild) const;
 
 	//Returns the child in this node's child array that immediately precedes aChild, which must be a child of this node.
-	MutableTreeNodeRefPtr getChildBefore(MutableTreeNodeRefPtr aChild) const;
+	MutableTreeNode* getChildBefore(MutableTreeNode* const aChild) const;
 
 	//Returns the height of the tree rooted at this node -- the longest distance from this node to a leaf.
 	UInt32 getHeight(void) const;
 
 	//Returns this node's first child.
-	MutableTreeNodeRefPtr getFirstChild(void) const;
+	MutableTreeNode* getFirstChild(void) const;
 
 	//Finds and returns the first leaf that is a descendant of this node -- either this node or its first child's first leaf.
-	DefaultMutableTreeNodeRefPtr getFirstLeaf(void) const;
+	DefaultMutableTreeNode* getFirstLeaf(void) const;
 
 	//Returns this node's last child.
-	MutableTreeNodeRefPtr getLastChild(void) const;
+	MutableTreeNode* getLastChild(void) const;
 
 	//Finds and returns the last leaf that is a descendant of this node -- either this node or its last child's last leaf.
-	DefaultMutableTreeNodeRefPtr getLastLeaf(void) const;
+	DefaultMutableTreeNode* getLastLeaf(void) const;
 
 	//Returns the total number of leaves that are descendants of this node.
 	UInt32 getLeafCount(void) const;
@@ -157,31 +157,31 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNode : public Defaul
 	UInt32 getDepth(void) const;
 
 	//Returns the leaf after this node or null if this node is the last leaf in the tree.
-	DefaultMutableTreeNodeRefPtr getNextLeaf(void) const;
+	DefaultMutableTreeNode* getNextLeaf(void) const;
 
 	//Returns the node that follows this node in a preorder traversal of this node's tree.
-	DefaultMutableTreeNodeRefPtr getNextNode(void) const;
+	DefaultMutableTreeNode* getNextNode(void) const;
 
 	//Returns the next sibling of this node in the parent's children array.
-	DefaultMutableTreeNodeRefPtr getNextSibling(void) const;
+	DefaultMutableTreeNode* getNextSibling(void) const;
 
 	//Returns the path from the root, to get to this node.
 	std::vector<MutableTreeNodeRefPtr> getPath(void) const;
 
 	//Returns the leaf before this node or null if this node is the first leaf in the tree.
-	DefaultMutableTreeNodeRefPtr getPreviousLeaf(void) const;
+	DefaultMutableTreeNode* getPreviousLeaf(void) const;
 
 	//Returns the node that precedes this node in a preorder traversal of this node's tree.
-	DefaultMutableTreeNodeRefPtr getPreviousNode(void) const;
+	DefaultMutableTreeNode* getPreviousNode(void) const;
 
 	//Returns the previous sibling of this node in the parent's children array.
-	DefaultMutableTreeNodeRefPtr getPreviousSibling(void) const;
+	DefaultMutableTreeNode* getPreviousSibling(void) const;
 
 	//Returns the root of the tree that contains this node.
-	MutableTreeNodeRefPtr getRoot(void) const;
+	MutableTreeNode* getRoot(void) const;
 
 	//Returns the nearest common ancestor to this node and aNode.
-	MutableTreeNodeRefPtr getSharedAncestor(DefaultMutableTreeNodeRefPtr aNode) const;
+	MutableTreeNode* getSharedAncestor(DefaultMutableTreeNode* const aNode) const;
 
 	//Returns the number of siblings of this node.
 	UInt32 getSiblingCount(void) const;
@@ -193,25 +193,25 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNode : public Defaul
 	std::vector<boost::any> getUserObjectPath(void) const;
 
 	//Returns true if anotherNode is an ancestor of this node -- if it is this node, this node's parent, or an ancestor of this node's parent.
-	bool isNodeAncestor(MutableTreeNodeRefPtr anotherNode) const;
+	bool isNodeAncestor(MutableTreeNode* const anotherNode) const;
 
 	//Returns true if aNode is a child of this node.
-	bool isNodeChild(MutableTreeNodeRefPtr aNode) const;
+	bool isNodeChild(MutableTreeNode* const aNode) const;
 
 	//Returns true if anotherNode is a descendant of this node -- if it is this node, one of this node's children, or a descendant of one of this node's children.
-	bool isNodeDescendant(DefaultMutableTreeNodeRefPtr anotherNode) const;
+	bool isNodeDescendant(DefaultMutableTreeNode* const anotherNode) const;
 
 	//Returns true if and only if aNode is in the same tree as this node.
-	bool isNodeRelated(DefaultMutableTreeNodeRefPtr aNode) const;
+	bool isNodeRelated(DefaultMutableTreeNode* const aNode) const;
 
 	//Returns true if anotherNode is a sibling of (has the same parent as) this node.
-	bool isNodeSibling(MutableTreeNodeRefPtr anotherNode) const;
+	bool isNodeSibling(MutableTreeNode* const anotherNode) const;
 
 	//Returns true if this node is the root of the tree.
 	bool isRoot(void) const;
 
 	//Creates and returns an enumeration that follows the path from ancestor to this node.
-	//Enumeration pathFromAncestorEnumeration(MutableTreeNodeRefPtr ancestor) const;
+	//Enumeration pathFromAncestorEnumeration(MutableTreeNode* const ancestor) const;
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in postorder.
 	void postorder(std::vector<DefaultMutableTreeNodeRefPtr>& Result) const;

@@ -124,7 +124,7 @@ std::vector<Int32> AbstractTreeModelLayout::getRowsForPaths(const std::vector<Tr
     return Result;
 }
 
-TreeModelRefPtr AbstractTreeModelLayout::getModel(void) const
+TreeModel* AbstractTreeModelLayout::getModel(void) const
 {
     return _TreeModel;
 }
@@ -180,7 +180,7 @@ bool AbstractTreeModelLayout::isRootVisible(void) const
     return getRootVisibleInternal();
 }
 
-void AbstractTreeModelLayout::setModel(TreeModelRefPtr newModel)
+void AbstractTreeModelLayout::setModel(TreeModel* const newModel)
 {
     if(_TreeModel != NULL)
     {
@@ -262,7 +262,7 @@ void AbstractTreeModelLayout::getNodeDimensions(Pnt2f& TopLeft, Pnt2f& BottomRig
 
 void AbstractTreeModelLayout::produceTreeCollapsed(const TreePath& Path)
 {
-    const TreeModelLayoutEventUnrecPtr TheEvent = TreeModelLayoutEvent::create(AbstractTreeModelLayoutRefPtr(this), getTimeStamp(), Path);
+    const TreeModelLayoutEventUnrecPtr TheEvent = TreeModelLayoutEvent::create(this, getTimeStamp(), Path);
     TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
     for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -273,7 +273,7 @@ void AbstractTreeModelLayout::produceTreeCollapsed(const TreePath& Path)
 
 void AbstractTreeModelLayout::produceTreeExpanded(const TreePath& Path)
 {
-    const TreeModelLayoutEventUnrecPtr TheEvent = TreeModelLayoutEvent::create(AbstractTreeModelLayoutRefPtr(this), getTimeStamp(), Path);
+    const TreeModelLayoutEventUnrecPtr TheEvent = TreeModelLayoutEvent::create(this, getTimeStamp(), Path);
     TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
     for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -284,7 +284,7 @@ void AbstractTreeModelLayout::produceTreeExpanded(const TreePath& Path)
 
 void AbstractTreeModelLayout::produceTreeWillCollapse(const TreePath& Path)
 {
-    const TreeModelLayoutEventUnrecPtr TheEvent = TreeModelLayoutEvent::create(AbstractTreeModelLayoutRefPtr(this), getTimeStamp(), Path);
+    const TreeModelLayoutEventUnrecPtr TheEvent = TreeModelLayoutEvent::create(this, getTimeStamp(), Path);
     TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
     for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -295,7 +295,7 @@ void AbstractTreeModelLayout::produceTreeWillCollapse(const TreePath& Path)
 
 void AbstractTreeModelLayout::produceTreeWillExpand(const TreePath& Path)
 {
-    const TreeModelLayoutEventUnrecPtr TheEvent = TreeModelLayoutEvent::create(AbstractTreeModelLayoutRefPtr(this), getTimeStamp(), Path);
+    const TreeModelLayoutEventUnrecPtr TheEvent = TreeModelLayoutEvent::create(this, getTimeStamp(), Path);
     TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
     for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {

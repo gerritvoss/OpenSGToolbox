@@ -99,7 +99,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
 	virtual bool areChildrenVisible(const TreePath& path) const;
 
 	//Returns the TreeModel that is providing the data.
-	virtual TreeModelRefPtr getModel(void) const;
+	virtual TreeModel* getModel(void) const;
 
 	//Returns the object that renders nodes in the tree, and which is responsible for calculating the dimensions of individual nodes.
 	//virtual AbstractLayoutCache.NodeDimensions getNodeDimensions(void) const;
@@ -132,7 +132,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
 	virtual void setVisible(const TreePath& path);
 
 	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelRefPtr newModel);
+	virtual void setModel(TreeModel* const newModel);
 
 	//Sets the renderer that is responsible for drawing nodes in the tree and which is threfore responsible for calculating the dimensions of individual nodes.
 	//virtual void setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
@@ -218,7 +218,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
     class ModelListener : public TreeModelListener
     {
       public :
-        ModelListener(AbstractTreeModelLayoutRefPtr TheAbstractTreeModelLayout);
+        ModelListener(AbstractTreeModelLayout* const TheAbstractTreeModelLayout);
 
         virtual void treeNodesChanged(const TreeModelEventUnrecPtr e);
         virtual void treeNodesInserted(const TreeModelEventUnrecPtr e);
@@ -226,7 +226,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
         virtual void treeNodesRemoved(const TreeModelEventUnrecPtr e);
         virtual void treeStructureChanged(const TreeModelEventUnrecPtr e);
       protected :
-        AbstractTreeModelLayoutRefPtr _AbstractTreeModelLayout;
+        AbstractTreeModelLayout* _AbstractTreeModelLayout;
     };
 
     friend class ModelListener;

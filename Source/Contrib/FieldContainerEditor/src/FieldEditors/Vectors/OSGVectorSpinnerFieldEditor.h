@@ -135,11 +135,11 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING VectorSpinnerFieldEditor : publ
     class SpinnerListener : public ChangeListener
     {
       public :
-           SpinnerListener(VectorSpinnerFieldEditor * ptr);
+           SpinnerListener(VectorSpinnerFieldEditor * const ptr);
            virtual void stateChanged(const ChangeEventUnrecPtr e);
 
       protected :
-        VectorSpinnerFieldEditor *_VectorSpinnerFieldEditor ;
+        VectorSpinnerFieldEditor* _VectorSpinnerFieldEditor ;
     };
 
     friend class SpinnerListener;

@@ -126,7 +126,7 @@ void ToggleButton::actionPreformed(const ActionEventUnrecPtr e)
     setSelected(!getSelected());
 }
 
-BorderRefPtr ToggleButton::getDrawnBorder(void) const
+Border* ToggleButton::getDrawnBorder(void) const
 {
     if(getSelected() && getEnabled())
     {
@@ -150,7 +150,7 @@ Vec2f ToggleButton::getDrawnOffset(void) const
     }
 }
 
-LayerRefPtr ToggleButton::getDrawnBackground(void) const
+Layer* ToggleButton::getDrawnBackground(void) const
 {
     if(getSelected() && getEnabled())
     {
@@ -161,7 +161,7 @@ LayerRefPtr ToggleButton::getDrawnBackground(void) const
         return Inherited::getDrawnBackground();
     }
 }
-LayerRefPtr ToggleButton::getDrawnForeground(void) const
+Layer* ToggleButton::getDrawnForeground(void) const
 {
     if(getSelected() && getEnabled())
     {

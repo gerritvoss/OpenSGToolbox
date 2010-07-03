@@ -74,7 +74,7 @@ void FlowLayout::initMethod(InitPhase ePhase)
 }
 
 
-Vec2f FlowLayout::getAppropriateComponentSize(ComponentRefPtr TheComponent)
+Vec2f FlowLayout::getAppropriateComponentSize(Component* const TheComponent)
 {
     Vec2f ComponentSize(0.0f,0.0f);
     if(TheComponent != NULL)
@@ -96,7 +96,7 @@ Vec2f FlowLayout::getAppropriateComponentSize(ComponentRefPtr TheComponent)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void FlowLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+void FlowLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     /*!
       totalMajorAxis will hold the width of its container, and cumMajorAxis
@@ -337,7 +337,7 @@ void FlowLayout::updateLayout(const MFUnrecComponentPtr* Components, const Compo
     }
 }
 
-Vec2f FlowLayout::layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
+Vec2f FlowLayout::layoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
 {
     Real32 MinorAxisMax(0.0f);
     Real32 MajorAxisSum(0.0f);
@@ -364,22 +364,22 @@ Vec2f FlowLayout::layoutSize(const MFUnrecComponentPtr* Components, const Compon
     return Result;
 }
 
-Vec2f FlowLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f FlowLayout::minimumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MIN_SIZE);
 }
 
-Vec2f FlowLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f FlowLayout::requestedContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
 }
 
-Vec2f FlowLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f FlowLayout::preferredContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
 }
 
-Vec2f FlowLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
+Vec2f FlowLayout::maximumContentsLayoutSize(const MFUnrecChildComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MAX_SIZE);
 }

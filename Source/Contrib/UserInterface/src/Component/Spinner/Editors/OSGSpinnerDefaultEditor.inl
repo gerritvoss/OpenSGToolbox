@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-SpinnerDefaultEditor::EditorTextFieldListener::EditorTextFieldListener(SpinnerDefaultEditorRefPtr TheSpinnerDefaultEditor) :
+SpinnerDefaultEditor::EditorTextFieldListener::EditorTextFieldListener(SpinnerDefaultEditor* const TheSpinnerDefaultEditor) :
    _SpinnerDefaultEditor(TheSpinnerDefaultEditor)
 {
 }

@@ -54,13 +54,13 @@ Component * ScrollPanel::getViewComponent  (void) const
 }
 
 inline
-ScrollPanel::ViewportChangeListener::ViewportChangeListener(ScrollPanelRefPtr TheScrollPanel) :
+ScrollPanel::ViewportChangeListener::ViewportChangeListener(ScrollPanel* const TheScrollPanel) :
    _ScrollPanel(TheScrollPanel)
 {
 }
 
 inline
-ScrollPanel::ViewportRangeModelChangeListener::ViewportRangeModelChangeListener(ScrollPanelRefPtr TheScrollPanel) :
+ScrollPanel::ViewportRangeModelChangeListener::ViewportRangeModelChangeListener(ScrollPanel* const TheScrollPanel) :
    _ScrollPanel(TheScrollPanel)
 {
 }

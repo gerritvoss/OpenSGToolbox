@@ -76,7 +76,7 @@ void RectUIDrawObject::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void RectUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void RectUIDrawObject::draw(Graphics* const Graphics, Real32 Opacity) const
 {
 	Graphics->drawRect(getTopLeft(), getBottomRight(), getColor(), getOpacity()*Opacity);
 }

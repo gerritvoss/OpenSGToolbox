@@ -109,7 +109,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelLayout : public TreeModelLayo
 	virtual bool areChildrenVisible(const TreePath& path) const = 0;
 
 	//Returns the TreeModel that is providing the data.
-	virtual TreeModelRefPtr getModel(void) const = 0;
+	virtual TreeModel* getModel(void) const = 0;
 
 	//Returns the object that renders nodes in the tree, and which is responsible for calculating the dimensions of individual nodes.
 	//virtual AbstractLayoutCache.NodeDimensions getNodeDimensions(void) const = 0;
@@ -167,7 +167,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelLayout : public TreeModelLayo
 	virtual void setVisible(const TreePath& path) = 0;
 
 	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelRefPtr newModel) = 0;
+	virtual void setModel(TreeModel* const newModel) = 0;
 
 	//Sets the renderer that is responsible for drawing nodes in the tree and which is threfore responsible for calculating the dimensions of individual nodes.
 	//virtual void setNodeDimensions(AbstractLayoutCache.NodeDimensions nd) = 0;

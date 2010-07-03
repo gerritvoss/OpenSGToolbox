@@ -76,7 +76,7 @@ void ShadowBorder::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ShadowBorder::draw(const GraphicsWeakPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
+void ShadowBorder::draw(Graphics* const g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
     //Draw the Inside Border
     getInsideBorder()->draw(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset(), Opacity);
@@ -101,7 +101,7 @@ void ShadowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bot
     Bottom +=getBottomOffset();
 }
 
-void ShadowBorder::activateInternalDrawConstraints(const GraphicsWeakPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void ShadowBorder::activateInternalDrawConstraints(Graphics* const g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     //Determine TopLeft and BottomRight of the Shadow
     Pnt2f ShadowTopLeft,

@@ -83,9 +83,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListGeneratedPopupMenu : public ListGe
 
     /*! \}                                                                 */
 
-    virtual void addItem(MenuItemRefPtr Item);
-    virtual void addItem(MenuItemRefPtr Item, const UInt32& Index);
-    virtual void removeItem(MenuItemRefPtr Item);
+    virtual void addItem(MenuItem* const Item);
+    virtual void addItem(MenuItem* const Item, const UInt32& Index);
+    virtual void removeItem(MenuItem* const Item);
     virtual void removeItem(const UInt32& Index);
     virtual void removeAllItems(void);
     virtual MenuItem* getItem(const UInt32& Index);
@@ -125,7 +125,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListGeneratedPopupMenu : public ListGe
 	class ModelListener : public ListDataListener
 	{
 	public :
-		ModelListener(ListGeneratedPopupMenuRefPtr TheListGeneratedPopupMenu);
+		ModelListener(ListGeneratedPopupMenu* const TheListGeneratedPopupMenu);
 		
 		//Sent when the contents of the list has changed in a way that's too complex to characterize with the previous methods.
 		virtual void contentsChanged(const ListDataEventUnrecPtr e);
@@ -134,7 +134,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListGeneratedPopupMenu : public ListGe
 		//Sent after the indices in the index0,index1 interval have been removed from the data model.
 		virtual void intervalRemoved(const ListDataEventUnrecPtr e);
 	protected :
-		ListGeneratedPopupMenuRefPtr _ListGeneratedPopupMenu;
+		ListGeneratedPopupMenu* _ListGeneratedPopupMenu;
 	};
 
 	friend class ModelListener;

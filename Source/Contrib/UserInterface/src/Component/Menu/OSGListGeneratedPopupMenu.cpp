@@ -81,17 +81,17 @@ void ListGeneratedPopupMenu::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ListGeneratedPopupMenu::addItem(MenuItemRefPtr Item)
+void ListGeneratedPopupMenu::addItem(MenuItem* const Item)
 {
 	//Do Nothing
 }
 
-void ListGeneratedPopupMenu::addItem(MenuItemRefPtr Item, const UInt32& Index)
+void ListGeneratedPopupMenu::addItem(MenuItem* const Item, const UInt32& Index)
 {
 	//Do Nothing
 }
 
-void ListGeneratedPopupMenu::removeItem(MenuItemRefPtr Item)
+void ListGeneratedPopupMenu::removeItem(MenuItem* const Item)
 {
 	//Do Nothing
 }
@@ -132,17 +132,24 @@ UInt32 ListGeneratedPopupMenu::getNumItems(void) const
 
 void ListGeneratedPopupMenu::updateMenuItems(void)
 {
-    clearChildren();
+    bool changed(false);
 
-    if(getModel() != NULL)// && )
+    if(getMFChildren()->size() > 0)
     {
+        changed = true;
+        clearChildren();
+    }
+
+    if(getModel() != NULL)
+    {
+        changed = true;
         MenuItemRefPtr Item;
         for(Int32 i(0) ; i<getModel()->getSize() ; ++i)
         {
             if(getCellGenerator() != NULL)
             {
                 Item = ComponentMenuItem::create();
-                ComponentRefPtr TheComponent = getCellGenerator()->getComponent(ListGeneratedPopupMenuRefPtr(this), getModel()->getElementAt(i), i, 0, false, false);
+                ComponentRefPtr TheComponent = getCellGenerator()->getComponent(this, getModel()->getElementAt(i), i, 0, false, false);
 
                 TheComponent->setBackgrounds(NULL);
 
@@ -167,7 +174,11 @@ void ListGeneratedPopupMenu::updateMenuItems(void)
             pushToChildren(Item);
         }
     }
-    producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
+
+    if(changed)
+    {
+        producePopupMenuContentsChanged(PopupMenuEvent::create(this, getSystemTime()));
+    }
 }
 
 /*-------------------------------------------------------------------------*\

@@ -294,6 +294,9 @@ void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& But
        MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
+           //If the event is consumed then stop sending the event
+           if(TheEvent->isConsumed()) break;
+
 		  (*SetItor)->mouseClicked(TheEvent);
 	   }
        _Producer.produceEvent(MouseClickedMethodId,TheEvent);
@@ -314,6 +317,9 @@ void WindowEventProducer::produceMouseEntered(const Pnt2f& Location)
        MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
+            //If the event is consumed then stop sending the event
+            if(TheEvent->isConsumed()) break;
+
 		   (*SetItor)->mouseEntered(TheEvent);
 	   }
        _Producer.produceEvent(MouseEnteredMethodId,TheEvent);
@@ -334,10 +340,10 @@ void WindowEventProducer::produceMouseExited(const Pnt2f& Location)
        MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
-		   if(!TheEvent->getConsumed())
-		   {
-			   (*SetItor)->mouseExited(TheEvent);
-		   }
+            //If the event is consumed then stop sending the event
+            if(TheEvent->isConsumed()) break;
+
+			(*SetItor)->mouseExited(TheEvent);
 	   }
        _Producer.produceEvent(MouseExitedMethodId,TheEvent);
    }
@@ -360,10 +366,10 @@ void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& But
 	   MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
-		   if(!TheEvent->getConsumed())
-		   {
-				(*SetItor)->mousePressed(TheEvent);
-		   }
+            //If the event is consumed then stop sending the event
+            if(TheEvent->isConsumed()) break;
+
+		    (*SetItor)->mousePressed(TheEvent);
 	   }
        _Producer.produceEvent(MousePressedMethodId,TheEvent);
    }
@@ -385,10 +391,10 @@ void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Bu
 	   MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
-		   if(!TheEvent->getConsumed())
-		   {
-				(*SetItor)->mouseReleased(TheEvent);
-		   }
+            //If the event is consumed then stop sending the event
+            if(TheEvent->isConsumed()) break;
+
+		    (*SetItor)->mouseReleased(TheEvent);
 	   }
        _Producer.produceEvent(MouseReleasedMethodId,TheEvent);
    }
@@ -412,10 +418,10 @@ void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, con
 	   const MouseWheelEventUnrecPtr TheEvent = MouseWheelEvent::create( WindowUnrecPtr(this), getSystemTime(), WheelRotation, TheScrollType,MouseWheelEvent::SCROLL_ORIENTATION_VERTICAL, ViewportLocation, ResultViewport );
 	   for(MouseWheelListenerSetConstItor SetItor(_MouseWheelListeners.begin()) ; SetItor != _MouseWheelListeners.end() ; ++SetItor)
 	   {
-		   if(!TheEvent->getConsumed())
-		   {
-				(*SetItor)->mouseWheelMoved(TheEvent);
-		   }
+            //If the event is consumed then stop sending the event
+            if(TheEvent->isConsumed()) break;
+
+		    (*SetItor)->mouseWheelMoved(TheEvent);
 	   }
        _Producer.produceEvent(MouseWheelMovedMethodId,TheEvent);
    }
@@ -434,10 +440,10 @@ void WindowEventProducer::produceMouseMoved(const Pnt2f& Location, const Vec2f& 
 	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(WindowUnrecPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport,Delta );
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
-		   if(!TheEvent->getConsumed())
-		   {
-				(*SetItor)->mouseMoved(TheEvent);
-		   }
+            //If the event is consumed then stop sending the event
+            if(TheEvent->isConsumed()) break;
+
+			(*SetItor)->mouseMoved(TheEvent);
 	   }
        _Producer.produceEvent(MouseMovedMethodId,TheEvent);
    }
@@ -456,10 +462,10 @@ void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& But
 	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(WindowUnrecPtr(this), getSystemTime(), Button, 0, ViewportLocation, ResultViewport,Delta );
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
-		   if(!TheEvent->getConsumed())
-		   {
-				(*SetItor)->mouseDragged(TheEvent);
-		   }
+            //If the event is consumed then stop sending the event
+            if(TheEvent->isConsumed()) break;
+
+			(*SetItor)->mouseDragged(TheEvent);
 	   }
        _Producer.produceEvent(MouseDraggedMethodId,TheEvent);
    }
@@ -474,10 +480,10 @@ void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const U
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
-		if(!TheEvent->getConsumed())
-		{
-			(*SetItor)->keyPressed(TheEvent);
-		}
+        //If the event is consumed then stop sending the event
+        if(TheEvent->isConsumed()) break;
+
+		(*SetItor)->keyPressed(TheEvent);
    }
    _Producer.produceEvent(KeyPressedMethodId,TheEvent);
    produceKeyTyped(TheKey, Modifiers);
@@ -492,10 +498,10 @@ void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const 
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
-		if(!TheEvent->getConsumed())
-		{
-			(*SetItor)->keyReleased(TheEvent);
-		}
+        //If the event is consumed then stop sending the event
+        if(TheEvent->isConsumed()) break;
+
+		(*SetItor)->keyReleased(TheEvent);
    }
    _Producer.produceEvent(KeyReleasedMethodId,TheEvent);
 }
@@ -509,10 +515,10 @@ void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UIn
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
-		if(!TheEvent->getConsumed())
-		{
-			(*SetItor)->keyTyped(TheEvent);
-		}
+        //If the event is consumed then stop sending the event
+        if(TheEvent->isConsumed()) break;
+
+		(*SetItor)->keyTyped(TheEvent);
    }
    _Producer.produceEvent(KeyTypedMethodId,TheEvent);
 }

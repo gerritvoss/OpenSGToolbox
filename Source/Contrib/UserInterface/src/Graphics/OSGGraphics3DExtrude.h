@@ -117,7 +117,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics3DExtrude : public Graphics3DE
                           const Vec2f& t3,
                           const Vec2f& t4,
                           const Color4f& color,
-                          const TextureObjChunkUnrecPtr Texture,
+                          TextureObjChunk* const Texture,
                           const Real32& Opacity) const;
 
     virtual void drawQuad(const Pnt2f& p1,
@@ -128,7 +128,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics3DExtrude : public Graphics3DE
                           const Vec2f& t2,
                           const Vec2f& t3,
                           const Vec2f& t4,
-                          const MaterialUnrecPtr Material,
+                          Material* const Material,
                           const Real32& Opacity) const;
 
     virtual void drawLine(const Pnt2f& TopLeft,
@@ -173,13 +173,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics3DExtrude : public Graphics3DE
 
     virtual void drawText(const Pnt2f& Position,
                           const std::string& Text,
-                          const UIFontUnrecPtr TheFont,
+                          UIFont* const TheFont,
                           const Color4f& Color,
                           const Real32& Opacity) const;
 
     virtual void drawTextUnderline(const Pnt2f& Position,
                                    const std::string& Text,
-                                   const UIFontUnrecPtr TheFont,
+                                   UIFont* const TheFont,
                                    const Color4f& Color,
                                    const Real32& Opacity) const;
 
@@ -223,7 +223,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics3DExtrude : public Graphics3DE
 	
 	/*! \}                                                                 */
 
-	static MaterialUnrecPtr createDefaultMaterial(void);
+	static MaterialTransitPtr createDefaultMaterial(void);
 
     /*==========================  PRIVATE  ================================*/
 
@@ -232,7 +232,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics3DExtrude : public Graphics3DE
     friend class FieldContainer;
     friend class Graphics3DExtrudeBase;
 
-    void drawCharacters( const TextLayoutResult& layoutResult, const UIFontUnrecPtr TheFont) const;
+    void drawCharacters( const TextLayoutResult& layoutResult, UIFont* const TheFont) const;
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const Graphics3DExtrude &source);

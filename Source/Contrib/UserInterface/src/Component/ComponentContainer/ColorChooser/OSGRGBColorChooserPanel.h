@@ -144,11 +144,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RGBColorChooserPanel : public RGBColor
     class BoundedRangeSpinnerChangeListener : public ChangeListener
     {
       public :
-        BoundedRangeSpinnerChangeListener(RGBColorChooserPanelRefPtr TheRGBColorChooserPanel);
+        BoundedRangeSpinnerChangeListener(RGBColorChooserPanel* const TheRGBColorChooserPanel);
 
         virtual void stateChanged(const ChangeEventUnrecPtr e);
       private:
-        RGBColorChooserPanelRefPtr _RGBColorChooserPanel;
+        RGBColorChooserPanel* _RGBColorChooserPanel;
     };
 
     friend class BoundedRangeSpinnerChangeListener;

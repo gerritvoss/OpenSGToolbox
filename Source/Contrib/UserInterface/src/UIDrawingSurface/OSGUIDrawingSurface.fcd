@@ -17,16 +17,19 @@ A UI DrawingSurface.
 	<Field
 		name="InternalWindows"
 		type="InternalWindow"
-		category="pointer"
 		cardinality="multi"
+        category="childpointer"
+        childParentType="FieldContainer"
 		visibility="external"
 		access="public"
+        ptrFieldAccess = "nullCheck"
+        linkParentField="ParentDrawingSurface"
 	>
 	</Field>
 	<Field
 		name="FocusedWindow"
 		type="InternalWindow"
-		category="pointer"
+		category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"
@@ -36,7 +39,7 @@ A UI DrawingSurface.
 	<Field
 		name="EventProducer"
 		type="WindowEventProducer"
-		category="pointer"
+		category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"

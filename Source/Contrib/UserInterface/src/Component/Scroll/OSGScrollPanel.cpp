@@ -79,7 +79,7 @@ void ScrollPanel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ScrollPanel::setViewComponent(ComponentRefPtr TheComponent)
+void ScrollPanel::setViewComponent(Component* const TheComponent)
 {
     if(getView() == NULL)
     {
@@ -128,7 +128,7 @@ void ScrollPanel::updateRangeModels(void)
     getView()->addChangeListener(&_ViewportChangeListener);
 }
 
-ScrollBarRefPtr ScrollPanel::getVerticalScrollBar(void)
+ScrollBar* ScrollPanel::getVerticalScrollBar(void)
 {
     if(getInternalVerticalScrollBar() == NULL)
     {
@@ -141,7 +141,7 @@ ScrollBarRefPtr ScrollPanel::getVerticalScrollBar(void)
     return getInternalVerticalScrollBar();
 }
 
-ScrollBarRefPtr ScrollPanel::getHorizontalScrollBar(void)
+ScrollBar* ScrollPanel::getHorizontalScrollBar(void)
 {
     if(getInternalHorizontalScrollBar() == NULL)
     {

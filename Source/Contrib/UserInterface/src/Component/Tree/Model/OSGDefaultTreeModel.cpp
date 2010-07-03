@@ -78,7 +78,7 @@ void DefaultTreeModel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ModelTreeNodeRefPtr DefaultTreeModel::getNodeForPath(const TreePath& ThePath) const
+ModelTreeNode* DefaultTreeModel::getNodeForPath(const TreePath& ThePath) const
 {
     try
     {
@@ -188,7 +188,7 @@ void DefaultTreeModel::valueForPathChanged(TreePath path, const boost::any& newV
 
 
 
-void DefaultTreeModel::insertNodeInto(MutableTreeNodeRefPtr newChild, MutableTreeNodeRefPtr parent, const UInt32& index)
+void DefaultTreeModel::insertNodeInto(MutableTreeNode* const newChild, MutableTreeNode* const parent, const UInt32& index)
 {
     parent->insert(newChild, index);
 
@@ -201,7 +201,7 @@ void DefaultTreeModel::insertNodeInto(MutableTreeNodeRefPtr newChild, MutableTre
     }
 }
 
-TreePath DefaultTreeModel::createPath(ModelTreeNodeRefPtr node) const
+TreePath DefaultTreeModel::createPath(ModelTreeNode* const node) const
 {
     std::deque<boost::any> PathVec;
     ModelTreeNodeRefPtr recNode(node);
@@ -226,7 +226,7 @@ TreePath DefaultTreeModel::createPath(ModelTreeNodeRefPtr node) const
     return TreePath(PathVec, const_cast<DefaultTreeModel*>(this));
 }
 
-void DefaultTreeModel::nodeChanged(ModelTreeNodeRefPtr node)
+void DefaultTreeModel::nodeChanged(ModelTreeNode* const node)
 {
     if(node->getParent() != NULL)
     {
@@ -236,36 +236,36 @@ void DefaultTreeModel::nodeChanged(ModelTreeNodeRefPtr node)
     }
 }
 
-void DefaultTreeModel::nodesChanged(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices)
+void DefaultTreeModel::nodesChanged(ModelTreeNode* const node, std::vector<UInt32> childIndices)
 {
     std::vector<boost::any> ChildUserObjects;
 
     for(UInt32 i(0) ; i< childIndices.size() ; ++i)
     {
-        ChildUserObjects.push_back(dynamic_pointer_cast<ModelTreeNode>(node->getChildAt(childIndices[i])));
+        ChildUserObjects.push_back(dynamic_cast<ModelTreeNode*>(node->getChildAt(childIndices[i])));
     }
 
     produceTreeNodesChanged(createPath(node), childIndices, ChildUserObjects);
 }
 
-void DefaultTreeModel::nodeStructureChanged(ModelTreeNodeRefPtr node)
+void DefaultTreeModel::nodeStructureChanged(ModelTreeNode* const node)
 {
     //TODO:Implement
     //produceTreeStructureChanged();
 }
 
-void DefaultTreeModel::nodesWereInserted(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices)
+void DefaultTreeModel::nodesWereInserted(ModelTreeNode* const node, std::vector<UInt32> childIndices)
 {
     std::vector<boost::any> InstertedChildUserObjects;
 
     for(UInt32 i(0) ; i< childIndices.size() ; ++i)
     {
-        InstertedChildUserObjects.push_back(dynamic_pointer_cast<ModelTreeNode>(node->getChildAt(childIndices[i])));
+        InstertedChildUserObjects.push_back(dynamic_cast<ModelTreeNode*>(node->getChildAt(childIndices[i])));
     }
     produceTreeNodesInserted(createPath(node), childIndices, InstertedChildUserObjects);
 }
 
-void DefaultTreeModel::removeNodeFromParent(MutableTreeNodeRefPtr node)
+void DefaultTreeModel::removeNodeFromParent(MutableTreeNode* const node)
 {
     ModelTreeNodeRefPtr Parent = node->getParent();
 
@@ -273,7 +273,7 @@ void DefaultTreeModel::removeNodeFromParent(MutableTreeNodeRefPtr node)
     ChildIndicies.push_back(Parent->getIndex(node));
 
     std::vector<boost::any> Children;
-    Children.push_back(dynamic_pointer_cast<ModelTreeNode>(node));
+    Children.push_back(dynamic_cast<ModelTreeNode*>(node));
 
     produceTreeNodesWillBeRemoved(createPath(Parent), ChildIndicies, Children);
     node->removeFromParent();
@@ -284,12 +284,12 @@ void DefaultTreeModel::removeNodeFromParent(MutableTreeNodeRefPtr node)
     }
 }
 
-void DefaultTreeModel::setRoot(ModelTreeNodeRefPtr root)
+void DefaultTreeModel::setRoot(ModelTreeNode* const root)
 {
     setInternalRoot(root);
 }
 
-ModelTreeNodeRefPtr DefaultTreeModel::getRootNode(void) const
+ModelTreeNode* DefaultTreeModel::getRootNode(void) const
 {
     return getInternalRoot();
 }

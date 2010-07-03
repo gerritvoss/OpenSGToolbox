@@ -77,7 +77,7 @@ void RadioButtonGroup::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void RadioButtonGroup::addButton(RadioButtonRefPtr Button)
+void RadioButtonGroup::addButton(RadioButton* const Button)
 {
     pushToGroupButtons(Button);
     if(Button->getSelected())
@@ -95,7 +95,7 @@ void RadioButtonGroup::addButton(RadioButtonRefPtr Button)
     Button->addButtonSelectedListener(this);
 }
 
-void RadioButtonGroup::removeButton(RadioButtonRefPtr Button)
+void RadioButtonGroup::removeButton(RadioButton* const Button)
 {
     MFUnrecRadioButtonPtr *curButtons = editMFGroupButtons();
     MFUnrecRadioButtonPtr::iterator ButtonIter = (*curButtons).find(Button);
@@ -126,7 +126,7 @@ UInt32 RadioButtonGroup::getButtonCount(void) const
 }
 
 
-bool RadioButtonGroup::isSelected(const RadioButtonRefPtr Button) const
+bool RadioButtonGroup::isSelected(const RadioButton* const Button) const
 {
     if(Button == getSelectedButton())
     {

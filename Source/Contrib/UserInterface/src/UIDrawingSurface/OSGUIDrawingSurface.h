@@ -117,16 +117,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurface : public UIDrawingSur
     virtual Pnt2f getMousePosition(void) const;
 
 	virtual UInt32 getNumWindowLayers(void) const;
-	virtual Int32 getWindowLayer(InternalWindowRefPtr TheWindow) const;
-	virtual InternalWindowRefPtr getWindowAtLayer(const UInt32& Layer) const;
-	virtual void setWindowToLayer(InternalWindowRefPtr TheWindow, const UInt32& Layer);
-	virtual void moveWindowUp(InternalWindowRefPtr TheWindow);
-	virtual void moveWindowDown(InternalWindowRefPtr TheWindow);
-	virtual void moveWindowToTop(InternalWindowRefPtr TheWindow);
-	virtual void moveWindowToBottom(InternalWindowRefPtr TheWindow);
+	virtual Int32 getWindowLayer(InternalWindow* const TheWindow) const;
+	virtual InternalWindow* getWindowAtLayer(const UInt32& Layer) const;
+	virtual void setWindowToLayer(InternalWindow* const TheWindow, const UInt32& Layer);
+	virtual void moveWindowUp(InternalWindow* const TheWindow);
+	virtual void moveWindowDown(InternalWindow* const TheWindow);
+	virtual void moveWindowToTop(InternalWindow* const TheWindow);
+	virtual void moveWindowToBottom(InternalWindow* const TheWindow);
 
-	virtual void openWindow(InternalWindowRefPtr TheWindow, const Int32 Layer = -1);
-	virtual void closeWindow(InternalWindowRefPtr TheWindow);
+	virtual void openWindow(InternalWindow* const TheWindow, const Int32 Layer = -1);
+	virtual void closeWindow(InternalWindow* const TheWindow);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -161,7 +161,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurface : public UIDrawingSur
                       _MouseWheelEventConnection,
                       _KeyEventConnection;
 
-	void checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, ViewportRefPtr TheViewport);
+	void checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, Viewport* const TheViewport);
+
+    std::set<InternalWindow*> _WindowsToClose;
+    bool _IsProcessingEvents;
+    void closeWindows(void);
 
     /*==========================  PRIVATE  ================================*/
 
@@ -178,7 +182,7 @@ typedef UIDrawingSurface *UIDrawingSurfaceP;
 
 OSG_END_NAMESPACE
 
-//#include "OSGInternalWindow.h"
+#include "OSGInternalWindow.h"
 
 #include "OSGUIDrawingSurfaceBase.inl"
 #include "OSGUIDrawingSurface.inl"

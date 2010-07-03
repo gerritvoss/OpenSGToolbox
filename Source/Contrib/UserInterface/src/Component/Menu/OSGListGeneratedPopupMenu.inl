@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-ListGeneratedPopupMenu::ModelListener::ModelListener(ListGeneratedPopupMenuRefPtr TheListGeneratedPopupMenu) : 
+ListGeneratedPopupMenu::ModelListener::ModelListener(ListGeneratedPopupMenu* const TheListGeneratedPopupMenu) : 
 _ListGeneratedPopupMenu(TheListGeneratedPopupMenu)
 {
 }

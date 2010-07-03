@@ -135,11 +135,11 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING QuaternionEulerFieldEditor : pu
     class SpinnerListener : public ChangeListener
     {
       public :
-           SpinnerListener(QuaternionEulerFieldEditor * ptr);
+           SpinnerListener(QuaternionEulerFieldEditor * const ptr);
            virtual void stateChanged(const ChangeEventUnrecPtr e);
 
       protected :
-        QuaternionEulerFieldEditor *_QuaternionEulerFieldEditor;
+        QuaternionEulerFieldEditor* _QuaternionEulerFieldEditor;
     };
 
     friend class SpinnerListener;

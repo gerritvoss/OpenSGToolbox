@@ -104,7 +104,7 @@ public:
 
             AddedTabContent->setText("This is where the new Tab content hangs out");
         
-        if( ExampleTabPanel->getMFTabs()->getSize() == 6) 
+        if( ExampleTabPanel->getMFTabs()->size() == 6) 
 		{
                 ExampleTabPanel->addTab(AddedTabButton, AddedTabContent);
         
@@ -126,7 +126,7 @@ public:
    virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
 
-        if( ExampleTabPanel->getMFTabs()->getSize() == 7) 
+        if( ExampleTabPanel->getMFTabs()->size() == 7) 
 		{
 				ExampleTabPanel->removeTab(6);
 	        

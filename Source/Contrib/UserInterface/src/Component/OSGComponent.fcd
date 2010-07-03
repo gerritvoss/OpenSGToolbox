@@ -12,6 +12,7 @@
     useLocalIncludes="false"
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
+    childFields="multi"
 >
 A UI Component Interface.
 	<Field
@@ -233,24 +234,16 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
-		name="ParentContainer"
-		type="ComponentContainer"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="ParentWindow"
-		type="InternalWindow"
-		category="pointer"
-		cardinality="single"
-		visibility="internal"
-		defaultValue="NULL"
-		access="public"
-	>
+	   name="ParentContainer"
+	   type="FieldContainer"
+	   cardinality="single"
+	   visibility="external"
+	   access="none"
+       doRefCount="false"
+       passFieldMask="true"
+       category="parentpointer"
+	   >
+	  The Component Container this Component is contained in.
 	</Field>
 	<Field
 		name="Clipping"

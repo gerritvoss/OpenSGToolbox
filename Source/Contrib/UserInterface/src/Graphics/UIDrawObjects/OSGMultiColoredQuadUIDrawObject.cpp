@@ -76,7 +76,7 @@ void MultiColoredQuadUIDrawObject::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void MultiColoredQuadUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void MultiColoredQuadUIDrawObject::draw(Graphics* const Graphics, Real32 Opacity) const
 {
 	Graphics->drawQuad(getPoint1(),getPoint2(),getPoint3(),getPoint4(),
                        getColor1(), getColor2(), getColor3(), getColor4(),

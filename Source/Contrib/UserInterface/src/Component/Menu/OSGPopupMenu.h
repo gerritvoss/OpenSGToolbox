@@ -86,18 +86,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenu : public PopupMenuBase
 
     /*! \}                                                                 */
 
-    virtual void addItem(MenuItemRefPtr Item);
-    virtual void addItem(MenuItemRefPtr Item, const UInt32& Index);
-    virtual void removeItem(MenuItemRefPtr Item);
+    virtual void addItem(MenuItem* const Item);
+    virtual void addItem(MenuItem* const Item, const UInt32& Index);
+    virtual void removeItem(MenuItem* const Item);
     virtual void removeItem(const UInt32& Index);
     virtual void removeAllItems(void);
     virtual MenuItem* getItem(const UInt32& Index);
     virtual UInt32 getNumItems(void) const;
 
     void addSeparator(void);
-    void addSeparator(SeparatorRefPtr TheSeparator);
+    void addSeparator(Separator* const TheSeparator);
     void removeSeparator(const UInt32&  Index);
-    void removeSeparator(SeparatorRefPtr TheSeparator);
+    void removeSeparator(Separator* const TheSeparator);
     void removeAllSeparators(void);
     UInt32 getNumSeparators(void) const;
     
@@ -116,6 +116,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenu : public PopupMenuBase
     void clearSelection(void);
     void setSelection(const Int32& Index);
     Int32 getSelectionIndex(void) const;
+
+    virtual ComponentContainer* getParentContainer(void) const;
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -158,10 +160,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenu : public PopupMenuBase
 	class MenuSelectionListener : public SelectionListener
 	{
 	public:
-		MenuSelectionListener(PopupMenuRefPtr ThePopupMenu);
+		MenuSelectionListener(PopupMenu* const ThePopupMenu);
         virtual void selectionChanged(const SelectionEventUnrecPtr e);
 	private:
-		PopupMenuRefPtr _PopupMenu;
+		PopupMenu* _PopupMenu;
 	};
 
 	friend class MenuSelectionListener;

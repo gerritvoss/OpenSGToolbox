@@ -96,7 +96,7 @@ Vec2f Tree::getContentRequestedSize(void) const
 
 void Tree::mousePressed(const MouseEventUnrecPtr e)
 {
-    Pnt2f PointInCompSpace(DrawingSurfaceToComponent(e->getLocation(),ComponentRefPtr(this)));
+    Pnt2f PointInCompSpace(DrawingSurfaceToComponent(e->getLocation(),this));
 
     //Determine the row the mouse is located
     Int32 Row = getRowForLocation(PointInCompSpace);
@@ -125,15 +125,15 @@ void Tree::mousePressed(const MouseEventUnrecPtr e)
             }
         }
 		if(getParentWindow() != NULL &&
-		   getParentWindow()->getDrawingSurface() != NULL &&
-		   getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+		   getParentWindow()->getParentDrawingSurface() != NULL &&
+		   getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 		{
-			if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+			if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 			{
 				getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionRow(), Row);
 				getSelectionModel()->setLeadSelectionRow(Row);
 			}
-			else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+			else if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
 			{
                 // this toggles the interval
                 if(getSelectionModel()->isRowSelected(Row))
@@ -158,10 +158,10 @@ void Tree::mousePressed(const MouseEventUnrecPtr e)
         //Clicked outside of the rows
         //Clear the selection
         if(getParentWindow() != NULL &&
-           getParentWindow()->getDrawingSurface() != NULL &&
-           getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+           getParentWindow()->getParentDrawingSurface() != NULL &&
+           getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
         {
-            if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() == 0)
+            if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() == 0)
             {
                 getSelectionModel()->clearSelection();
             }
@@ -625,7 +625,7 @@ void Tree::clearToggledPaths(void)
 
 
 
-TreeModelRefPtr Tree::getDefaultTreeModel(void)
+TreeModel* Tree::getDefaultTreeModel(void)
 {
     //TODO:Implement
     return NULL;
@@ -705,7 +705,7 @@ bool Tree::isParentAViewport(void) const
     return (getParentContainer() != NULL) && (getParentContainer()->getType() == UIViewport::getClassType());
 }
 
-UIViewportRefPtr Tree::getParentViewport(void) const
+UIViewport* Tree::getParentViewport(void) const
 {
     if(isParentAViewport())
     {
@@ -897,13 +897,14 @@ Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
         }
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
-            return TreeRowComponents( dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeExpandedComponent(TreeRefPtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
-                                      dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeComponent(TreeRefPtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
-                Row);
+            ComponentUnrecPtr NewExpComp(dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeExpandedComponent(this, NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false));
+            ComponentUnrecPtr NewComp(dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeComponent(this, NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false));
+            return TreeRowComponents( NewExpComp, NewComp, Row);
         }
         else
         {
-            return TreeRowComponents(NULL, getCellGenerator()->getComponent(TreeRefPtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false),Row);
+            ComponentUnrecPtr NewComp(getCellGenerator()->getComponent(this,NodePath.getLastPathComponent(), Row, 0,Selected, false));
+            return TreeRowComponents(NULL, NewComp,Row);
         }
     }
     else
@@ -1298,7 +1299,7 @@ Tree::TreeRowComponents::TreeRowComponents(void) :  _ExpandedComponent(NULL), _V
 {
 }
 
-Tree::TreeRowComponents::TreeRowComponents(ComponentRefPtr ExpandedComponent, ComponentRefPtr ValueComponent, Int32 Row) :  _ExpandedComponent(ExpandedComponent), _ValueComponent(ValueComponent), _Row(Row)
+Tree::TreeRowComponents::TreeRowComponents(Component* const ExpandedComponent, Component* const ValueComponent, Int32 Row) :  _ExpandedComponent(ExpandedComponent), _ValueComponent(ValueComponent), _Row(Row)
 {
 }
 

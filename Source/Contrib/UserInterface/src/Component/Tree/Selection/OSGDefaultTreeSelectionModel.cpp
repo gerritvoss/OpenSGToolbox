@@ -251,7 +251,7 @@ Int32 DefaultTreeSelectionModel::getMinSelectionRow(void) const
 	return _MinSelectionIndex; //Returns the smallest value obtained from the TreeRowMapper for the current set of selected TreePaths.
 }
 
-TreeRowMapperRefPtr DefaultTreeSelectionModel::getRowMapper(void) const
+TreeRowMapper* DefaultTreeSelectionModel::getRowMapper(void) const
 {
 	return _TreeRowMapper; // returns the current row from TreeRowMapper
 }
@@ -376,7 +376,7 @@ void DefaultTreeSelectionModel::removeSelectionPaths(std::vector<TreePath> paths
 	// Not sure what this function does
 //}
 
-void DefaultTreeSelectionModel::setRowMapper(TreeRowMapperRefPtr newMapper)
+void DefaultTreeSelectionModel::setRowMapper(TreeRowMapper* const newMapper)
 {
     _TreeRowMapper = newMapper;
 }

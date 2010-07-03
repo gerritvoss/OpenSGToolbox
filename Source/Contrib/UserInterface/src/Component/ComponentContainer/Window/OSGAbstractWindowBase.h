@@ -65,7 +65,7 @@
 
 #include "OSGComponentContainer.h" // Parent
 
-#include "OSGUIDrawingSurfaceFields.h"  // DrawingSurface type
+#include "OSGFieldContainerFields.h"    // ParentDrawingSurface type
 #include "OSGSysFields.h"               // Closable type
 #include "OSGBaseFields.h"              // Title type
 #include "OSGUIDrawObjectCanvasFields.h" // DesktopIcon type
@@ -102,8 +102,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
 
     enum
     {
-        DrawingSurfaceFieldId = Inherited::NextFieldId,
-        ClosableFieldId = DrawingSurfaceFieldId + 1,
+        ParentDrawingSurfaceFieldId = Inherited::NextFieldId,
+        ClosableFieldId = ParentDrawingSurfaceFieldId + 1,
         IconableFieldId = ClosableFieldId + 1,
         MaximizableFieldId = IconableFieldId + 1,
         IsClosedFieldId = MaximizableFieldId + 1,
@@ -124,8 +124,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
         NextFieldId = ResizeModifyCursorWidthFieldId + 1
     };
 
-    static const OSG::BitVector DrawingSurfaceFieldMask =
-        (TypeTraits<BitVector>::One << DrawingSurfaceFieldId);
+    static const OSG::BitVector ParentDrawingSurfaceFieldMask =
+        (TypeTraits<BitVector>::One << ParentDrawingSurfaceFieldId);
     static const OSG::BitVector ClosableFieldMask =
         (TypeTraits<BitVector>::One << ClosableFieldId);
     static const OSG::BitVector IconableFieldMask =
@@ -165,7 +165,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecUIDrawingSurfacePtr SFDrawingSurfaceType;
+    typedef SFParentFieldContainerPtr SFParentDrawingSurfaceType;
     typedef SFBool            SFClosableType;
     typedef SFBool            SFIconableType;
     typedef SFBool            SFMaximizableType;
@@ -224,8 +224,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecUIDrawingSurfacePtr *getSFDrawingSurface (void) const;
-                  SFUnrecUIDrawingSurfacePtr *editSFDrawingSurface (void);
 
                   SFBool              *editSFClosable       (void);
             const SFBool              *getSFClosable        (void) const;
@@ -280,8 +278,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
                   SFUInt32            *editSFResizeModifyCursorWidth(void);
             const SFUInt32            *getSFResizeModifyCursorWidth (void) const;
 
-
-                  UIDrawingSurface * getDrawingSurface (void) const;
 
                   bool                &editClosable       (void);
                   bool                 getClosable        (void) const;
@@ -341,7 +337,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setDrawingSurface (UIDrawingSurface * const value);
             void setClosable       (const bool value);
             void setIconable       (const bool value);
             void setMaximizable    (const bool value);
@@ -405,7 +400,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecUIDrawingSurfacePtr _sfDrawingSurface;
+    SFParentFieldContainerPtr _sfParentDrawingSurface;
     SFBool            _sfClosable;
     SFBool            _sfIconable;
     SFBool            _sfMaximizable;
@@ -449,11 +444,22 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleDrawingSurface  (void) const;
-    EditFieldHandlePtr editHandleDrawingSurface (void);
+    GetFieldHandlePtr  getHandleParentDrawingSurface (void) const;
+    EditFieldHandlePtr editHandleParentDrawingSurface(void);
     GetFieldHandlePtr  getHandleClosable        (void) const;
     EditFieldHandlePtr editHandleClosable       (void);
     GetFieldHandlePtr  getHandleIconable        (void) const;

@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-NumberSpinnerFieldEditor::SpinnerListener::SpinnerListener(NumberSpinnerFieldEditor * ptr) : _NumberSpinnerFieldEditor(ptr)
+NumberSpinnerFieldEditor::SpinnerListener::SpinnerListener(NumberSpinnerFieldEditor * const ptr) : _NumberSpinnerFieldEditor(ptr)
 {
 }
 

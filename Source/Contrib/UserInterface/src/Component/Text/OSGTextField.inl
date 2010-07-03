@@ -57,13 +57,13 @@ void TextField::removeActionListener(ActionListenerPtr Listener)
 }
 
 inline
-TextField::CaretUpdateListener::CaretUpdateListener(TextFieldRefPtr TheTextField) :
+TextField::CaretUpdateListener::CaretUpdateListener(TextField* const TheTextField) :
 									_TextField(TheTextField)
 {
 }
 
 inline
-TextField::MouseDownListener::MouseDownListener(TextFieldRefPtr TheTextField) :
+TextField::MouseDownListener::MouseDownListener(TextField* const TheTextField) :
 _TextField(TheTextField)
 {
 }

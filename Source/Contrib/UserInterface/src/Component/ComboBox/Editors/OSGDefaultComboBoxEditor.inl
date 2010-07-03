@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-DefaultComboBoxEditor::TextFieldListener::TextFieldListener(DefaultComboBoxEditorRefPtr TheDefaultComboBoxEditor) :
+DefaultComboBoxEditor::TextFieldListener::TextFieldListener(DefaultComboBoxEditor* const TheDefaultComboBoxEditor) :
    _DefaultComboBoxEditor(TheDefaultComboBoxEditor)
 {
 }

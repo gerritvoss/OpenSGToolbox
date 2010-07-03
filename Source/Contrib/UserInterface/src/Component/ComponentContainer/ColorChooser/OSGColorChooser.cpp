@@ -117,7 +117,7 @@ void ColorChooser::updateLayout(void)
 
 }
 
-void ColorChooser::addChooserPanel(AbstractColorChooserPanelRefPtr panel)
+void ColorChooser::addChooserPanel(AbstractColorChooserPanel* const panel)
 {
 	MFInternalChooserPanelsType::iterator
         SearchItor(editMFInternalChooserPanels()->find(panel));
@@ -163,7 +163,7 @@ ColorSelectionModelPtr ColorChooser::getSelectionModel(void)
 	return _SelectionModel;
 }
 
-AbstractColorChooserPanelRefPtr ColorChooser::removeChooserPanel(AbstractColorChooserPanelRefPtr panel)
+AbstractColorChooserPanel* ColorChooser::removeChooserPanel(AbstractColorChooserPanel* const panel)
 {
 	MFInternalChooserPanelsType::iterator
         SearchItor(editMFInternalChooserPanels()->find(panel));

@@ -90,7 +90,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooser : public ColorChooserBase
     virtual void updateLayout(void);
 
 	//Adds a color chooser panel to the color chooser.
-	void addChooserPanel(AbstractColorChooserPanelRefPtr panel);
+	void addChooserPanel(AbstractColorChooserPanel* const panel);
 
 	//Returns the specified color panels.
 	ColorChooserPanelVector getChooserPanels(void) const;
@@ -102,7 +102,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooser : public ColorChooserBase
 	ColorSelectionModelPtr getSelectionModel(void);
 
 	//Removes the Color4f Panel specified.
-	AbstractColorChooserPanelRefPtr removeChooserPanel(AbstractColorChooserPanelRefPtr panel);
+	AbstractColorChooserPanel* removeChooserPanel(AbstractColorChooserPanel* const panel);
 
 	//Specifies the Color4f Panels used to choose a color value.
 	void setChooserPanels(ColorChooserPanelVector panels);
@@ -153,11 +153,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooser : public ColorChooserBase
     class ColorSelectedChangeListener : public ChangeListener
     {
       public :
-        ColorSelectedChangeListener(ColorChooserRefPtr TheColorChooser);
+        ColorSelectedChangeListener(ColorChooser* const TheColorChooser);
 
         virtual void stateChanged(const ChangeEventUnrecPtr e);
       private:
-        ColorChooserRefPtr _ColorChooser;
+        ColorChooser* _ColorChooser;
     };
 
     friend class ColorSelectedChangeListener;

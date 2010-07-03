@@ -82,7 +82,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultComboBoxComponentGenerator : pu
 
     /*! \}                                                                 */
 
-	virtual ComponentRefPtr getComboBoxComponent(ComboBoxRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus);
+	virtual ComponentTransitPtr getComboBoxComponent(ComboBox* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus);
 
     /*=========================  PROTECTED  ===============================*/
 

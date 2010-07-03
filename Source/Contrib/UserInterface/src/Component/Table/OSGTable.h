@@ -140,7 +140,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
 	virtual void intervalRemoved(const TableModelEventUnrecPtr e);
 
     //Appends aColumn to the end of the array of columns held by this JTable's column model.
-    void addColumn(TableColumnRefPtr aColumn);
+    void addColumn(TableColumn* const aColumn);
 
     //Adds the columns from index0 to index1, inclusive, to the current selection.
     void addColumnSelectionInterval(const UInt32& index0, const UInt32& index1);
@@ -173,7 +173,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     virtual void columnSelectionChanged(const ListSelectionEventUnrecPtr e);
 
     //Returns the default table model object, which is a DefaultTableModel.
-    //protected  TableModelRefPtr createDefaultDataModel(void);
+    //protected  TableModel* createDefaultDataModel(void);
 
     //Returns the default selection model object, which is a DefaultListSelectionModel.
     //protected  ListSelectionModel createDefaultSelectionModel(void);
@@ -194,7 +194,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     virtual void editingStopped(const ChangeEventUnrecPtr e);
 
     //Returns an appropriate editor for the cell specified by row and column.
-    TableCellEditorRefPtr getCellEditor(const UInt32& row, const UInt32& column) const;
+    TableCellEditor* getCellEditor(const UInt32& row, const UInt32& column) const;
 
     //Returns a rectangle for the cell that lies at the intersection of row and column.
     //Rectangle getCellRect(int row, int column, bool includeSpacing);
@@ -209,7 +209,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     UInt32 getColumnCount(void) const;
 
     //Returns the TableColumnModel that contains all column information of this table.
-    //TableColumnModelRefPtr getColumnModel(void) const;
+    //TableColumnModel* getColumnModel(void) const;
 
     //Returns the name of the column appearing in the view at column position column.
     boost::any getColumnValue(const UInt32& column) const;
@@ -218,7 +218,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     bool getColumnSelectionAllowed(void) const;
 
     //Returns the editor to be used when no editor has been set in a TableColumn.
-    TableCellEditorRefPtr getDefaultEditor(const std::type_info& TheType) const;
+    TableCellEditor* getDefaultEditor(const std::type_info& TheType) const;
 
     //Returns the cell renderer to be used when no renderer has been set in a TableColumn.
     TableCellRendererPtr getDefaultRenderer(const std::type_info& TheType) const;
@@ -230,10 +230,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     Int32 getEditingRow(void) const;
 
     //Returns the component that is handling the editing session.
-    ComponentRefPtr getEditorComponent(void) const;
+    Component* getEditorComponent(void) const;
 
     //Returns the TableModel that provides the data displayed by this JTable.
-    //TableModelRefPtr getModel(void) const;
+    //TableModel* getModel(void) const;
 
     //Returns the number of rows in this table's model.
     UInt32 getRowCount(void) const;
@@ -290,7 +290,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     void moveColumn(const UInt32& column, const UInt32& targetColumn);
 
     //Removes aColumn from this JTable's array of columns.
-    void removeColumn(TableColumnRefPtr aColumn);
+    void removeColumn(TableColumn* const aColumn);
 
     //Deselects the columns from index0 to index1, inclusive.
     void removeColumnSelectionInterval(const UInt32& index0, const UInt32& index1);
@@ -308,7 +308,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     void setCellSelectionEnabled(bool cellSelectionEnabled);
 
     //Sets the column model for this table to newModel and registers for listener notifications from the new column model.
-    //void setColumnModel(TableColumnModelRefPtr columnModel);
+    //void setColumnModel(TableColumnModel* const columnModel);
 
     //Sets whether the columns in this model can be selected.
     void setColumnSelectionAllowed(bool columnSelectionAllowed);
@@ -320,7 +320,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     virtual void selectionChanged(const ListSelectionEventUnrecPtr e);
 
     //Sets a default cell editor to be used if no editor has been set in a TableColumn.
-    void setDefaultEditor(const std::type_info& TheType, TableCellEditorRefPtr editor);
+    void setDefaultEditor(const std::type_info& TheType, TableCellEditor* const editor);
 
     //Sets a default cell renderer to be used if no renderer has been set in a TableColumn.
     void setDefaultRenderer(const std::type_info& TheType, TableCellRendererPtr renderer);
@@ -339,7 +339,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
 
 
     //Sets the data model for this table to newModel and registers with it for listener notifications from the new data model.
-    //void setModel(TableModelRefPtr dataModel);
+    //void setModel(TableModel* const dataModel);
 
     //Sets the height for row to rowHeight, revalidates, and repaints.
     //void setRowHeight(const UInt32& row, const UInt32& rowHeight);
@@ -418,7 +418,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     mutable TableCellRendererPtr _DefaultCellRenderer;
     
     
-	virtual void drawInternal(const GraphicsRefPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 	void updateTableComponents(void);
 	void createColumnsFromModel(void);
     void updateItem(const UInt32& index);
@@ -426,8 +426,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
     void startEditing(const UInt32& Row, const UInt32& Column);
     bool getFocusedCell(UInt32& Row, UInt32& Column) const;
     
-	virtual void produceMouseExitOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp);
-	virtual void produceMouseEnterOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp);
+	virtual void produceMouseExitOnComponent(const MouseEventUnrecPtr e, Component* const Comp);
+	virtual void produceMouseEnterOnComponent(const MouseEventUnrecPtr e, Component* const Comp);
 
     /*==========================  PRIVATE  ================================*/
 

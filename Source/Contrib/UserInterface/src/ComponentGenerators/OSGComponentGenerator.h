@@ -82,7 +82,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentGenerator : public ComponentG
 
     /*! \}                                                                 */
     
-    virtual ComponentRefPtr getComponent(ComponentRefPtr Parent,
+    virtual ComponentTransitPtr getComponent(Component* const Parent,
                                          const boost::any& Value,
                                          Int32 PrimaryAxisIndex,
                                          Int32 SecondaryAxisIndex,

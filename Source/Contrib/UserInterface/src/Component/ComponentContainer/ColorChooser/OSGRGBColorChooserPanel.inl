@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-RGBColorChooserPanel::BoundedRangeSpinnerChangeListener::BoundedRangeSpinnerChangeListener(RGBColorChooserPanelRefPtr TheRGBColorChooserPanel) :
+RGBColorChooserPanel::BoundedRangeSpinnerChangeListener::BoundedRangeSpinnerChangeListener(RGBColorChooserPanel* const TheRGBColorChooserPanel) :
 _RGBColorChooserPanel(TheRGBColorChooserPanel)
 {
 }

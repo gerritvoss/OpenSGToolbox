@@ -113,7 +113,7 @@ void Table::startEditing(const UInt32& Row, const UInt32& Column)
 
     if(Inherited::getGlobalCellEditor()->getType().isDerivedFrom(TableCellEditor::getClassType()))
     {
-        _EditingComponent = dynamic_cast<TableCellEditor*>(Inherited::getGlobalCellEditor())->getTableCellEditorComponent(TableRefPtr(this), getModel()->getValueAt(Row, Column), isSelected(Row, Column), Row, Column);
+        _EditingComponent = dynamic_cast<TableCellEditor*>(Inherited::getGlobalCellEditor())->getTableCellEditorComponent(this, getModel()->getValueAt(Row, Column), isSelected(Row, Column), Row, Column);
     }
     else
     {
@@ -359,7 +359,7 @@ void Table::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
     Component::mouseWheelMoved(e);
 }
 
-void Table::produceMouseExitOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp)
+void Table::produceMouseExitOnComponent(const MouseEventUnrecPtr e, Component* const Comp)
 {
     UInt32 i(0);
     while(i<getMFChildren()->size()-1 && getChildren(i) != Comp)
@@ -373,7 +373,7 @@ void Table::produceMouseExitOnComponent(const MouseEventUnrecPtr e, ComponentRef
     Inherited::produceMouseExitOnComponent(e,Comp);
 }
 
-void Table::produceMouseEnterOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp)
+void Table::produceMouseEnterOnComponent(const MouseEventUnrecPtr e, Component* const Comp)
 {
     UInt32 i(0);
     while(i<getMFChildren()->size()-1 && getChildren(i) != Comp)
@@ -426,14 +426,14 @@ void Table::mousePressed(const MouseEventUnrecPtr e)
             {
                 getChildren(i)->takeFocus();
                 if(getParentWindow() != NULL &&
-                   getParentWindow()->getDrawingSurface() != NULL &&
-                   getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+                   getParentWindow()->getParentDrawingSurface() != NULL &&
+                   getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
                 {
-                    if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+                    if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
                     {
                         changeSelection(Row, Column, false, true);
                     }
-                    else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+                    else if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
                     {
                         changeSelection(Row, Column, true, true);
                     }
@@ -490,13 +490,14 @@ void Table::updateItem(const UInt32& index)
     //Check if this cell is being Edited
     if(isEditing() && Row == _EditingRow && Column == _EditingColumn)
     {
-        (*editMFChildren())[index] = _EditingComponent;
+        replaceInChildren(index, _EditingComponent);
     }
     else //Non-Editing Cell
     {
         boost::any CellValue = getModel()->getValueAt(Row, Column);
 
-        (*editMFChildren())[index] = getCellRenderer(Row, Column)->getTableCellRendererComponent(TableRefPtr(this), CellValue, isSelected(Row, Column), PrevComponent->getFocused(), Row, Column);
+        ComponentUnrecPtr NewComp(getCellRenderer(Row, Column)->getTableCellRendererComponent(this, CellValue, isSelected(Row, Column), PrevComponent->getFocused(), Row, Column));
+        replaceInChildren(index, NewComp);
     }
     if(PrevComponent->getFocused())
     {
@@ -507,48 +508,40 @@ void Table::updateItem(const UInt32& index)
     getChildren(index)->setFocused(PrevComponent->getFocused());
     getChildren(index)->setPosition(PrevComponent->getPosition());
     getChildren(index)->setSize(PrevComponent->getSize());
-    getChildren(index)->setParentContainer(PrevComponent->getParentContainer());
     getChildren(index)->setParentWindow(PrevComponent->getParentWindow());
     getChildren(index)->updateClipBounds();
 }
 void Table::focusGained(const FocusEventUnrecPtr e)
 {
     //Find this component
-    MFChildrenType::iterator Child =
-        editMFChildren()->find(dynamic_cast<Component*>(e->getSource()));
-    if(Child != editMFChildren()->end())
+    Component* Child = dynamic_cast<Component*>(e->getSource());
+    UInt32 index(0);
+    for( ; index< getMFChildren()->size(); ++index)
     {
-        UInt32 index(0);
-        for( ; index< getMFChildren()->size(); ++index)
+        if(Child == getChildren(index))
         {
-            if((*Child) == getChildren(index))
-            {
-                break;
-            }
+            updateItem(index);
+            return;
         }
-        updateItem(index);
     }
 }
 
 void Table::focusLost(const FocusEventUnrecPtr e)
 {
     //Find this component
-    MFChildrenType::iterator Child =
-        editMFChildren()->find(dynamic_cast<Component*>(e->getSource()));
-    if(Child != editMFChildren()->end())
+    Component* Child = dynamic_cast<Component*>(e->getSource());
+    UInt32 index(0);
+    for( ; index< getMFChildren()->size(); ++index)
     {
-        UInt32 index(0);
-        for( ; index< getMFChildren()->size(); ++index)
+        if(Child == getChildren(index))
         {
-            if((*Child) == getChildren(index))
-            {
-                break;
-            }
+            updateItem(index);
+            return;
         }
-        updateItem(index);
     }
 }
-void Table::drawInternal(const GraphicsRefPtr TheGraphics, Real32 Opacity) const
+
+void Table::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
     if(getShowVerticalLines() || getShowHorizontalLines())
     {
@@ -655,7 +648,8 @@ void Table::updateTableComponents(void)
 
             //TODO: Add Focusing
             CellValue = getModel()->getValueAt(Row, Column);
-            pushToTable(getCellRenderer(Row, Column)->getTableCellRendererComponent(TableRefPtr(this), CellValue, isSelected(Row, Column), false, Row, Column));
+            ComponentUnrecPtr NewComp(getCellRenderer(Row, Column)->getTableCellRendererComponent(this, CellValue, isSelected(Row, Column), false, Row, Column));
+            pushToTable(NewComp);
         }
     }
 
@@ -873,7 +867,7 @@ void Table::editingStopped(const ChangeEventUnrecPtr e)
 
 }
 
-TableCellEditorRefPtr Table::getCellEditor(const UInt32& row, const UInt32& column) const
+TableCellEditor* Table::getCellEditor(const UInt32& row, const UInt32& column) const
 {
     if(getColumnModel()->getColumn(column)->getCellEditor() != NULL)
     {
@@ -996,7 +990,7 @@ void Table::setShowGrid(bool showGrid)
     setShowVerticalLines(showGrid);
 }
 
-TableCellEditorRefPtr Table::getDefaultEditor(const std::type_info& TheType) const
+TableCellEditor* Table::getDefaultEditor(const std::type_info& TheType) const
 {
     CellEditorByTypeMap::const_iterator FindItor(_DefaultCellEditorByTypeMap.find(std::string(TheType.name())));
     if(FindItor != _DefaultCellEditorByTypeMap.end())
@@ -1084,7 +1078,7 @@ void Table::setHeader(TableHeader * const value)
 
     if(getHeader() != NULL)
     {
-        getHeader()->setTable(TableRefPtr(this));
+        getHeader()->setTable(this);
         getHeader()->setColumnModel(getColumnModel());
     }
 }
@@ -1175,15 +1169,16 @@ void Table::onCreate(const Table * Id)
     if(Id != NULL &&
        getHeader() != NULL)
     {
-        //Set the Table that the Header Points to to NULL,
+        //Ignore Table types
         //Otherwise, if the Header points to this table, there will be an infinite
         //recursion in the deepClone
-        getHeader()->setTable(NULL);
 
         //Clone the Header
-        FieldContainerUnrecPtr FCCopy(deepClone(getHeader()));
+        FieldContainerUnrecPtr FCCopy(deepClone(getHeader(),
+                                                std::vector<const OSG::ReflexiveContainerType *>(),
+                                                std::vector<const OSG::ReflexiveContainerType *>(1, &Table::getClassType())));
         setHeader(dynamic_pointer_cast<TableHeader>(FCCopy));
-        getHeader()->setTable(TableRefPtr(this));
+        getHeader()->setTable(this);
         getHeader()->setColumnModel(getColumnModel());
     }
     updateTableComponents();

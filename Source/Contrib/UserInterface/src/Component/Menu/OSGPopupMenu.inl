@@ -53,7 +53,7 @@ Int32 PopupMenu::getSelectionIndex(void) const
 }
 
 inline
-PopupMenu::MenuSelectionListener::MenuSelectionListener(PopupMenuRefPtr ThePopupMenu) :
+PopupMenu::MenuSelectionListener::MenuSelectionListener(PopupMenu* const ThePopupMenu) :
 									_PopupMenu(ThePopupMenu)
 {
 }

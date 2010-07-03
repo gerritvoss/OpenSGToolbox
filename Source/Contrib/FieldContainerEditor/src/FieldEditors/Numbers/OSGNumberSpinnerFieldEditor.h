@@ -133,11 +133,11 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING NumberSpinnerFieldEditor : publ
     class SpinnerListener : public ChangeListener
     {
       public :
-           SpinnerListener(NumberSpinnerFieldEditor * ptr);
+           SpinnerListener(NumberSpinnerFieldEditor * const ptr);
            virtual void stateChanged(const ChangeEventUnrecPtr e);
 
       protected :
-        NumberSpinnerFieldEditor *_NumberSpinnerFieldEditor ;
+        NumberSpinnerFieldEditor* _NumberSpinnerFieldEditor ;
     };
 
     friend class SpinnerListener;

@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-BoolFieldEditor::CheckboxListener::CheckboxListener(BoolFieldEditor * ptr) : _BoolFieldEditor(ptr)
+BoolFieldEditor::CheckboxListener::CheckboxListener(BoolFieldEditor * const ptr) : _BoolFieldEditor(ptr)
 {
 }
 

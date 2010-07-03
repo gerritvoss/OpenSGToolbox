@@ -50,6 +50,7 @@
 #include "OSGButton.h"
 #include "OSGLabel.h"
 #include "OSGUIDrawUtils.h"
+#include "OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -151,6 +152,11 @@ void Titlebar::updateLayout(void)
     }
 }
 
+ComponentContainer* Titlebar::getParentContainer(void) const
+{
+    return getParentWindow();
+}
+
 void Titlebar::updateClipBounds(void)
 {
     Pnt2f TopLeft, BottomRight;
@@ -202,6 +208,32 @@ void Titlebar::updateClipBounds(void)
     //Translate these bounds into my own coordinate space
     setClipTopLeft(TopLeft);
     setClipBottomRight(BottomRight);
+}
+
+void Titlebar::setParentWindow(InternalWindow* const parent)
+{
+    Inherited::setParentWindow(parent);
+    
+    if(getParentWindow() != NULL &&
+       getIconifyButton() != NULL &&
+       getParentWindow()->getIconable() != getIconifyButton()->getEnabled())
+    {
+        getIconifyButton()->setEnabled(getParentWindow()->getIconable());
+    }
+
+    if(getParentWindow() != NULL &&
+       getMaximizeButton() != NULL &&
+       getParentWindow()->getMaximizable() != getMaximizeButton()->getEnabled())
+    {
+        getMaximizeButton()->setEnabled(getParentWindow()->getMaximizable());
+    }
+
+    if(getParentWindow() != NULL &&
+       getCloseButton() != NULL &&
+       getParentWindow()->getClosable() != getCloseButton()->getEnabled())
+    {
+        getCloseButton()->setEnabled(getParentWindow()->getClosable());
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -298,8 +330,7 @@ void Titlebar::changed(ConstFieldMaskArg whichField,
         }
     }
 
-    if(((whichField & IconifyButtonFieldMask) ||
-        (whichField & ParentWindowFieldMask)) &&
+    if((whichField & IconifyButtonFieldMask) &&
        getParentWindow() != NULL &&
        getIconifyButton() != NULL &&
        getParentWindow()->getIconable() != getIconifyButton()->getEnabled())
@@ -307,8 +338,7 @@ void Titlebar::changed(ConstFieldMaskArg whichField,
         getIconifyButton()->setEnabled(getParentWindow()->getIconable());
     }
 
-    if(((whichField & MaximizeButtonFieldMask) ||
-        (whichField & ParentWindowFieldMask)) &&
+    if((whichField & MaximizeButtonFieldMask) &&
        getParentWindow() != NULL &&
        getMaximizeButton() != NULL &&
        getParentWindow()->getMaximizable() != getMaximizeButton()->getEnabled())
@@ -316,8 +346,7 @@ void Titlebar::changed(ConstFieldMaskArg whichField,
         getMaximizeButton()->setEnabled(getParentWindow()->getMaximizable());
     }
 
-    if(((whichField & CloseButtonFieldMask) ||
-        (whichField & ParentWindowFieldMask)) &&
+    if((whichField & CloseButtonFieldMask) &&
        getParentWindow() != NULL &&
        getCloseButton() != NULL &&
        getParentWindow()->getClosable() != getCloseButton()->getEnabled())

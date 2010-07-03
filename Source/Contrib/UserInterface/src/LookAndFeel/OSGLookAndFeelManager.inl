@@ -6,7 +6,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-LookAndFeelRefPtr LookAndFeelManager::getLookAndFeel(void)
+LookAndFeel* LookAndFeelManager::getLookAndFeel(void) const
 {
 	return _LookAndFeel;
 }

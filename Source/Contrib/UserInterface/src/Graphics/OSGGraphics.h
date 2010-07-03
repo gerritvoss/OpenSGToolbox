@@ -122,7 +122,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics : public GraphicsBase
                           const Vec2f& t3,
                           const Vec2f& t4,
                           const Color4f& color,
-                          const TextureObjChunkUnrecPtr Texture,
+                          TextureObjChunk* const Texture,
                           const Real32& Opacity) const = 0;
 
     virtual void drawQuad(const Pnt2f& p1,
@@ -133,7 +133,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics : public GraphicsBase
                           const Vec2f& t2,
                           const Vec2f& t3,
                           const Vec2f& t4,
-                          const MaterialUnrecPtr Material,
+                          Material* const Material,
                           const Real32& Opacity) const = 0;
 
     virtual void drawLine(const Pnt2f& TopLeft,
@@ -178,13 +178,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics : public GraphicsBase
 
     virtual void drawText(const Pnt2f& Position,
                           const std::string& Text,
-                          const UIFontUnrecPtr TheFont,
+                          UIFont* const TheFont,
                           const Color4f& Color,
                           const Real32& Opacity) const = 0;
 
     virtual void drawTextUnderline(const Pnt2f& Position,
                                    const std::string& Text,
-                                   const UIFontUnrecPtr TheFont,
+                                   UIFont* const TheFont,
                                    const Color4f& Color,
                                    const Real32& Opacity) const = 0;
 

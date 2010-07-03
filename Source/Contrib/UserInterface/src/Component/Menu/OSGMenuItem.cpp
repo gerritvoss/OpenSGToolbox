@@ -50,6 +50,7 @@
 #include "OSGInternalWindow.h"
 #include "OSGLookAndFeelManager.h"
 #include "OSGMenu.h"
+#include "OSGUIDrawingSurface.h"
 
 #include <boost/bind.hpp>
 
@@ -90,7 +91,7 @@ EventConnection MenuItem::addActionListener(ActionListenerPtr Listener)
        boost::bind(&MenuItem::removeActionListener, this, Listener));
 }
 
-void MenuItem::drawText(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity) const
+void MenuItem::drawText(Graphics* const TheGraphics, const Pnt2f& TopLeft, Real32 Opacity) const
 {
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NULL)
@@ -130,7 +131,7 @@ void MenuItem::mouseReleased(const MouseEventUnrecPtr e)
 {
     if(getSelected() && getEnabled())
     {
-	   produceActionPerformed(ActionEvent::create(MenuItemRefPtr(this), e->getTimeStamp()));
+	   produceActionPerformed(ActionEvent::create(this, e->getTimeStamp()));
        getParentWindow()->destroyPopupMenu();
           setSelected(false);
     }
@@ -139,14 +140,14 @@ void MenuItem::mouseReleased(const MouseEventUnrecPtr e)
 	{
 		if(e->getButton() == MouseEvent::BUTTON1 && _Armed)
 		{
-			ButtonRefPtr(this)->setActive(false);
+			this->setActive(false);
 			_Armed = false;
 		}
 	}
 	Component::mouseReleased(e);
 }
 
-MenuRefPtr MenuItem::getTopLevelMenu(void) const
+Menu* MenuItem::getTopLevelMenu(void) const
 {
     MenuRefPtr c(getParentMenu());
     while(c != NULL)
@@ -162,7 +163,7 @@ MenuRefPtr MenuItem::getTopLevelMenu(void) const
 
 void MenuItem::activate(void)
 {
-    produceActionPerformed(ActionEvent::create(MenuItemRefPtr(this), getSystemTime()));
+    produceActionPerformed(ActionEvent::create(this, getSystemTime()));
 }
 
 Vec2f MenuItem::getContentRequestedSize(void) const
@@ -238,6 +239,23 @@ void MenuItem::updateAcceleratorText(void)
     _AcceleratorText += KeyEvent::getKeynameStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
 }
 
+void MenuItem::setParentWindow(InternalWindow* const parent)
+{
+    if(getParentWindow() != NULL &&
+        getEnabled() && 
+        getAcceleratorKey() != KeyEvent::KEY_NONE)
+    {
+        getParentWindow()->removeKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers());
+    }
+    Inherited::setParentWindow(parent);
+    if(getParentWindow() != NULL &&
+        getEnabled() && 
+        getAcceleratorKey() != KeyEvent::KEY_NONE)
+    {
+        getParentWindow()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_MenuItemKeyAcceleratorListener);
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -276,14 +294,6 @@ void MenuItem::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-    if((whichField & ParentWindowFieldMask) &&
-        getParentWindow() != NULL &&
-        getEnabled() && 
-        getAcceleratorKey() != KeyEvent::KEY_NONE
-        )
-    {
-        getParentWindow()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_MenuItemKeyAcceleratorListener);
-    }
     if((whichField & EnabledFieldMask) &&
         getParentWindow() != NULL &&
         !getEnabled() && 
@@ -364,14 +374,14 @@ void MenuItem::MenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceler
         TopMenu->setDrawAsThoughSelected(true);
 
         _MenuItem->_KeyAcceleratorMenuFlashUpdateListener.reset();
-        _MenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_MenuItem->_KeyAcceleratorMenuFlashUpdateListener));
+        _MenuItem->getParentWindow()->getParentDrawingSurface()->getEventProducer()->addUpdateListener(&(_MenuItem->_KeyAcceleratorMenuFlashUpdateListener));
     }
     _MenuItem->produceActionPerformed(ActionEvent::create(_MenuItem, e->getTimeStamp()));
 }
 
 void MenuItem::KeyAcceleratorMenuFlashUpdateListener::disconnect(void)
 {
-    _MenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+    _MenuItem->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(this);
 }
 
 void MenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEventUnrecPtr e)

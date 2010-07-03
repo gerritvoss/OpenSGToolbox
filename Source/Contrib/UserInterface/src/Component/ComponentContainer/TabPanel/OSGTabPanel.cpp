@@ -82,7 +82,7 @@ void TabPanel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TabPanel::calculateTabBorderLengths(BorderRefPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
+void TabPanel::calculateTabBorderLengths(Border* const TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
 {
     if(TheBorder != NULL)
     {
@@ -114,7 +114,7 @@ void TabPanel::calculateTabBorderLengths(BorderRefPtr TheBorder, Real32& Left, R
     Bottom += getTabBorderInsets().y();
 }
 
-void TabPanel::calculateContentBorderLengths(BorderRefPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
+void TabPanel::calculateContentBorderLengths(Border* const TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
 {
     if(TheBorder != NULL)
     {
@@ -133,7 +133,7 @@ void TabPanel::calculateContentBorderLengths(BorderRefPtr TheBorder, Real32& Lef
 
 void TabPanel::calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
 {
-    std::vector<BorderRefPtr> Borders;
+    std::vector<Border* const> Borders;
     Borders.push_back(getTabBorder());
     Borders.push_back(getTabActiveBorder());
     Borders.push_back(getTabDisabledBorder());
@@ -176,7 +176,7 @@ void TabPanel::calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32&
     Bottom += getTabBorderInsets().y();
 }
 
-void TabPanel::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void TabPanel::drawInternal(Graphics* const Graphics, Real32 Opacity) const
 {
     //Draw the Tab Borders
     //Setup the Clip Planes
@@ -282,7 +282,7 @@ void TabPanel::focusGained(const FocusEventUnrecPtr e)
     }
 }
 
-ComponentRefPtr TabPanel::getSelectedComponent(void) const
+Component* TabPanel::getSelectedComponent(void) const
 {
     Int32 Index(getSelectedIndex());
     if(Index != -1)
@@ -319,7 +319,7 @@ void TabPanel::focusLost(const FocusEventUnrecPtr e)
 {
 }
 
-void TabPanel::addTab(const ComponentRefPtr Tab, const ComponentRefPtr TabContent)
+void TabPanel::addTab(Component* const Tab, Component* const TabContent)
 {
     // three lists of components are actually kept
     // every component, whether tab or tabcontent is kept in the children list
@@ -334,11 +334,11 @@ void TabPanel::addTab(const ComponentRefPtr Tab, const ComponentRefPtr TabConten
     pushToChildren(TabContent);
 }
 
-void TabPanel::removeTab(const ComponentRefPtr Tab)
+void TabPanel::removeTab(Component* const Tab)
 {
     UInt32 index(0);
     // also erase the the tab from the components list
-    editMFChildren()->erase(editMFChildren()->find(Tab));
+    removeObjFromChildren(Tab);
     // check if the component is a tab or tabcontent, then erase accordingly
     if (editMFTabs()->end() == editMFTabs()->find(Tab))
     {	// so it isn't in tabs
@@ -350,7 +350,7 @@ void TabPanel::removeTab(const ComponentRefPtr Tab)
         editMFTabContents()->erase(editMFTabContents()->find(Tab));
         // also erase the the tab from the components list
         getTabs(index)->removeFocusListener(this);
-        editMFChildren()->erase(editMFChildren()->find(getTabs(index)));
+        removeObjFromChildren(getTabs(index));
         editMFTabs()->erase(editMFTabs()->find(getTabs(index)));
     }
     else
@@ -363,7 +363,7 @@ void TabPanel::removeTab(const ComponentRefPtr Tab)
         Tab->removeFocusListener(this);
         editMFTabs()->erase(editMFTabs()->find(Tab));
         // also erase the the tab from the components list
-        editMFChildren()->erase(editMFChildren()->find(getTabContents(index))); 
+        removeObjFromChildren(getTabContents(index)); 
         editMFTabContents()->erase(editMFTabContents()->find(getTabContents(index)));
     }
 }
@@ -377,9 +377,9 @@ void TabPanel::removeTab(const UInt32 TabIndex)
     }
 
     getTabs(TabIndex)->removeFocusListener(this);
-    editMFChildren()->erase(editMFChildren()->find(getTabs(TabIndex))); // an incredibly ridiculous function call
-    editMFChildren()->erase(editMFChildren()->find(getTabContents(TabIndex)));
-    editMFTabs()->erase(editMFTabs()->find(getTabs(TabIndex))); // an incredibly ridiculous function call
+    removeObjFromChildren(getTabs(TabIndex));
+    removeObjFromChildren(getTabContents(TabIndex));
+    editMFTabs()->erase(editMFTabs()->find(getTabs(TabIndex)));
     editMFTabContents()->erase(editMFTabContents()->find(getTabContents(TabIndex)));
 }
 
@@ -395,7 +395,7 @@ void TabPanel::removeAllTabs(void)
     clearTabContents();
 }
 
-void TabPanel::insertTab(const ComponentRefPtr TabInsert, const ComponentRefPtr Tab, const ComponentRefPtr TabContent)
+void TabPanel::insertTab(Component* const TabInsert, Component* const Tab, Component* const TabContent)
 {
     Tab->addFocusListener(this);
     UInt32 index(0);
@@ -424,7 +424,7 @@ void TabPanel::insertTab(const ComponentRefPtr TabInsert, const ComponentRefPtr 
     }
 }
 
-void TabPanel::insertTab(const UInt32 TabIndex, const ComponentRefPtr Tab, const ComponentRefPtr TabContent)
+void TabPanel::insertTab(const UInt32 TabIndex, Component* const Tab, Component* const TabContent)
 {
     Tab->addFocusListener(this);
     pushToChildren(Tab);
@@ -735,7 +735,7 @@ void TabPanel::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
     Component::mouseWheelMoved(e);
 }
 
-BorderRefPtr TabPanel::getDrawnTabBorder(const UInt32& Index) const
+Border* TabPanel::getDrawnTabBorder(const UInt32& Index) const
 {
     if(getEnabled())
     {
@@ -762,7 +762,7 @@ BorderRefPtr TabPanel::getDrawnTabBorder(const UInt32& Index) const
     }
 }
 
-LayerRefPtr TabPanel::getDrawnTabBackground(const UInt32& Index) const
+Layer* TabPanel::getDrawnTabBackground(const UInt32& Index) const
 {
     if(getEnabled())
     {
@@ -789,7 +789,7 @@ LayerRefPtr TabPanel::getDrawnTabBackground(const UInt32& Index) const
     }
 }
 
-BorderRefPtr TabPanel::getDrawnContentBorder(void) const
+Border* TabPanel::getDrawnContentBorder(void) const
 {
     if(getEnabled())
     {
@@ -808,7 +808,7 @@ BorderRefPtr TabPanel::getDrawnContentBorder(void) const
     }
 }
 
-LayerRefPtr TabPanel::getDrawnContentBackground(void) const
+Layer* TabPanel::getDrawnContentBackground(void) const
 {
     if(getEnabled())
     {

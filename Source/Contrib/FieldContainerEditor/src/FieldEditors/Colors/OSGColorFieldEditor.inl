@@ -41,12 +41,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-ColorFieldEditor::ButtonListener::ButtonListener(ColorFieldEditor * ptr) : _ColorFieldEditor(ptr)
+ColorFieldEditor::ButtonListener::ButtonListener(ColorFieldEditor * const ptr) : _ColorFieldEditor(ptr)
 {
 }
 
 inline
-ColorFieldEditor::DialogListener::DialogListener(ColorFieldEditor * ptr) : _ColorFieldEditor(ptr)
+ColorFieldEditor::DialogListener::DialogListener(ColorFieldEditor * const ptr) : _ColorFieldEditor(ptr)
 {
 }
 

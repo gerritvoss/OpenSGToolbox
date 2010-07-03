@@ -99,43 +99,43 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeModel : public DefaultTreeM
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
 
     //Builds the parents of node up to and including the root node, where the original node is the last element in the returned array.
-    std::vector<MutableTreeNodeRefPtr> getPathToRoot(ModelTreeNodeRefPtr aNode);
+    std::vector<MutableTreeNodeRefPtr> getPathToRoot(ModelTreeNode* const aNode);
 
     //Invoked this to insert newChild at location index in parents children.
-    void insertNodeInto(MutableTreeNodeRefPtr newChild, MutableTreeNodeRefPtr parent, const UInt32& index);
+    void insertNodeInto(MutableTreeNode* const newChild, MutableTreeNode* const parent, const UInt32& index);
 
     //Invoke this method after you've changed how node is to be represented in the tree.
-    void nodeChanged(ModelTreeNodeRefPtr node);
+    void nodeChanged(ModelTreeNode* const node);
 
     //Invoke this method after you've changed how the children identified by childIndicies are to be represented in the tree.
-    void nodesChanged(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices);
+    void nodesChanged(ModelTreeNode* const node, std::vector<UInt32> childIndices);
 
     //Invoke this method if you've totally changed the children of node and its childrens children...
-    void nodeStructureChanged(ModelTreeNodeRefPtr node);
+    void nodeStructureChanged(ModelTreeNode* const node);
 
     //Invoke this method after you've inserted some TreeNodes into node.
-    void nodesWereInserted(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices);
+    void nodesWereInserted(ModelTreeNode* const node, std::vector<UInt32> childIndices);
 
     //Invoke this method after you've removed some TreeNodes from node.
-    void nodesWereRemoved(ModelTreeNodeRefPtr node, std::vector<UInt32> childIndices, std::vector<boost::any> removedChildren);
+    void nodesWereRemoved(ModelTreeNode* const node, std::vector<UInt32> childIndices, std::vector<boost::any> removedChildren);
 
     //Invoke this method if you've modified the TreeNodes upon which this model depends.
     void reload(void);
 
     //Invoke this method if you've modified the TreeNodes upon which this model depends.
-    void reload(ModelTreeNodeRefPtr node);
+    void reload(ModelTreeNode* const node);
 
     //Message this to remove node from its parent.
-    void removeNodeFromParent(MutableTreeNodeRefPtr node);
+    void removeNodeFromParent(MutableTreeNode* const node);
 
     //Sets the root to root.
-    void setRoot(ModelTreeNodeRefPtr root);
+    void setRoot(ModelTreeNode* const root);
 
-    //Get the ModelTreeNodeRefPtr to the Root Node
-    ModelTreeNodeRefPtr getRootNode(void) const;
+    //Get the ModelTreeNode* const to the Root Node
+    ModelTreeNode* getRootNode(void) const;
     
     //Get the Node for the given path
-    ModelTreeNodeRefPtr getNodeForPath(const TreePath& ThePath) const;
+    ModelTreeNode* getNodeForPath(const TreePath& ThePath) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -165,7 +165,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeModel : public DefaultTreeM
 
     /*! \}                                                                 */
 
-    TreePath createPath(ModelTreeNodeRefPtr node) const;
+    TreePath createPath(ModelTreeNode* const node) const;
 
     /*==========================  PRIVATE  ================================*/
 

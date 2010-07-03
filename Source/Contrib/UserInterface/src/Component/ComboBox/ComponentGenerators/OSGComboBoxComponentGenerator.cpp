@@ -76,15 +76,15 @@ void ComboBoxComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr ComboBoxComponentGenerator::getComponent(ComponentRefPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
+ComponentTransitPtr ComboBoxComponentGenerator::getComponent(Component* const Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
 {
     if(Parent->getType().isDerivedFrom(ComboBox::getClassType()))
     {
-        return getComboBoxComponent(dynamic_pointer_cast<ComboBox>(Parent), Value, PrimaryAxisIndex, IsSelected, HasFocus);
+        return ComponentTransitPtr(getComboBoxComponent(dynamic_cast<ComboBox* const>(Parent), Value, PrimaryAxisIndex, IsSelected, HasFocus).get());
     }
     else
     {
-        return getComboBoxComponent(NULL, Value, PrimaryAxisIndex, IsSelected, HasFocus);
+        return ComponentTransitPtr(getComboBoxComponent(NULL, Value, PrimaryAxisIndex, IsSelected, HasFocus).get());
     }
 }
 
