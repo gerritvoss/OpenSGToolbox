@@ -89,6 +89,10 @@ void Tree::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+Vec2f Tree::getContentRequestedSize(void) const
+{
+    return Vec2f(getPreferredSize().x(), getModelLayout()->getRowCount()* getModelLayout()->getRowHeight());
+}
 
 void Tree::mousePressed(const MouseEventUnrecPtr e)
 {
@@ -203,7 +207,7 @@ void Tree::keyTyped(const KeyEventUnrecPtr e)
             }
             else if(getModel()->getChildCount(SelectedPath.getLastPathComponent()) > 0)
             {
-                TreePath ToPath = getModel()->getPath(getModel()->getChild(SelectedPath.getLastPathComponent(),0));
+                TreePath ToPath(SelectedPath.getChildPath(0));
                 getSelectionModel()->setSelectionPath(ToPath);
                 scrollPathToVisible(ToPath);
             }
@@ -558,7 +562,7 @@ void Tree::treeDidChange(void)
 Vec2f Tree::getPreferredScrollableViewportSize(void)
 {
     //TODO:Implement
-    return Vec2f();
+    return getRequestedSize();
 }
 
 Int32 Tree::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
@@ -795,6 +799,20 @@ void Tree::updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRow
 
 }
 
+void Tree::updateChangedNode(const TreePath& Path)
+{
+    //Nuke it
+    clearRowsDrawn();
+    updateRowsDrawn();
+    updatePreferredSize();
+}
+
+void Tree::clearRowsDrawn(void)
+{
+    _TopDrawnRow = _BottomDrawnRow = -1;
+    _DrawnRows.clear();
+}
+
 void Tree::updateRows(const UInt32& Begining, const UInt32& NumRows)
 {
     for(UInt32 i(Begining) ; i<Begining+NumRows ; ++i)
@@ -906,18 +924,18 @@ void Tree::updateDrawnRow(const UInt32& Row)
 
 void Tree::updateChildren(void)
 {
-        clearChildren();
-        for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
+    clearChildren();
+    for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
+    {
+        if(_DrawnRows[i]._ExpandedComponent != NULL)
         {
-            if(_DrawnRows[i]._ExpandedComponent != NULL)
-            {
-                pushToChildren(_DrawnRows[i]._ExpandedComponent);
-            }
+            pushToChildren(_DrawnRows[i]._ExpandedComponent);
         }
-        for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
-        {
-            pushToChildren(_DrawnRows[i]._ValueComponent);
-        }
+    }
+    for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
+    {
+        pushToChildren(_DrawnRows[i]._ValueComponent);
+    }
 }
 
 void Tree::updateLayout(void)
@@ -931,8 +949,8 @@ void Tree::updateLayout(void)
                 _DrawnRows[i]._ExpandedComponent->setSize(_DrawnRows[i]._ExpandedComponent->getRequestedSize());
 		        _DrawnRows[i]._ExpandedComponent->setPosition(RowTopLeft-Vec2f(_DrawnRows[i]._ExpandedComponent->getSize().x()+ 2.0f, -0.5f*(getModelLayout()->getRowHeight()-_DrawnRows[i]._ExpandedComponent->getSize().y())));
         }
-            _DrawnRows[i]._ValueComponent->setPosition(RowTopLeft);
-            _DrawnRows[i]._ValueComponent->setSize(Vec2f(getSize().x()-_DrawnRows[i]._ValueComponent->getPosition().x(), getModelLayout()->getRowHeight()));
+        _DrawnRows[i]._ValueComponent->setPosition(RowTopLeft);
+        _DrawnRows[i]._ValueComponent->setSize(Vec2f(getSize().x()-_DrawnRows[i]._ValueComponent->getPosition().x(), getModelLayout()->getRowHeight()));
     }
 }
 
@@ -955,14 +973,14 @@ void Tree::getDrawnRows(Int32& Beginning, Int32& End) const
 
 void Tree::updatePreferredSize(void)
 {
-        if(getModelLayout() != NULL)
-        {
-            setPreferredSize(Vec2f(getPreferredSize().x(), getModelLayout()->getRowCount()* getModelLayout()->getRowHeight()));
-        }
-        else
-        {
-            setPreferredSize(Vec2f(0,0));
-        }
+    if(getModelLayout() != NULL)
+    {
+        setPreferredSize(Vec2f(getPreferredSize().x(), getModelLayout()->getRowCount()* getModelLayout()->getRowHeight()));
+    }
+    else
+    {
+        setPreferredSize(Vec2f(0,0));
+    }
 }
 
 void Tree::updateExpandedPath(const TreePath& Path)
@@ -979,6 +997,10 @@ void Tree::updateExpandedPath(const TreePath& Path)
         {
             updateInsertedRows(Row+1,VisibleChildren);
         }
+        else
+        {
+            updateChildren();
+        }
     }
 }
 
@@ -993,6 +1015,10 @@ void Tree::updateCollapsedPath(const TreePath& Path)
     if(VisibleChildren > 0)
     {
         updateRemovedRows(Row+1,VisibleChildren);
+    }
+    else
+    {
+        updateChildren();
     }
 
     std::vector<TreePath> SelectedPaths(getSelectionModel()->getSelectionPaths());
@@ -1145,7 +1171,7 @@ void Tree::ModelListener::treeNodesChanged(const TreeModelEventUnrecPtr e)
     Int32 Row(-1);
     for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
     {
-        Row = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e->getChildren()[i]));
+        Row = _Tree->getModelLayout()->getRowForPath(e->getChildPath(i));
         if(Row != -1)
         {
             _Tree->updateRows(Row, 1);
@@ -1158,7 +1184,7 @@ void Tree::ModelListener::treeNodesInserted(const TreeModelEventUnrecPtr e)
     Int32 InsertedRow(-1);
     for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
     {
-        InsertedRow = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e->getChildren()[i]));
+        InsertedRow = _Tree->getModelLayout()->getRowForPath(e->getChildPath(i));
         if(InsertedRow != -1)
         {
             _Tree->updateInsertedRows(InsertedRow, 1);
@@ -1174,7 +1200,7 @@ void Tree::ModelListener::treeNodesWillBeRemoved(const TreeModelEventUnrecPtr e)
     TreePath ThePath;
     for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
     {
-        ThePath = _Tree->getModel()->getPath(e->getChildren()[i]);
+        ThePath = e->getChildPath(i);
         //Get the row for this path
         RemovedRow = _Tree->getModelLayout()->getRowForPath(ThePath);
         _RomovedNodeRows.insert(RemovedRow);
@@ -1219,8 +1245,7 @@ void Tree::ModelListener::treeNodesRemoved(const TreeModelEventUnrecPtr e)
 
 void Tree::ModelListener::treeStructureChanged(const TreeModelEventUnrecPtr e)
 {
-    //TODO: Implement
-    _Tree->updatePreferredSize();
+    _Tree->updateChangedNode(e->getPath());
 }
 
 void Tree::SelectionListener::selectionAdded(const TreeSelectionEventUnrecPtr e)

@@ -147,12 +147,13 @@ void SwapFieldElementCommand::execute(void)
         TheFieldHandle->pushIndexedValueFromCString(FromValue.c_str(), _ToIndex);
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
 }
 
 std::string SwapFieldElementCommand::getCommandDescription(void) const
 {
-    EditFieldHandlePtr TheFieldHandle = _FC->editField(_FieldId);
+    GetFieldHandlePtr TheFieldHandle = _FC->getField(_FieldId);
 
 	std::string Description("");
 

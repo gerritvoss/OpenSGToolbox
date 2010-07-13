@@ -109,6 +109,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
     void setSelectionModel(ListSelectionModelPtr SelectionModel);
 
     ListSelectionModelPtr getSelectionModel(void) const;
+
+	virtual Vec2f getContentRequestedSize(void) const;
 	
     virtual void mousePressed(const MouseEventUnrecPtr e);
 	virtual void keyTyped(const KeyEventUnrecPtr e);

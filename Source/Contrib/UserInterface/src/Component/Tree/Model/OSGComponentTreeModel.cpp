@@ -100,24 +100,6 @@ boost::any ComponentTreeModel::getChild(const boost::any& parent, const UInt32& 
     }
 }
 
-boost::any ComponentTreeModel::getParent(const boost::any& node) const
-{
-    try
-    {
-        ComponentWeakPtr TheComponent = boost::any_cast<ComponentWeakPtr>(node);
-        if(TheComponent != NULL &&
-            TheComponent != getInternalRootComponent() &&
-            TheComponent->getParentContainer() != NULL)
-        {
-            return boost::any(ComponentWeakPtr(dynamic_cast<Component*>(TheComponent->getParentContainer())));
-        }
-    }
-    catch(boost::bad_any_cast &)
-    {
-    }
-    return boost::any();
-}
-
 UInt32 ComponentTreeModel::getChildCount(const boost::any& parent) const
 {
     try
@@ -254,7 +236,7 @@ void ComponentTreeModel::changed(ConstFieldMaskArg whichField,
 
     if(whichField & InternalRootComponentFieldMask)
     {
-        produceTreeStructureChanged(getPath(getInternalRootComponent()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getInternalRootComponent())));
+        produceTreeStructureChanged(getRootPath(),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, getRoot()));
     }
 }
 

@@ -129,6 +129,27 @@ void Table::startEditing(const UInt32& Row, const UInt32& Column)
     _EditingComponent->takeFocus();
 }
 
+Vec2f Table::getContentRequestedSize(void) const
+{
+    Pnt2f BorderTopLeft, BorderBottomRight;
+    getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+    Real32 CumulativeHeight(BorderTopLeft.y() +
+                            getChildren(getMFChildren()->size()-1)->getPosition().y() +
+                            getChildren(getMFChildren()->size()-1)->getSize().y());
+
+    for(UInt32 Row(0) ; Row<getModel()->getRowCount() ; ++Row)
+    {
+        CumulativeHeight += getRowMargin() + getRowHeight();
+    }
+
+
+    Pnt2f TopLeft, BottomRight;
+    getBounds(TopLeft, BottomRight);
+
+    return Vec2f(getColumnModel()->getTotalColumnWidth() + (BottomRight.x() - TopLeft.x() - BorderBottomRight.x() + BorderTopLeft.x()),
+                 CumulativeHeight + (BottomRight.y() - TopLeft.y() - BorderBottomRight.y() + BorderTopLeft.y()));
+}
+
 void Table::checkCellEdit(const EventUnrecPtr e, const UInt32& Row, const UInt32& Column)
 {
     //Check if this cell is editable
@@ -581,8 +602,8 @@ void Table::updateLayout(void)
 
     //Position and size all of the cells
     UInt32 CellIndex(0);
-    UInt32 CumulativeWidth(0);
-    UInt32 CumulativeHeight(BorderTopLeft.y() +
+    Real32 CumulativeWidth(0);
+    Real32 CumulativeHeight(BorderTopLeft.y() +
                             getChildren(HeaderIndex)->getPosition().y() +
                             getChildren(HeaderIndex)->getSize().y());
     for(UInt32 Row(0) ; Row<getModel()->getRowCount() ; ++Row)

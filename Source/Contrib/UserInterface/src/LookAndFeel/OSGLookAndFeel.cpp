@@ -140,7 +140,9 @@ void LookAndFeel::initUndefinedPrototypes(void)
                 GetFieldHandlePtr ClosestAncestorField =
                     ClosestAncestorPrototype->getField(ClosestAncestorDesc->getFieldId());
                 //Get the Closest Ancestor Field
-                if(UndefinedField != NULL && ClosestAncestorField != NULL)
+                if(UndefinedField != NULL && 
+                   ClosestAncestorField != NULL &&
+                   !UndefinedPrototypeDesc->isInternal())
                 {
                     if(UndefinedField->isPointerField())
                     {

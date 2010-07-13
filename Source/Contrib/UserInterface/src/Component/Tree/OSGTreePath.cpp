@@ -137,8 +137,28 @@ bool TreePath::isDescendant(const TreePath& aTreePath) const
 
 bool TreePath::operator==(const TreePath& Right) const
 {
-    return (_Model == Right._Model) &&
-           ((_Path.empty() && Right._Path.empty()) || _Model->isEqual(_Path.back(), Right._Path.back()));
+    if(_Model != Right._Model)
+    {
+        return false;
+    }
+
+    if(getPathCount() == Right.getPathCount())
+    {
+        for(UInt32 i(0) ; i<osgMin<UInt32>(getPathCount(), Right.getPathCount())-1 ; ++i)
+        {
+            if( _Model->getIndexOfChild(getPathComponent(i),getPathComponent(i+1))
+                !=
+                _Model->getIndexOfChild(Right.getPathComponent(i),Right.getPathComponent(i+1)))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const
@@ -164,6 +184,20 @@ TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const
     }
 }
 
+TreePath TreePath::getChildPath(UInt32 index) const
+{
+    if(_Model != NULL &&
+       _Path.size() != 0)
+    {
+        boost::any child(_Model->getChild(_Path.back(),index));
+        if(!child.empty())
+        {
+            return TreePath(*this, child);
+        }
+    }
+    return TreePath();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -171,21 +205,6 @@ TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const
 /*----------------------- constructors & destructors ----------------------*/
 
 /*----------------------------- class specific ----------------------------*/
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

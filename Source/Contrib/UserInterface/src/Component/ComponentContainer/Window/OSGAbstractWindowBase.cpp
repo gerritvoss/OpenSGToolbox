@@ -130,6 +130,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var bool            AbstractWindowBase::_sfModal
+    
+*/
+
 /*! \var bool            AbstractWindowBase::_sfAllwaysOnTop
     
 */
@@ -315,6 +319,18 @@ void AbstractWindowBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleDesktopIcon),
         static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleDesktopIcon));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Modal",
+        "",
+        ModalFieldId, ModalFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleModal),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleModal));
 
     oType.addInitialDesc(pDesc);
 
@@ -539,6 +555,16 @@ AbstractWindowBase::TypeObject AbstractWindowBase::_type(
     "        cardinality=\"single\"\n"
     "        visibility=\"external\"\n"
     "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Modal\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"false\"\n"
     "        >\n"
     "    </Field>\n"
     "    <Field\n"
@@ -887,6 +913,19 @@ SFUnrecUIDrawObjectCanvasPtr *AbstractWindowBase::editSFDesktopIcon    (void)
     return &_sfDesktopIcon;
 }
 
+SFBool *AbstractWindowBase::editSFModal(void)
+{
+    editSField(ModalFieldMask);
+
+    return &_sfModal;
+}
+
+const SFBool *AbstractWindowBase::getSFModal(void) const
+{
+    return &_sfModal;
+}
+
+
 SFBool *AbstractWindowBase::editSFAllwaysOnTop(void)
 {
     editSField(AllwaysOnTopFieldMask);
@@ -1032,6 +1071,10 @@ UInt32 AbstractWindowBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfDesktopIcon.getBinSize();
     }
+    if(FieldBits::NoField != (ModalFieldMask & whichField))
+    {
+        returnValue += _sfModal.getBinSize();
+    }
     if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
     {
         returnValue += _sfAllwaysOnTop.getBinSize();
@@ -1113,6 +1156,10 @@ void AbstractWindowBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfDesktopIcon.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ModalFieldMask & whichField))
+    {
+        _sfModal.copyToBin(pMem);
+    }
     if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
     {
         _sfAllwaysOnTop.copyToBin(pMem);
@@ -1192,6 +1239,10 @@ void AbstractWindowBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfDesktopIcon.copyFromBin(pMem);
     }
+    if(FieldBits::NoField != (ModalFieldMask & whichField))
+    {
+        _sfModal.copyFromBin(pMem);
+    }
     if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
     {
         _sfAllwaysOnTop.copyFromBin(pMem);
@@ -1240,6 +1291,7 @@ AbstractWindowBase::AbstractWindowBase(void) :
     _sfIsSelected             (bool(false)),
     _sfTitle                  (),
     _sfDesktopIcon            (NULL),
+    _sfModal                  (bool(false)),
     _sfAllwaysOnTop           (bool(false)),
     _sfDrawTitlebar           (bool(false)),
     _sfDrawDecorations        (bool(true)),
@@ -1264,6 +1316,7 @@ AbstractWindowBase::AbstractWindowBase(const AbstractWindowBase &source) :
     _sfIsSelected             (source._sfIsSelected             ),
     _sfTitle                  (source._sfTitle                  ),
     _sfDesktopIcon            (NULL),
+    _sfModal                  (source._sfModal                  ),
     _sfAllwaysOnTop           (source._sfAllwaysOnTop           ),
     _sfDrawTitlebar           (source._sfDrawTitlebar           ),
     _sfDrawDecorations        (source._sfDrawDecorations        ),
@@ -1572,6 +1625,31 @@ EditFieldHandlePtr AbstractWindowBase::editHandleDesktopIcon    (void)
                     static_cast<AbstractWindow *>(this), _1));
 
     editSField(DesktopIconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleModal           (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfModal,
+             this->getType().getFieldDesc(ModalFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleModal          (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfModal,
+             this->getType().getFieldDesc(ModalFieldId),
+             this));
+
+
+    editSField(ModalFieldMask);
 
     return returnValue;
 }

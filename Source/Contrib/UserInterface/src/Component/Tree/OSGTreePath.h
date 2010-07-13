@@ -75,11 +75,15 @@ public:
 
     typedef std::vector<boost::any> PathVectorType;
     
-    TreePath(const PathVectorType& path, TreeModelRefPtr theModel);
+    TreePath(const PathVectorType& path, TreeModel * const theModel);
 
-    TreePath(const std::deque<boost::any>& path, TreeModelRefPtr theModel);
+    TreePath(boost::any value, TreeModel * const theModel);
+
+    TreePath(const std::deque<boost::any>& path, TreeModel * const theModel);
 
     TreePath(const TreePath& p, UInt32 len);
+
+    TreePath(const TreePath& p, boost::any child);
 
 	//Tests two TreePaths for equality
 	bool operator==(const TreePath& Right) const;
@@ -90,6 +94,12 @@ public:
 
 	//Returns the last component of this path.
     boost::any getLastPathComponent(void) const;
+
+	//Returns a path of the child node at index of this path
+	TreePath getChildPath(UInt32 index) const;
+
+	//Returns a path of the child of this path
+	TreePath getChildPath(boost::any child) const;
 
 	//Returns a path containing all the elements of this object, except the last path component.
 	TreePath getParentPath(void) const;

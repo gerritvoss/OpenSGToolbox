@@ -247,7 +247,7 @@ A UI Component Interface.
 		type="InternalWindow"
 		category="pointer"
 		cardinality="single"
-		visibility="external"
+		visibility="internal"
 		defaultValue="NULL"
 		access="public"
 	>

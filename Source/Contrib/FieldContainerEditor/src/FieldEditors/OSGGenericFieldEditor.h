@@ -123,6 +123,7 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldEditor : public Gen
 
     static std::vector<const DataType*> _EditableTypes;
     TextFieldRefPtr _EditingTextField;
+    std::string _InitialValue;
     
     class TextFieldListener : public FocusListener, public ActionListener, public KeyAdapter
     {

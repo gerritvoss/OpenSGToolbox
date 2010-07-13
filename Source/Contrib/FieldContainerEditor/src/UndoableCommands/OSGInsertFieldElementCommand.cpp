@@ -133,12 +133,13 @@ void InsertFieldElementCommand::execute(void)
         TheFieldHandle->insertIndexedValueFromCString(_Value.c_str(), _Index);
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
 }
 
 std::string InsertFieldElementCommand::getCommandDescription(void) const
 {
-    EditFieldHandlePtr TheFieldHandle = _FC->editField(_FieldId);
+    GetFieldHandlePtr TheFieldHandle = _FC->getField(_FieldId);
 
 	std::string Description("");
 

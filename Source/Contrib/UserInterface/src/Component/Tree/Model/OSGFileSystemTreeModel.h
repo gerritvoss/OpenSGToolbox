@@ -92,9 +92,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FileSystemTreeModel : public FileSyste
 
 	//Returns true if node is a leaf.
 	virtual bool isLeaf(const boost::any& node) const;
-    
-    //Returns the Parent of this node
-    virtual boost::any getParent(const boost::any& node) const;
 
 	//Messaged when the user has altered the value for the item identified by path to newValue.
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
@@ -102,8 +99,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FileSystemTreeModel : public FileSyste
     //Sets the root to root.
     void setRoot(const BoostPath& root);
 
-    //Get the NodeRefPtr to the Root Node
-    const BoostPath& getRootPath(void) const;
+    //Get the FilePath to the Root Node
+    const BoostPath& getRootFilePath(void) const;
 
     //Returns true if these objects represent the same node in the tree
     virtual bool isEqual(const boost::any& left, const boost::any& right) const;

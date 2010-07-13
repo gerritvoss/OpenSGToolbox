@@ -194,7 +194,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
                 {
                     _ExpandedPathSet.insert(path);
 
-                    if(isVisible(path) || (_TreeModel->getPath(_TreeModel->getRoot()) == path))
+                    if(isVisible(path) || (_TreeModel->getRootPath() == path))
                     {
                         //Insert all visible decendents of Path
                         std::vector<TreePath> VisibleDecendants;
@@ -218,7 +218,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
                 {
                     _ExpandedPathSet.erase(path);
 
-                    if(isVisible(path) || _TreeModel->getPath(_TreeModel->getRoot()) == path)
+                    if(isVisible(path) || _TreeModel->getRootPath() == path)
                     {
                         //Remove all visible decendents of Path
                         std::vector<TreePath> VisibleDecendants;
