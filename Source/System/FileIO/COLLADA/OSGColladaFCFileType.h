@@ -43,7 +43,10 @@
 #include "OSGEventListener.h"
 #include "OSGContainerIdMapper.h"
 #include "OSGFieldContainer.h"
+<<<<<<< HEAD
 #include "OSGPathHandler.h"
+=======
+>>>>>>> 3cb0bb4abf2dfbc5a107cbc860389880f6a65bab
 
 
 OSG_BEGIN_NAMESPACE
@@ -84,6 +87,7 @@ public:
                         const std::string& fileNameOrExtension, const FCTypeVector& IgnoreTypes) const;
 
 protected:
+<<<<<<< HEAD
 
 	typedef FCFileType Inherited;
 	// this is a singleton class
@@ -94,6 +98,10 @@ private:
 	// path handlers for images & such
 
 
+=======
+	typedef FCFileType Inherited;
+private:
+>>>>>>> 3cb0bb4abf2dfbc5a107cbc860389880f6a65bab
 	void operator =(const ColladaFCFileType &source);
 };
 

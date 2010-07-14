@@ -47,7 +47,10 @@
 #include "OSGColladaFCFileType.h"
 
 #include "OSGColladaGlobal.h"
+<<<<<<< HEAD
 #include "OSGImageFileHandler.h"
+=======
+>>>>>>> 3cb0bb4abf2dfbc5a107cbc860389880f6a65bab
 
 OSG_BEGIN_NAMESPACE
 
@@ -60,8 +63,12 @@ ColladaFCFileType::ColladaFCFileType(void) : Inherited(FCFileType::ExtensionVect
 {
 }
 
+<<<<<<< HEAD
 ColladaFCFileType::ColladaFCFileType(const ColladaFCFileType &obj) 
 		: Inherited(obj)
+=======
+ColladaFCFileType::ColladaFCFileType(const ColladaFCFileType &obj) : Inherited(obj)
+>>>>>>> 3cb0bb4abf2dfbc5a107cbc860389880f6a65bab
 {
 }
 
@@ -81,7 +88,11 @@ A XMLFCFileType.
  *                           Class variables                               *
 \***************************************************************************/
 
+<<<<<<< HEAD
 ColladaFCFileType*  ColladaFCFileType::_the(new ColladaFCFileType());
+=======
+
+>>>>>>> 3cb0bb4abf2dfbc5a107cbc860389880f6a65bab
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -93,6 +104,7 @@ ColladaFCFileType::FCPtrStore ColladaFCFileType::read(std::istream &is,
 	                     const std::string& fileNameOrExtension) const
 {
 	ColladaGlobal::ObjTransitPtr colladaReader = ColladaGlobal::create();
+<<<<<<< HEAD
 	ColladaOptionsRefPtr colOpts   = ColladaOptions::create();
 	colOpts->setInvertTransparency(false);
 	colOpts->setCreateNameAttachments(false);
@@ -106,6 +118,12 @@ ColladaFCFileType::FCPtrStore ColladaFCFileType::read(std::istream &is,
 	//return store;
 	
 	return colladaReader->readAll(is,fileNameOrExtension);
+=======
+	NodeTransitPtr colRoot = colladaReader->read(is,fileNameOrExtension);
+	FCPtrStore store;
+	store.insert(colRoot);
+	return store;
+>>>>>>> 3cb0bb4abf2dfbc5a107cbc860389880f6a65bab
 }
 
  /*---------------------------------------------------------------------*/
@@ -123,7 +141,10 @@ std::string ColladaFCFileType::getName(void) const
 	return std::string("ColladaFCFileType");
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3cb0bb4abf2dfbc5a107cbc860389880f6a65bab
 OSG_END_NAMESPACE
 
