@@ -45,8 +45,16 @@
 
 #include <OSGConfig.h>
 
-#include "OSGSkeleton.h"
 #include "OSGJoint.h"
+#ifndef OSG_EMBEDDED
+#include "OSGIntersectAction.h"
+#endif
+
+#include "OSGRenderAction.h"
+
+#ifdef OSG_HAVE_ACTION //CHECK
+#include "OSGIntersectActor.h"
+#endif
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,6 +77,41 @@ void Joint::initMethod(InitPhase ePhase)
 
     if(ePhase == TypeObject::SystemPost)
     {
+#ifndef OSG_EMBEDDED
+        IntersectAction::registerEnterDefault( 
+            getClassType(), 
+            reinterpret_cast<Action::Callback>(&Joint::intersectEnter));
+        
+        IntersectAction::registerLeaveDefault( 
+            getClassType(), 
+            reinterpret_cast<Action::Callback>(&Joint::intersectLeave));
+#endif
+       
+        RenderAction::registerEnterDefault(
+            Joint::getClassType(), 
+            reinterpret_cast<Action::Callback>(&Joint::renderEnter));
+
+        RenderAction::registerLeaveDefault(
+            Joint::getClassType(), 
+            reinterpret_cast<Action::Callback>(&Joint::renderLeave));
+
+#ifdef OSG_HAVE_ACTION //CHECK
+    IntersectActor::regClassEnter(
+        osgTypedMethodFunctor2BaseCPtr<
+          NewActionTypes::ResultE,
+          JointPtr           ,
+          NodeCorePtr            ,
+          ActorBase::FunctorArgumentType &>(&Joint::intersectActorEnter),
+        getClassType());
+
+    IntersectActor::regClassLeave(
+        osgTypedMethodFunctor2BaseCPtr<
+          NewActionTypes::ResultE,
+          JointPtr           ,
+          NodeCorePtr            ,
+          ActorBase::FunctorArgumentType &>(&Joint::intersectActorLeave),
+        getClassType());
+#endif
     }
 }
 
@@ -77,126 +120,157 @@ void Joint::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Matrix Joint::getAbsoluteTransformation(void) const
+void Joint::accumulateMatrix(Matrixr &result)
 {
-    Vec3f translate;
-    Vec3f dummy1;
-    Quaternion dummy2;
-    Quaternion dummy3;
-    _AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
+    Inherited::accumulateMatrix(result);
 
-    _AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
+    result.mult(getJointTransformation());
+}
+/*-------------------------------------------------------------------------*/
+/*                            Render                                       */
 
-    return _AbsoluteTransformation;
+ActionBase::ResultE Joint::renderEnter(Action *action)
+{
+    RenderAction *pAction = 
+        dynamic_cast<RenderAction *>(action);
+
+    pAction->pushVisibility();
+
+    Matrix Transform(this->getMatrix());
+    Transform.mult(this->getJointTransformation());
+    pAction->pushMatrix(Transform);
+
+    return ActionBase::Continue;
 }
 
-Matrix Joint::getBindAbsoluteTransformation(void) const
+ActionBase::ResultE Joint::renderLeave(Action *action)
 {
-    return _BindAbsoluteTransformation;
+    RenderAction *pAction = 
+        dynamic_cast<RenderAction *>(action);
+
+    pAction->popVisibility();
+
+    pAction->popMatrix();
+
+    return ActionBase::Continue;
+}
+/*-------------------------------------------------------------------------*/
+/*                            Intersect                                    */
+
+#ifndef OSG_EMBEDDED
+ActionBase::ResultE Joint::intersectEnter(Action *action)
+{
+    // Use parent class for trivial reject
+    if(Inherited::intersect(action) == Action::Skip)
+        return Action::Skip;
+    
+    // Need to check children
+    IntersectAction *ia = dynamic_cast<IntersectAction *>(action);
+    Matrix           m  = this->getMatrix();
+
+    m.mult(this->getJointTransformation());
+    m.invert();
+    
+    Pnt3f pos;
+    Vec3f dir;
+
+    m.multFull(ia->getLine().getPosition (), pos);
+    m.mult    (ia->getLine().getDirection(), dir);
+    
+    Real32 length = dir.length();
+
+    if(length < TypeTraits<Real32>::getDefaultEps())
+        SWARNING << "Joint::intersectEnter: Near-zero scale!" << std::endl;
+
+    ia->setLine(Line(pos, dir), ia->getMaxDist());
+    ia->scale  (length                          );
+    
+    return ActionBase::Continue; 
 }
 
-const Matrix& Joint::getAbsoluteDifferenceTransformation(void) const
+ActionBase::ResultE Joint::intersectLeave(Action *action)
 {
-    return _AbsoluteDifferenceTransformation;
+    IntersectAction *ia = dynamic_cast<IntersectAction *>(action);
+    Matrix           m  = this->getMatrix();
+    m.mult(this->getJointTransformation());
+    
+    Pnt3f pos;
+    Vec3f dir;
+
+    m.multFull(ia->getLine().getPosition (), pos);
+    m.mult    (ia->getLine().getDirection(), dir);
+    
+    ia->setLine(Line(pos, dir), ia->getMaxDist());
+    ia->scale(dir.length());
+
+    return ActionBase::Continue;
 }
+#endif
 
-const Matrix& Joint::getRelativeDifferenceTransformation(void) const
+#ifdef OSG_HAVE_ACTION //CHECK
+NewActionTypes::ResultE Joint::intersectActorEnter(
+    ActorBase::FunctorArgumentType &funcArg)
 {
-    return _RelativeDifferenceTransformation;
-}
+    IntersectActor *pIA        = dynamic_cast<IntersectActor *>(
+                                                           funcArg.getActor());
+    Matrix          matrix     = this->getMatrix();
+    Line            transLine;
+    Pnt3f           pos;
+    Vec3f           dir;
 
-void Joint::calculateTransformations(void)
-{
-    bool rootJoint = false;
+    matrix.mult(this->getJointTransformation());
+    matrix.invert();
 
-    //Absolute transformation
-    if(getParentJoint() != NULL)
+    matrix.multFull(pIA->getRay().getPosition (), pos);
+    matrix.mult    (pIA->getRay().getDirection(), dir);
+
+    transLine.setValue(pos, dir);
+
+    pIA->beginEditState();
     {
-        _AbsoluteTransformation = getParentJoint()->getAbsoluteTransformation();
-
-        if(!getUseParentTranslation())
-        {
-            _AbsoluteTransformation.setTranslate(0.0, 0.0, 0.0);
-        }
-
-        Vec3f translate;
-        Vec3f dummy1;
-        Quaternion dummy2;
-        Quaternion dummy3;
-        _AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
+        pIA->setRay        (transLine                           );
+        pIA->setScaleFactor(pIA->getScaleFactor() / dir.length());
     }
-    else
-    {
-        _AbsoluteTransformation.setIdentity();
-        rootJoint = true;
-    }
-    _AbsoluteTransformation.mult(getRelativeTransformation());
+    pIA->endEditState  ();
 
-    //Absolute bind transformation
-    if(getParentJoint() != NULL)
-    {
-        _BindAbsoluteTransformation = getParentJoint()->getBindAbsoluteTransformation();
+    pIA->setupChildrenPriorities();
 
-        if(!getUseParentTranslation())
-        {
-            _BindAbsoluteTransformation.setTranslate(0.0, 0.0, 0.0);
-        }
-    }
-    else
-    {
-        _BindAbsoluteTransformation.setIdentity();
-    }
-    _BindAbsoluteTransformation.mult(getBindRelativeTransformation());
-
-    //Absolute difference transformation
-    _AbsoluteDifferenceTransformation = getBindAbsoluteTransformation();
-    _AbsoluteDifferenceTransformation.invert();
-    _AbsoluteDifferenceTransformation.multLeft(getAbsoluteTransformation());
-
-    //Relative difference transformation
-    _RelativeDifferenceTransformation = getBindRelativeTransformation();
-    _RelativeDifferenceTransformation.invert();
-    _RelativeDifferenceTransformation.multLeft(getRelativeTransformation());
-
+    return NewActionTypes::Continue;
 }
 
-void Joint::updateTransformations(bool isRecursive, bool tellSkeleton)
+NewActionTypes::ResultE Joint::intersectActorLeave(
+    ActorBase::FunctorArgumentType &funcArg)
 {
-    calculateTransformations();
+    IntersectActor *pIA    = dynamic_cast<IntersectActor *>(
+                                                           funcArg.getActor());
+    const Matrix   &matrix = this->getMatrix();
+          Pnt3f     pos;
+          Vec3f     dir;
 
-    for(UInt32 i(0) ; i<getMFChildJoints()->size() ; ++i)
+    matrix.mult(this->getJointTransformation());
+    matrix.multFull(pIA->getRay().getPosition (), pos);
+    matrix.mult    (pIA->getRay().getDirection(), dir);
+
+    pIA->beginEditState();
     {
-        getChildJoints(i)->updateTransformations(true);
+        pIA->setRay        (Line(pos, dir)                      );
+        pIA->setScaleFactor(pIA->getScaleFactor() / dir.length());
     }
+    pIA->endEditState  ();
 
-    if(!isRecursive && getParentSkeleton() != NULL && tellSkeleton)
-    {
-        //Tell skeleton joint has been updated
-        getParentSkeleton()->skeletonUpdated();
-    }
+    return NewActionTypes::Continue;
 }
-
-Matrix Joint::previewRelativeDifferenceTransformation(Matrix relativeTransformation)
-{
-    //Relative difference transformation
-    Matrix RelDifTrans = getBindRelativeTransformation();
-    RelDifTrans.invert();
-    RelDifTrans.multLeft(relativeTransformation);
-
-    return RelDifTrans;
-}
-
-Matrix Joint::previewRelativeTransformation(Matrix relativeDifferenceTransformation)
-{
-    Matrix RelTrans = relativeDifferenceTransformation;
-    RelTrans.mult(getBindRelativeTransformation());
-
-    return RelTrans;
-}
+#endif
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+void Joint::adjustVolume(Volume &volume)
+{
+    Inherited::adjustVolume(volume);
+
+    volume.transform(getJointTransformation());
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -220,20 +294,12 @@ void Joint::changed(ConstFieldMaskArg whichField,
                             UInt32            origin,
                             BitVector         details)
 {
+    if(whichField & JointTransformationFieldMask)
+    {
+        invalidateVolume();
+    }
+
     Inherited::changed(whichField, origin, details);
-
-	if((whichField & BindRelativeTransformationFieldMask) || (whichField & RelativeTransformationFieldMask) || (whichField & ParentJointFieldMask))
-	{
-		updateTransformations(false);
-	}
-
-	if(whichField & ChildJointsFieldMask)
-	{
-		for(UInt32 i(0) ; i<getMFChildJoints()->size() ; ++i)
-		{
-            getChildJoints(i)->setParentJoint(this);
-		}
-	}
 }
 
 void Joint::dump(      UInt32    ,

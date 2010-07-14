@@ -78,95 +78,32 @@ class OSG_TBANIMATION_DLLMAPPING Joint : public JointBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Transform                                */
+    /*! \{                                                                 */
 
-	/**************************************************************************//**
-	 * @fn	Matrix getAbsoluteTransformation(void) const
-	 * 
-	 * @brief	Gets the absolute transformation of the joint in its current
-	 *			position.
-	 * 
-	 * @return	The joint's absolute transformation matrix. 
-	*****************************************************************************/
-	Matrix getAbsoluteTransformation(void) const;
+    virtual void accumulateMatrix(Matrixr &result);
 
-	/**************************************************************************//**
-	 * @fn	Matrix getBindAbsoluteTransformation(void) const
-	 * 
-	 * @brief	Gets the absolute transformation of the joint in its bind
-	 *			position. 
-	 * 
-	 * @return	The joint's bind absolute transformation matrix. 
-	*****************************************************************************/
-	Matrix getBindAbsoluteTransformation(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name              Intersect & Render                              */
+    /*! \{                                                                 */
+#ifndef OSG_EMBEDDED
+    ActionBase::ResultE     intersectEnter(Action    *action);
+    ActionBase::ResultE     intersectLeave(Action    *action);
+#endif
 
-	/**************************************************************************//**
-	 * @fn	const Matrix& getAbsoluteDifferenceTransformation(void) const
-	 * 
-	 * @brief	Gets the transformation representing the difference between the
-	 *			joint's current absolute transformation and its bind absolute
-	 *			transformation.
-	 * 
-	 * @return	The absolute difference transformation. 
-	*****************************************************************************/
-	const Matrix& getAbsoluteDifferenceTransformation(void) const;
+    ActionBase::ResultE     renderEnter   (Action    *action);
+    ActionBase::ResultE     renderLeave   (Action    *action);
 
-	/**************************************************************************//**
-	 * @fn	const Matrix& getRelativeDifferenceTransformation(void) const
-	 * 
-	 * @brief	Gets the transformation representing the difference between the
-	 *			joint's current relative transformation and its bind relative
-	 *			transformation. 
-	 * 
-	 * @return	The relative difference transformation. 
-	*****************************************************************************/
-	const Matrix& getRelativeDifferenceTransformation(void) const;
+#ifdef OSG_HAVE_ACTION //CHECK
+    NewActionTypes::ResultE 
+        intersectActorEnter(ActorBase::FunctorArgumentType &funcArg);
 
-	/**************************************************************************//**
-	 * @fn	void calculateTransformations(void)
-	 * 
-	 * @brief	Updates the joint's absolute transformation matrix, bind absolute
-	 *			transformation matrix, absolute difference matrix, and relative
-	 *			difference matrix.
-	*****************************************************************************/
-	void calculateTransformations(void);
-
-	/**************************************************************************//**
-	 * @fn	void updateTransformations(bool isRecursive)
-	 * 
-	 * @brief	Same as calculateTransformations() only it will also tell its
-	 *			children to update. 
-	 * 
-	 * @param	isRecursive	-- Set to true to tell skeleton about the update.
-	*****************************************************************************/
-	void updateTransformations(bool isRecursive, bool tellSkeleton = true);
-
-	/**************************************************************************//**
-	 * @fn	Matrix previewRelativeDifferenceTransformation(Matrix relativeTransform
-	 * 		ation)
-	 * 
-	 * @brief	Calculates the difference transformation between the joint's
-	 *			relative bind transformation and the given transformation.
-	 * 
-	 * @param	relativeTransformation	The relative transformation. 
-	 * 
-	 * @return	The calculated difference transformation.
-	*****************************************************************************/
-	Matrix previewRelativeDifferenceTransformation(Matrix relativeTransformation);
-
-	/**************************************************************************//**
-	 * @fn	Matrix previewRelativeTransformation(Matrix relativeDifferenceTransform
-	 * 		ation)
-	 * 
-	 * @brief	Calculates the what the joint's new relative difference
-	 *			transformation would be if the given difference transformation
-	 *			were applied to it.
-	 * 
-	 * @param	relativeDifferenceTransformation	The relative difference
-	 * 												transformation to apply. 
-	 * 
-	 * @return	The relative transformation. 
-	*****************************************************************************/
-	Matrix previewRelativeTransformation(Matrix relativeDifferenceTransformation);
+    NewActionTypes::ResultE 
+        intersectActorLeave(ActorBase::FunctorArgumentType &funcArg);
+#endif
+    /*! \}                                                                 */
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -196,10 +133,14 @@ class OSG_TBANIMATION_DLLMAPPING Joint : public JointBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Transform                                */
+    /*! \{                                                                 */
 
-    Matrix _AbsoluteTransformation;
-    Matrix _BindAbsoluteTransformation;
-    Matrix _AbsoluteDifferenceTransformation;
+    virtual void adjustVolume(Volume &volume);
+
+    /*! \}                                                                 */
+
     Matrix _RelativeDifferenceTransformation;
 
     /*==========================  PRIVATE  ================================*/

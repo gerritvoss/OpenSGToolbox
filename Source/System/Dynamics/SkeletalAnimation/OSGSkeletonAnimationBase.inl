@@ -76,14 +76,14 @@ OSG::UInt16 SkeletonAnimationBase::getClassGroupId(void)
 
 //! Get the value of the SkeletonAnimation::_sfSkeleton field.
 inline
-Skeleton * SkeletonAnimationBase::getSkeleton(void) const
+SkeletonBlendedGeometry * SkeletonAnimationBase::getSkeleton(void) const
 {
     return _sfSkeleton.getValue();
 }
 
 //! Set the value of the SkeletonAnimation::_sfSkeleton field.
 inline
-void SkeletonAnimationBase::setSkeleton(Skeleton * const value)
+void SkeletonAnimationBase::setSkeleton(SkeletonBlendedGeometry * const value)
 {
     editSField(SkeletonFieldMask);
 

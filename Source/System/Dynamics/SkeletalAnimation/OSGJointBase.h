@@ -63,12 +63,9 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGAttachmentContainer.h" // Parent
+#include "OSGTransform.h" // Parent
 
-#include "OSGMathFields.h"              // RelativeTransformation type
-#include "OSGJointFields.h"             // ChildJoints type
-#include "OSGSkeletonFields.h"          // ParentSkeleton type
-#include "OSGSysFields.h"               // UseParentTranslation type
+#include "OSGMathFields.h"              // JointTransformation type
 
 #include "OSGJointFields.h"
 
@@ -78,12 +75,12 @@ class Joint;
 
 //! \brief Joint Base Class.
 
-class OSG_TBANIMATION_DLLMAPPING JointBase : public AttachmentContainer
+class OSG_TBANIMATION_DLLMAPPING JointBase : public Transform
 {
   public:
 
-    typedef AttachmentContainer Inherited;
-    typedef AttachmentContainer ParentContainer;
+    typedef Transform Inherited;
+    typedef Transform ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
@@ -96,36 +93,16 @@ class OSG_TBANIMATION_DLLMAPPING JointBase : public AttachmentContainer
 
     enum
     {
-        RelativeTransformationFieldId = Inherited::NextFieldId,
-        BindRelativeTransformationFieldId = RelativeTransformationFieldId + 1,
-        ChildJointsFieldId = BindRelativeTransformationFieldId + 1,
-        ParentJointFieldId = ChildJointsFieldId + 1,
-        ParentSkeletonFieldId = ParentJointFieldId + 1,
-        UseParentTranslationFieldId = ParentSkeletonFieldId + 1,
-        NextFieldId = UseParentTranslationFieldId + 1
+        JointTransformationFieldId = Inherited::NextFieldId,
+        NextFieldId = JointTransformationFieldId + 1
     };
 
-    static const OSG::BitVector RelativeTransformationFieldMask =
-        (TypeTraits<BitVector>::One << RelativeTransformationFieldId);
-    static const OSG::BitVector BindRelativeTransformationFieldMask =
-        (TypeTraits<BitVector>::One << BindRelativeTransformationFieldId);
-    static const OSG::BitVector ChildJointsFieldMask =
-        (TypeTraits<BitVector>::One << ChildJointsFieldId);
-    static const OSG::BitVector ParentJointFieldMask =
-        (TypeTraits<BitVector>::One << ParentJointFieldId);
-    static const OSG::BitVector ParentSkeletonFieldMask =
-        (TypeTraits<BitVector>::One << ParentSkeletonFieldId);
-    static const OSG::BitVector UseParentTranslationFieldMask =
-        (TypeTraits<BitVector>::One << UseParentTranslationFieldId);
+    static const OSG::BitVector JointTransformationFieldMask =
+        (TypeTraits<BitVector>::One << JointTransformationFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFMatrix          SFRelativeTransformationType;
-    typedef SFMatrix          SFBindRelativeTransformationType;
-    typedef MFUnrecJointPtr   MFChildJointsType;
-    typedef SFUnrecJointPtr   SFParentJointType;
-    typedef SFUnrecSkeletonPtr SFParentSkeletonType;
-    typedef SFBool            SFUseParentTranslationType;
+    typedef SFMatrix          SFJointTransformationType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -151,63 +128,24 @@ class OSG_TBANIMATION_DLLMAPPING JointBase : public AttachmentContainer
     /*! \{                                                                 */
 
 
-                  SFMatrix            *editSFRelativeTransformation(void);
-            const SFMatrix            *getSFRelativeTransformation (void) const;
-
-                  SFMatrix            *editSFBindRelativeTransformation(void);
-            const SFMatrix            *getSFBindRelativeTransformation (void) const;
-            const MFUnrecJointPtr     *getMFChildJoints    (void) const;
-                  MFUnrecJointPtr     *editMFChildJoints    (void);
-            const SFUnrecJointPtr     *getSFParentJoint    (void) const;
-                  SFUnrecJointPtr     *editSFParentJoint    (void);
-            const SFUnrecSkeletonPtr  *getSFParentSkeleton (void) const;
-                  SFUnrecSkeletonPtr  *editSFParentSkeleton (void);
-
-                  SFBool              *editSFUseParentTranslation(void);
-            const SFBool              *getSFUseParentTranslation (void) const;
+                  SFMatrix            *editSFJointTransformation(void);
+            const SFMatrix            *getSFJointTransformation (void) const;
 
 
-                  Matrix              &editRelativeTransformation(void);
-            const Matrix              &getRelativeTransformation (void) const;
-
-                  Matrix              &editBindRelativeTransformation(void);
-            const Matrix              &getBindRelativeTransformation (void) const;
-
-                  Joint * getChildJoints    (const UInt32 index) const;
-
-                  Joint * getParentJoint    (void) const;
-
-                  Skeleton * getParentSkeleton (void) const;
-
-                  bool                &editUseParentTranslation(void);
-                  bool                 getUseParentTranslation (void) const;
+                  Matrix              &editJointTransformation(void);
+            const Matrix              &getJointTransformation (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setRelativeTransformation(const Matrix &value);
-            void setBindRelativeTransformation(const Matrix &value);
-            void setParentJoint    (Joint * const value);
-            void setParentSkeleton (Skeleton * const value);
-            void setUseParentTranslation(const bool value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr Field Set                                 */
-    /*! \{                                                                 */
+            void setJointTransformation(const Matrix &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
-
-    void pushToChildJoints           (Joint * const value   );
-    void assignChildJoints          (const MFUnrecJointPtr   &value);
-    void removeFromChildJoints (UInt32               uiIndex );
-    void removeObjFromChildJoints(Joint * const value   );
-    void clearChildJoints            (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -262,12 +200,7 @@ class OSG_TBANIMATION_DLLMAPPING JointBase : public AttachmentContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFMatrix          _sfRelativeTransformation;
-    SFMatrix          _sfBindRelativeTransformation;
-    MFUnrecJointPtr   _mfChildJoints;
-    SFUnrecJointPtr   _sfParentJoint;
-    SFUnrecSkeletonPtr _sfParentSkeleton;
-    SFBool            _sfUseParentTranslation;
+    SFMatrix          _sfJointTransformation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -289,25 +222,14 @@ class OSG_TBANIMATION_DLLMAPPING JointBase : public AttachmentContainer
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
-    void onCreate(const Joint *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleRelativeTransformation (void) const;
-    EditFieldHandlePtr editHandleRelativeTransformation(void);
-    GetFieldHandlePtr  getHandleBindRelativeTransformation (void) const;
-    EditFieldHandlePtr editHandleBindRelativeTransformation(void);
-    GetFieldHandlePtr  getHandleChildJoints     (void) const;
-    EditFieldHandlePtr editHandleChildJoints    (void);
-    GetFieldHandlePtr  getHandleParentJoint     (void) const;
-    EditFieldHandlePtr editHandleParentJoint    (void);
-    GetFieldHandlePtr  getHandleParentSkeleton  (void) const;
-    EditFieldHandlePtr editHandleParentSkeleton (void);
-    GetFieldHandlePtr  getHandleUseParentTranslation (void) const;
-    EditFieldHandlePtr editHandleUseParentTranslation(void);
+    GetFieldHandlePtr  getHandleJointTransformation (void) const;
+    EditFieldHandlePtr editHandleJointTransformation(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

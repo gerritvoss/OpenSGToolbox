@@ -55,7 +55,7 @@ void reshape(Vec2f Size);
 void setupAnimation(void);
 
 JointUnrecPtr Pelvis,LeftHip,RightHip,LeftKnee,RightKnee,LeftFoot,RightFoot,LeftToes,RightToes, Clavicle, LeftShoulder,RightShoulder,LeftElbow,RightElbow,LeftHand,RightHand,LeftFingers,RightFingers,Head; 
-SkeletonUnrecPtr ExampleSkeleton;
+SkeletonBlendedGeometryUnrecPtr ExampleSkeleton;
 
 
 // Create a class to allow for the use of the keyboard shortcuts 
@@ -207,160 +207,257 @@ int main(int argc, char **argv)
     ExampleMaterial->addChunk(ExampleMaterialChunk);
     ExampleMaterial->addChunk(ExampleBlendChunk);
 
+    //Skeleton
+    ExampleSkeleton = SkeletonBlendedGeometry::create();
+
     //===========================================Joints==================================================================
     Matrix TempMat;
-
-    /*================================================================================================*/
-    /*                                       Left Fingers                                                 */
-    LeftFingers = Joint::create(); //create a joint called LeftFingers 
-    TempMat.setTranslate(1.0,0.0,0.0);
-    LeftFingers->setRelativeTransformation(TempMat);
-    LeftFingers->setBindRelativeTransformation(TempMat);
-
-    /*================================================================================================*/
-    /*                                       Right Fingers                                                 */
-    RightFingers = Joint::create(); //create a joint called RightFingers 
-    TempMat.setTranslate(-1.0,0.0,0.0);
-    RightFingers->setRelativeTransformation(TempMat);
-    RightFingers->setBindRelativeTransformation(TempMat);
-    /*================================================================================================*/
-    /*                                       Left Hand                                                 */
-    LeftHand = Joint::create(); //create a joint called LeftHand 
-    TempMat.setTranslate(2.0,0.0,0.0);
-    LeftHand->setRelativeTransformation(TempMat);
-    LeftHand->setBindRelativeTransformation(TempMat);
-    LeftHand->pushToChildJoints(LeftFingers);
-
-    /*================================================================================================*/
-    /*                                       Right Hand                                                 */
-    RightHand = Joint::create(); //create a joint called RightHand 
-    TempMat.setTranslate(-2.0,0.0,0.0);
-    RightHand->setRelativeTransformation(TempMat);
-    RightHand->setBindRelativeTransformation(TempMat);
-    RightHand->pushToChildJoints(RightFingers);
-    /*================================================================================================*/
-    /*                                       Left Elbow                                                 */
-    LeftElbow = Joint::create(); //create a joint called LeftElbow 
-    TempMat.setTranslate(2.0,0.0,0.0);
-    LeftElbow->setRelativeTransformation(TempMat);
-    LeftElbow->setBindRelativeTransformation(TempMat);
-    LeftElbow->pushToChildJoints(LeftHand);
-
-    /*================================================================================================*/
-    /*                                       Right Elbow                                                 */
-    RightElbow = Joint::create(); //create a joint called RightElbow 
-    TempMat.setTranslate(-2.0,0.0,0.0);
-    RightElbow->setRelativeTransformation(TempMat);
-    RightElbow->setBindRelativeTransformation(TempMat);
-    RightElbow->pushToChildJoints(RightHand);
-    /*================================================================================================*/
-    /*                                       Left Shoulder                                                 */
-    LeftShoulder = Joint::create(); //create a joint called LeftShoulder 
-    TempMat.setTranslate(1.0,-0.5,0.0);
-    LeftShoulder->setRelativeTransformation(TempMat);
-    LeftShoulder->setBindRelativeTransformation(TempMat);
-    LeftShoulder->pushToChildJoints(LeftElbow);
-
-    /*================================================================================================*/
-    /*                                       Right Shoulder                                                 */
-    RightShoulder = Joint::create(); //create a joint called RightShoulder 
-    TempMat.setTranslate(-1.0,-0.5,0.0);
-    RightShoulder->setRelativeTransformation(TempMat);
-    RightShoulder->setBindRelativeTransformation(TempMat);
-    RightShoulder->pushToChildJoints(RightElbow);
-
-    /*================================================================================================*/
-    /*                                       Head                                                 */
-    Head = Joint::create(); //create a joint called Head 
-    TempMat.setTranslate(0.0,1.0,0.0);
-    Head->setRelativeTransformation(TempMat);
-    Head->setBindRelativeTransformation(TempMat);
-
-    /*================================================================================================*/
-    /*                                       Clavicle                                                   */
-    Clavicle = Joint::create(); //create a joint called Clavicle 
-    TempMat.setTranslate(0.0,5.0,0.0);
-    Clavicle->setRelativeTransformation(TempMat);
-    Clavicle->setBindRelativeTransformation(TempMat);
-    Clavicle->pushToChildJoints(LeftShoulder);
-    Clavicle->pushToChildJoints(RightShoulder);
-    Clavicle->pushToChildJoints(Head);
-
-    /*================================================================================================*/
-    /*                                       Left Toes                                                 */
-    LeftToes = Joint::create(); //create a bone called ExampleChildbone
-    TempMat.setTranslate(0.0,0.0,1.0);
-    LeftToes->setRelativeTransformation(TempMat);
-    LeftToes->setBindRelativeTransformation(TempMat);
-
-    /*================================================================================================*/
-    /*                                       Right Toes                                                 */
-    RightToes = Joint::create(); //create a joint called RightToes 
-    TempMat.setTranslate(0.0,0.0,1.0);
-    RightToes->setRelativeTransformation(TempMat);
-    RightToes->setBindRelativeTransformation(TempMat);
-    /*================================================================================================*/
-    /*                                       Left Foot                                                 */
-    LeftFoot = Joint::create(); //create a joint called LeftFoot 
-    TempMat.setTranslate(0.0,-3.0,0.0);
-    LeftFoot->setRelativeTransformation(TempMat);
-    LeftFoot->setBindRelativeTransformation(TempMat);
-    LeftFoot->pushToChildJoints(LeftToes);
-
-    /*================================================================================================*/
-    /*                                       Right Foot                                                 */
-    RightFoot = Joint::create(); //create a joint called RightFoot 
-    TempMat.setTranslate(0.0,-3.0,0.0);
-    RightFoot->setRelativeTransformation(TempMat);
-    RightFoot->setBindRelativeTransformation(TempMat);
-    RightFoot->pushToChildJoints(RightToes);
-    /*================================================================================================*/
-    /*                                       Left Knee                                                 */
-    LeftKnee = Joint::create(); //create a joint called LeftKnee 
-    TempMat.setTranslate(0.0,-3.0,0.0);
-    LeftKnee->setRelativeTransformation(TempMat);
-    LeftKnee->setBindRelativeTransformation(TempMat);
-    LeftKnee->pushToChildJoints(LeftFoot);
-
-    /*================================================================================================*/
-    /*                                       Right Knee                                                 */
-    RightKnee = Joint::create(); //create a joint called RightKnee 
-    TempMat.setTranslate(0.0,-3.0,0.0);
-    RightKnee->setRelativeTransformation(TempMat);
-    RightKnee->setBindRelativeTransformation(TempMat);
-    RightKnee->pushToChildJoints(RightFoot);
-
-    /*================================================================================================*/
-    /*                                       Left Hip                                                 */
-    LeftHip = Joint::create(); //create a joint called LeftHip 
-    TempMat.setTranslate(1.0,-1.0,0.0);
-    LeftHip->setRelativeTransformation(TempMat);
-    LeftHip->setBindRelativeTransformation(TempMat);
-    LeftHip->pushToChildJoints(LeftKnee);
-
-    /*================================================================================================*/
-    /*                                       Right Hip                                                 */
-    RightHip = Joint::create(); //create a joint called RightHip 
-    TempMat.setTranslate(-1.0,-1.0,0.0);
-    RightHip->setRelativeTransformation(TempMat);
-    RightHip->setBindRelativeTransformation(TempMat);
-    RightHip->pushToChildJoints(RightKnee);
+    Matrix InvBind;
 
     /*================================================================================================*/
     /*                                       Pelvis                                                   */
     Pelvis = Joint::create(); //create a joint called Pelvis 
     TempMat.setTranslate(0.0,7.0,0.0);
-    Pelvis->setRelativeTransformation(TempMat);
-    Pelvis->setBindRelativeTransformation(TempMat);
-    Pelvis->pushToChildJoints(LeftHip);
-    Pelvis->pushToChildJoints(RightHip);
-    Pelvis->pushToChildJoints(Clavicle);
+    Pelvis->setJointTransformation(TempMat);
 
+    NodeRecPtr PelvisNode = makeNodeFor(Pelvis);
 
+    InvBind = PelvisNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(Pelvis, InvBind);
+    
+    /*================================================================================================*/
+    /*                                       Clavicle                                                   */
+    Clavicle = Joint::create(); //create a joint called Clavicle 
+    TempMat.setTranslate(0.0,5.0,0.0);
+    Clavicle->setJointTransformation(TempMat);
 
-    //Skeleton
-    ExampleSkeleton = Skeleton::create();
-    ExampleSkeleton->pushToRootJoints(Pelvis);  //Set Pelvis as root joint of skeleton
+    NodeRecPtr ClavicleNode = makeNodeFor(Clavicle);
+    PelvisNode->addChild(ClavicleNode);
+
+    InvBind = ClavicleNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(Clavicle, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Left Shoulder                                                 */
+    LeftShoulder = Joint::create(); //create a joint called LeftShoulder 
+    TempMat.setTranslate(1.0,-0.5,0.0);
+    LeftShoulder->setJointTransformation(TempMat);
+
+    NodeRecPtr LeftShoulderNode = makeNodeFor(LeftShoulder);
+    ClavicleNode->addChild(LeftShoulderNode);
+
+    InvBind = LeftShoulderNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(LeftShoulder, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Left Elbow                                                 */
+    LeftElbow = Joint::create(); //create a joint called LeftElbow 
+    TempMat.setTranslate(2.0,0.0,0.0);
+    LeftElbow->setJointTransformation(TempMat);
+
+    NodeRecPtr LeftElbowNode = makeNodeFor(LeftElbow);
+    LeftShoulderNode->addChild(LeftElbowNode);
+
+    InvBind = LeftElbowNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(LeftElbow, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Left Hand                                                 */
+    LeftHand = Joint::create(); //create a joint called LeftHand 
+    TempMat.setTranslate(2.0,0.0,0.0);
+    LeftHand->setJointTransformation(TempMat);
+
+    NodeRecPtr LeftHandNode = makeNodeFor(LeftHand);
+    LeftElbowNode->addChild(LeftHandNode);
+
+    InvBind = LeftHandNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(LeftHand, InvBind);
+    /*================================================================================================*/
+    /*                                       Left Fingers                                                 */
+    LeftFingers = Joint::create(); //create a joint called LeftFingers 
+    TempMat.setTranslate(1.0,0.0,0.0);
+    LeftFingers->setJointTransformation(TempMat);
+
+    NodeRecPtr LeftFingersNode = makeNodeFor(LeftFingers);
+    LeftHandNode->addChild(LeftFingersNode);
+
+    InvBind = LeftFingersNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(LeftFingers, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Right Shoulder                                                 */
+    RightShoulder = Joint::create(); //create a joint called RightShoulder 
+    TempMat.setTranslate(-1.0,-0.5,0.0);
+    RightShoulder->setJointTransformation(TempMat);
+
+    NodeRecPtr RightShoulderNode = makeNodeFor(RightShoulder);
+    ClavicleNode->addChild(RightShoulderNode);
+
+    InvBind = RightShoulderNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(RightShoulder, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Right Elbow                                                 */
+    RightElbow = Joint::create(); //create a joint called RightElbow 
+    TempMat.setTranslate(-2.0,0.0,0.0);
+    RightElbow->setJointTransformation(TempMat);
+
+    NodeRecPtr RightElbowNode = makeNodeFor(RightElbow);
+    RightShoulderNode->addChild(RightElbowNode);
+
+    InvBind = RightElbowNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(RightElbow, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Right Hand                                                 */
+    RightHand = Joint::create(); //create a joint called RightHand 
+    TempMat.setTranslate(-2.0,0.0,0.0);
+    RightHand->setJointTransformation(TempMat);
+
+    NodeRecPtr RightHandNode = makeNodeFor(RightHand);
+    RightElbowNode->addChild(RightHandNode);
+
+    InvBind = RightHandNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(RightHand, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Right Fingers                                                 */
+    RightFingers = Joint::create(); //create a joint called RightFingers 
+    TempMat.setTranslate(-1.0,0.0,0.0);
+    RightFingers->setJointTransformation(TempMat);
+
+    NodeRecPtr RightFingersNode = makeNodeFor(RightFingers);
+    RightHandNode->addChild(RightFingersNode);
+
+    InvBind = RightFingersNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(RightFingers, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Head                                                 */
+    Head = Joint::create(); //create a joint called Head 
+    TempMat.setTranslate(0.0,1.0,0.0);
+    Head->setJointTransformation(TempMat);
+
+    NodeRecPtr HeadNode = makeNodeFor(Head);
+    ClavicleNode->addChild(HeadNode);
+
+    InvBind = HeadNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(Head, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Left Hip                                                 */
+    LeftHip = Joint::create(); //create a joint called LeftHip 
+    TempMat.setTranslate(1.0,-1.0,0.0);
+    LeftHip->setJointTransformation(TempMat);
+
+    NodeRecPtr LeftHipNode = makeNodeFor(LeftHip);
+    PelvisNode->addChild(LeftHipNode);
+
+    InvBind = LeftHipNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(LeftHip, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Left Knee                                                 */
+    LeftKnee = Joint::create(); //create a joint called LeftKnee 
+    TempMat.setTranslate(0.0,-3.0,0.0);
+    LeftKnee->setJointTransformation(TempMat);
+
+    NodeRecPtr LeftKneeNode = makeNodeFor(LeftKnee);
+    LeftHipNode->addChild(LeftKneeNode);
+
+    InvBind = LeftKneeNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(LeftKnee, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Left Foot                                                 */
+    LeftFoot = Joint::create(); //create a joint called LeftFoot 
+    TempMat.setTranslate(0.0,-3.0,0.0);
+    LeftFoot->setJointTransformation(TempMat);
+
+    NodeRecPtr LeftFootNode = makeNodeFor(LeftFoot);
+    LeftKneeNode->addChild(LeftFootNode);
+
+    InvBind = LeftFootNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(LeftFoot, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Left Toes                                                 */
+    LeftToes = Joint::create(); //create a bone called ExampleChildbone
+    TempMat.setTranslate(0.0,0.0,1.0);
+    LeftToes->setJointTransformation(TempMat);
+
+    NodeRecPtr LeftToesNode = makeNodeFor(LeftToes);
+    LeftFootNode->addChild(LeftToesNode);
+
+    InvBind = LeftToesNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(LeftToes, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Right Hip                                                 */
+    RightHip = Joint::create(); //create a joint called RightHip 
+    TempMat.setTranslate(-1.0,-1.0,0.0);
+    RightHip->setJointTransformation(TempMat);
+
+    NodeRecPtr RightHipNode = makeNodeFor(RightHip);
+    PelvisNode->addChild(RightHipNode);
+
+    InvBind = RightHipNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(RightHip, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Right Knee                                                 */
+    RightKnee = Joint::create(); //create a joint called RightKnee 
+    TempMat.setTranslate(0.0,-3.0,0.0);
+    RightKnee->setJointTransformation(TempMat);
+
+    NodeRecPtr RightKneeNode = makeNodeFor(RightKnee);
+    RightHipNode->addChild(RightKneeNode);
+
+    InvBind = RightKneeNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(RightKnee, InvBind);
+
+    /*================================================================================================*/
+    /*                                       Right Foot                                                 */
+    RightFoot = Joint::create(); //create a joint called RightFoot 
+    TempMat.setTranslate(0.0,-3.0,0.0);
+    RightFoot->setJointTransformation(TempMat);
+
+    NodeRecPtr RightFootNode = makeNodeFor(RightFoot);
+    RightKneeNode->addChild(RightFootNode);
+
+    InvBind = RightFootNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(RightFoot, InvBind);
+    
+    /*================================================================================================*/
+    /*                                       Right Toes                                                 */
+    RightToes = Joint::create(); //create a joint called RightToes 
+    TempMat.setTranslate(0.0,0.0,1.0);
+    RightToes->setJointTransformation(TempMat);
+
+    NodeRecPtr RightToesNode = makeNodeFor(RightToes);
+    RightFootNode->addChild(RightToesNode);
+
+    InvBind = RightToesNode->getToWorld();
+    InvBind.invert();
+    ExampleSkeleton->pushToJoints(RightToes, InvBind);
 
     //SkeletonDrawer
     SkeletonDrawableUnrecPtr ExampleSkeletonDrawable = SkeletonDrawable::create();

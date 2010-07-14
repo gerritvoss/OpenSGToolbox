@@ -32,12 +32,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGText 
                    OSGTBAnimation 
                    OSGContribParticleSystem 
-                   OSGContribPhysics 
-                   OSGContribLua 
-                   OSGContribLuaToolbox 
-                   OSGContribSound 
                    OSGContribUserInterface 
-                   OSGContribVideo 
                    )
 
 

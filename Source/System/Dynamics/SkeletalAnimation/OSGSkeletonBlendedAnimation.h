@@ -45,7 +45,6 @@
 #include "OSGSkeletonBlendedAnimationBase.h"
 #include "OSGSkeletonAnimation.h"
 #include "OSGKeyframeAnimator.h"
-#include "OSGSkeleton.h"
 
 OSG_BEGIN_NAMESPACE
 

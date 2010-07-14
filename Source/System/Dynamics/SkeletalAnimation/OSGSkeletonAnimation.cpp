@@ -100,12 +100,12 @@ std::map<unsigned long, Matrix> SkeletonAnimation::getRelTransformations(const R
 				   -1, 
 				   t,
 				   prev_t,
-				   getAnimatorJoints(i)->editField( Joint::RelativeTransformationFieldId )) )
+				   getAnimatorJoints(i)->editField( Joint::JointTransformationFieldId )) )
 	   {
 	   }
 
-	   relTransformations[getAnimatorJoints(i)->getId()] = getAnimatorJoints(i)->getRelativeTransformation();
-	   AnimatedJoints.insert(getAnimatorJoints(i));
+	   //relTransformations[getAnimatorJoints(i)->getId()] = getAnimatorJoints(i)->getRelativeTransformation();
+	   //AnimatedJoints.insert(getAnimatorJoints(i));
 	}
 
 	return relTransformations;
@@ -124,15 +124,16 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 				   -1, 
 				   t,
 				   prev_t,
-				   getAnimatorJoints(i)->editField( Joint::RelativeTransformationFieldId )) )
+				   getAnimatorJoints(i)->editField( Joint::JointTransformationFieldId )) )
 	   {
 	   }
 	}
 
-    if(getSkeleton() != NULL)
-    {
-        getSkeleton()->updateJointTransformations();
-    }
+    //if(getSkeleton() != NULL)
+    //{
+        //getSkeleton()->updateJointTransformations();
+    //}
+    getSkeleton()->skeletonUpdated();
 }
 
 void SkeletonAnimation::addTransformationAnimator(KeyframeAnimatorUnrecPtr TheAnimator, JointUnrecPtr TheJoint)
