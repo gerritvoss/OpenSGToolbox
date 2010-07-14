@@ -351,8 +351,8 @@ void setupAnimation(void)
     //TheAnimator->setKeyframeSequence(VectorKeyframes);
     //TheAnimator->setKeyframeSequence(RotationKeyframes);
     //TheAnimator->setKeyframeSequence(ColorKeyframes);
-    TheAnimator->setKeyframeSequence(TransformationKeyframes);
-    //TheAnimator->setKeyframeSequence(NumberKeyframes);
+   // TheAnimator->setKeyframeSequence(TransformationKeyframes);
+    TheAnimator->setKeyframeSequence(NumberKeyframes);
     
     //Animation
     TheAnimation = FieldAnimation::create();
@@ -363,8 +363,8 @@ void setupAnimation(void)
     //TheAnimation->setAnimatedField(Trans, std::string("scale"));
     //TheAnimation->setAnimatedField(Trans, std::string("rotation"));
     //TheAnimation->setAnimatedField(TheTorusMaterial, std::string("diffuse"));
-    //TheAnimation->setAnimatedField(TheTorusMaterial, std::string("shininess"));
-    TheAnimation->setAnimatedField(TorusNodeTrans, std::string("matrix"));
+    TheAnimation->setAnimatedField(TheTorusMaterial, std::string("shininess"));
+    //TheAnimation->setAnimatedField(TorusNodeTrans, std::string("matrix"));
 
     //Animation Listener
     TheAnimation->addAnimationListener(&TheAnimationListener);

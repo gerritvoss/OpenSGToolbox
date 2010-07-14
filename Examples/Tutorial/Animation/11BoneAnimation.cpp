@@ -77,9 +77,16 @@ public:
 	   if(e->getKey() == KeyEvent::KEY_SPACE)
 	   {
 		   if(animationPaused)
-			   animationPaused = false;
+		   {
+				animationPaused = false;
+				TheCurrentAnimation->start();
+		   }
 		   else
-			   animationPaused = true;
+		   {
+				animationPaused = true;
+				TheCurrentAnimation->stop();
+		   }
+
 	   }
 
 	   //Toggle bind pose
@@ -276,10 +283,6 @@ int main(int argc, char **argv)
 	//Setup the Animation
 	setupAnimation(ExampleRootJoint, ExampleRootJoint->getChildJoints(0));
 
-	//Set the currently playing animation to TheJointAnimation (can be switched at runtime via a key command)
-	TheCurrentAnimation = TheJointAnimation;
-
-
     // Show the whole Scene
     mgr->showAll();
 
@@ -388,6 +391,10 @@ void setupAnimation(JointUnrecPtr TheJoint, JointUnrecPtr TheChildJoint)
     dynamic_pointer_cast<FieldAnimation>(TheChildJointAnimation)->setAnimatedField(TheChildJoint, std::string("RelativeTransformation"));
 
     TheChildJointAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
-    TheChildJointAnimation->start();
+	TheJointAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
+
+		//Set the currently playing animation to TheJointAnimation (can be switched at runtime via a key command)
+	TheCurrentAnimation = TheJointAnimation;
+	TheCurrentAnimation->start();
 }
 

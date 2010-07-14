@@ -95,6 +95,7 @@ bool KeyframeSequence::interpolate(const UInt32& Type, const Real32& time, const
     return ReplaceFunc(InterpFunc, time, prevTime, ReplacePolicy, isCyclic, Result, Index, Blend);
 }
 
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -157,7 +157,7 @@ int main(int argc, char **argv)
 
     //Load skeleton from an XML file
     FCFileType::FCPtrStore NewContainers;
-    NewContainers = FCFileHandler::the()->read(BoostPath("./Data/14Skeleton.xml"));
+    NewContainers = FCFileHandler::the()->read(BoostPath("C:\\Users\\danielg\\Desktop\\AnimationTest\\14Skeleton.xml"));
 
     FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
