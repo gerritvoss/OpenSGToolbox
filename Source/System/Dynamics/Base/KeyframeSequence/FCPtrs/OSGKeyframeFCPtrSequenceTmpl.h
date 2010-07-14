@@ -78,6 +78,7 @@ class KeyframeFCPtrSequenceTmpl : public KeyframeFCPtrSequence
 
     typedef typename SequenceDesc::StoredType      StoredType;
     typedef typename SequenceDesc::StoredFieldType StoredFieldType;
+    typedef typename SequenceDesc::StoredType*      StoredPtrType;
 
     typedef typename StoredFieldType::EditHandle      StoredEditHandle;
     typedef typename StoredFieldType::EditHandlePtr   StoredEditHandlePtr;
@@ -111,6 +112,28 @@ class KeyframeFCPtrSequenceTmpl : public KeyframeFCPtrSequence
 
           StoredFieldType &editField   (void);
     const StoredFieldType &getField    (void) const;
+
+    StoredPtrType getRawKeyValue (const UInt32 index );
+
+    StoredPtrType getRawKeyValue (const UInt32 index ) const;
+
+    void       getRawKeyValue (StoredPtrType const val,
+                               const UInt32 index );
+
+    void       getRawKeyValue (StoredPtrType const val,
+                               const UInt32 index ) const;
+
+
+    void       setRawKeyframe (StoredPtrType const val,
+                               const Real32     &key,
+                               const UInt32     index );
+
+    void       addRawKeyframe (StoredPtrType const val,
+                               const Real32     &key );
+
+    void       insertRawKeyframe(StoredPtrType const val,
+                                 const Real32     &key,
+                                 const UInt32     index);
 
     virtual GenericType getKeyValue (const UInt32       index )      ;
 

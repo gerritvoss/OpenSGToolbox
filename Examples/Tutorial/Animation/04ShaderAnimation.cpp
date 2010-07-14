@@ -18,7 +18,7 @@
 #include "OSGChunkMaterial.h"
 #include "OSGMaterialChunk.h"
 #include "OSGSimpleSHLChunk.h"
-#include "OSGSHLParameterChunk.h"
+#include "OSGSimpleSHLVariableChunk.h"
 #include "OSGShaderVariableVec4f.h"
 
 // Input
@@ -135,43 +135,30 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(TutorialWindow);
 	
-
-	//Shader Material
-	BlendChunkUnrecPtr ExampleBlendChunk = BlendChunk::create();
-    ExampleBlendChunk->setSrcFactor(GL_SRC_ALPHA);
-    ExampleBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
-
-	//Material Chunk
-	MaterialChunkUnrecPtr ShaderMaterialChunk = MaterialChunk::create();
-    ShaderMaterialChunk->setAmbient(Color4f(0.4f,0.4f,0.4f,1.0f));
-    ShaderMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-    ShaderMaterialChunk->setSpecular(Color4f(1.0f,1.0f,1.0f,1.0f));
-
 	//Shader Chunk
 	SimpleSHLChunkUnrecPtr TheSHLChunk = SimpleSHLChunk::create();
-    TheSHLChunk->setVertexProgram(createSHLVertexProg());
+    //TheSHLChunk->setVertexProgram(createSHLVertexProg());
     TheSHLChunk->setFragmentProgram(createSHLFragProg());
-
-	//Color Parameter
-	ShaderVariableVec4fUnrecPtr Color1Parameter = ShaderVariableVec4f::create();
-    Color1Parameter->setName("Color1");
-    Color1Parameter->setValue(Vec4f(0.0f,1.0f,0.0f,1.0f));
-	
-	ShaderVariableVec4fUnrecPtr Color2Parameter = ShaderVariableVec4f::create();
-    Color2Parameter->setName("Color2");
-    Color2Parameter->setValue(Vec4f(1.0f,1.0f,1.0f,1.0f));
-
+    TheSHLChunk->addUniformVariable("Color1",Vec4f(0.0f,1.0f,0.0f,1.0f));
+    TheSHLChunk->addUniformVariable("Color2",Vec4f(1.0f,1.0f,1.0f,1.0f));
 
 	//Shader Parameter Chunk
-	SHLParameterChunkUnrecPtr SHLParameters = SHLParameterChunk::create();
-    SHLParameters->getParameters().push_back(Color1Parameter);
-    SHLParameters->getParameters().push_back(Color2Parameter);
-    SHLParameters->setSHLChunk(TheSHLChunk);
+	//SimpleSHLVariableChunkUnrecPtr SHLParameters = SimpleSHLVariableChunk::create();
+	////Color Parameter
+    //SHLParameters->addUniformVariable("Color1",Vec4f(0.0f,1.0f,0.0f,1.0f));
+    //SHLParameters->addUniformVariable("Color2",Vec4f(1.0f,1.0f,1.0f,1.0f));
+
+	ShaderVariableVec4fUnrecPtr Color1Parameter;
+	ShaderVariableVec4fUnrecPtr Color2Parameter;
+
+    Color1Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(TheSHLChunk->getVariables()->getVariable("Color1")));
+    Color2Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(TheSHLChunk->getVariables()->getVariable("Color2")));
+    //Color1Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(SHLParameters->getVariables()->getVariable("Color1")));
+    //Color2Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(SHLParameters->getVariables()->getVariable("Color2")));
 
 	ChunkMaterialUnrecPtr ShaderMaterial = ChunkMaterial::create();
-    ShaderMaterial->addChunk(ShaderMaterialChunk);
     ShaderMaterial->addChunk(TheSHLChunk);
-    ShaderMaterial->addChunk(SHLParameters);
+    //ShaderMaterial->addChunk(SHLParameters);
 
 	//Torus Node
 	GeometryUnrecPtr TorusGeometry = makeTorusGeo(5.0f,20.0f, 32,32);
@@ -180,7 +167,6 @@ int main(int argc, char **argv)
 
 	NodeUnrecPtr TorusNode = Node::create();
     TorusNode->setCore(TorusGeometry);
-
 
     // Make Main Scene Node
     NodeUnrecPtr scene = Node::create();
@@ -228,9 +214,18 @@ void reshape(Vec2f Size)
 
 std::string createSHLVertexProg(void)
 {
-	std::string Result("");
+	std::ostringstream FragCodeStream;
 
-	return Result;
+	FragCodeStream
+	<< "//Vertex Shader\n"
+
+	<< "void main(void)\n"
+	<< "{\n"
+	<< "    gl_Position = ftransform();\n"
+	<< "}\n";
+
+
+	return FragCodeStream.str();
 }
 
 std::string createSHLFragProg(void)
@@ -254,20 +249,21 @@ std::string createSHLFragProg(void)
 AnimationUnrecPtr createColorAnimation(FieldContainerUnrecPtr AnimatedObject, std::string AnimatedField)
 {
     //Color Keyframe Sequence
-    KeyframeVectorSequenceUnrecPtr ColorKeyframes = KeyframeVectorSequenceVec4f::create();
-    ColorKeyframes->addKeyframe(Vec4f(1.0f,0.0f,0.0f,1.0f),0.0f);
-    ColorKeyframes->addKeyframe(Vec4f(0.0f,1.0f,0.0f,1.0f),2.0f);
-    ColorKeyframes->addKeyframe(Vec4f(0.0f,0.0f,1.0f,1.0f),4.0f);
-    ColorKeyframes->addKeyframe(Vec4f(1.0f,0.0f,0.0f,1.0f),6.0f);
+    KeyframeVectorSequenceVec4fUnrecPtr ColorKeyframes = KeyframeVectorSequenceVec4f::create();
+    ColorKeyframes->addRawKeyframe(Vec4f(1.0f,0.0f,0.0f,1.0f),0.0f);
+    ColorKeyframes->addRawKeyframe(Vec4f(0.0f,1.0f,0.0f,1.0f),2.0f);
+    ColorKeyframes->addRawKeyframe(Vec4f(0.0f,0.0f,1.0f,1.0f),4.0f);
+    ColorKeyframes->addRawKeyframe(Vec4f(1.0f,0.0f,0.0f,1.0f),6.0f);
 
     //Animator
-    AnimatorUnrecPtr Animator = KeyframeAnimator::create();
-    dynamic_pointer_cast<KeyframeAnimator>(Animator)->setKeyframeSequence(ColorKeyframes);
+    KeyframeAnimatorUnrecPtr Animator = KeyframeAnimator::create();
+    Animator->setKeyframeSequence(ColorKeyframes);
     
     //Animation
     FieldAnimationUnrecPtr ColorAnimation = FieldAnimation::create();
-    dynamic_pointer_cast<FieldAnimation>(ColorAnimation)->setInterpolationType(Animator::LINEAR_INTERPOLATION);
-    dynamic_pointer_cast<FieldAnimation>(ColorAnimation)->setCycling(-1);
+    ColorAnimation->setAnimator(Animator);
+    ColorAnimation->setInterpolationType(Animator::LINEAR_INTERPOLATION);
+    ColorAnimation->setCycling(-1);
 	ColorAnimation->setAnimatedField(AnimatedObject, AnimatedField);
 
 	return ColorAnimation;

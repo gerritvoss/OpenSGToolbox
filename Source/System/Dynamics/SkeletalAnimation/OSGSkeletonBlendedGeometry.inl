@@ -40,4 +40,34 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+bool SkeletonBlendedGeometry::isSkeletonListenerAttached(SkeletonListenerPtr Listener) const
+{
+    return _SkeletonListeners.find(Listener) != _SkeletonListeners.end();
+}
+
+inline
+GeoVectorProperty* SkeletonBlendedGeometry::getWeights(void) const
+{
+    return getInternalWeights();
+}
+
+inline
+GeoIntegralProperty* SkeletonBlendedGeometry::getWeightIndexes(void) const
+{
+    return getInternalWeightIndexes();
+}
+
+inline
+void SkeletonBlendedGeometry::setWeights(GeoVectorProperty* const weights  )
+{
+    setInternalWeights(weights);
+}
+
+inline
+void SkeletonBlendedGeometry::setWeightIndexes(GeoIntegralProperty* const indexes)
+{
+    setInternalWeightIndexes(indexes);
+}
+
 OSG_END_NAMESPACE

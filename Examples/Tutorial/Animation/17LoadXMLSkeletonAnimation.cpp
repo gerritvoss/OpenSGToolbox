@@ -27,7 +27,7 @@
 
 //Animation
 #include "OSGJoint.h"
-#include "OSGSkeleton.h"
+#include "OSGSkeletonBlendedGeometry.h"
 #include "OSGSkeletonDrawable.h"
 
 #include "OSGRandomPoolManager.h"
@@ -214,25 +214,33 @@ int main(int argc, char **argv)
     std::cout << "CTRL-Q  Exit\n\n" << std::endl;
 
 
+    //Joint Node Hierarchy
+    NodeRecPtr ExampleJointNode;
+
     //Import skeleton and animation from XML file
     FCFileType::FCPtrStore NewContainers;
     NewContainers = FCFileHandler::the()->read(BoostPath("./Data/17SkeletonAnimation.xml"));
 
-    SkeletonUnrecPtr ExampleSkeleton;
+    SkeletonBlendedGeometryUnrecPtr ExampleSkeleton;
 
     FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
         //Only import skeleton and skeletonAnimation data; ignore anything else saved in the XML file
-        if( (*Itor)->getType() == (Skeleton::getClassType()))
+        if( (*Itor)->getType() == (SkeletonBlendedGeometry::getClassType()))
         {
             //Set ExampleSkeleton to the skeleton we just read in
-            ExampleSkeleton = (dynamic_pointer_cast<Skeleton>(*Itor));
+            ExampleSkeleton = (dynamic_pointer_cast<SkeletonBlendedGeometry>(*Itor));
         }
         if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
         {
             //Set TheSkeletonAnimation to the animation we just read in
             TheSkeletonAnimation = (dynamic_pointer_cast<SkeletonAnimation>(*Itor));
+        }
+        if( (*Itor)->getType() == (Node::getClassType()) && 
+            (dynamic_pointer_cast<Node>(*Itor)->getParent() == NULL))
+        {
+            ExampleJointNode = (dynamic_pointer_cast<Node>(*Itor));
         }
     }
 

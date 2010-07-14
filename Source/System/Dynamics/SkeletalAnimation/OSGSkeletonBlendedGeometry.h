@@ -42,10 +42,13 @@
 #pragma once
 #endif
 
-#include "OSGSkeleton.h"
-#include "OSGJoint.h"
 #include "OSGSkeletonBlendedGeometryBase.h"
+#include "OSGJoint.h"
 #include "OSGSkeletonListener.h"
+#include "OSGEventConnection.h"
+#include "OSGGeoIntegralProperty.h"
+#include "OSGGeoVectorProperty.h"
+#include <set>
 #include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
@@ -54,7 +57,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsSkeletonBlendedGeometry for a description.
 */
 
-class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlendedGeometryBase, public SkeletonListener
+class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlendedGeometryBase
 {
   protected:
 
@@ -93,17 +96,102 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
      * @param	TheJoint		The joint to which the point is being attached.
      * @param	BlendAmount		The blend weight.
     *****************************************************************************/
-    void addJointBlending(const UInt32& PositionIndex, const JointUnrecPtr TheJoint, const Real32& BlendAmount);
+    void addJointBlending(UInt32 VertexIndex,
+                          Joint* const TheJoint,
+                          Real32 BlendAmount);
 
-   /**************************************************************************//**
-    * @fn	virtual void skeletonChanged(const SkeletonEvent& e)
-    * 
-    * @brief	Called when the skeleton changes. Tells all attached geometries
-	*			to update their positions.
-    * 
-    * @param	e	The SkeletonEvent. 
-   *****************************************************************************/
-   virtual void skeletonChanged(const SkeletonEventUnrecPtr e);
+    void addJointBlending(UInt32 VertexIndex,
+                          UInt32 JointIndex,
+                          Real32 BlendAmount);
+
+    void addJointBlending(UInt32 VertexIndex,
+                          UInt32 JointIndex,
+                          UInt32 WeightIndex);
+
+   GeoVectorProperty*   getWeights      (void) const;
+   GeoIntegralProperty* getWeightIndexes(void) const;
+
+   void setWeights      (GeoVectorProperty*   const weights);
+   void setWeightIndexes(GeoIntegralProperty* const indexes);
+
+    /**************************************************************************//**
+     * @fn	EventConnection addSkeletonListener(SkeletonListenerPtr Listener)
+     * 
+     * @brief	Adds a skeleton listener to this instance. 
+     * 
+     * @param	Listener	The listener to add. 
+     * 
+     * @return	EventConnection
+    *****************************************************************************/
+    EventConnection addSkeletonListener(SkeletonListenerPtr Listener);
+
+    /**************************************************************************//**
+     * @fn	bool isSkeletonListenerAttached(SkeletonListenerPtr Listener) const
+     * 
+     * @brief	Query if skeleton listener 'Listener' is attached to this instance. 
+     * 
+     * @param	Listener	The listener. 
+     * 
+     * @return	true if skeleton listener attached, false if not. 
+    *****************************************************************************/
+    bool isSkeletonListenerAttached(SkeletonListenerPtr Listener) const;
+
+    /**************************************************************************//**
+     * @fn	void removeSkeletonListener(SkeletonListenerPtr Listener)
+     * 
+     * @brief	Removes the skeleton listener 'Listener'. 
+     * 
+     * @param	Listener	 The listener to remove. 
+    *****************************************************************************/
+    void removeSkeletonListener(SkeletonListenerPtr Listener);
+
+    /**************************************************************************//**
+     * @fn	void skeletonUpdated(void)
+     * 
+     * @brief	Skeleton updated.
+    *****************************************************************************/
+    void skeletonUpdated(void);
+
+    /**************************************************************************//**
+     * @fn	void updateJointTransformations(void)
+     * 
+     * @brief	Updates the transformations of all joints in this skeleton. 
+    *****************************************************************************/
+    void updateJointTransformations(void);
+    
+
+    /**************************************************************************//**
+     * @fn	Matrix getAbsoluteTransformation(UInt32 index) const
+     * 
+     * @brief	Gets the absolute transformation of the joint in its current
+     *			position.
+     * 
+     * @return	The joint's absolute transformation matrix. 
+    *****************************************************************************/
+    Matrix getAbsoluteTransformation(UInt32 index) const;
+
+    /**************************************************************************//**
+     * @fn	Matrix getAbsoluteBindTransformation(UInt32 index) const
+     * 
+     * @brief	Gets the bind pose absolute transformation of the joint in its current
+     *			position.
+     * 
+     * @return	The joint's bind pose absolute transformation matrix. 
+    *****************************************************************************/
+    Matrix getAbsoluteBindTransformation(UInt32 index) const;
+
+    Matrix getBindTransformationDiff(UInt32 index) const;
+    Int32 getJointIndex(Joint* theJoint) const;
+    Int32 getJointParentIndex(UInt32 index) const;
+
+    UInt32 getNumJoints       (void                    ) const;
+    Joint* getJoint           (UInt32 index            ) const;
+    Matrix getJointInvBind    (UInt32 index            ) const; //Locaal space to Joint space
+    void   pushToJoints       (Joint* const jointValue,
+                               const Matrix& invBind  );
+    void   removeFromJoints   (UInt32 uiIndex         );
+    void   removeObjFromJoints(Joint* const jointValue);
+    void   clearJoints        (void                   );
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -139,6 +227,19 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
 	 *			current positions of the attached skeletons.
 	*****************************************************************************/
 	void calculatePositions(void);
+
+	typedef std::set<SkeletonListenerPtr> SkeletonListenerSet;
+    typedef SkeletonListenerSet::iterator SkeletonListenerSetItor;
+    typedef SkeletonListenerSet::const_iterator SkeletonListenerSetConstItor;
+	
+    SkeletonListenerSet       _SkeletonListeners;
+
+    /**************************************************************************//**
+     * @fn	void produceChangedEvent(void)
+     * 
+     * @brief	Tells all of the skeleton's listeners that an event has occurred. 
+    *****************************************************************************/
+	void produceChangedEvent(void);
     /*==========================  PRIVATE  ================================*/
 
   private:
@@ -148,8 +249,6 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SkeletonBlendedGeometry &source);
-
-	std::vector<EventConnection> _SkeletonListenerConnections;
 };
 
 typedef SkeletonBlendedGeometry *SkeletonBlendedGeometryP;

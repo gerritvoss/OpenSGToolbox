@@ -103,25 +103,6 @@ boost::any SceneGraphTreeModel::getChild(const boost::any& parent, const UInt32&
     }
 }
 
-boost::any SceneGraphTreeModel::getParent(const boost::any& node) const
-{
-    try
-    {
-        NodeUnrecPtr TheNode = boost::any_cast<NodeUnrecPtr>(node);
-        if(TheNode != NULL &&
-           TheNode != getInternalRoot() &&
-           TheNode->getParent() != NULL)
-        {
-            return boost::any(NodeUnrecPtr(TheNode->getParent()));
-        }
-    }
-    catch(boost::bad_any_cast &ex)
-    {
-        SWARNING << "Bad any cast: " << ex.what() << std::endl;
-    }
-    return boost::any();
-}
-
 UInt32 SceneGraphTreeModel::getChildCount(const boost::any& parent) const
 {
     try
@@ -251,12 +232,37 @@ bool SceneGraphTreeModel::isEqual(const boost::any& left, const boost::any& righ
     }
 }
 
+TreePath SceneGraphTreeModel::createPath(NodeUnrecPtr node) const
+{
+    std::deque<boost::any> PathVec;
+    NodeUnrecPtr recNode(node);
+
+    if(recNode != NULL)
+    {
+        while(recNode != NULL && recNode != getRootNode())
+        {
+            PathVec.push_front(boost::any(recNode));
+            recNode = recNode->getParent();
+        }
+        if(recNode != NULL)
+        {
+            PathVec.push_front(boost::any(recNode));
+        }
+        else
+        {
+            return TreePath();
+        }
+    }
+
+    return TreePath(PathVec, const_cast<SceneGraphTreeModel*>(this));
+}
+
 void SceneGraphTreeModel::removeNode(NodeUnrecPtr nodeToBeRemoved)
 {
 
     NodeRefPtr parent = nodeToBeRemoved->getParent();
 
-    TreePath pathOfNode = getPath(nodeToBeRemoved);
+    TreePath pathOfNode = createPath(nodeToBeRemoved);
     if(parent!=NULL)
     {
         UInt32 ChildIndex(parent->findChild(nodeToBeRemoved));
@@ -277,7 +283,7 @@ void SceneGraphTreeModel::removeNode(NodeUnrecPtr nodeToBeRemoved)
                 {
                     ChildUserObjects.push_back(boost::any(NodeUnrecPtr(parent->getParent()->getChild(childIndices[i]))));
                 }
-                produceTreeNodesChanged(getPath(boost::any(NodeUnrecPtr(parent->getParent()))), childIndices, ChildUserObjects);
+                produceTreeNodesChanged(createPath(parent->getParent()), childIndices, ChildUserObjects);
             }
         }
     }
@@ -287,7 +293,7 @@ void SceneGraphTreeModel::addNode(NodeUnrecPtr parent,NodeUnrecPtr nodeToBeAdded
 {
     UInt32 ChildIndex(parent->getNChildren());
     NodeRefPtr(parent)->addChild(nodeToBeAdded);
-    produceTreeNodesInserted(getPath(parent),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, nodeToBeAdded));
+    produceTreeNodesInserted(createPath(parent),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, nodeToBeAdded));
 
     if(parent->getNChildren() == 1)
     {
@@ -300,7 +306,7 @@ void SceneGraphTreeModel::addNode(NodeUnrecPtr parent,NodeUnrecPtr nodeToBeAdded
             {
                 ChildUserObjects.push_back(boost::any(NodeUnrecPtr(parent->getParent()->getChild(childIndices[i]))));
             }
-            produceTreeNodesChanged(getPath(boost::any(NodeUnrecPtr(parent->getParent()))), childIndices, ChildUserObjects);
+            produceTreeNodesChanged(createPath(NodeUnrecPtr(parent->getParent())), childIndices, ChildUserObjects);
         }
     }
 }	
@@ -310,7 +316,7 @@ void SceneGraphTreeModel::insertNode(NodeUnrecPtr parent,
                                      UInt32 Index)
 {
     NodeRefPtr(parent)->insertChild(Index, nodeToBeAdded);
-    produceTreeNodesInserted(getPath(parent),std::vector<UInt32>(1, Index),std::vector<boost::any>(1, nodeToBeAdded));
+    produceTreeNodesInserted(createPath(parent),std::vector<UInt32>(1, Index),std::vector<boost::any>(1, nodeToBeAdded));
 
     if(parent->getNChildren() == 1)
     {
@@ -323,7 +329,7 @@ void SceneGraphTreeModel::insertNode(NodeUnrecPtr parent,
             {
                 ChildUserObjects.push_back(boost::any(NodeUnrecPtr(parent->getParent()->getChild(childIndices[i]))));
             }
-            produceTreeNodesChanged(getPath(boost::any(NodeUnrecPtr(parent->getParent()))), childIndices, ChildUserObjects);
+            produceTreeNodesChanged(createPath(NodeUnrecPtr(parent->getParent())), childIndices, ChildUserObjects);
         }
     }
 }
@@ -358,7 +364,7 @@ void SceneGraphTreeModel::changed(ConstFieldMaskArg whichField,
 
     if(whichField & InternalRootFieldMask)
     {
-        produceTreeStructureChanged(getPath(getRootNode()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getRootNode())));
+        produceTreeStructureChanged(createPath(getRootNode()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getRootNode())));
     }
 }
 

@@ -177,7 +177,7 @@ Vec2f UIViewport::getCorrectedViewSize(void) const
     }
     else
     {
-        return getViewComponent()->getPreferredSize();
+        return getViewComponent()->getPreferredScrollableViewportSize();
     }
 }
 

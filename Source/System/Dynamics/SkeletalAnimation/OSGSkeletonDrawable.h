@@ -45,7 +45,7 @@
 #include "OSGConfig.h"
 #include "OSGSkeletonDrawableBase.h"
 #include "OSGAction.h"
-#include "OSGSkeleton.h"
+#include "OSGSkeletonBlendedGeometry.h"
 #include "OSGJoint.h"
 
 OSG_BEGIN_NAMESPACE
@@ -136,32 +136,6 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
     Pnt3f _lastStartPoint;
     Matrix _lastAbsTrans;
 
-    /**************************************************************************//**
-     * @fn void drawJointHierarchy (JointUnrecPtr TheJoint, DrawActionBase *action)
-     * 
-     * @brief Draws a bone between each parent-child joint pair located beneath
-     * 		  TheJoint in the joint hierarchy.
-     *
-     * @param TheJoint The joint in the hierarchy from which drawing should begin.
-     * @param action
-     * 
-     * @return  Result
-     *****************************************************************************/
-    void drawJointHierarchy (JointUnrecPtr TheJoint, DrawEnv *pEnv);
-
-    /**************************************************************************//**
-     * @fn void expandVolumeByJoint (JointUnrecPtr TheJoint, Volume &volume)
-     * 
-     * @brief  
-     *
-     * @param TheJoint
-     * @param volume
-     * 
-     * @return  Result
-     *****************************************************************************/
-    void expandVolumeByJoint (JointUnrecPtr TheJoint, Volume &volume);
-
-    UInt32 numJoints(JointUnrecPtr TheJoint) const;
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -343,6 +343,31 @@ void AbstractWindowBase::setDesktopIcon(UIDrawObjectCanvas * const value)
 
     _sfDesktopIcon.setValue(value);
 }
+//! Get the value of the AbstractWindow::_sfModal field.
+
+inline
+bool &AbstractWindowBase::editModal(void)
+{
+    editSField(ModalFieldMask);
+
+    return _sfModal.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfModal field.
+inline
+      bool  AbstractWindowBase::getModal(void) const
+{
+    return _sfModal.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfModal field.
+inline
+void AbstractWindowBase::setModal(const bool value)
+{
+    editSField(ModalFieldMask);
+
+    _sfModal.setValue(value);
+}
 //! Get the value of the AbstractWindow::_sfAllwaysOnTop field.
 
 inline
@@ -562,6 +587,9 @@ void AbstractWindowBase::execSync (      AbstractWindowBase *pFrom,
 
     if(FieldBits::NoField != (DesktopIconFieldMask & whichField))
         _sfDesktopIcon.syncWith(pFrom->_sfDesktopIcon);
+
+    if(FieldBits::NoField != (ModalFieldMask & whichField))
+        _sfModal.syncWith(pFrom->_sfModal);
 
     if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
         _sfAllwaysOnTop.syncWith(pFrom->_sfAllwaysOnTop);

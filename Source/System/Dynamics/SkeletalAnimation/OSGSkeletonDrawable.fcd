@@ -14,7 +14,7 @@
 >
 	<Field
 		name="Skeleton"
-		type="Skeleton"
+		type="SkeletonBlendedGeometry"
         category="pointer"
 		cardinality="single"
 		visibility="external"

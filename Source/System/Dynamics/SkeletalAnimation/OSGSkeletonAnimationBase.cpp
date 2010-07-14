@@ -61,7 +61,7 @@
 
 #include "OSGKeyframeAnimator.h"        // TransformationAnimators Class
 #include "OSGJoint.h"                   // AnimatorJoints Class
-#include "OSGSkeleton.h"                // Skeleton Class
+#include "OSGSkeletonBlendedGeometry.h" // Skeleton Class
 
 #include "OSGSkeletonAnimationBase.h"
 #include "OSGSkeletonAnimation.h"
@@ -94,7 +94,7 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var Skeleton *      SkeletonAnimationBase::_sfSkeleton
+/*! \var SkeletonBlendedGeometry * SkeletonAnimationBase::_sfSkeleton
     
 */
 
@@ -154,8 +154,8 @@ void SkeletonAnimationBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecSkeletonPtr::Description(
-        SFUnrecSkeletonPtr::getClassType(),
+    pDesc = new SFUnrecSkeletonBlendedGeometryPtr::Description(
+        SFUnrecSkeletonBlendedGeometryPtr::getClassType(),
         "Skeleton",
         "",
         SkeletonFieldId, SkeletonFieldMask,
@@ -226,7 +226,7 @@ SkeletonAnimationBase::TypeObject SkeletonAnimationBase::_type(
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"Skeleton\"\n"
-    "\t\ttype=\"Skeleton\"\n"
+    "\t\ttype=\"SkeletonBlendedGeometry\"\n"
     "        category=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -296,12 +296,12 @@ MFUnrecJointPtr     *SkeletonAnimationBase::editMFAnimatorJoints (void)
 }
 
 //! Get the SkeletonAnimation::_sfSkeleton field.
-const SFUnrecSkeletonPtr *SkeletonAnimationBase::getSFSkeleton(void) const
+const SFUnrecSkeletonBlendedGeometryPtr *SkeletonAnimationBase::getSFSkeleton(void) const
 {
     return &_sfSkeleton;
 }
 
-SFUnrecSkeletonPtr  *SkeletonAnimationBase::editSFSkeleton       (void)
+SFUnrecSkeletonBlendedGeometryPtr *SkeletonAnimationBase::editSFSkeleton       (void)
 {
     editSField(SkeletonFieldMask);
 
@@ -761,8 +761,8 @@ EditFieldHandlePtr SkeletonAnimationBase::editHandleAnimatorJoints (void)
 
 GetFieldHandlePtr SkeletonAnimationBase::getHandleSkeleton        (void) const
 {
-    SFUnrecSkeletonPtr::GetHandlePtr returnValue(
-        new  SFUnrecSkeletonPtr::GetHandle(
+    SFUnrecSkeletonBlendedGeometryPtr::GetHandlePtr returnValue(
+        new  SFUnrecSkeletonBlendedGeometryPtr::GetHandle(
              &_sfSkeleton,
              this->getType().getFieldDesc(SkeletonFieldId),
              const_cast<SkeletonAnimationBase *>(this)));
@@ -772,8 +772,8 @@ GetFieldHandlePtr SkeletonAnimationBase::getHandleSkeleton        (void) const
 
 EditFieldHandlePtr SkeletonAnimationBase::editHandleSkeleton       (void)
 {
-    SFUnrecSkeletonPtr::EditHandlePtr returnValue(
-        new  SFUnrecSkeletonPtr::EditHandle(
+    SFUnrecSkeletonBlendedGeometryPtr::EditHandlePtr returnValue(
+        new  SFUnrecSkeletonBlendedGeometryPtr::EditHandle(
              &_sfSkeleton,
              this->getType().getFieldDesc(SkeletonFieldId),
              this));

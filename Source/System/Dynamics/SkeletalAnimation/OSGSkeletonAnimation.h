@@ -43,7 +43,7 @@
 #endif
 
 #include "OSGJoint.h"
-#include "OSGSkeleton.h"
+#include "OSGSkeletonBlendedGeometry.h"
 #include "OSGKeyframeAnimator.h"
 #include "OSGSkeletonAnimationBase.h"
 

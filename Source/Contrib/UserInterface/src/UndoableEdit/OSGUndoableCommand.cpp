@@ -63,7 +63,8 @@ A UndoableCommand.
  *                           Class variables                               *
 \***************************************************************************/
 
-CommandType UndoableCommand::_Type("UndoableCommand", "Command");
+CommandType UndoableCommand::_Type          ("UndoableCommand", "Command");
+Time        UndoableCommand::_MaxReplaceTime(5.0                         );
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -76,6 +77,11 @@ const CommandType &UndoableCommand::getType(void) const
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void UndoableCommand::execute(void)
+{
+    _ExecuteTime = getSystemTime();
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

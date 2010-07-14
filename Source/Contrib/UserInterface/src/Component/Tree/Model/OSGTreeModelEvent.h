@@ -95,6 +95,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelEvent : public TreeModelEvent
     
 	const TreePath& getPath(void) const;
 
+	TreePath getChildPath(UInt32 index) const;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

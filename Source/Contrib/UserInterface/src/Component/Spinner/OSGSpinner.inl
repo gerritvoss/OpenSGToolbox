@@ -49,7 +49,10 @@ bool Spinner::isChangeListenerAttached(ChangeListenerPtr l) const
 inline
 void Spinner::removeChangeListener(ChangeListenerPtr l)
 {
-    _Model->removeChangeListener(l);
+    if(_Model)
+    {
+        _Model->removeChangeListener(l);
+    }
 }
 
 inline

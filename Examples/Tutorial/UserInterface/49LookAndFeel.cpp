@@ -2246,7 +2246,7 @@ PanelRefPtr StatePanelCreator::createTreePanel(void)
     TheTree->setModel(TheTreeModel);
 
     //Layout Expansion
-    TheTree->expandPath(TheTreeModel->getPath(ANode));
+    TheTree->expandPath(TheTreeModel->getRootPath());
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
     ScrollPanelRefPtr TheScrollPanel = ScrollPanel::create();
