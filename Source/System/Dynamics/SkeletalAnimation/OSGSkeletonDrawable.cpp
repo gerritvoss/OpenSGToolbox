@@ -45,7 +45,6 @@
 
 #include "OSGConfig.h"
 
-#include "OSGSkeleton.h"
 #include "OSGJoint.h"
 #include "OSGSkeletonDrawable.h"
 
@@ -103,48 +102,40 @@ void SkeletonDrawable::drawPrimitives (DrawEnv *pEnv)
     }
     else
     {
-		for(UInt32 i(0) ; i<getSkeleton()->getMFRootJoints()->size() ; ++i)
-		{
-			//Draw all Root Joints of Skeleton
-			drawJointHierarchy(getSkeleton()->getRootJoints(i), pEnv);
-		}
+
+        Pnt3f BoneStart(0.0,0.0,0.0),BoneEnd(0.0,0.0,0.0);
+        Int32 ParentIndex;
+        glBegin(GL_LINES);
+            for(UInt32 i(0) ; i<getSkeleton()->getNumJoints() ; ++i)
+            {
+                //Draw all Root Joints of Skeleton
+                ParentIndex = getSkeleton()->getJointParentIndex(i);
+                if(ParentIndex >= 0)
+                {
+                    if(getDrawPose())
+                    {
+                        BoneStart.setValues(0.0,0.0,0.0);
+                        BoneEnd.setValues(0.0,0.0,0.0);
+                        getSkeleton()->getAbsoluteTransformation(i).mult(BoneEnd,BoneEnd);
+                        getSkeleton()->getAbsoluteTransformation(ParentIndex).mult(BoneStart,BoneStart);
+                        glColor4fv(getPoseColor().getValuesRGBA());
+                        glVertex3fv(BoneStart.getValues());
+                        glVertex3fv(BoneEnd.getValues());
+                    }
+                    if(getDrawBindPose())
+                    {
+                        BoneStart.setValues(0.0f,0.0f,0.0f);
+                        BoneEnd.setValues(0.0f,0.0f,0.0f);
+                        getSkeleton()->getAbsoluteBindTransformation(i).mult(BoneEnd,BoneEnd);
+                        getSkeleton()->getAbsoluteBindTransformation(ParentIndex).mult(BoneStart,BoneStart);
+                        glColor4fv(getBindPoseColor().getValuesRGBA());
+                        glVertex3fv(BoneStart.getValues());
+                        glVertex3fv(BoneEnd.getValues());
+                    }
+                }
+            }
+        glEnd();
     }
-}
-
-void SkeletonDrawable::drawJointHierarchy(JointUnrecPtr TheJoint, DrawEnv *pEnv)
-{
-	//Draw the bone made by this joint and its parent joint
-	if(TheJoint->getParentJoint() != NULL)
-	{
-		Pnt3f BoneStart(0.0,0.0,0.0),BoneEnd(0.0,0.0,0.0);
-
-		glBegin(GL_LINES);
-			if(getDrawPose())
-			{
-				TheJoint->getAbsoluteTransformation().mult(BoneEnd,BoneEnd);
-				TheJoint->getParentJoint()->getAbsoluteTransformation().mult(BoneStart,BoneStart);
-				glColor4fv(getPoseColor().getValuesRGBA());
-				glVertex3fv(BoneStart.getValues());
-				glVertex3fv(BoneEnd.getValues());
-			}
-			if(getDrawBindPose())
-			{
-				BoneStart.setValues(0.0f,0.0f,0.0f);
-				BoneEnd.setValues(0.0f,0.0f,0.0f);
-				TheJoint->getBindAbsoluteTransformation().mult(BoneEnd,BoneEnd);
-				TheJoint->getParentJoint()->getBindAbsoluteTransformation().mult(BoneStart,BoneStart);
-				glColor4fv(getBindPoseColor().getValuesRGBA());
-				glVertex3fv(BoneStart.getValues());
-				glVertex3fv(BoneEnd.getValues());
-			}
-		glEnd();
-	}	
-
-	//Draw all of the child joint hierarchys
-	for(UInt32 i(0) ; i<TheJoint->getMFChildJoints()->size() ; ++i)
-	{
-		drawJointHierarchy(TheJoint->getChildJoints(i), pEnv);
-	}
 }
 
 void SkeletonDrawable::adjustVolume(Volume & volume)
@@ -158,34 +149,23 @@ void SkeletonDrawable::adjustVolume(Volume & volume)
     }
     else
     {
-		for(UInt32 i(0) ; i<getSkeleton()->getMFRootJoints()->size() ; ++i)
+        Pnt3f JointLocation(0.0,0.0,0.0);
+		for(UInt32 i(0) ; i<getSkeleton()->getNumJoints() ; ++i)
 		{
-			expandVolumeByJoint(getSkeleton()->getRootJoints(i), volume);
+            JointLocation.setValues(0.0,0.0,0.0);
+            if(getDrawPose())
+            {
+                getSkeleton()->getAbsoluteTransformation(i).mult(Pnt3f(0.0f,0.0f,0.0f),JointLocation);
+                volume.extendBy(JointLocation);
+            }
+            //if(getDrawBindPose())
+            //{
+                //TheJoint->getBindAbsoluteTransformation().mult(Pnt3f(0.0f,0.0f,0.0f),JointLocation);
+                //volume.extendBy(JointLocation);
+            //}
 		}
 	}
 
-}
-
-void SkeletonDrawable::expandVolumeByJoint (JointUnrecPtr TheJoint, Volume &volume) 
-{
-	Pnt3f JointLocation(0.0,0.0,0.0);
-	
-	if(getDrawPose())
-	{
-		TheJoint->getAbsoluteTransformation().mult(Pnt3f(0.0f,0.0f,0.0f),JointLocation);
-		volume.extendBy(JointLocation);
-	}
-	if(getDrawBindPose())
-	{
-		TheJoint->getBindAbsoluteTransformation().mult(Pnt3f(0.0f,0.0f,0.0f),JointLocation);
-		volume.extendBy(JointLocation);
-	}
-
-	//Then for each of TheJoints children; call expandVolumeByJoint on them
-	for(UInt32 i(0) ; i<TheJoint->getMFChildJoints()->size() ; ++i)
-	{
-		expandVolumeByJoint(TheJoint->getChildJoints(i), volume);
-	}
 }
 
 void SkeletonDrawable::fill(DrawableStatsAttachment *pStat)
@@ -202,25 +182,7 @@ void SkeletonDrawable::fill(DrawableStatsAttachment *pStat)
         return;
     }
 
-    UInt32 lines     = 0;
-
-    for(UInt32 i(0) ; i<getSkeleton()->getMFRootJoints()->size() ; ++i)
-    {
-        lines = numJoints(getSkeleton()->getRootJoints(i));
-    }
-
-    pStat->setLines    (lines    );
-}
-
-UInt32 SkeletonDrawable::numJoints(JointUnrecPtr TheJoint) const
-{
-    UInt32 Num(TheJoint->getMFChildJoints()->size());
-
-	for(UInt32 i(0) ; i<TheJoint->getMFChildJoints()->size() ; ++i)
-	{
-		Num += numJoints(TheJoint->getChildJoints(i));
-	}
-    return Num;
+    pStat->setLines    (getSkeleton()->getNumJoints()-1);
 }
 
 /*-------------------------------------------------------------------------*\

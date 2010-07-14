@@ -155,12 +155,13 @@ void MoveFieldElementCommand::execute(void)
         }
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
 }
 
 std::string MoveFieldElementCommand::getCommandDescription(void) const
 {
-    EditFieldHandlePtr TheFieldHandle = _FC->editField(_FieldId);
+    GetFieldHandlePtr TheFieldHandle = _FC->getField(_FieldId);
 
 	std::string Description("");
 

@@ -51,6 +51,7 @@ CommandManagerPtr FieldEditorComponent::getCommandManager(void) const
 {
     return _CmdManager;
 }
+
 inline
 void FieldEditorComponent::attachFieldCallback(void)
 {

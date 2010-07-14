@@ -50,6 +50,10 @@
 #include "OSGAttachmentContainer.h"
 #include "OSGNameAttachment.h"
 #include "OSGFilePathAttachment.h"
+#include "OSGPointerSFieldBase.h"
+#include "OSGFieldContainerSFieldHandle.h"
+#include "OSGPointerMFieldBase.h"
+#include "OSGFieldContainerMFieldHandle.h"
 
 #include "OSGXMLFCFileType.h"
 #include "OSGNode.h"
@@ -378,12 +382,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                             {
                                 //Check if the type of the FieldContainer Pointed to is derived from the type
                                 //expected for this field
-                                if(isFieldContentDerivedFrom( Desc->getFieldType(),&(TheFC->getType())))
-                                {
-
-                                    static_cast<SFUnrecFieldContainerPtr *>(TheFieldHandle->getField())->setValue(TheFC);
-                                }
-                                else
+                                if(!isFieldContentDerivedFrom( Desc->getFieldType(),&(TheFC->getType())))
                                 {
                                     printXMLSemanticError( "Attempting to assign a FieldContainerUnrecPtr to field: " 
                                                             + std::string(Desc->getCName()) + " of different types. Type of field: " 
@@ -392,13 +391,10 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                                            StreamText,
                                                            AttributeIterator->value() - StreamText.c_str(),
                                                            FileNameOrExtension);
-                                    static_cast<SFUnrecFieldContainerPtr *>(TheFieldHandle->getField())->setValue(NULL);
+                                    TheFC = NULL;
                                 }
                             }
-                            else
-                            {
-                                static_cast<SFUnrecFieldContainerPtr *>(TheFieldHandle->getField())->setValue(NULL);
-                            }
+                            dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->set(TheFC);
                         }
                         else if(Desc->getFieldType().getCardinality() == FieldType::MultiField &&
                             !FieldValue.empty())
@@ -447,7 +443,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                     //expected for this field
                                     if(isFieldContentDerivedFrom( Desc->getFieldType(),&(TheFC->getType())))
                                     {
-                                        static_cast<MFUnrecFieldContainerPtr *>(TheFieldHandle->getField())->push_back(TheFC);
+                                        dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->add(TheFC);
                                     }
                                     else
                                     {
@@ -462,7 +458,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
 								else if(FCId == 0)
 								{
 									//Push NULL
-									static_cast<MFUnrecFieldContainerPtr *>(TheFieldHandle->getField())->push_back(NULL);
+                                    dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->add(NULL);
 								}
                                 
                             }

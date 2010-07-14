@@ -509,7 +509,7 @@ LookAndFeelBase::LookAndFeelBase(void) :
     _mfPrototypes             (),
     _sfTextCaretRate          (Time(1.0)),
     _sfToolTipPopupTime       (Time(1.5)),
-    _sfSubMenuPopupTime       (Time(0.25)),
+    _sfSubMenuPopupTime       (Time(0.15)),
     _sfKeyAcceleratorMenuFlashTime(Time(0.15))
 {
 }

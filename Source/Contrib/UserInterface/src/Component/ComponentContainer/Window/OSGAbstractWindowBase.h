@@ -113,7 +113,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
         IsSelectedFieldId = ResizableFieldId + 1,
         TitleFieldId = IsSelectedFieldId + 1,
         DesktopIconFieldId = TitleFieldId + 1,
-        AllwaysOnTopFieldId = DesktopIconFieldId + 1,
+        ModalFieldId = DesktopIconFieldId + 1,
+        AllwaysOnTopFieldId = ModalFieldId + 1,
         DrawTitlebarFieldId = AllwaysOnTopFieldId + 1,
         DrawDecorationsFieldId = DrawTitlebarFieldId + 1,
         LockInputFieldId = DrawDecorationsFieldId + 1,
@@ -145,6 +146,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
         (TypeTraits<BitVector>::One << TitleFieldId);
     static const OSG::BitVector DesktopIconFieldMask =
         (TypeTraits<BitVector>::One << DesktopIconFieldId);
+    static const OSG::BitVector ModalFieldMask =
+        (TypeTraits<BitVector>::One << ModalFieldId);
     static const OSG::BitVector AllwaysOnTopFieldMask =
         (TypeTraits<BitVector>::One << AllwaysOnTopFieldId);
     static const OSG::BitVector DrawTitlebarFieldMask =
@@ -173,6 +176,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
     typedef SFBool            SFIsSelectedType;
     typedef SFString          SFTitleType;
     typedef SFUnrecUIDrawObjectCanvasPtr SFDesktopIconType;
+    typedef SFBool            SFModalType;
     typedef SFBool            SFAllwaysOnTopType;
     typedef SFBool            SFDrawTitlebarType;
     typedef SFBool            SFDrawDecorationsType;
@@ -252,6 +256,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
             const SFUnrecUIDrawObjectCanvasPtr *getSFDesktopIcon    (void) const;
                   SFUnrecUIDrawObjectCanvasPtr *editSFDesktopIcon    (void);
 
+                  SFBool              *editSFModal          (void);
+            const SFBool              *getSFModal           (void) const;
+
                   SFBool              *editSFAllwaysOnTop   (void);
             const SFBool              *getSFAllwaysOnTop    (void) const;
 
@@ -305,6 +312,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
 
                   UIDrawObjectCanvas * getDesktopIcon    (void) const;
 
+                  bool                &editModal          (void);
+                  bool                 getModal           (void) const;
+
                   bool                &editAllwaysOnTop   (void);
                   bool                 getAllwaysOnTop    (void) const;
 
@@ -342,6 +352,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
             void setIsSelected     (const bool value);
             void setTitle          (const std::string &value);
             void setDesktopIcon    (UIDrawObjectCanvas * const value);
+            void setModal          (const bool value);
             void setAllwaysOnTop   (const bool value);
             void setDrawTitlebar   (const bool value);
             void setDrawDecorations(const bool value);
@@ -405,6 +416,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
     SFBool            _sfIsSelected;
     SFString          _sfTitle;
     SFUnrecUIDrawObjectCanvasPtr _sfDesktopIcon;
+    SFBool            _sfModal;
     SFBool            _sfAllwaysOnTop;
     SFBool            _sfDrawTitlebar;
     SFBool            _sfDrawDecorations;
@@ -462,6 +474,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
     EditFieldHandlePtr editHandleTitle          (void);
     GetFieldHandlePtr  getHandleDesktopIcon     (void) const;
     EditFieldHandlePtr editHandleDesktopIcon    (void);
+    GetFieldHandlePtr  getHandleModal           (void) const;
+    EditFieldHandlePtr editHandleModal          (void);
     GetFieldHandlePtr  getHandleAllwaysOnTop    (void) const;
     EditFieldHandlePtr editHandleAllwaysOnTop   (void);
     GetFieldHandlePtr  getHandleDrawTitlebar    (void) const;

@@ -56,6 +56,8 @@
 #include "OSGEventConnection.h"
 #include "OSGComboBox.h"
 #include "OSGTextField.h"
+#include "OSGColorChooser.h"
+#include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,6 +96,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
     typedef DialogWindowBase Inherited;
     typedef DialogWindow     Self;
 
+    typedef std::vector<boost::any> TransientObjectVector;
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -122,9 +126,24 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
 	
 	virtual void close(UInt32 intOption, std::string strInput);
     
-	static DialogWindowRefPtr createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
-	static DialogWindowRefPtr createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
+	static DialogWindowUnrecPtr createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
+	static DialogWindowUnrecPtr createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
 	
+    static DialogWindowUnrecPtr createColorChooserDialog(const std::string& Title, 
+                                                           const std::string& Message, 
+                                                           bool showAlpha,
+                                                           ColorSelectionModelPtr colorModel,
+                                                           bool showCancel, 
+                                                           const std::string& ConfirmBtnText = "OK", 
+                                                           const std::string& CancelBtnText = "Cancel");
+
+    ActionListener* getConfirmButtonListener(void);
+    ActionListener* getCancelButtonListener (void);
+    ActionListener* getInputButtonListener  (void);
+    ActionListener* getComboButtonListener  (void);
+    ActionListener* getTextButtonListener   (void);
+
+    void addTransientObject(const boost::any& obj);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -161,6 +180,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    ConfirmButtonListener _ConfirmButtonListener;
 
     class CancelButtonListener : public ActionListener
     {
@@ -170,6 +190,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    CancelButtonListener _CancelButtonListener;
 
     class InputButtonListener : public ActionListener
     {
@@ -179,6 +200,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    InputButtonListener _InputButtonListener;
 
     class ComboButtonListener : public ActionListener
     {
@@ -188,6 +210,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    ComboButtonListener _ComboButtonListener;
 
     class TextButtonListener : public ActionListener
     {
@@ -197,6 +220,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
       protected :
         DialogWindowRefPtr _DialogWindow;
     };
+    TextButtonListener _TextButtonListener;
 
     typedef std::set<DialogWindowListenerPtr> DialogWindowListenerSet;
     typedef DialogWindowListenerSet::iterator DialogWindowListenerSetItor;
@@ -218,6 +242,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
 
 	static TextAreaRefPtr createTransparentTextArea(const std::string& Message);
 	static void handleInputButton(const ButtonRefPtr& btn);
+
+    TransientObjectVector _TransientObjects;
     /*==========================  PRIVATE  ================================*/
 
   private:

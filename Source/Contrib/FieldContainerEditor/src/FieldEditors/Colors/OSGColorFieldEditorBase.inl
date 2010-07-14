@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Skeleton!
+ **     class ColorFieldEditor!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -53,33 +53,20 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &SkeletonBase::getClassType(void)
+OSG::FieldContainerType &ColorFieldEditorBase::getClassType(void)
 {
     return _type;
 }
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SkeletonBase::getClassTypeId(void)
+OSG::UInt32 ColorFieldEditorBase::getClassTypeId(void)
 {
     return _type.getId();
 }
-//! access the producer type of the class
-inline
-const EventProducerType &SkeletonBase::getProducerClassType(void)
-{
-    return _producerType;
-}
-
-//! access the producer type id of the class
-inline
-UInt32 SkeletonBase::getProducerClassTypeId(void)
-{
-    return _producerType.getId();
-}
 
 inline
-OSG::UInt16 SkeletonBase::getClassGroupId(void)
+OSG::UInt16 ColorFieldEditorBase::getClassGroupId(void)
 {
     return _type.getGroupId();
 }
@@ -87,107 +74,26 @@ OSG::UInt16 SkeletonBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
-//! Get the value of the \a index element the Skeleton::_mfRootJoints field.
-inline
-Joint * SkeletonBase::getRootJoints(const UInt32 index) const
-{
-    return _mfRootJoints[index];
-}
-
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
-void SkeletonBase::execSync (      SkeletonBase *pFrom,
+void ColorFieldEditorBase::execSync (      ColorFieldEditorBase *pFrom,
                                         ConstFieldMaskArg  whichField,
                                         AspectOffsetStore &oOffsets,
                                         ConstFieldMaskArg  syncMode,
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
-
-    if(FieldBits::NoField != (RootJointsFieldMask & whichField))
-        _mfRootJoints.syncWith(pFrom->_mfRootJoints,
-                                syncMode,
-                                uiSyncInfo,
-                                oOffsets);
 }
 #endif
 
 
 inline
-const Char8 *SkeletonBase::getClassname(void)
+const Char8 *ColorFieldEditorBase::getClassname(void)
 {
-    return "Skeleton";
+    return "ColorFieldEditor";
 }
-
-inline
-EventConnection SkeletonBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool SkeletonBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 SkeletonBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr SkeletonBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void SkeletonBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 SkeletonBase::getNumProducedEvents(void) const
-{
-    return _Producer.getNumProducedEvents();
-}
-
-inline
-const MethodDescription *SkeletonBase::getProducedEventDescription(const std::string &ProducedEventName) const
-{
-    return _Producer.getProducedEventDescription(ProducedEventName);
-}
-
-inline
-const MethodDescription *SkeletonBase::getProducedEventDescription(UInt32 ProducedEventId) const
-{
-    return _Producer.getProducedEventDescription(ProducedEventId);
-}
-
-inline
-UInt32 SkeletonBase::getProducedEventId(const std::string &ProducedEventName) const
-{
-    return _Producer.getProducedEventId(ProducedEventName);
-}
-
-inline
-SFEventProducerPtr *SkeletonBase::editSFEventProducer(void)
-{
-    return &_sfEventProducer;
-}
-
-//! Get the value of the Skeleton::_sfEventProducer field.
-inline
-EventProducerPtr &SkeletonBase::editEventProducer(void)
-{
-    return _sfEventProducer.getValue();
-}
-
-OSG_GEN_CONTAINERPTR(Skeleton);
+OSG_GEN_CONTAINERPTR(ColorFieldEditor);
 
 OSG_END_NAMESPACE
 

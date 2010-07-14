@@ -82,6 +82,26 @@ void List::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+Vec2f List::getContentRequestedSize(void) const
+{
+    UInt32 ListLength;
+    if(getModel() != NULL)
+    {
+        ListLength = getModel()->getSize();
+    }
+    else
+    {
+        ListLength = 0;
+    }
+    if(getOrientation() == List::VERTICAL_ORIENTATION)
+    {
+        return Vec2f(getPreferredSize().x(), getCellMajorAxisLength()*ListLength);
+    }
+    else
+    {
+        return Vec2f(getCellMajorAxisLength()*ListLength, getPreferredSize().y());
+    }
+}
 
 ComponentRefPtr List::getComponentAtPoint(const MouseEventUnrecPtr e)
 {
@@ -814,23 +834,7 @@ ComponentRefPtr List::createIndexComponent(const UInt32& Index)
 
 void List::updatePreferredSize(void)
 {
-    UInt32 ListLength;
-    if(getModel() != NULL)
-    {
-        ListLength = getModel()->getSize();
-    }
-    else
-    {
-        ListLength = 0;
-    }
-    if(getOrientation() == List::VERTICAL_ORIENTATION)
-    {
-        setPreferredSize(Vec2f(getPreferredSize().x(), getCellMajorAxisLength()*ListLength));
-    }
-    else
-    {
-        setPreferredSize(Vec2f(getCellMajorAxisLength()*ListLength, getPreferredSize().y()));
-    }
+    setPreferredSize(getRequestedSize());
 }
 
 void List::focusIndex(const Int32& Index)

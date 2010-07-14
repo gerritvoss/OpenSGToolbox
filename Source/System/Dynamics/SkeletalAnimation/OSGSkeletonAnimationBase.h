@@ -67,7 +67,7 @@
 
 #include "OSGKeyframeAnimatorFields.h"  // TransformationAnimators type
 #include "OSGJointFields.h"             // AnimatorJoints type
-#include "OSGSkeletonFields.h"          // Skeleton type
+#include "OSGSkeletonBlendedGeometryFields.h" // Skeleton type
 #include "OSGSysFields.h"               // InterpolationType type
 
 #include "OSGSkeletonAnimationFields.h"
@@ -116,7 +116,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonAnimationBase : public Animation
         
     typedef MFUnrecKeyframeAnimatorPtr MFTransformationAnimatorsType;
     typedef MFUnrecJointPtr   MFAnimatorJointsType;
-    typedef SFUnrecSkeletonPtr SFSkeletonType;
+    typedef SFUnrecSkeletonBlendedGeometryPtr SFSkeletonType;
     typedef SFUInt32          SFInterpolationTypeType;
 
     /*---------------------------------------------------------------------*/
@@ -142,14 +142,14 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonAnimationBase : public Animation
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecSkeletonPtr  *getSFSkeleton       (void) const;
-                  SFUnrecSkeletonPtr  *editSFSkeleton       (void);
+            const SFUnrecSkeletonBlendedGeometryPtr *getSFSkeleton       (void) const;
+                  SFUnrecSkeletonBlendedGeometryPtr *editSFSkeleton       (void);
 
                   SFUInt32            *editSFInterpolationType(void);
             const SFUInt32            *getSFInterpolationType (void) const;
 
 
-                  Skeleton * getSkeleton       (void) const;
+                  SkeletonBlendedGeometry * getSkeleton       (void) const;
 
                   UInt32              &editInterpolationType(void);
                   UInt32               getInterpolationType (void) const;
@@ -159,7 +159,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonAnimationBase : public Animation
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setSkeleton       (Skeleton * const value);
+            void setSkeleton       (SkeletonBlendedGeometry * const value);
             void setInterpolationType(const UInt32 value);
 
     /*! \}                                                                 */
@@ -227,7 +227,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonAnimationBase : public Animation
 
     MFUnrecKeyframeAnimatorPtr _mfTransformationAnimators;
     MFUnrecJointPtr   _mfAnimatorJoints;
-    SFUnrecSkeletonPtr _sfSkeleton;
+    SFUnrecSkeletonBlendedGeometryPtr _sfSkeleton;
     SFUInt32          _sfInterpolationType;
 
     /*! \}                                                                 */

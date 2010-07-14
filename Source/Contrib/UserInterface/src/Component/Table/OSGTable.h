@@ -125,6 +125,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
 
     virtual void updateLayout(void);
 
+	virtual Vec2f getContentRequestedSize(void) const;
+
 	//Sent when the contents of the table header row has changed
 	virtual void contentsHeaderRowChanged(const TableModelEventUnrecPtr e);
 	

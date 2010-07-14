@@ -124,12 +124,13 @@ void AddFieldElementCommand::execute(void)
         TheFieldHandle->pushValueFromCString(_Value.c_str());
     }
 
+    Inherited::execute();
 	_HasBeenDone = true;
 }
 
 std::string AddFieldElementCommand::getCommandDescription(void) const
 {
-    EditFieldHandlePtr TheFieldHandle = _FC->editField(_FieldId);
+    GetFieldHandlePtr TheFieldHandle = _FC->getField(_FieldId);
 
 	std::string Description("");
 

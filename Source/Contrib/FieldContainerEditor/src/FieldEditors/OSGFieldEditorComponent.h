@@ -129,6 +129,9 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponent : public F
     virtual void internalStopEditing  (void                        ) = 0;
     virtual void internalCancelEditing(void                        ) = 0;
 
+    virtual bool internalAttachField (FieldContainer* fc, UInt32 fieldId, UInt32 index);
+    virtual bool internalDettachField(void);
+
 
     void attachFieldCallback (void);
     void dettachFieldCallback(void);

@@ -59,13 +59,16 @@
 
 
 #include "OSGGeometry.h"                // BaseGeometry Class
-#include "OSGJoint.h"                   // Joints Class
-#include "OSGSkeleton.h"                // Skeletons Class
+#include "OSGGeoIntegralProperty.h"     // InternalWeightIndexes Class
+#include "OSGGeoVectorProperty.h"       // InternalWeights Class
+#include "OSGJoint.h"                   // InternalJoints Class
 
 #include "OSGSkeletonBlendedGeometryBase.h"
 #include "OSGSkeletonBlendedGeometry.h"
 
 #include <boost/bind.hpp>
+
+#include "OSGEvent.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -89,23 +92,31 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var Joint *         SkeletonBlendedGeometryBase::_mfJoints
+/*! \var GeoIntegralProperty * SkeletonBlendedGeometryBase::_sfInternalWeightIndexes
     
 */
 
-/*! \var UInt32          SkeletonBlendedGeometryBase::_mfPositionIndexes
-    
-*/
-
-/*! \var Real32          SkeletonBlendedGeometryBase::_mfBlendAmounts
-    
-*/
-
-/*! \var Skeleton *      SkeletonBlendedGeometryBase::_mfSkeletons
+/*! \var GeoVectorProperty * SkeletonBlendedGeometryBase::_sfInternalWeights
     
 */
 
 /*! \var UInt32          SkeletonBlendedGeometryBase::_sfBlendMode
+    
+*/
+
+/*! \var Joint *         SkeletonBlendedGeometryBase::_mfInternalJoints
+    
+*/
+
+/*! \var Matrix          SkeletonBlendedGeometryBase::_mfInternalJointBindTransformations
+    
+*/
+
+/*! \var Matrix          SkeletonBlendedGeometryBase::_mfInternalJointInvBindTransformations
+    
+*/
+
+/*! \var Matrix          SkeletonBlendedGeometryBase::_sfBindTransformation
     
 */
 
@@ -149,51 +160,27 @@ void SkeletonBlendedGeometryBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new MFUnrecJointPtr::Description(
-        MFUnrecJointPtr::getClassType(),
-        "Joints",
+    pDesc = new SFUnrecChildGeoIntegralPropertyPtr::Description(
+        SFUnrecChildGeoIntegralPropertyPtr::getClassType(),
+        "InternalWeightIndexes",
         "",
-        JointsFieldId, JointsFieldMask,
+        InternalWeightIndexesFieldId, InternalWeightIndexesFieldMask,
         false,
-        (Field::MFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleJoints),
-        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleJoints));
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleInternalWeightIndexes),
+        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleInternalWeightIndexes));
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new MFUInt32::Description(
-        MFUInt32::getClassType(),
-        "PositionIndexes",
+    pDesc = new SFUnrecChildGeoVectorPropertyPtr::Description(
+        SFUnrecChildGeoVectorPropertyPtr::getClassType(),
+        "InternalWeights",
         "",
-        PositionIndexesFieldId, PositionIndexesFieldMask,
+        InternalWeightsFieldId, InternalWeightsFieldMask,
         false,
-        (Field::MFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandlePositionIndexes),
-        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandlePositionIndexes));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new MFReal32::Description(
-        MFReal32::getClassType(),
-        "BlendAmounts",
-        "",
-        BlendAmountsFieldId, BlendAmountsFieldMask,
-        false,
-        (Field::MFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleBlendAmounts),
-        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleBlendAmounts));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new MFUnrecSkeletonPtr::Description(
-        MFUnrecSkeletonPtr::getClassType(),
-        "Skeletons",
-        "",
-        SkeletonsFieldId, SkeletonsFieldMask,
-        false,
-        (Field::MFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleSkeletons),
-        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleSkeletons));
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleInternalWeights),
+        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleInternalWeights));
 
     oType.addInitialDesc(pDesc);
 
@@ -206,6 +193,65 @@ void SkeletonBlendedGeometryBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleBlendMode),
         static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleBlendMode));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFUnrecJointPtr::Description(
+        MFUnrecJointPtr::getClassType(),
+        "InternalJoints",
+        "",
+        InternalJointsFieldId, InternalJointsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleInternalJoints),
+        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleInternalJoints));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFMatrix::Description(
+        MFMatrix::getClassType(),
+        "InternalJointBindTransformations",
+        "",
+        InternalJointBindTransformationsFieldId, InternalJointBindTransformationsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleInternalJointBindTransformations),
+        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleInternalJointBindTransformations));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFMatrix::Description(
+        MFMatrix::getClassType(),
+        "InternalJointInvBindTransformations",
+        "",
+        InternalJointInvBindTransformationsFieldId, InternalJointInvBindTransformationsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleInternalJointInvBindTransformations),
+        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleInternalJointInvBindTransformations));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFMatrix::Description(
+        SFMatrix::getClassType(),
+        "BindTransformation",
+        "",
+        BindTransformationFieldId, BindTransformationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleBindTransformation),
+        static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleBindTransformation));
+
+    oType.addInitialDesc(pDesc);
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleEventProducer),
+        static_cast     <FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleEventProducer));
 
     oType.addInitialDesc(pDesc);
 }
@@ -246,39 +292,25 @@ SkeletonBlendedGeometryBase::TypeObject SkeletonBlendedGeometryBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
-    "\t\tname=\"Joints\"\n"
-    "\t\ttype=\"Joint\"\n"
-    "        category=\"pointer\"\n"
-    "\t\tcardinality=\"multi\"\n"
+    "\t\tname=\"InternalWeightIndexes\"\n"
+    "\t\ttype=\"GeoIntegralProperty\"\n"
+    "        category=\"childpointer\"\n"
+    "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"protected\"\n"
+    "\t\tchildParentType=\"FieldContainer\"\n"
+    "\t\tlinkParentField=\"Parents\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
-    "\t\tname=\"PositionIndexes\"\n"
-    "\t\ttype=\"UInt32\"\n"
-    "        category=\"data\"\n"
-    "\t\tcardinality=\"multi\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"BlendAmounts\"\n"
-    "\t\ttype=\"Real32\"\n"
-    "        category=\"data\"\n"
-    "\t\tcardinality=\"multi\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Skeletons\"\n"
-    "\t\ttype=\"Skeleton\"\n"
-    "        category=\"pointer\"\n"
-    "\t\tcardinality=\"multi\"\n"
+    "\t\tname=\"InternalWeights\"\n"
+    "\t\ttype=\"GeoVectorProperty\"\n"
+    "        category=\"childpointer\"\n"
+    "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
+    "\t\tchildParentType=\"FieldContainer\"\n"
+    "\t\tlinkParentField=\"Parents\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
@@ -290,9 +322,69 @@ SkeletonBlendedGeometryBase::TypeObject SkeletonBlendedGeometryBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalJoints\"\n"
+    "\t\ttype=\"Joint\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalJointBindTransformations\"\n"
+    "\t\ttype=\"Matrix\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalJointInvBindTransformations\"\n"
+    "\t\ttype=\"Matrix\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BindTransformation\"\n"
+    "\t\ttype=\"Matrix\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"SkeletonChanged\"\n"
+    "\t\ttype=\"SkeletonEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
     "</FieldContainer>\n",
     ""
     );
+
+//! SkeletonBlendedGeometry Produced Methods
+
+MethodDescription *SkeletonBlendedGeometryBase::_methodDesc[] =
+{
+    new MethodDescription("SkeletonChanged", 
+                    "",
+                     SkeletonChangedMethodId, 
+                     SFUnrecEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType SkeletonBlendedGeometryBase::_producerType(
+    "SkeletonBlendedGeometryProducerType",
+    "EventProducerType",
+    "",
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -304,6 +396,11 @@ FieldContainerType &SkeletonBlendedGeometryBase::getType(void)
 const FieldContainerType &SkeletonBlendedGeometryBase::getType(void) const
 {
     return _type;
+}
+
+const EventProducerType &SkeletonBlendedGeometryBase::getProducerType(void) const
+{
+    return _producerType;
 }
 
 UInt32 SkeletonBlendedGeometryBase::getContainerSize(void) const
@@ -327,56 +424,30 @@ SFUnrecGeometryPtr  *SkeletonBlendedGeometryBase::editSFBaseGeometry   (void)
     return &_sfBaseGeometry;
 }
 
-//! Get the SkeletonBlendedGeometry::_mfJoints field.
-const MFUnrecJointPtr *SkeletonBlendedGeometryBase::getMFJoints(void) const
+//! Get the SkeletonBlendedGeometry::_sfInternalWeightIndexes field.
+const SFUnrecChildGeoIntegralPropertyPtr *SkeletonBlendedGeometryBase::getSFInternalWeightIndexes(void) const
 {
-    return &_mfJoints;
+    return &_sfInternalWeightIndexes;
 }
 
-MFUnrecJointPtr     *SkeletonBlendedGeometryBase::editMFJoints         (void)
+SFUnrecChildGeoIntegralPropertyPtr *SkeletonBlendedGeometryBase::editSFInternalWeightIndexes(void)
 {
-    editMField(JointsFieldMask, _mfJoints);
+    editSField(InternalWeightIndexesFieldMask);
 
-    return &_mfJoints;
+    return &_sfInternalWeightIndexes;
 }
 
-MFUInt32 *SkeletonBlendedGeometryBase::editMFPositionIndexes(void)
+//! Get the SkeletonBlendedGeometry::_sfInternalWeights field.
+const SFUnrecChildGeoVectorPropertyPtr *SkeletonBlendedGeometryBase::getSFInternalWeights(void) const
 {
-    editMField(PositionIndexesFieldMask, _mfPositionIndexes);
-
-    return &_mfPositionIndexes;
+    return &_sfInternalWeights;
 }
 
-const MFUInt32 *SkeletonBlendedGeometryBase::getMFPositionIndexes(void) const
+SFUnrecChildGeoVectorPropertyPtr *SkeletonBlendedGeometryBase::editSFInternalWeights(void)
 {
-    return &_mfPositionIndexes;
-}
+    editSField(InternalWeightsFieldMask);
 
-
-MFReal32 *SkeletonBlendedGeometryBase::editMFBlendAmounts(void)
-{
-    editMField(BlendAmountsFieldMask, _mfBlendAmounts);
-
-    return &_mfBlendAmounts;
-}
-
-const MFReal32 *SkeletonBlendedGeometryBase::getMFBlendAmounts(void) const
-{
-    return &_mfBlendAmounts;
-}
-
-
-//! Get the SkeletonBlendedGeometry::_mfSkeletons field.
-const MFUnrecSkeletonPtr *SkeletonBlendedGeometryBase::getMFSkeletons(void) const
-{
-    return &_mfSkeletons;
-}
-
-MFUnrecSkeletonPtr  *SkeletonBlendedGeometryBase::editMFSkeletons      (void)
-{
-    editMField(SkeletonsFieldMask, _mfSkeletons);
-
-    return &_mfSkeletons;
+    return &_sfInternalWeights;
 }
 
 SFUInt32 *SkeletonBlendedGeometryBase::editSFBlendMode(void)
@@ -392,112 +463,111 @@ const SFUInt32 *SkeletonBlendedGeometryBase::getSFBlendMode(void) const
 }
 
 
-
-
-void SkeletonBlendedGeometryBase::pushToJoints(Joint * const value)
+//! Get the SkeletonBlendedGeometry::_mfInternalJoints field.
+const MFUnrecJointPtr *SkeletonBlendedGeometryBase::getMFInternalJoints(void) const
 {
-    editMField(JointsFieldMask, _mfJoints);
-
-    _mfJoints.push_back(value);
+    return &_mfInternalJoints;
 }
 
-void SkeletonBlendedGeometryBase::assignJoints   (const MFUnrecJointPtr   &value)
+MFUnrecJointPtr     *SkeletonBlendedGeometryBase::editMFInternalJoints (void)
+{
+    editMField(InternalJointsFieldMask, _mfInternalJoints);
+
+    return &_mfInternalJoints;
+}
+
+MFMatrix *SkeletonBlendedGeometryBase::editMFInternalJointBindTransformations(void)
+{
+    editMField(InternalJointBindTransformationsFieldMask, _mfInternalJointBindTransformations);
+
+    return &_mfInternalJointBindTransformations;
+}
+
+const MFMatrix *SkeletonBlendedGeometryBase::getMFInternalJointBindTransformations(void) const
+{
+    return &_mfInternalJointBindTransformations;
+}
+
+
+MFMatrix *SkeletonBlendedGeometryBase::editMFInternalJointInvBindTransformations(void)
+{
+    editMField(InternalJointInvBindTransformationsFieldMask, _mfInternalJointInvBindTransformations);
+
+    return &_mfInternalJointInvBindTransformations;
+}
+
+const MFMatrix *SkeletonBlendedGeometryBase::getMFInternalJointInvBindTransformations(void) const
+{
+    return &_mfInternalJointInvBindTransformations;
+}
+
+
+SFMatrix *SkeletonBlendedGeometryBase::editSFBindTransformation(void)
+{
+    editSField(BindTransformationFieldMask);
+
+    return &_sfBindTransformation;
+}
+
+const SFMatrix *SkeletonBlendedGeometryBase::getSFBindTransformation(void) const
+{
+    return &_sfBindTransformation;
+}
+
+
+
+
+void SkeletonBlendedGeometryBase::pushToInternalJoints(Joint * const value)
+{
+    editMField(InternalJointsFieldMask, _mfInternalJoints);
+
+    _mfInternalJoints.push_back(value);
+}
+
+void SkeletonBlendedGeometryBase::assignInternalJoints(const MFUnrecJointPtr   &value)
 {
     MFUnrecJointPtr  ::const_iterator elemIt  =
         value.begin();
     MFUnrecJointPtr  ::const_iterator elemEnd =
         value.end  ();
 
-    static_cast<SkeletonBlendedGeometry *>(this)->clearJoints();
+    static_cast<SkeletonBlendedGeometry *>(this)->clearInternalJoints();
 
     while(elemIt != elemEnd)
     {
-        this->pushToJoints(*elemIt);
+        this->pushToInternalJoints(*elemIt);
 
         ++elemIt;
     }
 }
 
-void SkeletonBlendedGeometryBase::removeFromJoints(UInt32 uiIndex)
+void SkeletonBlendedGeometryBase::removeFromInternalJoints(UInt32 uiIndex)
 {
-    if(uiIndex < _mfJoints.size())
+    if(uiIndex < _mfInternalJoints.size())
     {
-        editMField(JointsFieldMask, _mfJoints);
+        editMField(InternalJointsFieldMask, _mfInternalJoints);
 
-        _mfJoints.erase(uiIndex);
+        _mfInternalJoints.erase(uiIndex);
     }
 }
 
-void SkeletonBlendedGeometryBase::removeObjFromJoints(Joint * const value)
+void SkeletonBlendedGeometryBase::removeObjFromInternalJoints(Joint * const value)
 {
-    Int32 iElemIdx = _mfJoints.findIndex(value);
+    Int32 iElemIdx = _mfInternalJoints.findIndex(value);
 
     if(iElemIdx != -1)
     {
-        editMField(JointsFieldMask, _mfJoints);
+        editMField(InternalJointsFieldMask, _mfInternalJoints);
 
-        _mfJoints.erase(iElemIdx);
+        _mfInternalJoints.erase(iElemIdx);
     }
 }
-void SkeletonBlendedGeometryBase::clearJoints(void)
+void SkeletonBlendedGeometryBase::clearInternalJoints(void)
 {
-    editMField(JointsFieldMask, _mfJoints);
+    editMField(InternalJointsFieldMask, _mfInternalJoints);
 
 
-    _mfJoints.clear();
-}
-
-void SkeletonBlendedGeometryBase::pushToSkeletons(Skeleton * const value)
-{
-    editMField(SkeletonsFieldMask, _mfSkeletons);
-
-    _mfSkeletons.push_back(value);
-}
-
-void SkeletonBlendedGeometryBase::assignSkeletons(const MFUnrecSkeletonPtr &value)
-{
-    MFUnrecSkeletonPtr::const_iterator elemIt  =
-        value.begin();
-    MFUnrecSkeletonPtr::const_iterator elemEnd =
-        value.end  ();
-
-    static_cast<SkeletonBlendedGeometry *>(this)->clearSkeletons();
-
-    while(elemIt != elemEnd)
-    {
-        this->pushToSkeletons(*elemIt);
-
-        ++elemIt;
-    }
-}
-
-void SkeletonBlendedGeometryBase::removeFromSkeletons(UInt32 uiIndex)
-{
-    if(uiIndex < _mfSkeletons.size())
-    {
-        editMField(SkeletonsFieldMask, _mfSkeletons);
-
-        _mfSkeletons.erase(uiIndex);
-    }
-}
-
-void SkeletonBlendedGeometryBase::removeObjFromSkeletons(Skeleton * const value)
-{
-    Int32 iElemIdx = _mfSkeletons.findIndex(value);
-
-    if(iElemIdx != -1)
-    {
-        editMField(SkeletonsFieldMask, _mfSkeletons);
-
-        _mfSkeletons.erase(iElemIdx);
-    }
-}
-void SkeletonBlendedGeometryBase::clearSkeletons(void)
-{
-    editMField(SkeletonsFieldMask, _mfSkeletons);
-
-
-    _mfSkeletons.clear();
+    _mfInternalJoints.clear();
 }
 
 
@@ -512,25 +582,37 @@ UInt32 SkeletonBlendedGeometryBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfBaseGeometry.getBinSize();
     }
-    if(FieldBits::NoField != (JointsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalWeightIndexesFieldMask & whichField))
     {
-        returnValue += _mfJoints.getBinSize();
+        returnValue += _sfInternalWeightIndexes.getBinSize();
     }
-    if(FieldBits::NoField != (PositionIndexesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalWeightsFieldMask & whichField))
     {
-        returnValue += _mfPositionIndexes.getBinSize();
-    }
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-    {
-        returnValue += _mfBlendAmounts.getBinSize();
-    }
-    if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
-    {
-        returnValue += _mfSkeletons.getBinSize();
+        returnValue += _sfInternalWeights.getBinSize();
     }
     if(FieldBits::NoField != (BlendModeFieldMask & whichField))
     {
         returnValue += _sfBlendMode.getBinSize();
+    }
+    if(FieldBits::NoField != (InternalJointsFieldMask & whichField))
+    {
+        returnValue += _mfInternalJoints.getBinSize();
+    }
+    if(FieldBits::NoField != (InternalJointBindTransformationsFieldMask & whichField))
+    {
+        returnValue += _mfInternalJointBindTransformations.getBinSize();
+    }
+    if(FieldBits::NoField != (InternalJointInvBindTransformationsFieldMask & whichField))
+    {
+        returnValue += _mfInternalJointInvBindTransformations.getBinSize();
+    }
+    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+    {
+        returnValue += _sfBindTransformation.getBinSize();
+    }
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
     }
 
     return returnValue;
@@ -545,25 +627,37 @@ void SkeletonBlendedGeometryBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfBaseGeometry.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (JointsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalWeightIndexesFieldMask & whichField))
     {
-        _mfJoints.copyToBin(pMem);
+        _sfInternalWeightIndexes.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (PositionIndexesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalWeightsFieldMask & whichField))
     {
-        _mfPositionIndexes.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-    {
-        _mfBlendAmounts.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
-    {
-        _mfSkeletons.copyToBin(pMem);
+        _sfInternalWeights.copyToBin(pMem);
     }
     if(FieldBits::NoField != (BlendModeFieldMask & whichField))
     {
         _sfBlendMode.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (InternalJointsFieldMask & whichField))
+    {
+        _mfInternalJoints.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (InternalJointBindTransformationsFieldMask & whichField))
+    {
+        _mfInternalJointBindTransformations.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (InternalJointInvBindTransformationsFieldMask & whichField))
+    {
+        _mfInternalJointInvBindTransformations.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+    {
+        _sfBindTransformation.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 }
 
@@ -576,25 +670,37 @@ void SkeletonBlendedGeometryBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfBaseGeometry.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (JointsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalWeightIndexesFieldMask & whichField))
     {
-        _mfJoints.copyFromBin(pMem);
+        _sfInternalWeightIndexes.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (PositionIndexesFieldMask & whichField))
+    if(FieldBits::NoField != (InternalWeightsFieldMask & whichField))
     {
-        _mfPositionIndexes.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-    {
-        _mfBlendAmounts.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
-    {
-        _mfSkeletons.copyFromBin(pMem);
+        _sfInternalWeights.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (BlendModeFieldMask & whichField))
     {
         _sfBlendMode.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (InternalJointsFieldMask & whichField))
+    {
+        _mfInternalJoints.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (InternalJointBindTransformationsFieldMask & whichField))
+    {
+        _mfInternalJointBindTransformations.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (InternalJointInvBindTransformationsFieldMask & whichField))
+    {
+        _mfInternalJointInvBindTransformations.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+    {
+        _sfBindTransformation.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
     }
 }
 
@@ -720,24 +826,40 @@ FieldContainerTransitPtr SkeletonBlendedGeometryBase::shallowCopy(void) const
 /*------------------------- constructors ----------------------------------*/
 
 SkeletonBlendedGeometryBase::SkeletonBlendedGeometryBase(void) :
+    _Producer(&getProducerType()),
     Inherited(),
     _sfBaseGeometry           (NULL),
-    _mfJoints                 (),
-    _mfPositionIndexes        (),
-    _mfBlendAmounts           (),
-    _mfSkeletons              (),
-    _sfBlendMode              ()
+    _sfInternalWeightIndexes  (this,
+                          InternalWeightIndexesFieldId,
+                          GeoIntegralProperty::ParentsFieldId),
+    _sfInternalWeights        (this,
+                          InternalWeightsFieldId,
+                          GeoVectorProperty::ParentsFieldId),
+    _sfBlendMode              (),
+    _mfInternalJoints         (),
+    _mfInternalJointBindTransformations(),
+    _mfInternalJointInvBindTransformations(),
+    _sfBindTransformation     ()
+    ,_sfEventProducer(&_Producer)
 {
 }
 
 SkeletonBlendedGeometryBase::SkeletonBlendedGeometryBase(const SkeletonBlendedGeometryBase &source) :
+    _Producer(&source.getProducerType()),
     Inherited(source),
     _sfBaseGeometry           (NULL),
-    _mfJoints                 (),
-    _mfPositionIndexes        (source._mfPositionIndexes        ),
-    _mfBlendAmounts           (source._mfBlendAmounts           ),
-    _mfSkeletons              (),
-    _sfBlendMode              (source._sfBlendMode              )
+    _sfInternalWeightIndexes  (this,
+                          InternalWeightIndexesFieldId,
+                          GeoIntegralProperty::ParentsFieldId),
+    _sfInternalWeights        (this,
+                          InternalWeightsFieldId,
+                          GeoVectorProperty::ParentsFieldId),
+    _sfBlendMode              (source._sfBlendMode              ),
+    _mfInternalJoints         (),
+    _mfInternalJointBindTransformations(source._mfInternalJointBindTransformations),
+    _mfInternalJointInvBindTransformations(source._mfInternalJointInvBindTransformations),
+    _sfBindTransformation     (source._sfBindTransformation     )
+    ,_sfEventProducer(&_Producer)
 {
 }
 
@@ -746,6 +868,67 @@ SkeletonBlendedGeometryBase::SkeletonBlendedGeometryBase(const SkeletonBlendedGe
 
 SkeletonBlendedGeometryBase::~SkeletonBlendedGeometryBase(void)
 {
+}
+
+/*-------------------------------------------------------------------------*/
+/* Child linking                                                           */
+
+bool SkeletonBlendedGeometryBase::unlinkChild(
+    FieldContainer * const pChild,
+    UInt16           const childFieldId)
+{
+    if(childFieldId == InternalWeightIndexesFieldId)
+    {
+        GeoIntegralProperty * pTypedChild =
+            dynamic_cast<GeoIntegralProperty *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            if(pTypedChild == _sfInternalWeightIndexes.getValue())
+            {
+                editSField(InternalWeightIndexesFieldMask);
+
+                _sfInternalWeightIndexes.setValue(NULL);
+
+                return true;
+            }
+
+            FWARNING(("SkeletonBlendedGeometryBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    if(childFieldId == InternalWeightsFieldId)
+    {
+        GeoVectorProperty * pTypedChild =
+            dynamic_cast<GeoVectorProperty *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            if(pTypedChild == _sfInternalWeights.getValue())
+            {
+                editSField(InternalWeightsFieldMask);
+
+                _sfInternalWeights.setValue(NULL);
+
+                return true;
+            }
+
+            FWARNING(("SkeletonBlendedGeometryBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+
+    return Inherited::unlinkChild(pChild, childFieldId);
 }
 
 void SkeletonBlendedGeometryBase::onCreate(const SkeletonBlendedGeometry *source)
@@ -758,28 +941,20 @@ void SkeletonBlendedGeometryBase::onCreate(const SkeletonBlendedGeometry *source
 
         pThis->setBaseGeometry(source->getBaseGeometry());
 
-        MFUnrecJointPtr::const_iterator JointsIt  =
-            source->_mfJoints.begin();
-        MFUnrecJointPtr::const_iterator JointsEnd =
-            source->_mfJoints.end  ();
+        pThis->setInternalWeightIndexes(source->getInternalWeightIndexes());
 
-        while(JointsIt != JointsEnd)
+        pThis->setInternalWeights(source->getInternalWeights());
+
+        MFUnrecJointPtr::const_iterator InternalJointsIt  =
+            source->_mfInternalJoints.begin();
+        MFUnrecJointPtr::const_iterator InternalJointsEnd =
+            source->_mfInternalJoints.end  ();
+
+        while(InternalJointsIt != InternalJointsEnd)
         {
-            pThis->pushToJoints(*JointsIt);
+            pThis->pushToInternalJoints(*InternalJointsIt);
 
-            ++JointsIt;
-        }
-
-        MFUnrecSkeletonPtr::const_iterator SkeletonsIt  =
-            source->_mfSkeletons.begin();
-        MFUnrecSkeletonPtr::const_iterator SkeletonsEnd =
-            source->_mfSkeletons.end  ();
-
-        while(SkeletonsIt != SkeletonsEnd)
-        {
-            pThis->pushToSkeletons(*SkeletonsIt);
-
-            ++SkeletonsIt;
+            ++InternalJointsIt;
         }
     }
 }
@@ -812,126 +987,58 @@ EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleBaseGeometry   (void)
     return returnValue;
 }
 
-GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleJoints          (void) const
+GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleInternalWeightIndexes (void) const
 {
-    MFUnrecJointPtr::GetHandlePtr returnValue(
-        new  MFUnrecJointPtr::GetHandle(
-             &_mfJoints,
-             this->getType().getFieldDesc(JointsFieldId),
+    SFUnrecChildGeoIntegralPropertyPtr::GetHandlePtr returnValue(
+        new  SFUnrecChildGeoIntegralPropertyPtr::GetHandle(
+             &_sfInternalWeightIndexes,
+             this->getType().getFieldDesc(InternalWeightIndexesFieldId),
              const_cast<SkeletonBlendedGeometryBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleJoints         (void)
+EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleInternalWeightIndexes(void)
 {
-    MFUnrecJointPtr::EditHandlePtr returnValue(
-        new  MFUnrecJointPtr::EditHandle(
-             &_mfJoints,
-             this->getType().getFieldDesc(JointsFieldId),
+    SFUnrecChildGeoIntegralPropertyPtr::EditHandlePtr returnValue(
+        new  SFUnrecChildGeoIntegralPropertyPtr::EditHandle(
+             &_sfInternalWeightIndexes,
+             this->getType().getFieldDesc(InternalWeightIndexesFieldId),
              this));
 
-    returnValue->setAddMethod(
-        boost::bind(&SkeletonBlendedGeometry::pushToJoints,
+    returnValue->setSetMethod(
+        boost::bind(&SkeletonBlendedGeometry::setInternalWeightIndexes,
                     static_cast<SkeletonBlendedGeometry *>(this), _1));
-    returnValue->setRemoveMethod(
-        boost::bind(&SkeletonBlendedGeometry::removeFromJoints,
-                    static_cast<SkeletonBlendedGeometry *>(this), _1));
-    returnValue->setRemoveObjMethod(
-        boost::bind(&SkeletonBlendedGeometry::removeObjFromJoints,
-                    static_cast<SkeletonBlendedGeometry *>(this), _1));
-    returnValue->setClearMethod(
-        boost::bind(&SkeletonBlendedGeometry::clearJoints,
-                    static_cast<SkeletonBlendedGeometry *>(this)));
 
-    editMField(JointsFieldMask, _mfJoints);
+    editSField(InternalWeightIndexesFieldMask);
 
     return returnValue;
 }
 
-GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandlePositionIndexes (void) const
+GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleInternalWeights (void) const
 {
-    MFUInt32::GetHandlePtr returnValue(
-        new  MFUInt32::GetHandle(
-             &_mfPositionIndexes,
-             this->getType().getFieldDesc(PositionIndexesFieldId),
+    SFUnrecChildGeoVectorPropertyPtr::GetHandlePtr returnValue(
+        new  SFUnrecChildGeoVectorPropertyPtr::GetHandle(
+             &_sfInternalWeights,
+             this->getType().getFieldDesc(InternalWeightsFieldId),
              const_cast<SkeletonBlendedGeometryBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandlePositionIndexes(void)
+EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleInternalWeights(void)
 {
-    MFUInt32::EditHandlePtr returnValue(
-        new  MFUInt32::EditHandle(
-             &_mfPositionIndexes,
-             this->getType().getFieldDesc(PositionIndexesFieldId),
+    SFUnrecChildGeoVectorPropertyPtr::EditHandlePtr returnValue(
+        new  SFUnrecChildGeoVectorPropertyPtr::EditHandle(
+             &_sfInternalWeights,
+             this->getType().getFieldDesc(InternalWeightsFieldId),
              this));
 
-
-    editMField(PositionIndexesFieldMask, _mfPositionIndexes);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleBlendAmounts    (void) const
-{
-    MFReal32::GetHandlePtr returnValue(
-        new  MFReal32::GetHandle(
-             &_mfBlendAmounts,
-             this->getType().getFieldDesc(BlendAmountsFieldId),
-             const_cast<SkeletonBlendedGeometryBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleBlendAmounts   (void)
-{
-    MFReal32::EditHandlePtr returnValue(
-        new  MFReal32::EditHandle(
-             &_mfBlendAmounts,
-             this->getType().getFieldDesc(BlendAmountsFieldId),
-             this));
-
-
-    editMField(BlendAmountsFieldMask, _mfBlendAmounts);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleSkeletons       (void) const
-{
-    MFUnrecSkeletonPtr::GetHandlePtr returnValue(
-        new  MFUnrecSkeletonPtr::GetHandle(
-             &_mfSkeletons,
-             this->getType().getFieldDesc(SkeletonsFieldId),
-             const_cast<SkeletonBlendedGeometryBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleSkeletons      (void)
-{
-    MFUnrecSkeletonPtr::EditHandlePtr returnValue(
-        new  MFUnrecSkeletonPtr::EditHandle(
-             &_mfSkeletons,
-             this->getType().getFieldDesc(SkeletonsFieldId),
-             this));
-
-    returnValue->setAddMethod(
-        boost::bind(&SkeletonBlendedGeometry::pushToSkeletons,
+    returnValue->setSetMethod(
+        boost::bind(&SkeletonBlendedGeometry::setInternalWeights,
                     static_cast<SkeletonBlendedGeometry *>(this), _1));
-    returnValue->setRemoveMethod(
-        boost::bind(&SkeletonBlendedGeometry::removeFromSkeletons,
-                    static_cast<SkeletonBlendedGeometry *>(this), _1));
-    returnValue->setRemoveObjMethod(
-        boost::bind(&SkeletonBlendedGeometry::removeObjFromSkeletons,
-                    static_cast<SkeletonBlendedGeometry *>(this), _1));
-    returnValue->setClearMethod(
-        boost::bind(&SkeletonBlendedGeometry::clearSkeletons,
-                    static_cast<SkeletonBlendedGeometry *>(this)));
 
-    editMField(SkeletonsFieldMask, _mfSkeletons);
+    editSField(InternalWeightsFieldMask);
 
     return returnValue;
 }
@@ -957,6 +1064,144 @@ EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleBlendMode      (void)
 
 
     editSField(BlendModeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleInternalJoints  (void) const
+{
+    MFUnrecJointPtr::GetHandlePtr returnValue(
+        new  MFUnrecJointPtr::GetHandle(
+             &_mfInternalJoints,
+             this->getType().getFieldDesc(InternalJointsFieldId),
+             const_cast<SkeletonBlendedGeometryBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleInternalJoints (void)
+{
+    MFUnrecJointPtr::EditHandlePtr returnValue(
+        new  MFUnrecJointPtr::EditHandle(
+             &_mfInternalJoints,
+             this->getType().getFieldDesc(InternalJointsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&SkeletonBlendedGeometry::pushToInternalJoints,
+                    static_cast<SkeletonBlendedGeometry *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&SkeletonBlendedGeometry::removeFromInternalJoints,
+                    static_cast<SkeletonBlendedGeometry *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&SkeletonBlendedGeometry::removeObjFromInternalJoints,
+                    static_cast<SkeletonBlendedGeometry *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&SkeletonBlendedGeometry::clearInternalJoints,
+                    static_cast<SkeletonBlendedGeometry *>(this)));
+
+    editMField(InternalJointsFieldMask, _mfInternalJoints);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleInternalJointBindTransformations (void) const
+{
+    MFMatrix::GetHandlePtr returnValue(
+        new  MFMatrix::GetHandle(
+             &_mfInternalJointBindTransformations,
+             this->getType().getFieldDesc(InternalJointBindTransformationsFieldId),
+             const_cast<SkeletonBlendedGeometryBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleInternalJointBindTransformations(void)
+{
+    MFMatrix::EditHandlePtr returnValue(
+        new  MFMatrix::EditHandle(
+             &_mfInternalJointBindTransformations,
+             this->getType().getFieldDesc(InternalJointBindTransformationsFieldId),
+             this));
+
+
+    editMField(InternalJointBindTransformationsFieldMask, _mfInternalJointBindTransformations);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleInternalJointInvBindTransformations (void) const
+{
+    MFMatrix::GetHandlePtr returnValue(
+        new  MFMatrix::GetHandle(
+             &_mfInternalJointInvBindTransformations,
+             this->getType().getFieldDesc(InternalJointInvBindTransformationsFieldId),
+             const_cast<SkeletonBlendedGeometryBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleInternalJointInvBindTransformations(void)
+{
+    MFMatrix::EditHandlePtr returnValue(
+        new  MFMatrix::EditHandle(
+             &_mfInternalJointInvBindTransformations,
+             this->getType().getFieldDesc(InternalJointInvBindTransformationsFieldId),
+             this));
+
+
+    editMField(InternalJointInvBindTransformationsFieldMask, _mfInternalJointInvBindTransformations);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleBindTransformation (void) const
+{
+    SFMatrix::GetHandlePtr returnValue(
+        new  SFMatrix::GetHandle(
+             &_sfBindTransformation,
+             this->getType().getFieldDesc(BindTransformationFieldId),
+             const_cast<SkeletonBlendedGeometryBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleBindTransformation(void)
+{
+    SFMatrix::EditHandlePtr returnValue(
+        new  SFMatrix::EditHandle(
+             &_sfBindTransformation,
+             this->getType().getFieldDesc(BindTransformationFieldId),
+             this));
+
+
+    editSField(BindTransformationFieldMask);
+
+    return returnValue;
+}
+
+
+GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleEventProducer        (void) const
+{
+    SFEventProducerPtr::GetHandlePtr returnValue(
+        new  SFEventProducerPtr::GetHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             const_cast<SkeletonBlendedGeometryBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleEventProducer       (void)
+{
+    SFEventProducerPtr::EditHandlePtr returnValue(
+        new  SFEventProducerPtr::EditHandle(
+             &_sfEventProducer,
+             this->getType().getFieldDesc(EventProducerFieldId),
+             this));
+
+
+    editSField(EventProducerFieldMask);
 
     return returnValue;
 }
@@ -1000,9 +1245,11 @@ void SkeletonBlendedGeometryBase::resolveLinks(void)
 
     static_cast<SkeletonBlendedGeometry *>(this)->setBaseGeometry(NULL);
 
-    static_cast<SkeletonBlendedGeometry *>(this)->clearJoints();
+    static_cast<SkeletonBlendedGeometry *>(this)->setInternalWeightIndexes(NULL);
 
-    static_cast<SkeletonBlendedGeometry *>(this)->clearSkeletons();
+    static_cast<SkeletonBlendedGeometry *>(this)->setInternalWeights(NULL);
+
+    static_cast<SkeletonBlendedGeometry *>(this)->clearInternalJoints();
 
 #ifdef OSG_MT_CPTR_ASPECT
     AspectOffsetStore oOffsets;
@@ -1011,11 +1258,11 @@ void SkeletonBlendedGeometryBase::resolveLinks(void)
 #endif
 
 #ifdef OSG_MT_CPTR_ASPECT
-    _mfPositionIndexes.terminateShare(Thread::getCurrentAspect(),
+    _mfInternalJointBindTransformations.terminateShare(Thread::getCurrentAspect(),
                                       oOffsets);
 #endif
 #ifdef OSG_MT_CPTR_ASPECT
-    _mfBlendAmounts.terminateShare(Thread::getCurrentAspect(),
+    _mfInternalJointInvBindTransformations.terminateShare(Thread::getCurrentAspect(),
                                       oOffsets);
 #endif
 }

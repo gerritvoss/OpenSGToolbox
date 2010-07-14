@@ -78,7 +78,8 @@ bool CompoundUndoableEdit::addEdit(const UndoableEditPtr anEdit)
 	{
 		if(_Edits.size() != 0)
 		{
-			if(!_Edits.back()->addEdit(anEdit))
+			if(anEdit->isSignificant() &&
+               !_Edits.back()->addEdit(anEdit))
 			{
 				if(anEdit->replaceEdit(_Edits.back()))
 				{

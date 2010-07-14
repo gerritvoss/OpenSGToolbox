@@ -339,7 +339,7 @@ void UndoManager::trimEdits(Int32 from, Int32 to)
 {
 	if (from >= 0 && from <= to)
 	{
-        for (int i = to; from <= i; --i)
+        for (Int32 i = to-1; from <= i; --i)
 		{
             UndoableEditPtr e = _Edits[i];
             e->die();

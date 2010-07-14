@@ -52,4 +52,40 @@ bool DialogWindow::isEventListenerAttached(EventListenerPtr Listener) const
     return _EventListeners.find(Listener) != _EventListeners.end();
 }
 
+inline
+ActionListener* DialogWindow::getConfirmButtonListener(void)
+{
+    return &_ConfirmButtonListener;
+}
+
+inline
+ActionListener* DialogWindow::getCancelButtonListener(void)
+{
+    return &_CancelButtonListener;
+}
+
+inline
+ActionListener* DialogWindow::getInputButtonListener(void)
+{
+    return &_InputButtonListener;
+}
+
+inline
+ActionListener* DialogWindow::getComboButtonListener(void)
+{
+    return &_ComboButtonListener;
+}
+
+inline
+ActionListener* DialogWindow::getTextButtonListener(void)
+{
+    return &_TextButtonListener;
+}
+
+inline
+void DialogWindow::addTransientObject(const boost::any& obj)
+{
+    _TransientObjects.push_back(obj);
+}
+
 OSG_END_NAMESPACE

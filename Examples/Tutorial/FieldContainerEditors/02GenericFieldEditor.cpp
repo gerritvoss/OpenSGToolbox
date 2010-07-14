@@ -132,7 +132,7 @@ public:
 
 	virtual void stateChanged(const ChangeEventUnrecPtr e)
 	{
-		while(UndoRedoListModel->getSize() > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
+		while(UndoRedoListModel->getSize()-1 > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 		{
 			UndoRedoListModel->popBack();
 		}
@@ -222,10 +222,6 @@ int main(int argc, char **argv)
 	UndoManagerChangeListener TheUndoManagerChangeListener;
 	TheUndoManager->addChangeListener(&TheUndoManagerChangeListener);
     TheCommandManager = CommandManager::create(TheUndoManager);
-
-    //Background Editor Field
-    FieldEditorComponentRefPtr TheEditor = FieldEditorFactory::the()->createDefaultEditor(TutorialBackground, SolidBackground::ColorFieldId, TheCommandManager);
-    TheEditor->setPreferredSize(Vec2f(100.0f, 20.0f));
 	
     //UndoList
 	UndoRedoListModel = DefaultListModel::create();
@@ -260,6 +256,11 @@ int main(int argc, char **argv)
     UndoRedoScrollPanel->setPreferredSize(Vec2f(200,200));
     UndoRedoScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     UndoRedoScrollPanel->setViewComponent(UndoRedoList);
+
+    //Background Editor Field
+    //FieldEditorComponentRefPtr TheEditor = FieldEditorFactory::the()->createDefaultEditor(TutorialBackground, SolidBackground::ColorFieldId, TheCommandManager);
+    FieldEditorComponentRefPtr TheEditor = FieldEditorFactory::the()->createDefaultEditor(RedoButton, Button::TextFieldId, TheCommandManager);
+    TheEditor->setPreferredSize(Vec2f(100.0f, 20.0f));
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

@@ -22,10 +22,11 @@
 #include "OSGBlendChunk.h"
 #include "OSGChunkMaterial.h"
 #include "OSGMaterialChunk.h"
+#include "OSGSimpleGeometry.h"
 
 //Animation
 #include "OSGJoint.h"
-#include "OSGSkeleton.h"
+#include "OSGSkeletonBlendedGeometry.h"
 #include "OSGSkeletonDrawable.h"
 
 #include "OSGRandomPoolManager.h"
@@ -144,34 +145,63 @@ int main(int argc, char **argv)
     ExampleMaterial->addChunk(ExampleMaterialChunk);
     ExampleMaterial->addChunk(ExampleBlendChunk);
 
-    //Joint
-	JointUnrecPtr ExampleRootJoint = Joint::create();
-	JointUnrecPtr TempRootJoint;
-	TempRootJoint = ExampleRootJoint;
-	Matrix TempMat;
-
-	//Create a set of randomly placed child joints
-	for (Real32 i = 1.0f; i < 9.0f; i++)
-	{
-		JointUnrecPtr ExampleChildJoint;
-
-		TempMat.setTranslate(RandomPoolManager::getRandomReal32(0.0, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f));
-		ExampleChildJoint = Joint::create(); //create a joint called ExampleChildJoint
-		
-		//Set bind and current transformations to TempMat (calculated above)
-        ExampleChildJoint->setRelativeTransformation(TempMat);
-        ExampleChildJoint->setBindRelativeTransformation(TempMat);
-
-		//Add ExampleChildJoint as a child to the previous joint	
-        TempRootJoint->pushToChildJoints(ExampleChildJoint);//add a Child to the root joint
-
-		//ExampleChildJoint will be the next parent joint
-		TempRootJoint = TempRootJoint->getChildJoints(0);
-	}
+    GeometryRefPtr SphereGeometry = makeSphereGeo(2, 0.25f);
+    GeometryRefPtr BoxGeometry = makeBoxGeo(0.5f,0.5f,0.5f,1,1,1);
 
     //Skeleton
-    SkeletonUnrecPtr ExampleSkeleton = Skeleton::create();
-    ExampleSkeleton->pushToRootJoints(ExampleRootJoint); //Set the skeleton's root joint
+    SkeletonBlendedGeometryUnrecPtr ExampleSkeleton = SkeletonBlendedGeometry::create();
+
+    //Joint
+	JointRecPtr ExampleRootJoint = Joint::create();
+
+    //Add this joint to the skeleton
+    ExampleSkeleton->pushToJoints(ExampleRootJoint, Matrix());
+
+    NodeRecPtr ExampleRootJointNode = makeNodeFor(ExampleRootJoint);
+
+    NodeRecPtr TempRootJointNode = ExampleRootJointNode;
+    NodeRefPtr GeoNode = makeNodeFor(BoxGeometry);
+    TempRootJointNode->addChild(GeoNode);
+
+	Matrix TempMat;
+	//Create a set of randomly placed child joints
+	for (Real32 i = 0.0f; i < 5.0f; ++i)
+	{
+		JointRecPtr ExampleChildJoint = Joint::create();
+		NodeRecPtr ExampleChildJointNode = makeNodeFor(ExampleChildJoint);
+
+        GeoNode = makeNodeFor(SphereGeometry);
+        ExampleChildJointNode->addChild(GeoNode);
+
+		//TempMat.setTranslate(RandomPoolManager::getRandomReal32(0.0, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f), RandomPoolManager::getRandomReal32(0.0f, 10.0f));
+        switch((static_cast<UInt32>(i) % 3))
+        {
+            case 0:
+                TempMat.setTranslate(2.0f,0.0f,0.0f);
+                break;
+            case 1:
+                TempMat.setTranslate(0.0f,2.0f,0.0f);
+                break;
+            case 2:
+                TempMat.setTranslate(0.0f,0.0f,2.0f);
+                break;
+        }
+		
+		//Set bind and current transformations to TempMat (calculated above)
+        ExampleChildJoint->setJointTransformation(TempMat);
+
+		//Add ExampleChildJoint as a child to the previous joint	
+        TempRootJointNode->addChild(ExampleChildJointNode);//add a Child to the root joint
+
+		//ExampleChildJoint will be the next parent joint
+		TempRootJointNode = ExampleChildJointNode;
+        
+        //Add this joint to the skeleton
+        Matrix InvBind(TempRootJointNode->getToWorld());
+        InvBind.invert();
+        ExampleSkeleton->pushToJoints(ExampleChildJoint, InvBind);
+	}
+
 
     //SkeletonDrawer
     SkeletonDrawableUnrecPtr ExampleSkeletonDrawable = SkeletonDrawable::create();
@@ -187,6 +217,7 @@ int main(int argc, char **argv)
     NodeUnrecPtr scene = Node::create();
     scene->setCore(Group::create());
     scene->addChild(SkeletonNode);
+    scene->addChild(ExampleRootJointNode);
 
     mgr->setRoot(scene);
 

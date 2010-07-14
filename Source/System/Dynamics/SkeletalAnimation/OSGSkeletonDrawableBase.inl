@@ -76,14 +76,14 @@ OSG::UInt16 SkeletonDrawableBase::getClassGroupId(void)
 
 //! Get the value of the SkeletonDrawable::_sfSkeleton field.
 inline
-Skeleton * SkeletonDrawableBase::getSkeleton(void) const
+SkeletonBlendedGeometry * SkeletonDrawableBase::getSkeleton(void) const
 {
     return _sfSkeleton.getValue();
 }
 
 //! Set the value of the SkeletonDrawable::_sfSkeleton field.
 inline
-void SkeletonDrawableBase::setSkeleton(Skeleton * const value)
+void SkeletonDrawableBase::setSkeleton(SkeletonBlendedGeometry * const value)
 {
     editSField(SkeletonFieldMask);
 

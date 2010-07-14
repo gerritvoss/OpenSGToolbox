@@ -22,39 +22,25 @@
 	>
 	</Field>
 	<Field
-		name="Joints"
-		type="Joint"
-        category="pointer"
-		cardinality="multi"
+		name="InternalWeightIndexes"
+		type="GeoIntegralProperty"
+        category="childpointer"
+		cardinality="single"
 		visibility="external"
 		access="protected"
+		childParentType="FieldContainer"
+		linkParentField="Parents"
 	>
 	</Field>
 	<Field
-		name="PositionIndexes"
-		type="UInt32"
-        category="data"
-		cardinality="multi"
-		visibility="external"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="BlendAmounts"
-		type="Real32"
-        category="data"
-		cardinality="multi"
-		visibility="external"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="Skeletons"
-		type="Skeleton"
-        category="pointer"
-		cardinality="multi"
+		name="InternalWeights"
+		type="GeoVectorProperty"
+        category="childpointer"
+		cardinality="single"
 		visibility="external"
 		access="public"
+		childParentType="FieldContainer"
+		linkParentField="Parents"
 	>
 	</Field>
 	<Field
@@ -66,4 +52,45 @@
 		access="public"
 	>
 	</Field>
+	<Field
+		name="InternalJoints"
+		type="Joint"
+        category="pointer"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="InternalJointBindTransformations"
+		type="Matrix"
+        category="data"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="InternalJointInvBindTransformations"
+		type="Matrix"
+        category="data"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="BindTransformation"
+		type="Matrix"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<ProducedMethod
+		name="SkeletonChanged"
+		type="SkeletonEvent"
+	>
+	</ProducedMethod>
 </FieldContainer>

@@ -77,6 +77,11 @@ protected:
     FieldContainerUnrecPtr _PtrValue;
 
 public:
+	virtual bool addEdit(const UndoableEditPtr anEdit);
+
+	virtual bool replaceEdit(const UndoableEditPtr anEdit) const;
+    
+	virtual bool isSignificant(void) const;
 
 	virtual std::string getCommandDescription(void) const;
 

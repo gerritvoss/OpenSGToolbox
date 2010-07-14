@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,15 +45,16 @@
 
 #include <OSGConfig.h>
 
-#include "OSGJoint.h"
-#include "OSGSkeleton.h"
-#include <boost/bind.hpp>
+#include "OSGFieldContainerFieldPathComponentGenerator.h"
+#include "OSGFieldContainerTreeModel.h"
+#include "OSGNameAttachment.h"
+#include "OSGTree.h"
 
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
-// OSGSkeletonBase.cpp file.
-// To modify it, please change the .fcd file (OSGSkeleton.fcd) and
+// OSGFieldContainerFieldPathComponentGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGFieldContainerFieldPathComponentGenerator.fcd) and
 // regenerate the base file.
 
 /***************************************************************************\
@@ -64,7 +65,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Skeleton::initMethod(InitPhase ePhase)
+void FieldContainerFieldPathComponentGenerator::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
@@ -78,49 +79,54 @@ void Skeleton::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Skeleton::skeletonUpdated(void)
+ComponentRefPtr FieldContainerFieldPathComponentGenerator::getTreeComponent(TreeRefPtr Parent, 
+                                                                            const boost::any& Value, 
+                                                                            bool IsSelected, 
+                                                                            bool Expanded, 
+                                                                            bool Leaf, 
+                                                                            UInt32 Row, 
+                                                                            bool HasFocus)
 {
-	produceChangedEvent();
-}
+    FieldContainerTreeModel::ContainerFieldIdPair ThePair;
+    try
+    {
+        ThePair = boost::any_cast<FieldContainerTreeModel::ContainerFieldIdPair>(Value);
+    }
+    catch (boost::bad_any_cast &)
+    {
+        //Could not convert to FieldContinerFieldPath
+        return NULL;
+    }
 
-void Skeleton::updateJointTransformations(void)
-{
-	//Loop through bone hierarchy and update their transformations
-	for(UInt32 i(0); i < getMFRootJoints()->size(); ++i)
-	{
-		getRootJoints(i)->updateTransformations(false);
-	}
-}
+    //Get the text for the label
+    std::string LabelText("");
+    if(ThePair._FieldID == 0)
+    {
+        if(ThePair._Container != NULL)
+        {
+            if(ThePair._Container->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+            {
+                const Char8* name(getName(dynamic_pointer_cast<AttachmentContainer>(ThePair._Container)));
+                if(name)
+                {
+                    LabelText += std::string(name) + " ";
+                }
+            }
+            LabelText += std::string("[") + ThePair._Container->getType().getCName() + "]";
+        }
+        else
+        {
+            LabelText += "NULL";
+        }
+    }
+    else
+    {
+        LabelText = ThePair._Container->getFieldDescription(ThePair._FieldID)->getCName() +
+                    std::string(" [") + ThePair._Container->getFieldDescription(ThePair._FieldID)->getFieldType().getContentType().getCName() + "]";
+    }
 
 
-EventConnection Skeleton::addSkeletonListener(SkeletonListenerPtr Listener)
-{
-   _SkeletonListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&Skeleton::isSkeletonListenerAttached, this, Listener),
-       boost::bind(&Skeleton::removeSkeletonListener, this, Listener));
-}
-
-
-void Skeleton::removeSkeletonListener(SkeletonListenerPtr Listener)
-{
-   SkeletonListenerSetItor EraseIter(_SkeletonListeners.find(Listener));
-   if(EraseIter != _SkeletonListeners.end())
-   {
-      _SkeletonListeners.erase(EraseIter);
-   }
-}
-
-void Skeleton::produceChangedEvent(void)
-{
-	const SkeletonEventUnrecPtr TheEvent = SkeletonEvent::create( SkeletonUnrecPtr(this), getTimeStamp());
-
-	SkeletonListenerSet ListenerSet(_SkeletonListeners);
-	for(SkeletonListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-	{
-	   (*SetItor)->skeletonChanged(TheEvent);
-	}
-    _Producer.produceEvent(SkeletonChangedMethodId,TheEvent);
+    return getTreeComponentText(Parent, LabelText, IsSelected, Expanded, Leaf, Row, HasFocus);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -129,53 +135,33 @@ void Skeleton::produceChangedEvent(void)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-Skeleton::Skeleton(void) :
+FieldContainerFieldPathComponentGenerator::FieldContainerFieldPathComponentGenerator(void) :
     Inherited()
 {
 }
 
-Skeleton::Skeleton(const Skeleton &source) :
+FieldContainerFieldPathComponentGenerator::FieldContainerFieldPathComponentGenerator(const FieldContainerFieldPathComponentGenerator &source) :
     Inherited(source)
 {
 }
 
-Skeleton::~Skeleton(void)
+FieldContainerFieldPathComponentGenerator::~FieldContainerFieldPathComponentGenerator(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Skeleton::changed(ConstFieldMaskArg whichField, 
+void FieldContainerFieldPathComponentGenerator::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
-
-	if(whichField & RootJointsFieldMask)
-	{
-		//Loop through bone hierarchy and set their parent Skeleton to this instance
-        for (UInt32 i(0); i < getMFRootJoints()->size() ; ++i)
-		{
-			setJointParentSkeleton(getRootJoints(i));
-		}
-	}
 }
 
-void Skeleton::dump(      UInt32    ,
+void FieldContainerFieldPathComponentGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
-    SLOG << "Dump Skeleton NI" << std::endl;
-}
-
-void Skeleton::setJointParentSkeleton(JointUnrecPtr theJoint)
-{
-    theJoint->setParentSkeleton(this);
-
-
-	for (UInt32 i(0); i < theJoint->getMFChildJoints()->size() ; ++i)
-	{
-		setJointParentSkeleton(theJoint->getChildJoints(i));
-	}
+    SLOG << "Dump FieldContainerFieldPathComponentGenerator NI" << std::endl;
 }
 
 OSG_END_NAMESPACE

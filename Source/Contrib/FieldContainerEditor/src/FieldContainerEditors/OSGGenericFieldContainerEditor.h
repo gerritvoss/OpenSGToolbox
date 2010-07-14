@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,25 +36,22 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSKELETON_H_
-#define _OSGSKELETON_H_
+#ifndef _OSGGENERICFIELDCONTAINEREDITOR_H_
+#define _OSGGENERICFIELDCONTAINEREDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGSkeletonBase.h"
-
-#include "OSGSkeletonListener.h"
-#include <set>
-#include "OSGEventConnection.h"
+#include "OSGGenericFieldContainerEditorBase.h"
+#include "OSGTextField.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Skeleton class. See \ref
-           PageDynamicsSkeleton for a description.
+/*! \brief GenericFieldContainerEditor class. See \ref
+           PageContribFieldContainerEditorGenericFieldContainerEditor for a description.
 */
 
-class OSG_TBANIMATION_DLLMAPPING Skeleton : public SkeletonBase
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldContainerEditor : public GenericFieldContainerEditorBase
 {
   protected:
 
@@ -62,8 +59,8 @@ class OSG_TBANIMATION_DLLMAPPING Skeleton : public SkeletonBase
 
   public:
 
-    typedef SkeletonBase Inherited;
-    typedef Skeleton     Self;
+    typedef GenericFieldContainerEditorBase Inherited;
+    typedef GenericFieldContainerEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -82,81 +79,53 @@ class OSG_TBANIMATION_DLLMAPPING Skeleton : public SkeletonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual const std::vector<const FieldContainerType*>& getEditableTypes(void) const;
 
-    /**************************************************************************//**
-     * @fn	EventConnection addSkeletonListener(SkeletonListenerPtr Listener)
-     * 
-     * @brief	Adds a skeleton listener to this instance. 
-     * 
-     * @param	Listener	The listener to add. 
-     * 
-     * @return	EventConnection
-    *****************************************************************************/
-    EventConnection addSkeletonListener(SkeletonListenerPtr Listener);
+    virtual bool attachFieldContainer(FieldContainer* fc);
+    virtual bool dettachFieldContainer(void);
 
-    /**************************************************************************//**
-     * @fn	bool isSkeletonListenerAttached(SkeletonListenerPtr Listener) const
-     * 
-     * @brief	Query if skeleton listener 'Listener' is attached to this instance. 
-     * 
-     * @param	Listener	The listener. 
-     * 
-     * @return	true if skeleton listener attached, false if not. 
-    *****************************************************************************/
-    bool isSkeletonListenerAttached(SkeletonListenerPtr Listener) const;
+	virtual Vec2f getContentRequestedSize(void) const;
 
-    /**************************************************************************//**
-     * @fn	void removeSkeletonListener(SkeletonListenerPtr Listener)
-     * 
-     * @brief	Removes the skeleton listener 'Listener'. 
-     * 
-     * @param	Listener	 The listener to remove. 
-    *****************************************************************************/
-    void removeSkeletonListener(SkeletonListenerPtr Listener);
+    //Returns the preferred size of the viewport for a view component.
+    virtual Vec2f getPreferredScrollableViewportSize(void);
 
-	/**************************************************************************//**
-	 * @fn	void setJointParentSkeleton(JointUnrecPtr TheJoint)
-	 * 
-	 * @brief	Sets a TheJoint's parent skeleton to this instance and recursively
-	 *			does the same for all of TheJoint's descendants.
-	 * 
-	 * @param TheJoint The joint to update.
-	*****************************************************************************/
-	void setJointParentSkeleton(JointUnrecPtr TheJoint);
+    //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
+    virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 
-    /**************************************************************************//**
-     * @fn	void skeletonUpdated(void)
-     * 
-     * @brief	Skeleton updated.
-    *****************************************************************************/
-    void skeletonUpdated(void);
+    //Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
+    virtual bool getScrollableTracksViewportHeight(void);
 
-    /**************************************************************************//**
-     * @fn	void updateJointTransformations(void)
-     * 
-     * @brief	Updates the transformations of all joints in this skeleton. 
-    *****************************************************************************/
-    void updateJointTransformations(void);
+    //Return true if a viewport should always force the width of this Scrollable to match the width of the viewport.
+    virtual bool getScrollableTracksViewportWidth(void);
+
+    //Return true if a viewport should always force the height of this Scrollable to be at at least the height of the viewport.
+    virtual bool getScrollableHeightMinTracksViewport(void);
+
+    //Return true if a viewport should always force the width of this Scrollable to be at at least the width of the viewport.
+    virtual bool getScrollableWidthMinTracksViewport(void);
+
+    //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
+    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
     
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in SkeletonBase.
+    // Variables should all be in GenericFieldContainerEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Skeleton(void);
-    Skeleton(const Skeleton &source);
+    GenericFieldContainerEditor(void);
+    GenericFieldContainerEditor(const GenericFieldContainerEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Skeleton(void);
+    virtual ~GenericFieldContainerEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -166,36 +135,34 @@ class OSG_TBANIMATION_DLLMAPPING Skeleton : public SkeletonBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-
-	typedef std::set<SkeletonListenerPtr> SkeletonListenerSet;
-    typedef SkeletonListenerSet::iterator SkeletonListenerSetItor;
-    typedef SkeletonListenerSet::const_iterator SkeletonListenerSetConstItor;
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const GenericFieldContainerEditor *Id = NULL);
+	void onDestroy();
 	
-    SkeletonListenerSet       _SkeletonListeners;
+	/*! \}                                                                 */
+    void updateNameTextField(void);
 
-    /**************************************************************************//**
-     * @fn	void produceChangedEvent(void)
-     * 
-     * @brief	Tells all of the skeleton's listeners that an event has occurred. 
-    *****************************************************************************/
-	void produceChangedEvent(void);
-    
+    static std::vector<const FieldContainerType*> _EditableTypes;
+
+    TextFieldRefPtr _NameEditTextField;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class SkeletonBase;
+    friend class GenericFieldContainerEditorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const Skeleton &source);
+    void operator =(const GenericFieldContainerEditor &source);
 };
 
-typedef Skeleton *SkeletonP;
+typedef GenericFieldContainerEditor *GenericFieldContainerEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSkeletonBase.inl"
-#include "OSGSkeleton.inl"
+#include "OSGGenericFieldContainerEditorBase.inl"
+#include "OSGGenericFieldContainerEditor.inl"
 
-#endif /* _OSGSKELETON_H_ */
+#endif /* _OSGGENERICFIELDCONTAINEREDITOR_H_ */

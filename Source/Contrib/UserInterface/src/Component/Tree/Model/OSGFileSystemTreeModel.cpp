@@ -106,25 +106,6 @@ boost::any FileSystemTreeModel::getChild(const boost::any& parent, const UInt32&
     }
 }
 
-boost::any FileSystemTreeModel::getParent(const boost::any& node) const
-{
-    try
-    {
-        BoostPath ThePath = boost::any_cast<BoostPath>(node);
-
-        if(!ThePath.empty() || 
-           boost::filesystem::equivalent(ThePath, getInternalRoot()))
-        {
-            return boost::any(ThePath.parent_path());
-        }
-
-    }
-    catch(boost::bad_any_cast &)
-    {
-    }
-    return boost::any();
-}
-
 UInt32 FileSystemTreeModel::getChildCount(const boost::any& parent) const
 {
     try
@@ -229,7 +210,7 @@ void FileSystemTreeModel::setRoot(const BoostPath& root)
     setInternalRoot(root);
 }
 
-const BoostPath& FileSystemTreeModel::getRootPath(void) const
+const BoostPath& FileSystemTreeModel::getRootFilePath(void) const
 {
     return getInternalRoot();
 }
@@ -264,7 +245,7 @@ void FileSystemTreeModel::changed(ConstFieldMaskArg whichField,
 
     if(whichField & InternalRootFieldMask)
     {
-        produceTreeStructureChanged(getPath(getInternalRoot()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getInternalRoot())));
+        produceTreeStructureChanged(getRootPath(),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, getRoot()));
     }
 }
 

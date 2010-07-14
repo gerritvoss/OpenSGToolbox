@@ -458,7 +458,10 @@ void ComponentContainer::changed(ConstFieldMaskArg whichField,
     {
         for(UInt32 i(0) ; i< getMFChildren()->size() ; ++i)
         {
-            getChildren(i)->setEnabled(getEnabled());
+            if(getChildren(i)->getEnabled() != getEnabled())
+            {
+                getChildren(i)->setEnabled(getEnabled());
+            }
         }
     }
     Inherited::changed(whichField, origin, details);

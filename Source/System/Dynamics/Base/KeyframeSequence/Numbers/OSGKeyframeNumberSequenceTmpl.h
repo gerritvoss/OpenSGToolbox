@@ -110,6 +110,28 @@ class KeyframeNumberSequenceTmpl : public KeyframeNumberSequence
           StoredFieldType &editField   (void);
     const StoredFieldType &getField    (void) const;
 
+    StoredType getRawKeyValue (const UInt32 index );
+
+    StoredType getRawKeyValue (const UInt32 index ) const;
+
+    void       getRawKeyValue (StoredType   &val,
+                               const UInt32 index );
+
+    void       getRawKeyValue (StoredType   &val,
+                               const UInt32 index ) const;
+
+
+    void       setRawKeyframe (const StoredType &val,
+                               const Real32     &key,
+                               const UInt32     index );
+
+    void       addRawKeyframe (const StoredType &val,
+                               const Real32     &key );
+
+    void       insertRawKeyframe(const StoredType &val,
+                                 const Real32     &key,
+                                 const UInt32     index);
+
     virtual GenericType getKeyValue (const UInt32       index )      ;
 
     virtual GenericType getKeyValue (const UInt32       index ) const;

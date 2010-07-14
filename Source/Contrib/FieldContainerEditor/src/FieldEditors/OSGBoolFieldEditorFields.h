@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,14 +48,14 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGSKELETONFIELDS_H_
-#define _OSGSKELETONFIELDS_H_
+#ifndef _OSGBOOLFIELDEDITORFIELDS_H_
+#define _OSGBOOLFIELDEDITORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGConfig.h"
-#include "OSGTBAnimationDef.h"
+#include "OSGContribFieldContainerEditorDef.h"
 
 #include "OSGFieldContainerFields.h"
 #include "OSGPointerSField.h"
@@ -64,16 +64,16 @@
 
 OSG_BEGIN_NAMESPACE
 
-class Skeleton;
+class BoolFieldEditor;
 
-OSG_GEN_CONTAINERPTR(Skeleton);
+OSG_GEN_CONTAINERPTR(BoolFieldEditor);
 
-/*! \ingroup GrpTBAnimationFieldTraits
-    \ingroup GrpLibOSGTBAnimation
+/*! \ingroup GrpContribFieldContainerEditorFieldTraits
+    \ingroup GrpLibOSGContribFieldContainerEditor
  */
 template <>
-struct FieldTraits<Skeleton *> :
-    public FieldTraitsFCPtrBase<Skeleton *>
+struct FieldTraits<BoolFieldEditor *> :
+    public FieldTraitsFCPtrBase<BoolFieldEditor *>
 {
   private:
 
@@ -81,137 +81,137 @@ struct FieldTraits<Skeleton *> :
 
   public:
 
-    typedef FieldTraits<Skeleton *>  Self;
+    typedef FieldTraits<BoolFieldEditor *>  Self;
 
     enum                        { Convertible = NotConvertible };
 
-    static OSG_TBANIMATION_DLLMAPPING DataType &getType(void);
+    static OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING DataType &getType(void);
 
     template<typename RefCountPolicy> inline
     static const Char8    *getSName     (void);
 
-//    static const char *getSName(void) { return "SFSkeletonPtr"; }
+//    static const char *getSName(void) { return "SFBoolFieldEditorPtr"; }
     template<typename RefCountPolicy> inline
     static const Char8    *getMName     (void);
 
-//    static const char *getMName(void) { return "MFSkeletonPtr"; }
+//    static const char *getMName(void) { return "MFBoolFieldEditorPtr"; }
 };
 
 template<> inline
-const Char8 *FieldTraits<Skeleton *, 0>::getSName<RecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<BoolFieldEditor *, 0>::getSName<RecordedRefCountPolicy>(void)
 {
-    return "SFRecSkeletonPtr"; 
+    return "SFRecBoolFieldEditorPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<Skeleton *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<BoolFieldEditor *, 0>::getSName<UnrecordedRefCountPolicy>(void)
 {
-    return "SFUnrecSkeletonPtr"; 
+    return "SFUnrecBoolFieldEditorPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<Skeleton *, 0>::getSName<WeakRefCountPolicy>(void)
+const Char8 *FieldTraits<BoolFieldEditor *, 0>::getSName<WeakRefCountPolicy>(void)
 {
-    return "SFWeakSkeletonPtr"; 
+    return "SFWeakBoolFieldEditorPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<Skeleton *, 0>::getSName<NoRefCountPolicy>(void)
+const Char8 *FieldTraits<BoolFieldEditor *, 0>::getSName<NoRefCountPolicy>(void)
 {
-    return "SFUnrefdSkeletonPtr"; 
+    return "SFUnrefdBoolFieldEditorPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<Skeleton *, 0>::getMName<RecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<BoolFieldEditor *, 0>::getMName<RecordedRefCountPolicy>(void)
 {
-    return "MFRecSkeletonPtr"; 
+    return "MFRecBoolFieldEditorPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<Skeleton *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<BoolFieldEditor *, 0>::getMName<UnrecordedRefCountPolicy>(void)
 {
-    return "MFUnrecSkeletonPtr"; 
+    return "MFUnrecBoolFieldEditorPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<Skeleton *, 0>::getMName<WeakRefCountPolicy>(void)
+const Char8 *FieldTraits<BoolFieldEditor *, 0>::getMName<WeakRefCountPolicy>(void)
 {
-    return "MFWeakSkeletonPtr"; 
+    return "MFWeakBoolFieldEditorPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<Skeleton *, 0>::getMName<NoRefCountPolicy>(void)
+const Char8 *FieldTraits<BoolFieldEditor *, 0>::getMName<NoRefCountPolicy>(void)
 {
-    return "MFUnrefdSkeletonPtr"; 
+    return "MFUnrefdBoolFieldEditorPtr"; 
 }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-/*! \ingroup GrpTBAnimationFieldSFields */
-typedef PointerSField<Skeleton *,
-                      RecordedRefCountPolicy  > SFRecSkeletonPtr;
-/*! \ingroup GrpTBAnimationFieldSFields */
-typedef PointerSField<Skeleton *,
-                      UnrecordedRefCountPolicy> SFUnrecSkeletonPtr;
-/*! \ingroup GrpTBAnimationFieldSFields */
-typedef PointerSField<Skeleton *,
-                      WeakRefCountPolicy      > SFWeakSkeletonPtr;
-/*! \ingroup GrpTBAnimationFieldSFields */
-typedef PointerSField<Skeleton *,
-                      NoRefCountPolicy        > SFUncountedSkeletonPtr;
+/*! \ingroup GrpContribFieldContainerEditorFieldSFields */
+typedef PointerSField<BoolFieldEditor *,
+                      RecordedRefCountPolicy  > SFRecBoolFieldEditorPtr;
+/*! \ingroup GrpContribFieldContainerEditorFieldSFields */
+typedef PointerSField<BoolFieldEditor *,
+                      UnrecordedRefCountPolicy> SFUnrecBoolFieldEditorPtr;
+/*! \ingroup GrpContribFieldContainerEditorFieldSFields */
+typedef PointerSField<BoolFieldEditor *,
+                      WeakRefCountPolicy      > SFWeakBoolFieldEditorPtr;
+/*! \ingroup GrpContribFieldContainerEditorFieldSFields */
+typedef PointerSField<BoolFieldEditor *,
+                      NoRefCountPolicy        > SFUncountedBoolFieldEditorPtr;
 
 
-/*! \ingroup GrpTBAnimationFieldMFields */
-typedef PointerMField<Skeleton *,
-                      RecordedRefCountPolicy  > MFRecSkeletonPtr;
-/*! \ingroup GrpTBAnimationFieldMFields */
-typedef PointerMField<Skeleton *,
-                      UnrecordedRefCountPolicy> MFUnrecSkeletonPtr;
-/*! \ingroup GrpTBAnimationFieldMFields */
-typedef PointerMField<Skeleton *,
-                      WeakRefCountPolicy      > MFWeakSkeletonPtr;
-/*! \ingroup GrpTBAnimationFieldMFields */
-typedef PointerMField<Skeleton *,
-                      NoRefCountPolicy        > MFUncountedSkeletonPtr;
+/*! \ingroup GrpContribFieldContainerEditorFieldMFields */
+typedef PointerMField<BoolFieldEditor *,
+                      RecordedRefCountPolicy  > MFRecBoolFieldEditorPtr;
+/*! \ingroup GrpContribFieldContainerEditorFieldMFields */
+typedef PointerMField<BoolFieldEditor *,
+                      UnrecordedRefCountPolicy> MFUnrecBoolFieldEditorPtr;
+/*! \ingroup GrpContribFieldContainerEditorFieldMFields */
+typedef PointerMField<BoolFieldEditor *,
+                      WeakRefCountPolicy      > MFWeakBoolFieldEditorPtr;
+/*! \ingroup GrpContribFieldContainerEditorFieldMFields */
+typedef PointerMField<BoolFieldEditor *,
+                      NoRefCountPolicy        > MFUncountedBoolFieldEditorPtr;
 
 
 
 
 #else // these are the doxygen hacks
 
-/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
-struct SFRecSkeletonPtr : 
-    public PointerSField<Skeleton *,
+/*! \ingroup GrpContribFieldContainerEditorFieldSFields \ingroup GrpLibOSGContribFieldContainerEditor */
+struct SFRecBoolFieldEditorPtr : 
+    public PointerSField<BoolFieldEditor *,
                          RecordedRefCountPolicy> {};
-/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
-struct SFUnrecSkeletonPtr : 
-    public PointerSField<Skeleton *,
+/*! \ingroup GrpContribFieldContainerEditorFieldSFields \ingroup GrpLibOSGContribFieldContainerEditor */
+struct SFUnrecBoolFieldEditorPtr : 
+    public PointerSField<BoolFieldEditor *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
-struct SFWeakSkeletonPtr :
-    public PointerSField<Skeleton *,
+/*! \ingroup GrpContribFieldContainerEditorFieldSFields \ingroup GrpLibOSGContribFieldContainerEditor */
+struct SFWeakBoolFieldEditorPtr :
+    public PointerSField<BoolFieldEditor *,
                          WeakRefCountPolicy> {};
-/*! \ingroup GrpTBAnimationFieldSFields \ingroup GrpLibOSGTBAnimation */
-struct SFUncountedSkeletonPtr :
-    public PointerSField<Skeleton *,
+/*! \ingroup GrpContribFieldContainerEditorFieldSFields \ingroup GrpLibOSGContribFieldContainerEditor */
+struct SFUncountedBoolFieldEditorPtr :
+    public PointerSField<BoolFieldEditor *,
                          NoRefCountPolicy> {};
 
 
-/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
-struct MFRecSkeletonPtr :
-    public PointerMField<Skeleton *,
+/*! \ingroup GrpContribFieldContainerEditorFieldMFields \ingroup GrpLibOSGContribFieldContainerEditor */
+struct MFRecBoolFieldEditorPtr :
+    public PointerMField<BoolFieldEditor *,
                          RecordedRefCountPolicy  > {};
-/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
-struct MFUnrecSkeletonPtr :
-    public PointerMField<Skeleton *,
+/*! \ingroup GrpContribFieldContainerEditorFieldMFields \ingroup GrpLibOSGContribFieldContainerEditor */
+struct MFUnrecBoolFieldEditorPtr :
+    public PointerMField<BoolFieldEditor *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
-struct MFWeakSkeletonPtr :
-    public PointerMField<Skeleton *,
+/*! \ingroup GrpContribFieldContainerEditorFieldMFields \ingroup GrpLibOSGContribFieldContainerEditor */
+struct MFWeakBoolFieldEditorPtr :
+    public PointerMField<BoolFieldEditor *,
                          WeakRefCountPolicy      > {};
-/*! \ingroup GrpTBAnimationFieldMFields \ingroup GrpLibOSGTBAnimation */
-struct MFUncountedSkeletonPtr :
-    public PointerMField<Skeleton *,
+/*! \ingroup GrpContribFieldContainerEditorFieldMFields \ingroup GrpLibOSGContribFieldContainerEditor */
+struct MFUncountedBoolFieldEditorPtr :
+    public PointerMField<BoolFieldEditor *,
                          NoRefCountPolicy        > {};
 
 
@@ -220,4 +220,4 @@ struct MFUncountedSkeletonPtr :
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGSKELETONFIELDS_H_ */
+#endif /* _OSGBOOLFIELDEDITORFIELDS_H_ */

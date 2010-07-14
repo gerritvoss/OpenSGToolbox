@@ -94,9 +94,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeModel : public DefaultTreeM
 
 	//Returns true if node is a leaf.
 	virtual bool isLeaf(const boost::any& node) const;
-    
-    //Returns the Parent of this node
-    virtual boost::any getParent(const boost::any& node) const;
 
 	//Messaged when the user has altered the value for the item identified by path to newValue.
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
@@ -167,6 +164,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeModel : public DefaultTreeM
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+
+    TreePath createPath(ModelTreeNodeRefPtr node) const;
+
     /*==========================  PRIVATE  ================================*/
 
   private:

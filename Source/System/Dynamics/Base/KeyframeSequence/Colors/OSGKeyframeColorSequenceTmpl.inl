@@ -60,6 +60,81 @@ KeyframeColorSequenceTmpl<SequenceDesc>::~KeyframeColorSequenceTmpl(void)
 {
 }
 
+template <class SequenceDesc> inline 
+typename KeyframeColorSequenceTmpl<SequenceDesc>::StoredType 
+  KeyframeColorSequenceTmpl<SequenceDesc>::getRawKeyValue (const UInt32 index )
+{
+    return _field[index];
+}
+
+template <class SequenceDesc> inline 
+typename KeyframeColorSequenceTmpl<SequenceDesc>::StoredType
+  KeyframeColorSequenceTmpl<SequenceDesc>::getRawKeyValue (const UInt32 index ) const
+{
+    return _field[index];
+}
+
+template <class SequenceDesc> inline 
+void KeyframeColorSequenceTmpl<SequenceDesc>::getRawKeyValue (StoredType   &val,
+                           const UInt32 index )
+{
+    val = _field[index];
+}
+
+template <class SequenceDesc> inline 
+void KeyframeColorSequenceTmpl<SequenceDesc>::getRawKeyValue (StoredType   &val,
+                           const UInt32 index ) const
+{
+    val = _field[index];
+}
+
+
+template <class SequenceDesc> inline 
+void KeyframeColorSequenceTmpl<SequenceDesc>::setRawKeyframe (const StoredType &val,
+                           const Real32     &key,
+                           const UInt32     index )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field[index] = val;
+    _mfInternalKeys[index] = key;
+}
+
+template <class SequenceDesc> inline 
+void KeyframeColorSequenceTmpl<SequenceDesc>::addRawKeyframe (const StoredType &val,
+                           const Real32     &key )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field.push_back(val);
+    _mfInternalKeys.push_back(key);
+}
+
+template <class SequenceDesc> inline 
+void KeyframeColorSequenceTmpl<SequenceDesc>::insertRawKeyframe(const StoredType &val,
+                             const Real32     &key,
+                             const UInt32     index)
+{
+    if(_field.size() < index)
+    {
+        assert(false && "Index Out of bounds.");
+    }
+    else if(_field.size() == index)
+    {
+        addRawKeyframe(val,key);
+    }
+    else
+    {
+        editMField(SequenceDataFieldMask, _field);
+        editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+        _field.insert(_field.begin() + index, val);
+        this->_mfInternalKeys.insert(this->_mfInternalKeys.begin() + index, key);
+    }
+}
+
 #ifdef OSG_MT_CPTR_ASPECT
 template <class SequenceDesc> inline 
 typename KeyframeColorSequenceTmpl<SequenceDesc>::ObjCPtr 

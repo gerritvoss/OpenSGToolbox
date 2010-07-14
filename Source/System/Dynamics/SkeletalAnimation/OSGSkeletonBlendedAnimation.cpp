@@ -48,9 +48,7 @@
 #include "OSGSkeletonBlendedAnimation.h"
 #include "OSGInterpolations.h"
 
-#include "OSGSkeletonBlendedAnimation.h"
 #include "OSGJoint.h"
-#include "OSGSkeleton.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -116,8 +114,8 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 					if(getOverrideStatuses(i) && getBlendAmounts(i) != 0)
 					{
 						//If this skeleton animation is set to override, we don't consider any other difference transformations
-						Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][(*iter)->getId()]);
-						blendedRelDifTrans = (OSG::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+						//Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][(*iter)->getId()]);
+						//blendedRelDifTrans = (OSG::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
 						break;
 					}
 					else
@@ -126,18 +124,18 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 						{
 							//Use the calculated relative difference transformation from bind pose to the transformation defined by
 							//the skeleton animation
-							Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][(*iter)->getId()]);
-							blendedRelDifTrans = (OSG::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+							//Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][(*iter)->getId()]);
+							//blendedRelDifTrans = (OSG::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
 						}
 						else
 						{
 							//Use the difference transformation between the joint's current transformation and the transformation
 							//defined by the skeleton animation
-							Matrix relDifTrans = (*iter)->previewRelativeTransformation(blendedRelDifTrans);
-							relDifTrans.invert();
-							relDifTrans.multLeft(relTransformations[i][(*iter)->getId()]);
+							//Matrix relDifTrans = (*iter)->previewRelativeTransformation(blendedRelDifTrans);
+							//relDifTrans.invert();
+							//relDifTrans.multLeft(relTransformations[i][(*iter)->getId()]);
 
-							blendedRelDifTrans.mult(OSG::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+							//blendedRelDifTrans.mult(OSG::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
 						}
 					}
 					if(getBlendAmounts(i) != 0)
@@ -146,16 +144,16 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 					}
 				}
 			}
-			blendedRelDifTrans.mult((*iter)->getBindRelativeTransformation());
-			(*iter)->setRelativeTransformation(blendedRelDifTrans);
+			//blendedRelDifTrans.mult((*iter)->getBindRelativeTransformation());
+			//(*iter)->setRelativeTransformation(blendedRelDifTrans);
 
-			//Update joint, but don't tell skeleton
-			(*iter)->updateTransformations(false, false);
+			////Update joint, but don't tell skeleton
+			//(*iter)->updateTransformations(false, false);
 
 		}
 
 		//Tell skeleton to update
-		(*animatedJoints.begin())->getParentSkeleton()->skeletonUpdated();
+		//(*animatedJoints.begin())->getParentSkeleton()->skeletonUpdated();
 	}
 }
 

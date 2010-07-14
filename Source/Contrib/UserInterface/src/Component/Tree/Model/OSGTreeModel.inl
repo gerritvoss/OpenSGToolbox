@@ -40,4 +40,10 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+TreePath TreeModel::getRootPath(void) const
+{
+    return TreePath(getRoot(), const_cast<TreeModel*>(this));
+}
+
 OSG_END_NAMESPACE

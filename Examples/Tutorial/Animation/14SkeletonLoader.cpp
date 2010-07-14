@@ -25,7 +25,7 @@
 
 //Animation
 #include "OSGJoint.h"
-#include "OSGSkeleton.h"
+#include "OSGSkeletonBlendedGeometry.h"
 #include "OSGSkeletonDrawable.h"
 
 #include "OSGFCFileHandler.h"
@@ -152,20 +152,29 @@ int main(int argc, char **argv)
     ExampleMaterial->addChunk(ExampleMaterialChunk);
     ExampleMaterial->addChunk(ExampleBlendChunk);
 
+    //Joint Node Hierarchy
+    NodeRecPtr ExampleJointNode;
+
     //Create a new skeleton
-    SkeletonUnrecPtr ExampleSkeleton = Skeleton::create();
+    SkeletonBlendedGeometryRecPtr ExampleSkeleton;
 
     //Load skeleton from an XML file
     FCFileType::FCPtrStore NewContainers;
-    NewContainers = FCFileHandler::the()->read(BoostPath("C:\\Users\\danielg\\Desktop\\AnimationTest\\14Skeleton.xml"));
+    NewContainers = FCFileHandler::the()->read(BoostPath("./Data/14Skeleton.xml"));
 
     FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
         //We only want the skeleton; ignore anything else saved in the XML file
-        if( (*Itor)->getType() == (Skeleton::getClassType()))
+        if( (*Itor)->getType() == (SkeletonBlendedGeometry::getClassType()))
         {
-            ExampleSkeleton = (dynamic_pointer_cast<Skeleton>(*Itor));
+            ExampleSkeleton = (dynamic_pointer_cast<SkeletonBlendedGeometry>(*Itor));
+        }
+
+        if( (*Itor)->getType() == (Node::getClassType()) && 
+            (dynamic_pointer_cast<Node>(*Itor)->getParent() == NULL))
+        {
+            ExampleJointNode = (dynamic_pointer_cast<Node>(*Itor));
         }
     }
 

@@ -92,6 +92,9 @@ class NumberSpinnerModel : public AbstractSpinnerModel
     //Returns the size of the value change computed by the getNextValue and getPreviousValue methods.
     NumberType getStepSize(void);
 
+    //Set the value of the model
+    void setNumberValue(const NumberType& value);
+
     //Changes the upper bound for numbers in this sequence.
     void setMaximum(const NumberType& maximum);
 
@@ -146,6 +149,9 @@ typedef boost::shared_ptr<Real64SpinnerModel> Real64SpinnerModelPtr;
 
 typedef NumberSpinnerModel<Real128> Real128SpinnerModel;
 typedef boost::shared_ptr<Real128SpinnerModel> Real128SpinnerModelPtr;
+
+typedef NumberSpinnerModel<Fixed32> Fixed32SpinnerModel;
+typedef boost::shared_ptr<Fixed32SpinnerModel> Fixed32SpinnerModelPtr;
 
 OSG_END_NAMESPACE
 

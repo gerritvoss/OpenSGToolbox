@@ -60,6 +60,66 @@ KeyframeFCPtrSequenceTmpl<SequenceDesc>::~KeyframeFCPtrSequenceTmpl(void)
 {
 }
 
+template <class SequenceDesc> inline 
+typename KeyframeFCPtrSequenceTmpl<SequenceDesc>::StoredPtrType 
+  KeyframeFCPtrSequenceTmpl<SequenceDesc>::getRawKeyValue (const UInt32 index )
+{
+    return _field[index];
+}
+
+template <class SequenceDesc> inline 
+typename KeyframeFCPtrSequenceTmpl<SequenceDesc>::StoredPtrType
+  KeyframeFCPtrSequenceTmpl<SequenceDesc>::getRawKeyValue (const UInt32 index ) const
+{
+    return _field[index];
+}
+
+template <class SequenceDesc> inline 
+void KeyframeFCPtrSequenceTmpl<SequenceDesc>::setRawKeyframe (StoredPtrType const val,
+                           const Real32     &key,
+                           const UInt32     index )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field[index] = val;
+    _mfInternalKeys[index] = key;
+}
+
+template <class SequenceDesc> inline 
+void KeyframeFCPtrSequenceTmpl<SequenceDesc>::addRawKeyframe (StoredPtrType const val,
+                           const Real32     &key )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field.push_back(val);
+    _mfInternalKeys.push_back(key);
+}
+
+template <class SequenceDesc> inline 
+void KeyframeFCPtrSequenceTmpl<SequenceDesc>::insertRawKeyframe(StoredPtrType const val,
+                             const Real32     &key,
+                             const UInt32     index)
+{
+    if(_field.size() < index)
+    {
+        assert(false && "Index Out of bounds.");
+    }
+    else if(_field.size() == index)
+    {
+        addRawKeyframe(val,key);
+    }
+    else
+    {
+        editMField(SequenceDataFieldMask, _field);
+        editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+        _field.insert(_field.begin() + index, val);
+        this->_mfInternalKeys.insert(this->_mfInternalKeys.begin() + index, key);
+    }
+}
+
 #ifdef OSG_MT_CPTR_ASPECT
 template <class SequenceDesc> inline 
 typename KeyframeFCPtrSequenceTmpl<SequenceDesc>::ObjCPtr 
