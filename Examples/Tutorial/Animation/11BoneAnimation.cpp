@@ -85,7 +85,7 @@ public:
 		   else
 		   {
 				animationPaused = true;
-				TheCurrentAnimation->stop();
+				TheCurrentAnimation->pause(false);
 		   }
 
 	   }
