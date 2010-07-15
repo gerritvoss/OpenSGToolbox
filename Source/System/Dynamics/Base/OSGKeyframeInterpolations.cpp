@@ -4,106 +4,106 @@ OSG_BEGIN_NAMESPACE
 
 bool getInterpolationIndexes(const MFReal32& Keys, const Real32& time, UInt32& LastKeyframeIndex, UInt32& NextKeyframeIndex, Real32& t, bool isCyclic)
 {
-   Real32 Adjustedtime;
-   if(isCyclic)
-   {
-      Adjustedtime = time - ( Keys[Keys.size()-1] * osgFloor(time/Keys[Keys.size()-1]) );
-   }
-   else
-   {
-      Adjustedtime = time;
-   }
-   
-   //Get the indexes of the current keyframe in the animation
-   UInt32 KeysIndex(0);
-   while( KeysIndex < Keys.size() )
-   {
-      if(Adjustedtime < Keys[KeysIndex])
-      {
-         break;
-      }
-      ++KeysIndex;
-   }
-   
-   if( !isCyclic && KeysIndex == Keys.size() &&  Adjustedtime >= Keys[Keys.size()-1])
-   {
-      //time > t
-      //At the end of the animation
-      return true;
-   }
-   
-   NextKeyframeIndex = KeysIndex;
-   if(KeysIndex == 0)
-   {
+    Real32 Adjustedtime;
+    if(isCyclic)
+    {
+        Adjustedtime = time - ( Keys[Keys.size()-1] * osgFloor(time/Keys[Keys.size()-1]) );
+    }
+    else
+    {
+        Adjustedtime = time;
+    }
+
+    //Get the indexes of the current keyframe in the animation
+    UInt32 KeysIndex(0);
+    while( KeysIndex < Keys.size() )
+    {
+        if(Adjustedtime < Keys[KeysIndex])
+        {
+            break;
+        }
+        ++KeysIndex;
+    }
+
+    if( !isCyclic && KeysIndex == Keys.size() &&  Adjustedtime >= Keys[Keys.size()-1])
+    {
+        //time > t
+        //At the end of the animation
+        return true;
+    }
+
+    NextKeyframeIndex = KeysIndex;
+    if(KeysIndex == 0)
+    {
         LastKeyframeIndex = Keys.size() - 1;
-   }
-   else
-   {
+    }
+    else
+    {
         LastKeyframeIndex = NextKeyframeIndex - 1;
-   }
-   
-   //Normalize t
-   t = (Adjustedtime-Keys[LastKeyframeIndex])/(Keys[NextKeyframeIndex]-Keys[LastKeyframeIndex]);
-   return false;
+    }
+
+    //Normalize t
+    t = (Adjustedtime-Keys[LastKeyframeIndex])/(Keys[NextKeyframeIndex]-Keys[LastKeyframeIndex]);
+    return false;
 }
 
 bool getInterpolationIndex(const MFReal32& Keys, const Real32& time, UInt32& Index, Real32& t, bool isCyclic)
 {
-   Real32 Adjustedtime;
-   if(isCyclic)
-   {
-      Adjustedtime = time - ( Keys[Keys.size()-1] * osgFloor(time/Keys[Keys.size()-1]) );
-   }
-   else
-   {
-      Adjustedtime = time;
-   }
-   
-   //Get the indexes of the current keyframe in the animation
-   UInt32 KeysIndex(0);
-   while( KeysIndex < Keys.size() )
-   {
-      if(Adjustedtime < Keys[KeysIndex])
-      {
-         break;
-      }
-      ++KeysIndex;
-   }
-   
-   if( !isCyclic && KeysIndex == Keys.size() &&  Adjustedtime >= Keys[Keys.size()-1])
-   {
-      //time > t
-      //At the end of the animation
-      Index = Keys.size()-1;
-      return true;
-   }
-   
-   if(KeysIndex == 0)
-   {
-      Index = KeysIndex;
-      t = 0;
-   }
-   else
-   {
-      Index = KeysIndex-1;
-      //Normalize t
-      t = (Adjustedtime-Keys[Index])/(Keys[Index+1]-Keys[Index]);
-   }
-   
-   return false;
+    Real32 Adjustedtime;
+    if(isCyclic)
+    {
+        Adjustedtime = time - ( Keys[Keys.size()-1] * osgFloor(time/Keys[Keys.size()-1]) );
+    }
+    else
+    {
+        Adjustedtime = time;
+    }
+
+    //Get the indexes of the current keyframe in the animation
+    UInt32 KeysIndex(0);
+    while( KeysIndex < Keys.size() )
+    {
+        if(Adjustedtime < Keys[KeysIndex])
+        {
+            break;
+        }
+        ++KeysIndex;
+    }
+
+    if( !isCyclic && KeysIndex == Keys.size() &&  Adjustedtime >= Keys[Keys.size()-1])
+    {
+        //time > t
+        //At the end of the animation
+        Index = Keys.size()-1;
+        return true;
+    }
+
+    if(KeysIndex == 0)
+    {
+        Index = KeysIndex;
+        t = 0;
+    }
+    else
+    {
+        Index = KeysIndex-1;
+        //Normalize t
+        t = (Adjustedtime-Keys[Index])/(Keys[Index+1]-Keys[Index]);
+    }
+
+    return false;
 }
 
-std::string lerp( const std::string& From, const std::string& To, const Real32& t)
+std::string lerp( const std::string& From, const std::string& To, Real32 t)
 {
     return lerpFromSide(From,To,t);
 }
 
-std::string lerpFromSide( const std::string& From, const std::string& To, const Real32& t)
+std::string lerpFromSide( const std::string& From, const std::string& To, Real32 t)
 {
     UInt32 MaxSize(osgMax<UInt32>(From.size(),To.size()));
     Real32 TimePerChar(1.0f/static_cast<Real32>(MaxSize));
     Real32 FromChar(' '),ToChar(' ');
-    
+
     std::string Result("");
 
     if(From.size() < To.size())
@@ -152,7 +152,7 @@ std::string lerpFromSide( const std::string& From, const std::string& To, const 
 //This String interpolation will create a string that is length
 //Max(From.size(),To.size()), it then interpolates all of the characters at once
 //using their ASCII values to interpolate on
-std::string lerpAll( const std::string& From, const std::string& To, const Real32& t)
+std::string lerpAll( const std::string& From, const std::string& To, Real32 t)
 {
     std::string Result(From);
     Result.resize(osgMax(From.size(),To.size()), ' ');
@@ -170,88 +170,6 @@ std::string lerpAll( const std::string& From, const std::string& To, const Real3
         }
     }
     return Result;
-}
-
-//String Replace
-template<>
-bool replacement<SFString>(RawInterpFuncion& InterpFunc,
-                              const Real32& time,
-                              const Real32& prevtime,
-                              const UInt32& ReplacePolicy,
-                              bool isCyclic,
-                              EditFieldHandlePtr Result,
-                              UInt32 Index, 
-                              Real32 Blend)
-{
-    SFString Value(static_cast<SFString&>(*Result->getField()).getValue());
-    bool ReturnValue = InterpFunc(time, Value,isCyclic);
-
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        switch(ReplacePolicy)
-        {
-        case Animator::OVERWRITE:
-            static_cast<SFString&>(*Result->getField()).setValue(Value.getValue());
-            break;
-        default:
-            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
-            break;
-        }
-    }
-    else
-    {
-        switch(ReplacePolicy)
-        {
-        case Animator::OVERWRITE:
-            static_cast<MFString&>(*Result->getField())[Index] = Value.getValue();
-            break;
-        default:
-            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
-            break;
-        }
-    }
-   return ReturnValue;
-}
-
-//BoxVolume Replace
-template<>
-bool replacement<SFBoxVolume>(RawInterpFuncion& InterpFunc,
-                              const Real32& time,
-                              const Real32& prevtime,
-                              const UInt32& ReplacePolicy,
-                              bool isCyclic,
-                              EditFieldHandlePtr Result,
-                              UInt32 Index, 
-                              Real32 Blend)
-{
-    SFBoxVolume Value(static_cast<SFBoxVolume&>(*Result->getField()).getValue());
-    bool ReturnValue = InterpFunc(time, Value,isCyclic);
-
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        switch(ReplacePolicy)
-        {
-        case Animator::OVERWRITE:
-            static_cast<SFBoxVolume&>(*Result->getField()).setValue(Value.getValue());
-            break;
-        default:
-            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
-            break;
-        }
-    }
-    else
-    {
-        switch(ReplacePolicy)
-        {
-        case Animator::OVERWRITE:
-            static_cast<MFBoxVolume&>(*Result->getField())[Index] = Value.getValue();
-            break;
-        default:
-            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
-            break;
-        }
-    }
-   return ReturnValue;
 }
 
 OSG_END_NAMESPACE

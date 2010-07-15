@@ -1,5 +1,5 @@
 // 
-// OpenSGToolbox Tutorial: 01Animation
+// OpenSGToolbox Tutorial: 02TransformAnimation
 //
 // Demonstrates a simple animation using transformation keyframes. 
 //
@@ -33,7 +33,7 @@
 
 //Animation
 #include "OSGKeyframeSequences.h"
-#include "OSGKeyframeAnimator.h"
+#include "OSGTransformAnimator.h"
 #include "OSGFieldAnimation.h"
 
 // Activate the OpenSG namespace
@@ -46,8 +46,6 @@ OSG_USING_NAMESPACE
 void setupAnimation(void);
 void display(void);
 void reshape(Vec2f Size);
-
-void printAllStats(void);
 
 class TutorialAnimationListener : public AnimationListener
 {
@@ -95,13 +93,6 @@ MaterialUnrecPtr TheTorusMaterial;
 ComponentTransformUnrecPtr Trans;
 TransformUnrecPtr TorusNodeTrans;
 
-KeyframeAnimatorUnrecPtr TheAnimator;
-KeyframeTransformationSequenceRefPtr TransformationKeyframes;
-KeyframeColorSequenceUnrecPtr ColorKeyframes;
-KeyframeVectorSequenceUnrecPtr VectorKeyframes;
-KeyframeRotationSequenceUnrecPtr RotationKeyframes;
-KeyframeNumberSequenceUnrecPtr NumberKeyframes;
-
 // Create a class to allow for the use of the keyboard shortucts 
 class TutorialKeyListener : public KeyListener
 {
@@ -132,17 +123,6 @@ public:
        case KeyEvent::KEY_3:
                 dynamic_pointer_cast<FieldAnimation>(TheAnimation)->setInterpolationType(Animator::CUBIC_INTERPOLATION);
            break;
-		//case '1':
-				//TheAnimator->setKeyframeSequence(ColorKeyframes);
-			
-			//TheAnimation->setAnimatedField(TheTorusMaterial, std::string("diffuse"));
-			
-			//break;
-		//case '2':
-				//TheAnimator->setKeyframeSequence(TransformationKeyframes);
-
-			//TheAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
-            //break;
        }
    }
 
@@ -196,7 +176,6 @@ int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
-    printAllStats();
 
     {
 
@@ -268,7 +247,7 @@ int main(int argc, char **argv)
     Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
     TutorialWindow->openWindow(WinPos,
             WinSize,
-            "OpenSG 01Animation Window");
+            "OpenSG 02TransformAnimation Window");
 
     //Enter main Loop
     TutorialWindow->mainLoop();
@@ -295,75 +274,36 @@ void reshape(Vec2f Size)
 void setupAnimation(void)
 {
     //Number Keyframe Sequence
-    NumberKeyframes = KeyframeNumberSequenceReal32::create();
-    NumberKeyframes->addKeyframe(1.0,0.0f);
-    NumberKeyframes->addKeyframe(60.0,1.0f);
-    NumberKeyframes->addKeyframe(20.0,2.0f);
-    NumberKeyframes->addKeyframe(1.0,3.0f);
+    KeyframeNumberSequenceReal32UnrecPtr XTransKeyframes = KeyframeNumberSequenceReal32::create();
+    XTransKeyframes->addKeyframe(1.0,0.0f);
+    XTransKeyframes->addKeyframe(5.0,2.0f);
+    XTransKeyframes->addKeyframe(-5.0,4.0f);
+    XTransKeyframes->addKeyframe(1.0,6.0f);
     
-    //Color Keyframe Sequence
-    ColorKeyframes = KeyframeColorSequenceColor3f::create();
-    ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),0.0f);
-    ColorKeyframes->addKeyframe(Color4f(0.0f,1.0f,0.0f,1.0f),2.0f);
-    ColorKeyframes->addKeyframe(Color4f(0.0f,0.0f,1.0f,1.0f),4.0f);
-    ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),6.0f);
+    KeyframeNumberSequenceReal32UnrecPtr YRotKeyframes = KeyframeNumberSequenceReal32::create();
+    YRotKeyframes->addKeyframe(0.0,0.0f);
+    YRotKeyframes->addKeyframe(45.0,2.0f);
+    YRotKeyframes->addKeyframe(0.0,4.0f);
 
-	//Position Keyframe Sequence
-    KeyframePositionSequenceUnrecPtr PositionKeyframes = KeyframePositionSequencePnt3f::create();
-    PositionKeyframes->addKeyframe(Pnt3f(1.0f,1.0f,1.0f),0.0f);
-    PositionKeyframes->addKeyframe(Pnt3f(0.5f,1.0f,0.5f),1.0f);
-    PositionKeyframes->addKeyframe(Pnt3f(1.0f,1.0f,0.5f),2.0f);
-    PositionKeyframes->addKeyframe(Pnt3f(1.0f,0.5f,0.5f),3.0f);
-    PositionKeyframes->addKeyframe(Pnt3f(1.0f,1.0f,1.0f),4.0f);
+    KeyframeNumberSequenceReal32UnrecPtr ZScaleKeyframes = KeyframeNumberSequenceReal32::create();
+    ZScaleKeyframes->addKeyframe(1.0,0.0f);
+    ZScaleKeyframes->addKeyframe(2.0,2.0f);
+    ZScaleKeyframes->addKeyframe(3.0,4.0f);
+    ZScaleKeyframes->addKeyframe(1.0,6.0f);
 
-	//Vector Keyframe Sequence
-    VectorKeyframes = KeyframeVectorSequenceVec3f::create();
-    VectorKeyframes->addKeyframe(Vec3f(1.0f,1.0f,1.0f),0.0f);
-    VectorKeyframes->addKeyframe(Vec3f(0.5f,1.0f,0.5f),1.0f);
-    VectorKeyframes->addKeyframe(Vec3f(1.0f,1.0f,0.5f),2.0f);
-    VectorKeyframes->addKeyframe(Vec3f(1.0f,0.5f,0.5f),3.0f);
-    VectorKeyframes->addKeyframe(Vec3f(1.0f,1.0f,1.0f),4.0f);
-    
-	//Rotation Keyframe Sequence
-    RotationKeyframes = KeyframeRotationSequenceQuaternion::create();
-    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0f),0.0f);
-    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5f),1.0f);
-    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0f),2.0f);
-    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5f),3.0f);
-    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*2.0f),4.0f);
-
-	//Transformation Keyframe Sequence
-    TransformationKeyframes = KeyframeTransformationSequenceMatrix4f::create();
-    Matrix TempMat;
-    TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0f));
-    TransformationKeyframes->addKeyframe(TempMat,0.0f);
-    TempMat.setTransform(Vec3f(0.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5f));
-    TransformationKeyframes->addKeyframe(TempMat,1.0f);
-    TempMat.setTransform(Vec3f(1.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0f));
-    TransformationKeyframes->addKeyframe(TempMat,2.0f);
-    TempMat.setTransform(Vec3f(1.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5f));
-    TransformationKeyframes->addKeyframe(TempMat,3.0f);
-    TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*2.0f));
-    TransformationKeyframes->addKeyframe(TempMat,4.0f);
-    
     //Animator
-    TheAnimator = KeyframeAnimator::create();
-    //TheAnimator->setKeyframeSequence(VectorKeyframes);
-    //TheAnimator->setKeyframeSequence(RotationKeyframes);
-    //TheAnimator->setKeyframeSequence(ColorKeyframes);
-    TheAnimator->setKeyframeSequence(TransformationKeyframes);
-    //TheAnimator->setKeyframeSequence(NumberKeyframes);
+    TransformAnimatorUnrecPtr TheAnimator = TransformAnimator::create();
+    TheAnimator->setXTranslationSequence(XTransKeyframes);
+    TheAnimator->setXRotationSequence(YRotKeyframes);
+    TheAnimator->setYRotationSequence(YRotKeyframes);
+    //TheAnimator->setZRotationSequence(YRotKeyframes);
+    TheAnimator->setZScaleSequence(ZScaleKeyframes);
     
     //Animation
     TheAnimation = FieldAnimation::create();
     TheAnimation->setAnimator(TheAnimator);
     TheAnimation->setInterpolationType(Animator::LINEAR_INTERPOLATION);
     TheAnimation->setCycling(2);
-    //TheAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
-    //TheAnimation->setAnimatedField(Trans, std::string("scale"));
-    //TheAnimation->setAnimatedField(Trans, std::string("rotation"));
-    //TheAnimation->setAnimatedField(TheTorusMaterial, std::string("diffuse"));
-    //TheAnimation->setAnimatedField(TheTorusMaterial, std::string("shininess"));
     TheAnimation->setAnimatedField(TorusNodeTrans, std::string("matrix"));
 
     //Animation Listener
@@ -371,18 +311,5 @@ void setupAnimation(void)
 
     TheAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
     TheAnimation->start();
-}
-
-#include "OSGStatElemDesc.h"
-void printAllStats(void)
-{
-    StatElemDescBase* Desc(NULL);
-    for(UInt32 i = 0; i < StatElemDescBase::getNumOfDescs(); ++i)
-    {
-        Desc = StatElemDescBase::getDesc(i);
-        std::cout << Desc->getID()          << ": "
-                  << Desc->getName()        << ": "
-                  << Desc->getDescription() << std::endl;
-    }
 }
 

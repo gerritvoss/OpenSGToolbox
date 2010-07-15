@@ -91,7 +91,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlend
 
 	/**************************************************************************//**
 	 * @fn	void addAnimationBlending(const SkeletonAnimationUnrecPtr TheSkeletonAnimati
-	 * 		on, const Real32& BlendAmount)
+	 * 		on, Real32 BlendAmount)
 	 * 
 	 * @brief	Adds an animation to this blended animation.
 	 * 
@@ -103,7 +103,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlend
 	 *									animations affecting these joints will be
 	 *									ignored.
 	*****************************************************************************/
-	void addAnimationBlending(const SkeletonAnimationUnrecPtr TheSkeletonAnimation, const Real32& BlendAmount, bool Override);
+	void addAnimationBlending(const SkeletonAnimationUnrecPtr TheSkeletonAnimation, Real32 BlendAmount, bool Override);
 
 	/**************************************************************************//**
 	 * @fn	void setBlendAmount(unsigned int Index, Real32 BlendAmount)
@@ -163,7 +163,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlend
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-	virtual void internalUpdate(const Real32& t, const Real32 prev_t);
+	virtual void internalUpdate(Real32 t, const Real32 prev_t);
     /*==========================  PRIVATE  ================================*/
 
   private:

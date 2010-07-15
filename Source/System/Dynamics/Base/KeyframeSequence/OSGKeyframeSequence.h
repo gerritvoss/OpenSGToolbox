@@ -42,7 +42,6 @@
 #pragma once
 #endif
 
-#include "OSGKeyframeInterpolations.h"
 #include "OSGKeyframeSequenceBase.h"
 
 
@@ -100,7 +99,7 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
 
     virtual const Field& getKeyValues(void) const = 0;
     
-    virtual const DataType &getDataType(void) const = 0;
+    virtual const DataType* getDataType(void) const = 0;
 
     /*! \}                                                                 */
     
@@ -108,22 +107,20 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
     /*! \{                                                                 */
 
     virtual void        clear    (      void               )       = 0;
-    virtual void        resize   (      size_t      newsize)       = 0;
-    virtual void        shrink   (void                     )       = 0;
 
     /*! \}                                                                 */
 
     /*! \name                  Interpolation                               */
     /*! \{                                                                 */
 
-    bool interpolate(const UInt32& Type,
-                     const Real32& time,
-                     const Real32& prevTime,
-                     const UInt32& ReplacePolicy,
-                     bool isCyclic,
-                     EditFieldHandlePtr Result,
-                     UInt32 Index,
-                     Real32 Blend);
+    virtual bool interpolate(UInt32 Type,
+                             Real32 time,
+                             Real32 prevTime,
+                             UInt32 ReplacePolicy,
+                             bool isCyclic,
+                             EditFieldHandlePtr Result,
+                             UInt32 Index,
+                             Real32 Blend) = 0;
 
     virtual void zeroField(EditFieldHandlePtr Result,
                            UInt32 Index) const = 0;
@@ -136,9 +133,6 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
 
     /*! \name         Internal Interpolation Handling                      */
     /*! \{                                                                 */
-
-    virtual RawInterpFuncion bindInterpFunction(UInt32 InterpolationFunctionId) const = 0;
-    virtual ReplacementFuncion getReplacementFuncion(void) const = 0;
 
     /*! \}                                                                 */
     // Variables should all be in KeyframeSequenceBase.

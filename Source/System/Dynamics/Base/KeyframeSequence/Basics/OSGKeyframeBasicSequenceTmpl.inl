@@ -358,9 +358,9 @@ const Field& KeyframeBasicSequenceTmpl<SequenceDesc>::getKeyValues(void) const
 /*! \copydoc OSG::KeyframeBasicSequence::size
  */
 template <class SequenceDesc> inline
-const DataType& KeyframeBasicSequenceTmpl<SequenceDesc>::getDataType(void) const
+const DataType*  KeyframeBasicSequenceTmpl<SequenceDesc>::getDataType(void) const
 {
-    return SequenceDesc::StoredFieldType::getClassType().getContentType();
+    return &SequenceDesc::StoredFieldType::getClassType().getContentType();
 }
 
 template <class SequenceDesc> inline 
@@ -407,23 +407,74 @@ void KeyframeBasicSequenceTmpl<SequenceDesc>::shrink(void)
 }
 
 template <class SequenceDesc> inline
-RawInterpFuncion KeyframeBasicSequenceTmpl<SequenceDesc>::bindInterpFunction(UInt32 InterpolationFunctionId) const
+bool KeyframeBasicSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                         Real32 time,
+                         Real32 prevTime,
+                         UInt32 ReplacePolicy,
+                         bool isCyclic,
+                         EditFieldHandlePtr Result,
+                         UInt32 Index,
+                         Real32 Blend)
 {
-    typename SequenceDesc::ConcreteInterpFunction f(SequenceDesc::getInterpolationFuncMap()[InterpolationFunctionId]);
-    if(f.empty())
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        return NULL;
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<SingleFieldType&>(*Result->getField()).getValue(),
+                           Blend);
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index],
+                           Blend);
     }
 }
 
 template <class SequenceDesc> inline
-ReplacementFuncion KeyframeBasicSequenceTmpl<SequenceDesc>::getReplacementFuncion(void) const
+void KeyframeBasicSequenceTmpl<SequenceDesc>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    return &replacement<typename SequenceDesc::SingleFieldType>;
+    if(Result->getCardinality() == FieldType::SingleField)
+    {
+        return zeroField(static_cast<SingleFieldType&>(*Result->getField()).getValue());
+    }
+    else
+    {
+        return zeroField(static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index]);
+    }
+}
+
+template <class SequenceDesc> inline
+bool KeyframeBasicSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                                                           Real32 time,
+                                                           Real32 prevTime,
+                                                           UInt32 ReplacePolicy,
+                                                           bool isCyclic,
+                                                           StoredType& Result,
+                                                           Real32 Blend)
+{
+    typename SequenceDesc::ConcreteInterpFunction InterpFunc(SequenceDesc::getInterpolationFuncMap()[Type]);
+    if(InterpFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Interpolation function of type: " << Type << std::endl;
+        return false;
+    }
+    typename SequenceDesc::InterpReplaceFunction InterpReplaceFunc(boost::bind(InterpFunc, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3));
+    typename SequenceDesc::ConcreteReplaceFunction ReplaceFunc(SequenceDesc::getReplacementFuncMap()[ReplacePolicy]);
+    if(ReplaceFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Replacement function." << std::endl;
+        return false;
+    }
+
+    return ReplaceFunc(InterpReplaceFunc, time, prevTime, isCyclic, Result, Blend);
 }
 
 template <class SequenceDesc> inline
@@ -507,16 +558,9 @@ void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceStringDescBase>::getKeyValue
 }
 
 template<> inline 
-void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceStringDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceStringDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFString&>(*Result->getField()).setValue(std::string(""));
-    }
-    else
-    {
-        static_cast<MFString&>(*Result->getField())[Index] = std::string("");
-    }
+    Result = std::string("");
 }
 
 template<> inline 
@@ -565,6 +609,87 @@ void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceStringDescBase>::insertKeyfr
     }
 }
 
+/************************** Bool  ********************/
+template<> inline 
+KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::GenericType 
+      KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::getKeyValue (const UInt32       index ) const
+{
+    return GLDefineMapper::the()->toString(_field[index]);
+}
+
+template<> inline 
+KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::GenericType 
+      KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::getKeyValue (const UInt32       index )
+{
+    return GLDefineMapper::the()->toString(_field[index]);
+}
+
+template<> inline 
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::getKeyValue (GenericType &val,
+                              const UInt32       index )      
+{
+    val = GLDefineMapper::the()->toString(_field[index]);
+}
+
+template<> inline 
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::getKeyValue (GenericType &val,
+                              const UInt32       index ) const
+{
+    val = GLDefineMapper::the()->toString(_field[index]);
+}
+
+template<> inline 
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::zeroField(StoredType& Result) const
+{
+    Result = GL_NONE;
+}
+
+template<> inline 
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::setKeyframe (const GenericType &val,
+                                                              const Real32 &key,
+                                                              const UInt32       index )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field[index] = GLDefineMapper::the()->fromString(val.c_str());
+    _mfInternalKeys[index] = key;
+}
+
+template<> inline 
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::addKeyframe (const GenericType &val,
+                                                              const Real32 &key   )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field.push_back(GLDefineMapper::the()->fromString(val.c_str()));
+    _mfInternalKeys.push_back(key);
+}
+
+template<> inline 
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoolDescBase>::insertKeyframe (const GenericType &val,
+                                                              const Real32 &key,
+                                                              const UInt32       index )
+{
+    if(_field.size() < index)
+    {
+        assert(false && "Index Out of bounds.");
+    }
+    else if(_field.size() == index)
+    {
+        push_back(val,key);
+    }
+    else
+    {
+        editMField(SequenceDataFieldMask, _field);
+        editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+        _field.insert(_field.begin() + index, GLDefineMapper::the()->fromString(val.c_str()));
+        this->_mfInternalKeys.insert(this->_mfInternalKeys.begin() + index, key);
+    }
+}
+
 /************************** GLenum  ********************/
 template<> inline 
 KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::GenericType 
@@ -595,16 +720,9 @@ void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::getKeyValue
 }
 
 template<> inline 
-void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFGLenum&>(*Result->getField()).setValue(GL_NONE);
-    }
-    else
-    {
-        static_cast<MFGLenum&>(*Result->getField())[Index] = GL_NONE;
-    }
+    Result = GL_NONE;
 }
 
 template<> inline 
@@ -689,16 +807,9 @@ void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoxVolumeDescBase>::getKeyVa
 }
 
 template<> inline 
-void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoxVolumeDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeBasicSequenceTmpl<KeyframeBasicSequenceBoxVolumeDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFBoxVolume&>(*Result->getField()).getValue().setBounds(0.0f,0.0f,0.0f);
-    }
-    else
-    {
-        static_cast<MFBoxVolume&>(*Result->getField())[Index].setBounds(0.0f,0.0f,0.0f);
-    }
+    Result.setBounds(0.0f,0.0f,0.0f);
 }
 
 template<> inline 

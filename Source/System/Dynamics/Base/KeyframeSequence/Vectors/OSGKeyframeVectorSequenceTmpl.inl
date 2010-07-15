@@ -355,9 +355,9 @@ const Field& KeyframeVectorSequenceTmpl<SequenceDesc>::getKeyValues(void) const
 /*! \copydoc OSG::KeyframeVectorSequence::size
  */
 template <class SequenceDesc> inline
-const DataType& KeyframeVectorSequenceTmpl<SequenceDesc>::getDataType(void) const
+const DataType*  KeyframeVectorSequenceTmpl<SequenceDesc>::getDataType(void) const
 {
-    return SequenceDesc::StoredFieldType::getClassType().getContentType();
+    return &SequenceDesc::StoredFieldType::getClassType().getContentType();
 }
 
 template <class SequenceDesc> inline 
@@ -404,23 +404,74 @@ void KeyframeVectorSequenceTmpl<SequenceDesc>::shrink(void)
 }
 
 template <class SequenceDesc> inline
-RawInterpFuncion KeyframeVectorSequenceTmpl<SequenceDesc>::bindInterpFunction(UInt32 InterpolationFunctionId) const
+bool KeyframeVectorSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                         Real32 time,
+                         Real32 prevTime,
+                         UInt32 ReplacePolicy,
+                         bool isCyclic,
+                         EditFieldHandlePtr Result,
+                         UInt32 Index,
+                         Real32 Blend)
 {
-    typename SequenceDesc::ConcreteInterpFunction f(SequenceDesc::getInterpolationFuncMap()[InterpolationFunctionId]);
-    if(f.empty())
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        return NULL;
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<SingleFieldType&>(*Result->getField()).getValue(),
+                           Blend);
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index],
+                           Blend);
     }
 }
 
 template <class SequenceDesc> inline
-ReplacementFuncion KeyframeVectorSequenceTmpl<SequenceDesc>::getReplacementFuncion(void) const
+void KeyframeVectorSequenceTmpl<SequenceDesc>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    return &replacement<typename SequenceDesc::SingleFieldType>;
+    if(Result->getCardinality() == FieldType::SingleField)
+    {
+        zeroField(static_cast<SingleFieldType&>(*Result->getField()).getValue());
+    }
+    else
+    {
+        zeroField(static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index]);
+    }
+}
+
+template <class SequenceDesc> inline
+bool KeyframeVectorSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                                                           Real32 time,
+                                                           Real32 prevTime,
+                                                           UInt32 ReplacePolicy,
+                                                           bool isCyclic,
+                                                           StoredType& Result,
+                                                           Real32 Blend)
+{
+    typename SequenceDesc::ConcreteInterpFunction InterpFunc(SequenceDesc::getInterpolationFuncMap()[Type]);
+    if(InterpFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Interpolation function of type: " << Type << std::endl;
+        return false;
+    }
+    typename SequenceDesc::InterpReplaceFunction InterpReplaceFunc(boost::bind(InterpFunc, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3));
+    typename SequenceDesc::ConcreteReplaceFunction ReplaceFunc(SequenceDesc::getReplacementFuncMap()[ReplacePolicy]);
+    if(ReplaceFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Replacement function." << std::endl;
+        return false;
+    }
+
+    return ReplaceFunc(InterpReplaceFunc, time, prevTime, isCyclic, Result, Blend);
 }
 
 template <class SequenceDesc> inline
@@ -505,16 +556,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2sDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2sDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2sDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec2s&>(*Result->getField()).setValue(Vec2s(0,0));
-    }
-    else
-    {
-        static_cast<MFVec2s&>(*Result->getField())[Index] = Vec2s(0,0);
-    }
+    Result = Vec2s(0,0);
 }
 
 template<> inline 
@@ -593,16 +637,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3sDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3sDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3sDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec3s&>(*Result->getField()).setValue(Vec3s(0,0,0));
-    }
-    else
-    {
-        static_cast<MFVec3s&>(*Result->getField())[Index] = Vec3s(0,0,0);
-    }
+    Result = Vec3s(0,0,0);
 }
 
 template<> inline 
@@ -681,16 +718,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4sDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4sDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4sDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec4s&>(*Result->getField()).setValue(Vec4s(0,0,0,0));
-    }
-    else
-    {
-        static_cast<MFVec4s&>(*Result->getField())[Index] = Vec4s(0,0,0,0);
-    }
+    Result = Vec4s(0,0,0,0);
 }
 
 template<> inline 
@@ -770,16 +800,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2fDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2fDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec2f&>(*Result->getField()).setValue(Vec2f(0.0,0.0));
-    }
-    else
-    {
-        static_cast<MFVec2f&>(*Result->getField())[Index] = Vec2f(0.0,0.0);
-    }
+    Result = Vec2f(0.0,0.0);
 }
 
 template<> inline 
@@ -858,16 +881,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3fDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3fDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec3f&>(*Result->getField()).setValue(Vec3f(0.0,0.0,0.0));
-    }
-    else
-    {
-        static_cast<MFVec3f&>(*Result->getField())[Index] = Vec3f(0.0,0.0,0.0);
-    }
+    Result = Vec3f(0.0,0.0,0.0);
 }
 
 template<> inline 
@@ -946,16 +962,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4fDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4fDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec4f&>(*Result->getField()).setValue(Vec4f(0.0,0.0,0.0,0.0));
-    }
-    else
-    {
-        static_cast<MFVec4f&>(*Result->getField())[Index] = Vec4f(0.0,0.0,0.0,0.0);
-    }
+    Result = Vec4f(0.0,0.0,0.0,0.0);
 }
 
 template<> inline 
@@ -1059,16 +1068,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2fxDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2fxDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec2fx&>(*Result->getField()).setValue(Vec2fx(0.0f,0.0f));
-    }
-    else
-    {
-        static_cast<MFVec2fx&>(*Result->getField())[Index] = Vec2fx(0.0f,0.0f);
-    }
+    Result = Vec2fx(0.0f,0.0f);
 }
 
 template<> inline 
@@ -1171,16 +1173,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3fxDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3fxDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec3fx&>(*Result->getField()).setValue(Vec3fx(0.0f,0.0f,0.0f));
-    }
-    else
-    {
-        static_cast<MFVec3fx&>(*Result->getField())[Index] = Vec3fx(0.0f,0.0f,0.0f);
-    }
+    Result = Vec3fx(0.0f,0.0f,0.0f);
 }
 
 template<> inline 
@@ -1291,16 +1286,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4fxDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4fxDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec4fx&>(*Result->getField()).setValue(Vec4fx(0.0f,0.0f,0.0f,0.0f));
-    }
-    else
-    {
-        static_cast<MFVec4fx&>(*Result->getField())[Index] = Vec4fx(0.0f,0.0f,0.0f,0.0f);
-    }
+    Result = Vec4fx(0.0f,0.0f,0.0f,0.0f);
 }
 
 template<> inline 
@@ -1380,16 +1368,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2dDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2dDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2dDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec2d&>(*Result->getField()).setValue(Vec2d(0.0,0.0));
-    }
-    else
-    {
-        static_cast<MFVec2d&>(*Result->getField())[Index] = Vec2d(0.0,0.0);
-    }
+    Result = Vec2d(0.0,0.0);
 }
 
 template<> inline 
@@ -1468,16 +1449,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3dDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3dDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec3dDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec3d&>(*Result->getField()).setValue(Vec3d(0.0,0.0,0.0));
-    }
-    else
-    {
-        static_cast<MFVec3d&>(*Result->getField())[Index] = Vec3d(0.0,0.0,0.0);
-    }
+    Result = Vec3d(0.0,0.0,0.0);
 }
 
 template<> inline 
@@ -1556,16 +1530,9 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4dDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4dDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4dDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFVec4d&>(*Result->getField()).setValue(Vec4d(0.0,0.0,0.0,0.0));
-    }
-    else
-    {
-        static_cast<MFVec4d&>(*Result->getField())[Index] = Vec4d(0.0,0.0,0.0,0.0);
-    }
+    Result = Vec4d(0.0,0.0,0.0,0.0);
 }
 
 template<> inline 

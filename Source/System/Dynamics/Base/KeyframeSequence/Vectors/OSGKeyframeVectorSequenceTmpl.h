@@ -76,6 +76,10 @@ class KeyframeVectorSequenceTmpl : public KeyframeVectorSequence
 
     typedef typename SequenceDesc::StoredType      StoredType;
     typedef typename SequenceDesc::StoredFieldType StoredFieldType;
+    typedef typename SequenceDesc::SingleFieldType SingleFieldType;
+
+    typedef typename SequenceDesc::ConcreteInterpFunction  ConcreteInterpFunction;
+    typedef typename SequenceDesc::ConcreteReplaceFunction ConcreteReplaceFunction;
 
     typedef typename StoredFieldType::EditHandle      StoredEditHandle;
     typedef typename StoredFieldType::EditHandlePtr   StoredEditHandlePtr;
@@ -84,9 +88,6 @@ class KeyframeVectorSequenceTmpl : public KeyframeVectorSequence
 
     typedef typename StoredFieldType::reference       reference;
     typedef typename StoredFieldType::const_reference const_reference;
-
-    typedef typename SequenceDesc::ConcreteInterpFunction ConcreteInterpFunction;
-    typedef typename SequenceDesc::InterpolationFuncMap InterpolationFuncMap;
 
     enum
     {
@@ -162,14 +163,32 @@ class KeyframeVectorSequenceTmpl : public KeyframeVectorSequence
 
     virtual const Field& getKeyValues(void) const;
     
-    virtual const DataType &getDataType(void) const;
+    virtual const DataType* getDataType(void) const;
 
     virtual void        clear    (      void               );
     virtual void        resize   (      size_t      newsize);
     virtual void        shrink   (void                     );
 
-    bool interpolate(const UInt32& Type, const Real32& time, const Real32& prevTime, const UInt32& ReplacePolicy, bool isCyclic, Field& Result, UInt32 Index, Real32 Blend);
+    virtual bool interpolate(UInt32 Type,
+                             Real32 time,
+                             Real32 prevTime,
+                             UInt32 ReplacePolicy,
+                             bool isCyclic,
+                             EditFieldHandlePtr Result,
+                             UInt32 Index,
+                             Real32 Blend);
+
     virtual void zeroField(EditFieldHandlePtr Result, UInt32 Index) const;
+
+    bool interpolate(UInt32 Type,
+                     Real32 time,
+                     Real32 prevTime,
+                     UInt32 ReplacePolicy,
+                     bool isCyclic,
+                     StoredType& Result,
+                     Real32 Blend);
+
+    void zeroField(StoredType& Result) const;
 
     //virtual       SequenceTransitPtr  clone        (void);
     
@@ -188,9 +207,6 @@ class KeyframeVectorSequenceTmpl : public KeyframeVectorSequence
     friend class FieldContainer;
 
     StoredFieldType _field;
-
-    virtual RawInterpFuncion bindInterpFunction(UInt32 InterpolationFunctionId) const;
-    virtual ReplacementFuncion getReplacementFuncion(void) const;
 
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
@@ -319,30 +335,32 @@ struct KeyframeVectorSequenceTmplDescBase
 
 struct KeyframeVectorSequenceVec2sDescBase : public KeyframeVectorSequenceTmplDescBase
 {    
-
     static const Char8 *getTypeName (void) { return "KeyframeVectorSequenceVec2s";  }
 
     typedef Vec2s             StoredType;
     typedef MFVec2s           StoredFieldType;
     typedef SFVec2s           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
-
+    static void initMethod(InitPhase ePhase);
 };
 
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
@@ -366,22 +384,26 @@ struct KeyframeVectorSequenceVec3sDescBase : public KeyframeVectorSequenceTmplDe
     typedef MFVec3s           StoredFieldType;
     typedef SFVec3s           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 };
 
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
@@ -404,22 +426,26 @@ struct KeyframeVectorSequenceVec4sDescBase : public KeyframeVectorSequenceTmplDe
     typedef MFVec4s           StoredFieldType;
     typedef SFVec4s           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 };
 
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
@@ -444,22 +470,26 @@ struct KeyframeVectorSequenceVec2fDescBase : public KeyframeVectorSequenceTmplDe
     typedef MFVec2f           StoredFieldType;
     typedef SFVec2f           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 
 };
 
@@ -484,22 +514,26 @@ struct KeyframeVectorSequenceVec3fDescBase : public KeyframeVectorSequenceTmplDe
     typedef MFVec3f           StoredFieldType;
     typedef SFVec3f           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 };
 
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
@@ -522,22 +556,26 @@ struct KeyframeVectorSequenceVec4fDescBase : public KeyframeVectorSequenceTmplDe
     typedef MFVec4f           StoredFieldType;
     typedef SFVec4f           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 };
 
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
@@ -562,22 +600,26 @@ struct KeyframeVectorSequenceVec2fxDescBase : public KeyframeVectorSequenceTmplD
     typedef MFVec2fx           StoredFieldType;
     typedef SFVec2fx           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 
 };
 
@@ -602,22 +644,26 @@ struct KeyframeVectorSequenceVec3fxDescBase : public KeyframeVectorSequenceTmplD
     typedef MFVec3fx           StoredFieldType;
     typedef SFVec3fx           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 };
 
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
@@ -640,22 +686,26 @@ struct KeyframeVectorSequenceVec4fxDescBase : public KeyframeVectorSequenceTmplD
     typedef MFVec4fx           StoredFieldType;
     typedef SFVec4fx           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 };
 
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
@@ -680,22 +730,26 @@ struct KeyframeVectorSequenceVec2dDescBase : public KeyframeVectorSequenceTmplDe
     typedef MFVec2d           StoredFieldType;
     typedef SFVec2d           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 
 };
 
@@ -720,22 +774,26 @@ struct KeyframeVectorSequenceVec3dDescBase : public KeyframeVectorSequenceTmplDe
     typedef MFVec3d           StoredFieldType;
     typedef SFVec3d           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 };
 
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
@@ -758,22 +816,26 @@ struct KeyframeVectorSequenceVec4dDescBase : public KeyframeVectorSequenceTmplDe
     typedef MFVec4d           StoredFieldType;
     typedef SFVec4d           SingleFieldType;
 
-    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
     typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
 
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
     static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
 
     static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
 
-    static void initMethod(InitPhase ePhase)
-    {
-        if(ePhase == TypeObject::SystemPost)
-        {
-            _interpolationFuncs[Animator::STEP_INTERPOLATION] = stepKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredFieldType,SingleFieldType>;
-            _interpolationFuncs[Animator::CUBIC_INTERPOLATION] = splineKeyframeSequence<StoredFieldType,SingleFieldType>;
-        }
-    }
+    static void initMethod(InitPhase ePhase);
 };
 
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles

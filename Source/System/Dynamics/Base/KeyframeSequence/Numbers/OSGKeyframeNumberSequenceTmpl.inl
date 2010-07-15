@@ -355,9 +355,9 @@ const Field& KeyframeNumberSequenceTmpl<SequenceDesc>::getKeyValues(void) const
 /*! \copydoc OSG::KeyframeNumberSequence::size
  */
 template <class SequenceDesc> inline
-const DataType& KeyframeNumberSequenceTmpl<SequenceDesc>::getDataType(void) const
+const DataType*  KeyframeNumberSequenceTmpl<SequenceDesc>::getDataType(void) const
 {
-    return SequenceDesc::StoredFieldType::getClassType().getContentType();
+    return &SequenceDesc::StoredFieldType::getClassType().getContentType();
 }
 
 template <class SequenceDesc> inline 
@@ -404,23 +404,74 @@ void KeyframeNumberSequenceTmpl<SequenceDesc>::shrink(void)
 }
 
 template <class SequenceDesc> inline
-RawInterpFuncion KeyframeNumberSequenceTmpl<SequenceDesc>::bindInterpFunction(UInt32 InterpolationFunctionId) const
+bool KeyframeNumberSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                         Real32 time,
+                         Real32 prevTime,
+                         UInt32 ReplacePolicy,
+                         bool isCyclic,
+                         EditFieldHandlePtr Result,
+                         UInt32 Index,
+                         Real32 Blend)
 {
-    typename SequenceDesc::ConcreteInterpFunction f(SequenceDesc::getInterpolationFuncMap()[InterpolationFunctionId]);
-    if(f.empty())
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        return NULL;
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<SingleFieldType&>(*Result->getField()).getValue(),
+                           Blend);
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index],
+                           Blend);
     }
 }
 
 template <class SequenceDesc> inline
-ReplacementFuncion KeyframeNumberSequenceTmpl<SequenceDesc>::getReplacementFuncion(void) const
+void KeyframeNumberSequenceTmpl<SequenceDesc>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    return &replacement<typename SequenceDesc::SingleFieldType>;
+    if(Result->getCardinality() == FieldType::SingleField)
+    {
+        zeroField(static_cast<SingleFieldType&>(*Result->getField()).getValue());
+    }
+    else
+    {
+        zeroField(static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index]);
+    }
+}
+
+template <class SequenceDesc> inline
+bool KeyframeNumberSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                                                           Real32 time,
+                                                           Real32 prevTime,
+                                                           UInt32 ReplacePolicy,
+                                                           bool isCyclic,
+                                                           StoredType& Result,
+                                                           Real32 Blend)
+{
+    typename SequenceDesc::ConcreteInterpFunction InterpFunc(SequenceDesc::getInterpolationFuncMap()[Type]);
+    if(InterpFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Interpolation function of type: " << Type << std::endl;
+        return false;
+    }
+    typename SequenceDesc::InterpReplaceFunction InterpReplaceFunc(boost::bind(InterpFunc, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3));
+    typename SequenceDesc::ConcreteReplaceFunction ReplaceFunc(SequenceDesc::getReplacementFuncMap()[ReplacePolicy]);
+    if(ReplaceFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Replacement function." << std::endl;
+        return false;
+    }
+
+    return ReplaceFunc(InterpReplaceFunc, time, prevTime, isCyclic, Result, Blend);
 }
 
 template <class SequenceDesc> inline
@@ -505,16 +556,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt8DescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt8DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt8DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFUInt8&>(*Result->getField()).setValue(0);
-    }
-    else
-    {
-        static_cast<MFUInt8&>(*Result->getField())[Index] = 0;
-    }
+    Result = 0;
 }
 
 template<> inline 
@@ -593,16 +637,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt16DescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt16DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt16DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFUInt16&>(*Result->getField()).setValue(0);
-    }
-    else
-    {
-        static_cast<MFUInt16&>(*Result->getField())[Index] = 0;
-    }
+    Result = 0;
 }
 
 template<> inline 
@@ -681,16 +718,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt32DescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt32DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt32DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFUInt32&>(*Result->getField()).setValue(0);
-    }
-    else
-    {
-        static_cast<MFUInt32&>(*Result->getField())[Index] = 0;
-    }
+    Result = 0;
 }
 
 template<> inline 
@@ -769,16 +799,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt64DescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt64DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceUInt64DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFUInt64&>(*Result->getField()).setValue(0);
-    }
-    else
-    {
-        static_cast<MFUInt64&>(*Result->getField())[Index] = 0;
-    }
+    Result = 0;
 }
 
 template<> inline 
@@ -858,16 +881,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt8DescBase>::getKeyValue
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt8DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt8DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFInt8&>(*Result->getField()).setValue(0);
-    }
-    else
-    {
-        static_cast<MFInt8&>(*Result->getField())[Index] = 0;
-    }
+    Result = 0;
 }
 
 template<> inline 
@@ -946,16 +962,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt16DescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt16DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt16DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFInt16&>(*Result->getField()).setValue(0);
-    }
-    else
-    {
-        static_cast<MFInt16&>(*Result->getField())[Index] = 0;
-    }
+    Result = 0;
 }
 
 template<> inline 
@@ -1034,16 +1043,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt32DescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt32DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt32DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFInt32&>(*Result->getField()).setValue(0);
-    }
-    else
-    {
-        static_cast<MFInt32&>(*Result->getField())[Index] = 0;
-    }
+    Result = 0;
 }
 
 template<> inline 
@@ -1122,16 +1124,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt64DescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt64DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceInt64DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFInt64&>(*Result->getField()).setValue(0);
-    }
-    else
-    {
-        static_cast<MFInt64&>(*Result->getField())[Index] = 0;
-    }
+    Result = 0;
 }
 
 template<> inline 
@@ -1211,16 +1206,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceReal16DescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceReal16DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceReal16DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFReal16&>(*Result->getField()).setValue(0.0f);
-    }
-    else
-    {
-        static_cast<MFReal16&>(*Result->getField())[Index] = 0.0f;
-    }
+    Result = 0.0f;
 }
 
 template<> inline 
@@ -1299,16 +1287,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceReal32DescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceReal32DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceReal32DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFReal32&>(*Result->getField()).setValue(0.0f);
-    }
-    else
-    {
-        static_cast<MFReal32&>(*Result->getField())[Index] = 0.0f;
-    }
+    Result = 0.0f;
 }
 
 template<> inline 
@@ -1387,16 +1368,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceFixed32DescBase>::getKeyVa
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceFixed32DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceFixed32DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFFixed32&>(*Result->getField()).setValue(0.0f);
-    }
-    else
-    {
-        static_cast<MFFixed32&>(*Result->getField())[Index] = 0.0f;
-    }
+    Result = 0.0f;
 }
 
 template<> inline 
@@ -1475,16 +1449,9 @@ void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceReal64DescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceReal64DescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeNumberSequenceTmpl<KeyframeNumberSequenceReal64DescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFReal64&>(*Result->getField()).setValue(0.0f);
-    }
-    else
-    {
-        static_cast<MFReal64&>(*Result->getField())[Index] = 0.0f;
-    }
+    Result = 0.0;
 }
 
 template<> inline 

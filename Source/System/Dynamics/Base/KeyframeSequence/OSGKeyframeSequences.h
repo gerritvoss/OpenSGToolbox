@@ -65,7 +65,7 @@
 #include "OSGKeyframeBasicSequence.h"
 #include "OSGKeyframeBasicSequenceTmpl.h"
 #include "OSGKeyframeFCPtrSequence.h"
-#include "OSGKeyframeFCPtrSequenceTmpl.h"
+
 
 #endif /* _OSGKEYFRAMESEQUENCES_H_ */
 

@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class KeyframeFCPtrSequence
+ **     class TransformAnimator
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGKEYFRAMEFCPTRSEQUENCEBASE_H_
-#define _OSGKEYFRAMEFCPTRSEQUENCEBASE_H_
+#ifndef _OSGTRANSFORMANIMATORBASE_H_
+#define _OSGTRANSFORMANIMATORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -63,29 +63,29 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGKeyframeSequence.h" // Parent
+#include "OSGAnimator.h" // Parent
 
-#include "OSGFieldContainerFields.h"    // Values type
+#include "OSGKeyframeNumberSequenceTmplFields.h" // XTranslationSequence type
 
-#include "OSGKeyframeFCPtrSequenceFields.h"
+#include "OSGTransformAnimatorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class KeyframeFCPtrSequence;
+class TransformAnimator;
 
-//! \brief KeyframeFCPtrSequence Base Class.
+//! \brief TransformAnimator Base Class.
 
-class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequence
+class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
 {
   public:
 
-    typedef KeyframeSequence Inherited;
-    typedef KeyframeSequence ParentContainer;
+    typedef Animator Inherited;
+    typedef Animator ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
 
-    OSG_GEN_INTERNALPTR(KeyframeFCPtrSequence);
+    OSG_GEN_INTERNALPTR(TransformAnimator);
 
     /*==========================  PUBLIC  =================================*/
 
@@ -93,16 +93,48 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
 
     enum
     {
-        ValuesFieldId = Inherited::NextFieldId,
-        NextFieldId = ValuesFieldId + 1
+        XTranslationSequenceFieldId = Inherited::NextFieldId,
+        YTranslationSequenceFieldId = XTranslationSequenceFieldId + 1,
+        ZTranslationSequenceFieldId = YTranslationSequenceFieldId + 1,
+        XRotationSequenceFieldId = ZTranslationSequenceFieldId + 1,
+        YRotationSequenceFieldId = XRotationSequenceFieldId + 1,
+        ZRotationSequenceFieldId = YRotationSequenceFieldId + 1,
+        XScaleSequenceFieldId = ZRotationSequenceFieldId + 1,
+        YScaleSequenceFieldId = XScaleSequenceFieldId + 1,
+        ZScaleSequenceFieldId = YScaleSequenceFieldId + 1,
+        NextFieldId = ZScaleSequenceFieldId + 1
     };
 
-    static const OSG::BitVector ValuesFieldMask =
-        (TypeTraits<BitVector>::One << ValuesFieldId);
+    static const OSG::BitVector XTranslationSequenceFieldMask =
+        (TypeTraits<BitVector>::One << XTranslationSequenceFieldId);
+    static const OSG::BitVector YTranslationSequenceFieldMask =
+        (TypeTraits<BitVector>::One << YTranslationSequenceFieldId);
+    static const OSG::BitVector ZTranslationSequenceFieldMask =
+        (TypeTraits<BitVector>::One << ZTranslationSequenceFieldId);
+    static const OSG::BitVector XRotationSequenceFieldMask =
+        (TypeTraits<BitVector>::One << XRotationSequenceFieldId);
+    static const OSG::BitVector YRotationSequenceFieldMask =
+        (TypeTraits<BitVector>::One << YRotationSequenceFieldId);
+    static const OSG::BitVector ZRotationSequenceFieldMask =
+        (TypeTraits<BitVector>::One << ZRotationSequenceFieldId);
+    static const OSG::BitVector XScaleSequenceFieldMask =
+        (TypeTraits<BitVector>::One << XScaleSequenceFieldId);
+    static const OSG::BitVector YScaleSequenceFieldMask =
+        (TypeTraits<BitVector>::One << YScaleSequenceFieldId);
+    static const OSG::BitVector ZScaleSequenceFieldMask =
+        (TypeTraits<BitVector>::One << ZScaleSequenceFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef MFUnrecFieldContainerPtr MFValuesType;
+    typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFXTranslationSequenceType;
+    typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFYTranslationSequenceType;
+    typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFZTranslationSequenceType;
+    typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFXRotationSequenceType;
+    typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFYRotationSequenceType;
+    typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFZRotationSequenceType;
+    typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFXScaleSequenceType;
+    typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFYScaleSequenceType;
+    typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFZScaleSequenceType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -124,6 +156,74 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+            const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFXTranslationSequence(void) const;
+                  SFUnrecKeyframeNumberSequenceReal32Ptr *editSFXTranslationSequence(void);
+            const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFYTranslationSequence(void) const;
+                  SFUnrecKeyframeNumberSequenceReal32Ptr *editSFYTranslationSequence(void);
+            const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFZTranslationSequence(void) const;
+                  SFUnrecKeyframeNumberSequenceReal32Ptr *editSFZTranslationSequence(void);
+            const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFXRotationSequence(void) const;
+                  SFUnrecKeyframeNumberSequenceReal32Ptr *editSFXRotationSequence(void);
+            const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFYRotationSequence(void) const;
+                  SFUnrecKeyframeNumberSequenceReal32Ptr *editSFYRotationSequence(void);
+            const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFZRotationSequence(void) const;
+                  SFUnrecKeyframeNumberSequenceReal32Ptr *editSFZRotationSequence(void);
+            const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFXScaleSequence (void) const;
+                  SFUnrecKeyframeNumberSequenceReal32Ptr *editSFXScaleSequence (void);
+            const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFYScaleSequence (void) const;
+                  SFUnrecKeyframeNumberSequenceReal32Ptr *editSFYScaleSequence (void);
+            const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFZScaleSequence (void) const;
+                  SFUnrecKeyframeNumberSequenceReal32Ptr *editSFZScaleSequence (void);
+
+
+                  KeyframeNumberSequenceReal32 * getXTranslationSequence(void) const;
+
+                  KeyframeNumberSequenceReal32 * getYTranslationSequence(void) const;
+
+                  KeyframeNumberSequenceReal32 * getZTranslationSequence(void) const;
+
+                  KeyframeNumberSequenceReal32 * getXRotationSequence(void) const;
+
+                  KeyframeNumberSequenceReal32 * getYRotationSequence(void) const;
+
+                  KeyframeNumberSequenceReal32 * getZRotationSequence(void) const;
+
+                  KeyframeNumberSequenceReal32 * getXScaleSequence (void) const;
+
+                  KeyframeNumberSequenceReal32 * getYScaleSequence (void) const;
+
+                  KeyframeNumberSequenceReal32 * getZScaleSequence (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setXTranslationSequence(KeyframeNumberSequenceReal32 * const value);
+            void setYTranslationSequence(KeyframeNumberSequenceReal32 * const value);
+            void setZTranslationSequence(KeyframeNumberSequenceReal32 * const value);
+            void setXRotationSequence(KeyframeNumberSequenceReal32 * const value);
+            void setYRotationSequence(KeyframeNumberSequenceReal32 * const value);
+            void setZRotationSequence(KeyframeNumberSequenceReal32 * const value);
+            void setXScaleSequence (KeyframeNumberSequenceReal32 * const value);
+            void setYScaleSequence (KeyframeNumberSequenceReal32 * const value);
+            void setZScaleSequence (KeyframeNumberSequenceReal32 * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
@@ -139,16 +239,16 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  KeyframeFCPtrSequenceTransitPtr  create          (void);
-    static  KeyframeFCPtrSequence           *createEmpty     (void);
+    static  TransformAnimatorTransitPtr  create          (void);
+    static  TransformAnimator           *createEmpty     (void);
 
-    static  KeyframeFCPtrSequenceTransitPtr  createLocal     (
+    static  TransformAnimatorTransitPtr  createLocal     (
                                                BitVector bFlags = FCLocal::All);
 
-    static  KeyframeFCPtrSequence            *createEmptyLocal(
+    static  TransformAnimator            *createEmptyLocal(
                                               BitVector bFlags = FCLocal::All);
 
-    static  KeyframeFCPtrSequenceTransitPtr  createDependent  (BitVector bFlags);
+    static  TransformAnimatorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,65 +275,61 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFUnrecFieldContainerPtr _mfValues;
+    SFUnrecKeyframeNumberSequenceReal32Ptr _sfXTranslationSequence;
+    SFUnrecKeyframeNumberSequenceReal32Ptr _sfYTranslationSequence;
+    SFUnrecKeyframeNumberSequenceReal32Ptr _sfZTranslationSequence;
+    SFUnrecKeyframeNumberSequenceReal32Ptr _sfXRotationSequence;
+    SFUnrecKeyframeNumberSequenceReal32Ptr _sfYRotationSequence;
+    SFUnrecKeyframeNumberSequenceReal32Ptr _sfZRotationSequence;
+    SFUnrecKeyframeNumberSequenceReal32Ptr _sfXScaleSequence;
+    SFUnrecKeyframeNumberSequenceReal32Ptr _sfYScaleSequence;
+    SFUnrecKeyframeNumberSequenceReal32Ptr _sfZScaleSequence;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    KeyframeFCPtrSequenceBase(void);
-    KeyframeFCPtrSequenceBase(const KeyframeFCPtrSequenceBase &source);
+    TransformAnimatorBase(void);
+    TransformAnimatorBase(const TransformAnimatorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~KeyframeFCPtrSequenceBase(void);
+    virtual ~TransformAnimatorBase(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
-    void onCreate(const KeyframeFCPtrSequence *source = NULL);
+    void onCreate(const TransformAnimator *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleValues          (void) const;
-    EditFieldHandlePtr editHandleValues         (void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-            const MFUnrecFieldContainerPtr *getMFValues          (void) const;
-                  MFUnrecFieldContainerPtr *editMFValues         (void);
-
-
-                  FieldContainer * getValues         (const UInt32 index) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr MField Set                                */
-    /*! \{                                                                 */
-
-    void pushToValues              (FieldContainer * const value   );
-    void assignValues              (const MFUnrecFieldContainerPtr &value);
-    void removeFromValues (UInt32                uiIndex );
-    void removeObjFromValues(FieldContainer * const value   );
-    void clearValues                (void                          );
+    GetFieldHandlePtr  getHandleXTranslationSequence (void) const;
+    EditFieldHandlePtr editHandleXTranslationSequence(void);
+    GetFieldHandlePtr  getHandleYTranslationSequence (void) const;
+    EditFieldHandlePtr editHandleYTranslationSequence(void);
+    GetFieldHandlePtr  getHandleZTranslationSequence (void) const;
+    EditFieldHandlePtr editHandleZTranslationSequence(void);
+    GetFieldHandlePtr  getHandleXRotationSequence (void) const;
+    EditFieldHandlePtr editHandleXRotationSequence(void);
+    GetFieldHandlePtr  getHandleYRotationSequence (void) const;
+    EditFieldHandlePtr editHandleYRotationSequence(void);
+    GetFieldHandlePtr  getHandleZRotationSequence (void) const;
+    EditFieldHandlePtr editHandleZRotationSequence(void);
+    GetFieldHandlePtr  getHandleXScaleSequence  (void) const;
+    EditFieldHandlePtr editHandleXScaleSequence (void);
+    GetFieldHandlePtr  getHandleYScaleSequence  (void) const;
+    EditFieldHandlePtr editHandleYScaleSequence (void);
+    GetFieldHandlePtr  getHandleZScaleSequence  (void) const;
+    EditFieldHandlePtr editHandleZScaleSequence (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -247,7 +343,7 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
                                  ConstFieldMaskArg  syncMode  ,
                            const UInt32             uiSyncInfo);
 
-            void execSync (      KeyframeFCPtrSequenceBase *pFrom,
+            void execSync (      TransformAnimatorBase *pFrom,
                                  ConstFieldMaskArg  whichField,
                                  AspectOffsetStore &oOffsets,
                                  ConstFieldMaskArg  syncMode  ,
@@ -287,11 +383,11 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
     /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const KeyframeFCPtrSequenceBase &source);
+    void operator =(const TransformAnimatorBase &source);
 };
 
-typedef KeyframeFCPtrSequenceBase *KeyframeFCPtrSequenceBaseP;
+typedef TransformAnimatorBase *TransformAnimatorBaseP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGKEYFRAMEFCPTRSEQUENCEBASE_H_ */
+#endif /* _OSGTRANSFORMANIMATORBASE_H_ */

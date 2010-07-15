@@ -74,6 +74,13 @@ OSG::UInt16 KeyframeFCPtrSequenceBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
+//! Get the value of the \a index element the KeyframeFCPtrSequence::_mfValues field.
+inline
+FieldContainer * KeyframeFCPtrSequenceBase::getValues(const UInt32 index) const
+{
+    return _mfValues[index];
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -84,6 +91,12 @@ void KeyframeFCPtrSequenceBase::execSync (      KeyframeFCPtrSequenceBase *pFrom
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ValuesFieldMask & whichField))
+        _mfValues.syncWith(pFrom->_mfValues,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
 #endif
 

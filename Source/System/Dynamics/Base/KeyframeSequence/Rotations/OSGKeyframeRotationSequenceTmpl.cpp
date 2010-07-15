@@ -47,6 +47,8 @@
 
 #include "OSGKeyframeRotationSequenceTmplFuncs.ins"
 #include "OSGKeyframeRotationSequenceTmpl.ins"
+#include "OSGAnimator.h"
+#include "OSGKeyframeInterpolations.h"
 
 OSG_USING_NAMESPACE
 
@@ -67,16 +69,67 @@ OSG_FIELD_CONTAINER_NONINL_TMPL_DEF(KeyframeRotationSequenceTmpl, SequenceDesc)
 EXPORT_SEQUENCE(KeyframeRotationSequenceQuaternionDescBase)
 
 KeyframeRotationSequenceQuaternionDescBase::InterpolationFuncMap KeyframeRotationSequenceQuaternionDescBase::_interpolationFuncs = KeyframeRotationSequenceQuaternionDescBase::InterpolationFuncMap();
+KeyframeRotationSequenceQuaternionDescBase::ReplaceFuncMap KeyframeRotationSequenceQuaternionDescBase::_replacementFuncs = KeyframeRotationSequenceQuaternionDescBase::ReplaceFuncMap();
 
 //Fixed32
 EXPORT_SEQUENCE(KeyframeRotationSequenceQuaternionfxDescBase)
 
 KeyframeRotationSequenceQuaternionfxDescBase::InterpolationFuncMap KeyframeRotationSequenceQuaternionfxDescBase::_interpolationFuncs = KeyframeRotationSequenceQuaternionfxDescBase::InterpolationFuncMap();
+KeyframeRotationSequenceQuaternionfxDescBase::ReplaceFuncMap KeyframeRotationSequenceQuaternionfxDescBase::_replacementFuncs = KeyframeRotationSequenceQuaternionfxDescBase::ReplaceFuncMap();
 
 //Real64
 //EXPORT_SEQUENCE(KeyframeRotationSequenceQuaterniondDescBase)
 
 //KeyframeRotationSequenceQuaterniondDescBase::InterpolationFuncMap KeyframeRotationSequenceQuaterniondDescBase::_interpolationFuncs = KeyframeRotationSequenceQuaterniondDescBase::InterpolationFuncMap();
+//KeyframeRotationSequenceQuaterniondDescBase::ReplaceFuncMap KeyframeRotationSequenceQuaterniondDescBase::_replacementFuncs = KeyframeRotationSequenceQuaterniondDescBase::ReplaceFuncMap();
+
+void KeyframeRotationSequenceQuaternionDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = slerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::SPHERICAL_LINEAR_INTERPOLATION] = slerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::NORMALIZED_LINEAR_INTERPOLATION] = nlerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = squadKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    }
+}
+
+void KeyframeRotationSequenceQuaternionfxDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = slerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::SPHERICAL_LINEAR_INTERPOLATION] = slerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::NORMALIZED_LINEAR_INTERPOLATION] = nlerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = squadKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    }
+}
+
+//void KeyframeRotationSequenceQuaterniondDescBase::initMethod(InitPhase ePhase)
+//{
+    //if(ePhase == TypeObject::SystemPost)
+    //{
+        //_interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        //_interpolationFuncs[Animator::LINEAR_INTERPOLATION] = slerpKeyframeSequence<StoredType>;
+        //_interpolationFuncs[Animator::SPHERICAL_LINEAR_INTERPOLATION] = slerpKeyframeSequence<StoredType>;
+        //_interpolationFuncs[Animator::NORMALIZED_LINEAR_INTERPOLATION] = nlerpKeyframeSequence<StoredType>;
+        //_interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = squadKeyframeSequence<StoredType>;
+
+        //_replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        //_replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        //_replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    //}
+//}
 
 OSG_END_NAMESPACE
 

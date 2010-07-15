@@ -45,14 +45,15 @@
 
 #include <OSGConfig.h>
 
-#include "OSGBlendedKeyframeAnimator.h"
-#include "OSGKeyframeSequence.h"
+#include "OSGTransformAnimator.h"
+#include "OSGMathFieldTraits.h"
+#include "OSGMathFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
-// OSGBlendedKeyframeAnimatorBase.cpp file.
-// To modify it, please change the .fcd file (OSGBlendedKeyframeAnimator.fcd) and
+// OSGTransformAnimatorBase.cpp file.
+// To modify it, please change the .fcd file (OSGTransformAnimator.fcd) and
 // regenerate the base file.
 
 /***************************************************************************\
@@ -63,7 +64,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void BlendedKeyframeAnimator::initMethod(InitPhase ePhase)
+void TransformAnimator::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
@@ -77,133 +78,161 @@ void BlendedKeyframeAnimator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool BlendedKeyframeAnimator::animate(UInt32 InterpType,
-                         UInt32 ReplacementPolicy,
-                                      bool Cycling,
-                                      Real32 time,
-                                      Real32 prevTime,
-                                      EditFieldHandlePtr Result,
-                                      UInt32 Index)
+bool TransformAnimator::animate(UInt32 InterpType,
+                                UInt32 ReplacementPolicy,
+                                bool Cycling,
+                                Real32 time,
+                                Real32 prevTime,
+                                EditFieldHandlePtr Result,
+                                UInt32 Index)
 {
-    if( getMFKeyframeSequences()->size() != 0)
+    Matrix MatResult;
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        ValueReplacementPolicy BlendRepPol;
-        if(ReplacementPolicy == OVERWRITE)
-        {
-            //Zero out the value of the Field
-            getMFKeyframeSequences()->front()->zeroField(Result, Index);
-            BlendRepPol = ADDITIVE_ABSOLUTE;
-        }
-        else
-        {
-            BlendRepPol = static_cast<ValueReplacementPolicy>(ReplacementPolicy);
-        }
-        bool RetValue(true);
-        for(UInt32 i(0) ; i< getMFKeyframeSequences()->size() ; ++i)
-        {
-            RetValue = RetValue && getKeyframeSequences(i)->interpolate(InterpType, time, prevTime, BlendRepPol, Cycling, Result, Index, getBlendAmounts(i));
-        }
-        return RetValue;
+        MatResult = static_cast<SFMatrix&>(*Result->getField()).getValue();
     }
     else
     {
-        return false;
+        MatResult =  static_cast<MFMatrix&>(*Result->getField())[Index];
     }
-}
-    
-Real32 BlendedKeyframeAnimator::getLength(void) const
-{
-    if(getMFKeyframeSequences()->size() > 0 && checkSequencesValidity())
+
+
+    Vec3f Translation, ScaleMagnitude;
+    Quaternion Rotation,ScaleOrientation;
+    MatResult.getTransform(Translation,Rotation,ScaleMagnitude,ScaleOrientation);
+
+    //Tranlations
+    if( getXTranslationSequence() != NULL)
     {
-        Real32 MaxLength(0.0f);
-        for(UInt32 i(0) ; i< getMFKeyframeSequences()->size() ; ++i)
+        getXTranslationSequence()->interpolate(InterpType, time, prevTime,
+                                               ReplacementPolicy, Cycling,
+                                               Translation[0], 1.0f);
+    }
+    if( getYTranslationSequence() != NULL)
+    {
+        getYTranslationSequence()->interpolate(InterpType, time, prevTime,
+                                               ReplacementPolicy, Cycling,
+                                               Translation[1], 1.0f);
+    }
+    if( getZTranslationSequence() != NULL)
+    {
+        getZTranslationSequence()->interpolate(InterpType, time, prevTime,
+                                               ReplacementPolicy, Cycling,
+                                               Translation[2], 1.0f);
+    }
+
+    //Rotations
+    if( getXRotationSequence() ||
+        getYRotationSequence() ||
+        getZRotationSequence())
+    {
+        Vec3f EulerRot;
+        Rotation.getEulerAngleDeg(EulerRot);
+        if( getXRotationSequence() != NULL)
         {
-            MaxLength = osgMax(MaxLength, getKeyframeSequences(i)->getKeys().back());
+            getXRotationSequence()->interpolate(InterpType, time, prevTime,
+                                                ReplacementPolicy, Cycling,
+                                                EulerRot[0], 1.0f);
         }
-        return MaxLength;
+        if( getYRotationSequence() != NULL)
+        {
+            getYRotationSequence()->interpolate(InterpType, time, prevTime,
+                                                ReplacementPolicy, Cycling,
+                                                EulerRot[1], 1.0f);
+        }
+        if( getZRotationSequence() != NULL)
+        {
+            getZRotationSequence()->interpolate(InterpType, time, prevTime,
+                                                ReplacementPolicy, Cycling,
+                                                EulerRot[2], 1.0f);
+        }
+        Rotation.setValue(osgDegree2Rad(EulerRot.x()),
+                          osgDegree2Rad(EulerRot.y()),
+                          osgDegree2Rad(EulerRot.z()));
+    }
+    //Scales
+    if( getXScaleSequence() != NULL)
+    {
+        getXScaleSequence()->interpolate(InterpType, time, prevTime,
+                                               ReplacementPolicy, Cycling,
+                                               ScaleMagnitude[0], 1.0f);
+    }
+    if( getYScaleSequence() != NULL)
+    {
+        getYScaleSequence()->interpolate(InterpType, time, prevTime,
+                                               ReplacementPolicy, Cycling,
+                                               ScaleMagnitude[1], 1.0f);
+    }
+    if( getZScaleSequence() != NULL)
+    {
+        getZScaleSequence()->interpolate(InterpType, time, prevTime,
+                                               ReplacementPolicy, Cycling,
+                                               ScaleMagnitude[2], 1.0f);
+    }
+
+    MatResult.setTransform(Translation,Rotation,ScaleMagnitude);
+
+    if(Result->getCardinality() == FieldType::SingleField)
+    {
+        static_cast<SFMatrix&>(*Result->getField()).setValue(MatResult);
     }
     else
     {
-        return 0.0f;
+        static_cast<MFMatrix&>(*Result->getField())[Index] = MatResult;
     }
+    return true;
 }
 
-const DataType* BlendedKeyframeAnimator::getDataType(void) const
+Real32 TransformAnimator::getLength(void) const
 {
-   if( getMFKeyframeSequences()->size() != 0)
-   {
-       return getMFKeyframeSequences()->front()->getDataType();
-   }
-   else
-   {
-       return NULL;
-   }
+    //if(getKeyframeSequence()->size() > 0)
+    //{
+    //return getKeyframeSequence()->getKeys().back();
+    //}
+    //else
+    //{
+    return 0.0f;
+    //}
+}
+
+const DataType* TransformAnimator::getDataType(void) const
+{
+    return &FieldTraits<Matrix>::getType();
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-bool BlendedKeyframeAnimator::checkSequencesValidity(void) const
-{
-    //Check that the sizes are the same
-    if(getMFKeyframeSequences()->size() != getMFBlendAmounts()->size())
-    {
-        SWARNING << "BlendedKeyframeAnimator: The number of keyframe sequences and blend amounts must be the same."  << std::endl;
-        return false;
-    }
-
-    //Check that the types of the KeyframeSequences are all the same
-    if(getMFKeyframeSequences()->size() > 0)
-    {
-        const DataType &FrontDataType(*getMFKeyframeSequences()->front()->getDataType());
-        for(UInt32 i(1) ; i< getMFKeyframeSequences()->size() ; ++i)
-        {
-            if(FrontDataType != *getKeyframeSequences(i)->getDataType())
-            {
-                SWARNING << "BlendedKeyframeAnimator: All of the KeyframeSequences attached to a BlenededKeyframeAnimator must work on the same data type."  << std::endl;
-                return false;
-            }
-        }
-        if(!getMFKeyframeSequences()->front()->isBlendable())
-        {
-            SWARNING << "BlendedKeyframeAnimator: Cannot create a blended animation for a KeyframeSequence of type: " << getMFKeyframeSequences()->front()->getType().getCName() << "."  << std::endl;
-            return false;
-        }
-    }
-
-    return true;
-}
-
 /*----------------------- constructors & destructors ----------------------*/
 
-BlendedKeyframeAnimator::BlendedKeyframeAnimator(void) :
+TransformAnimator::TransformAnimator(void) :
     Inherited()
 {
 }
 
-BlendedKeyframeAnimator::BlendedKeyframeAnimator(const BlendedKeyframeAnimator &source) :
+TransformAnimator::TransformAnimator(const TransformAnimator &source) :
     Inherited(source)
 {
 }
 
-BlendedKeyframeAnimator::~BlendedKeyframeAnimator(void)
+TransformAnimator::~TransformAnimator(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void BlendedKeyframeAnimator::changed(ConstFieldMaskArg whichField, 
+void TransformAnimator::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
 }
 
-void BlendedKeyframeAnimator::dump(      UInt32    ,
+void TransformAnimator::dump(      UInt32    ,
                          const BitVector ) const
 {
-    SLOG << "Dump BlendedKeyframeAnimator NI" << std::endl;
+    SLOG << "Dump TransformAnimator NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
