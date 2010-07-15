@@ -5,7 +5,7 @@
 	parent="KeyframeSequence"
     library="TBAnimation"
 	pointerfieldtypes="both"
-	structure="abstract"
+	structure="concrete"
 	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
@@ -13,4 +13,13 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 KeyframeSequence is the base class of all Point Keyframe Sequences.
+	<Field
+		name="Values"
+		type="FieldContainer"
+        category="pointer"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
 </FieldContainer>

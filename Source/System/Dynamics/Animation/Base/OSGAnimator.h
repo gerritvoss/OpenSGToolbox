@@ -57,8 +57,22 @@ class OSG_TBANIMATION_DLLMAPPING Animator : public AnimatorBase
     /*==========================  PUBLIC  =================================*/
 
   public:
-    enum InterpolationType {LINEAR_INTERPOLATION=1, CUBIC_INTERPOLATION=2, STEP_INTERPOLATION=4, LINEAR_NORMAL_INTERPOLATION=8, SPHERICAL_LINEAR_INTERPOLATION=1, NORMALIZED_LINEAR_INTERPOLATION=1};
-    enum ValueReplacementPolicy {OVERWRITE=1, ADDITIVE_ABSOLUTE=2, ADDITIVE_SINCE_LAST=4};
+    enum InterpolationType
+    {
+        LINEAR_INTERPOLATION           =1,
+        CUBIC_INTERPOLATION            =2,
+        STEP_INTERPOLATION             =4,
+        LINEAR_NORMAL_INTERPOLATION    =8,
+        SPHERICAL_LINEAR_INTERPOLATION =16,
+        NORMALIZED_LINEAR_INTERPOLATION=32
+    };
+
+    enum ValueReplacementPolicy
+    {
+        OVERWRITE          =1,
+        ADDITIVE_ABSOLUTE  =2,
+        ADDITIVE_SINCE_LAST=4
+    };
 
     typedef AnimatorBase Inherited;
     typedef Animator     Self;
@@ -83,15 +97,15 @@ class OSG_TBANIMATION_DLLMAPPING Animator : public AnimatorBase
     virtual bool animate(UInt32 InterpType,
                          UInt32 ReplacementPolicy,
                          bool Cycling,
-                         const Real32& time,
-                         const Real32& prevTime,
+                         Real32 time,
+                         Real32 prevTime,
                          EditFieldHandlePtr Result,
                          UInt32 Index = 0) = 0;
                       
             
     virtual Real32 getLength(void) const = 0;
 
-    virtual const DataType &getDataType(void) const = 0;
+    virtual const DataType* getDataType(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

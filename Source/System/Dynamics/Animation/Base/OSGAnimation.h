@@ -138,7 +138,7 @@ class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
    void produceAnimationEnded(void);
    void produceAnimationCycled(void);
 
-    virtual void internalUpdate(const Real32& t, const Real32 prev_t)=0;
+    virtual void internalUpdate(Real32 t, const Real32 prev_t)=0;
 
     class UpdateHandler : public EventListener
     {

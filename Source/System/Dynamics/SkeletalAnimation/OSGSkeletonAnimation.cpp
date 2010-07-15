@@ -111,7 +111,7 @@ std::map<unsigned long, Matrix> SkeletonAnimation::getRelTransformations(const R
 	return relTransformations;
 }
 
-void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
+void SkeletonAnimation::internalUpdate(Real32 t, const Real32 prev_t)
 {
 	//Apply all of the Transformation Animators
 	for(UInt32 i(0) ; i<getMFTransformationAnimators()->size() ; ++i)
@@ -139,7 +139,7 @@ void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 void SkeletonAnimation::addTransformationAnimator(KeyframeAnimatorUnrecPtr TheAnimator, JointUnrecPtr TheJoint)
 {
 	if(TheAnimator != NULL && TheJoint != NULL && 
-        TheAnimator->getDataType() == FieldTraits<Matrix>::getType())
+        *TheAnimator->getDataType() == FieldTraits<Matrix>::getType())
 	{
         pushToTransformationAnimators(TheAnimator);
         pushToAnimatorJoints(TheJoint);
@@ -147,7 +147,7 @@ void SkeletonAnimation::addTransformationAnimator(KeyframeAnimatorUnrecPtr TheAn
 	else
 	{
 		SWARNING << "SkeletonAnimation::addTransformationAnimator(): could not add Animator, because it animates "
-                 << TheAnimator->getDataType().getCName() << " data types.  Expecting an animator that animated Matrix data types." << std::endl;
+                 << TheAnimator->getDataType()->getCName() << " data types.  Expecting an animator that animated Matrix data types." << std::endl;
 	}
 }
 

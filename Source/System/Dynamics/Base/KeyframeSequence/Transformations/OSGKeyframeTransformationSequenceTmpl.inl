@@ -355,9 +355,9 @@ const Field& KeyframeTransformationSequenceTmpl<SequenceDesc>::getKeyValues(void
 /*! \copydoc OSG::KeyframeTransformationSequence::size
  */
 template <class SequenceDesc> inline
-const DataType& KeyframeTransformationSequenceTmpl<SequenceDesc>::getDataType(void) const
+const DataType*  KeyframeTransformationSequenceTmpl<SequenceDesc>::getDataType(void) const
 {
-    return SequenceDesc::StoredFieldType::getClassType().getContentType();
+    return &SequenceDesc::StoredFieldType::getClassType().getContentType();
 }
 
 template <class SequenceDesc> inline 
@@ -404,23 +404,74 @@ void KeyframeTransformationSequenceTmpl<SequenceDesc>::shrink(void)
 }
 
 template <class SequenceDesc> inline
-RawInterpFuncion KeyframeTransformationSequenceTmpl<SequenceDesc>::bindInterpFunction(UInt32 InterpolationFunctionId) const
+bool KeyframeTransformationSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                         Real32 time,
+                         Real32 prevTime,
+                         UInt32 ReplacePolicy,
+                         bool isCyclic,
+                         EditFieldHandlePtr Result,
+                         UInt32 Index,
+                         Real32 Blend)
 {
-    typename SequenceDesc::ConcreteInterpFunction f(SequenceDesc::getInterpolationFuncMap()[InterpolationFunctionId]);
-    if(f.empty())
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        return NULL;
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<SingleFieldType&>(*Result->getField()).getValue(),
+                           Blend);
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index],
+                           Blend);
     }
 }
 
 template <class SequenceDesc> inline
-ReplacementFuncion KeyframeTransformationSequenceTmpl<SequenceDesc>::getReplacementFuncion(void) const
+void KeyframeTransformationSequenceTmpl<SequenceDesc>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    return &matrixReplacement<typename SequenceDesc::SingleFieldType>;
+    if(Result->getCardinality() == FieldType::SingleField)
+    {
+        zeroField(static_cast<SingleFieldType&>(*Result->getField()).getValue());
+    }
+    else
+    {
+        zeroField(static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index]);
+    }
+}
+
+template <class SequenceDesc> inline
+bool KeyframeTransformationSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                                                           Real32 time,
+                                                           Real32 prevTime,
+                                                           UInt32 ReplacePolicy,
+                                                           bool isCyclic,
+                                                           StoredType& Result,
+                                                           Real32 Blend)
+{
+    typename SequenceDesc::ConcreteInterpFunction InterpFunc(SequenceDesc::getInterpolationFuncMap()[Type]);
+    if(InterpFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Interpolation function of type: " << Type << std::endl;
+        return false;
+    }
+    typename SequenceDesc::InterpReplaceFunction InterpReplaceFunc(boost::bind(InterpFunc, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3));
+    typename SequenceDesc::ConcreteReplaceFunction ReplaceFunc(SequenceDesc::getReplacementFuncMap()[ReplacePolicy]);
+    if(ReplaceFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Replacement function." << std::endl;
+        return false;
+    }
+
+    return ReplaceFunc(InterpReplaceFunc, time, prevTime, isCyclic, Result, Blend);
 }
 
 template <class SequenceDesc> inline
@@ -521,16 +572,9 @@ void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fDe
 }
 
 template<> inline 
-void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFMatrix&>(*Result->getField()).setValue(Matrix::identity());
-    }
-    else
-    {
-        static_cast<MFMatrix&>(*Result->getField())[Index].setValue(Matrix::identity());
-    }
+    Result = Matrix::identity();
 }
 
 template<> inline 
@@ -671,16 +715,9 @@ void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fxD
 }
 
 template<> inline 
-void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4fxDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFMatrix4fx&>(*Result->getField()).setValue(Matrix4fx::identity());
-    }
-    else
-    {
-        static_cast<MFMatrix4fx&>(*Result->getField())[Index] = Matrix4fx::identity();
-    }
+    Result = Matrix4fx::identity();
 }
 
 template<> inline 
@@ -788,16 +825,9 @@ void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4dDe
 }
 
 template<> inline 
-void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4dDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeTransformationSequenceTmpl<KeyframeTransformationSequenceMatrix4dDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFMatrix4d&>(*Result->getField()).setValue(Matrix4d::identity());
-    }
-    else
-    {
-        static_cast<MFMatrix4d&>(*Result->getField())[Index].setValue(Matrix4d::identity());
-    }
+    Result = Matrix4d::identity();
 }
 
 template<> inline 

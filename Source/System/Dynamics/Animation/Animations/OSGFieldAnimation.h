@@ -115,7 +115,7 @@ class OSG_TBANIMATION_DLLMAPPING FieldAnimation : public FieldAnimationBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    virtual void internalUpdate(const Real32& t, const Real32 prev_t);
+    virtual void internalUpdate(Real32 t, const Real32 prev_t);
 
     void updateAttachedContainer(std::string FieldName);
     /*==========================  PRIVATE  ================================*/

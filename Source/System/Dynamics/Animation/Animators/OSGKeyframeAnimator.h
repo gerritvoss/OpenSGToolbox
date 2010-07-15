@@ -85,14 +85,14 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
     bool animate(UInt32 InterpType,
                  UInt32 ReplacementPolicy,
                  bool Cycling,
-                 const Real32& time,
-                 const Real32& prevTime,
+                 Real32 time,
+                 Real32 prevTime,
                  EditFieldHandlePtr Result,
                  UInt32 Index = 0);
     
     virtual Real32 getLength(void) const;
 
-    virtual const DataType &getDataType(void) const;
+    virtual const DataType* getDataType(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

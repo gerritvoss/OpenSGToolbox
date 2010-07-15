@@ -79,8 +79,8 @@ void KeyframeAnimator::initMethod(InitPhase ePhase)
 bool KeyframeAnimator::animate(UInt32 InterpType,
                                UInt32 ReplacementPolicy,
                                bool Cycling,
-                               const Real32& time,
-                               const Real32& prevTime,
+                               Real32 time,
+                               Real32 prevTime,
                                EditFieldHandlePtr Result,
                                UInt32 Index)
 {
@@ -106,7 +106,7 @@ Real32 KeyframeAnimator::getLength(void) const
     }
 }
 
-const DataType &KeyframeAnimator::getDataType(void) const
+const DataType* KeyframeAnimator::getDataType(void) const
 {
    return getKeyframeSequence()->getDataType();
 }

@@ -47,6 +47,8 @@
 
 #include "OSGKeyframeTransformationSequenceTmplFuncs.ins"
 #include "OSGKeyframeTransformationSequenceTmpl.ins"
+#include "OSGAnimator.h"
+#include "OSGKeyframeInterpolations.h"
 
 OSG_USING_NAMESPACE
 
@@ -67,16 +69,61 @@ OSG_FIELD_CONTAINER_NONINL_TMPL_DEF(KeyframeTransformationSequenceTmpl, Sequence
 EXPORT_SEQUENCE(KeyframeTransformationSequenceMatrix4fDescBase)
 
 KeyframeTransformationSequenceMatrix4fDescBase::InterpolationFuncMap KeyframeTransformationSequenceMatrix4fDescBase::_interpolationFuncs = KeyframeTransformationSequenceMatrix4fDescBase::InterpolationFuncMap();
+KeyframeTransformationSequenceMatrix4fDescBase::ReplaceFuncMap KeyframeTransformationSequenceMatrix4fDescBase::_replacementFuncs = KeyframeTransformationSequenceMatrix4fDescBase::ReplaceFuncMap();
 
 //Fixed32
 EXPORT_SEQUENCE(KeyframeTransformationSequenceMatrix4fxDescBase)
 
 KeyframeTransformationSequenceMatrix4fxDescBase::InterpolationFuncMap KeyframeTransformationSequenceMatrix4fxDescBase::_interpolationFuncs = KeyframeTransformationSequenceMatrix4fxDescBase::InterpolationFuncMap();
+KeyframeTransformationSequenceMatrix4fxDescBase::ReplaceFuncMap KeyframeTransformationSequenceMatrix4fxDescBase::_replacementFuncs = KeyframeTransformationSequenceMatrix4fxDescBase::ReplaceFuncMap();
 
 //Real64
 EXPORT_SEQUENCE(KeyframeTransformationSequenceMatrix4dDescBase)
 
 KeyframeTransformationSequenceMatrix4dDescBase::InterpolationFuncMap KeyframeTransformationSequenceMatrix4dDescBase::_interpolationFuncs = KeyframeTransformationSequenceMatrix4dDescBase::InterpolationFuncMap();
+KeyframeTransformationSequenceMatrix4dDescBase::ReplaceFuncMap KeyframeTransformationSequenceMatrix4dDescBase::_replacementFuncs = KeyframeTransformationSequenceMatrix4dDescBase::ReplaceFuncMap();
+
+void KeyframeTransformationSequenceMatrix4fDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteMatrixReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteMatrixReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastMatrixReplacement<StoredType>;
+    }
+}
+
+void KeyframeTransformationSequenceMatrix4fxDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteMatrixReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteMatrixReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastMatrixReplacement<StoredType>;
+    }
+}
+
+void KeyframeTransformationSequenceMatrix4dDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteMatrixReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteMatrixReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastMatrixReplacement<StoredType>;
+    }
+}
 
 OSG_END_NAMESPACE
 

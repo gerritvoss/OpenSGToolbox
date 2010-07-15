@@ -85,7 +85,7 @@ Real32 SkeletonBlendedAnimation::getCycleLength(void) const
     return -1;
 }
 
-void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
+void SkeletonBlendedAnimation::internalUpdate(Real32 t, const Real32 prev_t)
 {
 	if(getMFSkeletonAnimations()->size() == getMFBlendAmounts()->size())
 	{
@@ -157,7 +157,7 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 	}
 }
 
-void SkeletonBlendedAnimation::addAnimationBlending(const SkeletonAnimationUnrecPtr TheSkeletonAnimation, const Real32& BlendAmount, bool Override)
+void SkeletonBlendedAnimation::addAnimationBlending(const SkeletonAnimationUnrecPtr TheSkeletonAnimation, Real32 BlendAmount, bool Override)
 {
     pushToSkeletonAnimations(TheSkeletonAnimation);
     editMFBlendAmounts()->push_back(BlendAmount);

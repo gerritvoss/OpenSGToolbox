@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,24 +36,21 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSKELETONANIMATION_H_
-#define _OSGSKELETONANIMATION_H_
+#ifndef _OSGTRANSFORMANIMATOR_H_
+#define _OSGTRANSFORMANIMATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGJoint.h"
-#include "OSGSkeletonBlendedGeometry.h"
-#include "OSGKeyframeAnimator.h"
-#include "OSGSkeletonAnimationBase.h"
+#include "OSGTransformAnimatorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SkeletonAnimation class. See \ref
-           PageDynamicsSkeletonAnimation for a description.
+/*! \brief TransformAnimator class. See \ref
+           PageTBAnimationTransformAnimator for a description.
 */
 
-class OSG_TBANIMATION_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBase
+class OSG_TBANIMATION_DLLMAPPING TransformAnimator : public TransformAnimatorBase
 {
   protected:
 
@@ -61,8 +58,8 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBas
 
   public:
 
-    typedef SkeletonAnimationBase Inherited;
-    typedef SkeletonAnimation     Self;
+    typedef TransformAnimatorBase Inherited;
+    typedef TransformAnimator     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -81,45 +78,37 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBas
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual bool animate(UInt32 InterpType,
+                         UInt32 ReplacementPolicy,
+                         bool Cycling,
+                         Real32 time,
+                         Real32 prevTime,
+                         EditFieldHandlePtr Result,
+                         UInt32 Index = 0);
+                      
+            
+    virtual Real32 getLength(void) const;
 
-    /**************************************************************************//**
-     * @fn	virtual Real32 getCycleLength(void) const
-     * 
-     * @brief Returns the cycle length of the animation.	
-     * 
-     * @return  The cycle length of the animation.
-     *****************************************************************************/
-    virtual Real32 getCycleLength(void) const;
-
-    /**************************************************************************//**
-     * @fn	void addTransformationAnimator(KeyframeAnimatorUnrecPtr TheAnimator, JointUnrecPtr TheJoint);
-     * 
-     * @brief Adds the supplied animator to the specified joint in the skeleton. 
-     * 
-     * @param  TheAnimator The animator to attach.
-     * @param	TheJoint	The joint to be animated by TheAnimator
-     *****************************************************************************/
-    void addTransformationAnimator(KeyframeAnimatorUnrecPtr TheAnimator, JointUnrecPtr TheJoint);
-
+    virtual const DataType* getDataType(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in SkeletonAnimationBase.
+    // Variables should all be in TransformAnimatorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    SkeletonAnimation(void);
-    SkeletonAnimation(const SkeletonAnimation &source);
+    TransformAnimator(void);
+    TransformAnimator(const TransformAnimator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SkeletonAnimation(void);
+    virtual ~TransformAnimator(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -129,49 +118,22 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBas
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    /**************************************************************************//**
-     * @fn	virtual void internalUpdate(Real32 t, const Real32 prev_t)
-     * 
-     * @brief	Updates the skeleton animation.
-     * 
-     * @param	t		
-     * @param	prev_t	 
-     *****************************************************************************/
-    virtual void internalUpdate(Real32 t, const Real32 prev_t);
-
-    /**************************************************************************//**
-     * @fn	std::map<unsigned long, Matrix> getRelTransformations
-     * (const Real32& t, const Real32& prev_t, std::set<JointUnrecPtr>& AnimatedJoints);
-     * 
-     * @brief Retrieves the relative transformation for each joint that is animated
-     * 		  in this step of the animation.
-     * 
-     * @param	t		
-     * @param	prev_t	 
-     * @param  AnimatedJoints  A set of all joints animated at this time in the
-     * 								 animation.
-     *
-     * @return  A map from joint field container IDs to relative trans matrices 
-     *****************************************************************************/
-    std::map<unsigned long, Matrix> getRelTransformations(const Real32& t, const Real32& prev_t, std::set<JointUnrecPtr>& AnimatedJoints);
-    
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class SkeletonBlendedAnimation;
-    friend class SkeletonAnimationBase;
+    friend class TransformAnimatorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const SkeletonAnimation &source);
+    void operator =(const TransformAnimator &source);
 };
 
-typedef SkeletonAnimation *SkeletonAnimationP;
+typedef TransformAnimator *TransformAnimatorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSkeletonAnimationBase.inl"
-#include "OSGSkeletonAnimation.inl"
+#include "OSGTransformAnimatorBase.inl"
+#include "OSGTransformAnimator.inl"
 
-#endif /* _OSGSKELETONANIMATION_H_ */
+#endif /* _OSGTRANSFORMANIMATOR_H_ */

@@ -47,6 +47,8 @@
 
 #include "OSGKeyframeBasicSequenceTmplFuncs.ins"
 #include "OSGKeyframeBasicSequenceTmpl.ins"
+#include "OSGAnimator.h"
+#include "OSGKeyframeInterpolations.h"
 
 OSG_USING_NAMESPACE
 
@@ -67,18 +69,70 @@ OSG_FIELD_CONTAINER_NONINL_TMPL_DEF(KeyframeBasicSequenceTmpl, SequenceDesc)
 EXPORT_SEQUENCE(KeyframeBasicSequenceStringDescBase)
 
 KeyframeBasicSequenceStringDescBase::InterpolationFuncMap KeyframeBasicSequenceStringDescBase::_interpolationFuncs = KeyframeBasicSequenceStringDescBase::InterpolationFuncMap();
+KeyframeBasicSequenceStringDescBase::ReplaceFuncMap KeyframeBasicSequenceStringDescBase::_replacementFuncs = KeyframeBasicSequenceStringDescBase::ReplaceFuncMap();
+
+//Bool
+EXPORT_SEQUENCE(KeyframeBasicSequenceBoolDescBase)
+
+KeyframeBasicSequenceBoolDescBase::InterpolationFuncMap KeyframeBasicSequenceBoolDescBase::_interpolationFuncs = KeyframeBasicSequenceBoolDescBase::InterpolationFuncMap();
+KeyframeBasicSequenceBoolDescBase::ReplaceFuncMap KeyframeBasicSequenceBoolDescBase::_replacementFuncs = KeyframeBasicSequenceBoolDescBase::ReplaceFuncMap();
 
 //Glenum
 EXPORT_SEQUENCE(KeyframeBasicSequenceGLenumDescBase)
 
 KeyframeBasicSequenceGLenumDescBase::InterpolationFuncMap KeyframeBasicSequenceGLenumDescBase::_interpolationFuncs = KeyframeBasicSequenceGLenumDescBase::InterpolationFuncMap();
+KeyframeBasicSequenceGLenumDescBase::ReplaceFuncMap KeyframeBasicSequenceGLenumDescBase::_replacementFuncs = KeyframeBasicSequenceGLenumDescBase::ReplaceFuncMap();
 
 
 //BoxVolume
 EXPORT_SEQUENCE(KeyframeBasicSequenceBoxVolumeDescBase)
 
 KeyframeBasicSequenceBoxVolumeDescBase::InterpolationFuncMap KeyframeBasicSequenceBoxVolumeDescBase::_interpolationFuncs = KeyframeBasicSequenceBoxVolumeDescBase::InterpolationFuncMap();
+KeyframeBasicSequenceBoxVolumeDescBase::ReplaceFuncMap KeyframeBasicSequenceBoxVolumeDescBase::_replacementFuncs = KeyframeBasicSequenceBoxVolumeDescBase::ReplaceFuncMap();
 
+
+void KeyframeBasicSequenceStringDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteNoBlendReplacement<StoredType>;
+    }
+}
+
+void KeyframeBasicSequenceBoolDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteNoBlendReplacement<StoredType>;
+    }
+}
+
+void KeyframeBasicSequenceGLenumDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequenceSpec<StoredType,1>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequenceSpec<StoredType,1>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteNoBlendReplacement<StoredType>;
+    }
+}
+
+void KeyframeBasicSequenceBoxVolumeDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteNoBlendReplacement<StoredType>;
+    }
+}
 
 OSG_END_NAMESPACE
 

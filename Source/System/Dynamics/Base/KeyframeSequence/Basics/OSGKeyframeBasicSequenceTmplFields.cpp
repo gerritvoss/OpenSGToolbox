@@ -56,6 +56,12 @@ DataType FieldTraits<KeyframeBasicSequenceString  *>::_type(
     "KeyframeBasicSequenceStringPtr",
     "KeyframeBasicSequencePtr");
 
+//Bool
+OSG_FIELDTRAITS_GETTYPE(KeyframeBasicSequenceBool  *)
+DataType FieldTraits<KeyframeBasicSequenceBool  *>::_type(
+    "KeyframeBasicSequenceBoolPtr",
+    "KeyframeBasicSequencePtr");
+
 //GLenum
 OSG_FIELDTRAITS_GETTYPE(KeyframeBasicSequenceGLenum  *)
 DataType FieldTraits<KeyframeBasicSequenceGLenum  *>::_type(
@@ -76,6 +82,14 @@ OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
                            0);
 OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
                            KeyframeBasicSequenceString *, 
+                           0);
+
+//Bool
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeBasicSequenceBool *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeBasicSequenceBool *, 
                            0);
 
 //GLenum

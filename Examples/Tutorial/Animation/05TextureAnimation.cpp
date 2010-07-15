@@ -266,7 +266,7 @@ void setupAnimation(void)
     TheBoxMaterial->addChunk(AnimFrameTexture);
 
     //Texture Keyframe Sequence
-    KeyframeFCPtrSequenceUnrecPtr TextureKeyframes = KeyframeFCPtrSequenceImage::create();
+    KeyframeFCPtrSequenceUnrecPtr TextureKeyframes = KeyframeFCPtrSequence::create();
     for(UInt32 i(0) ; i<_Images.size(); ++i)
     {
         TextureKeyframes->addKeyframe(_Images[i],static_cast<Real32>(i)*0.5f);

@@ -355,9 +355,9 @@ const Field& KeyframeColorSequenceTmpl<SequenceDesc>::getKeyValues(void) const
 /*! \copydoc OSG::KeyframeColorSequence::size
  */
 template <class SequenceDesc> inline
-const DataType& KeyframeColorSequenceTmpl<SequenceDesc>::getDataType(void) const
+const DataType*  KeyframeColorSequenceTmpl<SequenceDesc>::getDataType(void) const
 {
-    return SequenceDesc::StoredFieldType::getClassType().getContentType();
+    return &SequenceDesc::StoredFieldType::getClassType().getContentType();
 }
 
 template <class SequenceDesc> inline 
@@ -404,23 +404,74 @@ void KeyframeColorSequenceTmpl<SequenceDesc>::shrink(void)
 }
 
 template <class SequenceDesc> inline
-RawInterpFuncion KeyframeColorSequenceTmpl<SequenceDesc>::bindInterpFunction(UInt32 InterpolationFunctionId) const
+bool KeyframeColorSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                         Real32 time,
+                         Real32 prevTime,
+                         UInt32 ReplacePolicy,
+                         bool isCyclic,
+                         EditFieldHandlePtr Result,
+                         UInt32 Index,
+                         Real32 Blend)
 {
-    typename SequenceDesc::ConcreteInterpFunction f(SequenceDesc::getInterpolationFuncMap()[InterpolationFunctionId]);
-    if(f.empty())
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        return NULL;
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<SingleFieldType&>(*Result->getField()).getValue(),
+                           Blend);
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index],
+                           Blend);
     }
 }
 
 template <class SequenceDesc> inline
-ReplacementFuncion KeyframeColorSequenceTmpl<SequenceDesc>::getReplacementFuncion(void) const
+void KeyframeColorSequenceTmpl<SequenceDesc>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    return &replacement<typename SequenceDesc::SingleFieldType>;
+    if(Result->getCardinality() == FieldType::SingleField)
+    {
+        zeroField(static_cast<SingleFieldType&>(*Result->getField()).getValue());
+    }
+    else
+    {
+        zeroField(static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index]);
+    }
+}
+
+template <class SequenceDesc> inline
+bool KeyframeColorSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                                                           Real32 time,
+                                                           Real32 prevTime,
+                                                           UInt32 ReplacePolicy,
+                                                           bool isCyclic,
+                                                           StoredType& Result,
+                                                           Real32 Blend)
+{
+    typename SequenceDesc::ConcreteInterpFunction InterpFunc(SequenceDesc::getInterpolationFuncMap()[Type]);
+    if(InterpFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Interpolation function of type: " << Type << std::endl;
+        return false;
+    }
+    typename SequenceDesc::InterpReplaceFunction InterpReplaceFunc(boost::bind(InterpFunc, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3));
+    typename SequenceDesc::ConcreteReplaceFunction ReplaceFunc(SequenceDesc::getReplacementFuncMap()[ReplacePolicy]);
+    if(ReplaceFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Replacement function." << std::endl;
+        return false;
+    }
+
+    return ReplaceFunc(InterpReplaceFunc, time, prevTime, isCyclic, Result, Blend);
 }
 
 template <class SequenceDesc> inline
@@ -505,16 +556,9 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3ubDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3ubDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3ubDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFColor3ub&>(*Result->getField()).setValue(Color3ub(0,0,0));
-    }
-    else
-    {
-        static_cast<MFColor3ub&>(*Result->getField())[Index] = Color3ub(0,0,0);
-    }
+    Result = Color3ub(0,0,0);
 }
 
 template<> inline 
@@ -593,16 +637,9 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4ubDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4ubDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4ubDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFColor4ub&>(*Result->getField()).setValue(Color4ub(0,0,0,0));
-    }
-    else
-    {
-        static_cast<MFColor4ub&>(*Result->getField())[Index] = Color4ub(0,0,0,0);
-    }
+    Result = Color4ub(0,0,0,0);
 }
 
 template<> inline 
@@ -682,16 +719,9 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFColor3f&>(*Result->getField()).setValue(Color3f(0.0,0.0,0.0));
-    }
-    else
-    {
-        static_cast<MFColor3f&>(*Result->getField())[Index] = Color3f(0.0,0.0,0.0);
-    }
+    Result = Color3f(0.0,0.0,0.0);
 }
 
 template<> inline 
@@ -770,16 +800,9 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fDescBase>::getKeyValu
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFColor4f&>(*Result->getField()).setValue(Color4f(0.0,0.0,0.0,0.0));
-    }
-    else
-    {
-        static_cast<MFColor4f&>(*Result->getField())[Index] = Color4f(0.0,0.0,0.0,0.0);
-    }
+    Result = Color4f(0.0,0.0,0.0,0.0);
 }
 
 template<> inline 
@@ -898,16 +921,9 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFColor3fx&>(*Result->getField()).setValue(Color3fx(0.0f,0.0f,0.0f));
-    }
-    else
-    {
-        static_cast<MFColor3fx&>(*Result->getField())[Index] = Color3fx(0.0f,0.0f,0.0f);
-    }
+    Result = Color3fx(0.0f,0.0f,0.0f);
 }
 
 template<> inline 
@@ -1026,16 +1042,9 @@ void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::getKeyVal
 }
 
 template<> inline 
-void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFColor4fx&>(*Result->getField()).setValue(Color4fx(0.0f,0.0f,0.0f,0.0f));
-    }
-    else
-    {
-        static_cast<MFColor4fx&>(*Result->getField())[Index] = Color4fx(0.0f,0.0f,0.0f,0.0f);
-    }
+    Result = Color4fx(0.0f,0.0f,0.0f,0.0f);
 }
 
 template<> inline 
