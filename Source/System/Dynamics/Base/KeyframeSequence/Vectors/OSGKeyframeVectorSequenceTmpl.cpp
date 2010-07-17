@@ -80,9 +80,13 @@ KeyframeVectorSequenceVec4sDescBase::InterpolationFuncMap KeyframeVectorSequence
 KeyframeVectorSequenceVec4sDescBase::ReplaceFuncMap KeyframeVectorSequenceVec4sDescBase::_replacementFuncs = KeyframeVectorSequenceVec4sDescBase::ReplaceFuncMap();
 
 ////Real32
+EXPORT_SEQUENCE(KeyframeVectorSequenceVec1fDescBase)
 EXPORT_SEQUENCE(KeyframeVectorSequenceVec2fDescBase)
 EXPORT_SEQUENCE(KeyframeVectorSequenceVec3fDescBase)
 EXPORT_SEQUENCE(KeyframeVectorSequenceVec4fDescBase)
+
+KeyframeVectorSequenceVec1fDescBase::InterpolationFuncMap KeyframeVectorSequenceVec1fDescBase::_interpolationFuncs = KeyframeVectorSequenceVec1fDescBase::InterpolationFuncMap();
+KeyframeVectorSequenceVec1fDescBase::ReplaceFuncMap KeyframeVectorSequenceVec1fDescBase::_replacementFuncs = KeyframeVectorSequenceVec1fDescBase::ReplaceFuncMap();
 
 KeyframeVectorSequenceVec2fDescBase::InterpolationFuncMap KeyframeVectorSequenceVec2fDescBase::_interpolationFuncs = KeyframeVectorSequenceVec2fDescBase::InterpolationFuncMap();
 KeyframeVectorSequenceVec2fDescBase::ReplaceFuncMap KeyframeVectorSequenceVec2fDescBase::_replacementFuncs = KeyframeVectorSequenceVec2fDescBase::ReplaceFuncMap();
@@ -150,6 +154,20 @@ void KeyframeVectorSequenceVec3sDescBase::initMethod(InitPhase ePhase)
 }
 
 void KeyframeVectorSequenceVec4sDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    }
+}
+
+void KeyframeVectorSequenceVec1fDescBase::initMethod(InitPhase ePhase)
 {
     if(ePhase == TypeObject::SystemPost)
     {
