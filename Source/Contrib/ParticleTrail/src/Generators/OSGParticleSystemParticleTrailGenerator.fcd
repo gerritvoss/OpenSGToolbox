@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<FieldContainer
+	name="ParticleSystemParticleTrailGenerator"
+	parent="ParticleTrailGenerator"
+    library="ContribParticleTrail"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
+>
+	<Field
+		name="ParticleSystem"
+		type="ParticleSystem"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	ParticleSystem that will contain the particles for a trail
+	</Field>
+	<Field
+		name="VelocityDistribution"
+		type="Distribution3D"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	Velocity Distribution of the particle trail sections
+	</Field>
+	<Field
+		name="NormalDistribution"
+		type="Distribution3D"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	Normal Distribution of the particle trail sections
+	</Field>
+	<Field
+		name="ColorDistribution"
+		type="Distribution3D"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	Color Distribution of the particle trail sections
+	</Field>
+	<Field
+		name="TransparencyDistribution"
+		type="Distribution1D"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	Transparency Distribution of the particle trail sections
+	</Field>
+	<Field
+		name="SizeDistribution"
+		type="Distribution3D"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	Size Distribution of the particle trail sections
+	</Field>
+		<Field
+		name="AccelerationDistribution"
+		type="Distribution3D"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	Acceleration Distribution of the particle trail sections
+	</Field>
+	<Field
+		name="VelocityMultiplier"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0"
+		access="public"
+	>
+	Multiplier for the velocity of the trails.
+	</Field>
+	<Field
+		name="VelocitySource"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="ParticleSystemParticleTrailGenerator::DISTRIBUTION"
+	>
+	The source for the trail particles' velocity.
+	DISTRIBUTION - velocity generated from the VelocityDistribution field
+	PARENT_PARTICLE - velocity from the parent particle used (the particle this trail is generated form)
+	BLEND - The average between DISTRIBUTION and PARENT_PARTICLE is used
+	</Field>
+</FieldContainer>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<FieldContainer
+	name="SimpleParticleTrailGenerator"
+	parent="ParticleTrailGenerator"
+    library="ContribParticleTrail"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
+>
+	<Field
+		name="Resolution"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="3.0f"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DrawMethod"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="SimpleParticleTrailGenerator::POINTS"
+	>
+	The method used to draw the trails
+	POINTS - trail will be drawn as a series of points (dots)
+	LINES - trail will be drawn as a series of connected lines
+	</Field>
+</FieldContainer>
