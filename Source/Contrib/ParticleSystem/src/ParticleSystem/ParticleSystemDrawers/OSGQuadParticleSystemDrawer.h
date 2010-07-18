@@ -109,6 +109,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadParticleSystemDrawer : public Qua
                       ParticleSystemUnrecPtr System,
                       const MFUInt32& Sort);
 
+    bool setNormalAndUpSource(UInt32 NormalSource,UInt32 UpSource,Vec3f Normal = Vec3f(1,0,0), Vec3f Up = Vec3f(0,1,0));
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

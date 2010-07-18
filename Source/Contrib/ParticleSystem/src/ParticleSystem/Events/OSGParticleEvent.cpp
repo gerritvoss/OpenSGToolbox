@@ -84,13 +84,15 @@ ParticleEventTransitPtr ParticleEvent::create( FieldContainerRefPtr Source,
                                              const Vec3f& Velocity,
                                              const Vec3f& SecVelocity,
                                              const Vec3f& Acceleration,
-                                             const StringToUInt32Map& Attributes)
+                                             const StringToUInt32Map& Attributes,
+                                             UInt32 ID)
 {
     ParticleEvent* TheEvent = ParticleEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setParticleIndex(Index);
+    TheEvent->setParticleID(ID);
     TheEvent->setParticlePosition(Position);
     TheEvent->setParticleSecPosition(SecPosition);
     TheEvent->setParticleNormal(Normal);

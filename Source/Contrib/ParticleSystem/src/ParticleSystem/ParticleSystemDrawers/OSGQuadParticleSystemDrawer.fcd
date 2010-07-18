@@ -42,7 +42,7 @@
 		cardinality="single"
 		visibility="external"
 		defaultValue="QuadParticleSystemDrawer::NORMAL_VIEW_DIRECTION"
-		access="public"
+		access="protected"
 	>
 	This enum is used to determine what is used for the direction of the line.
    NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.
@@ -61,7 +61,7 @@
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0,0.0,0.0"
-		access="public"
+		access="protected"
 	>
    The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.
 	</Field>
@@ -72,7 +72,7 @@
 		cardinality="single"
 		visibility="external"
 		defaultValue="QuadParticleSystemDrawer::UP_VIEW_DIRECTION"
-		access="public"
+		access="protected"
 	>
 	This enum is used to determine what is used for the direction of the line.
    UP_POSITION_CHANGE uses the diference between Position and SecPosition.
@@ -90,7 +90,7 @@
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,1.0,0.0"
-		access="public"
+		access="protected"
 	>
    The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.
 	</Field>

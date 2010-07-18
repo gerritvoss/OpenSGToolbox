@@ -163,18 +163,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadParticleSystemDrawerBase : public
                   SFBool              *editSFUseImageSizeRatio(void);
             const SFBool              *getSFUseImageSizeRatio (void) const;
 
-                  SFUInt32            *editSFNormalSource   (void);
-            const SFUInt32            *getSFNormalSource    (void) const;
-
-                  SFVec3f             *editSFNormal         (void);
-            const SFVec3f             *getSFNormal          (void) const;
-
-                  SFUInt32            *editSFUpSource       (void);
-            const SFUInt32            *getSFUpSource        (void) const;
-
-                  SFVec3f             *editSFUp             (void);
-            const SFVec3f             *getSFUp              (void) const;
-
                   SFBool              *editSFUseNormalAsObjectSpaceRotation(void);
             const SFBool              *getSFUseNormalAsObjectSpaceRotation (void) const;
 
@@ -187,18 +175,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadParticleSystemDrawerBase : public
 
                   bool                &editUseImageSizeRatio(void);
                   bool                 getUseImageSizeRatio (void) const;
-
-                  UInt32              &editNormalSource   (void);
-                  UInt32               getNormalSource    (void) const;
-
-                  Vec3f               &editNormal         (void);
-            const Vec3f               &getNormal          (void) const;
-
-                  UInt32              &editUpSource       (void);
-                  UInt32               getUpSource        (void) const;
-
-                  Vec3f               &editUp             (void);
-            const Vec3f               &getUp              (void) const;
 
                   bool                &editUseNormalAsObjectSpaceRotation(void);
                   bool                 getUseNormalAsObjectSpaceRotation (void) const;
@@ -213,10 +189,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadParticleSystemDrawerBase : public
 
             void setQuadSizeScaling(const Vec2f &value);
             void setUseImageSizeRatio(const bool value);
-            void setNormalSource   (const UInt32 value);
-            void setNormal         (const Vec3f &value);
-            void setUpSource       (const UInt32 value);
-            void setUp             (const Vec3f &value);
             void setUseNormalAsObjectSpaceRotation(const bool value);
             void setTwist          (const Real32 value);
 
@@ -329,6 +301,52 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadParticleSystemDrawerBase : public
     EditFieldHandlePtr editHandleUseNormalAsObjectSpaceRotation(void);
     GetFieldHandlePtr  getHandleTwist           (void) const;
     EditFieldHandlePtr editHandleTwist          (void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+
+                  SFUInt32            *editSFNormalSource   (void);
+            const SFUInt32            *getSFNormalSource    (void) const;
+
+                  SFVec3f             *editSFNormal         (void);
+            const SFVec3f             *getSFNormal          (void) const;
+
+                  SFUInt32            *editSFUpSource       (void);
+            const SFUInt32            *getSFUpSource        (void) const;
+
+                  SFVec3f             *editSFUp             (void);
+            const SFVec3f             *getSFUp              (void) const;
+
+
+                  UInt32              &editNormalSource   (void);
+                  UInt32               getNormalSource    (void) const;
+
+                  Vec3f               &editNormal         (void);
+            const Vec3f               &getNormal          (void) const;
+
+                  UInt32              &editUpSource       (void);
+                  UInt32               getUpSource        (void) const;
+
+                  Vec3f               &editUp             (void);
+            const Vec3f               &getUp              (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setNormalSource   (const UInt32 value);
+            void setNormal         (const Vec3f &value);
+            void setUpSource       (const UInt32 value);
+            void setUp             (const Vec3f &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

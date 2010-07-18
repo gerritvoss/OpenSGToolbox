@@ -67,8 +67,6 @@ OSG_BEGIN_NAMESPACE
  *                           Class variables                               *
 \***************************************************************************/
 
-ParticleSystemCore::ParticleSortByViewPosition ParticleSystemCore::TheSorter = ParticleSystemCore::ParticleSortByViewPosition();
-
 StatElemDesc<StatTimeElem> ParticleSystemCore::statParticleSortTime("ParticleSortTime", 
                                                                     "time for particles to be sorted");
 
@@ -108,8 +106,8 @@ void ParticleSystemCore::drawPrimitives (DrawEnv *pEnv)
     //If I have a Drawer tell it to draw the particles
     if(getDrawer() != NULL && getSystem() != NULL)
     {
-		
-		checkAndInitializeSort();
+        //Sorting particles
+        checkAndInitializeSort();
 		sortParticles(pEnv);
 
 		getDrawer()->draw(pEnv, getSystem(), *getMFSort());
@@ -137,11 +135,13 @@ void ParticleSystemCore::checkAndInitializeSort(void)
 
 	if(getMFSort()->size() != getSystem()->getNumParticles() && getSortingMode() != NONE)
 	{	// re-init _mfSort if there is a discrepency between number of particles in each
-		editMFSort()->resize(getSystem()->getNumParticles());
+		editMFSort()->resize(getSystem()->getNumParticles(),1);
+		editMFDistances()->resize(getSystem()->getNumParticles(), 0.0f);
 		//initialize _mfSort
 		for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
 		{
 			editSort(i) = i;
+			editDistances(i) = 0.0f;
 		}
 	}
 
@@ -190,96 +190,257 @@ void ParticleSystemCore::sortParticles(DrawEnv *pEnv)
     //This should be called if the ParticleSystem has
     //just finished an update
 
-	//extract camera position
-	Pnt3f CameraLocation(0.0,0.0,0.0);
-    pEnv->getCameraToWorld().mult(CameraLocation,CameraLocation);
-    if(getSystem() != NULL && getSortingMode() != NONE && _mfSort.size() > 0)
+	UInt32 numParticles = getSystem()->getNumParticles();
+	if(getSystem() != NULL && getSortingMode() != NONE && getMFSort()->size() > 0)
     {
-		// initialize sort funcion struct
-		TheSorter = ParticleSortByViewPosition(getSystem(),CameraLocation,true);
+		//extract camera position
+		Pnt3f CameraLocation(0.0,0.0,0.0);
+		pEnv->getCameraToWorld().mult(CameraLocation,CameraLocation);
 
-		// get sorting order
+		/* 
+		 * Lots of time spent getting the sorting as best as possible
+		 * std::qsort averages 3 to 4 ticks w/ 500 particles. Fast enough, but not stable
+		 *	std::stable_sort averages 18 to 19 ticks w/ 500 particles, much too slow
+		 *	The radix sort we use here avgs. 1 to 2 ticks, and is stable	
+		 */
+	
+		// fill up the array of distances from the particles to the camera
 		switch(getSortingMode())
-        {
-			case FRONT_TO_BACK:
-				//Use the FrontToBack Comparitor, already initialized above
-				break;
-
+		{
 			case BACK_TO_FRONT:
-				//Use the BackToFront Comparitor, changes sorting order
-				TheSorter = ParticleSortByViewPosition(getSystem(),CameraLocation,false);
+			{
+				for(UInt32 i(0); i < numParticles; i++)
+				{
+					editDistances(i) = -(getSystem()->getPosition(i) - CameraLocation).squareLength();
+				}
 				break;
-        }
+			}
+
+			case FRONT_TO_BACK:
+			{
+				for(UInt32 i(0); i < numParticles; i++)
+				{
+					editDistances(i) = (getSystem()->getPosition(i) - CameraLocation).squareLength();
+				}
+				break;
+			}
+		}
 		
-		// particles sorted using stdlib's quicksort
-		std::qsort(&_mfSort[0],_mfSort.size(), sizeof(MFUInt32::StoredType),qSortComp);
-		// sort with std::sort
-		//std::sort(getSort().begin(), getSort().end(), TheSorter);
+		// perform the actual sort
+		doRadixSort();	
     }
-}
-
-ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition(const ParticleSystem* TheSystem, Pnt3f TheCameraPos, bool SortByMinimum) 
-	: _System(TheSystem), _CameraPos(TheCameraPos.subZero()), _SortByMinimum(SortByMinimum)
-{
-}
-
-ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition() 
-	: _System(NULL), _CameraPos(Vec3f(0.0,0.0,0.0)), _SortByMinimum(true)
-{
-}
-
-
-/*  
- *	This comparison operator is left here in case we revert to std::sort again
- */
-bool ParticleSystemCore::ParticleSortByViewPosition::operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight)
-{
-	bool retFlag;
-	// relative distances squared are compared
-	if(_SortByMinimum){
-		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
-			< ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
-
-	} else
-	{
-		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
-			> ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
-	}
-	return retFlag;
-}
-
-// function used for qsort comparisons
-int qSortComp(const void * a, const void * b)
-{
-	int ret;
-	// relative distances squared are compared
-	if(ParticleSystemCore::TheSorter._SortByMinimum){
-		ret = (Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)a) - ParticleSystemCore::TheSorter._CameraPos).squareLength()) 
-			- ((Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)b)) - ParticleSystemCore::TheSorter._CameraPos).squareLength());
-
-	} else
-	{
-		ret = Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)b) - ParticleSystemCore::TheSorter._CameraPos).squareLength() 
-			- Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)a) - ParticleSystemCore::TheSorter._CameraPos).squareLength();
-	}
-	return ret;
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void ParticleSystemCore::doRadixSort()
+{
+	if(getMFHistogram()->size() == 0)
+	{ // only initialize histograms if needed. should happen once only
+		editMFHistogram()->resize(256*4);
+		editMFOffset()->resize(256);
+	}
+
+	UInt32* input = (UInt32*)&editDistances(0);
+	UInt32 numParticles = getSystem()->getNumParticles();
+	// Resize lists if needed
+	if(numParticles != getPreviousSize())							
+	{ 											
+		if(getPreviousSize() < numParticles) 
+		{ // only expand if needed
+			editMFSort()->resize(numParticles);
+			editMFSort2()->resize(numParticles);
+		}
+		else 
+		{	// reset indices
+			for(UInt32 i=0;i < numParticles;i++)	
+            {
+				editSort(i) = i;
+            }
+		}
+		setPreviousSize(numParticles);							
+	}
+
+	
+	// Clear counters 			
+	memset(&editHistogram(0), 0,256*4*sizeof(UInt32));	
+													
+	// Prepare for temporal coherence 		
+	Real32 PrevVal = getDistances(getSort(0));		
+	bool AlreadySorted = true;	// Optimism... 
+	UInt32* Indices = &editSort(0);
+													
+	/* Prepare to count */							
+	UChar8* p = (UChar8*)input;						
+	UChar8* pe = &p[numParticles*4];							
+	UInt32* h0= &editHistogram(0);	/* Histogram for first pass (LSB)*/		
+	UInt32* h1= &editHistogram(256);	/* Histogram for second pass*/		
+	UInt32* h2= &editHistogram(512);	/* Histogram for third pass*/		
+	UInt32* h3= &editHistogram(768);	/* Histogram for last pass (MSB)*/	
+																		
+	while(p!=pe)														
+	{																	
+		// Read input buffer in previous sorted order 				
+		Real32 Val = getDistances(*Indices++);							
+		// Check whether already sorted or not x					
+		if(Val<PrevVal)	 // Early out
+		{ 
+			AlreadySorted = false; 
+			break; 
+		} 
+		// Update for next iteration 			
+		PrevVal = Val;									
+														
+		// Create histograms 					
+		h0[*p++]++;	
+		h1[*p++]++;	
+		h2[*p++]++; 
+		h3[*p++]++;	
+	}													
+														
+	/* If all input values are already sorted, we just have to return and leave the 
+	 * previous list unchanged. That way the routine may take advantage of temporal 	
+	 * coherence, for example when used to sort transparent faces.
+	 */					
+	if(AlreadySorted) return;										
+																						
+	// Else there has been an early out and we must finish computing the histograms 
+	while(p!=pe)												
+	{															
+		// Continue to create histograms from where we left off	
+		h0[*p++]++;	
+		h1[*p++]++;	
+		h2[*p++]++;	
+		h3[*p++]++;			
+	}
+
+	
+	// Compute #negative values involved if needed
+	UInt32 NbNegativeValues = 0;
+	// An efficient way to compute the number of negatives values we'll have to deal with is simply to sum the 128
+	// last values of the last histogram. Last histogram because that's the one for the Most Significant Byte,
+	// responsible for the sign. 128 last values because the 128 first ones are related to positive numbers.
+	h3= &editHistogram(768);
+	for(UInt32 i=128;i<256;i++)	NbNegativeValues += h3[i];	// 768 for last histogram, 128 for negative part
+
+	// we index from these alternating arrays each pass, and they must be swapped each time. To avoid
+	// having to copy all of the elements each pass, we just use pointers to handle this
+	UInt32 * sortPtr = &editSort(0);
+	UInt32 * sort2Ptr = &editSort2(0);
+
+	// Radix sort, j is the pass number (0=LSB, 3=MSB)
+	for(UInt32 j=0;j<4;j++)
+	{
+		// Should we care about negative values?
+		if(j!=3)
+		{
+			// Here we deal with positive values only
+			// Shortcut to current counters 						
+			UInt32* CurCount = &editHistogram(j<<8);					
+																		
+			// Reset flag. The sorting pass is supposed to be performed. (default)
+			bool PerformPass = true;					
+																						
+			// Get first byte 								
+			UChar8 UniqueVal = *(((UChar8*)input)+j);			
+																	
+			// Check that byte's counter 	
+			if(CurCount[UniqueVal]==numParticles)	
+				PerformPass=false;	
+
+			if(PerformPass)
+			{
+				// Create offsets
+				editOffset(0) = 0;
+				for(UInt32 i=1;i<256;i++) 
+                {
+					editOffset(i) = getOffset(i-1) + CurCount[i-1];
+                }
+
+				// Perform Radix Sort
+				UChar8* InputBytes = (UChar8*)input;
+				UInt32* Indices	= sortPtr;
+				UInt32* IndicesEnd = &sortPtr[numParticles];
+				InputBytes += j;
+				while(Indices!=IndicesEnd)
+				{
+					UInt32 id = *Indices++;
+					sort2Ptr[editOffset(InputBytes[id<<2])++] = id;
+				}
+
+				// Swap pointers for next pass. Valid indices - the most recent ones - are in sortPtr after the swap.
+				UInt32* Tmp = sortPtr;	
+				sortPtr = sort2Ptr; 
+				sort2Ptr = Tmp;
+			}
+		}
+		else
+		{
+			// This is a special case to correctly handle negative values
+			/* Shortcut to current counters */						
+			UInt32* CurCount = &editHistogram(j<<8);				
+																						
+			/* Get first byte */									
+			UChar8 UniqueVal = *(((UChar8*)input)+j);			
+																
+			if(!(CurCount[UniqueVal]==numParticles))
+			{
+				// Create biased offsets, in order for negative numbers to be sorted as well
+				editOffset(0) = NbNegativeValues; // First positive number takes place after the negative ones
+				for(UInt32 i=1;i<128;i++)	editOffset(i) = getOffset(i-1) + CurCount[i-1];	// 1 to 128 for positive numbers
+
+				// We must reverse the sorting order for negative numbers!
+				editOffset(255) = 0;
+				for(UInt32 i=0;i<127;i++) 
+					editOffset(254-i) = getOffset(255-i) + CurCount[255-i]; // Fixing the wrong order for negative values
+				for(UInt32 i=128;i<256;i++) 
+					editOffset(i) += CurCount[i];	// Fixing the wrong place for negative values
+
+				// Perform Radix Sort
+				for(UInt32 i=0;i<numParticles;i++)
+				{
+					UInt32 Radix = input[sortPtr[i]]>>24;	// Radix byte, same as above. AND is useless here (UInt32).
+					if(Radix<128) 
+						sort2Ptr[editOffset(Radix)++] = sortPtr[i]; // Number is positive, same as above
+					else 
+						sort2Ptr[--editOffset(Radix)] = sortPtr[i]; // Number is negative, flip the sorting order
+				}
+				// Swap pointers for next pass. Valid indices - the most recent ones - are in sortPtr after the swap.
+				UInt32* Tmp = sortPtr;	
+				sortPtr = sort2Ptr; 
+				sort2Ptr = Tmp;
+			}
+			else
+			{
+				// The pass is useless, yet we still have to reverse the order of current list if all values are negative.
+				if(UniqueVal >= 128)
+				{
+					for(UInt32 i=0; i < numParticles; i++)	
+						sort2Ptr[i] = sortPtr[numParticles-i-1];
+
+					// Swap pointers for next pass. Valid indices - the most recent ones - are in sortPtr after the swap.
+				UInt32* Tmp = sortPtr;	
+				sortPtr = sort2Ptr; 
+				sort2Ptr = Tmp;
+				}
+			}
+		} //end if (j!=3)
+	} // end for (j<4...)
+}// end of doRadixSort()
+
 /*----------------------- constructors & destructors ----------------------*/
 
 ParticleSystemCore::ParticleSystemCore(void) :
     Inherited(),
-    _SystemUpdateListener(ParticleSystemCoreRefPtr(this))
+    _SystemUpdateListener(this)
 {
 }
 
 ParticleSystemCore::ParticleSystemCore(const ParticleSystemCore &source) :
     Inherited(source),
-    _SystemUpdateListener(ParticleSystemCoreRefPtr(this))
+    _SystemUpdateListener(this)
 {
 }
 
@@ -328,11 +489,13 @@ void ParticleSystemCore::changed(ConstFieldMaskArg whichField,
             if(getMFSort()->size() != getSystem()->getNumParticles())
             {
                 editMFSort()->resize(getSystem()->getNumParticles());
+                editMFDistances()->resize(getSystem()->getNumParticles());
 
                 //initialize _mfSort
                 for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
                 {
                     editSort(i) = i;
+                    editDistances(i) = 0.0f;
                 }
             }
         }
@@ -341,6 +504,7 @@ void ParticleSystemCore::changed(ConstFieldMaskArg whichField,
             if(getMFSort()->size() != 0)
             {
                 editMFSort()->clear();
+                editMFDistances()->clear();
             }
         }
     }
@@ -384,7 +548,11 @@ void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEven
 void ParticleSystemCore::handleParticleGenerated(const ParticleEventUnrecPtr e)
 {
     //add particle to _mfSort
-    if(getSortingMode() != NONE) editMFSort()->push_back(getMFSort()->size());
+    if(getSortingMode() != NONE)
+    {
+        editMFSort()->push_back(getMFSort()->size());
+		editMFDistances()->push_back(0.0f);
+    }
 }
 
 void ParticleSystemCore::handleParticleKilled(const ParticleEventUnrecPtr e)
@@ -395,6 +563,7 @@ void ParticleSystemCore::handleParticleKilled(const ParticleEventUnrecPtr e)
         if((*theItor) == _mfSort.size() - 1 ) 
         {
             _mfSort.erase(theItor);
+			_mfDistances.erase(--_mfDistances.end());
             break;
         }
     }
@@ -408,6 +577,7 @@ void ParticleSystemCore::handleParticleStolen(const ParticleEventUnrecPtr e)
         if((int)*theItor == _mfSort.size() - 1 ) 
         {
             _mfSort.erase(theItor);
+			_mfDistances.erase(--_mfDistances.end());
             break;
         }
     }

@@ -65,9 +65,9 @@
 
 #include "OSGMaterialDrawable.h" // Parent
 
-#include "OSGSysFields.h"               // SortingMode type
 #include "OSGParticleSystemFields.h"    // System type
 #include "OSGParticleSystemDrawerFields.h" // Drawer type
+#include "OSGSysFields.h"               // SortingMode type
 
 #include "OSGParticleSystemCoreFields.h"
 
@@ -95,28 +95,48 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
 
     enum
     {
-        SortingModeFieldId = Inherited::NextFieldId,
-        SortFieldId = SortingModeFieldId + 1,
-        SystemFieldId = SortFieldId + 1,
+        SystemFieldId = Inherited::NextFieldId,
         DrawerFieldId = SystemFieldId + 1,
-        NextFieldId = DrawerFieldId + 1
+        SortingModeFieldId = DrawerFieldId + 1,
+        SortFieldId = SortingModeFieldId + 1,
+        Sort2FieldId = SortFieldId + 1,
+        DistancesFieldId = Sort2FieldId + 1,
+        HistogramFieldId = DistancesFieldId + 1,
+        OffsetFieldId = HistogramFieldId + 1,
+        PreviousSizeFieldId = OffsetFieldId + 1,
+        NextFieldId = PreviousSizeFieldId + 1
     };
 
-    static const OSG::BitVector SortingModeFieldMask =
-        (TypeTraits<BitVector>::One << SortingModeFieldId);
-    static const OSG::BitVector SortFieldMask =
-        (TypeTraits<BitVector>::One << SortFieldId);
     static const OSG::BitVector SystemFieldMask =
         (TypeTraits<BitVector>::One << SystemFieldId);
     static const OSG::BitVector DrawerFieldMask =
         (TypeTraits<BitVector>::One << DrawerFieldId);
+    static const OSG::BitVector SortingModeFieldMask =
+        (TypeTraits<BitVector>::One << SortingModeFieldId);
+    static const OSG::BitVector SortFieldMask =
+        (TypeTraits<BitVector>::One << SortFieldId);
+    static const OSG::BitVector Sort2FieldMask =
+        (TypeTraits<BitVector>::One << Sort2FieldId);
+    static const OSG::BitVector DistancesFieldMask =
+        (TypeTraits<BitVector>::One << DistancesFieldId);
+    static const OSG::BitVector HistogramFieldMask =
+        (TypeTraits<BitVector>::One << HistogramFieldId);
+    static const OSG::BitVector OffsetFieldMask =
+        (TypeTraits<BitVector>::One << OffsetFieldId);
+    static const OSG::BitVector PreviousSizeFieldMask =
+        (TypeTraits<BitVector>::One << PreviousSizeFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUInt32          SFSortingModeType;
-    typedef MFUInt32          MFSortType;
     typedef SFUnrecParticleSystemPtr SFSystemType;
     typedef SFUnrecParticleSystemDrawerPtr SFDrawerType;
+    typedef SFUInt32          SFSortingModeType;
+    typedef MFUInt32          MFSortType;
+    typedef MFUInt32          MFSort2Type;
+    typedef MFReal32          MFDistancesType;
+    typedef MFUInt32          MFHistogramType;
+    typedef MFUInt32          MFOffsetType;
+    typedef SFUInt32          SFPreviousSizeType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -141,30 +161,30 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-
-                  SFUInt32            *editSFSortingMode    (void);
-            const SFUInt32            *getSFSortingMode     (void) const;
             const SFUnrecParticleSystemPtr *getSFSystem         (void) const;
                   SFUnrecParticleSystemPtr *editSFSystem         (void);
             const SFUnrecParticleSystemDrawerPtr *getSFDrawer         (void) const;
                   SFUnrecParticleSystemDrawerPtr *editSFDrawer         (void);
 
+                  SFUInt32            *editSFSortingMode    (void);
+            const SFUInt32            *getSFSortingMode     (void) const;
 
-                  UInt32              &editSortingMode    (void);
-                  UInt32               getSortingMode     (void) const;
 
                   ParticleSystem * getSystem         (void) const;
 
                   ParticleSystemDrawer * getDrawer         (void) const;
+
+                  UInt32              &editSortingMode    (void);
+                  UInt32               getSortingMode     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setSortingMode    (const UInt32 value);
             void setSystem         (ParticleSystem * const value);
             void setDrawer         (ParticleSystemDrawer * const value);
+            void setSortingMode    (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -229,10 +249,15 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32          _sfSortingMode;
-    MFUInt32          _mfSort;
     SFUnrecParticleSystemPtr _sfSystem;
     SFUnrecParticleSystemDrawerPtr _sfDrawer;
+    SFUInt32          _sfSortingMode;
+    MFUInt32          _mfSort;
+    MFUInt32          _mfSort2;
+    MFReal32          _mfDistances;
+    MFUInt32          _mfHistogram;
+    MFUInt32          _mfOffset;
+    SFUInt32          _sfPreviousSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -261,14 +286,24 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleSortingMode     (void) const;
-    EditFieldHandlePtr editHandleSortingMode    (void);
-    GetFieldHandlePtr  getHandleSort            (void) const;
-    EditFieldHandlePtr editHandleSort           (void);
     GetFieldHandlePtr  getHandleSystem          (void) const;
     EditFieldHandlePtr editHandleSystem         (void);
     GetFieldHandlePtr  getHandleDrawer          (void) const;
     EditFieldHandlePtr editHandleDrawer         (void);
+    GetFieldHandlePtr  getHandleSortingMode     (void) const;
+    EditFieldHandlePtr editHandleSortingMode    (void);
+    GetFieldHandlePtr  getHandleSort            (void) const;
+    EditFieldHandlePtr editHandleSort           (void);
+    GetFieldHandlePtr  getHandleSort2           (void) const;
+    EditFieldHandlePtr editHandleSort2          (void);
+    GetFieldHandlePtr  getHandleDistances       (void) const;
+    EditFieldHandlePtr editHandleDistances      (void);
+    GetFieldHandlePtr  getHandleHistogram       (void) const;
+    EditFieldHandlePtr editHandleHistogram      (void);
+    GetFieldHandlePtr  getHandleOffset          (void) const;
+    EditFieldHandlePtr editHandleOffset         (void);
+    GetFieldHandlePtr  getHandlePreviousSize    (void) const;
+    EditFieldHandlePtr editHandlePreviousSize   (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -279,15 +314,46 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
                   MFUInt32            *editMFSort           (void);
             const MFUInt32            *getMFSort            (void) const;
 
+                  MFUInt32            *editMFSort2          (void);
+            const MFUInt32            *getMFSort2           (void) const;
+
+                  MFReal32            *editMFDistances      (void);
+            const MFReal32            *getMFDistances       (void) const;
+
+                  MFUInt32            *editMFHistogram      (void);
+            const MFUInt32            *getMFHistogram       (void) const;
+
+                  MFUInt32            *editMFOffset         (void);
+            const MFUInt32            *getMFOffset          (void) const;
+
+                  SFUInt32            *editSFPreviousSize   (void);
+            const SFUInt32            *getSFPreviousSize    (void) const;
+
 
                   UInt32              &editSort           (const UInt32 index);
                   UInt32               getSort            (const UInt32 index) const;
+
+                  UInt32              &editSort2          (const UInt32 index);
+                  UInt32               getSort2           (const UInt32 index) const;
+
+                  Real32              &editDistances      (const UInt32 index);
+                  Real32               getDistances       (const UInt32 index) const;
+
+                  UInt32              &editHistogram      (const UInt32 index);
+                  UInt32               getHistogram       (const UInt32 index) const;
+
+                  UInt32              &editOffset         (const UInt32 index);
+                  UInt32               getOffset          (const UInt32 index) const;
+
+                  UInt32              &editPreviousSize   (void);
+                  UInt32               getPreviousSize    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+            void setPreviousSize   (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

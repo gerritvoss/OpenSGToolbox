@@ -110,6 +110,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     const Vec3f getVelocityChange(const UInt32& Index) const;
     const Vec3f& getAcceleration(const UInt32& Index) const;
     UInt32 getAttribute(const UInt32& Index, const std::string& AttributeKey) const;
+	const UInt32 getID(const UInt32& Index) const;
     const StringToUInt32Map& getAttributes(const UInt32& Index) const;
 
 
@@ -185,6 +186,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
 
 
     bool killParticle(UInt32 Index, bool KillNextUpdate = false);
+	bool killParticleByID(UInt32 ID, bool KillNextUpdate = false);
 
     void updateVolume(void);
 
@@ -266,7 +268,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
                                const Vec3f& Velocity,
                                const Vec3f& SecVelocity,
                                const Vec3f& Acceleration,
-                               const StringToUInt32Map& Attributes);
+                               const StringToUInt32Map& Attributes,
+                               UInt32& ID);
 
     void produceParticleStolen(
                                Int32 Index,
@@ -280,7 +283,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
                                const Vec3f& Velocity,
                                const Vec3f& SecVelocity,
                                const Vec3f& Acceleration,
-                               const StringToUInt32Map& Attributes);
+                               const StringToUInt32Map& Attributes,
+                               UInt32& ID);
 
     class SystemUpdateListener : public UpdateListener
     {
@@ -319,6 +323,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     void removeSecVelocity(UInt32 Index);
     void removeAcceleration(UInt32 Index);
     void removeAttributes(UInt32 Index);
+	void removeID(UInt32 Index);
 
     bool internalKillParticle(UInt32 Index);
     void internalKillParticles();
@@ -327,6 +332,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     std::set<UInt32, GreaterThanUInt32> _ParticlesToKill;
     EventConnection _UpdateEventConnection;
 
+	UInt32 _curID;
 
     void extendVolumeByParticle(UInt32 ParticleIndex);
     /*==========================  PRIVATE  ================================*/
