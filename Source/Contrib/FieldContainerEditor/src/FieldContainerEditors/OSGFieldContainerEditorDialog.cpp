@@ -121,11 +121,15 @@ class TreeEditorSelectionListener : public TreeSelectionListener
   protected:
     TreeRefPtr _EditorTree;
     FieldContainerEditorComponentRefPtr _Editor;
+    ScrollPanelRefPtr _EditorScroll;
     
   public:
-    TreeEditorSelectionListener(TreeRefPtr tree, FieldContainerEditorComponentRefPtr editor) :
+    TreeEditorSelectionListener(TreeRefPtr tree,
+                                FieldContainerEditorComponentRefPtr editor,
+                                ScrollPanelRefPtr editorScroll) :
       _EditorTree(tree),
-      _Editor(editor)
+      _Editor(editor),
+      _EditorScroll(editorScroll)
     {
     }
     ~TreeEditorSelectionListener(void)
@@ -145,6 +149,15 @@ class TreeEditorSelectionListener : public TreeSelectionListener
 
                 if(ThePair._FieldID == 0)
                 {
+                    //Check if this is the default editor for this type of
+                    //FieldContainer
+                    if(*FieldContainerEditorFactory::the()->getDefaultEditorType(&ThePair._Container->getType()) != _Editor->getType())
+                    {
+                        _Editor =
+                            FieldContainerEditorFactory::the()->createDefaultEditor(ThePair._Container,
+                                                                                    _Editor->getCommandManager());
+                        _EditorScroll->setViewComponent(_Editor);
+                    }
                     _Editor->attachFieldContainer(ThePair._Container);
                 }
             }
@@ -197,7 +210,9 @@ DialogWindowTransitPtr createFCTreeEditorDialog       (FieldContainer* fc,
     TheTree->setModel(TheTreeModel);
     TheTree->setCellGenerator(TheTreeComponentGenerator);
     
-    TreeSelectionListenerRefPtr TheTreeEditorSelectionListener(new TreeEditorSelectionListener(TheTree, TheEditor));
+    TreeSelectionListenerRefPtr TheTreeEditorSelectionListener(new TreeEditorSelectionListener(TheTree,
+                                                                                           TheEditor,
+                                                                                           EditorScrollPanel));
     TheTree->getSelectionModel()->addTreeSelectionListener(TheTreeEditorSelectionListener.get());
     TheDialog->addTransientObject(boost::any(TheTreeEditorSelectionListener));
 

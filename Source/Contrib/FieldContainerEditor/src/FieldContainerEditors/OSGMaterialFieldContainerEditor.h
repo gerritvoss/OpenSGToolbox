@@ -36,32 +36,43 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFIELDCONTAINEREDITORCOMPONENT_H_
-#define _OSGFIELDCONTAINEREDITORCOMPONENT_H_
+#ifndef _OSGMATERIALFIELDCONTAINEREDITOR_H_
+#define _OSGMATERIALFIELDCONTAINEREDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGFieldContainerEditorComponentBase.h"
-#include "OSGCommandManager.h"
-#include "OSGFieldEditorComponent.h"
+#include "OSGMaterialFieldContainerEditorBase.h"
+#include "OSGGenericFieldContainerEditor.h"
+#include "OSGGLViewport.h"
+#include "OSGGeometry.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FieldContainerEditorComponent class. See \ref
-           PageContribFieldContainerEditorFieldContainerEditorComponent for a description.
+/*! \brief MaterialFieldContainerEditor class. See \ref
+           PageContribFieldContainerEditorMaterialFieldContainerEditor for a description.
 */
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldContainerEditorComponent : public FieldContainerEditorComponentBase
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialFieldContainerEditor : public MaterialFieldContainerEditorBase
 {
   protected:
 
     /*==========================  PUBLIC  =================================*/
 
   public:
+    enum MaterialShapes
+    {
+        SPHERE_SHAPE   = 0,
+        PLANE_SHAPE    = 1,
+        BOX_SHAPE      = 2,
+        TEAPOT_SHAPE   = 3,
+        CONE_SHAPE     = 4,
+        CYLINDER_SHAPE = 5,
+        TORUS_SHAPE    = 6
+    };
 
-    typedef FieldContainerEditorComponentBase Inherited;
-    typedef FieldContainerEditorComponent     Self;
+    typedef MaterialFieldContainerEditorBase Inherited;
+    typedef MaterialFieldContainerEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -80,35 +91,54 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldContainerEditorComponent :
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    virtual const std::vector<const FieldContainerType*>& getEditableTypes(void) const = 0;
-    bool isTypeEditable(const FieldContainerType& type) const;
+    virtual const std::vector<const FieldContainerType*>& getEditableTypes(void) const;
 
     virtual bool attachFieldContainer(FieldContainer* fc);
     virtual bool dettachFieldContainer(void);
 
-    virtual void              setCommandManager(CommandManagerPtr manager);
-    CommandManagerPtr getCommandManager(void                     ) const;
+	virtual Vec2f getContentRequestedSize(void) const;
 
+    //Returns the preferred size of the viewport for a view component.
+    virtual Vec2f getPreferredScrollableViewportSize(void);
+
+    //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
+    virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+
+    //Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
+    virtual bool getScrollableTracksViewportHeight(void);
+
+    //Return true if a viewport should always force the width of this Scrollable to match the width of the viewport.
+    virtual bool getScrollableTracksViewportWidth(void);
+
+    //Return true if a viewport should always force the height of this Scrollable to be at at least the height of the viewport.
+    virtual bool getScrollableHeightMinTracksViewport(void);
+
+    //Return true if a viewport should always force the width of this Scrollable to be at at least the width of the viewport.
+    virtual bool getScrollableWidthMinTracksViewport(void);
+
+    //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
+    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+
+    virtual void setCommandManager(CommandManagerPtr manager);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in FieldContainerEditorComponentBase.
+    // Variables should all be in MaterialFieldContainerEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    FieldContainerEditorComponent(void);
-    FieldContainerEditorComponent(const FieldContainerEditorComponent &source);
+    MaterialFieldContainerEditor(void);
+    MaterialFieldContainerEditor(const MaterialFieldContainerEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FieldContainerEditorComponent(void);
+    virtual ~MaterialFieldContainerEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -118,24 +148,38 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldContainerEditorComponent :
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const MaterialFieldContainerEditor *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+    void updateMaterialViewport(void);
+    void createGLViewport(void);
+    void createGeometry(void);
 
-    CommandManagerPtr _CmdManager;
+    static std::vector<const FieldContainerType*> _EditableTypes;
+
+    GenericFieldContainerEditorRefPtr _GenericEditor;
+    GLViewportRefPtr _MaterialViewport;
+    GeometryRefPtr  _MaterialGeometry;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class FieldContainerEditorComponentBase;
+    friend class MaterialFieldContainerEditorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const FieldContainerEditorComponent &source);
+    void operator =(const MaterialFieldContainerEditor &source);
 };
 
-typedef FieldContainerEditorComponent *FieldContainerEditorComponentP;
+typedef MaterialFieldContainerEditor *MaterialFieldContainerEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFieldContainerEditorComponentBase.inl"
-#include "OSGFieldContainerEditorComponent.inl"
+#include "OSGMaterialFieldContainerEditorBase.inl"
+#include "OSGMaterialFieldContainerEditor.inl"
 
-#endif /* _OSGFIELDCONTAINEREDITORCOMPONENT_H_ */
+#endif /* _OSGMATERIALFIELDCONTAINEREDITOR_H_ */
