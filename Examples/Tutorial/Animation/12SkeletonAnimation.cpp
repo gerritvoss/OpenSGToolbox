@@ -32,7 +32,7 @@
 #include "OSGNameAttachment.h"
 #include "OSGSkeletonAnimation.h"
 #include "OSGSkeletonDrawable.h"
-#include "OSGSkeleton.h"
+//#include "OSGSkeleton.h"
 #include "OSGJoint.h"
 
 

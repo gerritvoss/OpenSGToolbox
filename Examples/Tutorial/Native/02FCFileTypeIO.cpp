@@ -52,7 +52,7 @@ int main(int argc, char **argv)
         NewContainers = FCFileHandler::the()->read(BoostPath("./TestFieldContainers.xml"));
 
         //Write the read FieldContainers to an XML file
-        FCFileHandler::the()->write(NewContainers,BoostPath("./TestFieldContainers2.xml"),IgnoreTypes);
+//        FCFileHandler::the()->write(NewContainers,BoostPath("./TestFieldContainers2.xml"),IgnoreTypes);
     }
     
 	// OSG exit
