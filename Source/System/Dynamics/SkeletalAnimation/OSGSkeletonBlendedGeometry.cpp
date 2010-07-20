@@ -330,7 +330,8 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 
     UInt32 WeightIndex, JointIndex, VertexIndex;
     //Update the Positions and Normals
-    for(UInt32 i(0) ; i < getWeights()->size() ; ++i)
+	UInt32 NumWeightIndexTuples(getWeightIndexes()->size()/3);
+    for(UInt32 i(0) ; i < NumWeightIndexTuples ; ++i)
     {
         VertexIndex = getWeightIndexes()->getValue<UInt32>( 3 * i     );
         JointIndex  = getWeightIndexes()->getValue<UInt32>((3 * i) + 1);
