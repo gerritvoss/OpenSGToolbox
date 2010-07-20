@@ -35,91 +35,86 @@
  *                                                                           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+OSG_BEGIN_NAMESPACE
 
-#include "OSGConfig.h"
-
-#include "OSGCreateFieldContainerCommand.h"
-#include "OSGFieldContainerFactory.h"
-
-OSG_USING_NAMESPACE
-
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class OSG::CreateFieldContainerCommand
-A CreateFieldContainerCommand. 
-*/
-
-/***************************************************************************\
- *                           Class variables                               *
-\***************************************************************************/
-
-CommandType CreateFieldContainerCommand::_Type("CreateFieldContainerCommand", "CommandType");
-
-/***************************************************************************\
- *                           Class methods                                 *
-\***************************************************************************/
-
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const std::string& typeName)
+inline
+void FCPtrEditorStore::addExclude(FieldContainer* ptr)
 {
-    const FieldContainerType* type = FieldContainerFactory::the()->findType(typeName.c_str());
-	return create(type);
+    _ExcludedPtrs.push_back(ptr);
 }
 
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const FieldContainerType* type)
+inline
+void FCPtrEditorStore::removeExclude(FieldContainer* ptr)
 {
-	return RefPtr(new CreateFieldContainerCommand(type));
-}
-
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
-void CreateFieldContainerCommand::execute(void)
-{
-    //Check for a valid Field Container
-    if(_TypeToCreate == NULL)
+    FieldContianerVector::iterator
+        EraseItor(std::find(_ExcludedPtrs.begin(), _ExcludedPtrs.end(), ptr));
+    if(EraseItor != _ExcludedPtrs.end())
     {
-        SWARNING << "Type of field container to create is NULL." << std::endl;
-        return;
+        _ExcludedPtrs.erase(EraseItor);
     }
-
-    //Create the FieldContainer
-    _CreatedFC = _TypeToCreate->createContainer();
 }
 
-std::string CreateFieldContainerCommand::getCommandDescription(void) const
+inline
+void FCPtrEditorStore::removeExclude(UInt32 index)
 {
-	std::string Description("");
-
-    Description = Description + "Create " + _TypeToCreate->getName();
-	
-	return Description;
+    if(index < getExcludedTypeSize())
+    {
+        FieldContianerVector::iterator EraseItor(_ExcludedPtrs.begin());
+        EraseItor = EraseItor + index;
+        _ExcludedPtrs.erase(EraseItor);
+    }
 }
 
-const CommandType &CreateFieldContainerCommand::getType(void) const
+inline
+const FCPtrEditorStore::FieldContianerVector& FCPtrEditorStore::getExcluded(void) const
 {
-	return _Type;
+    return _ExcludedPtrs;
 }
 
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
-/*----------------------- constructors & destructors ----------------------*/
-
-CreateFieldContainerCommand::~CreateFieldContainerCommand(void)
+inline
+UInt32 FCPtrEditorStore::getExcludedSize(void) const
 {
+    return _ExcludedPtrs.size();
 }
 
-/*----------------------------- class specific ----------------------------*/
-
-void CreateFieldContainerCommand::operator =(const CreateFieldContainerCommand& source)
+inline
+void FCPtrEditorStore::addExcludeType(const FieldContainerType* type)
 {
-    assert("Should never reach operator=");
+    _ExcludedTypes.push_back(type);
 }
 
+inline
+void FCPtrEditorStore::removeExcludeType(const FieldContainerType* type)
+{
+    FieldContianerTypeVector::iterator
+        EraseItor(std::find(_ExcludedTypes.begin(), _ExcludedTypes.end(), type));
+    if(EraseItor != _ExcludedTypes.end())
+    {
+        _ExcludedTypes.erase(EraseItor);
+    }
+}
+
+inline
+void FCPtrEditorStore::removeExcludeType(UInt32 index)
+{
+    if(index < getExcludedTypeSize())
+    {
+        FieldContianerTypeVector::iterator EraseItor(_ExcludedTypes.begin());
+        EraseItor = EraseItor + index;
+        _ExcludedTypes.erase(EraseItor);
+    }
+}
+
+inline
+const FCPtrEditorStore::FieldContianerTypeVector& FCPtrEditorStore::getExcludedType(void) const
+{
+    return _ExcludedTypes;
+}
+
+inline
+UInt32 FCPtrEditorStore::getExcludedTypeSize(void) const
+{
+    return _ExcludedTypes.size();
+}
+
+OSG_END_NAMESPACE

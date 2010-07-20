@@ -41,8 +41,8 @@
 
 #include "OSGConfig.h"
 
-#include "OSGCreateFieldContainerCommand.h"
-#include "OSGFieldContainerFactory.h"
+#include "OSGFCPtrEditorRootedStore.h"
+#include "OSGContainerUtils.h"
 
 OSG_USING_NAMESPACE
 
@@ -50,60 +50,41 @@ OSG_USING_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class OSG::CreateFieldContainerCommand
-A CreateFieldContainerCommand. 
+/*! \class OSG::FCPtrEditorRootedStore
+A FCPtrEditorRootedStore. 
 */
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-CommandType CreateFieldContainerCommand::_Type("CreateFieldContainerCommand", "CommandType");
-
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
-
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const std::string& typeName)
-{
-    const FieldContainerType* type = FieldContainerFactory::the()->findType(typeName.c_str());
-	return create(type);
-}
-
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const FieldContainerType* type)
-{
-	return RefPtr(new CreateFieldContainerCommand(type));
-}
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void CreateFieldContainerCommand::execute(void)
+std::vector<FieldContainer*> FCPtrEditorRootedStore::getList(void) const
 {
-    //Check for a valid Field Container
-    if(_TypeToCreate == NULL)
+    std::set<FieldContainer*> AllContainers =
+        getAllDependantFCs(std::set<FieldContainer*>(_Roots.begin(),_Roots.end()),
+                           std::set<FieldContainer*>(_ExcludedPtrs.begin(),_ExcludedPtrs.end()),
+                           _ExcludedTypes);
+
+    std::vector<FieldContainer*> Result;
+    for(std::set<FieldContainer*>::iterator StoreItor(AllContainers.begin());
+        StoreItor != AllContainers.end();
+        ++StoreItor)
     {
-        SWARNING << "Type of field container to create is NULL." << std::endl;
-        return;
+        if((*StoreItor)->getType().isDerivedFrom(*_TypeToStore))
+        {
+            Result.push_back(*StoreItor);
+        }
     }
 
-    //Create the FieldContainer
-    _CreatedFC = _TypeToCreate->createContainer();
-}
-
-std::string CreateFieldContainerCommand::getCommandDescription(void) const
-{
-	std::string Description("");
-
-    Description = Description + "Create " + _TypeToCreate->getName();
-	
-	return Description;
-}
-
-const CommandType &CreateFieldContainerCommand::getType(void) const
-{
-	return _Type;
+    return Result;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -111,15 +92,38 @@ const CommandType &CreateFieldContainerCommand::getType(void) const
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
+FCPtrEditorRootedStore::FCPtrEditorRootedStore(const FieldContainerType* type,
+                                               const FieldContianerVector& roots,
+                                               const FieldContianerVector& Exclude,
+                                               const FieldContianerTypeVector& ExcludeTypes) :
+    Inherited(Exclude,ExcludeTypes),
+    _TypeToStore(type),
+    _Roots(roots)
+{
+}
 
-CreateFieldContainerCommand::~CreateFieldContainerCommand(void)
+FCPtrEditorRootedStore::FCPtrEditorRootedStore(const FCPtrEditorRootedStore& source) :
+    Inherited(source),
+    _TypeToStore(source._TypeToStore),
+    _Roots(source._Roots)
+{
+}
+
+
+FCPtrEditorRootedStore::~FCPtrEditorRootedStore(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-void CreateFieldContainerCommand::operator =(const CreateFieldContainerCommand& source)
+void FCPtrEditorRootedStore::operator =(const FCPtrEditorRootedStore& source)
 {
-    assert("Should never reach operator=");
+    if(this == &source)
+    {
+        return;
+    }
+
+    Inherited::operator=(source);
+    _TypeToStore = source._TypeToStore;
+    _Roots = source._Roots;
 }
 

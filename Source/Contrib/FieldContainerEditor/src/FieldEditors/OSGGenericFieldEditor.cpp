@@ -95,8 +95,8 @@ void GenericFieldEditor::initMethod(InitPhase ePhase)
                 _EditableTypes.push_back(type);
                 FieldEditorFactory::the()->setEditorType(type, &getClassType(), "Generic");
             }
-            FieldEditorFactory::the()->removeEditorType(&FieldTraits<MaterialMap>::getType(), "Generic");
         }
+        FieldEditorFactory::the()->removeEditorType(&FieldTraits<MaterialMap>::getType(), "Generic");
     }
 }
 

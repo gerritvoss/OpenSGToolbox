@@ -35,91 +35,48 @@
  *                                                                           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGFCPTREDITORALLSTORE_H_
+#define _OSGFCPTREDITORALLSTORE_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include "OSGConfig.h"
+#include "OSGContribFieldContainerEditorDef.h"
 
-#include "OSGCreateFieldContainerCommand.h"
-#include "OSGFieldContainerFactory.h"
+#include "OSGFCPtrEditorStore.h"
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
+class FCPtrEditorAllStore;
+typedef boost::shared_ptr<FCPtrEditorAllStore> FCPtrEditorAllStorePtr;
 
-/*! \class OSG::CreateFieldContainerCommand
-A CreateFieldContainerCommand. 
-*/
-
-/***************************************************************************\
- *                           Class variables                               *
-\***************************************************************************/
-
-CommandType CreateFieldContainerCommand::_Type("CreateFieldContainerCommand", "CommandType");
-
-/***************************************************************************\
- *                           Class methods                                 *
-\***************************************************************************/
-
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const std::string& typeName)
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrEditorAllStore : public FCPtrEditorStore
 {
-    const FieldContainerType* type = FieldContainerFactory::the()->findType(typeName.c_str());
-	return create(type);
-}
+  public:
+    typedef FCPtrEditorStore Inherited;
 
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const FieldContainerType* type)
-{
-	return RefPtr(new CreateFieldContainerCommand(type));
-}
+    virtual ~FCPtrEditorAllStore(void);
 
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
+    void operator =(const FCPtrEditorAllStore& source);
 
-void CreateFieldContainerCommand::execute(void)
-{
-    //Check for a valid Field Container
-    if(_TypeToCreate == NULL)
-    {
-        SWARNING << "Type of field container to create is NULL." << std::endl;
-        return;
-    }
+    virtual std::vector<FieldContainer*> getList(void) const;
 
-    //Create the FieldContainer
-    _CreatedFC = _TypeToCreate->createContainer();
-}
+    const FieldContainerType* getTypeToStore(void) const;
+    void setTypeToStore(const FieldContainerType* type);
 
-std::string CreateFieldContainerCommand::getCommandDescription(void) const
-{
-	std::string Description("");
+  protected:
+    FCPtrEditorAllStore(const FieldContainerType* type,
+                        const FieldContianerVector& Exclude = FieldContianerVector(),
+                        const FieldContianerTypeVector& ExcludeTypes = FieldContianerTypeVector());
 
-    Description = Description + "Create " + _TypeToCreate->getName();
-	
-	return Description;
-}
+    FCPtrEditorAllStore(const FCPtrEditorAllStore& source);
 
-const CommandType &CreateFieldContainerCommand::getType(void) const
-{
-	return _Type;
-}
+    const FieldContainerType* _TypeToStore;
+};
 
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
+OSG_END_NAMESPACE
 
-/*----------------------- constructors & destructors ----------------------*/
+#include "OSGFCPtrEditorAllStore.inl"
 
-CreateFieldContainerCommand::~CreateFieldContainerCommand(void)
-{
-}
-
-/*----------------------------- class specific ----------------------------*/
-
-void CreateFieldContainerCommand::operator =(const CreateFieldContainerCommand& source)
-{
-    assert("Should never reach operator=");
-}
-
+#endif /* _OSGFCPTREDITORALLSTORE_H_ */
