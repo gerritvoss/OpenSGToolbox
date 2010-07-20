@@ -17,6 +17,16 @@ SET(${PROJECT_NAME}_DEP_OSG_LIB OSGDynamics OSGFileIO)
 
 SET(${PROJECT_NAME}_CXXFLAGS ${OSG_ADD_CXX_FLAGS})
 
+IF(COLLADA_FOUND)
+    SET(${PROJECT_NAME}_DEP_INCDIR COLLADA_DAE_INCLUDE_DIR
+                                   COLLADA_DOM_INCLUDE_DIR
+                                   CG_INCLUDE_DIR	)
+                                   
+    SET(${PROJECT_NAME}_DEP_LIB    OSG_COLLADA_LIBS 
+    				   OSG_BOOST_LIBS 
+    				   CG_LIBRARIES		)
+ENDIF(COLLADA_FOUND)
+
 OSG_STORE_PROJECT_DEPENDENCIES()
 
 ##############################################################################
@@ -28,6 +38,10 @@ OSG_ADD_DIRECTORY("Base")
 OSG_ADD_DIRECTORY("Utils")
 OSG_ADD_DIRECTORY("Attachments")
 OSG_ADD_DIRECTORY("XML")
+
+IF(COLLADA_FOUND)
+    OSG_ADD_DIRECTORY("Collada")
+ENDIF(COLLADA_FOUND)
 
 IF(${OSG_CMAKE_PASS} STREQUAL "OSGSETUP")
   INSTALL(FILES 

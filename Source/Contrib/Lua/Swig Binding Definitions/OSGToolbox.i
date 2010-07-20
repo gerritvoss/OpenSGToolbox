@@ -59,6 +59,7 @@
 #include "OSGWindow.h"
 #include "OSGLuaActivity.h"
 #include "OSGGenericEvent.h"
+#include "OSGCgFXMaterial.h"
         
 %}
 
@@ -1293,6 +1294,39 @@ namespace OSG {
         static Distribution3DRefPtr dcast(const FieldContainerRefPtr oIn)
         {
             return OSG::dynamic_pointer_cast<OSG::Distribution3D>(oIn);
+        }
+    };
+
+    /******************************************************/
+    /*               CgFXMaterialRefPtr                    */
+    /******************************************************/
+    class CgFXMaterial : public AttachmentContainer
+    {
+      public:
+	bool setActiveTechnique(std::string techniqueName);
+	std::vector<std::string> getAvailableTechniques();
+      protected:
+        CgFXMaterial(void);
+        CgFXMaterial(const CgFXMaterial &source);
+        virtual ~CgFXMaterial(void); 
+    };
+    
+    class CgFXMaterialRefPtr : public AttachmentContainerRefPtr
+    {
+      public:
+         CgFXMaterialRefPtr(void);
+         CgFXMaterialRefPtr(const CgFXMaterialRefPtr               &source);
+         /*CgFXMaterialRefPtr(const NullFieldContainerRefPtr &source);*/
+
+
+        ~CgFXMaterialRefPtr(void); 
+        CgFXMaterial *operator->(void);
+    };
+    %extend CgFXMaterialRefPtr
+    {
+        static CgFXMaterialRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            return OSG::dynamic_pointer_cast<OSG::CgFXMaterial>(oIn);
         }
     };
 }

@@ -92,6 +92,8 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
 
     const MFReal32 &getKeys(void) const;
 
+          MFReal32 *editKeys(void);
+
     virtual UInt32  size         (void) const = 0;
     virtual bool        isBlendable(void) const = 0;
 

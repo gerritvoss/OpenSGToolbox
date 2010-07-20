@@ -128,7 +128,7 @@ int main(int argc, char **argv)
 	
 	//SkeletonDrawer System Material
 	LineChunkUnrecPtr ExampleLineChunk = LineChunk::create();
-    ExampleLineChunk->setWidth(2.0f);
+    ExampleLineChunk->setWidth(4.0f);
     ExampleLineChunk->setSmooth(true);
 
 	BlendChunkUnrecPtr ExampleBlendChunk = BlendChunk::create();

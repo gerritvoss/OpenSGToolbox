@@ -12,7 +12,7 @@ SET(${PROJECT_NAME}_DEP_OSG_LIB OSGGroup OSGTBFileIO OSGFileIO OSGDrawable
                                 OSGUtil OSGWindow OSGImageFileIO OSGContribPhysics
                                 OSGTBAnimation OSGContribVideo
                                 OSGContribUserInterface
-                                OSGContribParticleSystem OSGContribSound OSGContribLua)
+                                OSGContribParticleSystem OSGContribSound OSGContribLua OSGContribCgFX)
 SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB)
 
 # dependencies - External
@@ -21,9 +21,9 @@ SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB)
 #SET(OSG_EXTERNAL_LIBRARY_DIRS)
 
 IF(OSG_WITH_LUA)
-  SET(${PROJECT_NAME}_DEP_LIB LUA_LIBRARY_STATIC ODE_LIBRARY_RELEASE)
-  SET(${PROJECT_NAME}_DEP_INCDIR LUA_INCLUDE_DIR ODE_INCLUDE_DIR)
-
+  SET(${PROJECT_NAME}_DEP_LIB LUA_LIBRARY_STATIC ODE_LIBRARY_RELEASE CG_LIBRARY_RELEASE)
+  SET(${PROJECT_NAME}_DEP_INCDIR LUA_INCLUDE_DIR ODE_INCLUDE_DIR CG_INCLUDE_DIR)
+  
   IF(NOT OSG_BUILD_ACTIVE)
     SET(${PROJECT_NAME}_DEP_DEFS OSG_WITH_LUA)
   ELSE()

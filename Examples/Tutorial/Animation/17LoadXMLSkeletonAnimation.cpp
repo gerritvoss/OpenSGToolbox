@@ -39,7 +39,7 @@
 #include "OSGKeyframeAnimator.h"
 #include "OSGNameAttachment.h"
 #include "OSGSkeletonAnimation.h"
-#include "OSGSkeleton.h"
+//#include "OSGSkeleton.h"
 
 #include "OSGFCFileHandler.h"
 

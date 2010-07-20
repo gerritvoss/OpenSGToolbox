@@ -44,6 +44,7 @@
 #include "OSGBaseTypes.h"
 #include "OSGFCFileType.h"
 #include "OSGPathType.h"
+#include "OSGPathHandler.h"
 #include "OSGSingletonHolder.h"
 
 OSG_BEGIN_NAMESPACE
@@ -130,6 +131,11 @@ class OSG_TBFILEIO_DLLMAPPING FCFileHandlerBase
      bool            _ReadReady;
 
      BoostPath _RootFilePath;
+
+	 
+	PathHandler   *_pathHandler;
+	PathHandler    _defaultPathHandler;
+	std::string initPathHandler(const Char8 *filename);
 };
 
 typedef SingletonHolder<FCFileHandlerBase> FCFileHandler;
