@@ -76,6 +76,17 @@ void GenericEvent::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+GenericEventTransitPtr GenericEvent::create(FieldContainerRefPtr Source,
+                                            Time TimeStamp)
+{
+    GenericEvent* TheEvent(GenericEvent::createEmpty());
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+
+    return GenericEventTransitPtr(TheEvent);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -77,6 +77,9 @@ class OSG_BASE_DLLMAPPING GenericEvent : public GenericEventBase
     virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
+    static GenericEventTransitPtr create(   FieldContainerRefPtr Source,
+                                            Time TimeStamp);
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
