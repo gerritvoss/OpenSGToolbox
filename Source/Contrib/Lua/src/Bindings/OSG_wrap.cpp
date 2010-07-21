@@ -46320,4 +46320,3 @@ void push_FieldContainer_on_lua(lua_State* L, OSG::FieldContainerRefPtr value)
     OSG::FieldContainerRefPtr * resultptr = new OSG::FieldContainerRefPtr((const OSG::FieldContainerRefPtr &) value);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1);
 }
-
