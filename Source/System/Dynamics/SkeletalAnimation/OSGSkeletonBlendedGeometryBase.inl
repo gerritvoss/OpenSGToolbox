@@ -134,31 +134,6 @@ void SkeletonBlendedGeometryBase::setInternalWeights(GeoVectorProperty * const v
 
     _sfInternalWeights.setValue(value);
 }
-//! Get the value of the SkeletonBlendedGeometry::_sfBlendMode field.
-
-inline
-UInt32 &SkeletonBlendedGeometryBase::editBlendMode(void)
-{
-    editSField(BlendModeFieldMask);
-
-    return _sfBlendMode.getValue();
-}
-
-//! Get the value of the SkeletonBlendedGeometry::_sfBlendMode field.
-inline
-      UInt32  SkeletonBlendedGeometryBase::getBlendMode(void) const
-{
-    return _sfBlendMode.getValue();
-}
-
-//! Set the value of the SkeletonBlendedGeometry::_sfBlendMode field.
-inline
-void SkeletonBlendedGeometryBase::setBlendMode(const UInt32 value)
-{
-    editSField(BlendModeFieldMask);
-
-    _sfBlendMode.setValue(value);
-}
 //! Get the value of the SkeletonBlendedGeometry::_sfBindTransformation field.
 
 inline
@@ -187,26 +162,10 @@ void SkeletonBlendedGeometryBase::setBindTransformation(const Matrix &value)
 
 //! Get the value of the \a index element the SkeletonBlendedGeometry::_mfInternalJoints field.
 inline
-Joint * SkeletonBlendedGeometryBase::getInternalJoints(const UInt32 index) const
+Node * SkeletonBlendedGeometryBase::getInternalJoints(const UInt32 index) const
 {
     return _mfInternalJoints[index];
 }
-
-//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfInternalJointBindTransformations field.
-inline
-const Matrix &SkeletonBlendedGeometryBase::getInternalJointBindTransformations(const UInt32 index) const
-{
-    return _mfInternalJointBindTransformations[index];
-}
-
-inline
-Matrix &SkeletonBlendedGeometryBase::editInternalJointBindTransformations(const UInt32 index)
-{
-    editMField(InternalJointBindTransformationsFieldMask, _mfInternalJointBindTransformations);
-
-    return _mfInternalJointBindTransformations[index];
-}
-
 
 //! Get the value of the \a index element the SkeletonBlendedGeometry::_mfInternalJointInvBindTransformations field.
 inline
@@ -244,17 +203,8 @@ void SkeletonBlendedGeometryBase::execSync (      SkeletonBlendedGeometryBase *p
     if(FieldBits::NoField != (InternalWeightsFieldMask & whichField))
         _sfInternalWeights.syncWith(pFrom->_sfInternalWeights);
 
-    if(FieldBits::NoField != (BlendModeFieldMask & whichField))
-        _sfBlendMode.syncWith(pFrom->_sfBlendMode);
-
     if(FieldBits::NoField != (InternalJointsFieldMask & whichField))
         _mfInternalJoints.syncWith(pFrom->_mfInternalJoints,
-                                syncMode,
-                                uiSyncInfo,
-                                oOffsets);
-
-    if(FieldBits::NoField != (InternalJointBindTransformationsFieldMask & whichField))
-        _mfInternalJointBindTransformations.syncWith(pFrom->_mfInternalJointBindTransformations,
                                 syncMode,
                                 uiSyncInfo,
                                 oOffsets);

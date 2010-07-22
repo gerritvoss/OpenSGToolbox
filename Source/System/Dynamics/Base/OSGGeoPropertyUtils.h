@@ -19,39 +19,40 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OPENSG_TOOLBOX_FIELD_CONATINER_UTILS_H_
-#define _OPENSG_TOOLBOX_FIELD_CONATINER_UTILS_H_
+#ifndef _OPENSG_GEOPROPERTYUTILS_H_
+#define _OPENSG_GEOPROPERTYUTILS_H_
 
 #include "OSGConfig.h"
-#include "OSGBaseDef.h"
+#include "OSGTBAnimationDef.h"
 
-#include "OSGFieldContainer.h"
-#include "OSGEventProducerType.h"
-#include "OSGEventProducer.h"
-#include <set>
-#include <vector>
+#include "OSGGeoVectorProperty.h"
 
 OSG_BEGIN_NAMESPACE
 
-FieldContainerUnrecPtr OSG_BASE_DLLMAPPING getFieldContainer(const std::string &szTypeName, const std::string &namestring);
-FieldContainerUnrecPtr OSG_BASE_DLLMAPPING getFieldContainer(const FieldContainerType *szType, const std::string &namestring);
-FieldContainerUnrecPtr OSG_BASE_DLLMAPPING getFieldContainer(const std::string &namestring);
+void OSG_TBANIMATION_DLLMAPPING zeroGeoProperty(GeoVectorProperty* GeoProp);
 
-//std::vector<FieldContainerRefPtr> OSG_BASE_DLLMAPPING getAllFieldContainers(const std::string &namestring);
+template<class TypeT>
+void OSG_TBANIMATION_DLLMAPPING zeroGeoPropertyTmpl(GeoVectorProperty* GeoProp);
 
-bool OSG_BASE_DLLMAPPING isFieldContentDerivedFrom(const FieldType &TheFieldType, const FieldContainerType* TheFCType);
+void morphGeoProperty(GeoVectorProperty* BaseGeoProp,
+                      GeoVectorProperty* TargetGeoProp,
+                      GeoVectorProperty* ResultGeoProp,
+                      Real32 Weight);
+template<class TypeT>
+void morphGeoPropertyTmpl(GeoVectorProperty* BaseGeoProp,
+                          GeoVectorProperty* TargetGeoProp,
+                          GeoVectorProperty* ResultGeoProp,
+                          Real32 Weight);
 
-bool OSG_BASE_DLLMAPPING isEventProducer(const FieldContainerRefPtr TheFC);
-EventProducerPtr OSG_BASE_DLLMAPPING getEventProducer(const FieldContainerRefPtr TheFC);
-
-//std::vector<FieldContainerPtr> OSG_BASE_DLLMAPPING getAllContainersByType(const FieldContainerType *szType);
-std::vector<FieldContainerUnrecPtr> OSG_BASE_DLLMAPPING getAllContainersByDerivedType(const FieldContainerType *szType);
-
-const FieldContainerType OSG_BASE_DLLMAPPING *getClosestAncestor(const FieldContainerType *type,
-                                                                 MFUnrecFieldContainerPtr::const_iterator begin,
-                                                                 MFUnrecFieldContainerPtr::const_iterator end);
+template<class TypeT>
+void morphNormGeoPropertyTmpl(GeoVectorProperty* BaseGeoProp,
+                              GeoVectorProperty* TargetGeoProp,
+                              GeoVectorProperty* ResultGeoProp,
+                              Real32 Weight);
 
 OSG_END_NAMESPACE
+
+#include "OSGGeoPropertyUtils.inl"
 
 #endif
 

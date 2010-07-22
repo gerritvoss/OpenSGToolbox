@@ -26,7 +26,6 @@
 #include "OSGMaterialChunk.h"
 
 //Animation
-#include "OSGJoint.h"
 #include "OSGSkeletonBlendedGeometry.h"
 #include "OSGSkeletonDrawable.h"
 
@@ -38,7 +37,7 @@
 #include "OSGFieldAnimation.h"
 #include "OSGKeyframeAnimator.h"
 #include "OSGNameAttachment.h"
-#include "OSGSkeletonAnimation.h"
+#include "OSGAnimationGroup.h"
 //#include "OSGSkeleton.h"
 
 #include "OSGFCFileHandler.h"
@@ -54,7 +53,7 @@ WindowEventProducerUnrecPtr TutorialWindow;
 
 Time TimeLastIdle;
 NodeUnrecPtr SkeletonNode;
-AnimationUnrecPtr TheSkeletonAnimation;
+AnimationGroupUnrecPtr TheSkeletonAnimation;
 bool animationPaused = false;
 
 // Forward declaration so we can have the interesting stuff upfront
@@ -232,10 +231,10 @@ int main(int argc, char **argv)
             //Set ExampleSkeleton to the skeleton we just read in
             ExampleSkeleton = (dynamic_pointer_cast<SkeletonBlendedGeometry>(*Itor));
         }
-        if( (*Itor)->getType().isDerivedFrom(SkeletonAnimation::getClassType()))
+        if( (*Itor)->getType().isDerivedFrom(AnimationGroup::getClassType()))
         {
             //Set TheSkeletonAnimation to the animation we just read in
-            TheSkeletonAnimation = (dynamic_pointer_cast<SkeletonAnimation>(*Itor));
+            TheSkeletonAnimation = (dynamic_pointer_cast<AnimationGroup>(*Itor));
         }
         if( (*Itor)->getType() == (Node::getClassType()) && 
             (dynamic_pointer_cast<Node>(*Itor)->getParent() == NULL))

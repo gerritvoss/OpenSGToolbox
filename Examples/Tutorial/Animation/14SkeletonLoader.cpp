@@ -24,7 +24,6 @@
 #include "OSGMaterialChunk.h"
 
 //Animation
-#include "OSGJoint.h"
 #include "OSGSkeletonBlendedGeometry.h"
 #include "OSGSkeletonDrawable.h"
 

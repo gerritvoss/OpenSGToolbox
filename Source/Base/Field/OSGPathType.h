@@ -94,7 +94,7 @@ struct FieldTraits<BoostPath> : public FieldTraitsTemplateBase<BoostPath>
     static void putToStream(const BoostPath   &inVal,
             OutStream &outVal)
     {
-		FieldTraits<std::string>::putToStream(inVal.string(), outVal);
+        outVal << inVal.string();
     }
     
     // Setup outVal from the contents of inVal

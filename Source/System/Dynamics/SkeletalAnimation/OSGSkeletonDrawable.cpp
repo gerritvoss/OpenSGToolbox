@@ -45,7 +45,6 @@
 
 #include "OSGConfig.h"
 
-#include "OSGJoint.h"
 #include "OSGSkeletonDrawable.h"
 
 #include "OSGAction.h"
@@ -158,11 +157,11 @@ void SkeletonDrawable::adjustVolume(Volume & volume)
                 getSkeleton()->getAbsoluteTransformation(i).mult(Pnt3f(0.0f,0.0f,0.0f),JointLocation);
                 volume.extendBy(JointLocation);
             }
-            //if(getDrawBindPose())
-            //{
-                //TheJoint->getBindAbsoluteTransformation().mult(Pnt3f(0.0f,0.0f,0.0f),JointLocation);
-                //volume.extendBy(JointLocation);
-            //}
+            if(getDrawBindPose())
+            {
+                getSkeleton()->getAbsoluteBindTransformation(i).mult(Pnt3f(0.0f,0.0f,0.0f),JointLocation);
+                volume.extendBy(JointLocation);
+            }
 		}
 	}
 
@@ -182,7 +181,16 @@ void SkeletonDrawable::fill(DrawableStatsAttachment *pStat)
         return;
     }
 
-    pStat->setLines    (getSkeleton()->getNumJoints()-1);
+    UInt32 NumLines(0);
+    if(getDrawPose())
+    {
+        NumLines += getSkeleton()->getNumJoints()-1;
+    }
+    if(getDrawBindPose())
+    {
+        NumLines += getSkeleton()->getNumJoints()-1;
+    }
+    pStat->setLines    (NumLines);
 }
 
 /*-------------------------------------------------------------------------*\

@@ -34,17 +34,17 @@ int main(int argc, char **argv)
 
     {
         //Create some Field Containers
-        //NodeUnrecPtr Root = createScene();
+        NodeUnrecPtr Root = createScene();
 
-        //FCFileType::FCPtrStore Containers;
-        //Containers.insert(Root);
+        FCFileType::FCPtrStore Containers;
+        Containers.insert(Root);
 
         //Use an empty Ignore types vector
-        //FCFileType::FCTypeVector IgnoreTypes;
+        FCFileType::FCTypeVector IgnoreTypes;
         //IgnoreTypes.push_back(Node::getClassType().getId());
         
         //Write the Field Containers to a xml file
-       // FCFileHandler::the()->write(Containers,BoostPath("./TestFieldContainers.xml"),IgnoreTypes);
+        FCFileHandler::the()->write(Containers,BoostPath("./TestFieldContainers.xml"),IgnoreTypes);
 
 
         //Read FieldContainers from an XML file
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
         NewContainers = FCFileHandler::the()->read(BoostPath("./TestFieldContainers.xml"));
 
         //Write the read FieldContainers to an XML file
-//        FCFileHandler::the()->write(NewContainers,BoostPath("./TestFieldContainers2.xml"),IgnoreTypes);
+        FCFileHandler::the()->write(NewContainers,BoostPath("./TestFieldContainers2.xml"),IgnoreTypes);
     }
     
 	// OSG exit

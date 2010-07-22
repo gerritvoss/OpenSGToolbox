@@ -340,9 +340,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                     }
                     ChangedFields = ChangedFields | Desc->getFieldMask();
 					if(Desc->getFieldType().getClass() == FieldType::PtrField ||
-						Desc->getFieldType().getClass() == FieldType::ParentPtrField ||
 						Desc->getFieldType().getClass() == FieldType::ChildPtrField)
                     {
+
                         if(Desc->getFieldType().getCardinality() == FieldType::SingleField)
                         {
                             FieldContainerUnrecPtr TheFC;
@@ -372,10 +372,10 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                 TheFC = getFieldContainer(FieldValue);
                                 if(TheFC == NULL)
                                 {
-                                        printXMLSemanticError("Could not find Container referenced with Id: " + FieldValue,
-                                                               StreamText,
-                                                               AttributeIterator->value() - StreamText.c_str(),
-                                                               FileNameOrExtension);
+                                    printXMLSemanticError("Could not find Container referenced with Id: " + FieldValue,
+                                                           StreamText,
+                                                           AttributeIterator->value() - StreamText.c_str(),
+                                                           FileNameOrExtension);
                                 }
                             }
                             if(TheFC != NULL)
@@ -394,7 +394,14 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                     TheFC = NULL;
                                 }
                             }
-                            dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->set(TheFC);
+                            if(Desc->getFieldType().getClass() == FieldType::PtrField)
+                            {
+                                static_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->set(TheFC);
+                            }
+                            else if( Desc->getFieldType().getClass() == FieldType::ChildPtrField)
+                            {
+                                static_cast<ChildPointerSField <FieldContainer *, UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->setValue(TheFC);
+                            }
                         }
                         else if(Desc->getFieldType().getCardinality() == FieldType::MultiField &&
                             !FieldValue.empty())
@@ -443,7 +450,14 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                     //expected for this field
                                     if(isFieldContentDerivedFrom( Desc->getFieldType(),&(TheFC->getType())))
                                     {
-                                        dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->add(TheFC);
+                                        if(Desc->getFieldType().getClass() == FieldType::PtrField)
+                                        {
+                                            static_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->add(TheFC);
+                                        }
+                                        else if( Desc->getFieldType().getClass() == FieldType::ChildPtrField)
+                                        {
+                                           static_cast<ChildPointerMField <FieldContainer *, UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->push_back(TheFC);
+                                        }
                                     }
                                     else
                                     {
@@ -458,7 +472,16 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
 								else if(FCId == 0)
 								{
 									//Push NULL
-                                    dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->add(NULL);
+                                    if(Desc->getFieldType().getClass() == FieldType::PtrField)
+                                    {
+                                        static_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->add(NULL);
+                                    }
+                                    else if( Desc->getFieldType().getClass() == FieldType::ChildPtrField)
+                                    {
+                                       static_cast<ChildPointerMField
+                                           <FieldContainer *,
+                                           UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->push_back(NULL);
+                                    }
 								}
                                 
                             }
@@ -753,14 +776,14 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                 }
             }
 
-            if((*FCItor)->getField(i) == NULL)
+            TheFieldHandle = (*FCItor)->getField(i);
+            if(TheFieldHandle == NULL ||
+               Desc->getFieldType().getClass() == FieldType::ParentPtrField)
             {
                 continue;
             }
-            TheFieldHandle = (*FCItor)->getField(i);
             TheField = TheFieldHandle->getField();
             if(Desc->getFieldType().getClass() == FieldType::PtrField ||
-				Desc->getFieldType().getClass() == FieldType::ParentPtrField ||
 				Desc->getFieldType().getClass() == FieldType::ChildPtrField)
             {
                 OSGOutputStream << "\t\t" << Desc->getCName() << "=\"";
@@ -799,6 +822,9 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             }
             else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
             {
+            }
+            else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
+            {
                 FieldValue.clear();
                 //Path RootPath = boost::filesystem::system_complete(RootPath);
                 BoostPath FilePath = boost::filesystem::system_complete(static_cast<const SFBoostPath*>(TheField)->getValue());
@@ -825,6 +851,11 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                     OSGOutputStream << FieldValue;
                 }
                 OSGOutputStream << "\"" << std::endl;
+            }
+            else if(TheFieldHandle->getType() == SFString::getClassType())
+            {
+                OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" <<
+                    static_cast<const SFString*>(TheField)->getValue()  << "\"" << std::endl;
             }
             else
             {

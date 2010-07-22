@@ -1,463 +1,290 @@
 <?xml version="1.0"  encoding="utf-8"?>
 
 <OSGFieldContainers>
-	<KeyframeTransformationSequenceMatrix4f
+	<Node
+		fieldcontainerid="692"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="690"
+		core="691"
+		children=""
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="693"
+		matrix="1 0 0 0 0 1 0 1 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="694"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="676"
+		core="693"
+		children=""
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="695"
+		matrix="1 0 0 1 0 1 0 -1 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="696"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="674"
+		core="695"
+		children="698"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="697"
+		matrix="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="698"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="696"
+		core="697"
+		children="700"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="699"
+		matrix="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="700"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="698"
+		core="699"
+		children="702"
+	>
+	</Node>
+	<Transform
 		fieldcontainerid="701"
-		internal="FALSE"
-		InternalKeys="0, 3, 6"
-		transformations="1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1, 0.000796258 -1 0 2 1 0.000796258 0 0 0 0 1 0 0 0 0 1, 1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1"
+		matrix="1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 1"
 	>
-	</KeyframeTransformationSequenceMatrix4f>
-	<KeyframeAnimator
+	</Transform>
+	<Node
 		fieldcontainerid="702"
-		KeyframeSequence="701"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="700"
+		core="701"
+		children=""
 	>
-	</KeyframeAnimator>
-	<KeyframeTransformationSequenceMatrix4f
-		fieldcontainerid="703"
-		internal="FALSE"
-		InternalKeys="0, 3, 6"
-		transformations="1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1, 0.000796258 1 0 -2 -1 0.000796258 0 0 0 0 1 0 0 0 0 1, 1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1"
-	>
-	</KeyframeTransformationSequenceMatrix4f>
-	<KeyframeAnimator
-		fieldcontainerid="704"
-		KeyframeSequence="703"
-	>
-	</KeyframeAnimator>
-	<KeyframeTransformationSequenceMatrix4f
-		fieldcontainerid="705"
-		internal="FALSE"
-		InternalKeys="0, 3, 6"
-		transformations="1 0 0 1 0 1 0 -0.5 0 0 1 0 0 0 0 1, 0.921061 -0.389418 0 1 0.389418 0.921061 0 -0.5 0 0 1 0 0 0 0 1, 1 0 0 1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
-	>
-	</KeyframeTransformationSequenceMatrix4f>
-	<KeyframeAnimator
-		fieldcontainerid="706"
-		KeyframeSequence="705"
-	>
-	</KeyframeAnimator>
-	<KeyframeTransformationSequenceMatrix4f
-		fieldcontainerid="707"
-		internal="FALSE"
-		InternalKeys="0, 3, 6"
-		transformations="1 0 0 -1 0 1 0 -0.5 0 0 1 0 0 0 0 1, 0.921061 0.389418 0 -1 -0.389418 0.921061 0 -0.5 0 0 1 0 0 0 0 1, 1 0 0 -1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
-	>
-	</KeyframeTransformationSequenceMatrix4f>
-	<KeyframeAnimator
-		fieldcontainerid="708"
-		KeyframeSequence="707"
-	>
-	</KeyframeAnimator>
-	<KeyframeTransformationSequenceMatrix4f
-		fieldcontainerid="709"
-		internal="FALSE"
-		InternalKeys="0, 3, 6"
-		transformations="1 0 0 1 0 1 0 -1 0 0 1 0 0 0 0 1, 0.921061 -0.389418 0 1 0.389418 0.921061 0 -1 0 0 1 0 0 0 0 1, 1 0 0 1 0 1 0 -1 0 0 1 0 0 0 0 1"
-	>
-	</KeyframeTransformationSequenceMatrix4f>
-	<KeyframeAnimator
-		fieldcontainerid="710"
-		KeyframeSequence="709"
-	>
-	</KeyframeAnimator>
-	<KeyframeTransformationSequenceMatrix4f
-		fieldcontainerid="711"
-		internal="FALSE"
-		InternalKeys="0, 3, 6"
-		transformations="1 0 0 -1 0 1 0 -1 0 0 1 0 0 0 0 1, 0.921061 0.389418 0 -1 -0.389418 0.921061 0 -1 0 0 1 0 0 0 0 1, 1 0 0 -1 0 1 0 -1 0 0 1 0 0 0 0 1"
-	>
-	</KeyframeTransformationSequenceMatrix4f>
-	<KeyframeAnimator
-		fieldcontainerid="712"
-		KeyframeSequence="711"
-	>
-	</KeyframeAnimator>
-	<KeyframeTransformationSequenceMatrix4f
-		fieldcontainerid="713"
-		internal="FALSE"
-		InternalKeys="0, 2, 4, 6"
-		transformations="1 0 0 0 0 1 0 5 0 0 1 0 0 0 0 1, 1 0 0 0 0 1 0 3 0 0 1 0 0 0 0 1, 1 0 0 0 0 1 0 3 0 0 1 0 0 0 0 1, 1 0 0 0 0 1 0 5 0 0 1 0 0 0 0 1"
-	>
-	</KeyframeTransformationSequenceMatrix4f>
-	<KeyframeAnimator
-		fieldcontainerid="714"
-		KeyframeSequence="713"
-	>
-	</KeyframeAnimator>
-	<SkeletonAnimation
-		fieldcontainerid="715"
-		Cycling="-1"
-		Scale="1"
-		Offset="0"
-		Span="-1"
-		TransformationAnimators="702;704;706;708;710;712;714"
-		AnimatorJoints="611;627;607;623;643;659;603"
-		Skeleton="598"
-		InterpolationType="1"
-	>
-	</SkeletonAnimation>
-	<GeoVec3fProperty
-		fieldcontainerid="718"
-		internal="FALSE"
-		ignore="FALSE"
-		useVBO="FALSE"
-		usage="268435458"
-		values="0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 1 0, 0 1 0, 0 1 0, 0 1 0, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 1 0, 0 1 0, 0 1 0, 0 1 0"
-	>
-	</GeoVec3fProperty>
-	<GeoPnt3fProperty
-		fieldcontainerid="721"
-		internal="FALSE"
-		ignore="FALSE"
-		useVBO="FALSE"
-		usage="268435457"
-		values="-0.5 6 0, 0.5 6 0, 0.5 12 0, -0.5 12 0, -0.5 12 0, 0.5 12 0, 0.5 13 0, -0.5 13 0, 0 11.5 0, 0 12.5 0, 1 12 0, 1 11 0, 1 11 0, 1 12 0, 3 12 0, 3 11 0, 3 11 0, 3 12 0, 5 12 0, 5 11 0, 5 11 0, 5 12 0, 6 12 0, 6 11 0, 0 11.5 0, 0 12.5 0, -1 12 0, -1 11 0, -1 11 0, -1 12 0, -3 12 0, -3 11 0, -3 11 0, -3 12 0, -5 12 0, -5 11 0, -5 11 0, -5 12 0, -6 12 0, -6 11 0, 0 6.5 0, 0.5 7.5 0, 1.5 6 0, 0.5 6 0, 0.5 6 0, 1.5 6 0, 1.5 3 0, 0.5 3 0, 0.5 3 0, 1.5 3 0, 1.5 0 0, 0.5 0 0, 0.5 0 0, 1.5 0 0, 1.5 0 1, 0.5 0 1, 0 6.5 0, -0.5 7.5 0, -1.5 6 0, -0.5 6 0, -0.5 6 0, -1.5 6 0, -1.5 3 0, -0.5 3 0, -0.5 3 0, -1.5 3 0, -1.5 0 0, -0.5 0 0, -0.5 0 0, -1.5 0 0, -1.5 0 1, -0.5 0 1"
-	>
-	</GeoPnt3fProperty>
+	</Node>
 	<SkeletonBlendedGeometry
-		fieldcontainerid="598"
-		material="680"
-		types="675"
-		lengths="676"
-		properties="721;0;718"
+		fieldcontainerid="672"
+		material="716"
+		types="711"
+		lengths="712"
+		properties="741;0;742"
 		propIndices=""
 		dlistCache="TRUE"
-		BaseGeometry="679"
-		InternalWeightIndexes="687"
-		InternalWeights="688"
-		BlendMode="0"
-		InternalJoints="599;603;607;611;615;619;623;627;631;635;639;643;647;651;655;659;663;667;671"
-		InternalJointBindTransformations="1 -0 0 -0 -0 1 -0 7 0 -0 1 -0 0 0 -0 1, 1 -0 0 -0 -0 1 -0 12 0 -0 1 -0 0 0 -0 1, 1 -0 0 1 -0 1 -0 11.5 0 -0 1 -0 0 0 -0 1, 1 -0 0 3 -0 1 -0 11.5 0 -0 1 -0 0 0 -0 1, 1 -0 0 5 -0 1 -0 11.5 0 -0 1 -0 0 0 -0 1, 1 -0 0 6 -0 1 -0 11.5 0 -0 1 -0 0 0 -0 1, 1 -0 0 -1 -0 1 -0 11.5 0 -0 1 -0 0 0 -0 1, 1 -0 0 -3 -0 1 -0 11.5 0 -0 1 -0 0 0 -0 1, 1 -0 0 -5 -0 1 -0 11.5 0 -0 1 -0 0 0 -0 1, 1 -0 0 -6 -0 1 -0 11.5 0 -0 1 -0 0 0 -0 1, 1 -0 0 -0 -0 1 -0 13 0 -0 1 -0 0 0 -0 1, 1 -0 0 1 -0 1 -0 6 0 -0 1 -0 0 0 -0 1, 1 -0 0 1 -0 1 -0 3 0 -0 1 -0 0 0 -0 1, 1 -0 0 1 0 1 -0 0 -0 -0 1 -0 0 0 -0 1, 1 -0 0 1 0 1 -0 0 0 -0 1 1 0 0 -0 1, 1 -0 0 -1 -0 1 -0 6 0 -0 1 -0 0 0 -0 1, 1 -0 0 -1 -0 1 -0 3 0 -0 1 -0 0 0 -0 1, 1 -0 0 -1 0 1 -0 0 -0 -0 1 -0 0 0 -0 1, 1 -0 0 -1 0 1 -0 0 0 -0 1 1 0 0 -0 1"
+		BaseGeometry="715"
+		InternalWeightIndexes="723"
+		InternalWeights="724"
+		InternalJoints="674;676;678;680;682;684;686;688;690;692;694;696;698;700;702;704;706;708;710"
 		InternalJointInvBindTransformations="1 -0 0 -0 -0 1 -0 -7 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -0 -0 1 -0 -12 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -3 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -5 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -6 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 1 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 3 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 5 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 6 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -0 -0 1 -0 -13 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 -6 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 -3 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 0 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 0 0 -0 1 -1 -0 0 -0 1, 1 -0 0 1 -0 1 -0 -6 0 -0 1 -0 -0 0 -0 1, 1 -0 0 1 -0 1 -0 -3 0 -0 1 -0 -0 0 -0 1, 1 -0 0 1 -0 1 -0 0 0 -0 1 -0 -0 0 -0 1, 1 -0 0 1 -0 1 -0 0 0 -0 1 -1 -0 0 -0 1"
 		BindTransformation="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
 	</SkeletonBlendedGeometry>
-	<Joint
-		fieldcontainerid="599"
-		nameAttachment="Pelvis Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 0 0 1 0 7 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="673"
+		matrix="1 0 0 0 0 1 0 7 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="600"
-		nameAttachment="Pelvis Node"
+		fieldcontainerid="674"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
 		parent="0"
-		core="599"
-		children="604;644;660"
+		core="673"
+		children="676;696;704"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="603"
-		nameAttachment="Clavicle Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 0 0 1 0 5 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="675"
+		matrix="1 0 0 0 0 1 0 5 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="604"
-		nameAttachment="Clavicle Node"
+		fieldcontainerid="676"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="600"
-		core="603"
-		children="608;624;640"
+		parent="674"
+		core="675"
+		children="678;686;694"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="607"
-		nameAttachment="Left Shoulder Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="677"
+		matrix="1 0 0 1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="608"
-		nameAttachment="Left Shoulder Node"
+		fieldcontainerid="678"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="604"
-		core="607"
-		children="612"
+		parent="676"
+		core="677"
+		children="680"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="611"
-		nameAttachment="Left Elbow Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="683"
+		matrix="1 0 0 1 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
+	<Transform
+		fieldcontainerid="679"
+		matrix="1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
 	<Node
-		fieldcontainerid="612"
-		nameAttachment="Left Elbow Node"
+		fieldcontainerid="680"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="608"
-		core="611"
-		children="616"
+		parent="678"
+		core="679"
+		children="682"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="615"
-		nameAttachment="Left Hand Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="681"
+		matrix="1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="616"
-		nameAttachment="Left Hand Node"
+		fieldcontainerid="682"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="612"
-		core="615"
-		children="620"
+		parent="680"
+		core="681"
+		children="684"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="619"
-		nameAttachment="Left Fingers Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 1 0 1 0 0 0 0 1 0 0 0 0 1"
-	>
-	</Joint>
 	<Node
-		fieldcontainerid="620"
-		nameAttachment="Left Fingers Node"
+		fieldcontainerid="684"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="616"
-		core="619"
+		parent="682"
+		core="683"
 		children=""
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="623"
-		nameAttachment="Right Shoulder Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 -1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="685"
+		matrix="1 0 0 -1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="624"
-		nameAttachment="Right Shoulder Node"
+		fieldcontainerid="686"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="604"
-		core="623"
-		children="628"
+		parent="676"
+		core="685"
+		children="688"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="627"
-		nameAttachment="Right Elbow Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="687"
+		matrix="1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="628"
-		nameAttachment="Right Elbow Node"
+		fieldcontainerid="688"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="624"
-		core="627"
-		children="632"
+		parent="686"
+		core="687"
+		children="690"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="631"
-		nameAttachment="Right Hand Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="689"
+		matrix="1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="632"
-		nameAttachment="Right Hand Node"
+		fieldcontainerid="690"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="628"
-		core="631"
-		children="636"
+		parent="688"
+		core="689"
+		children="692"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="635"
-		nameAttachment="Right Fingers Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 -1 0 1 0 0 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="691"
+		matrix="1 0 0 -1 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
+	<Transform
+		fieldcontainerid="703"
+		matrix="1 0 0 -1 0 1 0 -1 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
 	<Node
-		fieldcontainerid="636"
-		nameAttachment="Right Fingers Node"
+		fieldcontainerid="704"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="632"
-		core="635"
-		children=""
+		parent="674"
+		core="703"
+		children="706"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="639"
-		nameAttachment="Head Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 0 0 1 0 1 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="705"
+		matrix="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="640"
-		nameAttachment="Head Node"
+		fieldcontainerid="706"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="604"
-		core="639"
-		children=""
+		parent="704"
+		core="705"
+		children="708"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="643"
-		nameAttachment="Left Hip Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 1 0 1 0 -1 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="707"
+		matrix="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="644"
-		nameAttachment="Left Hip Node"
+		fieldcontainerid="708"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="600"
-		core="643"
-		children="648"
+		parent="706"
+		core="707"
+		children="710"
 	>
 	</Node>
-	<Joint
-		fieldcontainerid="647"
-		nameAttachment="Left Knee Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
+	<Transform
+		fieldcontainerid="709"
+		matrix="1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 1"
 	>
-	</Joint>
+	</Transform>
 	<Node
-		fieldcontainerid="648"
-		nameAttachment="Left Knee Node"
+		fieldcontainerid="710"
 		volume="2 0 0 0 0 0 0"
 		travMask="4294967295"
-		parent="644"
-		core="647"
-		children="652"
-	>
-	</Node>
-	<Joint
-		fieldcontainerid="651"
-		nameAttachment="Left Foot Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
-	>
-	</Joint>
-	<Node
-		fieldcontainerid="652"
-		nameAttachment="Left Foot Node"
-		volume="2 0 0 0 0 0 0"
-		travMask="4294967295"
-		parent="648"
-		core="651"
-		children="656"
-	>
-	</Node>
-	<Joint
-		fieldcontainerid="655"
-		nameAttachment="Left Toes Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 1"
-	>
-	</Joint>
-	<Node
-		fieldcontainerid="656"
-		nameAttachment="Left Toes Node"
-		volume="2 0 0 0 0 0 0"
-		travMask="4294967295"
-		parent="652"
-		core="655"
-		children=""
-	>
-	</Node>
-	<Joint
-		fieldcontainerid="659"
-		nameAttachment="Right Hip Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 -1 0 1 0 -1 0 0 1 0 0 0 0 1"
-	>
-	</Joint>
-	<Node
-		fieldcontainerid="660"
-		nameAttachment="Right Hip Node"
-		volume="2 0 0 0 0 0 0"
-		travMask="4294967295"
-		parent="600"
-		core="659"
-		children="664"
-	>
-	</Node>
-	<Joint
-		fieldcontainerid="663"
-		nameAttachment="Right Knee Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
-	>
-	</Joint>
-	<Node
-		fieldcontainerid="664"
-		nameAttachment="Right Knee Node"
-		volume="2 0 0 0 0 0 0"
-		travMask="4294967295"
-		parent="660"
-		core="663"
-		children="668"
-	>
-	</Node>
-	<Joint
-		fieldcontainerid="667"
-		nameAttachment="Right Foot Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
-	>
-	</Joint>
-	<Node
-		fieldcontainerid="668"
-		nameAttachment="Right Foot Node"
-		volume="2 0 0 0 0 0 0"
-		travMask="4294967295"
-		parent="664"
-		core="667"
-		children="672"
-	>
-	</Node>
-	<Joint
-		fieldcontainerid="671"
-		nameAttachment="Right Toes Joint"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-		JointTransformation="1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 1"
-	>
-	</Joint>
-	<Node
-		fieldcontainerid="672"
-		nameAttachment="Right Toes Node"
-		volume="2 0 0 0 0 0 0"
-		travMask="4294967295"
-		parent="668"
-		core="671"
+		parent="708"
+		core="709"
 		children=""
 	>
 	</Node>
 	<GeoUInt8Property
-		fieldcontainerid="675"
+		fieldcontainerid="711"
 		internal="FALSE"
 		ignore="FALSE"
 		useVBO="FALSE"
@@ -466,7 +293,7 @@
 	>
 	</GeoUInt8Property>
 	<GeoUInt32Property
-		fieldcontainerid="676"
+		fieldcontainerid="712"
 		internal="FALSE"
 		ignore="FALSE"
 		useVBO="FALSE"
@@ -475,7 +302,7 @@
 	>
 	</GeoUInt32Property>
 	<GeoPnt3fProperty
-		fieldcontainerid="677"
+		fieldcontainerid="713"
 		internal="FALSE"
 		ignore="FALSE"
 		useVBO="FALSE"
@@ -484,7 +311,7 @@
 	>
 	</GeoPnt3fProperty>
 	<GeoVec3fProperty
-		fieldcontainerid="678"
+		fieldcontainerid="714"
 		internal="FALSE"
 		ignore="FALSE"
 		useVBO="FALSE"
@@ -493,17 +320,17 @@
 	>
 	</GeoVec3fProperty>
 	<Geometry
-		fieldcontainerid="679"
-		material="680"
-		types="675"
-		lengths="676"
-		properties="677;0;678"
+		fieldcontainerid="715"
+		material="716"
+		types="711"
+		lengths="712"
+		properties="713;0;714"
 		propIndices=""
 		dlistCache="TRUE"
 	>
 	</Geometry>
 	<SimpleMaterial
-		fieldcontainerid="680"
+		fieldcontainerid="716"
 		sortKey="0"
 		transparencyMode="0"
 		chunks=""
@@ -519,7 +346,7 @@
 	>
 	</SimpleMaterial>
 	<GeoUInt32Property
-		fieldcontainerid="687"
+		fieldcontainerid="723"
 		internal="FALSE"
 		ignore="FALSE"
 		useVBO="FALSE"
@@ -528,7 +355,7 @@
 	>
 	</GeoUInt32Property>
 	<GeoVec1fProperty
-		fieldcontainerid="688"
+		fieldcontainerid="724"
 		internal="FALSE"
 		ignore="FALSE"
 		useVBO="FALSE"
@@ -536,5 +363,220 @@
 		values="1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.8, 0.8, 0.2, 0.2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1"
 	>
 	</GeoVec1fProperty>
+	<KeyframeTransformationSequenceMatrix4f
+		fieldcontainerid="737"
+		internal="FALSE"
+		InternalKeys="0, 3, 6"
+		transformations="1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1, 0.000796258 -1 0 2 1 0.000796258 0 0 0 0 1 0 0 0 0 1, 1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1"
+	>
+	</KeyframeTransformationSequenceMatrix4f>
+	<KeyframeAnimator
+		fieldcontainerid="738"
+		KeyframeSequence="737"
+	>
+	</KeyframeAnimator>
+	<FieldAnimation
+		fieldcontainerid="739"
+		Cycling="-1"
+		Scale="1"
+		Offset="0"
+		Span="-1"
+		Animator="738"
+		Container="679"
+		FieldId="4"
+		FieldName="matrix"
+		Index="0"
+		InterpolationType="1"
+		ReplacementPolicy="1"
+	>
+	</FieldAnimation>
+	<GeoPnt3fProperty
+		fieldcontainerid="741"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435457"
+		values="-0.5 6 0, 0.5 6 0, 0.5 12 0, -0.5 12 0, -0.5 12 0, 0.5 12 0, 0.5 13 0, -0.5 13 0, 0 11.5 0, 0 12.5 0, 1 12 0, 1 11 0, 1 11 0, 1 12 0, 3 12 0, 3 11 0, 3 11 0, 3 12 0, 5 12 0, 5 11 0, 5 11 0, 5 12 0, 6 12 0, 6 11 0, 0 11.5 0, 0 12.5 0, -1 12 0, -1 11 0, -1 11 0, -1 12 0, -3 12 0, -3 11 0, -3 11 0, -3 12 0, -5 12 0, -5 11 0, -5 11 0, -5 12 0, -6 12 0, -6 11 0, 0 6.5 0, 0.5 7.5 0, 1.5 6 0, 0.5 6 0, 0.5 6 0, 1.5 6 0, 1.5 3 0, 0.5 3 0, 0.5 3 0, 1.5 3 0, 1.5 0 0, 0.5 0 0, 0.5 0 0, 1.5 0 0, 1.5 0 1, 0.5 0 1, 0 6.5 0, -0.5 7.5 0, -1.5 6 0, -0.5 6 0, -0.5 6 0, -1.5 6 0, -1.5 3 0, -0.5 3 0, -0.5 3 0, -1.5 3 0, -1.5 0 0, -0.5 0 0, -0.5 0 0, -1.5 0 0, -1.5 0 1, -0.5 0 1"
+	>
+	</GeoPnt3fProperty>
+	<GeoVec3fProperty
+		fieldcontainerid="742"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435458"
+		values="0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 1 0, 0 1 0, 0 1 0, 0 1 0, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 1 0, 0 1 0, 0 1 0, 0 1 0"
+	>
+	</GeoVec3fProperty>
+	<KeyframeTransformationSequenceMatrix4f
+		fieldcontainerid="744"
+		internal="FALSE"
+		InternalKeys="0, 3, 6"
+		transformations="1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1, 0.000796258 1 0 -2 -1 0.000796258 0 0 0 0 1 0 0 0 0 1, 1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1"
+	>
+	</KeyframeTransformationSequenceMatrix4f>
+	<KeyframeAnimator
+		fieldcontainerid="745"
+		KeyframeSequence="744"
+	>
+	</KeyframeAnimator>
+	<FieldAnimation
+		fieldcontainerid="746"
+		Cycling="-1"
+		Scale="1"
+		Offset="0"
+		Span="-1"
+		Animator="745"
+		Container="687"
+		FieldId="4"
+		FieldName="matrix"
+		Index="0"
+		InterpolationType="1"
+		ReplacementPolicy="1"
+	>
+	</FieldAnimation>
+	<KeyframeTransformationSequenceMatrix4f
+		fieldcontainerid="747"
+		internal="FALSE"
+		InternalKeys="0, 3, 6"
+		transformations="1 0 0 1 0 1 0 -0.5 0 0 1 0 0 0 0 1, 0.921061 -0.389418 0 1 0.389418 0.921061 0 -0.5 0 0 1 0 0 0 0 1, 1 0 0 1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
+	>
+	</KeyframeTransformationSequenceMatrix4f>
+	<KeyframeAnimator
+		fieldcontainerid="748"
+		KeyframeSequence="747"
+	>
+	</KeyframeAnimator>
+	<FieldAnimation
+		fieldcontainerid="749"
+		Cycling="-1"
+		Scale="1"
+		Offset="0"
+		Span="-1"
+		Animator="748"
+		Container="677"
+		FieldId="4"
+		FieldName="matrix"
+		Index="0"
+		InterpolationType="1"
+		ReplacementPolicy="1"
+	>
+	</FieldAnimation>
+	<KeyframeTransformationSequenceMatrix4f
+		fieldcontainerid="750"
+		internal="FALSE"
+		InternalKeys="0, 3, 6"
+		transformations="1 0 0 -1 0 1 0 -0.5 0 0 1 0 0 0 0 1, 0.921061 0.389418 0 -1 -0.389418 0.921061 0 -0.5 0 0 1 0 0 0 0 1, 1 0 0 -1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
+	>
+	</KeyframeTransformationSequenceMatrix4f>
+	<KeyframeAnimator
+		fieldcontainerid="751"
+		KeyframeSequence="750"
+	>
+	</KeyframeAnimator>
+	<FieldAnimation
+		fieldcontainerid="752"
+		Cycling="-1"
+		Scale="1"
+		Offset="0"
+		Span="-1"
+		Animator="751"
+		Container="685"
+		FieldId="4"
+		FieldName="matrix"
+		Index="0"
+		InterpolationType="1"
+		ReplacementPolicy="1"
+	>
+	</FieldAnimation>
+	<KeyframeTransformationSequenceMatrix4f
+		fieldcontainerid="753"
+		internal="FALSE"
+		InternalKeys="0, 3, 6"
+		transformations="1 0 0 1 0 1 0 -1 0 0 1 0 0 0 0 1, 0.921061 -0.389418 0 1 0.389418 0.921061 0 -1 0 0 1 0 0 0 0 1, 1 0 0 1 0 1 0 -1 0 0 1 0 0 0 0 1"
+	>
+	</KeyframeTransformationSequenceMatrix4f>
+	<KeyframeAnimator
+		fieldcontainerid="754"
+		KeyframeSequence="753"
+	>
+	</KeyframeAnimator>
+	<FieldAnimation
+		fieldcontainerid="755"
+		Cycling="-1"
+		Scale="1"
+		Offset="0"
+		Span="-1"
+		Animator="754"
+		Container="695"
+		FieldId="4"
+		FieldName="matrix"
+		Index="0"
+		InterpolationType="1"
+		ReplacementPolicy="1"
+	>
+	</FieldAnimation>
+	<KeyframeTransformationSequenceMatrix4f
+		fieldcontainerid="756"
+		internal="FALSE"
+		InternalKeys="0, 3, 6"
+		transformations="1 0 0 -1 0 1 0 -1 0 0 1 0 0 0 0 1, 0.921061 0.389418 0 -1 -0.389418 0.921061 0 -1 0 0 1 0 0 0 0 1, 1 0 0 -1 0 1 0 -1 0 0 1 0 0 0 0 1"
+	>
+	</KeyframeTransformationSequenceMatrix4f>
+	<KeyframeAnimator
+		fieldcontainerid="757"
+		KeyframeSequence="756"
+	>
+	</KeyframeAnimator>
+	<FieldAnimation
+		fieldcontainerid="758"
+		Cycling="-1"
+		Scale="1"
+		Offset="0"
+		Span="-1"
+		Animator="757"
+		Container="703"
+		FieldId="4"
+		FieldName="matrix"
+		Index="0"
+		InterpolationType="1"
+		ReplacementPolicy="1"
+	>
+	</FieldAnimation>
+	<KeyframeTransformationSequenceMatrix4f
+		fieldcontainerid="759"
+		internal="FALSE"
+		InternalKeys="0, 2, 4, 6"
+		transformations="1 0 0 0 0 1 0 5 0 0 1 0 0 0 0 1, 1 0 0 0 0 1 0 3 0 0 1 0 0 0 0 1, 1 0 0 0 0 1 0 3 0 0 1 0 0 0 0 1, 1 0 0 0 0 1 0 5 0 0 1 0 0 0 0 1"
+	>
+	</KeyframeTransformationSequenceMatrix4f>
+	<KeyframeAnimator
+		fieldcontainerid="760"
+		KeyframeSequence="759"
+	>
+	</KeyframeAnimator>
+	<FieldAnimation
+		fieldcontainerid="761"
+		Cycling="-1"
+		Scale="1"
+		Offset="0"
+		Span="-1"
+		Animator="760"
+		Container="675"
+		FieldId="4"
+		FieldName="matrix"
+		Index="0"
+		InterpolationType="1"
+		ReplacementPolicy="1"
+	>
+	</FieldAnimation>
+	<AnimationGroup
+		fieldcontainerid="762"
+		Animations="739;746;749;752;755;758;761"
+		Scale="1"
+		Offset="0"
+		Span="-1"
+	>
+	</AnimationGroup>
 </OSGFieldContainers>
 

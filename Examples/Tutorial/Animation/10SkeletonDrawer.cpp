@@ -25,7 +25,6 @@
 #include "OSGSimpleGeometry.h"
 
 //Animation
-#include "OSGJoint.h"
 #include "OSGSkeletonBlendedGeometry.h"
 #include "OSGSkeletonDrawable.h"
 
@@ -152,12 +151,12 @@ int main(int argc, char **argv)
     SkeletonBlendedGeometryUnrecPtr ExampleSkeleton = SkeletonBlendedGeometry::create();
 
     //Joint
-	JointRecPtr ExampleRootJoint = Joint::create();
-
-    //Add this joint to the skeleton
-    ExampleSkeleton->pushToJoints(ExampleRootJoint, Matrix());
+	TransformRecPtr ExampleRootJoint = Transform::create();
 
     NodeRecPtr ExampleRootJointNode = makeNodeFor(ExampleRootJoint);
+
+    //Add this joint to the skeleton
+    ExampleSkeleton->pushToJoints(ExampleRootJointNode, Matrix());
 
     NodeRecPtr TempRootJointNode = ExampleRootJointNode;
     NodeRefPtr GeoNode = makeNodeFor(BoxGeometry);
@@ -167,7 +166,7 @@ int main(int argc, char **argv)
 	//Create a set of randomly placed child joints
 	for (Real32 i = 0.0f; i < 5.0f; ++i)
 	{
-		JointRecPtr ExampleChildJoint = Joint::create();
+		TransformRecPtr ExampleChildJoint = Transform::create();
 		NodeRecPtr ExampleChildJointNode = makeNodeFor(ExampleChildJoint);
 
         GeoNode = makeNodeFor(SphereGeometry);
@@ -188,7 +187,7 @@ int main(int argc, char **argv)
         }
 		
 		//Set bind and current transformations to TempMat (calculated above)
-        ExampleChildJoint->setJointTransformation(TempMat);
+        ExampleChildJoint->setMatrix(TempMat);
 
 		//Add ExampleChildJoint as a child to the previous joint	
         TempRootJointNode->addChild(ExampleChildJointNode);//add a Child to the root joint
@@ -199,7 +198,7 @@ int main(int argc, char **argv)
         //Add this joint to the skeleton
         Matrix InvBind(TempRootJointNode->getToWorld());
         InvBind.invert();
-        ExampleSkeleton->pushToJoints(ExampleChildJoint, InvBind);
+        ExampleSkeleton->pushToJoints(ExampleChildJointNode, InvBind);
 	}
 
 

@@ -53,6 +53,8 @@
 #include "OSGTypedGeoVectorProperty.h"
 #include <boost/bind.hpp>
 
+#include "OSGGeoPropertyUtils.h"
+
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
@@ -100,7 +102,7 @@ UInt32 SkeletonBlendedGeometry::getNumJoints(void) const
     return getMFInternalJoints()->size();
 }
 
-Joint* SkeletonBlendedGeometry::getJoint(UInt32 index) const
+Node* SkeletonBlendedGeometry::getJoint(UInt32 index) const
 {
     if(index < getMFInternalJoints()->size())
     {
@@ -124,27 +126,22 @@ Matrix SkeletonBlendedGeometry::getJointInvBind(UInt32 index) const
     }
 }
 
-void SkeletonBlendedGeometry::pushToJoints(Joint* const jointValue,
+void SkeletonBlendedGeometry::pushToJoints(Node* const jointValue,
                            const Matrix& invBind  )
 {
     pushToInternalJoints(jointValue);
     editMFInternalJointInvBindTransformations()->push_back(invBind);
-    Matrix bind(invBind);
-    bind.invert();
-    editMFInternalJointBindTransformations()->push_back(bind);
 }
 
 void SkeletonBlendedGeometry::removeFromJoints(UInt32 uiIndex)
 {
     removeFromInternalJoints(uiIndex);
     editMFInternalJointInvBindTransformations()->erase(uiIndex);
-    editMFInternalJointBindTransformations()->erase(uiIndex);
 }
 
-void SkeletonBlendedGeometry::removeObjFromJoints(Joint* const jointValue)
+void SkeletonBlendedGeometry::removeObjFromJoints(Node* const jointValue)
 {
     editMFInternalJointInvBindTransformations()->erase(getMFInternalJoints()->findIndex(jointValue));
-    editMFInternalJointBindTransformations()->erase(getMFInternalJoints()->findIndex(jointValue));
     removeObjFromInternalJoints(jointValue);
 }
 
@@ -152,7 +149,20 @@ void SkeletonBlendedGeometry::clearJoints(void)
 {
     clearInternalJoints();
     editMFInternalJointInvBindTransformations()->clear();
-    editMFInternalJointBindTransformations()->clear();
+}
+
+void SkeletonBlendedGeometry::drawPrimitives(DrawEnv *pEnv)
+{
+    if(getBaseGeometry())
+    {
+        calculateJointTransform();
+        if(_NeedRecalc)
+        {
+            calculatePositions();
+        }
+    }
+
+    Inherited::drawPrimitives(pEnv);
 }
 
 void SkeletonBlendedGeometry::skeletonUpdated(void)
@@ -164,56 +174,35 @@ void SkeletonBlendedGeometry::skeletonUpdated(void)
     }
 }
 
-void SkeletonBlendedGeometry::updateJointTransformations(void)
-{
-	//Loop through bone hierarchy and update their transformations
-	for(UInt32 i(0); i < getMFInternalJoints()->size(); ++i)
-	{
-		//getJoints(i)->updateTransformations(false);
-	}
-}
-
 Matrix SkeletonBlendedGeometry::getAbsoluteTransformation(UInt32 index) const
 {
-    return dynamic_cast<Node*>(getInternalJoints(index)->getParents()[0])->getToWorld();
+    return getInternalJoints(index)->getToWorld();
 }
 
 Matrix SkeletonBlendedGeometry::getAbsoluteBindTransformation(UInt32 index) const
 {
-    Matrix Result(getBindTransformation());
-    Result.mult(getInternalJointBindTransformations(index));
+    Matrix Result(getInternalJointInvBindTransformations(index));
+    Result.invert();
     return Result;
 }
 
-Int32 SkeletonBlendedGeometry::getJointIndex(Joint* theJoint) const
+Int32 SkeletonBlendedGeometry::getJointIndex(Node* theJoint) const
 {
     return getMFInternalJoints()->findIndex(theJoint);
 }
 
 Int32 SkeletonBlendedGeometry::getJointParentIndex(UInt32 index) const
 {
-    Joint* ChildJoint(getJoint(index));
-    Node* ChildNode(dynamic_cast<Node*>(ChildJoint->getParents()[0]));
+    Node* ChildJoint(getJoint(index));
 
-    if(ChildNode->getParent())
+    if(ChildJoint->getParent())
     {
-        NodeCore* ParentCore(ChildNode->getParent()->getCore());
-        if(ParentCore->getType().isDerivedFrom(Joint::getClassType()))
-        {
-            return getMFInternalJoints()->findIndex(ParentCore);
-        }
+        return getMFInternalJoints()->findIndex(ChildJoint->getParent());
     }
     return -1;
 }
 
-Matrix SkeletonBlendedGeometry::getBindTransformationDiff(UInt32 index) const
-{
-    Matrix Result(getInternalJointInvBindTransformations(index));
-    Result.multLeft(dynamic_cast<Node*>(getJoint(index)->getParents()[0])->getToWorld());
-    return Result;
-}
-
-void SkeletonBlendedGeometry::addJointBlending(UInt32 VertexIndex, Joint* const TheJoint, Real32 BlendAmount)
+void SkeletonBlendedGeometry::addJointBlending(UInt32 VertexIndex, Node* const TheJoint, Real32 BlendAmount)
 {
     if(getWeightIndexes() == NULL)
     {
@@ -297,39 +286,54 @@ void SkeletonBlendedGeometry::addJointBlending(UInt32 VertexIndex,
     getWeightIndexes()->push_back(WeightIndex);
 }
 
+void SkeletonBlendedGeometry::calculateJointTransform(void)
+{
+    //Precalculate the matrix for each joint
+    Matrix m;
+    for(UInt32 i(0) ; i<getNumJoints() ; ++i)
+    {
+        m.setValue(getBindTransformation());
+        m.multLeft(getInternalJointInvBindTransformations(i));
+        m.multLeft(getJoint(i)->getToWorld());
+
+        if( m != _JointPoseTransforms[i])
+        {
+            _JointPoseTransforms[i].setValue(m);
+            _NeedRecalc             = true;
+        }
+    }
+}
+
 void SkeletonBlendedGeometry::calculatePositions(void)
 {
 	if(getBaseGeometry() == NULL)
 	{
 		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Base Geometry is NULL." << std::endl;
+		SWARNING << "Base Geometry is NULL." << std::endl;
         return;
     }
 	if(getPositions() == NULL)
 	{
 		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Positions is NULL." << std::endl;
+		SWARNING << "Positions is NULL." << std::endl;
         return;
 	}
 	if(getBaseGeometry()->getPositions() == NULL)
 	{
 		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Base Geometry Postions is NULL." << std::endl;
+		SWARNING << "Base Geometry Postions is NULL." << std::endl;
         return;
 	}
 
     Pnt3f CalculatedPoint;
-    Pnt3f BasePointInfluenced;
     Pnt3f BasePoint;
-    Vec3f CalculatedNormal;
+    //Vec3f CalculatedNormal;
 
+    //Zero the Position Property
+    zeroGeoProperty(getPositions());
 
-    //Reset all points
-    GeoVectorPropertyUnrecPtr ResetPositions(dynamic_pointer_cast<GeoVectorProperty>(getBaseGeometry()->getPositions()->clone()));
-    setPositions(ResetPositions);
-
-    UInt32 WeightIndex, JointIndex, VertexIndex;
     //Update the Positions and Normals
+    UInt32 WeightIndex, JointIndex, VertexIndex;
 	UInt32 NumWeightIndexTuples(getWeightIndexes()->size()/3);
     for(UInt32 i(0) ; i < NumWeightIndexTuples ; ++i)
     {
@@ -337,17 +341,14 @@ void SkeletonBlendedGeometry::calculatePositions(void)
         JointIndex  = getWeightIndexes()->getValue<UInt32>((3 * i) + 1);
         WeightIndex = getWeightIndexes()->getValue<UInt32>((3 * i) + 2);
 
-        //Get the position of this index from the base geometry
+        //v*BSM*IBM*JM*JW
         getBaseGeometry()->getPositions()->getValue<Pnt3f>(BasePoint, VertexIndex);
 
-        //Get the Influence matrix of this joint
-        //Apply the influence of this joint to the position
-        getBindTransformationDiff(JointIndex).mult(BasePoint, BasePointInfluenced);
+        _JointPoseTransforms[JointIndex].mult(BasePoint, BasePoint);
 
         //Add the displacement to the value at this position
         getPositions()->getValue<Pnt3f>(CalculatedPoint, VertexIndex);
-        //Scale the influence by the blend amount
-        CalculatedPoint += getWeights()->getValue<Pnt1f>(WeightIndex)[0] * (BasePointInfluenced - BasePoint);
+        CalculatedPoint += Vec3f(BasePoint) * getWeights()->getValue<Pnt1f>(WeightIndex)[0];
         getPositions()->setValue<Pnt3f>(CalculatedPoint, VertexIndex);
     }
 
@@ -358,6 +359,8 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 
     _volumeCache.setValid();
     _volumeCache.setEmpty();
+
+    _NeedRecalc = false;
 }
 
 EventConnection SkeletonBlendedGeometry::addSkeletonListener(SkeletonListenerPtr Listener)
@@ -486,10 +489,18 @@ void SkeletonBlendedGeometry::changed(ConstFieldMaskArg whichField,
         setMaterial(getBaseGeometry()->getMaterial());
     }
 
-    if( (whichField & InternalJointsFieldMask) ||
-        (whichField & InternalWeightIndexesFieldMask) ||
-        (whichField & InternalWeightsFieldMask))
+    if(whichField & InternalJointsFieldMask)
     {
+        _JointPoseTransforms.resize(getNumJoints());
+    }
+
+    if( (whichField & BaseGeometryFieldMask) ||
+        (whichField & InternalJointsFieldMask) ||
+        (whichField & InternalWeightIndexesFieldMask) ||
+        (whichField & InternalWeightsFieldMask) ||
+        (whichField & BindTransformationFieldMask))
+    {
+        _JointPoseTransforms.resize(getNumJoints());
         calculatePositions();
     }
 }
