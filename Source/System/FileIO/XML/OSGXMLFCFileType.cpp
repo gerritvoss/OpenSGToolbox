@@ -753,14 +753,14 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                 }
             }
 
-            if((*FCItor)->getField(i) == NULL)
+            TheFieldHandle = (*FCItor)->getField(i);
+            if(TheFieldHandle == NULL ||
+               Desc->getFieldType().getClass() == FieldType::ParentPtrField)
             {
                 continue;
             }
-            TheFieldHandle = (*FCItor)->getField(i);
             TheField = TheFieldHandle->getField();
             if(Desc->getFieldType().getClass() == FieldType::PtrField ||
-				Desc->getFieldType().getClass() == FieldType::ParentPtrField ||
 				Desc->getFieldType().getClass() == FieldType::ChildPtrField)
             {
                 OSGOutputStream << "\t\t" << Desc->getCName() << "=\"";
@@ -799,6 +799,9 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             }
             else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
             {
+            }
+            else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
+            {
                 FieldValue.clear();
                 //Path RootPath = boost::filesystem::system_complete(RootPath);
                 BoostPath FilePath = boost::filesystem::system_complete(static_cast<const SFBoostPath*>(TheField)->getValue());
@@ -825,6 +828,11 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                     OSGOutputStream << FieldValue;
                 }
                 OSGOutputStream << "\"" << std::endl;
+            }
+            else if(TheFieldHandle->getType() == SFString::getClassType())
+            {
+                OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" <<
+                    static_cast<const SFString*>(TheField)->getValue()  << "\"" << std::endl;
             }
             else
             {

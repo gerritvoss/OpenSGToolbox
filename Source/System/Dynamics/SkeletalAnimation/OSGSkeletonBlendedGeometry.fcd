@@ -44,27 +44,9 @@
 	>
 	</Field>
 	<Field
-		name="BlendMode"
-		type="UInt32"
-        category="data"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="InternalJoints"
-		type="Joint"
+		type="Node"
         category="pointer"
-		cardinality="multi"
-		visibility="external"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="InternalJointBindTransformations"
-		type="Matrix"
-        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -85,7 +67,7 @@
         category="data"
 		cardinality="single"
 		visibility="external"
-		access="protected"
+		access="public"
 	>
 	</Field>
 	<ProducedMethod

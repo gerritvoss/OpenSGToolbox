@@ -68,9 +68,8 @@
 #include "OSGGeometryFields.h"          // BaseGeometry type
 #include "OSGGeoIntegralPropertyFields.h" // InternalWeightIndexes type
 #include "OSGGeoVectorPropertyFields.h" // InternalWeights type
-#include "OSGSysFields.h"               // BlendMode type
-#include "OSGJointFields.h"             // InternalJoints type
-#include "OSGMathFields.h"              // InternalJointBindTransformations type
+#include "OSGNodeFields.h"              // InternalJoints type
+#include "OSGMathFields.h"              // InternalJointInvBindTransformations type
 
 #include "OSGSkeletonBlendedGeometryFields.h"
 
@@ -107,10 +106,8 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
         BaseGeometryFieldId = Inherited::NextFieldId,
         InternalWeightIndexesFieldId = BaseGeometryFieldId + 1,
         InternalWeightsFieldId = InternalWeightIndexesFieldId + 1,
-        BlendModeFieldId = InternalWeightsFieldId + 1,
-        InternalJointsFieldId = BlendModeFieldId + 1,
-        InternalJointBindTransformationsFieldId = InternalJointsFieldId + 1,
-        InternalJointInvBindTransformationsFieldId = InternalJointBindTransformationsFieldId + 1,
+        InternalJointsFieldId = InternalWeightsFieldId + 1,
+        InternalJointInvBindTransformationsFieldId = InternalJointsFieldId + 1,
         BindTransformationFieldId = InternalJointInvBindTransformationsFieldId + 1,
         EventProducerFieldId = BindTransformationFieldId + 1,
         NextFieldId = EventProducerFieldId + 1
@@ -122,12 +119,8 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
         (TypeTraits<BitVector>::One << InternalWeightIndexesFieldId);
     static const OSG::BitVector InternalWeightsFieldMask =
         (TypeTraits<BitVector>::One << InternalWeightsFieldId);
-    static const OSG::BitVector BlendModeFieldMask =
-        (TypeTraits<BitVector>::One << BlendModeFieldId);
     static const OSG::BitVector InternalJointsFieldMask =
         (TypeTraits<BitVector>::One << InternalJointsFieldId);
-    static const OSG::BitVector InternalJointBindTransformationsFieldMask =
-        (TypeTraits<BitVector>::One << InternalJointBindTransformationsFieldId);
     static const OSG::BitVector InternalJointInvBindTransformationsFieldMask =
         (TypeTraits<BitVector>::One << InternalJointInvBindTransformationsFieldId);
     static const OSG::BitVector BindTransformationFieldMask =
@@ -140,9 +133,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     typedef SFUnrecGeometryPtr SFBaseGeometryType;
     typedef SFUnrecChildGeoIntegralPropertyPtr SFInternalWeightIndexesType;
     typedef SFUnrecChildGeoVectorPropertyPtr SFInternalWeightsType;
-    typedef SFUInt32          SFBlendModeType;
-    typedef MFUnrecJointPtr   MFInternalJointsType;
-    typedef MFMatrix          MFInternalJointBindTransformationsType;
+    typedef MFUnrecNodePtr    MFInternalJointsType;
     typedef MFMatrix          MFInternalJointInvBindTransformationsType;
     typedef SFMatrix          SFBindTransformationType;
     typedef SFEventProducerPtr          SFEventProducerType;
@@ -183,16 +174,16 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
             const SFUnrecChildGeoVectorPropertyPtr *getSFInternalWeights(void) const;
                   SFUnrecChildGeoVectorPropertyPtr *editSFInternalWeights(void);
 
-                  SFUInt32            *editSFBlendMode      (void);
-            const SFUInt32            *getSFBlendMode       (void) const;
+                  SFMatrix            *editSFBindTransformation(void);
+            const SFMatrix            *getSFBindTransformation (void) const;
 
 
                   Geometry * getBaseGeometry   (void) const;
 
                   GeoVectorProperty * getInternalWeights(void) const;
 
-                  UInt32              &editBlendMode      (void);
-                  UInt32               getBlendMode       (void) const;
+                  Matrix              &editBindTransformation(void);
+            const Matrix              &getBindTransformation (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -201,7 +192,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
 
             void setBaseGeometry   (Geometry * const value);
             void setInternalWeights(GeoVectorProperty * const value);
-            void setBlendMode      (const UInt32 value);
+            void setBindTransformation(const Matrix &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -302,9 +293,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     SFUnrecGeometryPtr _sfBaseGeometry;
     SFUnrecChildGeoIntegralPropertyPtr _sfInternalWeightIndexes;
     SFUnrecChildGeoVectorPropertyPtr _sfInternalWeights;
-    SFUInt32          _sfBlendMode;
-    MFUnrecJointPtr   _mfInternalJoints;
-    MFMatrix          _mfInternalJointBindTransformations;
+    MFUnrecNodePtr    _mfInternalJoints;
     MFMatrix          _mfInternalJointInvBindTransformations;
     SFMatrix          _sfBindTransformation;
     SFEventProducerPtr _sfEventProducer;
@@ -350,12 +339,8 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     EditFieldHandlePtr editHandleInternalWeightIndexes(void);
     GetFieldHandlePtr  getHandleInternalWeights (void) const;
     EditFieldHandlePtr editHandleInternalWeights(void);
-    GetFieldHandlePtr  getHandleBlendMode       (void) const;
-    EditFieldHandlePtr editHandleBlendMode      (void);
     GetFieldHandlePtr  getHandleInternalJoints  (void) const;
     EditFieldHandlePtr editHandleInternalJoints (void);
-    GetFieldHandlePtr  getHandleInternalJointBindTransformations (void) const;
-    EditFieldHandlePtr editHandleInternalJointBindTransformations(void);
     GetFieldHandlePtr  getHandleInternalJointInvBindTransformations (void) const;
     EditFieldHandlePtr editHandleInternalJointInvBindTransformations(void);
     GetFieldHandlePtr  getHandleBindTransformation (void) const;
@@ -368,31 +353,19 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
 
             const SFUnrecChildGeoIntegralPropertyPtr *getSFInternalWeightIndexes (void) const;
                   SFUnrecChildGeoIntegralPropertyPtr *editSFInternalWeightIndexes(void);
-            const MFUnrecJointPtr     *getMFInternalJoints  (void) const;
-                  MFUnrecJointPtr     *editMFInternalJoints (void);
-
-                  MFMatrix            *editMFInternalJointBindTransformations(void);
-            const MFMatrix            *getMFInternalJointBindTransformations (void) const;
+            const MFUnrecNodePtr      *getMFInternalJoints  (void) const;
+                  MFUnrecNodePtr      *editMFInternalJoints (void);
 
                   MFMatrix            *editMFInternalJointInvBindTransformations(void);
             const MFMatrix            *getMFInternalJointInvBindTransformations (void) const;
 
-                  SFMatrix            *editSFBindTransformation(void);
-            const SFMatrix            *getSFBindTransformation (void) const;
-
 
                   GeoIntegralProperty * getInternalWeightIndexes(void) const;
 
-                  Joint * getInternalJoints (const UInt32 index) const;
-
-                  Matrix              &editInternalJointBindTransformations(const UInt32 index);
-            const Matrix              &getInternalJointBindTransformations (const UInt32 index) const;
+                  Node * getInternalJoints (const UInt32 index) const;
 
                   Matrix              &editInternalJointInvBindTransformations(const UInt32 index);
             const Matrix              &getInternalJointInvBindTransformations (const UInt32 index) const;
-
-                  Matrix              &editBindTransformation(void);
-            const Matrix              &getBindTransformation (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -400,17 +373,16 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     /*! \{                                                                 */
 
             void setInternalWeightIndexes(GeoIntegralProperty * const value);
-            void setBindTransformation(const Matrix &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
-    void pushToInternalJoints           (Joint * const value   );
-    void assignInternalJoints           (const MFUnrecJointPtr   &value);
+    void pushToInternalJoints           (Node * const value   );
+    void assignInternalJoints           (const MFUnrecNodePtr    &value);
     void removeFromInternalJoints (UInt32                uiIndex );
-    void removeObjFromInternalJoints(Joint * const value   );
+    void removeObjFromInternalJoints(Node * const value   );
     void clearInternalJoints            (void                          );
 
     /*! \}                                                                 */

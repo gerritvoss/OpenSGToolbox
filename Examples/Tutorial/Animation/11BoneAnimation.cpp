@@ -26,7 +26,6 @@
 #include "OSGSimpleGeometry.h"
 
 //Animation
-#include "OSGJoint.h"
 #include "OSGSkeletonBlendedGeometry.h"
 #include "OSGSkeletonDrawable.h"
 
@@ -59,7 +58,7 @@ bool animationPaused = false;
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-void setupAnimation(JointUnrecPtr TheJoint, JointUnrecPtr TheChildJoint);
+void setupAnimation(TransformUnrecPtr TheJoint, TransformUnrecPtr TheChildJoint);
 
 // Create a class to allow for the use of the keyboard shortcuts 
 class TutorialKeyListener : public KeyListener
@@ -236,12 +235,12 @@ int main(int argc, char **argv)
     SkeletonBlendedGeometryUnrecPtr ExampleSkeleton = SkeletonBlendedGeometry::create();
 
     //Joint
-	JointRecPtr ExampleRootJoint = Joint::create();
-
-    //Add this joint to the skeleton
-    ExampleSkeleton->pushToJoints(ExampleRootJoint, Matrix());
+	TransformRecPtr ExampleRootJoint = Transform::create();
 
     NodeRecPtr ExampleRootJointNode = makeNodeFor(ExampleRootJoint);
+
+    //Add this joint to the skeleton
+    ExampleSkeleton->pushToJoints(ExampleRootJointNode, Matrix());
 
     NodeRecPtr TempRootJointNode = ExampleRootJointNode;
     NodeRefPtr GeoNode = makeNodeFor(BoxGeometry);
@@ -251,7 +250,7 @@ int main(int argc, char **argv)
 	//Create a set of randomly placed child joints
 	for (Real32 i = 0.0f; i < 5.0f; ++i)
 	{
-		JointRecPtr ExampleChildJoint = Joint::create();
+		TransformRecPtr ExampleChildJoint = Transform::create();
 		NodeRecPtr ExampleChildJointNode = makeNodeFor(ExampleChildJoint);
 
         GeoNode = makeNodeFor(SphereGeometry);
@@ -272,7 +271,7 @@ int main(int argc, char **argv)
         }
 		
 		//Set bind and current transformations to TempMat (calculated above)
-        ExampleChildJoint->setJointTransformation(TempMat);
+        ExampleChildJoint->setMatrix(TempMat);
 
 		//Add ExampleChildJoint as a child to the previous joint	
         TempRootJointNode->addChild(ExampleChildJointNode);//add a Child to the root joint
@@ -283,7 +282,7 @@ int main(int argc, char **argv)
         //Add this joint to the skeleton
         Matrix InvBind(TempRootJointNode->getToWorld());
         InvBind.invert();
-        ExampleSkeleton->pushToJoints(ExampleChildJoint, InvBind);
+        ExampleSkeleton->pushToJoints(ExampleChildJointNode, InvBind);
 	}
 
     //SkeletonDrawer
@@ -309,7 +308,7 @@ int main(int argc, char **argv)
 
 	//Setup the Animation
 	setupAnimation(ExampleRootJoint,
-                   dynamic_cast<Joint*>(ExampleRootJointNode->getChild(1)->getCore()));
+                   dynamic_cast<Transform*>(ExampleRootJointNode->getChild(1)->getCore()));
 
     // Show the whole Scene
     mgr->showAll();
@@ -344,13 +343,11 @@ void reshape(Vec2f Size)
     
 }
 
-
-
-void setupAnimation(JointUnrecPtr TheJoint, JointUnrecPtr TheChildJoint)
+void setupAnimation(TransformUnrecPtr TheJoint, TransformUnrecPtr TheChildJoint)
 {
 	//Create an animation for TheJoint
 	//TheJoint Transformation keyframes (we'll animate TheJoint's translation)
-	Matrix transform = TheJoint->getJointTransformation();
+	Matrix transform = TheJoint->getMatrix();
 
 	KeyframeTransformationSequenceUnrecPtr TheJointTranformationKeyframes = KeyframeTransformationSequenceMatrix4f::create();
 	
@@ -366,7 +363,7 @@ void setupAnimation(JointUnrecPtr TheJoint, JointUnrecPtr TheChildJoint)
 	transform.setTranslate(3.0f,0.0f,0.0f);
 	TheJointTranformationKeyframes->addKeyframe(transform, 6.0f);
 
-	transform = TheJoint->getJointTransformation();
+	transform = TheJoint->getMatrix();
 	transform.setTranslate(0.0f,0.0f,0.0f);
 	TheJointTranformationKeyframes->addKeyframe(transform, 8.0f);
 
@@ -379,14 +376,15 @@ void setupAnimation(JointUnrecPtr TheJoint, JointUnrecPtr TheChildJoint)
     dynamic_pointer_cast<FieldAnimation>(TheJointAnimation)->setAnimator(TheJointAnimator);
     dynamic_pointer_cast<FieldAnimation>(TheJointAnimation)->setInterpolationType(Animator::CUBIC_INTERPOLATION);
     dynamic_pointer_cast<FieldAnimation>(TheJointAnimation)->setCycling(-1);
-    dynamic_pointer_cast<FieldAnimation>(TheJointAnimation)->setAnimatedField(TheJoint, std::string("JointTransformation"));
+    dynamic_pointer_cast<FieldAnimation>(TheJointAnimation)->setAnimatedField(TheJoint,
+                                                                              std::string("matrix"));
 	
     TheJointAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
     TheJointAnimation->start();
 
 	//Create an animation for TheChildJoint
 	//TheChildJoint Transformation keyframes (we'll animate TheChildJoint's rotation)
-	transform = TheChildJoint->getJointTransformation();
+	transform = TheChildJoint->getMatrix();
 
 	KeyframeTransformationSequenceUnrecPtr TheChildJointTransformationKeyframes = KeyframeTransformationSequenceMatrix4f::create();
 
@@ -416,7 +414,7 @@ void setupAnimation(JointUnrecPtr TheJoint, JointUnrecPtr TheChildJoint)
     dynamic_pointer_cast<FieldAnimation>(TheChildJointAnimation)->setAnimator(TheChildJointAnimator);
     dynamic_pointer_cast<FieldAnimation>(TheChildJointAnimation)->setInterpolationType(Animator::CUBIC_INTERPOLATION);
     dynamic_pointer_cast<FieldAnimation>(TheChildJointAnimation)->setCycling(-1);
-    dynamic_pointer_cast<FieldAnimation>(TheChildJointAnimation)->setAnimatedField(TheChildJoint, std::string("JointTransformation"));
+    dynamic_pointer_cast<FieldAnimation>(TheChildJointAnimation)->setAnimatedField(TheChildJoint, std::string("matrix"));
 
     TheChildJointAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
 	TheJointAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());

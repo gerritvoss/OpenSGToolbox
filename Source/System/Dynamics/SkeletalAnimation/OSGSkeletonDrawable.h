@@ -46,7 +46,6 @@
 #include "OSGSkeletonDrawableBase.h"
 #include "OSGAction.h"
 #include "OSGSkeletonBlendedGeometry.h"
-#include "OSGJoint.h"
 
 OSG_BEGIN_NAMESPACE
 

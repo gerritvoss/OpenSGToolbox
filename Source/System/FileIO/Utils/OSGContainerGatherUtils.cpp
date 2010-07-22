@@ -3,6 +3,7 @@
 #include "OSGAttachmentContainer.h"
 #include "OSGFieldContainerFactory.h"
 #include "OSGFilePathAttachment.h"
+#include "OSGDrawableStatsAttachment.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -35,7 +36,8 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
             for( ; MapItor!=MapEnd  ; ++MapItor)
             {
                 if(MapItor->second->getType() != Name::getClassType() &&
-                   MapItor->second->getType() != FilePathAttachment::getClassType())
+                   MapItor->second->getType() != FilePathAttachment::getClassType() &&
+                   MapItor->second->getType() != DrawableStatsAttachment::getClassType())
                 {
                     std::set<FieldContainerUnrecPtr> TheContainer;
                     TheContainer.insert(MapItor->second);
