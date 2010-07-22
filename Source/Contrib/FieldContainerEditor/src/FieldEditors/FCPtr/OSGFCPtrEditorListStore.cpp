@@ -41,8 +41,7 @@
 
 #include "OSGConfig.h"
 
-#include "OSGCreateFieldContainerCommand.h"
-#include "OSGFieldContainerFactory.h"
+#include "OSGFCPtrEditorListStore.h"
 
 OSG_USING_NAMESPACE
 
@@ -50,60 +49,25 @@ OSG_USING_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class OSG::CreateFieldContainerCommand
-A CreateFieldContainerCommand. 
+/*! \class OSG::FCPtrEditorListStore
+A FCPtrEditorListStore. 
 */
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-CommandType CreateFieldContainerCommand::_Type("CreateFieldContainerCommand", "CommandType");
-
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
-
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const std::string& typeName)
-{
-    const FieldContainerType* type = FieldContainerFactory::the()->findType(typeName.c_str());
-	return create(type);
-}
-
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const FieldContainerType* type)
-{
-	return RefPtr(new CreateFieldContainerCommand(type));
-}
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void CreateFieldContainerCommand::execute(void)
+std::vector<FieldContainer*> FCPtrEditorListStore::getList(void) const
 {
-    //Check for a valid Field Container
-    if(_TypeToCreate == NULL)
-    {
-        SWARNING << "Type of field container to create is NULL." << std::endl;
-        return;
-    }
-
-    //Create the FieldContainer
-    _CreatedFC = _TypeToCreate->createContainer();
-}
-
-std::string CreateFieldContainerCommand::getCommandDescription(void) const
-{
-	std::string Description("");
-
-    Description = Description + "Create " + _TypeToCreate->getName();
-	
-	return Description;
-}
-
-const CommandType &CreateFieldContainerCommand::getType(void) const
-{
-	return _Type;
+    return _Store;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -111,15 +75,32 @@ const CommandType &CreateFieldContainerCommand::getType(void) const
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
+FCPtrEditorListStore::FCPtrEditorListStore(const FieldContianerVector& Store) :
+    Inherited(),
+    _Store(Store)
+{
+}
 
-CreateFieldContainerCommand::~CreateFieldContainerCommand(void)
+FCPtrEditorListStore::FCPtrEditorListStore(const FCPtrEditorListStore& source) :
+    Inherited(source),
+    _Store(source._Store)
+{
+}
+
+
+FCPtrEditorListStore::~FCPtrEditorListStore(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-void CreateFieldContainerCommand::operator =(const CreateFieldContainerCommand& source)
+void FCPtrEditorListStore::operator =(const FCPtrEditorListStore& source)
 {
-    assert("Should never reach operator=");
+    if(this == &source)
+    {
+        return;
+    }
+
+    Inherited::operator=(source);
+    _Store = source._Store;
 }
 

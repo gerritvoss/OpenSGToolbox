@@ -4,8 +4,6 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
- *                                                                           *
  *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -35,91 +33,31 @@
  *                                                                           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
 
-#include "OSGConfig.h"
+OSG_BEGIN_NAMESPACE
 
-#include "OSGCreateFieldContainerCommand.h"
-#include "OSGFieldContainerFactory.h"
-
-OSG_USING_NAMESPACE
-
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class OSG::CreateFieldContainerCommand
-A CreateFieldContainerCommand. 
-*/
-
-/***************************************************************************\
- *                           Class variables                               *
-\***************************************************************************/
-
-CommandType CreateFieldContainerCommand::_Type("CreateFieldContainerCommand", "CommandType");
-
-/***************************************************************************\
- *                           Class methods                                 *
-\***************************************************************************/
-
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const std::string& typeName)
-{
-    const FieldContainerType* type = FieldContainerFactory::the()->findType(typeName.c_str());
-	return create(type);
-}
-
-CreateFieldContainerCommandPtr CreateFieldContainerCommand::create(const FieldContainerType* type)
-{
-	return RefPtr(new CreateFieldContainerCommand(type));
-}
-
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
-void CreateFieldContainerCommand::execute(void)
-{
-    //Check for a valid Field Container
-    if(_TypeToCreate == NULL)
-    {
-        SWARNING << "Type of field container to create is NULL." << std::endl;
-        return;
-    }
-
-    //Create the FieldContainer
-    _CreatedFC = _TypeToCreate->createContainer();
-}
-
-std::string CreateFieldContainerCommand::getCommandDescription(void) const
-{
-	std::string Description("");
-
-    Description = Description + "Create " + _TypeToCreate->getName();
-	
-	return Description;
-}
-
-const CommandType &CreateFieldContainerCommand::getType(void) const
-{
-	return _Type;
-}
-
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
-/*----------------------- constructors & destructors ----------------------*/
-
-CreateFieldContainerCommand::~CreateFieldContainerCommand(void)
+inline
+FCPtrFieldEditor::TextFieldListener::TextFieldListener(FCPtrFieldEditor * ptr) : _FCPtrFieldEditor(ptr)
 {
 }
 
-/*----------------------------- class specific ----------------------------*/
-
-void CreateFieldContainerCommand::operator =(const CreateFieldContainerCommand& source)
+inline
+FCPtrFieldEditor::MenuButtonFieldListener::MenuButtonFieldListener(FCPtrFieldEditor * ptr) : _FCPtrFieldEditor(ptr)
 {
-    assert("Should never reach operator=");
 }
 
+inline
+FCPtrFieldEditor::CreateContainerDialogListener::CreateContainerDialogListener(FCPtrFieldEditor * ptr) : _FCPtrFieldEditor(ptr)
+{
+}
+
+inline
+FCPtrFieldEditor::FindContainerDialogListener::FindContainerDialogListener(FCPtrFieldEditor * ptr) : _FCPtrFieldEditor(ptr)
+{
+}
+
+OSG_END_NAMESPACE
