@@ -309,19 +309,19 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 	if(getBaseGeometry() == NULL)
 	{
 		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Base Geometry is NULL." << std::endl;
+		SWARNING << "Base Geometry is NULL." << std::endl;
         return;
     }
 	if(getPositions() == NULL)
 	{
 		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Positions is NULL." << std::endl;
+		SWARNING << "Positions is NULL." << std::endl;
         return;
 	}
 	if(getBaseGeometry()->getPositions() == NULL)
 	{
 		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Base Geometry Postions is NULL." << std::endl;
+		SWARNING << "Base Geometry Postions is NULL." << std::endl;
         return;
 	}
 
@@ -500,6 +500,7 @@ void SkeletonBlendedGeometry::changed(ConstFieldMaskArg whichField,
         (whichField & InternalWeightsFieldMask) ||
         (whichField & BindTransformationFieldMask))
     {
+        _JointPoseTransforms.resize(getNumJoints());
         calculatePositions();
     }
 }

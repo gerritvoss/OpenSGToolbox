@@ -92,18 +92,6 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometry : public MorphGeometryBase
     Real32 getMorphTargetWeight(UInt32 Index) const;
     Real32 getMorphTargetWeight(Geometry * const Target) const;
 
-    template<class TypeT>
-    static void morphProperty(GeoVectorProperty* BaseGeoProp,
-                              GeoVectorProperty* TargetGeoProp,
-                              GeoVectorProperty* ResultGeoProp,
-                              Real32 Weight);
-
-    template<class TypeT>
-    static void morphNormProperty(GeoVectorProperty* BaseGeoProp,
-                                  GeoVectorProperty* TargetGeoProp,
-                                  GeoVectorProperty* ResultGeoProp,
-                                  Real32 Weight);
-
     GeoVectorProperty*   getWeights      (void) const;
     /*=========================  PROTECTED  ===============================*/
 

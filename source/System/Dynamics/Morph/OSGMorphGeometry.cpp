@@ -49,6 +49,7 @@
 #include "OSGTypedGeoVectorProperty.h"
 #include "OSGRenderAction.h"
 #include "OSGIntersectAction.h"
+#include "OSGGeoPropertyUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -202,60 +203,7 @@ void MorphGeometry::updateMorph(void)
             TargetProp = Target->getProperty(getMorphProperties(i));
 
             //Call the morph property with the given property format
-            switch(Prop->getFormat())
-            {
-                case GL_UNSIGNED_BYTE:
-                    morphProperty<GLubyte>(BaseProp,
-                                           TargetProp,
-                                           Prop,
-                                           Weight);
-                    break;
-                case GL_BYTE:
-                    morphProperty<GLbyte>(BaseProp,
-                                           TargetProp,
-                                           Prop,
-                                           Weight);
-                    break;
-                case GL_UNSIGNED_SHORT:
-                    morphProperty<GLushort>(BaseProp,
-                                           TargetProp,
-                                           Prop,
-                                           Weight);
-                    break;
-                case GL_SHORT:
-                    morphProperty<GLshort>(BaseProp,
-                                           TargetProp,
-                                           Prop,
-                                           Weight);
-                    break;
-#ifndef OSG_EMBEDED
-                case GL_FLOAT:
-                    morphProperty<GLfloat>(BaseProp,
-                                           TargetProp,
-                                           Prop,
-                                           Weight);
-                    break;
-#endif
-#ifdef OSG_EMBEDED
-                case GL_FIXED:
-                    morphProperty<GLfixed>(BaseProp,
-                                           TargetProp,
-                                           Prop,
-                                           Weight);
-                    break;
-#endif
-#ifndef OSG_EMBEDED
-                case GL_DOUBLE:
-                    morphProperty<GLdouble>(BaseProp,
-                                           TargetProp,
-                                           Prop,
-                                           Weight);
-                    break;
-#endif
-                default:
-                    SWARNING << "Property format " << Prop->getFormat() << " not supported" << std::endl;
-                    break;
-            }
+            morphGeoProperty(BaseProp, TargetProp, Prop, Weight);
         }
     }
 }
