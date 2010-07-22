@@ -100,7 +100,12 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawEnv *pEnv,
         GLfloat PointSizeRange[2];
         glGetFloatv(GL_POINT_SIZE_RANGE, PointSizeRange);
 
-		UInt32 Index;
+        //Sizes
+        if(getForcePerParticleSizing())
+        {
+            glPointSize(osgClamp<Real32>(PointSizeRange[0], System->getSize(0).x(), PointSizeRange[1]));
+        }
+        UInt32 Index;
 		glBegin(GL_POINTS);
 			if(isSorted)
 			{
@@ -114,11 +119,6 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawEnv *pEnv,
 			if(!SeparateColors)
 			{
 				glColor4fv(System->getColor(Index).getValuesRGBA());
-			}
-			//Sizes
-			if(!SeparateSizes && getForcePerParticleSizing())
-			{
-                glPointSize(osgClamp<Real32>(PointSizeRange[0], System->getSize(Index).x(), PointSizeRange[1]));
 			}
 			//Normals
 			if(!SeparateNormals)

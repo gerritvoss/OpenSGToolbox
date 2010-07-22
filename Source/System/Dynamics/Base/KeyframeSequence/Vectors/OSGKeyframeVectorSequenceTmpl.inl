@@ -430,7 +430,7 @@ bool KeyframeVectorSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
                            prevTime,
                            ReplacePolicy,
                            isCyclic,
-                           static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index],
+                           static_cast<StoredFieldType&>(*Result->getField())[Index],
                            Blend);
     }
 }
@@ -444,7 +444,7 @@ void KeyframeVectorSequenceTmpl<SequenceDesc>::zeroField(EditFieldHandlePtr Resu
     }
     else
     {
-        zeroField(static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index]);
+        zeroField(static_cast<StoredFieldType&>(*Result->getField())[Index]);
     }
 }
 
@@ -770,6 +770,127 @@ void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec4sDescBase>::insertKeyf
 }
 
 /************************** Real32  ********************/
+/************************** Vec1f  ********************/
+template<> inline 
+bool KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::interpolate(UInt32 Type,
+                         Real32 time,
+                         Real32 prevTime,
+                         UInt32 ReplacePolicy,
+                         bool isCyclic,
+                         EditFieldHandlePtr Result,
+                         UInt32 Index,
+                         Real32 Blend)
+{
+    if(Result->getCardinality() == FieldType::SingleField)
+    {
+        assert(false);
+        return false;
+    }
+    else
+    {
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<StoredFieldType&>(*Result->getField())[Index],
+                           Blend);
+    }
+}
+
+template<> inline 
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::zeroField(StoredType& Result) const
+{
+    Result = Vec1f(0.0);
+}
+
+template<> inline 
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+{
+    if(Result->getCardinality() == FieldType::SingleField)
+    {
+        assert(false);
+    }
+    else
+    {
+        zeroField(static_cast<StoredFieldType&>(*Result->getField())[Index]);
+    }
+}
+
+template<> inline 
+KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::GenericType 
+      KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::getKeyValue (const UInt32       index ) const
+{
+    return GenericType(_field[index][0],0.0,0.0);
+}
+
+template<> inline 
+KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::GenericType 
+      KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::getKeyValue (const UInt32       index )
+{
+    return GenericType(_field[index][0],0.0,0.0);
+}
+
+template<> inline 
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::getKeyValue (GenericType &val,
+                              const UInt32       index )      
+{
+    val.setValues(_field[index][0],0.0,0.0); 
+}
+
+template<> inline 
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::getKeyValue (GenericType &val,
+                              const UInt32       index ) const
+{
+    val.setValues(_field[index][0],0.0,0.0); 
+}
+
+template<> inline 
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::setKeyframe (const GenericType &val,
+                                                              const Real32 &key,
+                                                              const UInt32       index )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field[index] = Vec1f(val[0]);
+    _mfInternalKeys[index] = key;
+}
+
+template<> inline 
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::addKeyframe (const GenericType &val,
+                                                              const Real32 &key   )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field.push_back(Vec1f(val[0]));
+    _mfInternalKeys.push_back(key);
+}
+
+template<> inline 
+void KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase>::insertKeyframe (const GenericType &val,
+                                                              const Real32 &key,
+                                                              const UInt32       index )
+{
+    if(_field.size() < index)
+    {
+        assert(false && "Index Out of bounds.");
+    }
+    else if(_field.size() == index)
+    {
+        push_back(val,key);
+    }
+    else
+    {
+        editMField(SequenceDataFieldMask, _field);
+        editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+        _field.insert(_field.begin() + index, Vec1f(val[0]));
+        this->_mfInternalKeys.insert(this->_mfInternalKeys.begin() + index, key);
+    }
+}
+
 /************************** Vec2f  ********************/
 template<> inline 
 KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec2fDescBase>::GenericType 

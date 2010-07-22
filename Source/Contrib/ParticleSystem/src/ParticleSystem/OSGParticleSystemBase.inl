@@ -429,6 +429,22 @@ StringToUInt32Map &ParticleSystemBase::editInternalAttributes(const UInt32 index
 }
 
 
+//! Get the value of the \a index element the ParticleSystem::_mfInternalIDs field.
+inline
+      UInt32  ParticleSystemBase::getInternalIDs(const UInt32 index) const
+{
+    return _mfInternalIDs[index];
+}
+
+inline
+UInt32 &ParticleSystemBase::editInternalIDs(const UInt32 index)
+{
+    editMField(InternalIDsFieldMask, _mfInternalIDs);
+
+    return _mfInternalIDs[index];
+}
+
+
 //! Get the value of the \a index element the ParticleSystem::_mfGenerators field.
 inline
 ParticleGenerator * ParticleSystemBase::getGenerators(const UInt32 index) const
@@ -526,6 +542,12 @@ void ParticleSystemBase::execSync (      ParticleSystemBase *pFrom,
 
     if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
         _mfInternalAttributes.syncWith(pFrom->_mfInternalAttributes,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (InternalIDsFieldMask & whichField))
+        _mfInternalIDs.syncWith(pFrom->_mfInternalIDs,
                                 syncMode,
                                 uiSyncInfo,
                                 oOffsets);

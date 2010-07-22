@@ -152,6 +152,16 @@
    A per-particle attribute map.  Used for storing user-defined data to particles.
 	</Field>
 	<Field
+		name="InternalIDs"
+		type="UInt32"
+        category="data"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	Unique ID for each particle (At least up to 4,294,967,296)
+	</Field>
+	<Field
 		name="MaxParticles"
 		type="UInt32"
         category="data"

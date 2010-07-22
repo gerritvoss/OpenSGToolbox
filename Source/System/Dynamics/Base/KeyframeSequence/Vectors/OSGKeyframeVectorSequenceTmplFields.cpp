@@ -73,6 +73,14 @@ DataType FieldTraits<KeyframeVectorSequenceVec4s  *>::_type(
 OSG_FIELDTRAITS_GETTYPE(KeyframeVectorSequenceVec2s  *)
 
 //Real32
+OSG_FIELDTRAITS_GETTYPE(KeyframeVectorSequenceVec1f  *)
+
+DataType FieldTraits<KeyframeVectorSequenceVec1f  *>::_type(
+    "KeyframeVectorSequenceVec1fPtr",
+    "KeyframeVectorSequencePtr");
+
+OSG_FIELDTRAITS_GETTYPE(KeyframeVectorSequenceVec2f  *)
+
 DataType FieldTraits<KeyframeVectorSequenceVec2f  *>::_type(
     "KeyframeVectorSequenceVec2fPtr",
     "KeyframeVectorSequencePtr");
@@ -91,8 +99,6 @@ DataType FieldTraits<KeyframeVectorSequenceVec4f  *>::_type(
     "KeyframeVectorSequenceVec4fPtr",
     "KeyframeVectorSequencePtr");
 
-
-OSG_FIELDTRAITS_GETTYPE(KeyframeVectorSequenceVec2f  *)
 
 //Fixed32
 DataType FieldTraits<KeyframeVectorSequenceVec2fx  *>::_type(
@@ -162,6 +168,13 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            0);
 
 //Real32
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeVectorSequenceVec1f *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeVectorSequenceVec1f *, 
+                           0);
+
 OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
                            KeyframeVectorSequenceVec2f *, 
                            0);

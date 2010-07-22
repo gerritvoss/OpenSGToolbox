@@ -102,20 +102,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleS
 
     virtual void fill(DrawableStatsAttachment *pStat);
 
-    // used for sorting particles
-    struct ParticleSortByViewPosition
-    {
-      public:
-
-        const ParticleSystem* _System;
-		Vec3f _CameraPos;
-        bool _SortByMinimum;
-        ParticleSortByViewPosition(const ParticleSystem* TheSystem, Pnt3f TheCameraPos, bool SortByMinimum);
-        ParticleSortByViewPosition();
-        bool operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight);
-    };
-    static ParticleSortByViewPosition TheSorter;
-
     static StatElemDesc<StatTimeElem    > statParticleSortTime;
 
     std::vector<UInt32> intersectLine(const Line& Ray, Real32 IntersectionDistance) const;
@@ -173,7 +159,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleS
 	void handleParticleKilled(const ParticleEventUnrecPtr e);
 	void handleParticleStolen(const ParticleEventUnrecPtr e);
 	
-	UInt32 comparisons;
+	void doRadixSort();
 
     /*==========================  PRIVATE  ================================*/
 
@@ -181,7 +167,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleS
 
     friend class FieldContainer;
     friend class ParticleSystemCoreBase;
-	friend struct ParticleSortByViewPosition;
 	friend class SystemUpdateListener;
 
     // prohibit default functions (move to 'public' if you need one)

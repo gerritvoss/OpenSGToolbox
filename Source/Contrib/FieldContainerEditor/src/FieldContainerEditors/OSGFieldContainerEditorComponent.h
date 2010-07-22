@@ -87,7 +87,7 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldContainerEditorComponent :
     virtual bool attachFieldContainer(FieldContainer* fc);
     virtual bool dettachFieldContainer(void);
 
-    void              setCommandManager(CommandManagerPtr manager);
+    virtual void              setCommandManager(CommandManagerPtr manager);
     CommandManagerPtr getCommandManager(void                     ) const;
 
     /*=========================  PROTECTED  ===============================*/

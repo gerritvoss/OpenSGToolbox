@@ -139,7 +139,8 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
     {
         Desc = fc->getFieldDescription(i);
         if(Desc != 0 &&
-           !Desc->isInternal())
+           !Desc->isInternal() &&
+           !Desc->getFieldType().getClass() != FieldType::ParentPtrField)
         {
             //Create the Editor
             TheEditor = FieldEditorFactory::the()->createDefaultEditor(fc, Desc->getFieldId(), _CmdManager);

@@ -461,6 +461,49 @@ OSG_GEN_CONTAINERPTR(KeyframeVectorSequenceVec4s);
     \hideinhierarchy
 */
 
+struct KeyframeVectorSequenceVec1fDescBase : public KeyframeVectorSequenceTmplDescBase
+{    
+
+    static const Char8 *getTypeName (void) { return "KeyframeVectorSequenceVec1f";  }
+
+    typedef Vec1f             StoredType;
+    typedef MFVec1f           StoredFieldType;
+    typedef SFReal32           SingleFieldType;
+
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, Real32, StoredType& , bool )> ConcreteInterpFunction;
+    typedef std::map<UInt32, ConcreteInterpFunction> InterpolationFuncMap;
+
+    typedef boost::function<bool (Real32, StoredType& , bool)> InterpReplaceFunction;
+    typedef boost::function<bool (InterpReplaceFunction,
+                                  Real32,
+                                  Real32,
+                                  bool,
+                                  StoredType& Result,
+                                  Real32)> ConcreteReplaceFunction;
+
+    typedef std::map<UInt32, ConcreteReplaceFunction> ReplaceFuncMap;
+
+    static InterpolationFuncMap _interpolationFuncs;
+    static ReplaceFuncMap _replacementFuncs;
+
+    static InterpolationFuncMap &getInterpolationFuncMap(void) { return _interpolationFuncs;}
+    static ReplaceFuncMap &getReplacementFuncMap(void) { return _replacementFuncs;}
+
+    static void initMethod(InitPhase ePhase);
+
+};
+
+#if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
+
+typedef KeyframeVectorSequenceTmpl<KeyframeVectorSequenceVec1fDescBase> KeyframeVectorSequenceVec1f;
+
+OSG_GEN_CONTAINERPTR(KeyframeVectorSequenceVec1f);
+
+#endif
+/*! \brief
+    \hideinhierarchy
+*/
+
 struct KeyframeVectorSequenceVec2fDescBase : public KeyframeVectorSequenceTmplDescBase
 {    
 

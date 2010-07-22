@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ParticleTrailGenerator"
+	parent="Node"
+    library="ContribParticleTrail"
+    pointerfieldtypes="both"
+	structure="abstract"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
+>
+	<Field
+		name="TrailLength"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="3.0f"
+		access="public"
+	>
+	This value determines the length the particle trails have. Determined by
+	the LengthMethod field (based on time -or- the number of points in the trail)
+	NOTE: If NUM_POINTS is selected as the method for determining trail length,
+	then the value of TrailLength will be rounded down to determine the number 
+	of points to include in the trail.
+	</Field>
+	<Field
+		name="TrailLengthMethod"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="ParticleTrailGenerator::TIME"
+	>
+	Method to use to determine the length of the trail.
+	TIME - Trail points from the last n seconds used, where n is the value 
+		of the TrailLength field
+	NUM_POINTS - The last n trail points are used in the trail, where n is 
+		the value of the TrailLength field, rounded down.
+	</Field>
+	<Field
+		name="TrailResolution"
+		type="Real64"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="3.0f"
+		access="public"
+	>
+	This value determines the spacing between subsequent trail points.  The 
+	method (time or distance) used for spacing is determined by the 
+	TrailResolutionMethod field.
+	</Field>
+	<Field
+		name="TrailResolutionMethod"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="ParticleTrailGenerator::TIME_SPACING"
+	>
+	The method used to calculated the spacing between trail points
+	TIME_SPACING - trail points spacing determined by time since last trail point
+	DISTANCE_SPACING - trail point spacing determined by distance from last trail point
+	</Field>
+</FieldContainer>

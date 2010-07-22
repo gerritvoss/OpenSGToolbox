@@ -43,6 +43,7 @@ OSG_ADD_DIRECTORY("Animation/Animators")
 OSG_ADD_DIRECTORY("Animation/Events")
 OSG_ADD_DIRECTORY("SkeletalAnimation")
 
+OSG_ADD_DIRECTORY("Morph")
 ##############################################################################
 # setup build
 ##############################################################################

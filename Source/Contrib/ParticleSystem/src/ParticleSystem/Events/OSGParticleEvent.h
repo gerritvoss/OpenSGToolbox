@@ -91,7 +91,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEvent : public ParticleEventB
                                            const Vec3f& Velocity,
                                            const Vec3f& SecVelocity,
                                            const Vec3f& Acceleration,
-                                           const StringToUInt32Map& Attributes);
+                                           const StringToUInt32Map& Attributes,
+										   UInt32 ID);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
