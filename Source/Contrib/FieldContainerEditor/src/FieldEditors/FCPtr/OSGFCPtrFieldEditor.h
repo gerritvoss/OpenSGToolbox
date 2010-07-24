@@ -46,6 +46,7 @@
 #include "OSGTextField.h"
 #include "OSGMenuButton.h"
 #include "OSGDialogWindowListener.h"
+#include "OSGFCPtrEditorStore.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,6 +85,9 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
 
     virtual const std::vector<const DataType*>& getEditableTypes(void) const;
 
+    FCPtrEditorStorePtr getFCStore(void) const;
+    void setFCStore(FCPtrEditorStorePtr store);
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -119,6 +123,9 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    virtual bool internalAttachField (FieldContainer* fc, UInt32 fieldId, UInt32 index);
+    virtual bool internalDettachField(void);
+
     virtual void internalFieldChanged (void);
     virtual void internalStartEditing (void);
     virtual void internalStopEditing  (void);
@@ -195,6 +202,9 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
     FindContainerDialogListener _FindContainerDialogListener;
 
     void handleFindContainerClosed(const DialogWindowEventUnrecPtr e);
+
+
+    FCPtrEditorStorePtr _FindFCStore;
     /*==========================  PRIVATE  ================================*/
 
   private:

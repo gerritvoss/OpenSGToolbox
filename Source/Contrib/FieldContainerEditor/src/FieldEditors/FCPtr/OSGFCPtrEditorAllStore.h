@@ -65,6 +65,10 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrEditorAllStore : public FC
     const FieldContainerType* getTypeToStore(void) const;
     void setTypeToStore(const FieldContainerType* type);
 
+    static FCPtrEditorAllStorePtr create(const FieldContainerType* type,
+                                        const FieldContianerVector& Exclude = FieldContianerVector(),
+                                        const FieldContianerTypeVector& ExcludeTypes = FieldContianerTypeVector());
+
   protected:
     FCPtrEditorAllStore(const FieldContainerType* type,
                         const FieldContianerVector& Exclude = FieldContianerVector(),

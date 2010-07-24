@@ -15,6 +15,7 @@ SET(${PROJECT_NAME}_DEP_OSG_LIB OSGDrawable
                                 OSGBase
                                 OSGUtil
                                 OSGTBFileIO
+                                OSGFileIO
                                 OSGState
                                 OSGContribUserInterface)
 

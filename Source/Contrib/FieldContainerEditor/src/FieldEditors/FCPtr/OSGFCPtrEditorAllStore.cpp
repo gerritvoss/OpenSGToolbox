@@ -61,6 +61,12 @@ A FCPtrEditorAllStore.
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+FCPtrEditorAllStorePtr FCPtrEditorAllStore::create(const FieldContainerType* type,
+                                                   const FieldContianerVector& Exclude,
+                                                   const FieldContianerTypeVector& ExcludeTypes)
+{
+    return FCPtrEditorAllStorePtr(new FCPtrEditorAllStore(type, Exclude, ExcludeTypes));
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -85,7 +91,10 @@ std::vector<FieldContainer*> FCPtrEditorAllStore::getList(void) const
 #else
         Cont = *FCStoreIter;
 #endif
-        if(Cont->getType().isDerivedFrom(*_TypeToStore) && !isExcluded(Cont))
+        if(Cont->getType().isDerivedFrom(*_TypeToStore) &&  //Container is derived from type
+           !isExcluded(Cont) && //Container is not specifically excluded
+           Cont != Cont->getType().getPrototype()  //Container is not a prototype
+           )
         {
             Result.push_back(Cont);
         }

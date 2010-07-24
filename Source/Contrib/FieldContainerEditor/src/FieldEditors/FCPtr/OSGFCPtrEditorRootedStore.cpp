@@ -43,6 +43,7 @@
 
 #include "OSGFCPtrEditorRootedStore.h"
 #include "OSGContainerUtils.h"
+#include "OSGContainerGatherUtils.h"
 
 OSG_USING_NAMESPACE
 
@@ -68,13 +69,25 @@ A FCPtrEditorRootedStore.
 
 std::vector<FieldContainer*> FCPtrEditorRootedStore::getList(void) const
 {
-    std::set<FieldContainer*> AllContainers =
-        getAllDependantFCs(std::set<FieldContainer*>(_Roots.begin(),_Roots.end()),
-                           std::set<FieldContainer*>(_ExcludedPtrs.begin(),_ExcludedPtrs.end()),
+    std::set<FieldContainerUnrecPtr> SearchRoots;
+    for(std::vector<FieldContainer*>::const_iterator Itor(_Roots.begin()) ; Itor!=_Roots.end() ; ++Itor)
+    {
+        SearchRoots.insert(*Itor);
+    }
+
+    std::set<FieldContainerUnrecPtr> Exclude;
+    for(std::vector<FieldContainer*>::const_iterator Itor(_ExcludedPtrs.begin()) ; Itor!=_ExcludedPtrs.end() ; ++Itor)
+    {
+        Exclude.insert(*Itor);
+    }
+
+    std::set<FieldContainerUnrecPtr> AllContainers =
+        getAllDependantFCs(SearchRoots,
+                           Exclude,
                            _ExcludedTypes);
 
     std::vector<FieldContainer*> Result;
-    for(std::set<FieldContainer*>::iterator StoreItor(AllContainers.begin());
+    for(std::set<FieldContainerUnrecPtr>::iterator StoreItor(AllContainers.begin());
         StoreItor != AllContainers.end();
         ++StoreItor)
     {

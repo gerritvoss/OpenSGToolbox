@@ -142,6 +142,7 @@ bool MaterialFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
 
     //Attach the material
     _MaterialGeometry->setMaterial(dynamic_cast<Material*>(fc));
+    commitChanges();
 	_MaterialViewport->showAll();
 
     return true;
