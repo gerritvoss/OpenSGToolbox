@@ -59,21 +59,26 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrEditorRootedStore : public
     virtual ~FCPtrEditorRootedStore(void);
 
     void operator =(const FCPtrEditorRootedStore& source);
+    virtual FCPtrEditorStorePtr clone(void) const;
 
-    virtual std::vector<FieldContainer*> getList(void) const;
-
-    const FieldContainerType* getTypeToStore(void) const;
-    void setTypeToStore(const FieldContainerType* type);
+    virtual const FieldContainerType* getTypeToStore(void) const;
+    virtual void setTypeToStore(const FieldContainerType* type);
 
     const FieldContianerVector& getRoots(void) const;
-    void setTypeToStore(const FieldContianerVector& roots);
+    void setRoots(const FieldContianerVector& roots);
+
+    static FCPtrEditorRootedStorePtr create(void);
   protected:
+    FCPtrEditorRootedStore(void);
+
     FCPtrEditorRootedStore(const FieldContainerType* type,
                            const FieldContianerVector& roots,
                         const FieldContianerVector& Exclude = FieldContianerVector(),
                         const FieldContianerTypeVector& ExcludeTypes = FieldContianerTypeVector());
 
     FCPtrEditorRootedStore(const FCPtrEditorRootedStore& source);
+
+    virtual void updateList(void);
 
     const FieldContainerType* _TypeToStore;
     FieldContianerVector _Roots;

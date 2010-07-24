@@ -38,13 +38,13 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-const FCPtrEditorListStore::FieldContianerVector& FCPtrEditorListStore::getTypeToStore(void) const
+const FCPtrEditorListStore::FieldContianerVector& FCPtrEditorListStore::getStore(void) const
 {
     return _Store;
 }
 
 inline
-void FCPtrEditorListStore::setTypeToStore(const FieldContianerVector& store)
+void FCPtrEditorListStore::setStore(const FieldContianerVector& store)
 {
     _Store = store;
 }

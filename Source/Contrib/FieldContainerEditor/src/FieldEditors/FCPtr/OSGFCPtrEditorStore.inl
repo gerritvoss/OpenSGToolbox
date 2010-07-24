@@ -55,6 +55,12 @@ void FCPtrEditorStore::removeExclude(FieldContainer* ptr)
 }
 
 inline
+const FCPtrEditorStore::FieldContianerVector& FCPtrEditorStore::getList(void) const
+{
+    return _Store;
+}
+
+inline
 void FCPtrEditorStore::removeExclude(UInt32 index)
 {
     if(index < getExcludedTypeSize())
@@ -62,6 +68,7 @@ void FCPtrEditorStore::removeExclude(UInt32 index)
         FieldContianerVector::iterator EraseItor(_ExcludedPtrs.begin());
         EraseItor = EraseItor + index;
         _ExcludedPtrs.erase(EraseItor);
+        updateList();
     }
 }
 
@@ -81,6 +88,7 @@ inline
 void FCPtrEditorStore::addExcludeType(const FieldContainerType* type)
 {
     _ExcludedTypes.push_back(type);
+    updateList();
 }
 
 inline
@@ -91,6 +99,7 @@ void FCPtrEditorStore::removeExcludeType(const FieldContainerType* type)
     if(EraseItor != _ExcludedTypes.end())
     {
         _ExcludedTypes.erase(EraseItor);
+        updateList();
     }
 }
 
@@ -102,6 +111,7 @@ void FCPtrEditorStore::removeExcludeType(UInt32 index)
         FieldContianerTypeVector::iterator EraseItor(_ExcludedTypes.begin());
         EraseItor = EraseItor + index;
         _ExcludedTypes.erase(EraseItor);
+        updateList();
     }
 }
 

@@ -60,21 +60,27 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrEditorAllStore : public FC
 
     void operator =(const FCPtrEditorAllStore& source);
 
-    virtual std::vector<FieldContainer*> getList(void) const;
+    virtual FCPtrEditorStorePtr clone(void) const;
 
-    const FieldContainerType* getTypeToStore(void) const;
-    void setTypeToStore(const FieldContainerType* type);
+    virtual const FieldContainerType* getTypeToStore(void) const;
+    virtual void setTypeToStore(const FieldContainerType* type);
 
     static FCPtrEditorAllStorePtr create(const FieldContainerType* type,
                                         const FieldContianerVector& Exclude = FieldContianerVector(),
                                         const FieldContianerTypeVector& ExcludeTypes = FieldContianerTypeVector());
 
+    static FCPtrEditorAllStorePtr create(void);
+
   protected:
+    FCPtrEditorAllStore(void);
+
     FCPtrEditorAllStore(const FieldContainerType* type,
                         const FieldContianerVector& Exclude = FieldContianerVector(),
                         const FieldContianerTypeVector& ExcludeTypes = FieldContianerTypeVector());
 
     FCPtrEditorAllStore(const FCPtrEditorAllStore& source);
+
+    virtual void updateList(void);
 
     const FieldContainerType* _TypeToStore;
 };

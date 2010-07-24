@@ -88,6 +88,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
     FCPtrEditorStorePtr getFCStore(void) const;
     void setFCStore(FCPtrEditorStorePtr store);
 
+    static FCPtrEditorStorePtr getDefaultFindFCStorePrototype(void);
+    static void setDefaultFindFCStorePrototype(FCPtrEditorStorePtr fcStore);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -205,6 +207,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
 
 
     FCPtrEditorStorePtr _FindFCStore;
+
+    static FCPtrEditorStorePtr _DefaultFindFCStorePrototype;
     /*==========================  PRIVATE  ================================*/
 
   private:

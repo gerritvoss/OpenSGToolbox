@@ -63,12 +63,28 @@ A FCPtrEditorRootedStore.
  *                           Class methods                                 *
 \***************************************************************************/
 
+FCPtrEditorRootedStorePtr FCPtrEditorRootedStore::create(void)
+{
+    return FCPtrEditorRootedStorePtr(new FCPtrEditorRootedStore());
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-std::vector<FieldContainer*> FCPtrEditorRootedStore::getList(void) const
+FCPtrEditorStorePtr FCPtrEditorRootedStore::clone(void) const
 {
+    return FCPtrEditorStorePtr(new FCPtrEditorRootedStore(*this));
+}
+
+void FCPtrEditorRootedStore::updateList(void)
+{
+    _Store.clear();
+    if(_TypeToStore == NULL || _Roots.empty())
+    {
+        return;
+    }
+
     std::set<FieldContainerUnrecPtr> SearchRoots;
     for(std::vector<FieldContainer*>::const_iterator Itor(_Roots.begin()) ; Itor!=_Roots.end() ; ++Itor)
     {
@@ -86,18 +102,15 @@ std::vector<FieldContainer*> FCPtrEditorRootedStore::getList(void) const
                            Exclude,
                            _ExcludedTypes);
 
-    std::vector<FieldContainer*> Result;
     for(std::set<FieldContainerUnrecPtr>::iterator StoreItor(AllContainers.begin());
         StoreItor != AllContainers.end();
         ++StoreItor)
     {
         if((*StoreItor)->getType().isDerivedFrom(*_TypeToStore))
         {
-            Result.push_back(*StoreItor);
+            _Store.push_back(*StoreItor);
         }
     }
-
-    return Result;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -105,11 +118,17 @@ std::vector<FieldContainer*> FCPtrEditorRootedStore::getList(void) const
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
+FCPtrEditorRootedStore::FCPtrEditorRootedStore(void) :
+    Inherited(),
+    _TypeToStore(NULL)
+{
+}
+
 FCPtrEditorRootedStore::FCPtrEditorRootedStore(const FieldContainerType* type,
                                                const FieldContianerVector& roots,
                                                const FieldContianerVector& Exclude,
                                                const FieldContianerTypeVector& ExcludeTypes) :
-    Inherited(Exclude,ExcludeTypes),
+    Inherited(FieldContianerVector(),Exclude,ExcludeTypes),
     _TypeToStore(type),
     _Roots(roots)
 {

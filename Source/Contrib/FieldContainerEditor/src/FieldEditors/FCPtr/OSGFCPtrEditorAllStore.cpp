@@ -68,24 +68,37 @@ FCPtrEditorAllStorePtr FCPtrEditorAllStore::create(const FieldContainerType* typ
     return FCPtrEditorAllStorePtr(new FCPtrEditorAllStore(type, Exclude, ExcludeTypes));
 }
 
+FCPtrEditorAllStorePtr FCPtrEditorAllStore::create(void)
+{
+    return FCPtrEditorAllStorePtr(new FCPtrEditorAllStore());
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-std::vector<FieldContainer*> FCPtrEditorAllStore::getList(void) const
+FCPtrEditorStorePtr FCPtrEditorAllStore::clone(void) const
 {
-    std::vector<FieldContainer*> Result;
+    return FCPtrEditorStorePtr(new FCPtrEditorAllStore(*this));
+}
 
-   const FieldContainerFactoryBase::ContainerStore &FCStore(FieldContainerFactory::the()->getFieldContainerStore () );
+void FCPtrEditorAllStore::updateList(void)
+{
+    _Store.clear();
+    if(_TypeToStore == NULL)
+    {
+        return;
+    }
 
-   FieldContainerFactoryBase::ContainerStore::const_iterator FCStoreIter;
-   FieldContainerFactoryBase::ContainerPtr Cont;
-   for(FCStoreIter = FCStore.begin() ; FCStoreIter != FCStore.end() ; ++FCStoreIter)
-   {
-       if(*FCStoreIter == NULL)
-       {
-           continue;
-       }
+    const FieldContainerFactoryBase::ContainerStore &FCStore(FieldContainerFactory::the()->getFieldContainerStore () );
+
+    FieldContainerFactoryBase::ContainerStore::const_iterator FCStoreIter;
+    FieldContainerFactoryBase::ContainerPtr Cont;
+    for(FCStoreIter = FCStore.begin() ; FCStoreIter != FCStore.end() ; ++FCStoreIter)
+    {
+        if(*FCStoreIter == NULL)
+        {
+            continue;
+        }
 #ifdef OSG_MT_CPTR_ASPECT
         Cont = (*FCStoreIter)->getPtr();
 #else
@@ -94,13 +107,11 @@ std::vector<FieldContainer*> FCPtrEditorAllStore::getList(void) const
         if(Cont->getType().isDerivedFrom(*_TypeToStore) &&  //Container is derived from type
            !isExcluded(Cont) && //Container is not specifically excluded
            Cont != Cont->getType().getPrototype()  //Container is not a prototype
-           )
+          )
         {
-            Result.push_back(Cont);
+            _Store.push_back(Cont);
         }
-   }
-
-    return Result;
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -108,18 +119,27 @@ std::vector<FieldContainer*> FCPtrEditorAllStore::getList(void) const
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
+
+FCPtrEditorAllStore::FCPtrEditorAllStore(void) :
+    Inherited(),
+    _TypeToStore(NULL)
+{
+}
+
 FCPtrEditorAllStore::FCPtrEditorAllStore(const FieldContainerType* type,
                                          const FieldContianerVector& Exclude,
                                          const FieldContianerTypeVector& ExcludeTypes) :
-    Inherited(Exclude,ExcludeTypes),
+    Inherited(FieldContianerVector(),Exclude,ExcludeTypes),
     _TypeToStore(type)
 {
+    updateList();
 }
 
 FCPtrEditorAllStore::FCPtrEditorAllStore(const FCPtrEditorAllStore& source) :
     Inherited(source),
     _TypeToStore(source._TypeToStore)
 {
+    updateList();
 }
 
 

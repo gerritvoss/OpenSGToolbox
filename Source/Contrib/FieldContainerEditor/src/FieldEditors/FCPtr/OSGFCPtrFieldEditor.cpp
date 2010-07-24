@@ -89,6 +89,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
  
 std::vector<const DataType*> FCPtrFieldEditor::_EditableTypes = std::vector<const DataType*>();
+FCPtrEditorStorePtr FCPtrFieldEditor::_DefaultFindFCStorePrototype = FCPtrEditorAllStore::create();
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -120,6 +121,15 @@ void FCPtrFieldEditor::initMethod(InitPhase ePhase)
     }
 }
 
+FCPtrEditorStorePtr FCPtrFieldEditor::getDefaultFindFCStorePrototype(void)
+{
+    return _DefaultFindFCStorePrototype;
+}
+
+void FCPtrFieldEditor::setDefaultFindFCStorePrototype(FCPtrEditorStorePtr fcStore)
+{
+    _DefaultFindFCStorePrototype = fcStore;
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -129,7 +139,7 @@ bool FCPtrFieldEditor::internalAttachField (FieldContainer* fc, UInt32 fieldId, 
     if(!_FindFCStore)
     {
         const FieldContainerType* ThePtrType(getFieldContainerTypeFromPtrType(fc->getFieldDescription(fieldId)->getFieldType().getContentType()));
-        _FindFCStore = FCPtrEditorAllStore::create(ThePtrType);
+        _FindFCStore = _DefaultFindFCStorePrototype->clone();
     }
     return true;
 }
@@ -235,6 +245,8 @@ void FCPtrFieldEditor::onCreate(const FCPtrFieldEditor *Id)
         FCCommandsListModel->pushBack(boost::any(std::string("Find ...")));
 
         _EditingMenuButton = MenuButton::create();
+        //_EditingMenuButton =
+            //dynamic_pointer_cast<Button>(dynamic_cast<ComboBox*>(ComboBox::getClassType().getPrototype())->getExpandButton()->shallowCopy());
         _EditingMenuButton->setModel(FCCommandsListModel);
         _EditingMenuButton->addMenuActionListener(&_MenuButtonFieldListener);
         pushToChildren(_EditingMenuButton);
@@ -297,6 +309,7 @@ void FCPtrFieldEditor::handleMenuSelected(const ActionEventUnrecPtr e)
                 }
 
                 std::vector<std::string> inputValues;
+                _FindFCStore->setTypeToStore(ThePtrType);
                 std::vector<FieldContainer*> fcStore(_FindFCStore->getList());
 
                 std::string value;

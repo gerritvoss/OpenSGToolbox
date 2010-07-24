@@ -63,7 +63,13 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrEditorStore
 
     void operator =(const FCPtrEditorStore& source);
 
-    virtual std::vector<FieldContainer*> getList(void) const = 0;
+    virtual FCPtrEditorStorePtr clone(void) const = 0;
+
+    const FieldContianerVector& getList(void) const;
+
+    virtual const FieldContainerType* getTypeToStore(void) const;
+    virtual void setTypeToStore(const FieldContainerType* type);
+
     virtual bool isExcluded(FieldContainer* ptr) const;
 
     void addExclude(FieldContainer* ptr);
@@ -79,11 +85,15 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrEditorStore
     UInt32 getExcludedTypeSize(void) const;
 
   protected:
-    FCPtrEditorStore(const FieldContianerVector& Exclude = FieldContianerVector(),
+    virtual void updateList(void) = 0;
+
+    FCPtrEditorStore(const FieldContianerVector& Store = FieldContianerVector(),
+                     const FieldContianerVector& Exclude = FieldContianerVector(),
                      const FieldContianerTypeVector& ExcludeTypes = FieldContianerTypeVector());
 
     FCPtrEditorStore(const FCPtrEditorStore& source);
 
+    FieldContianerVector _Store;
     FieldContianerVector _ExcludedPtrs;
     FieldContianerTypeVector _ExcludedTypes;
 
