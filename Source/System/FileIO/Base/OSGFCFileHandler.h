@@ -54,7 +54,7 @@ class OSG_TBFILEIO_DLLMAPPING FCFileHandlerBase
      /*==========================  PUBLIC  =================================*/
    public:
  
-     typedef std::set<FieldContainerUnrecPtr> FCPtrStore;
+     typedef FCFileType::FCPtrStore FCPtrStore;
  
      /*---------------------------------------------------------------------*/
      virtual ~FCFileHandlerBase(void);

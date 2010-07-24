@@ -7,7 +7,24 @@
 
 OSG_BEGIN_NAMESPACE
 
-std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers, const std::set<FieldContainerUnrecPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes)
+std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers,
+                                                    const std::set<FieldContainerUnrecPtr>& IgnoreContainers,
+                                                    const std::vector<const FieldContainerType*>& IgnoreTypes)
+{
+    std::vector<UInt32> IgnoreTypeIds;
+    for(UInt32 i = 0; i < IgnoreTypes.size(); ++i)
+    {
+        IgnoreTypeIds.push_back(IgnoreTypes[i]->getId());
+    }
+    
+    return getAllDependantFCs(Containers,
+                              IgnoreContainers,
+                              IgnoreTypeIds);
+}
+
+std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers,
+                                                    const std::set<FieldContainerUnrecPtr>& IgnoreContainers,
+                                                    const std::vector<UInt32>& IgnoreTypes)
 {
     std::set<FieldContainerUnrecPtr> AllContainers(Containers);
     std::set<FieldContainerUnrecPtr> NewIgnores(IgnoreContainers);

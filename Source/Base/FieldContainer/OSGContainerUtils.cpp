@@ -155,6 +155,12 @@ FieldContainerUnrecPtr getFieldContainer(const std::string &namestring)
    return NULL;
 }
 
+const FieldContainerType* getFieldContainerTypeFromPtrType(const DataType& type)
+{
+    std::string FCPtrTypeName = type.getName().substr(0,type.getName().size()-3);
+    return FieldContainerFactory::the()->findType(FCPtrTypeName.c_str());
+}
+
 bool isFieldContentDerivedFrom(const FieldType &TheFieldType, const FieldContainerType* TheFCType)
 {
     if(TheFieldType.isPtrField())

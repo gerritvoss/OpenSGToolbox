@@ -822,9 +822,6 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             }
             else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
             {
-            }
-            else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
-            {
                 FieldValue.clear();
                 //Path RootPath = boost::filesystem::system_complete(RootPath);
                 BoostPath FilePath = boost::filesystem::system_complete(static_cast<const SFBoostPath*>(TheField)->getValue());
