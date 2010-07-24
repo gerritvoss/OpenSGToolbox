@@ -53,6 +53,7 @@
 #include "OSGListComponentGenerator.h"
 #include "OSGListModel.h"
 #include "OSGScrollBar.h"
+#include "OSGDefaultListSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -939,7 +940,7 @@ void List::scrollToSelection(void)
     }
 }
 
-ComponentRefPtr List::getComponentAtIndex(const UInt32& Index)
+ComponentRefPtr List::getComponentAtIndex(const UInt32& Index) const
 {
     if(getModel() != NULL && Index < getModel()->getSize())
     {
@@ -951,7 +952,7 @@ ComponentRefPtr List::getComponentAtIndex(const UInt32& Index)
     }
 }
 
-boost::any List::getValueAtIndex(const UInt32& Index)
+boost::any List::getValueAtIndex(const UInt32& Index) const
 {
     if(getModel() != NULL && Index < getModel()->getSize())
     {
@@ -966,6 +967,20 @@ boost::any List::getValueAtIndex(const UInt32& Index)
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+void List::onCreate(const List * Id)
+{
+	Inherited::onCreate(Id);
+
+    if(Id != NULL)
+    {
+        ListSelectionModelPtr TheListSelectionModel(new DefaultListSelectionModel());
+        setSelectionModel(TheListSelectionModel);
+    }
+}
+
+void List::onDestroy()
+{
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
