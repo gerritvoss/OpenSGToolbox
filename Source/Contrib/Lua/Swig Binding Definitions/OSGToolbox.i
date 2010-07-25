@@ -502,7 +502,7 @@ namespace OSG {
 //#else
                          KEY_MODIFIER_COMMAND     = KEY_MODIFIER_CONTROL
 //#endif
-         };
+                            };
          enum Key
           {
              KEY_UNKNOWN = 0,
@@ -706,11 +706,11 @@ namespace OSG {
         ~ParticleSystemRefPtr(void); 
         ParticleSystem *operator->(void);
     };
-    %extend ParticleSystemManagerRefPtr
+    %extend ParticleSystemRefPtr
     {
-        static ParticleSystemManagerRefPtr dcast(const FieldContainerRefPtr oIn)
+        static ParticleSystemRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            return OSG::dynamic_pointer_cast<OSG::ParticleSystemManager>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::ParticleSystem>(oIn);
         }
     };
     
