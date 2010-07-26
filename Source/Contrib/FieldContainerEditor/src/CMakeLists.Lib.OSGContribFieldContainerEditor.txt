@@ -41,6 +41,8 @@ OSG_STORE_PROJECT_DEPENDENCIES()
 # collect sources
 ##############################################################################
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/AttachmentEditors")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/MultiFieldEditors")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldContainerEditors")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Numbers")

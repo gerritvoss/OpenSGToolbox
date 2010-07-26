@@ -36,23 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGGENERICFIELDCONTAINEREDITOR_H_
-#define _OSGGENERICFIELDCONTAINEREDITOR_H_
+#ifndef _OSGGENERICNAMEATTACHMENTEDITOR_H_
+#define _OSGGENERICNAMEATTACHMENTEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGGenericFieldContainerEditorBase.h"
-#include "OSGGenericNameAttachmentEditor.h"
-#include "OSGLabel.h"
+#include "OSGGenericNameAttachmentEditorBase.h"
+#include "OSGCommandManager.h"
+#include "OSGTextField.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief GenericFieldContainerEditor class. See \ref
-           PageContribFieldContainerEditorGenericFieldContainerEditor for a description.
+/*! \brief GenericNameAttachmentEditor class. See \ref
+           PageContribFieldContainerEditorGenericNameAttachmentEditor for a description.
 */
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldContainerEditor : public GenericFieldContainerEditorBase
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericNameAttachmentEditor : public GenericNameAttachmentEditorBase
 {
   protected:
 
@@ -60,8 +60,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldContainerEditor : p
 
   public:
 
-    typedef GenericFieldContainerEditorBase Inherited;
-    typedef GenericFieldContainerEditor     Self;
+    typedef GenericNameAttachmentEditorBase Inherited;
+    typedef GenericNameAttachmentEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -80,53 +80,39 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldContainerEditor : p
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual const std::vector<const FieldContainerType*>& getEditableTypes(void) const;
 
-    virtual bool attachFieldContainer(FieldContainer* fc);
-    virtual bool dettachFieldContainer(void);
+    virtual void startEditing (void);
+    virtual void stopEditing  (void);
+    virtual void cancelEditing(void);
+    virtual bool isEditing    (void) const;
 
-	virtual Vec2f getContentRequestedSize(void) const;
+    bool isTypeEditable(const DataType& type) const;
 
-    //Returns the preferred size of the viewport for a view component.
-    virtual Vec2f getPreferredScrollableViewportSize(void);
+    bool attachContainer (FieldContainer* fc);
+    bool dettachContainer(void);
+    void updateLayout(void);
 
-    //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
-    virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-
-    //Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
-    virtual bool getScrollableTracksViewportHeight(void);
-
-    //Return true if a viewport should always force the width of this Scrollable to match the width of the viewport.
-    virtual bool getScrollableTracksViewportWidth(void);
-
-    //Return true if a viewport should always force the height of this Scrollable to be at at least the height of the viewport.
-    virtual bool getScrollableHeightMinTracksViewport(void);
-
-    //Return true if a viewport should always force the width of this Scrollable to be at at least the width of the viewport.
-    virtual bool getScrollableWidthMinTracksViewport(void);
-
-    //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
-    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-    
+    void              setCommandManager(CommandManagerPtr manager);
+    CommandManagerPtr getCommandManager(void                     ) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in GenericFieldContainerEditorBase.
+    // Variables should all be in GenericNameAttachmentEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    GenericFieldContainerEditor(void);
-    GenericFieldContainerEditor(const GenericFieldContainerEditor &source);
+    GenericNameAttachmentEditor(void);
+    GenericNameAttachmentEditor(const GenericNameAttachmentEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GenericFieldContainerEditor(void);
+    virtual ~GenericNameAttachmentEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -139,32 +125,52 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldContainerEditor : p
 	/*---------------------------------------------------------------------*/
 	/*! \name                   Class Specific                             */
 	/*! \{                                                                 */
-	void onCreate(const GenericFieldContainerEditor *Id = NULL);
+	void onCreate(const GenericNameAttachmentEditor *Id = NULL);
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    void fieldChanged         (FieldContainer *fc, 
+                               ConstFieldMaskArg whichField);
 
-    static std::vector<const FieldContainerType*> _EditableTypes;
+    void attachFieldCallback (void);
+    void dettachFieldCallback(void);
 
-    LabelRefPtr _ContainerTypeLabel;
-    LabelRefPtr _ContainerIdLabel;
-    GenericNameAttachmentEditorRefPtr _GenericNameAttachmentEditor;
+    TextFieldRefPtr _EditingTextField;
+    std::string _InitialValue;
+    
+    class TextFieldListener : public FocusListener, public ActionListener, public KeyAdapter
+    {
+      public :
+           TextFieldListener(GenericNameAttachmentEditor * ptr);
+           virtual void focusGained    (const FocusEventUnrecPtr  e);
+           virtual void focusLost      (const FocusEventUnrecPtr  e);
+           virtual void actionPerformed(const ActionEventUnrecPtr e);
+           virtual void keyTyped       (const KeyEventUnrecPtr    e);
+
+      protected :
+        GenericNameAttachmentEditor *_GenericNameAttachmentEditor ;
+    };
+
+    TextFieldListener _TextFieldListener;
+
+    CommandManagerPtr _CmdManager;
+    bool              _isEditing;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class GenericFieldContainerEditorBase;
+    friend class GenericNameAttachmentEditorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const GenericFieldContainerEditor &source);
+    void operator =(const GenericNameAttachmentEditor &source);
 };
 
-typedef GenericFieldContainerEditor *GenericFieldContainerEditorP;
+typedef GenericNameAttachmentEditor *GenericNameAttachmentEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGGenericFieldContainerEditorBase.inl"
-#include "OSGGenericFieldContainerEditor.inl"
+#include "OSGGenericNameAttachmentEditorBase.inl"
+#include "OSGGenericNameAttachmentEditor.inl"
 
-#endif /* _OSGGENERICFIELDCONTAINEREDITOR_H_ */
+#endif /* _OSGGENERICNAMEATTACHMENTEDITOR_H_ */
