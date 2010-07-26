@@ -1,4 +1,5 @@
 %include <OSGBase.i>
+%include <lua/std_map.i>
 %module OSG
 %native(createFieldContainer) int createFieldContainer(lua_State*L);  // registers native_function() with SWIG
 %native(getFieldContainer) int getFieldContainer(lua_State*L);  // registers native_function() with SWIG
@@ -270,6 +271,12 @@
               OSG::Quaternion * resultptr = new OSG::Quaternion((const OSG::Quaternion &) static_cast<const OSG::SFQuaternion*>(TheFieldHandle->getField())->getValue());
               SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Quaternion,1); SWIG_arg++;
           }
+          //StringToUInt32Map
+          else if(FieldContentType == OSG::FieldTraits<OSG::StringToUInt32Map>::getType() )
+          {
+              OSG::StringToUInt32Map * resultptr = new OSG::StringToUInt32Map((const OSG::StringToUInt32Map &) static_cast<const OSG::SFStringToUInt32Map*>(TheFieldHandle->getField())->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,1); SWIG_arg++;
+          }
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
@@ -492,6 +499,12 @@
           {
               OSG::Quaternion * resultptr = new OSG::Quaternion((const OSG::Quaternion &) static_cast<const OSG::MFQuaternion*>(TheFieldHandle->getField())->operator[](arg3));
               SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Quaternion,1); SWIG_arg++;
+          }
+          //StringToUInt32Map
+          else if(FieldContentType == OSG::FieldTraits<OSG::StringToUInt32Map>::getType() )
+          {
+              OSG::StringToUInt32Map * resultptr = new OSG::StringToUInt32Map((const OSG::StringToUInt32Map &) static_cast<const OSG::MFStringToUInt32Map*>(TheFieldHandle->getField())->operator[](arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,1); SWIG_arg++;
           }
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
@@ -871,6 +884,17 @@
               }
               
                   static_cast<OSG::SFQuaternion*>(TheFieldHandle->getField())->setValue(static_cast<OSG::Quaternion const &>(*arg3));
+          }
+          //StringToUInt32Map
+          else if(FieldContentType == OSG::FieldTraits<OSG::StringToUInt32Map>::getType() )
+          {
+              OSG::StringToUInt32Map *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+                  return SWIG_arg;
+              }
+              
+                  static_cast<OSG::SFStringToUInt32Map*>(TheFieldHandle->getField())->setValue(static_cast<OSG::StringToUInt32Map const &>(*arg3));
           }
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
@@ -1258,6 +1282,17 @@
               
                   static_cast<OSG::MFQuaternion*>(TheFieldHandle->getField())->operator[](arg4) = (static_cast<OSG::Quaternion const &>(*arg3));
           }
+          //StringToUInt32Map
+          else if(FieldContentType == OSG::FieldTraits<OSG::StringToUInt32Map>::getType() )
+          {
+              OSG::StringToUInt32Map *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+                  return SWIG_arg;
+              }
+              
+                  static_cast<OSG::MFStringToUInt32Map*>(TheFieldHandle->getField())->operator[](arg4) = (static_cast<OSG::StringToUInt32Map const &>(*arg3));
+          }
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
@@ -1627,6 +1662,17 @@
               }
               
                   static_cast<OSG::MFQuaternion*>(TheFieldHandle->getField())->push_back(static_cast<OSG::Quaternion const &>(*arg3));
+          }
+          //StringToUInt32Map
+          else if(FieldContentType == OSG::FieldTraits<OSG::StringToUInt32Map>::getType() )
+          {
+              OSG::StringToUInt32Map *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+                  return SWIG_arg;
+              }
+              
+                  static_cast<OSG::MFStringToUInt32Map*>(TheFieldHandle->getField())->push_back(static_cast<OSG::StringToUInt32Map const &>(*arg3));
           }
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
@@ -2062,6 +2108,18 @@
               InsertItor += arg4;
                   static_cast<OSG::MFQuaternion*>(TheFieldHandle->getField())->insert(InsertItor, static_cast<OSG::Quaternion const &>(*arg3));
           }
+          //StringToUInt32Map
+          else if(FieldContentType == OSG::FieldTraits<OSG::StringToUInt32Map>::getType() )
+          {
+              OSG::StringToUInt32Map *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+                  return SWIG_arg;
+              }
+              OSG::MFStringToUInt32Map::iterator InsertItor(static_cast<OSG::MFStringToUInt32Map*>(TheFieldHandle->getField())->begin());
+              InsertItor += arg4;
+                  static_cast<OSG::MFStringToUInt32Map*>(TheFieldHandle->getField())->insert(InsertItor, static_cast<OSG::StringToUInt32Map const &>(*arg3));
+          }
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
@@ -2120,6 +2178,9 @@
           return SWIG_arg;
     }
 %}
+
+%template(StringToUInt32Map) std::map<std::string,OSG::UInt32>;
+%template(Int32ToStringMap) std::map<OSG::Int32, std::string>;
 
 namespace OSG {
 
@@ -2551,6 +2612,11 @@ namespace OSG {
               {
                       static_cast<OSG::MFQuaternion*>(TheFieldHandle->getField())->clear();
               }
+              //StringToUInt32Map
+              else if(FieldContentType == OSG::FieldTraits<OSG::StringToUInt32Map>::getType() )
+              {
+                      static_cast<OSG::MFStringToUInt32Map*>(TheFieldHandle->getField())->clear();
+              }
               //FieldContainerRefPtrs
               else if(TheFieldHandle->isPointerField())
               {
@@ -2740,6 +2806,11 @@ namespace OSG {
               else if(FieldContentType == OSG::FieldTraits<OSG::Quaternion>::getType() )
               {
                       static_cast<OSG::MFQuaternion*>(TheFieldHandle->getField())->erase(Index);
+              }
+              //StringToUInt32Map
+              else if(FieldContentType == OSG::FieldTraits<OSG::StringToUInt32Map>::getType() )
+              {
+                      static_cast<OSG::MFStringToUInt32Map*>(TheFieldHandle->getField())->erase(Index);
               }
               //FieldContainerRefPtrs
               else if(TheFieldHandle->isPointerField())
@@ -3930,6 +4001,16 @@ namespace OSG {
             GenericEvent(void);
             GenericEvent(const GenericEvent &obj);
             virtual ~GenericEvent(void);
+    };
+    %extend GenericEventRefPtr
+    {
+        static GenericEventRefPtr create(FieldContainerRefPtr Source,
+                                        Time TimeStamp,
+                                        const ::std::map<::std::string,OSG::UInt32>& strToIntMap = ::std::map<::std::string,OSG::UInt32>())
+        {
+            OSG::GenericEventRecPtr event(OSG::GenericEvent::create(Source,TimeStamp,strToIntMap));
+            return event;
+        }
     };
     
     /******************************************************/
