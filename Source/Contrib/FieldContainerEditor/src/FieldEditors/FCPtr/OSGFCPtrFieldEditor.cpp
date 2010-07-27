@@ -112,8 +112,6 @@ void FCPtrFieldEditor::initMethod(InitPhase ePhase)
                type->getClass() == FieldType::ChildPtrField))
             {
                 _EditableTypes.push_back(&type->getContentType());
-                FieldEditorFactory::the()->setDefaultEditor(&type->getContentType(),
-                                                            &getClassType());
                 FieldEditorFactory::the()->setEditorType(&type->getContentType(), &getClassType(),
                                                          "FieldContainerPtr");
             }
@@ -257,91 +255,98 @@ void FCPtrFieldEditor::onDestroy()
 {
 }
 
+void FCPtrFieldEditor::openCreateHandler(void)
+{
+    const FieldContainerType* ThePtrType(getFieldContainerTypeFromPtrType(getEditingFC()->getFieldDescription(getEditingFieldId())->getFieldType().getContentType()));
+    if(ThePtrType == NULL)
+    {
+        return;
+    }
+
+    std::vector<std::string> inputValues;
+    UInt32 NumFieldContainersFound(0);
+    const FieldContainerType* FoundType(NULL);
+    for(UInt32 j(0) ; NumFieldContainersFound<FieldContainerFactory::the()->getNumTypes(); ++j)
+    {
+        FoundType = FieldContainerFactory::the()->findType(j);
+        if(FoundType != NULL)
+        {
+            if(FoundType->isDerivedFrom(*ThePtrType)  && !FoundType->isAbstract())
+            {
+                inputValues.push_back(FoundType->getName());
+            }
+            ++NumFieldContainersFound;
+        }
+    }
+
+    DialogWindowRefPtr TheDialog = DialogWindow::createInputDialog("Create Field Container",
+                                                                   "Choose the type of object to create",
+                                                                   DialogWindow::INPUT_COMBO,
+                                                                   true,
+                                                                   inputValues);
+    TheDialog->addDialogWindowListener(&_CreateContainerDialogListener);
+
+    Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->setResizable(true);
+
+    getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+}
+
+void FCPtrFieldEditor::openFindContainerHandler(void)
+{
+    const FieldContainerType* ThePtrType(getFieldContainerTypeFromPtrType(getEditingFC()->getFieldDescription(getEditingFieldId())->getFieldType().getContentType()));
+    if(ThePtrType == NULL)
+    {
+        return;
+    }
+
+    std::vector<std::string> inputValues;
+    _FindFCStore->setTypeToStore(ThePtrType);
+    std::vector<FieldContainer*> fcStore(_FindFCStore->getList());
+
+    std::string value;
+    for(UInt32 i(0) ; i<fcStore.size(); ++i)
+    {
+        value.clear();
+        if(fcStore[i]->getType().isDerivedFrom(AttachmentContainer::getClassType()) &&
+           getName(dynamic_cast<AttachmentContainer*>(fcStore[i])))
+        {
+            value += std::string(getName(dynamic_cast<AttachmentContainer*>(fcStore[i]))) + " ";
+        }
+        value += "[" + fcStore[i]->getType().getName() + "] " + boost::lexical_cast<std::string>(fcStore[i]->getId());
+        inputValues.push_back(value);
+    }
+
+    DialogWindowRefPtr TheDialog = DialogWindow::createInputDialog("Find Field Container",
+                                                                   "Choose the container to use",
+                                                                   DialogWindow::INPUT_LIST,
+                                                                   true,
+                                                                   inputValues);
+    TheDialog->addDialogWindowListener(&_FindContainerDialogListener);
+
+    Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->setResizable(true);
+
+    getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+}
+
 void FCPtrFieldEditor::handleMenuSelected(const ActionEventUnrecPtr e)
 {
     switch(_EditingMenuButton->getSelectionIndex())
     {
         case 0:     //Create
-            {
-                const FieldContainerType* ThePtrType(getFieldContainerTypeFromPtrType(getEditingFC()->getFieldDescription(getEditingFieldId())->getFieldType().getContentType()));
-                if(ThePtrType == NULL)
-                {
-                    return;
-                }
-
-                std::vector<std::string> inputValues;
-                UInt32 NumFieldContainersFound(0);
-                const FieldContainerType* FoundType(NULL);
-                for(UInt32 j(0) ; NumFieldContainersFound<FieldContainerFactory::the()->getNumTypes(); ++j)
-                {
-                    FoundType = FieldContainerFactory::the()->findType(j);
-                    if(FoundType != NULL)
-                    {
-                        if(FoundType->isDerivedFrom(*ThePtrType)  && !FoundType->isAbstract())
-                        {
-                            inputValues.push_back(FoundType->getName());
-                        }
-                        ++NumFieldContainersFound;
-                    }
-                }
-
-                DialogWindowRefPtr TheDialog = DialogWindow::createInputDialog("Create Field Container",
-                                                                               "Choose the type of object to create",
-                                                                               DialogWindow::INPUT_COMBO,
-                                                                               true,
-                                                                               inputValues);
-                TheDialog->addDialogWindowListener(&_CreateContainerDialogListener);
-
-                Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-                TheDialog->setPosition(CenteredPosition);
-                TheDialog->setAllwaysOnTop(true);
-                TheDialog->setResizable(true);
-
-                getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-            }
+            openCreateHandler();
             break;
         case 1:     //Find
-            {
-                const FieldContainerType* ThePtrType(getFieldContainerTypeFromPtrType(getEditingFC()->getFieldDescription(getEditingFieldId())->getFieldType().getContentType()));
-                if(ThePtrType == NULL)
-                {
-                    return;
-                }
-
-                std::vector<std::string> inputValues;
-                _FindFCStore->setTypeToStore(ThePtrType);
-                std::vector<FieldContainer*> fcStore(_FindFCStore->getList());
-
-                std::string value;
-                for(UInt32 i(0) ; i<fcStore.size(); ++i)
-                {
-                    value.clear();
-                    if(fcStore[i]->getType().isDerivedFrom(AttachmentContainer::getClassType()) &&
-                       getName(dynamic_cast<AttachmentContainer*>(fcStore[i])))
-                    {
-                        value += std::string(getName(dynamic_cast<AttachmentContainer*>(fcStore[i]))) + " ";
-                    }
-                    value += "[" + fcStore[i]->getType().getName() + "] " + boost::lexical_cast<std::string>(fcStore[i]->getId());
-                    inputValues.push_back(value);
-                }
-
-                DialogWindowRefPtr TheDialog = DialogWindow::createInputDialog("Find Field Container",
-                                                                               "Choose the container to use",
-                                                                               DialogWindow::INPUT_LIST,
-                                                                               true,
-                                                                               inputValues);
-                TheDialog->addDialogWindowListener(&_FindContainerDialogListener);
-
-                Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-                TheDialog->setPosition(CenteredPosition);
-                TheDialog->setAllwaysOnTop(true);
-                TheDialog->setResizable(true);
-
-                getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-            }
+            openFindContainerHandler();
             break;
         default:
             assert(false);
+            break;
     }
 }
 
