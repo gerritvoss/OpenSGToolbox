@@ -54,6 +54,7 @@
 #include "OSGFieldContainerSFieldHandle.h"
 #include "OSGPointerMFieldBase.h"
 #include "OSGFieldContainerMFieldHandle.h"
+#include "OSGDrawableStatsAttachment.h"
 
 #include "OSGXMLFCFileType.h"
 #include "OSGNode.h"
@@ -70,6 +71,7 @@
 #include <boost/lexical_cast.hpp>
 #include "rapidxml.h"
 #include "rapidxml_iterators.h"
+#include "rapidxml_print.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -159,7 +161,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
     try
     {
         //doc.parse<rapidxml::parse_non_destructive | rapidxml::parse_declaration_node | rapidxml::parse_no_data_nodes>(const_cast<char *>(StreamText.str().c_str()));
-        doc.parse<rapidxml::parse_non_destructive | rapidxml::parse_declaration_node | rapidxml::parse_no_data_nodes>(const_cast<char *>(&StreamText[0]));
+        doc.parse<rapidxml::parse_no_string_terminators | rapidxml::parse_declaration_node | rapidxml::parse_no_data_nodes>(const_cast<char *>(&StreamText[0]));
     }
     catch (rapidxml::parse_error& e)
     {
@@ -686,9 +688,15 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_i
 }
 
 bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStream,
-                    const std::string& FileNameOrExtension, const FCTypeVector& IgnoreTypes) const
+                          const std::string& FileNameOrExtension, const FCTypeVector& IgnoreTypes) const
 {
-    OutStream OSGOutputStream(OutputStream);
+    rapidxml::xml_document<> doc;
+
+    // xml declaration
+    rapidxml::xml_node<>* decl = doc.allocate_node(rapidxml::node_declaration);
+    decl->append_attribute(doc.allocate_attribute("version", "1.0"));
+    decl->append_attribute(doc.allocate_attribute("encoding", "utf-8"));
+    doc.append_node(decl);
 
     BoostPath RootPath = FCFileHandler::the()->getRootFilePath();
 
@@ -697,16 +705,26 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
     FCPtrStore AllContainers;
     AllContainers = getAllDependantFCs(Containers, IgnoreContainers, IgnoreTypes);
 
+    // root node
+    rapidxml::xml_node<>* root = doc.allocate_node(rapidxml::node_element,
+                                                   RootFCXMLToken.c_str());
+    root->append_attribute(doc.allocate_attribute("version", "1.0"));
+    root->append_attribute(doc.allocate_attribute("type", "OpenSGContainers"));
+    doc.append_node(root);
 
-    OSGOutputStream << "<?xml version=\"1.0\"  encoding=\"utf-8\"?>" << std::endl << std::endl;
-    OSGOutputStream << "<" << RootFCXMLToken << ">" << std::endl;
+    rapidxml::xml_node<>* child;
+    rapidxml::xml_attribute<> *attr;
 
+    char *alloc_str;
     for(FCPtrStore::const_iterator FCItor(AllContainers.begin()) ; FCItor != AllContainers.end() ; ++FCItor)
     {
-        OSGOutputStream << "\t<" << (*FCItor)->getType().getCName() << std::endl;
-        OSGOutputStream << "\t\t"+FieldContainerIDXMLToken+"=\"";
-        TypeTraits<UInt32>::putToStream((*FCItor)->getId(), OSGOutputStream);
-        OSGOutputStream << "\"" << std::endl;
+        child = doc.allocate_node(rapidxml::node_element, (*FCItor)->getType().getCName());
+        root->append_node(child);
+
+        alloc_str = doc.allocate_string(boost::lexical_cast<std::string>((*FCItor)->getId()).c_str());
+        attr = doc.allocate_attribute(FieldContainerIDXMLToken.c_str(),
+                                      alloc_str);
+        child->append_attribute(attr);
 
         if((*FCItor)->getType().isDerivedFrom(AttachmentContainer::getClassType()))
         {
@@ -714,14 +732,19 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             const char* Name(OSG::getName(dynamic_pointer_cast<AttachmentContainer>(*FCItor)));
             if(Name != NULL)
             {
-                OSGOutputStream << "\t\t" + NameAttachmentXMLToken + "=\"" << Name << "\"" << std::endl;
+                attr = doc.allocate_attribute(NameAttachmentXMLToken.c_str(),
+                                              Name);
+                child->append_attribute(attr);
             }
 
             //Output FilePath
             const BoostPath* FilePath(FilePathAttachment::getFilePath(dynamic_pointer_cast<AttachmentContainer>(*FCItor)));
             if(FilePath != NULL)
             {
-                OSGOutputStream << "\t\t" + FileAttachmentXMLToken + "=\"" << FilePath->string() << "\"" << std::endl;
+                alloc_str = doc.allocate_string(FilePath->string().c_str());
+                attr = doc.allocate_attribute(FileAttachmentXMLToken.c_str(),
+                                              alloc_str);
+                child->append_attribute(attr);
                 continue;
             }
 
@@ -732,7 +755,8 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             for( ; MapItor!=MapEnd  ; ++MapItor)
             {
                 if(MapItor->second->getType() != Name::getClassType() &&
-                   MapItor->second->getType() != FilePathAttachment::getClassType())
+                   MapItor->second->getType() != FilePathAttachment::getClassType() &&
+                   MapItor->second->getType() != DrawableStatsAttachment::getClassType())
                 {
                     AttachmentIds.push_back(boost::lexical_cast<std::string>(MapItor->second->getId()));
                 }
@@ -740,21 +764,24 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 
             if(AttachmentIds.size() > 0)
             {
-                OSGOutputStream << "\t\t" + AttachmentsXMLToken + "=\"";
+                std::string Ids;
                 for( UInt32 i(0)  ; i<AttachmentIds.size()  ; ++i)
                 {
-                    if(i != 0) { OSGOutputStream << ";"; }
-                    OSGOutputStream << AttachmentIds[i];
+                    if(i != 0) { Ids += ";"; }
+                    Ids += boost::lexical_cast<std::string>(AttachmentIds[i]);
                 }
-                OSGOutputStream << "\"" << std::endl;
+
+                alloc_str = doc.allocate_string(Ids.c_str());
+                attr = doc.allocate_attribute(AttachmentsXMLToken.c_str(),
+                                              alloc_str);
+                child->append_attribute(attr);
             }
-		}
+        }
 
         //Write all of the Fields
         FieldContainerType& TheFCType((*FCItor)->getType());
         UInt32 NumFields(TheFCType.getNumFieldDescs());
         const FieldDescriptionBase* Desc;
-        std::string FieldValue("");
         GetFieldHandlePtr TheFieldHandle;
         const Field* TheField(NULL);
         for(UInt32 i(1) ; i<NumFields+1 ; ++i)
@@ -784,75 +811,86 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             }
             TheField = TheFieldHandle->getField();
             if(Desc->getFieldType().getClass() == FieldType::PtrField ||
-				Desc->getFieldType().getClass() == FieldType::ChildPtrField)
+                Desc->getFieldType().getClass() == FieldType::ChildPtrField)
             {
-                OSGOutputStream << "\t\t" << Desc->getCName() << "=\"";
                 if(TheFieldHandle->getCardinality() == FieldType::SingleField)
                 {
                     if(static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue() == NULL ||
                         std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue()->getTypeId()) != IgnoreTypes.end())
                     {
-                        TypeTraits<UInt32>::putToStream(0,OSGOutputStream);
+                        alloc_str = doc.allocate_string("0");
                     }
                     else
                     {
-                        TypeTraits<UInt32>::putToStream(static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue()->getId(),OSGOutputStream);
+                        alloc_str =
+                            doc.allocate_string(boost::lexical_cast<std::string>(static_cast<const
+                                                                                 SFUnrecFieldContainerPtr
+                                                                                 *>(TheField)->getValue()->getId()).c_str());
                     }
                 }
                 else if(TheFieldHandle->getCardinality() == FieldType::MultiField)
                 {
+                    std::string IdListStr;
                     for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
                     {
                         if(Index!=0)
                         {
-                            OSGOutputStream << ";";
+                            IdListStr += ";";
                         }
                         if(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index) == NULL ||
                             std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index)->getTypeId()) != IgnoreTypes.end())
                         {
-                            TypeTraits<UInt32>::putToStream(0,OSGOutputStream);
+                            IdListStr += boost::lexical_cast<std::string>(0);
                         }
                         else
                         {
-                            TypeTraits<UInt32>::putToStream(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index)->getId(),OSGOutputStream);
+                            IdListStr += boost::lexical_cast<std::string>(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index)->getId());
                         }
                     }
+                    alloc_str = doc.allocate_string(IdListStr.c_str());
                 }
-                OSGOutputStream << "\"" << std::endl;
+                attr = doc.allocate_attribute(Desc->getCName(),
+                                              alloc_str);
+                child->append_attribute(attr);
             }
             else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
             {
-                FieldValue.clear();
+
                 //Path RootPath = boost::filesystem::system_complete(RootPath);
                 BoostPath FilePath = boost::filesystem::system_complete(static_cast<const SFBoostPath*>(TheField)->getValue());
                 //Path RelativePath = makeRelative(RootPath, FilePath);
                 //FieldValue = RelativePath.string();//TheField->getValueByStr(FieldValue);
-                OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" << FilePath.string()  << "\"" << std::endl;
+                alloc_str = doc.allocate_string(FilePath.string().c_str());
+                attr = doc.allocate_attribute(Desc->getCName(),
+                                              alloc_str);
+                child->append_attribute(attr);
             }
             else if(TheFieldHandle->getType() == MFBoostPath::getClassType())
             {
-                OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" ;
-                //Path RootPath = boost::filesystem::system_complete(RootPath);
-                BoostPath FilePath;
-                //Path RelativePath;
-                for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
-                {
-                    FieldValue.clear();
-                    FilePath = boost::filesystem::system_complete((*static_cast<const MFBoostPath*>(TheField))[Index]);
-                    //RelativePath = makeRelative(RootPath, FilePath);
-                    FieldValue = FilePath.string();
-                    if(Index!=0)
-                    {
-                        OSGOutputStream << ";";
-                    }
-                    OSGOutputStream << FieldValue;
-                }
-                OSGOutputStream << "\"" << std::endl;
+                //OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" ;
+                ////Path RootPath = boost::filesystem::system_complete(RootPath);
+                //BoostPath FilePath;
+                ////Path RelativePath;
+                //for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
+                //{
+                    //FieldValue.clear();
+                    //FilePath = boost::filesystem::system_complete((*static_cast<const MFBoostPath*>(TheField))[Index]);
+                    ////RelativePath = makeRelative(RootPath, FilePath);
+                    //FieldValue = FilePath.string();
+                    //if(Index!=0)
+                    //{
+                        //OSGOutputStream << ";";
+                    //}
+                    //OSGOutputStream << FieldValue;
+                //}
+                //OSGOutputStream << "\"" << std::endl;
             }
             else if(TheFieldHandle->getType() == SFString::getClassType())
             {
-                OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" <<
-                    static_cast<const SFString*>(TheField)->getValue()  << "\"" << std::endl;
+                attr = doc.allocate_attribute(Desc->getCName(),
+                                              static_cast<const
+                                              SFString*>(TheField)->getValue().c_str());
+                child->append_attribute(attr);
             }
             else
             {
@@ -862,9 +900,14 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                     //TheField->pushValueToString(FieldValue);
                     //boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of(std::string("\"")));
                     //OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" << FieldValue << "\"" << std::endl;
-                    OSGOutputStream << "\t\t" << Desc->getCName() << "=\"";
+                    std::ostringstream sstrm;
+                    OutStream OSGOutputStream(sstrm);
                     TheFieldHandle->pushValueToStream(OSGOutputStream);
-                    OSGOutputStream << "\"" << std::endl;
+                    alloc_str = doc.allocate_string(sstrm.str().c_str());
+                    attr = doc.allocate_attribute(Desc->getCName(),
+                                                  alloc_str);
+                    child->append_attribute(attr);
+
                 //}
                 //else if(TheFieldHandle->getCardinality() == FieldType::MultiField)
                 //{
@@ -886,16 +929,13 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             }
         }
 
-        OSGOutputStream << "\t>" << std::endl;
-
         XMLHandlerMap::const_iterator XMLHandlerMapItor = _HandlerMap.find(&TheFCType);
         //TODO: Add Write Handler Code
-        if(XMLHandlerMapItor != _HandlerMap.end())
-            (XMLHandlerMapItor->second.second)(*FCItor,OutputStream);
-
-        OSGOutputStream << "\t</" << TheFCType.getCName() << ">" << std::endl;
+        //if(XMLHandlerMapItor != _HandlerMap.end())
+            //(XMLHandlerMapItor->second.second)(*FCItor,OutputStream);
     }
-    OSGOutputStream << "</" << RootFCXMLToken << ">" << std::endl << std::endl;
+
+    rapidxml::print(OutputStream, doc, rapidxml::print_newline_attributes);
 
 	return true;
 }
