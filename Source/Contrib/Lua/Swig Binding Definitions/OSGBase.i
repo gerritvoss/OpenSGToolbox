@@ -857,6 +857,8 @@ namespace OSG {
                                             Real32 &radians) const;
               void       getValueAsAxisDeg (VectorType &axis,
                                             Real32 &degrees) const;
+              void       getEulerAngleRad  (VectorType &euler  ) const;
+              void       getEulerAngleDeg  (VectorType &euler  ) const;
               void       getValue          (MatrixType &matrix ) const;
               void       getValuesOnly     (MatrixType &matrix ) const;
 

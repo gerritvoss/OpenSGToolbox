@@ -2180,7 +2180,7 @@
 %}
 
 %template(StringToUInt32Map) std::map<std::string,OSG::UInt32>;
-%template(Int32ToStringMap) std::map<OSG::Int32, std::string>;
+%template(Int32ToStringMap) std::map<OSG::Int32,std::string>;
 
 namespace OSG {
 
@@ -4002,11 +4002,11 @@ namespace OSG {
             GenericEvent(const GenericEvent &obj);
             virtual ~GenericEvent(void);
     };
-    %extend GenericEventRefPtr
+    %extend GenericEvent
     {
         static GenericEventRefPtr create(FieldContainerRefPtr Source,
                                         Time TimeStamp,
-                                        const ::std::map<::std::string,OSG::UInt32>& strToIntMap = ::std::map<::std::string,OSG::UInt32>())
+                                        const std::map<std::string,OSG::UInt32>& strToIntMap = std::map<std::string,OSG::UInt32>())
         {
             OSG::GenericEventRecPtr event(OSG::GenericEvent::create(Source,TimeStamp,strToIntMap));
             return event;

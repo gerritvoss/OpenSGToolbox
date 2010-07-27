@@ -143,8 +143,6 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
     lua_State *getLuaState(void);
     void checkError(int Status);
 
-    void checkError(int Status);
-
 #ifdef OSG_WITH_LUA_DEBUGGER
 
 	void setCallback(const boost::function<void (lua_details::LuaRunEvent, Int32)>& fn);

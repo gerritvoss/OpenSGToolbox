@@ -1609,15 +1609,14 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_mapped_type swig_types[80]
 #define SWIGTYPE_p_signed_char swig_types[81]
 #define SWIGTYPE_p_size_type swig_types[82]
-#define SWIGTYPE_p_std__mapT___std__string_unsigned_int_t swig_types[83]
-#define SWIGTYPE_p_std__mapT_int_std__string_t swig_types[84]
-#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[85]
-#define SWIGTYPE_p_std__string swig_types[86]
-#define SWIGTYPE_p_unsigned_char swig_types[87]
-#define SWIGTYPE_p_unsigned_int swig_types[88]
-#define SWIGTYPE_p_unsigned_long swig_types[89]
-static swig_type_info *swig_types[91];
-static swig_module_info swig_module = {swig_types, 90, 0, 0, 0, 0};
+#define SWIGTYPE_p_std__mapT_int_std__string_t swig_types[83]
+#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[84]
+#define SWIGTYPE_p_std__string swig_types[85]
+#define SWIGTYPE_p_unsigned_char swig_types[86]
+#define SWIGTYPE_p_unsigned_int swig_types[87]
+#define SWIGTYPE_p_unsigned_long swig_types[88]
+static swig_type_info *swig_types[90];
+static swig_module_info swig_module = {swig_types, 89, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -4785,7 +4784,7 @@ SWIGINTERN OSG::EventRefPtr OSG_EventRefPtr_dcast(OSG::FieldContainerRefPtr cons
 SWIGINTERN OSG::GenericEventRefPtr OSG_GenericEventRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
             return OSG::dynamic_pointer_cast<OSG::GenericEvent>(oIn);
         }
-SWIGINTERN OSG::GenericEventRefPtr OSG_GenericEventRefPtr_create__SWIG_0(OSG::FieldContainerRefPtr Source,OSG::Time TimeStamp,std::map< ::std::string,OSG::UInt32 > const &strToIntMap=::std::map< ::std::string,OSG::UInt32 >()){
+SWIGINTERN OSG::GenericEventRefPtr OSG_GenericEvent_create__SWIG_0(OSG::FieldContainerRefPtr Source,OSG::Time TimeStamp,std::map< std::string,OSG::UInt32 > const &strToIntMap=std::map< std::string,OSG::UInt32 >()){
             OSG::GenericEventRecPtr event(OSG::GenericEvent::create(Source,TimeStamp,strToIntMap));
             return event;
         }
@@ -17379,6 +17378,66 @@ static int _wrap_Quaternion_getValueAsAxisDeg(lua_State* L) {
 }
 
 
+static int _wrap_Quaternion_getEulerAngleRad(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Quaternion *arg1 = (OSG::Quaternion *) 0 ;
+  OSG::Quaternion::VectorType *arg2 = 0 ;
+  
+  SWIG_check_num_args("getEulerAngleRad",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getEulerAngleRad",1,"OSG::Quaternion const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getEulerAngleRad",2,"OSG::Quaternion::VectorType &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Quaternion,0))){
+    SWIG_fail_ptr("Quaternion_getEulerAngleRad",1,SWIGTYPE_p_OSG__Quaternion);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("Quaternion_getEulerAngleRad",2,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  ((OSG::Quaternion const *)arg1)->getEulerAngleRad(*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Quaternion_getEulerAngleDeg(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Quaternion *arg1 = (OSG::Quaternion *) 0 ;
+  OSG::Quaternion::VectorType *arg2 = 0 ;
+  
+  SWIG_check_num_args("getEulerAngleDeg",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getEulerAngleDeg",1,"OSG::Quaternion const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getEulerAngleDeg",2,"OSG::Quaternion::VectorType &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Quaternion,0))){
+    SWIG_fail_ptr("Quaternion_getEulerAngleDeg",1,SWIGTYPE_p_OSG__Quaternion);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("Quaternion_getEulerAngleDeg",2,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  ((OSG::Quaternion const *)arg1)->getEulerAngleDeg(*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_Quaternion_getValue(lua_State* L) {
   int SWIG_arg = 0;
   OSG::Quaternion *arg1 = (OSG::Quaternion *) 0 ;
@@ -18018,6 +18077,8 @@ static swig_lua_method swig_OSG_Quaternion_methods[] = {
     {"getValueAsQuat", _wrap_Quaternion_getValueAsQuat}, 
     {"getValueAsAxisRad", _wrap_Quaternion_getValueAsAxisRad}, 
     {"getValueAsAxisDeg", _wrap_Quaternion_getValueAsAxisDeg}, 
+    {"getEulerAngleRad", _wrap_Quaternion_getEulerAngleRad}, 
+    {"getEulerAngleDeg", _wrap_Quaternion_getEulerAngleDeg}, 
     {"getValue", _wrap_Quaternion_getValue}, 
     {"getValuesOnly", _wrap_Quaternion_getValuesOnly}, 
     {"x", _wrap_Quaternion_x}, 
@@ -44865,31 +44926,45 @@ fail:
 }
 
 
-static int _wrap_GenericEventRefPtr_create__SWIG_0(lua_State* L) {
+static void swig_delete_GenericEventRefPtr(void *obj) {
+OSG::GenericEventRefPtr *arg1 = (OSG::GenericEventRefPtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_OSG_GenericEventRefPtr_methods[] = {
+    {0,0}
+};
+static swig_lua_attribute swig_OSG_GenericEventRefPtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_OSG_GenericEventRefPtr_bases[] = {0,0};
+static const char *swig_OSG_GenericEventRefPtr_base_names[] = {"OSG::EventRefPtr *",0};
+static swig_lua_class _wrap_class_OSG_GenericEventRefPtr = { "GenericEventRefPtr", &SWIGTYPE_p_OSG__GenericEventRefPtr,_wrap_new_GenericEventRefPtr, swig_delete_GenericEventRefPtr, swig_OSG_GenericEventRefPtr_methods, swig_OSG_GenericEventRefPtr_attributes, swig_OSG_GenericEventRefPtr_bases, swig_OSG_GenericEventRefPtr_base_names };
+
+static int _wrap_GenericEvent_create__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   OSG::FieldContainerRefPtr arg1 ;
   OSG::Time arg2 ;
-  std::map< ::std::string,OSG::UInt32 > *arg3 = 0 ;
+  std::map< std::string,OSG::UInt32 > *arg3 = 0 ;
   OSG::FieldContainerRefPtr *argp1 ;
   OSG::GenericEventRefPtr result;
   
-  SWIG_check_num_args("OSG_GenericEventRefPtr_create__SWIG_0",3,3)
-  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG_GenericEventRefPtr_create__SWIG_0",1,"OSG::FieldContainerRefPtr");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG_GenericEventRefPtr_create__SWIG_0",2,"OSG::Time");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("OSG_GenericEventRefPtr_create__SWIG_0",3,"std::map< ::std::string,OSG::UInt32 > const &");
+  SWIG_check_num_args("OSG_GenericEvent_create__SWIG_0",3,3)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG_GenericEvent_create__SWIG_0",1,"OSG::FieldContainerRefPtr");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG_GenericEvent_create__SWIG_0",2,"OSG::Time");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("OSG_GenericEvent_create__SWIG_0",3,"std::map< std::string,OSG::UInt32 > const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_OSG__FieldContainerRefPtr,0))){
-    SWIG_fail_ptr("GenericEventRefPtr_create",1,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+    SWIG_fail_ptr("GenericEvent_create",1,SWIGTYPE_p_OSG__FieldContainerRefPtr);
   }
   arg1 = *argp1;
   
   arg2 = (OSG::Time)lua_tonumber(L, 2);
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("GenericEventRefPtr_create",3,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("GenericEvent_create",3,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
   }
   
-  result = OSG_GenericEventRefPtr_create__SWIG_0(arg1,arg2,(std::map< ::std::string,unsigned int > const &)*arg3);
+  result = OSG_GenericEvent_create__SWIG_0(arg1,arg2,(std::map< std::string,unsigned int > const &)*arg3);
   {
     OSG::GenericEventRefPtr * resultptr = new OSG::GenericEventRefPtr((const OSG::GenericEventRefPtr &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__GenericEventRefPtr,1); SWIG_arg++;
@@ -44904,24 +44979,24 @@ fail:
 }
 
 
-static int _wrap_GenericEventRefPtr_create__SWIG_1(lua_State* L) {
+static int _wrap_GenericEvent_create__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
   OSG::FieldContainerRefPtr arg1 ;
   OSG::Time arg2 ;
   OSG::FieldContainerRefPtr *argp1 ;
   OSG::GenericEventRefPtr result;
   
-  SWIG_check_num_args("OSG_GenericEventRefPtr_create__SWIG_0",2,2)
-  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG_GenericEventRefPtr_create__SWIG_0",1,"OSG::FieldContainerRefPtr");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG_GenericEventRefPtr_create__SWIG_0",2,"OSG::Time");
+  SWIG_check_num_args("OSG_GenericEvent_create__SWIG_0",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG_GenericEvent_create__SWIG_0",1,"OSG::FieldContainerRefPtr");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG_GenericEvent_create__SWIG_0",2,"OSG::Time");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_OSG__FieldContainerRefPtr,0))){
-    SWIG_fail_ptr("GenericEventRefPtr_create",1,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+    SWIG_fail_ptr("GenericEvent_create",1,SWIGTYPE_p_OSG__FieldContainerRefPtr);
   }
   arg1 = *argp1;
   
   arg2 = (OSG::Time)lua_tonumber(L, 2);
-  result = OSG_GenericEventRefPtr_create__SWIG_0(arg1,arg2);
+  result = OSG_GenericEvent_create__SWIG_0(arg1,arg2);
   {
     OSG::GenericEventRefPtr * resultptr = new OSG::GenericEventRefPtr((const OSG::GenericEventRefPtr &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__GenericEventRefPtr,1); SWIG_arg++;
@@ -44936,7 +45011,7 @@ fail:
 }
 
 
-static int _wrap_GenericEventRefPtr_create(lua_State* L) {
+static int _wrap_GenericEvent_create(lua_State* L) {
   int argc;
   int argv[4]={
     1,2,3,4
@@ -44958,7 +45033,7 @@ static int _wrap_GenericEventRefPtr_create(lua_State* L) {
         _v = lua_isnumber(L,argv[1]);
       }
       if (_v) {
-        return _wrap_GenericEventRefPtr_create__SWIG_1(L);
+        return _wrap_GenericEvent_create__SWIG_1(L);
       }
     }
   }
@@ -44979,40 +45054,26 @@ static int _wrap_GenericEventRefPtr_create(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__mapT___std__string_unsigned_int_t, 0)) {
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__mapT_std__string_unsigned_int_t, 0)) {
             _v = 0;
           } else {
             _v = 1;
           }
         }
         if (_v) {
-          return _wrap_GenericEventRefPtr_create__SWIG_0(L);
+          return _wrap_GenericEvent_create__SWIG_0(L);
         }
       }
     }
   }
   
-  lua_pushstring(L,"Wrong arguments for overloaded function 'GenericEventRefPtr_create'\n"
+  lua_pushstring(L,"Wrong arguments for overloaded function 'GenericEvent_create'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    create(OSG::FieldContainerRefPtr,OSG::Time,std::map< ::std::string,OSG::UInt32 > const &)\n"
-    "    OSG_GenericEventRefPtr_create__SWIG_0(OSG::FieldContainerRefPtr,OSG::Time)\n");
+    "    create(OSG::FieldContainerRefPtr,OSG::Time,std::map< std::string,OSG::UInt32 > const &)\n"
+    "    OSG_GenericEvent_create__SWIG_0(OSG::FieldContainerRefPtr,OSG::Time)\n");
   lua_error(L);return 0;
 }
 
-
-static void swig_delete_GenericEventRefPtr(void *obj) {
-OSG::GenericEventRefPtr *arg1 = (OSG::GenericEventRefPtr *) obj;
-delete arg1;
-}
-static swig_lua_method swig_OSG_GenericEventRefPtr_methods[] = {
-    {0,0}
-};
-static swig_lua_attribute swig_OSG_GenericEventRefPtr_attributes[] = {
-    {0,0,0}
-};
-static swig_lua_class *swig_OSG_GenericEventRefPtr_bases[] = {0,0};
-static const char *swig_OSG_GenericEventRefPtr_base_names[] = {"OSG::EventRefPtr *",0};
-static swig_lua_class _wrap_class_OSG_GenericEventRefPtr = { "GenericEventRefPtr", &SWIGTYPE_p_OSG__GenericEventRefPtr,_wrap_new_GenericEventRefPtr, swig_delete_GenericEventRefPtr, swig_OSG_GenericEventRefPtr_methods, swig_OSG_GenericEventRefPtr_attributes, swig_OSG_GenericEventRefPtr_bases, swig_OSG_GenericEventRefPtr_base_names };
 
 static swig_lua_method swig_OSG_GenericEvent_methods[] = {
     {0,0}
@@ -46271,7 +46332,7 @@ static const struct luaL_reg swig_commands[] = {
     { "TextureObjChunkRefPtr_dcast", _wrap_TextureObjChunkRefPtr_dcast},
     { "EventRefPtr_dcast", _wrap_EventRefPtr_dcast},
     { "GenericEventRefPtr_dcast", _wrap_GenericEventRefPtr_dcast},
-    { "GenericEventRefPtr_create",_wrap_GenericEventRefPtr_create},
+    { "GenericEvent_create",_wrap_GenericEvent_create},
     { "LuaActivityRefPtr_dcast", _wrap_LuaActivityRefPtr_dcast},
     { "LuaActivity_addLuaCallback", _wrap_LuaActivity_addLuaCallback},
     { "LuaActivity_removeLuaCallback", _wrap_LuaActivity_removeLuaCallback},
@@ -46621,7 +46682,6 @@ static swig_type_info _swigt__p_long_double = {"_p_long_double", "long double *|
 static swig_type_info _swigt__p_mapped_type = {"_p_mapped_type", "mapped_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_signed_char = {"_p_signed_char", "signed char *|OSG::SChar8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_size_type = {"_p_size_type", "size_type *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__mapT___std__string_unsigned_int_t = {"_p_std__mapT___std__string_unsigned_int_t", "std::map< ::std::string,OSG::UInt32 > *|std::map< ::std::string,unsigned int > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT_int_std__string_t = {"_p_std__mapT_int_std__string_t", "std::map< int,std::string > *|std::map< OSG::Int32,std::string > *", 0, 0, (void*)&_wrap_class_std_map_Sl_OSG_Int32_Sc_std_string_Sg_, 0};
 static swig_type_info _swigt__p_std__mapT_std__string_unsigned_int_t = {"_p_std__mapT_std__string_unsigned_int_t", "std::map< std::string,OSG::UInt32 > *|std::map< std::string,unsigned int > *", 0, 0, (void*)&_wrap_class_std_map_Sl_std_string_Sc_OSG_UInt32_Sg_, 0};
 static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)&_wrap_class_std_string, 0};
@@ -46713,7 +46773,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_mapped_type,
   &_swigt__p_signed_char,
   &_swigt__p_size_type,
-  &_swigt__p_std__mapT___std__string_unsigned_int_t,
   &_swigt__p_std__mapT_int_std__string_t,
   &_swigt__p_std__mapT_std__string_unsigned_int_t,
   &_swigt__p_std__string,
@@ -46805,7 +46864,6 @@ static swig_cast_info _swigc__p_long_double[] = {  {&_swigt__p_long_double, 0, 0
 static swig_cast_info _swigc__p_mapped_type[] = {  {&_swigt__p_mapped_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_signed_char[] = {  {&_swigt__p_signed_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_size_type[] = {  {&_swigt__p_size_type, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__mapT___std__string_unsigned_int_t[] = {  {&_swigt__p_std__mapT___std__string_unsigned_int_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_int_std__string_t[] = {  {&_swigt__p_std__mapT_int_std__string_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_std__string_unsigned_int_t[] = {  {&_swigt__p_std__mapT_std__string_unsigned_int_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
@@ -46897,7 +46955,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_mapped_type,
   _swigc__p_signed_char,
   _swigc__p_size_type,
-  _swigc__p_std__mapT___std__string_unsigned_int_t,
   _swigc__p_std__mapT_int_std__string_t,
   _swigc__p_std__mapT_std__string_unsigned_int_t,
   _swigc__p_std__string,
@@ -47221,3 +47278,4 @@ void push_FieldContainer_on_lua(lua_State* L, OSG::FieldContainerRefPtr value)
     OSG::FieldContainerRefPtr * resultptr = new OSG::FieldContainerRefPtr((const OSG::FieldContainerRefPtr &) value);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1);
 }
+
