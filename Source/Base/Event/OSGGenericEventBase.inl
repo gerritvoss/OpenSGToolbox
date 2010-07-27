@@ -73,6 +73,56 @@ OSG::UInt16 GenericEventBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the value of the GenericEvent::_sfNumberMap field.
+
+inline
+StringToUInt32Map &GenericEventBase::editNumberMap(void)
+{
+    editSField(NumberMapFieldMask);
+
+    return _sfNumberMap.getValue();
+}
+
+//! Get the value of the GenericEvent::_sfNumberMap field.
+inline
+const StringToUInt32Map &GenericEventBase::getNumberMap(void) const
+{
+    return _sfNumberMap.getValue();
+}
+
+//! Set the value of the GenericEvent::_sfNumberMap field.
+inline
+void GenericEventBase::setNumberMap(const StringToUInt32Map &value)
+{
+    editSField(NumberMapFieldMask);
+
+    _sfNumberMap.setValue(value);
+}
+//! Get the value of the GenericEvent::_sfContainerMap field.
+
+inline
+FieldContainerMap &GenericEventBase::editContainerMap(void)
+{
+    editSField(ContainerMapFieldMask);
+
+    return _sfContainerMap.getValue();
+}
+
+//! Get the value of the GenericEvent::_sfContainerMap field.
+inline
+const FieldContainerMap &GenericEventBase::getContainerMap(void) const
+{
+    return _sfContainerMap.getValue();
+}
+
+//! Set the value of the GenericEvent::_sfContainerMap field.
+inline
+void GenericEventBase::setContainerMap(const FieldContainerMap &value)
+{
+    editSField(ContainerMapFieldMask);
+
+    _sfContainerMap.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -84,6 +134,12 @@ void GenericEventBase::execSync (      GenericEventBase *pFrom,
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (NumberMapFieldMask & whichField))
+        _sfNumberMap.syncWith(pFrom->_sfNumberMap);
+
+    if(FieldBits::NoField != (ContainerMapFieldMask & whichField))
+        _sfContainerMap.syncWith(pFrom->_sfContainerMap);
 }
 #endif
 

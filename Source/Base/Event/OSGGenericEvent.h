@@ -78,7 +78,9 @@ class OSG_BASE_DLLMAPPING GenericEvent : public GenericEventBase
                       const BitVector  bvFlags  = 0) const;
 
     static GenericEventTransitPtr create(   FieldContainerRefPtr Source,
-                                            Time TimeStamp);
+                                            Time TimeStamp,
+                                            const StringToUInt32Map& strToIntMap = StringToUInt32Map(),
+                                            const FieldContainerMap& fcMap = FieldContainerMap());
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

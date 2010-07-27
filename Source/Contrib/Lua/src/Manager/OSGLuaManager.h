@@ -141,6 +141,7 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
     UInt32                   getProducedEventId(const            Char8 *ProducedEventName) const;
 
     lua_State *getLuaState(void);
+    void checkError(int Status);
 
     void checkError(int Status);
 
