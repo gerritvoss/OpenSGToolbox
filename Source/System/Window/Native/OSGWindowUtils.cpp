@@ -53,7 +53,7 @@ WindowEventProducerTransitPtr createNativeWindow(void)
 #endif
 }
 
-FieldContainerType* const OSG_WINDOW_DLLMAPPING getNativeWindowType(void)
+FieldContainerType const *getNativeWindowType(void)
 {
 #if defined(__APPLE__)
     return &CarbonWindow::getClassType();

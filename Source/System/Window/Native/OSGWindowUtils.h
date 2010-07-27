@@ -38,7 +38,7 @@ OSG_BEGIN_NAMESPACE
 
 WindowEventProducerTransitPtr OSG_WINDOW_DLLMAPPING createNativeWindow(void);
 
-FieldContainerType* const OSG_WINDOW_DLLMAPPING getNativeWindowType(void);
+FieldContainerType const OSG_WINDOW_DLLMAPPING *getNativeWindowType(void);
 
 OSG_END_NAMESPACE
 
