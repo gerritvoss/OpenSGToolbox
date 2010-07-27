@@ -1642,6 +1642,7 @@ typedef struct{} LANGUAGE_OBJ;
 #include "OSGColor.h"
 #include "OSGVector.h"
 #include "OSGMatrix.h"
+#include "OSGMatrixUtility.h"
 #include "OSGQuaternion.h"
 #include "OSGLine.h"
 #include "OSGPlane.h"
@@ -24770,6 +24771,708 @@ static swig_lua_class *swig_OSG_Plane_bases[] = {0};
 static const char *swig_OSG_Plane_base_names[] = {0};
 static swig_lua_class _wrap_class_OSG_Plane = { "Plane", &SWIGTYPE_p_OSG__Plane,_wrap_new_Plane, swig_delete_Plane, swig_OSG_Plane_methods, swig_OSG_Plane_attributes, swig_OSG_Plane_bases, swig_OSG_Plane_base_names };
 
+static int _wrap_MatrixOrthogonal(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Real32 arg2 ;
+  OSG::Real32 arg3 ;
+  OSG::Real32 arg4 ;
+  OSG::Real32 arg5 ;
+  OSG::Real32 arg6 ;
+  OSG::Real32 arg7 ;
+  bool result;
+  
+  SWIG_check_num_args("OSG::MatrixOrthogonal",7,7)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::MatrixOrthogonal",1,"OSG::Matrix &");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG::MatrixOrthogonal",2,"OSG::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("OSG::MatrixOrthogonal",3,"OSG::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("OSG::MatrixOrthogonal",4,"OSG::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("OSG::MatrixOrthogonal",5,"OSG::Real32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("OSG::MatrixOrthogonal",6,"OSG::Real32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("OSG::MatrixOrthogonal",7,"OSG::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("MatrixOrthogonal",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  arg2 = (OSG::Real32)lua_tonumber(L, 2);
+  arg3 = (OSG::Real32)lua_tonumber(L, 3);
+  arg4 = (OSG::Real32)lua_tonumber(L, 4);
+  arg5 = (OSG::Real32)lua_tonumber(L, 5);
+  arg6 = (OSG::Real32)lua_tonumber(L, 6);
+  arg7 = (OSG::Real32)lua_tonumber(L, 7);
+  result = (bool)OSG::MatrixOrthogonal(*arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MatrixFrustum(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Real32 arg2 ;
+  OSG::Real32 arg3 ;
+  OSG::Real32 arg4 ;
+  OSG::Real32 arg5 ;
+  OSG::Real32 arg6 ;
+  OSG::Real32 arg7 ;
+  bool result;
+  
+  SWIG_check_num_args("OSG::MatrixFrustum",7,7)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::MatrixFrustum",1,"OSG::Matrix &");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG::MatrixFrustum",2,"OSG::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("OSG::MatrixFrustum",3,"OSG::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("OSG::MatrixFrustum",4,"OSG::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("OSG::MatrixFrustum",5,"OSG::Real32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("OSG::MatrixFrustum",6,"OSG::Real32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("OSG::MatrixFrustum",7,"OSG::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("MatrixFrustum",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  arg2 = (OSG::Real32)lua_tonumber(L, 2);
+  arg3 = (OSG::Real32)lua_tonumber(L, 3);
+  arg4 = (OSG::Real32)lua_tonumber(L, 4);
+  arg5 = (OSG::Real32)lua_tonumber(L, 5);
+  arg6 = (OSG::Real32)lua_tonumber(L, 6);
+  arg7 = (OSG::Real32)lua_tonumber(L, 7);
+  result = (bool)OSG::MatrixFrustum(*arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MatrixPerspective(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Real32 arg2 ;
+  OSG::Real32 arg3 ;
+  OSG::Real32 arg4 ;
+  OSG::Real32 arg5 ;
+  bool result;
+  
+  SWIG_check_num_args("OSG::MatrixPerspective",5,5)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::MatrixPerspective",1,"OSG::Matrix &");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG::MatrixPerspective",2,"OSG::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("OSG::MatrixPerspective",3,"OSG::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("OSG::MatrixPerspective",4,"OSG::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("OSG::MatrixPerspective",5,"OSG::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("MatrixPerspective",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  arg2 = (OSG::Real32)lua_tonumber(L, 2);
+  arg3 = (OSG::Real32)lua_tonumber(L, 3);
+  arg4 = (OSG::Real32)lua_tonumber(L, 4);
+  arg5 = (OSG::Real32)lua_tonumber(L, 5);
+  result = (bool)OSG::MatrixPerspective(*arg1,arg2,arg3,arg4,arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MatrixStereoPerspective(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Matrix *arg2 = 0 ;
+  OSG::Real32 arg3 ;
+  OSG::Real32 arg4 ;
+  OSG::Real32 arg5 ;
+  OSG::Real32 arg6 ;
+  OSG::Real32 arg7 ;
+  OSG::Real32 arg8 ;
+  OSG::Real32 arg9 ;
+  OSG::Real32 arg10 ;
+  bool result;
+  
+  SWIG_check_num_args("OSG::MatrixStereoPerspective",10,10)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::MatrixStereoPerspective",1,"OSG::Matrix &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("OSG::MatrixStereoPerspective",2,"OSG::Matrix &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("OSG::MatrixStereoPerspective",3,"OSG::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("OSG::MatrixStereoPerspective",4,"OSG::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("OSG::MatrixStereoPerspective",5,"OSG::Real32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("OSG::MatrixStereoPerspective",6,"OSG::Real32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("OSG::MatrixStereoPerspective",7,"OSG::Real32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("OSG::MatrixStereoPerspective",8,"OSG::Real32");
+  if(!lua_isnumber(L,9)) SWIG_fail_arg("OSG::MatrixStereoPerspective",9,"OSG::Real32");
+  if(!lua_isnumber(L,10)) SWIG_fail_arg("OSG::MatrixStereoPerspective",10,"OSG::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("MatrixStereoPerspective",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("MatrixStereoPerspective",2,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  arg3 = (OSG::Real32)lua_tonumber(L, 3);
+  arg4 = (OSG::Real32)lua_tonumber(L, 4);
+  arg5 = (OSG::Real32)lua_tonumber(L, 5);
+  arg6 = (OSG::Real32)lua_tonumber(L, 6);
+  arg7 = (OSG::Real32)lua_tonumber(L, 7);
+  arg8 = (OSG::Real32)lua_tonumber(L, 8);
+  arg9 = (OSG::Real32)lua_tonumber(L, 9);
+  arg10 = (OSG::Real32)lua_tonumber(L, 10);
+  result = (bool)OSG::MatrixStereoPerspective(*arg1,*arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MatrixLookAt__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Real32 arg2 ;
+  OSG::Real32 arg3 ;
+  OSG::Real32 arg4 ;
+  OSG::Real32 arg5 ;
+  OSG::Real32 arg6 ;
+  OSG::Real32 arg7 ;
+  OSG::Real32 arg8 ;
+  OSG::Real32 arg9 ;
+  OSG::Real32 arg10 ;
+  bool result;
+  
+  SWIG_check_num_args("OSG::MatrixLookAt",10,10)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::MatrixLookAt",1,"OSG::Matrix &");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG::MatrixLookAt",2,"OSG::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("OSG::MatrixLookAt",3,"OSG::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("OSG::MatrixLookAt",4,"OSG::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("OSG::MatrixLookAt",5,"OSG::Real32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("OSG::MatrixLookAt",6,"OSG::Real32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("OSG::MatrixLookAt",7,"OSG::Real32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("OSG::MatrixLookAt",8,"OSG::Real32");
+  if(!lua_isnumber(L,9)) SWIG_fail_arg("OSG::MatrixLookAt",9,"OSG::Real32");
+  if(!lua_isnumber(L,10)) SWIG_fail_arg("OSG::MatrixLookAt",10,"OSG::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("MatrixLookAt",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  arg2 = (OSG::Real32)lua_tonumber(L, 2);
+  arg3 = (OSG::Real32)lua_tonumber(L, 3);
+  arg4 = (OSG::Real32)lua_tonumber(L, 4);
+  arg5 = (OSG::Real32)lua_tonumber(L, 5);
+  arg6 = (OSG::Real32)lua_tonumber(L, 6);
+  arg7 = (OSG::Real32)lua_tonumber(L, 7);
+  arg8 = (OSG::Real32)lua_tonumber(L, 8);
+  arg9 = (OSG::Real32)lua_tonumber(L, 9);
+  arg10 = (OSG::Real32)lua_tonumber(L, 10);
+  result = (bool)OSG::MatrixLookAt(*arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MatrixLookAt__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Pnt3f arg2 ;
+  OSG::Pnt3f arg3 ;
+  OSG::Vec3f arg4 ;
+  OSG::Pnt3f *argp2 ;
+  OSG::Pnt3f *argp3 ;
+  OSG::Vec3f *argp4 ;
+  bool result;
+  
+  SWIG_check_num_args("OSG::MatrixLookAt",4,4)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::MatrixLookAt",1,"OSG::Matrix &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("OSG::MatrixLookAt",2,"OSG::Pnt3f");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("OSG::MatrixLookAt",3,"OSG::Pnt3f");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("OSG::MatrixLookAt",4,"OSG::Vec3f");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("MatrixLookAt",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_OSG__Pnt3f,0))){
+    SWIG_fail_ptr("MatrixLookAt",2,SWIGTYPE_p_OSG__Pnt3f);
+  }
+  arg2 = *argp2;
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_OSG__Pnt3f,0))){
+    SWIG_fail_ptr("MatrixLookAt",3,SWIGTYPE_p_OSG__Pnt3f);
+  }
+  arg3 = *argp3;
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&argp4,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("MatrixLookAt",4,SWIGTYPE_p_OSG__Vec3f);
+  }
+  arg4 = *argp4;
+  
+  result = (bool)OSG::MatrixLookAt(*arg1,arg2,arg3,arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MatrixLookAt(lua_State* L) {
+  int argc;
+  int argv[11]={
+    1,2,3,4,5,6,7,8,9,10,11
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Matrix, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_OSG__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_OSG__Vec3f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            return _wrap_MatrixLookAt__SWIG_1(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 10) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Matrix, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      _v = lua_isnumber(L,argv[8]);
+                    }
+                    if (_v) {
+                      {
+                        _v = lua_isnumber(L,argv[9]);
+                      }
+                      if (_v) {
+                        return _wrap_MatrixLookAt__SWIG_0(L);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'MatrixLookAt'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    OSG::MatrixLookAt(OSG::Matrix &,OSG::Real32,OSG::Real32,OSG::Real32,OSG::Real32,OSG::Real32,OSG::Real32,OSG::Real32,OSG::Real32,OSG::Real32)\n"
+    "    OSG::MatrixLookAt(OSG::Matrix &,OSG::Pnt3f,OSG::Pnt3f,OSG::Vec3f)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_MatrixProjection(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Real32 arg2 ;
+  OSG::Real32 arg3 ;
+  OSG::Real32 arg4 ;
+  OSG::Real32 arg5 ;
+  OSG::Real32 arg6 ;
+  OSG::Real32 arg7 ;
+  bool result;
+  
+  SWIG_check_num_args("OSG::MatrixProjection",7,7)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::MatrixProjection",1,"OSG::Matrix &");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG::MatrixProjection",2,"OSG::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("OSG::MatrixProjection",3,"OSG::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("OSG::MatrixProjection",4,"OSG::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("OSG::MatrixProjection",5,"OSG::Real32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("OSG::MatrixProjection",6,"OSG::Real32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("OSG::MatrixProjection",7,"OSG::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("MatrixProjection",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  arg2 = (OSG::Real32)lua_tonumber(L, 2);
+  arg3 = (OSG::Real32)lua_tonumber(L, 3);
+  arg4 = (OSG::Real32)lua_tonumber(L, 4);
+  arg5 = (OSG::Real32)lua_tonumber(L, 5);
+  arg6 = (OSG::Real32)lua_tonumber(L, 6);
+  arg7 = (OSG::Real32)lua_tonumber(L, 7);
+  result = (bool)OSG::MatrixProjection(*arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeViewFromUVND(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Vec3f *arg2 = 0 ;
+  OSG::Vec3f *arg3 = 0 ;
+  OSG::Vec3f *arg4 = 0 ;
+  OSG::Vec3f *arg5 = 0 ;
+  
+  SWIG_check_num_args("OSG::makeViewFromUVND",5,5)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::makeViewFromUVND",1,"OSG::Matrix &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("OSG::makeViewFromUVND",2,"OSG::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("OSG::makeViewFromUVND",3,"OSG::Vec3f const &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("OSG::makeViewFromUVND",4,"OSG::Vec3f const &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("OSG::makeViewFromUVND",5,"OSG::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("makeViewFromUVND",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("makeViewFromUVND",2,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("makeViewFromUVND",3,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("makeViewFromUVND",4,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("makeViewFromUVND",5,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  OSG::makeViewFromUVND(*arg1,(OSG::Vec3f const &)*arg2,(OSG::Vec3f const &)*arg3,(OSG::Vec3f const &)*arg4,(OSG::Vec3f const &)*arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeViewFromUVNP(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Vec3f *arg2 = 0 ;
+  OSG::Vec3f *arg3 = 0 ;
+  OSG::Vec3f *arg4 = 0 ;
+  OSG::Pnt3f *arg5 = 0 ;
+  
+  SWIG_check_num_args("OSG::makeViewFromUVNP",5,5)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::makeViewFromUVNP",1,"OSG::Matrix &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("OSG::makeViewFromUVNP",2,"OSG::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("OSG::makeViewFromUVNP",3,"OSG::Vec3f const &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("OSG::makeViewFromUVNP",4,"OSG::Vec3f const &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("OSG::makeViewFromUVNP",5,"OSG::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("makeViewFromUVNP",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("makeViewFromUVNP",2,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("makeViewFromUVNP",3,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("makeViewFromUVNP",4,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_OSG__Pnt3f,0))){
+    SWIG_fail_ptr("makeViewFromUVNP",5,SWIGTYPE_p_OSG__Pnt3f);
+  }
+  
+  OSG::makeViewFromUVNP(*arg1,(OSG::Vec3f const &)*arg2,(OSG::Vec3f const &)*arg3,(OSG::Vec3f const &)*arg4,(OSG::Pnt3f const &)*arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_getUVNDFromMat(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Vec3f *arg2 = 0 ;
+  OSG::Vec3f *arg3 = 0 ;
+  OSG::Vec3f *arg4 = 0 ;
+  OSG::Vec3f *arg5 = 0 ;
+  
+  SWIG_check_num_args("OSG::getUVNDFromMat",5,5)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::getUVNDFromMat",1,"OSG::Matrix const &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("OSG::getUVNDFromMat",2,"OSG::Vec3f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("OSG::getUVNDFromMat",3,"OSG::Vec3f &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("OSG::getUVNDFromMat",4,"OSG::Vec3f &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("OSG::getUVNDFromMat",5,"OSG::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("getUVNDFromMat",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("getUVNDFromMat",2,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("getUVNDFromMat",3,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("getUVNDFromMat",4,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("getUVNDFromMat",5,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  OSG::getUVNDFromMat((OSG::Matrix const &)*arg1,*arg2,*arg3,*arg4,*arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_getUVNPFromMat(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Vec3f *arg2 = 0 ;
+  OSG::Vec3f *arg3 = 0 ;
+  OSG::Vec3f *arg4 = 0 ;
+  OSG::Pnt3f *arg5 = 0 ;
+  
+  SWIG_check_num_args("OSG::getUVNPFromMat",5,5)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::getUVNPFromMat",1,"OSG::Matrix const &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("OSG::getUVNPFromMat",2,"OSG::Vec3f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("OSG::getUVNPFromMat",3,"OSG::Vec3f &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("OSG::getUVNPFromMat",4,"OSG::Vec3f &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("OSG::getUVNPFromMat",5,"OSG::Pnt3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("getUVNPFromMat",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("getUVNPFromMat",2,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("getUVNPFromMat",3,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_OSG__Vec3f,0))){
+    SWIG_fail_ptr("getUVNPFromMat",4,SWIGTYPE_p_OSG__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_OSG__Pnt3f,0))){
+    SWIG_fail_ptr("getUVNPFromMat",5,SWIGTYPE_p_OSG__Pnt3f);
+  }
+  
+  OSG::getUVNPFromMat((OSG::Matrix const &)*arg1,*arg2,*arg3,*arg4,*arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_getPFromViewMat(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Pnt3f *arg1 = 0 ;
+  OSG::Matrix *arg2 = 0 ;
+  
+  SWIG_check_num_args("OSG::getPFromViewMat",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::getPFromViewMat",1,"OSG::Pnt3f &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("OSG::getPFromViewMat",2,"OSG::Matrix const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Pnt3f,0))){
+    SWIG_fail_ptr("getPFromViewMat",1,SWIGTYPE_p_OSG__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("getPFromViewMat",2,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  OSG::getPFromViewMat(*arg1,(OSG::Matrix const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_setViewMatEyePos(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Matrix *arg1 = 0 ;
+  OSG::Pnt3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("OSG::setViewMatEyePos",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::setViewMatEyePos",1,"OSG::Matrix &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("OSG::setViewMatEyePos",2,"OSG::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Matrix,0))){
+    SWIG_fail_ptr("setViewMatEyePos",1,SWIGTYPE_p_OSG__Matrix);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt3f,0))){
+    SWIG_fail_ptr("setViewMatEyePos",2,SWIGTYPE_p_OSG__Pnt3f);
+  }
+  
+  OSG::setViewMatEyePos(*arg1,(OSG::Pnt3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_StringToUInt32Map__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   std::map< std::string,OSG::UInt32 > *result = 0 ;
@@ -46317,6 +47020,18 @@ static const struct luaL_reg swig_commands[] = {
     { "Quaternion_identity", _wrap_Quaternion_identity},
     { "TypeFactory_the", _wrap_TypeFactory_the},
     { "FieldType_dcast", _wrap_FieldType_dcast},
+    { "MatrixOrthogonal", _wrap_MatrixOrthogonal},
+    { "MatrixFrustum", _wrap_MatrixFrustum},
+    { "MatrixPerspective", _wrap_MatrixPerspective},
+    { "MatrixStereoPerspective", _wrap_MatrixStereoPerspective},
+    { "MatrixLookAt",_wrap_MatrixLookAt},
+    { "MatrixProjection", _wrap_MatrixProjection},
+    { "makeViewFromUVND", _wrap_makeViewFromUVND},
+    { "makeViewFromUVNP", _wrap_makeViewFromUVNP},
+    { "getUVNDFromMat", _wrap_getUVNDFromMat},
+    { "getUVNPFromMat", _wrap_getUVNPFromMat},
+    { "getPFromViewMat", _wrap_getPFromViewMat},
+    { "setViewMatEyePos", _wrap_setViewMatEyePos},
     { "createFieldContainer",createFieldContainer},
     { "getFieldContainer",getFieldContainer},
     { "EventProducer_getProducerClassTypeId", _wrap_EventProducer_getProducerClassTypeId},
@@ -47278,4 +47993,5 @@ void push_FieldContainer_on_lua(lua_State* L, OSG::FieldContainerRefPtr value)
     OSG::FieldContainerRefPtr * resultptr = new OSG::FieldContainerRefPtr((const OSG::FieldContainerRefPtr &) value);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1);
 }
+
 
