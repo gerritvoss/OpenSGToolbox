@@ -51,8 +51,6 @@
 #include "OSGFieldEditorFactory.h"
 #include "OSGSpringLayout.h"
 #include "OSGSpringLayoutConstraints.h"
-#include "OSGLabel.h"
-#include "OSGNameAttachment.h"
 
 #include "OSGNode.h"
 #include "OSGGroup.h"
@@ -135,11 +133,6 @@ bool MaterialFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
         return false;
     }
 
-    dettachFieldContainer();
-
-    //Attach the Generic Field Container Editor
-    _GenericEditor->attachFieldContainer(fc); 
-
     //Attach the material
     _MaterialGeometry->setMaterial(dynamic_cast<Material*>(fc));
     commitChanges();
@@ -150,55 +143,10 @@ bool MaterialFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
 
 bool MaterialFieldContainerEditor::dettachFieldContainer(void)
 {
-    //Dettach the Generic Field Container Editor
-    _GenericEditor->dettachFieldContainer(); 
-
     //Dettach the material
     _MaterialGeometry->setMaterial(NULL);
 
     return Inherited::dettachFieldContainer();
-}
-
-Vec2f MaterialFieldContainerEditor::getPreferredScrollableViewportSize(void)
-{
-    return getRequestedSize();
-}
-
-Int32 MaterialFieldContainerEditor::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
-{
-    return direction * (VisibleRectBottomRight[1] - VisibleRectTopLeft[1]);
-}
-
-bool MaterialFieldContainerEditor::getScrollableTracksViewportHeight(void)
-{
-    return false;
-}
-
-bool MaterialFieldContainerEditor::getScrollableTracksViewportWidth(void)
-{
-    return true;
-}
-
-
-bool MaterialFieldContainerEditor::getScrollableHeightMinTracksViewport(void)
-{
-    return false;
-}
-
-bool MaterialFieldContainerEditor::getScrollableWidthMinTracksViewport(void)
-{
-    return false;
-}
-
-Int32 MaterialFieldContainerEditor::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
-{
-    return 20;
-}
-
-void MaterialFieldContainerEditor::setCommandManager(CommandManagerPtr manager)
-{
-    Inherited::setCommandManager(manager);
-    _GenericEditor->setCommandManager(manager);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -304,11 +252,7 @@ void MaterialFieldContainerEditor::onCreate(const MaterialFieldContainerEditor *
         createGLViewport();
 
         //Create the viewport to view the material in
-        _MaterialViewport->setPreferredSize(Vec2f(95.0f,95.0f));
-        
-        //Create the Generic FieldContainerEditor
-        _GenericEditor = GenericFieldContainerEditor::create();
-
+        _MaterialViewport->setPreferredSize(Vec2f(150.0f,150.0f));
 
         SpringLayoutRefPtr TheLayout = SpringLayout::create();
 

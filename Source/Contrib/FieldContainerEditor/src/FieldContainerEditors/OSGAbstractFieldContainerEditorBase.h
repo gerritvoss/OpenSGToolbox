@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ImageFieldContainerEditor
+ **     class AbstractFieldContainerEditor
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGIMAGEFIELDCONTAINEREDITORBASE_H_
-#define _OSGIMAGEFIELDCONTAINEREDITORBASE_H_
+#ifndef _OSGABSTRACTFIELDCONTAINEREDITORBASE_H_
+#define _OSGABSTRACTFIELDCONTAINEREDITORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -63,28 +63,28 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGAbstractFieldContainerEditor.h" // Parent
+#include "OSGFieldContainerEditorComponent.h" // Parent
 
 
-#include "OSGImageFieldContainerEditorFields.h"
+#include "OSGAbstractFieldContainerEditorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ImageFieldContainerEditor;
+class AbstractFieldContainerEditor;
 
-//! \brief ImageFieldContainerEditor Base Class.
+//! \brief AbstractFieldContainerEditor Base Class.
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ImageFieldContainerEditorBase : public AbstractFieldContainerEditor
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING AbstractFieldContainerEditorBase : public FieldContainerEditorComponent
 {
   public:
 
-    typedef AbstractFieldContainerEditor Inherited;
-    typedef AbstractFieldContainerEditor ParentContainer;
+    typedef FieldContainerEditorComponent Inherited;
+    typedef FieldContainerEditorComponent ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
 
-    OSG_GEN_INTERNALPTR(ImageFieldContainerEditor);
+    OSG_GEN_INTERNALPTR(AbstractFieldContainerEditor);
 
     /*==========================  PUBLIC  =================================*/
 
@@ -122,33 +122,6 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ImageFieldContainerEditorBase :
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  ImageFieldContainerEditorTransitPtr  create          (void);
-    static  ImageFieldContainerEditor           *createEmpty     (void);
-
-    static  ImageFieldContainerEditorTransitPtr  createLocal     (
-                                               BitVector bFlags = FCLocal::All);
-
-    static  ImageFieldContainerEditor            *createEmptyLocal(
-                                              BitVector bFlags = FCLocal::All);
-
-    static  ImageFieldContainerEditorTransitPtr  createDependent  (BitVector bFlags);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerTransitPtr shallowCopy     (void) const;
-    virtual FieldContainerTransitPtr shallowCopyLocal(
-                                       BitVector bFlags = FCLocal::All) const;
-    virtual FieldContainerTransitPtr shallowCopyDependent(
-                                                      BitVector bFlags) const;
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -162,15 +135,15 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ImageFieldContainerEditorBase :
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ImageFieldContainerEditorBase(void);
-    ImageFieldContainerEditorBase(const ImageFieldContainerEditorBase &source);
+    AbstractFieldContainerEditorBase(void);
+    AbstractFieldContainerEditorBase(const AbstractFieldContainerEditorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ImageFieldContainerEditorBase(void);
+    virtual ~AbstractFieldContainerEditorBase(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,7 +169,7 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ImageFieldContainerEditorBase :
                                  ConstFieldMaskArg  syncMode  ,
                            const UInt32             uiSyncInfo);
 
-            void execSync (      ImageFieldContainerEditorBase *pFrom,
+            void execSync (      AbstractFieldContainerEditorBase *pFrom,
                                  ConstFieldMaskArg  whichField,
                                  AspectOffsetStore &oOffsets,
                                  ConstFieldMaskArg  syncMode  ,
@@ -212,11 +185,6 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ImageFieldContainerEditorBase :
     /*---------------------------------------------------------------------*/
     /*! \name                     Aspect Create                            */
     /*! \{                                                                 */
-
-#ifdef OSG_MT_CPTR_ASPECT
-    virtual FieldContainer *createAspectCopy(
-                                    const FieldContainer *pRefAspect) const;
-#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -236,11 +204,11 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ImageFieldContainerEditorBase :
     /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ImageFieldContainerEditorBase &source);
+    void operator =(const AbstractFieldContainerEditorBase &source);
 };
 
-typedef ImageFieldContainerEditorBase *ImageFieldContainerEditorBaseP;
+typedef AbstractFieldContainerEditorBase *AbstractFieldContainerEditorBaseP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGIMAGEFIELDCONTAINEREDITORBASE_H_ */
+#endif /* _OSGABSTRACTFIELDCONTAINEREDITORBASE_H_ */

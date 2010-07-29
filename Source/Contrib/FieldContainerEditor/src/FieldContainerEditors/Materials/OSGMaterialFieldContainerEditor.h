@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGMaterialFieldContainerEditorBase.h"
-#include "OSGGenericFieldContainerEditor.h"
 #include "OSGGLViewport.h"
 #include "OSGGeometry.h"
 
@@ -97,29 +96,6 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialFieldContainerEditor : 
     virtual bool dettachFieldContainer(void);
 
 	virtual Vec2f getContentRequestedSize(void) const;
-
-    //Returns the preferred size of the viewport for a view component.
-    virtual Vec2f getPreferredScrollableViewportSize(void);
-
-    //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
-    virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-
-    //Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
-    virtual bool getScrollableTracksViewportHeight(void);
-
-    //Return true if a viewport should always force the width of this Scrollable to match the width of the viewport.
-    virtual bool getScrollableTracksViewportWidth(void);
-
-    //Return true if a viewport should always force the height of this Scrollable to be at at least the height of the viewport.
-    virtual bool getScrollableHeightMinTracksViewport(void);
-
-    //Return true if a viewport should always force the width of this Scrollable to be at at least the width of the viewport.
-    virtual bool getScrollableWidthMinTracksViewport(void);
-
-    //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
-    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-
-    virtual void setCommandManager(CommandManagerPtr manager);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -161,7 +137,6 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialFieldContainerEditor : 
 
     static std::vector<const FieldContainerType*> _EditableTypes;
 
-    GenericFieldContainerEditorRefPtr _GenericEditor;
     GLViewportRefPtr _MaterialViewport;
     GeometryRefPtr  _MaterialGeometry;
     /*==========================  PRIVATE  ================================*/

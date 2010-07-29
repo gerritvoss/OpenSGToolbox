@@ -96,7 +96,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<MaterialFieldContainerEditor *>::_type("MaterialFieldContainerEditorPtr", "FieldContainerEditorComponentPtr");
+DataType FieldTraits<MaterialFieldContainerEditor *>::_type("MaterialFieldContainerEditorPtr", "AbstractFieldContainerEditorPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(MaterialFieldContainerEditor *)
@@ -159,7 +159,7 @@ MaterialFieldContainerEditorBase::TypeObject MaterialFieldContainerEditorBase::_
     "\n"
     "<FieldContainer\n"
     "\tname=\"MaterialFieldContainerEditor\"\n"
-    "\tparent=\"FieldContainerEditorComponent\"\n"
+    "\tparent=\"AbstractFieldContainerEditor\"\n"
     "    library=\"ContribFieldContainerEditor\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"

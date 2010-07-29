@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="MaterialFieldContainerEditor"
-	parent="FieldContainerEditorComponent"
+	parent="AbstractFieldContainerEditor"
     library="ContribFieldContainerEditor"
     pointerfieldtypes="both"
 	structure="concrete"

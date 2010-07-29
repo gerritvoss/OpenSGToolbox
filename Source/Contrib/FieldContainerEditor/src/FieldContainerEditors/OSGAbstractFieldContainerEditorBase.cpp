@@ -45,7 +45,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ImageFieldContainerEditor!
+ **     class AbstractFieldContainerEditor!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -59,8 +59,8 @@
 
 
 
-#include "OSGImageFieldContainerEditorBase.h"
-#include "OSGImageFieldContainerEditor.h"
+#include "OSGAbstractFieldContainerEditorBase.h"
+#include "OSGAbstractFieldContainerEditor.h"
 
 #include <boost/bind.hpp>
 
@@ -74,7 +74,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class OSG::ImageFieldContainerEditor
+/*! \class OSG::AbstractFieldContainerEditor
     
  */
 
@@ -88,47 +88,47 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<ImageFieldContainerEditor *>::_type("ImageFieldContainerEditorPtr", "AbstractFieldContainerEditorPtr");
+DataType FieldTraits<AbstractFieldContainerEditor *>::_type("AbstractFieldContainerEditorPtr", "FieldContainerEditorComponentPtr");
 #endif
 
-OSG_FIELDTRAITS_GETTYPE(ImageFieldContainerEditor *)
+OSG_FIELDTRAITS_GETTYPE(AbstractFieldContainerEditor *)
 
 OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
-                           ImageFieldContainerEditor *,
+                           AbstractFieldContainerEditor *,
                            0);
 
 OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
-                           ImageFieldContainerEditor *,
+                           AbstractFieldContainerEditor *,
                            0);
 
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
 
-void ImageFieldContainerEditorBase::classDescInserter(TypeObject &oType)
+void AbstractFieldContainerEditorBase::classDescInserter(TypeObject &oType)
 {
 }
 
 
-ImageFieldContainerEditorBase::TypeObject ImageFieldContainerEditorBase::_type(
-    ImageFieldContainerEditorBase::getClassname(),
+AbstractFieldContainerEditorBase::TypeObject AbstractFieldContainerEditorBase::_type(
+    AbstractFieldContainerEditorBase::getClassname(),
     Inherited::getClassname(),
     "NULL",
     0,
-    reinterpret_cast<PrototypeCreateF>(&ImageFieldContainerEditorBase::createEmptyLocal),
-    ImageFieldContainerEditor::initMethod,
-    ImageFieldContainerEditor::exitMethod,
-    reinterpret_cast<InitalInsertDescFunc>(&ImageFieldContainerEditor::classDescInserter),
+    NULL,
+    AbstractFieldContainerEditor::initMethod,
+    AbstractFieldContainerEditor::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AbstractFieldContainerEditor::classDescInserter),
     false,
     0,
     "<?xml version=\"1.0\"?>\n"
     "\n"
     "<FieldContainer\n"
-    "\tname=\"ImageFieldContainerEditor\"\n"
-    "\tparent=\"AbstractFieldContainerEditor\"\n"
+    "\tname=\"AbstractFieldContainerEditor\"\n"
+    "\tparent=\"FieldContainerEditorComponent\"\n"
     "    library=\"ContribFieldContainerEditor\"\n"
     "    pointerfieldtypes=\"both\"\n"
-    "\tstructure=\"concrete\"\n"
+    "\tstructure=\"abstract\"\n"
     "    systemcomponent=\"true\"\n"
     "    parentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
@@ -142,19 +142,19 @@ ImageFieldContainerEditorBase::TypeObject ImageFieldContainerEditorBase::_type(
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ImageFieldContainerEditorBase::getType(void)
+FieldContainerType &AbstractFieldContainerEditorBase::getType(void)
 {
     return _type;
 }
 
-const FieldContainerType &ImageFieldContainerEditorBase::getType(void) const
+const FieldContainerType &AbstractFieldContainerEditorBase::getType(void) const
 {
     return _type;
 }
 
-UInt32 ImageFieldContainerEditorBase::getContainerSize(void) const
+UInt32 AbstractFieldContainerEditorBase::getContainerSize(void) const
 {
-    return sizeof(ImageFieldContainerEditor);
+    return sizeof(AbstractFieldContainerEditor);
 }
 
 /*------------------------- decorator get ------------------------------*/
@@ -166,7 +166,7 @@ UInt32 ImageFieldContainerEditorBase::getContainerSize(void) const
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ImageFieldContainerEditorBase::getBinSize(ConstFieldMaskArg whichField)
+UInt32 AbstractFieldContainerEditorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -174,134 +174,18 @@ UInt32 ImageFieldContainerEditorBase::getBinSize(ConstFieldMaskArg whichField)
     return returnValue;
 }
 
-void ImageFieldContainerEditorBase::copyToBin(BinaryDataHandler &pMem,
+void AbstractFieldContainerEditorBase::copyToBin(BinaryDataHandler &pMem,
                                   ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
 }
 
-void ImageFieldContainerEditorBase::copyFromBin(BinaryDataHandler &pMem,
+void AbstractFieldContainerEditorBase::copyFromBin(BinaryDataHandler &pMem,
                                     ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-}
-
-//! create a new instance of the class
-ImageFieldContainerEditorTransitPtr ImageFieldContainerEditorBase::createLocal(BitVector bFlags)
-{
-    ImageFieldContainerEditorTransitPtr fc;
-
-    if(getClassType().getPrototype() != NULL)
-    {
-        FieldContainerTransitPtr tmpPtr =
-            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
-
-        fc = dynamic_pointer_cast<ImageFieldContainerEditor>(tmpPtr);
-    }
-
-    return fc;
-}
-
-//! create a new instance of the class, copy the container flags
-ImageFieldContainerEditorTransitPtr ImageFieldContainerEditorBase::createDependent(BitVector bFlags)
-{
-    ImageFieldContainerEditorTransitPtr fc;
-
-    if(getClassType().getPrototype() != NULL)
-    {
-        FieldContainerTransitPtr tmpPtr =
-            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
-
-        fc = dynamic_pointer_cast<ImageFieldContainerEditor>(tmpPtr);
-    }
-
-    return fc;
-}
-
-//! create a new instance of the class
-ImageFieldContainerEditorTransitPtr ImageFieldContainerEditorBase::create(void)
-{
-    ImageFieldContainerEditorTransitPtr fc;
-
-    if(getClassType().getPrototype() != NULL)
-    {
-        FieldContainerTransitPtr tmpPtr =
-            getClassType().getPrototype()-> shallowCopy();
-
-        fc = dynamic_pointer_cast<ImageFieldContainerEditor>(tmpPtr);
-    }
-
-    return fc;
-}
-
-ImageFieldContainerEditor *ImageFieldContainerEditorBase::createEmptyLocal(BitVector bFlags)
-{
-    ImageFieldContainerEditor *returnValue;
-
-    newPtr<ImageFieldContainerEditor>(returnValue, bFlags);
-
-    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
-
-    return returnValue;
-}
-
-//! create an empty new instance of the class, do not copy the prototype
-ImageFieldContainerEditor *ImageFieldContainerEditorBase::createEmpty(void)
-{
-    ImageFieldContainerEditor *returnValue;
-
-    newPtr<ImageFieldContainerEditor>(returnValue, Thread::getCurrentLocalFlags());
-
-    returnValue->_pFieldFlags->_bNamespaceMask &=
-        ~Thread::getCurrentLocalFlags();
-
-    return returnValue;
-}
-
-
-FieldContainerTransitPtr ImageFieldContainerEditorBase::shallowCopyLocal(
-    BitVector bFlags) const
-{
-    ImageFieldContainerEditor *tmpPtr;
-
-    newPtr(tmpPtr, dynamic_cast<const ImageFieldContainerEditor *>(this), bFlags);
-
-    FieldContainerTransitPtr returnValue(tmpPtr);
-
-    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
-
-    return returnValue;
-}
-
-FieldContainerTransitPtr ImageFieldContainerEditorBase::shallowCopyDependent(
-    BitVector bFlags) const
-{
-    ImageFieldContainerEditor *tmpPtr;
-
-    newPtr(tmpPtr, dynamic_cast<const ImageFieldContainerEditor *>(this), ~bFlags);
-
-    FieldContainerTransitPtr returnValue(tmpPtr);
-
-    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
-
-    return returnValue;
-}
-
-FieldContainerTransitPtr ImageFieldContainerEditorBase::shallowCopy(void) const
-{
-    ImageFieldContainerEditor *tmpPtr;
-
-    newPtr(tmpPtr,
-           dynamic_cast<const ImageFieldContainerEditor *>(this),
-           Thread::getCurrentLocalFlags());
-
-    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
-
-    FieldContainerTransitPtr returnValue(tmpPtr);
-
-    return returnValue;
 }
 
 
@@ -309,12 +193,12 @@ FieldContainerTransitPtr ImageFieldContainerEditorBase::shallowCopy(void) const
 
 /*------------------------- constructors ----------------------------------*/
 
-ImageFieldContainerEditorBase::ImageFieldContainerEditorBase(void) :
+AbstractFieldContainerEditorBase::AbstractFieldContainerEditorBase(void) :
     Inherited()
 {
 }
 
-ImageFieldContainerEditorBase::ImageFieldContainerEditorBase(const ImageFieldContainerEditorBase &source) :
+AbstractFieldContainerEditorBase::AbstractFieldContainerEditorBase(const AbstractFieldContainerEditorBase &source) :
     Inherited(source)
 {
 }
@@ -322,22 +206,22 @@ ImageFieldContainerEditorBase::ImageFieldContainerEditorBase(const ImageFieldCon
 
 /*-------------------------- destructors ----------------------------------*/
 
-ImageFieldContainerEditorBase::~ImageFieldContainerEditorBase(void)
+AbstractFieldContainerEditorBase::~AbstractFieldContainerEditorBase(void)
 {
 }
 
 
 
 #ifdef OSG_MT_CPTR_ASPECT
-void ImageFieldContainerEditorBase::execSyncV(      FieldContainer    &oFrom,
+void AbstractFieldContainerEditorBase::execSyncV(      FieldContainer    &oFrom,
                                         ConstFieldMaskArg  whichField,
                                         AspectOffsetStore &oOffsets,
                                         ConstFieldMaskArg  syncMode,
                                   const UInt32             uiSyncInfo)
 {
-    ImageFieldContainerEditor *pThis = static_cast<ImageFieldContainerEditor *>(this);
+    AbstractFieldContainerEditor *pThis = static_cast<AbstractFieldContainerEditor *>(this);
 
-    pThis->execSync(static_cast<ImageFieldContainerEditor *>(&oFrom),
+    pThis->execSync(static_cast<AbstractFieldContainerEditor *>(&oFrom),
                     whichField,
                     oOffsets,
                     syncMode,
@@ -346,21 +230,8 @@ void ImageFieldContainerEditorBase::execSyncV(      FieldContainer    &oFrom,
 #endif
 
 
-#ifdef OSG_MT_CPTR_ASPECT
-FieldContainer *ImageFieldContainerEditorBase::createAspectCopy(
-    const FieldContainer *pRefAspect) const
-{
-    ImageFieldContainerEditor *returnValue;
 
-    newAspectCopy(returnValue,
-                  dynamic_cast<const ImageFieldContainerEditor *>(pRefAspect),
-                  dynamic_cast<const ImageFieldContainerEditor *>(this));
-
-    return returnValue;
-}
-#endif
-
-void ImageFieldContainerEditorBase::resolveLinks(void)
+void AbstractFieldContainerEditorBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
 

@@ -63,7 +63,7 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGFieldContainerEditorComponent.h" // Parent
+#include "OSGAbstractFieldContainerEditor.h" // Parent
 
 #include "OSGSysFields.h"               // MaterialShape type
 
@@ -75,12 +75,12 @@ class MaterialFieldContainerEditor;
 
 //! \brief MaterialFieldContainerEditor Base Class.
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialFieldContainerEditorBase : public FieldContainerEditorComponent
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialFieldContainerEditorBase : public AbstractFieldContainerEditor
 {
   public:
 
-    typedef FieldContainerEditorComponent Inherited;
-    typedef FieldContainerEditorComponent ParentContainer;
+    typedef AbstractFieldContainerEditor Inherited;
+    typedef AbstractFieldContainerEditor ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
