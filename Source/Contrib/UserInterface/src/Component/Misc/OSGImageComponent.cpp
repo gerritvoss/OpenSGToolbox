@@ -242,6 +242,22 @@ TextureObjChunkRefPtr ImageComponent::getDrawnTexture(void) const
     }
 }
 
+void ImageComponent::setImages(ImageRefPtr TheImage)
+{
+    setImage(TheImage);
+    setRolloverTexture(getTexture());
+    setDisabledTexture(getTexture());
+    setFocusedTexture(getTexture());
+}
+
+void ImageComponent::setImages(const char *fileName, const char *mimeType)
+{
+    setImage(fileName, mimeType);
+    setRolloverTexture(getTexture());
+    setDisabledTexture(getTexture());
+    setFocusedTexture(getTexture());
+}
+
 void ImageComponent::setImage(ImageRefPtr Image)
 {
     if(getTexture() == NULL)
