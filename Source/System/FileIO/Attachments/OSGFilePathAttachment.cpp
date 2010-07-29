@@ -119,7 +119,7 @@ void   FilePathAttachment::setFilePath(      AttachmentContainer*  container,
 
     if(att != NULL)
     {
-        container->subAttachment(PathAttachment);
+        container->subAttachment(att);
     }
 
     PathAttachment = FilePathAttachment::create();
@@ -222,6 +222,12 @@ FieldContainerUnrecPtr FilePathAttachment::loadFromFilePath(BoostPath &LoadFileP
     catch(boost::filesystem::basic_filesystem_error<BoostPath> &)
     {
         return NULL;
+    }
+
+    if(Result != NULL &&
+       Result->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+    {
+        setFilePath(dynamic_pointer_cast<AttachmentContainer>(Result), LoadFilePath);
     }
 
     return Result;

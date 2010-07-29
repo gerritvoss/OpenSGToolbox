@@ -116,7 +116,7 @@ void BoundedRangeModelBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&BoundedRangeModel::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&BoundedRangeModel::getHandleEventProducer));

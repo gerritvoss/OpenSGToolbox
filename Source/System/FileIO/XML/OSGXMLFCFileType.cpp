@@ -62,6 +62,7 @@
 #include "OSGContainerUtils.h"
 
 #include "OSGStringUtils.h"
+#include "OSGPathUtils.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -571,7 +572,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
     //{
         //changedCP(Itor->first, Itor->second);
     //}
-    commitChanges();
+    //commitChanges();
     
 
     FieldContainerFactory::the()->setMapper(NULL);
@@ -703,7 +704,10 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
     //Get all of the dependent FieldContainers
     const std::set<FieldContainerUnrecPtr> IgnoreContainers;
     FCPtrStore AllContainers;
-    AllContainers = getAllDependantFCs(Containers, IgnoreContainers, IgnoreTypes);
+    AllContainers = getAllDependantFCs(Containers,
+                                       IgnoreContainers,
+                                       IgnoreTypes,
+                                       false);
 
     // root node
     rapidxml::xml_node<>* root = doc.allocate_node(rapidxml::node_element,
@@ -741,10 +745,30 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             const BoostPath* FilePath(FilePathAttachment::getFilePath(dynamic_pointer_cast<AttachmentContainer>(*FCItor)));
             if(FilePath != NULL)
             {
-                alloc_str = doc.allocate_string(FilePath->string().c_str());
+                BoostPath RelativePath = makeRelative(RootPath, *FilePath);
+
+                alloc_str = doc.allocate_string(RelativePath.string().c_str());
                 attr = doc.allocate_attribute(FileAttachmentXMLToken.c_str(),
                                               alloc_str);
                 child->append_attribute(attr);
+
+                bool RecurseWrite(true);
+                if((!getOptionAs<bool>(getOptions(), "RecurseWriteDepFCFiles", RecurseWrite) ||
+                   RecurseWrite) &&
+                   FCFileHandler::the()->getFileType(*FilePath,FCFileType::OSG_WRITE_SUPPORTED) != NULL)
+                {
+                    FCPtrStore store;
+                    store.insert(*FCItor);
+                    //Remove the file path attachment temporarily
+                    AttachmentUnrecPtr att  = 
+                        dynamic_pointer_cast<AttachmentContainer>(*FCItor)->findAttachment(FilePathAttachment::getClassType().getGroupId());
+
+                    dynamic_pointer_cast<AttachmentContainer>(*FCItor)->subAttachment(att);
+
+                    FCFileHandler::the()->write(store,*FilePath, IgnoreTypes);
+                    //Put the file path attachment back on
+                    dynamic_pointer_cast<AttachmentContainer>(*FCItor)->addAttachment(att);
+                }
                 continue;
             }
 
@@ -855,35 +879,33 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             }
             else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
             {
-
-                //Path RootPath = boost::filesystem::system_complete(RootPath);
                 BoostPath FilePath = boost::filesystem::system_complete(static_cast<const SFBoostPath*>(TheField)->getValue());
-                //Path RelativePath = makeRelative(RootPath, FilePath);
-                //FieldValue = RelativePath.string();//TheField->getValueByStr(FieldValue);
-                alloc_str = doc.allocate_string(FilePath.string().c_str());
+                BoostPath RelativePath = makeRelative(RootPath, FilePath);
+
+                alloc_str = doc.allocate_string(RelativePath.string().c_str());
                 attr = doc.allocate_attribute(Desc->getCName(),
                                               alloc_str);
                 child->append_attribute(attr);
             }
             else if(TheFieldHandle->getType() == MFBoostPath::getClassType())
             {
-                //OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" ;
-                ////Path RootPath = boost::filesystem::system_complete(RootPath);
-                //BoostPath FilePath;
-                ////Path RelativePath;
-                //for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
-                //{
-                    //FieldValue.clear();
-                    //FilePath = boost::filesystem::system_complete((*static_cast<const MFBoostPath*>(TheField))[Index]);
-                    ////RelativePath = makeRelative(RootPath, FilePath);
-                    //FieldValue = FilePath.string();
-                    //if(Index!=0)
-                    //{
-                        //OSGOutputStream << ";";
-                    //}
-                    //OSGOutputStream << FieldValue;
-                //}
-                //OSGOutputStream << "\"" << std::endl;
+                BoostPath FilePath;
+                BoostPath RelativePath;
+                std::string PathList;
+                for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
+                {
+                    FilePath = boost::filesystem::system_complete((*static_cast<const MFBoostPath*>(TheField))[Index]);
+                    BoostPath RelativePath = makeRelative(RootPath, FilePath);
+                    if(Index!=0)
+                    {
+                        PathList += ";";
+                    }
+                    PathList += RelativePath.string();
+                }
+                alloc_str = doc.allocate_string(PathList.c_str());
+                attr = doc.allocate_attribute(Desc->getCName(),
+                                              alloc_str);
+                child->append_attribute(attr);
             }
             else if(TheFieldHandle->getType() == SFString::getClassType())
             {

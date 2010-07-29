@@ -123,6 +123,10 @@ ComponentRefPtr DefaultTreeComponentGenerator::getTreeComponent(TreeRefPtr Paren
     {
         //Could not convert to string
     }
+    if(LabelText.empty())
+    {
+        LabelText = "[Unnamed]";
+    }
 
     return getTreeComponentText(Parent, LabelText, IsSelected, Expanded, Leaf, Row, HasFocus);
 }

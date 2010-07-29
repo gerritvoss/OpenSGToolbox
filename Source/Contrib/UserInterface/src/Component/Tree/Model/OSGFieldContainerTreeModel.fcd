@@ -105,6 +105,16 @@ A UI ComponentTreeModel.
 	>
    </Field>
 	<Field
+		name="ShowEventProducers"
+		type="bool"
+        category="data"
+		cardinality="single"
+        visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+   </Field>
+	<Field
 		name="ShowCallbackFunctors"
 		type="bool"
         category="data"

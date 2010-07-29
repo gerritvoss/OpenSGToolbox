@@ -100,7 +100,8 @@ void FCPtrEditorRootedStore::updateList(void)
     std::set<FieldContainerUnrecPtr> AllContainers =
         getAllDependantFCs(SearchRoots,
                            Exclude,
-                           _ExcludedTypes);
+                           _ExcludedTypes,
+                           true);
 
     for(std::set<FieldContainerUnrecPtr>::iterator StoreItor(AllContainers.begin());
         StoreItor != AllContainers.end();

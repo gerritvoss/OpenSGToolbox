@@ -148,6 +148,8 @@ bool FCFileHandlerBase::subFCFileType(FCFileTypeP FileType)
 
 FCFileTypeP FCFileHandlerBase::getFileType(const std::string& FileExtension, UInt32 Flags)
 {
+    //Check if this is a FileName or just the file extension
+
 	FileTypeMap::const_iterator SearchItor(_SuffixTypeMap.find(FileExtension));
 
 	if(SearchItor != _SuffixTypeMap.end())
@@ -248,6 +250,15 @@ std::vector<std::string> FCFileHandlerBase::getSuffixList(UInt32 flags) const
 	 }
 	 return Result;
  }
+
+FCFileTypeP  FCFileHandlerBase::getFileType(const BoostPath& FilePath, UInt32 Flags)
+{
+	 //Determine the file extension
+	 std::string Extension(boost::filesystem::extension(FilePath.string()));
+	 boost::algorithm::trim_if(Extension,boost::is_any_of("."));
+
+     return getFileType(Extension, Flags);
+}
 
  FCFileHandlerBase::FCPtrStore FCFileHandlerBase::read(const BoostPath& FilePath)
  {

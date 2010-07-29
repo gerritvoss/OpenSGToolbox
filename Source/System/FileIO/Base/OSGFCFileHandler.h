@@ -62,6 +62,9 @@ class OSG_TBFILEIO_DLLMAPPING FCFileHandlerBase
      /*---------------------------------------------------------------------*/
 	 virtual FCFileTypeP getFileType(const std::string& FileExtension, UInt32 Flags = FCFileType::OSG_READ_SUPPORTED |
                                               FCFileType::OSG_WRITE_SUPPORTED);
+
+	 virtual FCFileTypeP getFileType(const BoostPath& FilePath, UInt32 Flags = FCFileType::OSG_READ_SUPPORTED |
+                                              FCFileType::OSG_WRITE_SUPPORTED);
  
 	 virtual std::vector<std::string> getSuffixList(UInt32 flags = FCFileType::OSG_READ_SUPPORTED |
                                               FCFileType::OSG_WRITE_SUPPORTED) const;
