@@ -1,5 +1,5 @@
 // 
-// OpenSGToolbox Tutorial: 05TextureAnimation 
+// OpenSGToolbox Tutorial: 09TextureSelectAnimation 
 //
 // Demonstrates a texture animation. 
 //
@@ -16,6 +16,8 @@
 #include "OSGChunkMaterial.h"
 #include "OSGMaterialChunk.h"
 #include "OSGTextureObjChunk.h"
+#include "OSGTextureSelectChunk.h"
+#include "OSGTextureEnvChunk.h"
 #include "OSGImageFileHandler.h"
 
 #include "OSGComponentTransform.h"
@@ -23,7 +25,6 @@
 #include "OSGTypeFactory.h"
 
 #include "OSGFieldContainerFactory.h"
-#include "OSGNameAttachment.h"
 
 #include "OSGContainerUtils.h"
 
@@ -215,7 +216,7 @@ int main(int argc, char **argv)
 
     TutorialWindow->openWindow(WinPos,
                                WinSize,
-                               "05TextureAnimation");
+                               "09TextureSelectAnimation");
 
     //Main Loop
     TutorialWindow->mainLoop();
@@ -237,7 +238,6 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-std::vector<ImageUnrecPtr> _Images;
 void setupAnimation(void)
 {
     std::vector<BoostPath> _ImagePaths;
@@ -246,17 +246,20 @@ void setupAnimation(void)
     _ImagePaths.push_back(BoostPath("./Data/Anim003.jpg"));
     _ImagePaths.push_back(BoostPath("./Data/Anim004.jpg"));
     _ImagePaths.push_back(BoostPath("./Data/Anim005.jpg"));
+    
+    TextureSelectChunkRefPtr AnimSequenceTexture = TextureSelectChunk::create();
+    AnimSequenceTexture->setChoice(0);
 
     //Make the textures
     for(UInt32 i(0) ; i<_ImagePaths.size(); ++i)
     {
-        ImageUnrecPtr AnimFrameImage = ImageFileHandler::the()->read(_ImagePaths[i].string().c_str());
-           
-        _Images.push_back(AnimFrameImage);
+        ImageRefPtr AnimFrameImage = ImageFileHandler::the()->read(_ImagePaths[i].string().c_str());
+
+        TextureObjChunkRefPtr AnimFrameTexture = TextureObjChunk::create();
+        AnimFrameTexture->setImage(AnimFrameImage);
+
+        AnimSequenceTexture->pushToTextures(AnimFrameTexture);
     }
-    
-    TextureObjChunkUnrecPtr AnimFrameTexture = TextureObjChunk::create();
-    AnimFrameTexture->setImage(_Images.front());
 
     //Box Material
     MaterialChunkUnrecPtr TheMaterialChunk = MaterialChunk::create();
@@ -264,26 +267,38 @@ void setupAnimation(void)
     TheMaterialChunk->setDiffuse(Color4f(0.8,0.8,0.8,1.0));
     TheMaterialChunk->setSpecular(Color4f(1.0,1.0,1.0,1.0));
 
+    //Texture Env Chunk
+    TextureEnvChunkRefPtr TexEnv = TextureEnvChunk::create();
+    TexEnv->setEnvMode(GL_MODULATE);
+
     TheBoxMaterial = ChunkMaterial::create();
-    TheBoxMaterial->addChunk(AnimFrameTexture);
+    TheBoxMaterial->addChunk(AnimSequenceTexture);
+    TheBoxMaterial->addChunk(TexEnv);
+    TheBoxMaterial->addChunk(TheMaterialChunk);
 
     //Texture Keyframe Sequence
-    KeyframeFCPtrSequenceUnrecPtr TextureKeyframes = KeyframeFCPtrSequenceImage::create();
-    for(UInt32 i(0) ; i<_Images.size(); ++i)
+    KeyframeNumberSequenceUInt32RefPtr FrameChoiceKeyframes = KeyframeNumberSequenceUInt32::create();
+    Real32 Rate(0.05f);
+    for(UInt32 i(0) ; i<AnimSequenceTexture->getMFTextures()->size(); ++i)
     {
-        TextureKeyframes->addKeyframe(_Images[i],static_cast<Real32>(i)*0.5f);
+        FrameChoiceKeyframes->addRawKeyframe(i,static_cast<Real32>(i)*Rate);
+    }
+    for(UInt32 i(0) ; i<AnimSequenceTexture->getMFTextures()->size(); ++i)
+    {
+        FrameChoiceKeyframes->addRawKeyframe(AnimSequenceTexture->getMFTextures()->size()-i-1,
+                                             static_cast<Real32>(i+AnimSequenceTexture->getMFTextures()->size())*Rate);
     }
     
     //Animator
     TutorialTextureAnimator = KeyframeAnimator::create();
-    TutorialTextureAnimator->setKeyframeSequence(TextureKeyframes);
+    TutorialTextureAnimator->setKeyframeSequence(FrameChoiceKeyframes);
     
     //Animation
     TutorialTextureAnimation = FieldAnimation::create();
     TutorialTextureAnimation->setAnimator(TutorialTextureAnimator);
     TutorialTextureAnimation->setInterpolationType(Animator::STEP_INTERPOLATION);
     TutorialTextureAnimation->setCycling(-1);
-    TutorialTextureAnimation->setAnimatedField(AnimFrameTexture,TextureObjChunk::ImageFieldId);
+    TutorialTextureAnimation->setAnimatedField(AnimSequenceTexture,TextureSelectChunk::ChoiceFieldId);
 
     //Animation Listener
     TutorialTextureAnimation->addAnimationListener(&TutorialTextureAnimationListener);
@@ -291,3 +306,4 @@ void setupAnimation(void)
     TutorialTextureAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
     TutorialTextureAnimation->start();
 }
+
