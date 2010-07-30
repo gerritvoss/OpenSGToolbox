@@ -1,5 +1,6 @@
 
 %module OSGToolbox
+%include <std_except.i>
 %import  <OSGBase.i>
 %import  <OSGSystem.i>
 %include <lua/std_map.i>
@@ -724,7 +725,7 @@ namespace OSG {
         UInt32 getNumParticles(void) const;
         const Pnt3f& getPosition(const UInt32& Index) const;
         const Pnt3f& getSecPosition(const UInt32& Index) const;
-        const Vec3f getPositionChange(const UInt32& Index) const;
+        Vec3f getPositionChange(const UInt32& Index) const;
         const Vec3f& getNormal(const UInt32& Index) const;
         const Color4f& getColor(const UInt32& Index) const;
         const Vec3f& getSize(const UInt32& Index) const;
@@ -732,9 +733,11 @@ namespace OSG {
         Real32 getAge(const UInt32& Index) const;
         const Vec3f& getVelocity(const UInt32& Index) const;
         const Vec3f& getSecVelocity(const UInt32& Index) const;
-        const Vec3f getVelocityChange(const UInt32& Index) const;
+        Vec3f getVelocityChange(const UInt32& Index) const;
         const Vec3f& getAcceleration(const UInt32& Index) const;
         UInt32 getAttribute(const UInt32& Index, const std::string& AttributeKey) const;
+        UInt32 getID(const UInt32& Index) const;
+        Int64 getIndex(UInt32 ParticleID) const;
         const std::map<std::string, OSG::UInt32>& getAttributes(const UInt32& Index) const;
     
         void setPosition(const Pnt3f& Pos, const UInt32& Index);
@@ -791,6 +794,7 @@ namespace OSG {
                          const Vec3f& Acceleration);
     
         bool killParticle(UInt32 Index, bool KillNextUpdate = false);
+        bool killParticleByID(UInt32 ID, bool KillNextUpdate = false);
     
         bool attachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
         void dettachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
