@@ -45,43 +45,59 @@
 
 #include <OSGConfig.h>
 
-#include "OSGImageFieldContainerEditor.h"
+#include "OSGTextureFieldContainerEditor.h"
 #include "OSGFieldContainerFactory.h"
 #include "OSGFieldContainerEditorFactory.h"
 #include "OSGFieldEditorFactory.h"
 #include "OSGSpringLayout.h"
 #include "OSGSpringLayoutConstraints.h"
 
-#include "OSGImage.h"
+#include "OSGTextureBaseChunk.h"
 
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
-// OSGImageFieldContainerEditorBase.cpp file.
-// To modify it, please change the .fcd file (OSGImageFieldContainerEditor.fcd) and
+// OSGTextureFieldContainerEditorBase.cpp file.
+// To modify it, please change the .fcd file (OSGTextureFieldContainerEditor.fcd) and
 // regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-std::vector<const FieldContainerType*> ImageFieldContainerEditor::_EditableTypes = std::vector<const FieldContainerType*>();
+std::vector<const FieldContainerType*> TextureFieldContainerEditor::_EditableTypes = std::vector<const FieldContainerType*>();
 
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ImageFieldContainerEditor::initMethod(InitPhase ePhase)
+void TextureFieldContainerEditor::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
     if(ePhase == TypeObject::SystemPost)
     {
-        FieldContainerEditorFactory::the()->setDefaultEditor(&Image::getClassType(),
-                                                             &getClassType());
-        FieldContainerEditorFactory::the()->setEditorType(&Image::getClassType(),
-                                                          &getClassType(),
-                                                          "Image");
+        //Fill in all of the editable types
+        UInt32 NumTypes(FieldContainerFactory::the()->getNumTypes());
+        UInt32 FoundTypes(0);
+        FieldContainerType* type;
+        for(UInt32 i(0) ; FoundTypes<NumTypes; ++i)
+        {
+            type = FieldContainerFactory::the()->findType(i);
+            if(type != NULL)
+            {
+                ++FoundTypes;
+                if(type->isDerivedFrom(TextureBaseChunk::getClassType()))
+                {
+                    _EditableTypes.push_back(type);
+                    FieldContainerEditorFactory::the()->setDefaultEditor(type,
+                                                                         &getClassType());
+                    FieldContainerEditorFactory::the()->setEditorType(type,
+                                                                      &getClassType(),
+                                                                      "Texture");
+                }
+            }
+        }
     }
 }
 
@@ -90,18 +106,18 @@ void ImageFieldContainerEditor::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Vec2f ImageFieldContainerEditor::getContentRequestedSize(void) const
+Vec2f TextureFieldContainerEditor::getContentRequestedSize(void) const
 {
     return _GenericEditor->getContentRequestedSize() +
         Vec2f(0.0f,_ImageDisplayComponent->getPreferredSize().y());
 }
 
-const std::vector<const FieldContainerType*>& ImageFieldContainerEditor::getEditableTypes(void) const
+const std::vector<const FieldContainerType*>& TextureFieldContainerEditor::getEditableTypes(void) const
 {
     return _EditableTypes;
 }
 
-bool ImageFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
+bool TextureFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
 {
     //Check that this is a valid FieldContainer
     if(!Inherited::attachFieldContainer(fc))
@@ -110,34 +126,47 @@ bool ImageFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
     }
 
     //Attach the image
-	_ImageDisplayComponent->setImages(dynamic_cast<Image*>(fc));
+	_ImageDisplayComponent->setTexture(dynamic_cast<TextureBaseChunk*>(fc));
+	_ImageDisplayComponent->setRolloverTexture(dynamic_cast<TextureBaseChunk*>(fc));
+	_ImageDisplayComponent->setDisabledTexture(dynamic_cast<TextureBaseChunk*>(fc));
+	_ImageDisplayComponent->setFocusedTexture(dynamic_cast<TextureBaseChunk*>(fc));
 
     return true;
 }
 
-bool ImageFieldContainerEditor::dettachFieldContainer(void)
+bool TextureFieldContainerEditor::dettachFieldContainer(void)
 {
     //Dettach the image
-	_ImageDisplayComponent->setImages(NULL);
+	_ImageDisplayComponent->setTexture(NULL);
+	_ImageDisplayComponent->setRolloverTexture(NULL);
+	_ImageDisplayComponent->setDisabledTexture(NULL);
+	_ImageDisplayComponent->setFocusedTexture(NULL);
 
     return Inherited::dettachFieldContainer();
 }
-
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void ImageFieldContainerEditor::onCreate(const ImageFieldContainerEditor *Id)
+void TextureFieldContainerEditor::onCreate(const TextureFieldContainerEditor *Id)
 {
 	Inherited::onCreate(Id);
 
     if(Id != NULL)
     {
+        Matrix m;
+        m.setScale(Vec3f(3.0f,3.0f,1.0f));
+        m.setTranslate(Pnt3f(-1.0f,-1.0f,0.0f));
+
+        TextureTransformChunkRefPtr TextureTransform = TextureTransformChunk::create();
+        TextureTransform->setMatrix(m);
+
         //Create the ImageComponent
         _ImageDisplayComponent = ImageComponent::create();
-        _ImageDisplayComponent->setPreferredSize(Vec2f(150.0f,150.0f));
-        _ImageDisplayComponent->setScale(ImageComponent::SCALE_MAX_AXIS);
+        _ImageDisplayComponent->setPreferredSize(Vec2f(250.0f,250.0f));
+        _ImageDisplayComponent->setScale(ImageComponent::SCALE_STRETCH);
+        _ImageDisplayComponent->setTransformation(TextureTransform);
 
         SpringLayoutRefPtr TheLayout = SpringLayout::create();
 
@@ -155,39 +184,39 @@ void ImageFieldContainerEditor::onCreate(const ImageFieldContainerEditor *Id)
     }
 }
 
-void ImageFieldContainerEditor::onDestroy()
+void TextureFieldContainerEditor::onDestroy()
 {
 }
 
 /*----------------------- constructors & destructors ----------------------*/
 
-ImageFieldContainerEditor::ImageFieldContainerEditor(void) :
+TextureFieldContainerEditor::TextureFieldContainerEditor(void) :
     Inherited()
 {
 }
 
-ImageFieldContainerEditor::ImageFieldContainerEditor(const ImageFieldContainerEditor &source) :
+TextureFieldContainerEditor::TextureFieldContainerEditor(const TextureFieldContainerEditor &source) :
     Inherited(source)
 {
 }
 
-ImageFieldContainerEditor::~ImageFieldContainerEditor(void)
+TextureFieldContainerEditor::~TextureFieldContainerEditor(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void ImageFieldContainerEditor::changed(ConstFieldMaskArg whichField, 
+void TextureFieldContainerEditor::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
 }
 
-void ImageFieldContainerEditor::dump(      UInt32    ,
+void TextureFieldContainerEditor::dump(      UInt32    ,
                          const BitVector ) const
 {
-    SLOG << "Dump ImageFieldContainerEditor NI" << std::endl;
+    SLOG << "Dump TextureFieldContainerEditor NI" << std::endl;
 }
 
 OSG_END_NAMESPACE

@@ -76,14 +76,14 @@ OSG::UInt16 ImageComponentBase::getClassGroupId(void)
 
 //! Get the value of the ImageComponent::_sfTexture field.
 inline
-TextureObjChunk * ImageComponentBase::getTexture(void) const
+TextureBaseChunk * ImageComponentBase::getTexture(void) const
 {
     return _sfTexture.getValue();
 }
 
 //! Set the value of the ImageComponent::_sfTexture field.
 inline
-void ImageComponentBase::setTexture(TextureObjChunk * const value)
+void ImageComponentBase::setTexture(TextureBaseChunk * const value)
 {
     editSField(TextureFieldMask);
 
@@ -92,14 +92,14 @@ void ImageComponentBase::setTexture(TextureObjChunk * const value)
 
 //! Get the value of the ImageComponent::_sfRolloverTexture field.
 inline
-TextureObjChunk * ImageComponentBase::getRolloverTexture(void) const
+TextureBaseChunk * ImageComponentBase::getRolloverTexture(void) const
 {
     return _sfRolloverTexture.getValue();
 }
 
 //! Set the value of the ImageComponent::_sfRolloverTexture field.
 inline
-void ImageComponentBase::setRolloverTexture(TextureObjChunk * const value)
+void ImageComponentBase::setRolloverTexture(TextureBaseChunk * const value)
 {
     editSField(RolloverTextureFieldMask);
 
@@ -108,14 +108,14 @@ void ImageComponentBase::setRolloverTexture(TextureObjChunk * const value)
 
 //! Get the value of the ImageComponent::_sfDisabledTexture field.
 inline
-TextureObjChunk * ImageComponentBase::getDisabledTexture(void) const
+TextureBaseChunk * ImageComponentBase::getDisabledTexture(void) const
 {
     return _sfDisabledTexture.getValue();
 }
 
 //! Set the value of the ImageComponent::_sfDisabledTexture field.
 inline
-void ImageComponentBase::setDisabledTexture(TextureObjChunk * const value)
+void ImageComponentBase::setDisabledTexture(TextureBaseChunk * const value)
 {
     editSField(DisabledTextureFieldMask);
 
@@ -124,14 +124,14 @@ void ImageComponentBase::setDisabledTexture(TextureObjChunk * const value)
 
 //! Get the value of the ImageComponent::_sfFocusedTexture field.
 inline
-TextureObjChunk * ImageComponentBase::getFocusedTexture(void) const
+TextureBaseChunk * ImageComponentBase::getFocusedTexture(void) const
 {
     return _sfFocusedTexture.getValue();
 }
 
 //! Set the value of the ImageComponent::_sfFocusedTexture field.
 inline
-void ImageComponentBase::setFocusedTexture(TextureObjChunk * const value)
+void ImageComponentBase::setFocusedTexture(TextureBaseChunk * const value)
 {
     editSField(FocusedTextureFieldMask);
 

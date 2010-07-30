@@ -45,104 +45,51 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ImageComponent
+ **     class TextureFieldContainerEditor
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGIMAGECOMPONENTBASE_H_
-#define _OSGIMAGECOMPONENTBASE_H_
+#ifndef _OSGTEXTUREFIELDCONTAINEREDITORBASE_H_
+#define _OSGTEXTUREFIELDCONTAINEREDITORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include "OSGConfig.h"
-#include "OSGContribUserInterfaceDef.h"
+#include "OSGContribFieldContainerEditorDef.h"
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGComponent.h" // Parent
+#include "OSGAbstractFieldContainerEditor.h" // Parent
 
-#include "OSGTextureBaseChunkFields.h"  // Texture type
-#include "OSGTextureTransformChunkFields.h" // Transformation type
-#include "OSGBaseFields.h"              // Color type
-#include "OSGSysFields.h"               // Scale type
-#include "OSGVecFields.h"               // ScaleAbsoluteSize type
 
-#include "OSGImageComponentFields.h"
+#include "OSGTextureFieldContainerEditorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ImageComponent;
+class TextureFieldContainerEditor;
 
-//! \brief ImageComponent Base Class.
+//! \brief TextureFieldContainerEditor Base Class.
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING TextureFieldContainerEditorBase : public AbstractFieldContainerEditor
 {
   public:
 
-    typedef Component Inherited;
-    typedef Component ParentContainer;
+    typedef AbstractFieldContainerEditor Inherited;
+    typedef AbstractFieldContainerEditor ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
 
-    OSG_GEN_INTERNALPTR(ImageComponent);
+    OSG_GEN_INTERNALPTR(TextureFieldContainerEditor);
 
     /*==========================  PUBLIC  =================================*/
 
   public:
 
-    enum
-    {
-        TextureFieldId = Inherited::NextFieldId,
-        RolloverTextureFieldId = TextureFieldId + 1,
-        DisabledTextureFieldId = RolloverTextureFieldId + 1,
-        FocusedTextureFieldId = DisabledTextureFieldId + 1,
-        TransformationFieldId = FocusedTextureFieldId + 1,
-        ColorFieldId = TransformationFieldId + 1,
-        ScaleFieldId = ColorFieldId + 1,
-        ScaleAbsoluteSizeFieldId = ScaleFieldId + 1,
-        AlignmentFieldId = ScaleAbsoluteSizeFieldId + 1,
-        ImageClippingOffsetsFieldId = AlignmentFieldId + 1,
-        NextFieldId = ImageClippingOffsetsFieldId + 1
-    };
-
-    static const OSG::BitVector TextureFieldMask =
-        (TypeTraits<BitVector>::One << TextureFieldId);
-    static const OSG::BitVector RolloverTextureFieldMask =
-        (TypeTraits<BitVector>::One << RolloverTextureFieldId);
-    static const OSG::BitVector DisabledTextureFieldMask =
-        (TypeTraits<BitVector>::One << DisabledTextureFieldId);
-    static const OSG::BitVector FocusedTextureFieldMask =
-        (TypeTraits<BitVector>::One << FocusedTextureFieldId);
-    static const OSG::BitVector TransformationFieldMask =
-        (TypeTraits<BitVector>::One << TransformationFieldId);
-    static const OSG::BitVector ColorFieldMask =
-        (TypeTraits<BitVector>::One << ColorFieldId);
-    static const OSG::BitVector ScaleFieldMask =
-        (TypeTraits<BitVector>::One << ScaleFieldId);
-    static const OSG::BitVector ScaleAbsoluteSizeFieldMask =
-        (TypeTraits<BitVector>::One << ScaleAbsoluteSizeFieldId);
-    static const OSG::BitVector AlignmentFieldMask =
-        (TypeTraits<BitVector>::One << AlignmentFieldId);
-    static const OSG::BitVector ImageClippingOffsetsFieldMask =
-        (TypeTraits<BitVector>::One << ImageClippingOffsetsFieldId);
-    static const OSG::BitVector NextFieldMask =
-        (TypeTraits<BitVector>::One << NextFieldId);
-        
-    typedef SFUnrecTextureBaseChunkPtr SFTextureType;
-    typedef SFUnrecTextureBaseChunkPtr SFRolloverTextureType;
-    typedef SFUnrecTextureBaseChunkPtr SFDisabledTextureType;
-    typedef SFUnrecTextureBaseChunkPtr SFFocusedTextureType;
-    typedef SFUnrecTextureTransformChunkPtr SFTransformationType;
-    typedef SFColor4f         SFColorType;
-    typedef SFUInt32          SFScaleType;
-    typedef SFVec2f           SFScaleAbsoluteSizeType;
-    typedef SFVec2f           SFAlignmentType;
-    typedef SFVec4f           SFImageClippingOffsetsType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -164,89 +111,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-            const SFUnrecTextureBaseChunkPtr *getSFTexture        (void) const;
-                  SFUnrecTextureBaseChunkPtr *editSFTexture        (void);
-            const SFUnrecTextureBaseChunkPtr *getSFRolloverTexture(void) const;
-                  SFUnrecTextureBaseChunkPtr *editSFRolloverTexture(void);
-            const SFUnrecTextureBaseChunkPtr *getSFDisabledTexture(void) const;
-                  SFUnrecTextureBaseChunkPtr *editSFDisabledTexture(void);
-            const SFUnrecTextureBaseChunkPtr *getSFFocusedTexture (void) const;
-                  SFUnrecTextureBaseChunkPtr *editSFFocusedTexture (void);
-            const SFUnrecTextureTransformChunkPtr *getSFTransformation (void) const;
-                  SFUnrecTextureTransformChunkPtr *editSFTransformation (void);
-
-                  SFColor4f           *editSFColor          (void);
-            const SFColor4f           *getSFColor           (void) const;
-
-                  SFUInt32            *editSFScale          (void);
-            const SFUInt32            *getSFScale           (void) const;
-
-                  SFVec2f             *editSFScaleAbsoluteSize(void);
-            const SFVec2f             *getSFScaleAbsoluteSize (void) const;
-
-                  SFVec2f             *editSFAlignment      (void);
-            const SFVec2f             *getSFAlignment       (void) const;
-
-                  SFVec4f             *editSFImageClippingOffsets(void);
-            const SFVec4f             *getSFImageClippingOffsets (void) const;
-
-
-                  TextureBaseChunk * getTexture        (void) const;
-
-                  TextureBaseChunk * getRolloverTexture(void) const;
-
-                  TextureBaseChunk * getDisabledTexture(void) const;
-
-                  TextureBaseChunk * getFocusedTexture (void) const;
-
-                  TextureTransformChunk * getTransformation (void) const;
-
-                  Color4f             &editColor          (void);
-            const Color4f             &getColor           (void) const;
-
-                  UInt32              &editScale          (void);
-                  UInt32               getScale           (void) const;
-
-                  Vec2f               &editScaleAbsoluteSize(void);
-            const Vec2f               &getScaleAbsoluteSize (void) const;
-
-                  Vec2f               &editAlignment      (void);
-            const Vec2f               &getAlignment       (void) const;
-
-                  Vec4f               &editImageClippingOffsets(void);
-            const Vec4f               &getImageClippingOffsets (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-            void setTexture        (TextureBaseChunk * const value);
-            void setRolloverTexture(TextureBaseChunk * const value);
-            void setDisabledTexture(TextureBaseChunk * const value);
-            void setFocusedTexture (TextureBaseChunk * const value);
-            void setTransformation (TextureTransformChunk * const value);
-            void setColor          (const Color4f &value);
-            void setScale          (const UInt32 value);
-            void setScaleAbsoluteSize(const Vec2f &value);
-            void setAlignment      (const Vec2f &value);
-            void setImageClippingOffsets(const Vec4f &value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr Field Set                                 */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr MField Set                                */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
@@ -262,16 +126,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ImageComponentTransitPtr  create          (void);
-    static  ImageComponent           *createEmpty     (void);
+    static  TextureFieldContainerEditorTransitPtr  create          (void);
+    static  TextureFieldContainerEditor           *createEmpty     (void);
 
-    static  ImageComponentTransitPtr  createLocal     (
+    static  TextureFieldContainerEditorTransitPtr  createLocal     (
                                                BitVector bFlags = FCLocal::All);
 
-    static  ImageComponent            *createEmptyLocal(
+    static  TextureFieldContainerEditor            *createEmptyLocal(
                                               BitVector bFlags = FCLocal::All);
 
-    static  ImageComponentTransitPtr  createDependent  (BitVector bFlags);
+    static  TextureFieldContainerEditorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -295,67 +159,30 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
     static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFUnrecTextureBaseChunkPtr _sfTexture;
-    SFUnrecTextureBaseChunkPtr _sfRolloverTexture;
-    SFUnrecTextureBaseChunkPtr _sfDisabledTexture;
-    SFUnrecTextureBaseChunkPtr _sfFocusedTexture;
-    SFUnrecTextureTransformChunkPtr _sfTransformation;
-    SFColor4f         _sfColor;
-    SFUInt32          _sfScale;
-    SFVec2f           _sfScaleAbsoluteSize;
-    SFVec2f           _sfAlignment;
-    SFVec4f           _sfImageClippingOffsets;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ImageComponentBase(void);
-    ImageComponentBase(const ImageComponentBase &source);
+    TextureFieldContainerEditorBase(void);
+    TextureFieldContainerEditorBase(const TextureFieldContainerEditorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ImageComponentBase(void);
+    virtual ~TextureFieldContainerEditorBase(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
-    void onCreate(const ImageComponent *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleTexture         (void) const;
-    EditFieldHandlePtr editHandleTexture        (void);
-    GetFieldHandlePtr  getHandleRolloverTexture (void) const;
-    EditFieldHandlePtr editHandleRolloverTexture(void);
-    GetFieldHandlePtr  getHandleDisabledTexture (void) const;
-    EditFieldHandlePtr editHandleDisabledTexture(void);
-    GetFieldHandlePtr  getHandleFocusedTexture  (void) const;
-    EditFieldHandlePtr editHandleFocusedTexture (void);
-    GetFieldHandlePtr  getHandleTransformation  (void) const;
-    EditFieldHandlePtr editHandleTransformation (void);
-    GetFieldHandlePtr  getHandleColor           (void) const;
-    EditFieldHandlePtr editHandleColor          (void);
-    GetFieldHandlePtr  getHandleScale           (void) const;
-    EditFieldHandlePtr editHandleScale          (void);
-    GetFieldHandlePtr  getHandleScaleAbsoluteSize (void) const;
-    EditFieldHandlePtr editHandleScaleAbsoluteSize(void);
-    GetFieldHandlePtr  getHandleAlignment       (void) const;
-    EditFieldHandlePtr editHandleAlignment      (void);
-    GetFieldHandlePtr  getHandleImageClippingOffsets (void) const;
-    EditFieldHandlePtr editHandleImageClippingOffsets(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -369,7 +196,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
                                  ConstFieldMaskArg  syncMode  ,
                            const UInt32             uiSyncInfo);
 
-            void execSync (      ImageComponentBase *pFrom,
+            void execSync (      TextureFieldContainerEditorBase *pFrom,
                                  ConstFieldMaskArg  whichField,
                                  AspectOffsetStore &oOffsets,
                                  ConstFieldMaskArg  syncMode  ,
@@ -409,11 +236,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
     /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ImageComponentBase &source);
+    void operator =(const TextureFieldContainerEditorBase &source);
 };
 
-typedef ImageComponentBase *ImageComponentBaseP;
+typedef TextureFieldContainerEditorBase *TextureFieldContainerEditorBaseP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGIMAGECOMPONENTBASE_H_ */
+#endif /* _OSGTEXTUREFIELDCONTAINEREDITORBASE_H_ */

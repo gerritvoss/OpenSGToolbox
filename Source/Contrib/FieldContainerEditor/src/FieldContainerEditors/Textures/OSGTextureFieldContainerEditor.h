@@ -36,41 +36,31 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGIMAGECOMPONENT_H_
-#define _OSGIMAGECOMPONENT_H_
+#ifndef _OSGTEXTUREFIELDCONTAINEREDITOR_H_
+#define _OSGTEXTUREFIELDCONTAINEREDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGImageComponentBase.h"
-#include "OSGTextureObjChunk.h"
-#include "OSGTextureTransformChunk.h"
-#include "OSGImageFileHandler.h"
+#include "OSGTextureFieldContainerEditorBase.h"
+#include "OSGImageComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ImageComponent class. See \ref
-           PageContribUserInterfaceImageComponent for a description.
+/*! \brief TextureFieldContainerEditor class. See \ref
+           PageContribFieldContainerEditorTextureFieldContainerEditor for a description.
 */
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponentBase
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING TextureFieldContainerEditor : public TextureFieldContainerEditorBase
 {
   protected:
 
     /*==========================  PUBLIC  =================================*/
 
   public:
-	enum Scale
-    {
-        SCALE_NONE     = 0,
-        SCALE_STRETCH  = 1,
-        SCALE_MIN_AXIS = 2,
-        SCALE_MAX_AXIS = 3,
-        SCALE_ABSOLUTE = 4
-    };
 
-    typedef ImageComponentBase Inherited;
-    typedef ImageComponent     Self;
+    typedef TextureFieldContainerEditorBase Inherited;
+    typedef TextureFieldContainerEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -89,40 +79,31 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponent
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual const std::vector<const FieldContainerType*>& getEditableTypes(void) const;
 
-	void setImages(ImageRefPtr Image);
-	void setImages(const char *fileName, const char *mimeType = 0);
+    virtual bool attachFieldContainer(FieldContainer* fc);
+    virtual bool dettachFieldContainer(void);
 
-	void setImage(ImageRefPtr Image);
-	void setImage(const char *fileName, const char *mimeType = 0);
-	
-	void setRolloverImage(ImageRefPtr Image);
-	void setRolloverImage(const char *fileName, const char *mimeType = 0);
-
-	void setDisabledImage(ImageRefPtr Image);
-	void setDisabledImage(const char *fileName, const char *mimeType = 0);
-	
-	void setFocusedImage(ImageRefPtr Image);
-	void setFocusedImage(const char *fileName, const char *mimeType = 0);
+	virtual Vec2f getContentRequestedSize(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in ImageComponentBase.
+    // Variables should all be in TextureFieldContainerEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    ImageComponent(void);
-    ImageComponent(const ImageComponent &source);
+    TextureFieldContainerEditor(void);
+    TextureFieldContainerEditor(const TextureFieldContainerEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ImageComponent(void);
+    virtual ~TextureFieldContainerEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -132,27 +113,34 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponent
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const TextureFieldContainerEditor *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+    void updateImageComponent(void);
 
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
-    virtual TextureBaseChunk* getDrawnTexture(void) const;
-    static TextureObjChunkTransitPtr createTexture(ImageWeakPtr Image);
-    
+    static std::vector<const FieldContainerType*> _EditableTypes;
+
+    ImageComponentRefPtr _ImageDisplayComponent;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class ImageComponentBase;
+    friend class TextureFieldContainerEditorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ImageComponent &source);
+    void operator =(const TextureFieldContainerEditor &source);
 };
 
-typedef ImageComponent *ImageComponentP;
+typedef TextureFieldContainerEditor *TextureFieldContainerEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGImageComponentBase.inl"
-#include "OSGImageComponent.inl"
+#include "OSGTextureFieldContainerEditorBase.inl"
+#include "OSGTextureFieldContainerEditor.inl"
 
-#endif /* _OSGIMAGECOMPONENT_H_ */
+#endif /* _OSGTEXTUREFIELDCONTAINEREDITOR_H_ */
