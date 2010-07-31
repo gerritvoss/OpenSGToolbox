@@ -100,8 +100,8 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
 
     static LuaManager* the(void);
 
-    void runScript(const std::string& Script);
-    void runScript(const BoostPath& ScriptPath);
+    int runScript(const std::string& Script);
+    int runScript(const BoostPath& ScriptPath);
 
     static void report_errors(lua_State *L, int status);
 

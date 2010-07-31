@@ -120,6 +120,7 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaActivity : public LuaActivityBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+    std::vector< std::string > _EntryFunctionPath;
     /*==========================  PRIVATE  ================================*/
 
   private:
