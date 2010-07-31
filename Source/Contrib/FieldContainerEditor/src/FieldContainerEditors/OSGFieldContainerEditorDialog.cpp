@@ -206,7 +206,7 @@ DialogWindowTransitPtr createFCTreeEditorDialog       (FieldContainer* fc,
     TheTreeModel->setShowDataFields(false);
     TheTreeModel->setShowParentPtrFields(false);
     TheTreeModel->setShowChildPtrFields(true);
-    TheTreeModel->setShowAttachments(false);
+    TheTreeModel->setShowAttachments(true);
     TheTreeModel->setShowCallbackFunctors(false);
 
     //Field Container Tree Component Generator
