@@ -76,6 +76,11 @@ SetFieldValueCommandPtr SetFieldValueCommand::create(FieldContainer* FC, UInt32 
 	return RefPtr(new SetFieldValueCommand(FC, FieldId, Value, Index));
 }
 
+SetFieldValueCommandPtr SetFieldValueCommand::create(FieldContainer* FC, UInt32 FieldId, const std::string& Value,const std::string& PrevValue, UInt32 Index)
+{
+	return RefPtr(new SetFieldValueCommand(FC, FieldId, Value,PrevValue, Index));
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -115,53 +120,56 @@ void SetFieldValueCommand::execute(void)
 
 
     //Get the previous value
-    std::ostringstream StrStream;
-    OutStream TheOutStream(StrStream);
-    if(TheFieldHandle->getCardinality() == FieldType::SingleField)
+    if(_PrevValue.empty())
     {
-        if(TheFieldHandle->isPointerField())
+        std::ostringstream StrStream;
+        OutStream TheOutStream(StrStream);
+        if(TheFieldHandle->getCardinality() == FieldType::SingleField)
         {
-            _PrevPtrValue = dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get();
-            if(dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get())
+            if(TheFieldHandle->isPointerField())
             {
-                _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get()->getId());
+                _PrevPtrValue = dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get();
+                if(dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get())
+                {
+                    _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get())->get()->getId());
+                }
+                else
+                {
+                    _PrevValue = "0";
+                }
             }
             else
             {
-                _PrevValue = "0";
+                TheFieldHandle->pushValueToStream(TheOutStream);
+                _PrevValue = StrStream.str();
             }
         }
         else
         {
-            TheFieldHandle->pushValueToStream(TheOutStream);
-            _PrevValue = StrStream.str();
-        }
-    }
-    else
-    {
-        if(TheFieldHandle->isPointerField())
-        {
-            _PrevPtrValue = dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index);
-            if(_PrevPtrValue)
+            if(TheFieldHandle->isPointerField())
             {
-                _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index)->getId());
+                _PrevPtrValue = dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index);
+                if(_PrevPtrValue)
+                {
+                    _PrevValue = boost::lexical_cast<std::string>(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get())->get(_Index)->getId());
+                }
+                else
+                {
+                    _PrevValue = "0";
+                }
             }
             else
             {
-                _PrevValue = "0";
+                TheFieldHandle->pushIndexedValueToStream(TheOutStream, _Index);
+                _PrevValue = StrStream.str();
             }
         }
-        else
-        {
-            TheFieldHandle->pushIndexedValueToStream(TheOutStream, _Index);
-            _PrevValue = StrStream.str();
-        }
-    }
 
-    //Remove quotes from strings
-    if(TheFieldHandle->getType().getContentType() == FieldTraits<std::string>::getType())
-    {
-        _PrevValue = _PrevValue.substr(1,StrStream.str().size()-2);
+        //Remove quotes from strings
+        if(TheFieldHandle->getType().getContentType() == FieldTraits<std::string>::getType())
+        {
+            _PrevValue = _PrevValue.substr(1,StrStream.str().size()-2);
+        }
     }
 
     //Set the value

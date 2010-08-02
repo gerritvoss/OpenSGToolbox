@@ -118,7 +118,7 @@ bool ImageFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
 bool ImageFieldContainerEditor::dettachFieldContainer(void)
 {
     //Dettach the image
-	_ImageDisplayComponent->setImages(NULL);
+	_ImageDisplayComponent->setImages(static_cast<Image*>(NULL));
 
     return Inherited::dettachFieldContainer();
 }
