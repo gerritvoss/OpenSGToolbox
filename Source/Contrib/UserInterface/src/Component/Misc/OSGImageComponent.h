@@ -90,8 +90,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponent
 
     /*! \}                                                                 */
 
-	void setImages(ImageRefPtr Image);
-	void setImages(const char *fileName, const char *mimeType = 0);
+	void setImages(Image* const  Image);
+	void setImages(const BoostPath& fileName, const char *mimeType = 0);
 
 	void setImage(ImageRefPtr Image);
 	void setImage(const char *fileName, const char *mimeType = 0);

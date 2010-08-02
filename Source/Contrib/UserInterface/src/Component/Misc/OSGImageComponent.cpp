@@ -248,7 +248,7 @@ TextureBaseChunk* ImageComponent::getDrawnTexture(void) const
     }
 }
 
-void ImageComponent::setImages(ImageRefPtr TheImage)
+void ImageComponent::setImages(Image* const TheImage)
 {
     setImage(TheImage);
     setRolloverTexture(getTexture());
@@ -256,9 +256,9 @@ void ImageComponent::setImages(ImageRefPtr TheImage)
     setFocusedTexture(getTexture());
 }
 
-void ImageComponent::setImages(const char *fileName, const char *mimeType)
+void ImageComponent::setImages(const BoostPath& fileName, const char *mimeType)
 {
-    setImage(fileName, mimeType);
+    setImage(fileName.string().c_str(), mimeType);
     setRolloverTexture(getTexture());
     setDisabledTexture(getTexture());
     setFocusedTexture(getTexture());
