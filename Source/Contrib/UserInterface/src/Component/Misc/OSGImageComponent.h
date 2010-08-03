@@ -90,6 +90,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponent
 
     /*! \}                                                                 */
 
+	void setImages(Image* const  Image);
+	void setImages(const BoostPath& fileName, const char *mimeType = 0);
+
 	void setImage(ImageRefPtr Image);
 	void setImage(const char *fileName, const char *mimeType = 0);
 	
@@ -131,7 +134,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponent
     /*! \}                                                                 */
 
 	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
-    virtual TextureObjChunkRefPtr getDrawnTexture(void) const;
+    virtual TextureBaseChunk* getDrawnTexture(void) const;
     static TextureObjChunkTransitPtr createTexture(ImageWeakPtr Image);
     
     /*==========================  PRIVATE  ================================*/

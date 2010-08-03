@@ -56,7 +56,7 @@ struct FieldTraits<EventProducerPtr> : public FieldTraitsTemplateBase<EventProdu
     // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
     static DataType       _type;
 
-    typedef FieldTraits<std::string>  Self;
+    typedef FieldTraits<EventProducerPtr>  Self;
 
     // Define whether string conversions are available. It is strongly
     // recommended to implement both.

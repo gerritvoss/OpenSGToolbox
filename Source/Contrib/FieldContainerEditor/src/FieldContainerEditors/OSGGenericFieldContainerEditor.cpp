@@ -50,8 +50,7 @@
 #include "OSGFieldContainerEditorFactory.h"
 #include "OSGFieldEditorFactory.h"
 #include "OSGGridLayout.h"
-#include "OSGLabel.h"
-#include "OSGNameAttachment.h"
+#include <boost/lexical_cast.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -124,15 +123,24 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
     FieldEditorComponentUnrecPtr TheEditor;
     LabelUnrecPtr TheLabel;
 
-    if(fc->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+    //Push the Type and Id Labels
+    _ContainerTypeLabel->setText(getEditingFC()->getType().getName());
+    pushToChildren(_ContainerTypeLabel);
+    _ContainerIdLabel->setText(boost::lexical_cast<std::string>(getEditingFC()->getId()));
+    pushToChildren(_ContainerIdLabel);
+
+    if(_GenericNameAttachmentEditor->isTypeEditable(fc->getType()))
     {
+        //Attach the Generic Name Editor
+        _GenericNameAttachmentEditor->setCommandManager(_CmdManager);
+        _GenericNameAttachmentEditor->attachContainer(fc);
+
         //Create the Label
         TheLabel = Label::create();
         TheLabel->setText("Name");
 
         pushToChildren(TheLabel);
-        pushToChildren(_NameEditTextField);
-        updateNameTextField();
+        pushToChildren(_GenericNameAttachmentEditor);
     }
 
     for(UInt32 i(1) ; i<=NumFields ; ++i)
@@ -140,7 +148,8 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
         Desc = fc->getFieldDescription(i);
         if(Desc != 0 &&
            !Desc->isInternal() &&
-           !Desc->getFieldType().getClass() != FieldType::ParentPtrField)
+           Desc->getFieldType().getCardinality() != FieldType::MultiField &&
+           Desc->getFieldType().getClass() != FieldType::ParentPtrField)
         {
             //Create the Editor
             TheEditor = FieldEditorFactory::the()->createDefaultEditor(fc, Desc->getFieldId(), _CmdManager);
@@ -158,13 +167,20 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
         }
     }
     //Set the number of rows for the grid layout
-    dynamic_cast<GridLayout*>(getLayout())->setRows(getMFChildren()->size()/2);
+    dynamic_cast<GridLayout*>(getLayout())->setRows(1+getMFChildren()->size()/2);
 
     return true;
 }
 
 bool GenericFieldContainerEditor::dettachFieldContainer(void)
 {
+    //Dettach the Name Editor
+    if(getEditingFC() &&
+       _GenericNameAttachmentEditor->isTypeEditable(getEditingFC()->getType()))
+    {
+        _GenericNameAttachmentEditor->dettachContainer();
+    }
+
     //Clear Children
     clearChildren();
     clearEditors();
@@ -231,23 +247,6 @@ GenericFieldContainerEditor::~GenericFieldContainerEditor(void)
 {
 }
 
-void GenericFieldContainerEditor::updateNameTextField(void)
-{
-    if(getEditingFC() != NULL &&
-       getEditingFC()->getType().isDerivedFrom(AttachmentContainer::getClassType()))
-    {
-        const Char8* FCName = getName(dynamic_cast<AttachmentContainer*>(getEditingFC()));
-        if(FCName)
-        {
-            _NameEditTextField->setText(FCName);
-        }
-        else
-        {
-            _NameEditTextField->setText("");
-        }
-    }
-}
-
 /*----------------------------- class specific ----------------------------*/
 void GenericFieldContainerEditor::onCreate(const GenericFieldContainerEditor *Id)
 {
@@ -262,7 +261,11 @@ void GenericFieldContainerEditor::onCreate(const GenericFieldContainerEditor *Id
         TheLayout->setVerticalGap(3);
         setLayout(TheLayout);
 
-        _NameEditTextField = TextField::create();
+        _ContainerTypeLabel = Label::create();
+        _ContainerTypeLabel->setAlignment(Vec2f(0.5f,0.5f));
+        _ContainerIdLabel = Label::create();
+        _ContainerIdLabel->setAlignment(Vec2f(0.5f,0.5f));
+        _GenericNameAttachmentEditor = GenericNameAttachmentEditor::create();
     }
 }
 

@@ -289,6 +289,31 @@ void FieldContainerTreeModelBase::setShowAttachments(const bool value)
 
     _sfShowAttachments.setValue(value);
 }
+//! Get the value of the FieldContainerTreeModel::_sfShowEventProducers field.
+
+inline
+bool &FieldContainerTreeModelBase::editShowEventProducers(void)
+{
+    editSField(ShowEventProducersFieldMask);
+
+    return _sfShowEventProducers.getValue();
+}
+
+//! Get the value of the FieldContainerTreeModel::_sfShowEventProducers field.
+inline
+      bool  FieldContainerTreeModelBase::getShowEventProducers(void) const
+{
+    return _sfShowEventProducers.getValue();
+}
+
+//! Set the value of the FieldContainerTreeModel::_sfShowEventProducers field.
+inline
+void FieldContainerTreeModelBase::setShowEventProducers(const bool value)
+{
+    editSField(ShowEventProducersFieldMask);
+
+    _sfShowEventProducers.setValue(value);
+}
 //! Get the value of the FieldContainerTreeModel::_sfShowCallbackFunctors field.
 
 inline
@@ -352,6 +377,9 @@ void FieldContainerTreeModelBase::execSync (      FieldContainerTreeModelBase *p
 
     if(FieldBits::NoField != (ShowAttachmentsFieldMask & whichField))
         _sfShowAttachments.syncWith(pFrom->_sfShowAttachments);
+
+    if(FieldBits::NoField != (ShowEventProducersFieldMask & whichField))
+        _sfShowEventProducers.syncWith(pFrom->_sfShowEventProducers);
 
     if(FieldBits::NoField != (ShowCallbackFunctorsFieldMask & whichField))
         _sfShowCallbackFunctors.syncWith(pFrom->_sfShowCallbackFunctors);

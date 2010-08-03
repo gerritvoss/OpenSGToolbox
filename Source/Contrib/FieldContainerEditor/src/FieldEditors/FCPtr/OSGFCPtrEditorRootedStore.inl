@@ -47,6 +47,7 @@ inline
 void FCPtrEditorRootedStore::setTypeToStore(const FieldContainerType* type)
 {
     _TypeToStore = type;
+    updateList();
 }
 
 inline
@@ -56,9 +57,10 @@ const FCPtrEditorRootedStore::FieldContianerVector& FCPtrEditorRootedStore::getR
 }
 
 inline
-void FCPtrEditorRootedStore::setTypeToStore(const FieldContianerVector& roots)
+void FCPtrEditorRootedStore::setRoots(const FieldContianerVector& roots)
 {
     _Roots = roots;
+    updateList();
 }
 
 OSG_END_NAMESPACE

@@ -15,6 +15,7 @@ SET(${PROJECT_NAME}_DEP_OSG_LIB OSGDrawable
                                 OSGBase
                                 OSGUtil
                                 OSGTBFileIO
+                                OSGFileIO
                                 OSGState
                                 OSGContribUserInterface)
 
@@ -40,13 +41,19 @@ OSG_STORE_PROJECT_DEPENDENCIES()
 # collect sources
 ##############################################################################
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/AttachmentEditors")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/MultiFieldEditors")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldContainerEditors")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldContainerEditors/Images")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldContainerEditors/Materials")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldContainerEditors/Textures")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors")
+#OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Paths")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Images")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Numbers")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Colors")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Vectors")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/MFields")
-OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Paths")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Quaternions")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/GLEnums")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Matricies")

@@ -46,6 +46,14 @@ _PrevValue("")
 }
 
 inline
+SetFieldValueCommand::SetFieldValueCommand(FieldContainer* FC, UInt32 FieldId, const std::string& Value, const std::string& PrevValue, UInt32 Index) : Inherited(FC, FieldId),
+_Index(Index),
+_Value(Value),
+_PrevValue(PrevValue)
+{
+}
+
+inline
 SetFieldValueCommand::SetFieldValueCommand(const SetFieldValueCommand& source) : Inherited(source),
 _Index(source._Index),
 _Value(source._Value)

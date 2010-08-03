@@ -136,7 +136,7 @@ class CreateMessageBoxButtonActionListener : public ActionListener
             buttonText = dynamic_cast<Button*>(e->getSource())->getText();
             if (buttonText.compare("Message") == 0)
             {
-                TheDialog = DialogWindow::createMessageDialog("Error", "Error 404: Page Not Found!", DialogWindow::MSG_ERROR,true);
+                TheDialog = DialogWindow::createMessageDialog("Error", "Error 404: Page Not Found!"/*, DialogWindow::MSG_ERROR*/,true);
             }
             else if(buttonText.compare("Color Chooser") == 0)
             {
@@ -155,6 +155,8 @@ class CreateMessageBoxButtonActionListener : public ActionListener
                     TheDialog = DialogWindow::createInputDialog("Input Dialog Title", "Please choose an option below", DialogWindow::INPUT_BTNS,true,inputValues);
                 else if (buttonText == "Input Textbox")
                     TheDialog = DialogWindow::createInputDialog("Input Dialog Title", "Please enter a choice below", DialogWindow::INPUT_TEXT,true,inputValues);
+                else if(buttonText.compare("Input List") == 0)
+                    TheDialog = DialogWindow::createInputDialog("Input Dialog Title", "Please enter a choice below", DialogWindow::INPUT_LIST,true,inputValues);
             }
             Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
             TheDialog->setPosition(CenteredPosition);
@@ -195,12 +197,13 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    PanelRefPtr ButtonPanel = OSG::Panel::create();
+    PanelRefPtr ButtonPanel = OSG::Panel::createEmpty();
 
     ButtonRefPtr MessageDialogButton = OSG::Button::create();
     ButtonRefPtr InputComboDialogButton = OSG::Button::create();
     ButtonRefPtr InputTextDialogButton = OSG::Button::create();
     ButtonRefPtr InputBtnsDialogButton = OSG::Button::create();
+    ButtonRefPtr InputListDialogButton = OSG::Button::create();
     ButtonRefPtr ColorChooserDialogButton = OSG::Button::create();
 
     MessageDialogButton->setMinSize(Vec2f(50, 25));
@@ -222,15 +225,20 @@ int main(int argc, char **argv)
     InputTextDialogButton->setMinSize(Vec2f(50, 25));
     InputTextDialogButton->setMaxSize(Vec2f(200, 100));
     InputTextDialogButton->setPreferredSize(Vec2f(100, 50));
-    InputTextDialogButton->setText("Input Buttons");
-
-    //CreateMessageBoxButtonActionListener TheExampleButtonActionListener;
+    InputTextDialogButton->setText("Input Textbox");
     InputTextDialogButton->addActionListener(&TheExampleButtonActionListener);
+
+    InputListDialogButton->setMinSize(Vec2f(50, 25));
+    InputListDialogButton->setMaxSize(Vec2f(200, 100));
+    InputListDialogButton->setPreferredSize(Vec2f(100, 50));
+    InputListDialogButton->setText("Input List");
+    InputListDialogButton->addActionListener(&TheExampleButtonActionListener);
 
     InputBtnsDialogButton->setMinSize(Vec2f(50, 25));
     InputBtnsDialogButton->setMaxSize(Vec2f(200, 100));
     InputBtnsDialogButton->setPreferredSize(Vec2f(100, 50));
-    InputBtnsDialogButton->setText("Input Textbox");
+    InputBtnsDialogButton->setText("Input Buttons");
+    InputBtnsDialogButton->addActionListener(&TheExampleButtonActionListener);
 
     //CreateMessageBoxButtonActionListener TheExampleButtonActionListener;
 
@@ -247,9 +255,10 @@ int main(int argc, char **argv)
     ButtonPanel->pushToChildren(InputComboDialogButton);
     ButtonPanel->pushToChildren(InputTextDialogButton);
     ButtonPanel->pushToChildren(InputBtnsDialogButton);
+    ButtonPanel->pushToChildren(InputListDialogButton);
     ButtonPanel->pushToChildren(ColorChooserDialogButton);
     ButtonPanel->setLayout(ButtonPanelLayout);
-    ButtonPanel->setPreferredSize(Vec2f(600,75));
+    ButtonPanel->setPreferredSize(Vec2f(600,175));
 
     OutputLabel = OSG::Label::create();
     OutputLabel->setText("");

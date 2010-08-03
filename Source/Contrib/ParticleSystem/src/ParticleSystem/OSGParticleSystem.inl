@@ -53,7 +53,7 @@ void ParticleSystem::setPosition(const Pnt3f& Pos, const UInt32& Index)
 }
 
 inline
-const UInt32 ParticleSystem::getID(const UInt32& Index) const
+UInt32 ParticleSystem::getID(const UInt32& Index) const
 {
 	return getInternalIDs(Index);
 }

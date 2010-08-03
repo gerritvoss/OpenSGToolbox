@@ -233,7 +233,7 @@ void UIFontBase::classDescInserter(TypeObject &oType)
         "Texture",
         "",
         TextureFieldId, TextureFieldMask,
-        false,
+        true,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&UIFont::editHandleTexture),
         static_cast<FieldGetMethodSig >(&UIFont::getHandleTexture));
@@ -345,7 +345,7 @@ UIFontBase::TypeObject UIFontBase::_type(
     "\t\ttype=\"TextureObjChunk\"\n"
     "        category=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
+    "\t\tvisibility=\"internal\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"

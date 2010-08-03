@@ -43,7 +43,8 @@
 #endif
 
 #include "OSGGenericFieldContainerEditorBase.h"
-#include "OSGTextField.h"
+#include "OSGGenericNameAttachmentEditor.h"
+#include "OSGLabel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -142,11 +143,12 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldContainerEditor : p
 	void onDestroy();
 	
 	/*! \}                                                                 */
-    void updateNameTextField(void);
 
     static std::vector<const FieldContainerType*> _EditableTypes;
 
-    TextFieldRefPtr _NameEditTextField;
+    LabelRefPtr _ContainerTypeLabel;
+    LabelRefPtr _ContainerIdLabel;
+    GenericNameAttachmentEditorRefPtr _GenericNameAttachmentEditor;
     /*==========================  PRIVATE  ================================*/
 
   private:

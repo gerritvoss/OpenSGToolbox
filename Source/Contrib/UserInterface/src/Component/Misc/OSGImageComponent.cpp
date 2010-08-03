@@ -47,6 +47,7 @@
 
 #include "OSGImageComponent.h"
 #include "OSGTextureTransformChunk.h"
+#include "OSGTextureObjChunk.h"
 
 #include "OSGImageComponent.h"
 #include "OSGUIDrawUtils.h"
@@ -102,8 +103,10 @@ void ImageComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opac
     getInsideBorderBounds(TopLeft, BottomRight);
     Vec2f ComponentSize(BottomRight-TopLeft);
 
-    TextureObjChunkRefPtr DrawnTexture = getDrawnTexture();
-    if(DrawnTexture == NULL || DrawnTexture->getImage() == NULL)
+    TextureBaseChunk* DrawnTexture = getDrawnTexture();
+    if(DrawnTexture == NULL ||
+       (DrawnTexture->getType() == TextureObjChunk::getClassType() &&
+        dynamic_cast<TextureObjChunk*>(DrawnTexture)->getImage() == NULL))
     {
         return;
     }
@@ -116,7 +119,8 @@ void ImageComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opac
     {
         case SCALE_NONE:
             //Size in pixels Should be the Image size in pixels
-            Size.setValues(DrawnTexture->getImage()->getWidth(), DrawnTexture->getImage()->getHeight());
+            Size.setValues(dynamic_cast<TextureObjChunk*>(DrawnTexture)->getImage()->getWidth(),
+                           dynamic_cast<TextureObjChunk*>(DrawnTexture)->getImage()->getHeight());
             break;
         case SCALE_STRETCH:
             Size.setValue(ComponentSize);
@@ -125,7 +129,8 @@ void ImageComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opac
             {
                 //Figure out the aspect ratio of this Component
                 Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-                Real32 AspectImage = static_cast<Real32>(DrawnTexture->getImage()->getWidth())/static_cast<Real32>(DrawnTexture->getImage()->getHeight());
+                Real32 AspectImage = static_cast<Real32>(dynamic_cast<TextureObjChunk*>(DrawnTexture)->getImage()->getWidth()) / 
+                    static_cast<Real32>(dynamic_cast<TextureObjChunk*>(DrawnTexture)->getImage()->getHeight());
 
                 Vec2f vector(0,0);
                 if (AspectComponent < AspectImage)
@@ -145,7 +150,8 @@ void ImageComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opac
             {
                 //Figure out the aspect ratio of this Component
                 Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-                Real32 AspectImage = static_cast<Real32>(DrawnTexture->getImage()->getWidth())/static_cast<Real32>(DrawnTexture->getImage()->getHeight());
+                Real32 AspectImage = static_cast<Real32>(dynamic_cast<TextureObjChunk*>(DrawnTexture)->getImage()->getWidth()) / 
+                    static_cast<Real32>(dynamic_cast<TextureObjChunk*>(DrawnTexture)->getImage()->getHeight());
 
                 Vec2f vector(0,0);
                 if (AspectComponent > AspectImage)
@@ -209,9 +215,9 @@ void ImageComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opac
 }
 
 
-TextureObjChunkRefPtr ImageComponent::getDrawnTexture(void) const
+TextureBaseChunk* ImageComponent::getDrawnTexture(void) const
 {
-    TextureObjChunkRefPtr ReturnedTexture;
+    TextureBaseChunk* ReturnedTexture;
     if(getEnabled())
     {
         if(getFocused())
@@ -242,6 +248,22 @@ TextureObjChunkRefPtr ImageComponent::getDrawnTexture(void) const
     }
 }
 
+void ImageComponent::setImages(Image* const TheImage)
+{
+    setImage(TheImage);
+    setRolloverTexture(getTexture());
+    setDisabledTexture(getTexture());
+    setFocusedTexture(getTexture());
+}
+
+void ImageComponent::setImages(const BoostPath& fileName, const char *mimeType)
+{
+    setImage(fileName.string().c_str(), mimeType);
+    setRolloverTexture(getTexture());
+    setDisabledTexture(getTexture());
+    setFocusedTexture(getTexture());
+}
+
 void ImageComponent::setImage(ImageRefPtr Image)
 {
     if(getTexture() == NULL)
@@ -249,9 +271,9 @@ void ImageComponent::setImage(ImageRefPtr Image)
         TextureObjChunkUnrecPtr NewTexture(createTexture(Image));
         setTexture(NewTexture);
     }
-    else
+    else if(getTexture()->getType() == TextureObjChunk::getClassType())
     {
-        getTexture()->setImage(Image);
+        dynamic_cast<TextureObjChunk*>(getTexture())->setImage(Image);
     }
 }
 
@@ -262,9 +284,9 @@ void ImageComponent::setRolloverImage(ImageRefPtr Image)
         TextureObjChunkUnrecPtr NewTexture(createTexture(Image));
         setRolloverTexture(NewTexture);
     }
-    else
+    else if(getTexture()->getType() == TextureObjChunk::getClassType())
     {
-        getRolloverTexture()->setImage(Image);
+        dynamic_cast<TextureObjChunk*>(getRolloverTexture())->setImage(Image);
     }
 }
 
@@ -275,9 +297,9 @@ void ImageComponent::setDisabledImage(ImageRefPtr Image)
         TextureObjChunkUnrecPtr NewTexture(createTexture(Image));
         setDisabledTexture(NewTexture);
     }
-    else
+    else if(getTexture()->getType() == TextureObjChunk::getClassType())
     {
-        getDisabledTexture()->setImage(Image);
+        dynamic_cast<TextureObjChunk*>(getDisabledTexture())->setImage(Image);
     }
 }
 
@@ -288,9 +310,9 @@ void ImageComponent::setFocusedImage(ImageRefPtr Image)
         TextureObjChunkUnrecPtr NewTexture(createTexture(Image));
         setFocusedTexture(NewTexture);
     }
-    else
+    else if(getTexture()->getType() == TextureObjChunk::getClassType())
     {
-        getFocusedTexture()->setImage(Image);
+        dynamic_cast<TextureObjChunk*>(getFocusedTexture())->setImage(Image);
     }
 }
 
@@ -321,6 +343,50 @@ void ImageComponent::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if((whichField & TextureFieldMask) &&
+       getTexture() != NULL &&
+       getTexture()->getType() != TextureObjChunk::getClassType() &&
+       (getScale() == SCALE_NONE ||
+        getScale() == SCALE_MIN_AXIS ||
+        getScale() == SCALE_MAX_AXIS))
+    {
+        SWARNING << "Can only use scaling of SCALE_NONE, SCALE_MIN_AXIS, SCALE_MAX_AXIS, with TextureObjChunks." << std::endl;
+        setScale(SCALE_STRETCH);
+    }
+
+    if((whichField & RolloverTextureFieldMask) &&
+       getRolloverTexture() != NULL &&
+       getRolloverTexture()->getType() != TextureObjChunk::getClassType() &&
+       (getScale() == SCALE_NONE ||
+        getScale() == SCALE_MIN_AXIS ||
+        getScale() == SCALE_MAX_AXIS))
+    {
+        SWARNING << "Can only use scaling of SCALE_NONE, SCALE_MIN_AXIS, SCALE_MAX_AXIS, with TextureObjChunks." << std::endl;
+        setScale(SCALE_STRETCH);
+    }
+
+    if((whichField & DisabledTextureFieldMask) &&
+       getDisabledTexture() != NULL &&
+       getDisabledTexture()->getType() != TextureObjChunk::getClassType() &&
+       (getScale() == SCALE_NONE ||
+        getScale() == SCALE_MIN_AXIS ||
+        getScale() == SCALE_MAX_AXIS))
+    {
+        SWARNING << "Can only use scaling of SCALE_NONE, SCALE_MIN_AXIS, SCALE_MAX_AXIS, with TextureObjChunks." << std::endl;
+        setScale(SCALE_STRETCH);
+    }
+
+    if((whichField & FocusedTextureFieldMask) &&
+       getFocusedTexture() != NULL &&
+       getFocusedTexture()->getType() != TextureObjChunk::getClassType() &&
+       (getScale() == SCALE_NONE ||
+        getScale() == SCALE_MIN_AXIS ||
+        getScale() == SCALE_MAX_AXIS))
+    {
+        SWARNING << "Can only use scaling of SCALE_NONE, SCALE_MIN_AXIS, SCALE_MAX_AXIS, with TextureObjChunks." << std::endl;
+        setScale(SCALE_STRETCH);
+    }
 }
 
 void ImageComponent::dump(      UInt32    ,

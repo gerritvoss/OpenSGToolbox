@@ -149,16 +149,26 @@ class TreeEditorSelectionListener : public TreeSelectionListener
 
                 if(ThePair._FieldID == 0)
                 {
-                    //Check if this is the default editor for this type of
-                    //FieldContainer
-                    if(*FieldContainerEditorFactory::the()->getDefaultEditorType(&ThePair._Container->getType()) != _Editor->getType())
+                    //Check if the container is NULL
+                    if(ThePair._Container == NULL)
                     {
-                        _Editor =
-                            FieldContainerEditorFactory::the()->createDefaultEditor(ThePair._Container,
-                                                                                    _Editor->getCommandManager());
-                        _EditorScroll->setViewComponent(_Editor);
+                        _Editor->dettachFieldContainer();
                     }
-                    _Editor->attachFieldContainer(ThePair._Container);
+                    else
+                    {
+                        //Check if this editor is already the default editor for
+                        //this type
+                        if(*FieldContainerEditorFactory::the()->getDefaultEditorType(&ThePair._Container->getType()) != _Editor->getType())
+                        {
+                            //If not then create a default editor for this type
+                            _Editor =
+                                FieldContainerEditorFactory::the()->createDefaultEditor(ThePair._Container,
+                                                                                        _Editor->getCommandManager());
+                            _EditorScroll->setViewComponent(_Editor);
+                        }
+                        //Attach the container to the editor
+                        _Editor->attachFieldContainer(ThePair._Container);
+                    }
                 }
             }
             catch(boost::bad_any_cast &ex)
@@ -196,7 +206,7 @@ DialogWindowTransitPtr createFCTreeEditorDialog       (FieldContainer* fc,
     TheTreeModel->setShowDataFields(false);
     TheTreeModel->setShowParentPtrFields(false);
     TheTreeModel->setShowChildPtrFields(true);
-    TheTreeModel->setShowAttachments(false);
+    TheTreeModel->setShowAttachments(true);
     TheTreeModel->setShowCallbackFunctors(false);
 
     //Field Container Tree Component Generator

@@ -116,7 +116,7 @@ void TableColumnModelBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&TableColumnModel::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&TableColumnModel::getHandleEventProducer));

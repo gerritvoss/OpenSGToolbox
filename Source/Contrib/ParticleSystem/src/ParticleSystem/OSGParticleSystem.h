@@ -99,7 +99,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     UInt32 getNumParticles(void) const;
     const Pnt3f& getPosition(const UInt32& Index) const;
     const Pnt3f& getSecPosition(const UInt32& Index) const;
-    const Vec3f getPositionChange(const UInt32& Index) const;
+    Vec3f getPositionChange(const UInt32& Index) const;
     const Vec3f& getNormal(const UInt32& Index) const;
     const Color4f& getColor(const UInt32& Index) const;
     const Vec3f& getSize(const UInt32& Index) const;
@@ -107,11 +107,12 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     Real32 getAge(const UInt32& Index) const;
     const Vec3f& getVelocity(const UInt32& Index) const;
     const Vec3f& getSecVelocity(const UInt32& Index) const;
-    const Vec3f getVelocityChange(const UInt32& Index) const;
+    Vec3f getVelocityChange(const UInt32& Index) const;
     const Vec3f& getAcceleration(const UInt32& Index) const;
     UInt32 getAttribute(const UInt32& Index, const std::string& AttributeKey) const;
-	const UInt32 getID(const UInt32& Index) const;
+	UInt32 getID(const UInt32& Index) const;
     const StringToUInt32Map& getAttributes(const UInt32& Index) const;
+	Int64 getIndex(UInt32 ParticleID) const;
 
 
     void setPosition(const Pnt3f& Pos, const UInt32& Index);

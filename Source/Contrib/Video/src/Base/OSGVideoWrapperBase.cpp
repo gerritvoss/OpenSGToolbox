@@ -116,7 +116,7 @@ void VideoWrapperBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&VideoWrapper::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&VideoWrapper::getHandleEventProducer));

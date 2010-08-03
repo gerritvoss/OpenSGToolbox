@@ -43,6 +43,7 @@
 
 #include "OSGFCPtrEditorRootedStore.h"
 #include "OSGContainerUtils.h"
+#include "OSGContainerGatherUtils.h"
 
 OSG_USING_NAMESPACE
 
@@ -62,29 +63,55 @@ A FCPtrEditorRootedStore.
  *                           Class methods                                 *
 \***************************************************************************/
 
+FCPtrEditorRootedStorePtr FCPtrEditorRootedStore::create(void)
+{
+    return FCPtrEditorRootedStorePtr(new FCPtrEditorRootedStore());
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-std::vector<FieldContainer*> FCPtrEditorRootedStore::getList(void) const
+FCPtrEditorStorePtr FCPtrEditorRootedStore::clone(void) const
 {
-    std::set<FieldContainer*> AllContainers =
-        getAllDependantFCs(std::set<FieldContainer*>(_Roots.begin(),_Roots.end()),
-                           std::set<FieldContainer*>(_ExcludedPtrs.begin(),_ExcludedPtrs.end()),
-                           _ExcludedTypes);
+    return FCPtrEditorStorePtr(new FCPtrEditorRootedStore(*this));
+}
 
-    std::vector<FieldContainer*> Result;
-    for(std::set<FieldContainer*>::iterator StoreItor(AllContainers.begin());
+void FCPtrEditorRootedStore::updateList(void)
+{
+    _Store.clear();
+    if(_TypeToStore == NULL || _Roots.empty())
+    {
+        return;
+    }
+
+    std::set<FieldContainerUnrecPtr> SearchRoots;
+    for(std::vector<FieldContainer*>::const_iterator Itor(_Roots.begin()) ; Itor!=_Roots.end() ; ++Itor)
+    {
+        SearchRoots.insert(*Itor);
+    }
+
+    std::set<FieldContainerUnrecPtr> Exclude;
+    for(std::vector<FieldContainer*>::const_iterator Itor(_ExcludedPtrs.begin()) ; Itor!=_ExcludedPtrs.end() ; ++Itor)
+    {
+        Exclude.insert(*Itor);
+    }
+
+    std::set<FieldContainerUnrecPtr> AllContainers =
+        getAllDependantFCs(SearchRoots,
+                           Exclude,
+                           _ExcludedTypes,
+                           true);
+
+    for(std::set<FieldContainerUnrecPtr>::iterator StoreItor(AllContainers.begin());
         StoreItor != AllContainers.end();
         ++StoreItor)
     {
         if((*StoreItor)->getType().isDerivedFrom(*_TypeToStore))
         {
-            Result.push_back(*StoreItor);
+            _Store.push_back(*StoreItor);
         }
     }
-
-    return Result;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -92,11 +119,17 @@ std::vector<FieldContainer*> FCPtrEditorRootedStore::getList(void) const
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
+FCPtrEditorRootedStore::FCPtrEditorRootedStore(void) :
+    Inherited(),
+    _TypeToStore(NULL)
+{
+}
+
 FCPtrEditorRootedStore::FCPtrEditorRootedStore(const FieldContainerType* type,
                                                const FieldContianerVector& roots,
                                                const FieldContianerVector& Exclude,
                                                const FieldContianerTypeVector& ExcludeTypes) :
-    Inherited(Exclude,ExcludeTypes),
+    Inherited(FieldContianerVector(),Exclude,ExcludeTypes),
     _TypeToStore(type),
     _Roots(roots)
 {

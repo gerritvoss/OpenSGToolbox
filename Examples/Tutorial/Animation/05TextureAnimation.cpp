@@ -241,11 +241,11 @@ std::vector<ImageUnrecPtr> _Images;
 void setupAnimation(void)
 {
     std::vector<BoostPath> _ImagePaths;
-    _ImagePaths.push_back(BoostPath("C:/Users/danielg/Documents/OpenSGToolbox/Examples/Tutorial/Animation/Data/Anim001.jpg"));
-    _ImagePaths.push_back(BoostPath("C:/Users/danielg/Documents/OpenSGToolbox/Examples/Tutorial/Animation/Data/Anim002.jpg"));
-    _ImagePaths.push_back(BoostPath("C:/Users/danielg/Documents/OpenSGToolbox/Examples/Tutorial/Animation/Data/Anim003.jpg"));
-    _ImagePaths.push_back(BoostPath("C:/Users/danielg/Documents/OpenSGToolbox/Examples/Tutorial/Animation/Data/Anim004.jpg"));
-    _ImagePaths.push_back(BoostPath("C:/Users/danielg/Documents/OpenSGToolbox/Examples/Tutorial/Animation/Data/Anim005.jpg"));
+    _ImagePaths.push_back(BoostPath("./Data/Anim001.jpg"));
+    _ImagePaths.push_back(BoostPath("./Data/Anim002.jpg"));
+    _ImagePaths.push_back(BoostPath("./Data/Anim003.jpg"));
+    _ImagePaths.push_back(BoostPath("./Data/Anim004.jpg"));
+    _ImagePaths.push_back(BoostPath("./Data/Anim005.jpg"));
 
     //Make the textures
     for(UInt32 i(0) ; i<_ImagePaths.size(); ++i)

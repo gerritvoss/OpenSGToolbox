@@ -116,7 +116,7 @@ void TreeModelLayoutBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&TreeModelLayout::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&TreeModelLayout::getHandleEventProducer));

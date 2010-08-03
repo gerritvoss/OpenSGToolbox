@@ -90,6 +90,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var UInt32          DialogWindowEventBase::_sfInputIndex
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -139,6 +143,18 @@ void DialogWindowEventBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&DialogWindowEvent::editHandleInput),
         static_cast<FieldGetMethodSig >(&DialogWindowEvent::getHandleInput));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "InputIndex",
+        "",
+        InputIndexFieldId, InputIndexFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DialogWindowEvent::editHandleInputIndex),
+        static_cast<FieldGetMethodSig >(&DialogWindowEvent::getHandleInputIndex));
 
     oType.addInitialDesc(pDesc);
 }
@@ -192,6 +208,17 @@ DialogWindowEventBase::TypeObject DialogWindowEventBase::_type(
     "        publicRead=\"true\"\n"
     "\t>\n"
     "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InputIndex\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -242,6 +269,19 @@ const SFString *DialogWindowEventBase::getSFInput(void) const
 }
 
 
+SFUInt32 *DialogWindowEventBase::editSFInputIndex(void)
+{
+    editSField(InputIndexFieldMask);
+
+    return &_sfInputIndex;
+}
+
+const SFUInt32 *DialogWindowEventBase::getSFInputIndex(void) const
+{
+    return &_sfInputIndex;
+}
+
+
 
 
 
@@ -260,6 +300,10 @@ UInt32 DialogWindowEventBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfInput.getBinSize();
     }
+    if(FieldBits::NoField != (InputIndexFieldMask & whichField))
+    {
+        returnValue += _sfInputIndex.getBinSize();
+    }
 
     return returnValue;
 }
@@ -277,6 +321,10 @@ void DialogWindowEventBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfInput.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (InputIndexFieldMask & whichField))
+    {
+        _sfInputIndex.copyToBin(pMem);
+    }
 }
 
 void DialogWindowEventBase::copyFromBin(BinaryDataHandler &pMem,
@@ -291,6 +339,10 @@ void DialogWindowEventBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (InputFieldMask & whichField))
     {
         _sfInput.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (InputIndexFieldMask & whichField))
+    {
+        _sfInputIndex.copyFromBin(pMem);
     }
 }
 
@@ -418,14 +470,16 @@ FieldContainerTransitPtr DialogWindowEventBase::shallowCopy(void) const
 DialogWindowEventBase::DialogWindowEventBase(void) :
     Inherited(),
     _sfOption                 (UInt8(DialogWindowEvent::DIALOG_OPTION_OK)),
-    _sfInput                  ()
+    _sfInput                  (),
+    _sfInputIndex             (UInt32(0))
 {
 }
 
 DialogWindowEventBase::DialogWindowEventBase(const DialogWindowEventBase &source) :
     Inherited(source),
     _sfOption                 (source._sfOption                 ),
-    _sfInput                  (source._sfInput                  )
+    _sfInput                  (source._sfInput                  ),
+    _sfInputIndex             (source._sfInputIndex             )
 {
 }
 
@@ -483,6 +537,31 @@ EditFieldHandlePtr DialogWindowEventBase::editHandleInput          (void)
 
 
     editSField(InputFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DialogWindowEventBase::getHandleInputIndex      (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfInputIndex,
+             this->getType().getFieldDesc(InputIndexFieldId),
+             const_cast<DialogWindowEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DialogWindowEventBase::editHandleInputIndex     (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfInputIndex,
+             this->getType().getFieldDesc(InputIndexFieldId),
+             this));
+
+
+    editSField(InputIndexFieldMask);
 
     return returnValue;
 }

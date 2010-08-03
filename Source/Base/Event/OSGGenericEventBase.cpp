@@ -82,6 +82,14 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
+/*! \var StringToUInt32Map GenericEventBase::_sfNumberMap
+    
+*/
+
+/*! \var FieldContainerMap GenericEventBase::_sfContainerMap
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -104,6 +112,32 @@ OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
 
 void GenericEventBase::classDescInserter(TypeObject &oType)
 {
+    FieldDescriptionBase *pDesc = NULL;
+
+
+    pDesc = new SFStringToUInt32Map::Description(
+        SFStringToUInt32Map::getClassType(),
+        "NumberMap",
+        "",
+        NumberMapFieldId, NumberMapFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GenericEvent::editHandleNumberMap),
+        static_cast<FieldGetMethodSig >(&GenericEvent::getHandleNumberMap));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFFieldContainerMap::Description(
+        SFFieldContainerMap::getClassType(),
+        "ContainerMap",
+        "",
+        ContainerMapFieldId, ContainerMapFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GenericEvent::editHandleContainerMap),
+        static_cast<FieldGetMethodSig >(&GenericEvent::getHandleContainerMap));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -132,6 +166,26 @@ GenericEventBase::TypeObject GenericEventBase::_type(
     "\tuseLocalIncludes=\"true\"\n"
     "    authors=\"Robert Goetz                                                  \"\n"
     ">\n"
+    "\t<Field\n"
+    "\t\tname=\"NumberMap\"\n"
+    "\t\ttype=\"StringToUInt32Map\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ContainerMap\"\n"
+    "\t\ttype=\"FieldContainerMap\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -156,6 +210,32 @@ UInt32 GenericEventBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
+SFStringToUInt32Map *GenericEventBase::editSFNumberMap(void)
+{
+    editSField(NumberMapFieldMask);
+
+    return &_sfNumberMap;
+}
+
+const SFStringToUInt32Map *GenericEventBase::getSFNumberMap(void) const
+{
+    return &_sfNumberMap;
+}
+
+
+SFFieldContainerMap *GenericEventBase::editSFContainerMap(void)
+{
+    editSField(ContainerMapFieldMask);
+
+    return &_sfContainerMap;
+}
+
+const SFFieldContainerMap *GenericEventBase::getSFContainerMap(void) const
+{
+    return &_sfContainerMap;
+}
+
+
 
 
 
@@ -166,6 +246,14 @@ UInt32 GenericEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (NumberMapFieldMask & whichField))
+    {
+        returnValue += _sfNumberMap.getBinSize();
+    }
+    if(FieldBits::NoField != (ContainerMapFieldMask & whichField))
+    {
+        returnValue += _sfContainerMap.getBinSize();
+    }
 
     return returnValue;
 }
@@ -175,6 +263,14 @@ void GenericEventBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (NumberMapFieldMask & whichField))
+    {
+        _sfNumberMap.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (ContainerMapFieldMask & whichField))
+    {
+        _sfContainerMap.copyToBin(pMem);
+    }
 }
 
 void GenericEventBase::copyFromBin(BinaryDataHandler &pMem,
@@ -182,6 +278,14 @@ void GenericEventBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (NumberMapFieldMask & whichField))
+    {
+        _sfNumberMap.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ContainerMapFieldMask & whichField))
+    {
+        _sfContainerMap.copyFromBin(pMem);
+    }
 }
 
 //! create a new instance of the class
@@ -306,12 +410,16 @@ FieldContainerTransitPtr GenericEventBase::shallowCopy(void) const
 /*------------------------- constructors ----------------------------------*/
 
 GenericEventBase::GenericEventBase(void) :
-    Inherited()
+    Inherited(),
+    _sfNumberMap              (),
+    _sfContainerMap           ()
 {
 }
 
 GenericEventBase::GenericEventBase(const GenericEventBase &source) :
-    Inherited(source)
+    Inherited(source),
+    _sfNumberMap              (source._sfNumberMap              ),
+    _sfContainerMap           (source._sfContainerMap           )
 {
 }
 
@@ -322,6 +430,56 @@ GenericEventBase::~GenericEventBase(void)
 {
 }
 
+
+GetFieldHandlePtr GenericEventBase::getHandleNumberMap       (void) const
+{
+    SFStringToUInt32Map::GetHandlePtr returnValue(
+        new  SFStringToUInt32Map::GetHandle(
+             &_sfNumberMap,
+             this->getType().getFieldDesc(NumberMapFieldId),
+             const_cast<GenericEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GenericEventBase::editHandleNumberMap      (void)
+{
+    SFStringToUInt32Map::EditHandlePtr returnValue(
+        new  SFStringToUInt32Map::EditHandle(
+             &_sfNumberMap,
+             this->getType().getFieldDesc(NumberMapFieldId),
+             this));
+
+
+    editSField(NumberMapFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GenericEventBase::getHandleContainerMap    (void) const
+{
+    SFFieldContainerMap::GetHandlePtr returnValue(
+        new  SFFieldContainerMap::GetHandle(
+             &_sfContainerMap,
+             this->getType().getFieldDesc(ContainerMapFieldId),
+             const_cast<GenericEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GenericEventBase::editHandleContainerMap   (void)
+{
+    SFFieldContainerMap::EditHandlePtr returnValue(
+        new  SFFieldContainerMap::EditHandle(
+             &_sfContainerMap,
+             this->getType().getFieldDesc(ContainerMapFieldId),
+             this));
+
+
+    editSField(ContainerMapFieldMask);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

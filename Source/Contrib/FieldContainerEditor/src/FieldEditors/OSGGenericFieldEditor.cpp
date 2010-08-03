@@ -89,6 +89,9 @@ void GenericFieldEditor::initMethod(InitPhase ePhase)
         {
             type = dynamic_cast<DataType*>(TypeFactory::the()->findType(i));
             if(type != NULL &&
+               !(dynamic_cast<FieldType*>(type) &&
+                 (dynamic_cast<FieldType*>(type)->getClass() == FieldType::PtrField ||
+                  dynamic_cast<FieldType*>(type)->getClass() == FieldType::ChildPtrField)) &&
                 *type != FieldTraits<AttachmentMap>::getType() &&
                 *type != FieldTraits<ChangedFunctorCallback>::getType())
             {

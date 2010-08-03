@@ -138,6 +138,11 @@ void GridLayout::updateLayout(const MFUnrecComponentPtr* Components, const Compo
 
 Vec2f GridLayout::layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
 {
+    if(getRows() == 0 || getColumns() == 0)
+    {
+        return Vec2f(1.0f,1.0f);
+    }
+
 	Real32 maxSizeX = 0.0f;
 	Real32 maxSizeY = 0.0f;
 

@@ -34,7 +34,7 @@
 #endif
 
 #include "OSGConfig.h"
-#include "OSGTBFileIODef.h"
+#include "OSGSystemDef.h"
 
 #include <vector>
 #include <set>
@@ -49,18 +49,21 @@
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TBFILEIO_DLLMAPPING FCFileHandlerBase
+class OSG_SYSTEM_DLLMAPPING FCFileHandlerBase
 {
      /*==========================  PUBLIC  =================================*/
    public:
  
-     typedef std::set<FieldContainerUnrecPtr> FCPtrStore;
+     typedef FCFileType::FCPtrStore FCPtrStore;
  
      /*---------------------------------------------------------------------*/
      virtual ~FCFileHandlerBase(void);
  
      /*---------------------------------------------------------------------*/
 	 virtual FCFileTypeP getFileType(const std::string& FileExtension, UInt32 Flags = FCFileType::OSG_READ_SUPPORTED |
+                                              FCFileType::OSG_WRITE_SUPPORTED);
+
+	 virtual FCFileTypeP getFileType(const BoostPath& FilePath, UInt32 Flags = FCFileType::OSG_READ_SUPPORTED |
                                               FCFileType::OSG_WRITE_SUPPORTED);
  
 	 virtual std::vector<std::string> getSuffixList(UInt32 flags = FCFileType::OSG_READ_SUPPORTED |
@@ -112,7 +115,7 @@ class OSG_TBFILEIO_DLLMAPPING FCFileHandlerBase
     template <class SingletonT>
     friend class SingletonHolder;
     
-     friend class OSG_TBFILEIO_DLLMAPPING FCFileType;
+     friend class OSG_SYSTEM_DLLMAPPING FCFileType;
      
      void operator =(const FCFileHandlerBase &source);
  

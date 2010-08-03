@@ -116,7 +116,7 @@ void SingleSelectionModelBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&SingleSelectionModel::invalidEditField),
         static_cast     <FieldGetMethodSig >(&SingleSelectionModel::invalidGetField));

@@ -116,7 +116,7 @@ void DocumentBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&Document::invalidEditField),
         static_cast     <FieldGetMethodSig >(&Document::invalidGetField));

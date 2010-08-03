@@ -47,6 +47,7 @@ inline
 void FCPtrEditorAllStore::setTypeToStore(const FieldContainerType* type)
 {
     _TypeToStore = type;
+    updateList();
 }
 
 OSG_END_NAMESPACE

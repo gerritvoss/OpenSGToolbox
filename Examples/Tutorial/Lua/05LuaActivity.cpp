@@ -76,14 +76,16 @@ int main(int argc, char **argv)
         //Make the Lua Activity
         LuaActivityRefPtr TheLuaActivity = LuaActivity::create();
         std::string LuaCode = 
-            "function handleEvent(Event, EventID)\n"
+            "eventFuncTable = {}\n"
+            "\n"
+            "function eventFuncTable.handleEvent(Event, EventID)\n"
             "    print(\"Source:  \", Event:getFieldValue(\"Source\"))\n"
             "    print(\"TimeStamp:  \", Event:getFieldValue(\"TimeStamp\"))\n"
             "    print(\"Button:  \", Event:getFieldValue(\"Button\"))\n"
             "    print(\"Position:  \", Event:getFieldValue(\"Location\"):x(), \", \", Event:getFieldValue(\"Location\"):y())\n"
             "end";
         TheLuaActivity->setCode(LuaCode);
-        TheLuaActivity->setEntryFunction("handleEvent");
+        TheLuaActivity->setEntryFunction("eventFuncTable.handleEvent");
 
         TutorialWindow->attachActivity(TheLuaActivity, WindowEventProducer::MousePressedMethodId);
         //TutorialWindow->attachActivity(TheLuaActivity, WindowEventProducer::KeyTypedMethodId);

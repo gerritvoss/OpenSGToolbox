@@ -65,6 +65,8 @@
 
 #include "OSGEvent.h" // Parent
 
+#include "OSGStringToUInt32MapFields.h" // NumberMap type
+#include "OSGFieldContainerMapFields.h" // ContainerMap type
 
 #include "OSGGenericEventFields.h"
 
@@ -90,6 +92,22 @@ class OSG_BASE_DLLMAPPING GenericEventBase : public Event
 
   public:
 
+    enum
+    {
+        NumberMapFieldId = Inherited::NextFieldId,
+        ContainerMapFieldId = NumberMapFieldId + 1,
+        NextFieldId = ContainerMapFieldId + 1
+    };
+
+    static const OSG::BitVector NumberMapFieldMask =
+        (TypeTraits<BitVector>::One << NumberMapFieldId);
+    static const OSG::BitVector ContainerMapFieldMask =
+        (TypeTraits<BitVector>::One << ContainerMapFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFStringToUInt32Map SFNumberMapType;
+    typedef SFFieldContainerMap SFContainerMapType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -108,6 +126,32 @@ class OSG_BASE_DLLMAPPING GenericEventBase : public Event
     virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+
+            const SFStringToUInt32Map *getSFNumberMap       (void) const;
+
+            const SFFieldContainerMap *getSFContainerMap    (void) const;
+
+
+            const StringToUInt32Map   &getNumberMap       (void) const;
+
+            const FieldContainerMap   &getContainerMap    (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -159,6 +203,14 @@ class OSG_BASE_DLLMAPPING GenericEventBase : public Event
     static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFStringToUInt32Map _sfNumberMap;
+    SFFieldContainerMap _sfContainerMap;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
@@ -183,6 +235,38 @@ class OSG_BASE_DLLMAPPING GenericEventBase : public Event
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
+    GetFieldHandlePtr  getHandleNumberMap       (void) const;
+    EditFieldHandlePtr editHandleNumberMap      (void);
+    GetFieldHandlePtr  getHandleContainerMap    (void) const;
+    EditFieldHandlePtr editHandleContainerMap   (void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+
+                  SFStringToUInt32Map *editSFNumberMap      (void);
+
+                  SFFieldContainerMap *editSFContainerMap   (void);
+
+
+                  StringToUInt32Map   &editNumberMap      (void);
+
+                  FieldContainerMap   &editContainerMap   (void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setNumberMap      (const StringToUInt32Map &value);
+            void setContainerMap   (const FieldContainerMap &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

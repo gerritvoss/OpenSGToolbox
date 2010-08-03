@@ -46,6 +46,7 @@
 #include "OSGTextField.h"
 #include "OSGMenuButton.h"
 #include "OSGDialogWindowListener.h"
+#include "OSGFCPtrEditorStore.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,6 +85,11 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
 
     virtual const std::vector<const DataType*>& getEditableTypes(void) const;
 
+    FCPtrEditorStorePtr getFCStore(void) const;
+    void setFCStore(FCPtrEditorStorePtr store);
+
+    static FCPtrEditorStorePtr getDefaultFindFCStorePrototype(void);
+    static void setDefaultFindFCStorePrototype(FCPtrEditorStorePtr fcStore);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -119,6 +125,9 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    virtual bool internalAttachField (FieldContainer* fc, UInt32 fieldId, UInt32 index);
+    virtual bool internalDettachField(void);
+
     virtual void internalFieldChanged (void);
     virtual void internalStartEditing (void);
     virtual void internalStopEditing  (void);
@@ -130,6 +139,9 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
     MenuButtonRefPtr _EditingMenuButton;
     std::string _InitialValue;
     
+    virtual void openCreateHandler(void);
+    virtual void openFindContainerHandler(void);
+
     class TextFieldListener : public FocusListener, public ActionListener, public KeyAdapter
     {
       public :
@@ -176,7 +188,7 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
 
     CreateContainerDialogListener _CreateContainerDialogListener;
 
-    void handleCreateContainerClosed(const DialogWindowEventUnrecPtr e);
+    virtual void handleCreateContainerClosed(const DialogWindowEventUnrecPtr e);
 
     class FindContainerDialogListener : public DialogWindowListener
     {
@@ -194,7 +206,12 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
 
     FindContainerDialogListener _FindContainerDialogListener;
 
-    void handleFindContainerClosed(const DialogWindowEventUnrecPtr e);
+    virtual void handleFindContainerClosed(const DialogWindowEventUnrecPtr e);
+
+
+    FCPtrEditorStorePtr _FindFCStore;
+
+    static FCPtrEditorStorePtr _DefaultFindFCStorePrototype;
     /*==========================  PRIVATE  ================================*/
 
   private:

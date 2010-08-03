@@ -249,7 +249,7 @@ void LuaManager::FunctionHook(lua_State *l, lua_Debug *ar)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LuaManager::runScript(const std::string& Script)
+int LuaManager::runScript(const std::string& Script)
 {
     //If Stack Trace is enabled
     if(_EnableStackTrace)
@@ -265,14 +265,20 @@ void LuaManager::runScript(const std::string& Script)
     //Load the Script
     int s = luaL_loadstring(_State, Script.c_str());
     checkError(s);
-    if(s != 0) {return;}            //Error loading the string exit
+    if(s != 0)
+    {
+        //Error loading the string
+        return s;
+    }
 
     // execute Lua program
     s = lua_pcall(_State, 0, LUA_MULTRET, 0);
     checkError(s);
+
+    return s;
 }
 
-void LuaManager::runScript(const BoostPath& ScriptPath)
+int LuaManager::runScript(const BoostPath& ScriptPath)
 {
     if(boost::filesystem::exists(ScriptPath))
     {
@@ -290,15 +296,22 @@ void LuaManager::runScript(const BoostPath& ScriptPath)
         //Load the Script
         int s = luaL_loadfile(_State, ScriptPath.string().c_str());
         checkError(s);
-        if(s != 0) {return;}            //Error loading the string exit
+        if(s != 0)
+        {
+            //Error loading the string
+            return s;
+        }
 
         // execute Lua program
         s = lua_pcall(_State, 0, LUA_MULTRET, 0);
         checkError(s);
+
+        return s;
     }
     else
     {
         SWARNING << "LuaManager::runScript(): File by path: " << ScriptPath.string() << ", does not exist." << std::endl;
+        return 0;
     }
 }
 

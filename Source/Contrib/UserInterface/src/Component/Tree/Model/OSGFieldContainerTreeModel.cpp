@@ -53,6 +53,10 @@
 #include "OSGFieldContainerMFieldHandle.h"
 #include "OSGAttachmentMapFieldTraits.h"
 #include "OSGChangedFunctorFieldTraits.h"
+#include "OSGEventProducerPtrType.h"
+#include "OSGEventProducer.h"
+
+#include "OSGAttachmentMapSFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -90,7 +94,7 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
 	    ContainerFieldIdPair ThePair = boost::any_cast<ContainerFieldIdPair>(parent);
 
         //FieldContainer
-        if(ThePair._FieldID == 0)
+        if(ThePair._FieldID == FIELD_CONTAINER_ID)
         {
             UInt32 FieldId(1);
             UInt32 NumFields(0);
@@ -125,7 +129,7 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
                         GetFieldHandlePtr TempHandle(ThePair._Container->getField(ThePair._FieldID));
                         FieldContainerWeakPtr TheContainer = dynamic_cast<GetMFieldHandle<FieldContainerPtrMFieldBase>*>(TempHandle.get())->get(index);
 
-                        return boost::any(ContainerFieldIdPair(TheContainer,0));
+                        return boost::any(ContainerFieldIdPair(TheContainer,FIELD_CONTAINER_ID));
                     }
                     else
                     {
@@ -140,7 +144,7 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
                         GetFieldHandlePtr TempHandle(ThePair._Container->getField(ThePair._FieldID));
                         FieldContainerWeakPtr TheContainer = dynamic_cast<GetSFieldHandle<FieldContainerPtrSFieldBase>*>(TempHandle.get())->get();
 
-                        return boost::any(ContainerFieldIdPair(TheContainer,0));
+                        return boost::any(ContainerFieldIdPair(TheContainer,FIELD_CONTAINER_ID));
                     }
                     else
                     {
@@ -149,9 +153,25 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
                     }
                 }
             }
+            else if(fcType.getContentType() == FieldTraits<AttachmentMap>::getType())
+            {
+                //Attachment Map
+                if(index < ThePair._Container->getField(ThePair._FieldID)->size())
+                {
+                    GetMapFieldHandle::ContainerList TheContainerList;
+                    static_cast<GetSFieldHandle<SFAttachmentPtrMap>*>(ThePair._Container->getField(ThePair._FieldID).get())->flatten(TheContainerList);
+                    return boost::any(ContainerFieldIdPair(TheContainerList[index],FIELD_CONTAINER_ID));
+                }
+                else
+                {
+                    SWARNING << "Index out of bounds." << std::endl;
+                    return boost::any();
+                }
+                return boost::any();
+            }
             else
             {
-                SWARNING << "Not Ptr field." << std::endl;
+                SWARNING << "Not Valid field." << std::endl;
                 return boost::any();
             }
         }
@@ -176,7 +196,12 @@ bool FieldContainerTreeModel::isFieldAllowed(const FieldDescriptionBase* fieldDe
         (!getShowMultiFields ()    && fieldCardinality == FieldType::MultiField ) ||
         (!getShowSingleFields()    && fieldCardinality == FieldType::SingleField) ||
 
-        (!getShowDataFields()      && fieldClass == FieldType::ValueField       ) ||
+        (!getShowDataFields()      && fieldClass == FieldType::ValueField
+         && 
+         (!getShowAttachments() ||
+          (getShowAttachments() && contentType != FieldTraits<AttachmentMap>::getType()))) ||
+                                 
+        (!getShowAttachments()  && contentType == FieldTraits<AttachmentMap>::getType())      ||
 
         (!getShowParentPtrFields() && fieldClass == FieldType::ParentPtrField   ) ||
 
@@ -185,8 +210,8 @@ bool FieldContainerTreeModel::isFieldAllowed(const FieldDescriptionBase* fieldDe
         (!getShowPtrFields() && (fieldClass == FieldType::ParentPtrField ||
                                  fieldClass == FieldType::ChildPtrField  ||
                                  fieldClass == FieldType::PtrField         )    ) ||
-                                 
-        (!getShowAttachments()  && contentType == FieldTraits<AttachmentMap>::getType())      ||
+                        
+        (!getShowEventProducers()  && contentType == FieldTraits<EventProducerPtr>::getType())      ||
                                  
         (!getShowCallbackFunctors()  && contentType == FieldTraits<ChangedFunctorCallback>::getType())
       )
@@ -217,7 +242,7 @@ UInt32 FieldContainerTreeModel::getChildCount(const boost::any& parent) const
 	    ContainerFieldIdPair ThePair = boost::any_cast<ContainerFieldIdPair>(parent);
 
         //FieldContainer
-        if(ThePair._FieldID == 0)
+        if(ThePair._FieldID == FIELD_CONTAINER_ID)
         {
             if(ThePair._Container != NULL)
             {
@@ -242,18 +267,26 @@ UInt32 FieldContainerTreeModel::getChildCount(const boost::any& parent) const
         {
             const FieldType& fcType(ThePair._Container->getFieldDescription(ThePair._FieldID)->getFieldType());
            
-            if(isFieldAllowed(ThePair._Container->getFieldDescription(ThePair._FieldID)) &&
-               ((fcType.getClass() == FieldType::PtrField      ) ||
-               (fcType.getClass() == FieldType::ParentPtrField) ||
-               (fcType.getClass() == FieldType::ChildPtrField )))
+            if(isFieldAllowed(ThePair._Container->getFieldDescription(ThePair._FieldID)))
             {
-                if(fcType.getCardinality() == FieldType::MultiField )
+                if((fcType.getClass() == FieldType::PtrField      ) ||
+                   (fcType.getClass() == FieldType::ParentPtrField) ||
+                   (fcType.getClass() == FieldType::ChildPtrField ))
                 {
-                    return ThePair._Container->getField(ThePair._FieldID)->size();
+                    if(fcType.getCardinality() == FieldType::MultiField )
+                    {
+                        return ThePair._Container->getField(ThePair._FieldID)->size();
+                    }
+                    else
+                    {
+                        return 1;
+                    }
                 }
-                else
+                else if(fcType.getContentType() == FieldTraits<AttachmentMap>::getType())
                 {
-                    return 1;
+                    GetMapFieldHandle::ContainerList TheContainerList;
+                    static_cast<GetSFieldHandle<SFAttachmentPtrMap>*>(ThePair._Container->getField(ThePair._FieldID).get())->flatten(TheContainerList);
+                    return TheContainerList.size();
                 }
             }
             else
@@ -277,7 +310,7 @@ UInt32 FieldContainerTreeModel::getIndexOfChild(const boost::any& parent, const 
 	    ContainerFieldIdPair ParentPair = boost::any_cast<ContainerFieldIdPair>(parent);
 
         //FieldContainer
-        if(ChildPair._FieldID == 0)
+        if(ChildPair._FieldID == FIELD_CONTAINER_ID)
         {
             const FieldType& fcType(ParentPair._Container->getFieldDescription(ParentPair._FieldID)->getFieldType());
            
@@ -307,6 +340,23 @@ UInt32 FieldContainerTreeModel::getIndexOfChild(const boost::any& parent, const 
                     return 0;
                 }
             }
+            else if(fcType.getContentType() == FieldTraits<AttachmentMap>::getType())
+            {
+                //Attachment Map
+                GetMapFieldHandle::ContainerList TheContainerList;
+                static_cast<GetSFieldHandle<SFAttachmentPtrMap>*>(ParentPair._Container->getField(ParentPair._FieldID).get())->flatten(TheContainerList);
+                FieldContainerWeakPtr TheChildContainer = ChildPair._Container;
+
+                for(UInt32 i(0) ; i<TheContainerList.size() ; ++i)
+                {
+                    if(TheContainerList[i] == TheChildContainer)
+                    {
+                        return i;
+                    }
+                }
+                SWARNING << "Could not find index." << std::endl;
+                return 0;
+            }
         }
         else
         {
@@ -322,35 +372,12 @@ UInt32 FieldContainerTreeModel::getIndexOfChild(const boost::any& parent, const 
 
 boost::any FieldContainerTreeModel::getRoot(void) const
 {
-    return boost::any(ContainerFieldIdPair(getInternalRootFieldContainer(),0));
+    return boost::any(ContainerFieldIdPair(getInternalRootFieldContainer(),FIELD_CONTAINER_ID));
 }
 
 bool FieldContainerTreeModel::isLeaf(const boost::any& node) const
 {
-    try
-    {
-	    ContainerFieldIdPair ThePair = boost::any_cast<ContainerFieldIdPair>(node);
-
-        //FieldContainer
-        if(ThePair._FieldID == 0)
-        {
-            return false;
-        }
-        //Field
-        else
-        {
-            const FieldType& fcType(ThePair._Container->getFieldDescription(ThePair._FieldID)->getFieldType());
-           
-            return !((fcType.getClass() == FieldType::PtrField      ) ||
-                     (fcType.getClass() == FieldType::ParentPtrField) ||
-                     (fcType.getClass() == FieldType::ChildPtrField ));
-        }
-    }
-    catch(const boost::bad_any_cast &ex)
-    {
-        SWARNING << "Bad any cast" << ex.what() << "." << std::endl;
-        return true;
-    }
+    return getChildCount(node) == 0;
 }
 
 void FieldContainerTreeModel::valueForPathChanged(TreePath path, const boost::any& newValue)

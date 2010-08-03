@@ -648,6 +648,19 @@ void ParticleSystem::addAndExpandAttributes(const StringToUInt32Map& AttributeMa
     }
 }
 
+Int64 ParticleSystem::getIndex(UInt32 ParticleID) const
+{
+    Int64 i;
+    for(i = 0; i < getNumParticles(); ++i)
+    {
+        if(getID(i) == ParticleID)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
 bool ParticleSystem::internalKillParticle(UInt32 Index)
 {
     if(Index >= getNumParticles())
@@ -709,16 +722,9 @@ bool ParticleSystem::killParticle(UInt32 Index, bool KillNextUpdate)
 
 bool ParticleSystem::killParticleByID(UInt32 ID, bool KillNextUpdate)
 {
-    UInt32 i,index;
-    for(i = 0; i < getNumParticles(); i++)
-    {
-        if(getID(i) == ID)
-        {
-            index = i;
-            break;
-        }
-    }
-    if(i != getNumParticles()) 
+    Int64 index(getIndex(ID));
+
+    if(index >= 0) 
         return killParticle(index,KillNextUpdate);
     else 
         return false;
@@ -1014,12 +1020,12 @@ bool ParticleSystem::addWorldSpaceParticle(const Pnt3f& Position,
     return false;
 }
 
-const Vec3f ParticleSystem::getPositionChange(const UInt32& Index) const
+Vec3f ParticleSystem::getPositionChange(const UInt32& Index) const
 {
     return getPosition(Index) - getSecPosition(Index);
 }
 
-const Vec3f ParticleSystem::getVelocityChange(const UInt32& Index) const
+Vec3f ParticleSystem::getVelocityChange(const UInt32& Index) const
 {
     return getVelocity(Index) - getSecVelocity(Index);
 }

@@ -61,13 +61,22 @@ A FCPtrEditorListStore.
  *                           Class methods                                 *
 \***************************************************************************/
 
+FCPtrEditorListStorePtr FCPtrEditorListStore::create(void)
+{
+    return FCPtrEditorListStorePtr(new FCPtrEditorListStore());
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-std::vector<FieldContainer*> FCPtrEditorListStore::getList(void) const
+FCPtrEditorStorePtr FCPtrEditorListStore::clone(void) const
 {
-    return _Store;
+    return FCPtrEditorStorePtr(new FCPtrEditorListStore(*this));
+}
+
+void FCPtrEditorListStore::updateList(void)
+{
+   //Do Nothing
 }
 
 /*-------------------------------------------------------------------------*\
@@ -75,15 +84,18 @@ std::vector<FieldContainer*> FCPtrEditorListStore::getList(void) const
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
+FCPtrEditorListStore::FCPtrEditorListStore(void) :
+    Inherited()
+{
+}
+
 FCPtrEditorListStore::FCPtrEditorListStore(const FieldContianerVector& Store) :
-    Inherited(),
-    _Store(Store)
+    Inherited(Store)
 {
 }
 
 FCPtrEditorListStore::FCPtrEditorListStore(const FCPtrEditorListStore& source) :
-    Inherited(source),
-    _Store(source._Store)
+    Inherited(source)
 {
 }
 

@@ -60,4 +60,16 @@ FCPtrFieldEditor::FindContainerDialogListener::FindContainerDialogListener(FCPtr
 {
 }
 
+inline
+FCPtrEditorStorePtr FCPtrFieldEditor::getFCStore(void) const
+{
+    return _FindFCStore;
+}
+
+inline
+void FCPtrFieldEditor::setFCStore(FCPtrEditorStorePtr store)
+{
+    _FindFCStore = store;
+}
+
 OSG_END_NAMESPACE

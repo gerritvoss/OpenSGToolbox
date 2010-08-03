@@ -195,7 +195,7 @@ void AbstractWindowBase::classDescInserter(TypeObject &oType)
         "DrawingSurface",
         "",
         DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
-        false,
+        true,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleDrawingSurface),
         static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleDrawingSurface));
@@ -453,7 +453,7 @@ AbstractWindowBase::TypeObject AbstractWindowBase::_type(
     "        type=\"UIDrawingSurface\"\n"
     "        category=\"pointer\"\n"
     "        cardinality=\"single\"\n"
-    "        visibility=\"external\"\n"
+    "        visibility=\"internal\"\n"
     "        access=\"public\"\n"
     "        defaultValue=\"NULL\"\n"
     "        >\n"

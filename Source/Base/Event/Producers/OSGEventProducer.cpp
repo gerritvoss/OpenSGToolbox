@@ -263,7 +263,7 @@ void EventProducer::detachAllEventListeners(void)
 
 EventConnection EventProducer::attachEventListener(EventListenerPtr TheEventListener, UInt32 ProducedEventId)
 {
-    if(TheEventListener == NULL)
+if(TheEventListener == NULL)
     {
         SWARNING << "EventProducer::attachEventListener(): Cannot attach a NULL EventListener." << std::endl;
     }

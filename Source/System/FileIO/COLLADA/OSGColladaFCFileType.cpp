@@ -84,39 +84,39 @@ ColladaFCFileType* ColladaFCFileType::_the(new ColladaFCFileType());
  
  /*---------------------------------------------------------------------*/
 ColladaFCFileType::FCPtrStore ColladaFCFileType::read(std::istream &is,
-const std::string& fileNameOrExtension) const
+                                                      const std::string& fileNameOrExtension) const
 {
-ColladaGlobal::ObjTransitPtr colladaReader = ColladaGlobal::create();
+    ColladaGlobal::ObjTransitPtr colladaReader = ColladaGlobal::create();
 
-ColladaOptionsRefPtr colOpts = ColladaOptions::create();
-colOpts->setInvertTransparency(false);
-colOpts->setCreateNameAttachments(true);
-colOpts->setFlattenNodeXForms(true);
-colOpts->setReadAnimations(true);
-colladaReader->setOptions(colOpts);
+    ColladaOptionsRefPtr colOpts = ColladaOptions::create();
+    colOpts->setInvertTransparency(false);
+    colOpts->setCreateNameAttachments(true);
+    colOpts->setFlattenNodeXForms(true);
+    colOpts->setReadAnimations(true);
+    colladaReader->setOptions(colOpts);
 
-//NodeTransitPtr colRoot = colladaReader->read(is,fileNameOrExtension);
-//FCPtrStore store;
-//store.insert(colRoot);
-//return store;
+    //NodeTransitPtr colRoot = colladaReader->read(is,fileNameOrExtension);
+    //FCPtrStore store;
+    //store.insert(colRoot);
+    //return store;
 
-return colladaReader->readAll(is,fileNameOrExtension);
+    return colladaReader->readAll(is,fileNameOrExtension);
 
 }
 
  /*---------------------------------------------------------------------*/
 
 bool ColladaFCFileType::write(const FCPtrStore &Containers, std::ostream &os,
-                    const std::string& fileNameOrExtension, const FCTypeVector& IgnoreTypes) const
+                              const std::string& fileNameOrExtension, const FCTypeVector& IgnoreTypes) const
 {
-SWARNING << "In ColladaFCFileType: Write support for COLLADA files NIY." << std::endl;
-return false;
+    SWARNING << "In ColladaFCFileType: Write support for COLLADA files NIY." << std::endl;
+    return false;
 }
 
 
 std::string ColladaFCFileType::getName(void) const
 {
-return std::string("ColladaFCFileType");
+    return std::string("ColladaFCFileType");
 }
 
 OSG_END_NAMESPACE

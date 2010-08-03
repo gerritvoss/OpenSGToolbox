@@ -86,19 +86,33 @@ bool FCPtrEditorStore::isExcluded(FieldContainer* ptr) const
     return false;
 }
 
+const FieldContainerType* FCPtrEditorStore::getTypeToStore(void) const
+{
+    //Do nothing
+    return NULL;
+}
+
+void FCPtrEditorStore::setTypeToStore(const FieldContainerType* type)
+{
+    //Do nothing
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
-FCPtrEditorStore::FCPtrEditorStore(const FieldContianerVector& Exclude,
+FCPtrEditorStore::FCPtrEditorStore(const FieldContianerVector& Store,
+                     const FieldContianerVector& Exclude,
                  const FieldContianerTypeVector& ExcludeTypes) :
+    _Store(Store),
     _ExcludedPtrs(Exclude),
     _ExcludedTypes(ExcludeTypes)
 {
 }
 
 FCPtrEditorStore::FCPtrEditorStore(const FCPtrEditorStore& source) :
+    _Store(source._Store),
     _ExcludedPtrs(source._ExcludedPtrs),
     _ExcludedTypes(source._ExcludedTypes)
 {
