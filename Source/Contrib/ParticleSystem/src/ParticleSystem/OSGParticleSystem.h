@@ -114,6 +114,14 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     const StringToUInt32Map& getAttributes(const UInt32& Index) const;
 	Int64 getIndex(UInt32 ParticleID) const;
 
+	Pnt3f getWorldSpacePosition(const UInt32& Index) const;
+	Pnt3f getWorldSpaceSecPosition(const UInt32& Index) const;
+	Vec3f getWorldSpacePositionChange(const UInt32& Index) const;
+	Vec3f getWorldSpaceNormal(const UInt32& Index) const;
+	Vec3f getWorldSpaceVelocity(const UInt32& Index) const;
+	Vec3f getWorldSpaceSecVelocity(const UInt32& Index) const;
+	Vec3f getWorldSpaceVelocityChange(const UInt32& Index) const;
+	Vec3f getWorldSpaceAcceleration(const UInt32& Index) const;
 
     void setPosition(const Pnt3f& Pos, const UInt32& Index);
     void setSecPosition(const Pnt3f& SecPosition, const UInt32& Index);

@@ -1020,6 +1020,70 @@ bool ParticleSystem::addWorldSpaceParticle(const Pnt3f& Position,
     return false;
 }
 
+Pnt3f ParticleSystem::getWorldSpacePosition(const UInt32& Index) const
+{
+	Pnt3f result;
+    if(getBeacon() != NULL) 
+		getBeacon()->getToWorld().mult(getPosition(Index),result);
+
+	return result; 
+}
+
+Pnt3f ParticleSystem::getWorldSpaceSecPosition(const UInt32& Index) const
+{
+	Pnt3f result;
+    if(getBeacon() != NULL) 
+		getBeacon()->getToWorld().mult(getSecPosition(Index),result);
+
+	return result; 
+}
+
+Vec3f ParticleSystem::getWorldSpacePositionChange(const UInt32& Index) const
+{
+	return getWorldSpacePosition(Index) - getWorldSpaceSecPosition(Index);
+}
+
+Vec3f ParticleSystem::getWorldSpaceNormal(const UInt32& Index) const
+{
+	Vec3f result;
+	if(getBeacon() != NULL) 
+		getBeacon()->getToWorld().mult(getNormal(Index),result);
+
+	return result; 
+}
+
+Vec3f ParticleSystem::getWorldSpaceVelocity(const UInt32& Index) const
+{
+	Vec3f result;
+	if(getBeacon() != NULL) 
+		getBeacon()->getToWorld().mult(getVelocity(Index),result);
+
+	return result; 
+}
+
+Vec3f ParticleSystem::getWorldSpaceSecVelocity(const UInt32& Index) const
+{
+	Vec3f result;
+    if(getBeacon() != NULL)
+		getBeacon()->getToWorld().mult(getSecVelocity(Index),result);
+	return result; 
+}
+
+Vec3f ParticleSystem::getWorldSpaceVelocityChange(const UInt32& Index) const
+{
+	return getWorldSpaceVelocity(Index) - getWorldSpaceSecVelocity(Index);
+}
+
+Vec3f ParticleSystem::getWorldSpaceAcceleration(const UInt32& Index) const
+{
+	Vec3f result;
+    if(getBeacon() != NULL) 	
+		getBeacon()->getToWorld().mult(getAcceleration(Index),result);
+
+	return result; 
+}
+
+
 Vec3f ParticleSystem::getPositionChange(const UInt32& Index) const
 {
     return getPosition(Index) - getSecPosition(Index);
