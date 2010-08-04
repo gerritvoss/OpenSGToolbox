@@ -34,7 +34,7 @@
 #endif
 
 #include "OSGConfig.h"
-#include "OSGTBFileIODef.h"
+#include "OSGSystemDef.h"
 
 #include <vector>
 #include <set>
@@ -46,7 +46,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TBFILEIO_DLLMAPPING FCFileType : public IOFileTypeBase
+class OSG_SYSTEM_DLLMAPPING FCFileType : public IOFileTypeBase
 {
      /*==========================  PUBLIC  =================================*/
    public:

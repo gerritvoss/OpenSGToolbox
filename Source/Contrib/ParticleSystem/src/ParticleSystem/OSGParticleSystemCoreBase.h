@@ -99,8 +99,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
         DrawerFieldId = SystemFieldId + 1,
         SortingModeFieldId = DrawerFieldId + 1,
         SortFieldId = SortingModeFieldId + 1,
-        Sort2FieldId = SortFieldId + 1,
-        DistancesFieldId = Sort2FieldId + 1,
+        DistancesFieldId = SortFieldId + 1,
         HistogramFieldId = DistancesFieldId + 1,
         OffsetFieldId = HistogramFieldId + 1,
         PreviousSizeFieldId = OffsetFieldId + 1,
@@ -115,8 +114,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
         (TypeTraits<BitVector>::One << SortingModeFieldId);
     static const OSG::BitVector SortFieldMask =
         (TypeTraits<BitVector>::One << SortFieldId);
-    static const OSG::BitVector Sort2FieldMask =
-        (TypeTraits<BitVector>::One << Sort2FieldId);
     static const OSG::BitVector DistancesFieldMask =
         (TypeTraits<BitVector>::One << DistancesFieldId);
     static const OSG::BitVector HistogramFieldMask =
@@ -132,7 +129,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
     typedef SFUnrecParticleSystemDrawerPtr SFDrawerType;
     typedef SFUInt32          SFSortingModeType;
     typedef MFUInt32          MFSortType;
-    typedef MFUInt32          MFSort2Type;
     typedef MFReal32          MFDistancesType;
     typedef MFUInt32          MFHistogramType;
     typedef MFUInt32          MFOffsetType;
@@ -253,7 +249,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
     SFUnrecParticleSystemDrawerPtr _sfDrawer;
     SFUInt32          _sfSortingMode;
     MFUInt32          _mfSort;
-    MFUInt32          _mfSort2;
     MFReal32          _mfDistances;
     MFUInt32          _mfHistogram;
     MFUInt32          _mfOffset;
@@ -294,8 +289,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
     EditFieldHandlePtr editHandleSortingMode    (void);
     GetFieldHandlePtr  getHandleSort            (void) const;
     EditFieldHandlePtr editHandleSort           (void);
-    GetFieldHandlePtr  getHandleSort2           (void) const;
-    EditFieldHandlePtr editHandleSort2          (void);
     GetFieldHandlePtr  getHandleDistances       (void) const;
     EditFieldHandlePtr editHandleDistances      (void);
     GetFieldHandlePtr  getHandleHistogram       (void) const;
@@ -314,9 +307,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
                   MFUInt32            *editMFSort           (void);
             const MFUInt32            *getMFSort            (void) const;
 
-                  MFUInt32            *editMFSort2          (void);
-            const MFUInt32            *getMFSort2           (void) const;
-
                   MFReal32            *editMFDistances      (void);
             const MFReal32            *getMFDistances       (void) const;
 
@@ -332,9 +322,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCoreBase : public Mater
 
                   UInt32              &editSort           (const UInt32 index);
                   UInt32               getSort            (const UInt32 index) const;
-
-                  UInt32              &editSort2          (const UInt32 index);
-                  UInt32               getSort2           (const UInt32 index) const;
 
                   Real32              &editDistances      (const UInt32 index);
                   Real32               getDistances       (const UInt32 index) const;

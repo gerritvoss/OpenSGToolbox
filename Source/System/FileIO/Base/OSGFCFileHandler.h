@@ -34,7 +34,7 @@
 #endif
 
 #include "OSGConfig.h"
-#include "OSGTBFileIODef.h"
+#include "OSGSystemDef.h"
 
 #include <vector>
 #include <set>
@@ -49,7 +49,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TBFILEIO_DLLMAPPING FCFileHandlerBase
+class OSG_SYSTEM_DLLMAPPING FCFileHandlerBase
 {
      /*==========================  PUBLIC  =================================*/
    public:
@@ -115,7 +115,7 @@ class OSG_TBFILEIO_DLLMAPPING FCFileHandlerBase
     template <class SingletonT>
     friend class SingletonHolder;
     
-     friend class OSG_TBFILEIO_DLLMAPPING FCFileType;
+     friend class OSG_SYSTEM_DLLMAPPING FCFileType;
      
      void operator =(const FCFileHandlerBase &source);
  

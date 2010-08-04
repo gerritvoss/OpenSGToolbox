@@ -52,7 +52,7 @@ OSG_BEGIN_NAMESPACE
            PageFileIOFilePathAttachment for a description.
 */
 
-class OSG_TBFILEIO_DLLMAPPING FilePathAttachment : public FilePathAttachmentBase
+class OSG_SYSTEM_DLLMAPPING FilePathAttachment : public FilePathAttachmentBase
 {
   protected:
 

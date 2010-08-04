@@ -48,7 +48,7 @@
 #include "OSGFilePathAttachment.h"
 #include "OSGImageFileHandler.h"
 #include "OSGSceneFileHandler.h"
-#include "OSGProxyGroup.h"
+//#include "OSGProxyGroup.h"
 #include "OSGFCFileHandler.h"
 
 #include <boost/filesystem/operations.hpp>
@@ -191,7 +191,7 @@ FieldContainerUnrecPtr FilePathAttachment::loadFromFilePath(BoostPath &LoadFileP
                 Result = TheNode;
             }
             //ProxyGroup Core
-            else if(FCType.isDerivedFrom(ProxyGroup::getClassType()))
+            /*else if(FCType.isDerivedFrom(ProxyGroup::getClassType()))
             {
                 ProxyGroupUnrecPtr TheProxyGroup = ProxyGroup::create();
                 TheProxyGroup->setUrl(LoadFilePath.string().c_str());
@@ -199,7 +199,7 @@ FieldContainerUnrecPtr FilePathAttachment::loadFromFilePath(BoostPath &LoadFileP
                 TheProxyGroup->setConcurrentLoad(true);
 
                 Result = TheProxyGroup;
-            }
+            }*/
 
             //If not loaded, try loading as a generic FC file
             if(Result == NULL && isFileXML(LoadFilePath.string()))  //Other

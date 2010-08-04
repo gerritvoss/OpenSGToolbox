@@ -34,9 +34,7 @@ OSG_STORE_PROJECT_DEPENDENCIES()
 ##############################################################################
 
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}")
-OSG_ADD_DIRECTORY("Base")
 OSG_ADD_DIRECTORY("Utils")
-OSG_ADD_DIRECTORY("Attachments")
 OSG_ADD_DIRECTORY("XML")
 
 IF(COLLADA_FOUND)
