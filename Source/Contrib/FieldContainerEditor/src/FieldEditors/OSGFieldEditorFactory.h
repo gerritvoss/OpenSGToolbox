@@ -68,13 +68,35 @@ protected:
     friend class SingletonHolder;
 
 public:
+    FieldEditorComponentTransitPtr createDefaultEditor(FieldContainer* fc, 
+                                                       UInt32 FieldId, 
+                                                       CommandManagerPtr CmdManager,
+                                                       UInt32 FieldIndex = 0) const;
 
-          bool                setDefaultEditor        (const DataType* type,
+    //Single field default editors
+    bool                setSingleDefaultEditor        (const DataType* type,
                                                        const FieldContainerType* editorType);
-          bool                addDefaultEditor        (const DataType* type,
+    bool                addSingleDefaultEditor        (const DataType* type,
                                                        const FieldContainerType* editorType);
-          bool                removeDefaultEditor     (const DataType* type);
-    const FieldContainerType* getDefaultEditorType    (const DataType* type) const;
+    bool                removeSingleDefaultEditor     (const DataType* type);
+    const FieldContainerType* getSingleDefaultEditorType    (const DataType* type) const;
+
+    FieldEditorComponentTransitPtr createSingleDefaultEditor(FieldContainer* fc, 
+                                                             UInt32 FieldId, 
+                                                             CommandManagerPtr CmdManager,
+                                                             UInt32 FieldIndex = 0) const;
+
+    //Multi field default editors
+    bool                setMultiDefaultEditor        (const DataType* type,
+                                                      const FieldContainerType* editorType);
+    bool                addMultiDefaultEditor        (const DataType* type,
+                                                      const FieldContainerType* editorType);
+    bool                removeMultiDefaultEditor     (const DataType* type);
+    const FieldContainerType* getMultiDefaultEditorType    (const DataType* type) const;
+
+    FieldEditorComponentTransitPtr createMultiDefaultEditor(FieldContainer* fc, 
+                                                            UInt32 FieldId, 
+                                                            CommandManagerPtr CmdManager) const;
 
           bool                setEditorType    (const DataType* type,
                                                 const FieldContainerType* editorType,
@@ -90,10 +112,6 @@ public:
     const FieldContainerType* getEditorType    (const DataType* type,
                                                 UInt32 Index) const;
 
-    FieldEditorComponentTransitPtr createDefaultEditor(FieldContainer* fc, 
-                                                       UInt32 FieldId, 
-                                                       CommandManagerPtr CmdManager,
-                                                       UInt32 FieldIndex = 0) const;
     FieldEditorComponentTransitPtr createEditor       (FieldContainer* fc, 
                                                        UInt32 FieldId, 
                                                        CommandManagerPtr CmdManager,

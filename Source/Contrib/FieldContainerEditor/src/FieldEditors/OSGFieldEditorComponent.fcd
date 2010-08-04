@@ -34,14 +34,4 @@ A UI Panel.
 		defaultValue="0"
 	>
 	</Field>
-	<Field
-		name="EditingFieldIndex"
-		type="UInt32"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		access="protected"
-		defaultValue="0"
-	>
-	</Field>
 </FieldContainer>
