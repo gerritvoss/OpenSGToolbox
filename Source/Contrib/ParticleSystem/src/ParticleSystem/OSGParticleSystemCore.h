@@ -144,7 +144,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleS
         virtual void particleGenerated(const ParticleEventUnrecPtr e);
         virtual void particleKilled(const ParticleEventUnrecPtr e);
         virtual void particleStolen(const ParticleEventUnrecPtr e);
-        // used for sorting particles 
 
       private:
         ParticleSystemCoreRefPtr _Core;
@@ -158,8 +157,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleS
 	void handleParticleGenerated(const ParticleEventUnrecPtr e);
 	void handleParticleKilled(const ParticleEventUnrecPtr e);
 	void handleParticleStolen(const ParticleEventUnrecPtr e);
-	
-	void doRadixSort();
 
     /*==========================  PRIVATE  ================================*/
 
@@ -173,7 +170,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleS
     void operator =(const ParticleSystemCore &source);
 };
 
-int qSortComp(const void * a, const void * b);
 
 typedef ParticleSystemCore *ParticleSystemCoreP;
 

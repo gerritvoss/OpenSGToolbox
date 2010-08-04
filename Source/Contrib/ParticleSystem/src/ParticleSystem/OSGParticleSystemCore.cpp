@@ -52,6 +52,7 @@
 #include "OSGCamera.h"
 #include "OSGMatrix.h"
 #include "OSGQuaternion.h"
+#include "OSGRadixSort.h"
 #include <stdio.h>
 #include <vector>
 #include <iterator>
@@ -187,8 +188,7 @@ void ParticleSystemCore::adjustVolume(Volume & volume)
 
 void ParticleSystemCore::sortParticles(DrawEnv *pEnv)
 {
-    //This should be called if the ParticleSystem has
-    //just finished an update
+    //This should be called if the ParticleSystem has just finished an update
 
 	UInt32 numParticles = getSystem()->getNumParticles();
 	if(getSystem() != NULL && getSortingMode() != NONE && getMFSort()->size() > 0)
@@ -227,7 +227,7 @@ void ParticleSystemCore::sortParticles(DrawEnv *pEnv)
 		}
 		
 		// perform the actual sort
-		doRadixSort();	
+		RadixSort(numParticles ,_mfDistances, _mfSort);
     }
 }
 
@@ -235,200 +235,7 @@ void ParticleSystemCore::sortParticles(DrawEnv *pEnv)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void ParticleSystemCore::doRadixSort()
-{
-	if(getMFHistogram()->size() == 0)
-	{ // only initialize histograms if needed. should happen once only
-		editMFHistogram()->resize(256*4);
-		editMFOffset()->resize(256);
-	}
 
-	UInt32* input = (UInt32*)&editDistances(0);
-	UInt32 numParticles = getSystem()->getNumParticles();
-	// Resize lists if needed
-	if(numParticles != getPreviousSize())							
-	{ 											
-		if(getPreviousSize() < numParticles) 
-		{ // only expand if needed
-			editMFSort()->resize(numParticles);
-			editMFSort2()->resize(numParticles);
-		}
-		else 
-		{	// reset indices
-			for(UInt32 i=0;i < numParticles;i++)	
-            {
-				editSort(i) = i;
-            }
-		}
-		setPreviousSize(numParticles);							
-	}
-
-	
-	// Clear counters 			
-	memset(&editHistogram(0), 0,256*4*sizeof(UInt32));	
-													
-	// Prepare for temporal coherence 		
-	Real32 PrevVal = getDistances(getSort(0));		
-	bool AlreadySorted = true;	// Optimism... 
-	UInt32* Indices = &editSort(0);
-													
-	/* Prepare to count */							
-	UChar8* p = (UChar8*)input;						
-	UChar8* pe = &p[numParticles*4];							
-	UInt32* h0= &editHistogram(0);	/* Histogram for first pass (LSB)*/		
-	UInt32* h1= &editHistogram(256);	/* Histogram for second pass*/		
-	UInt32* h2= &editHistogram(512);	/* Histogram for third pass*/		
-	UInt32* h3= &editHistogram(768);	/* Histogram for last pass (MSB)*/	
-																		
-	while(p!=pe)														
-	{																	
-		// Read input buffer in previous sorted order 				
-		Real32 Val = getDistances(*Indices++);							
-		// Check whether already sorted or not x					
-		if(Val<PrevVal)	 // Early out
-		{ 
-			AlreadySorted = false; 
-			break; 
-		} 
-		// Update for next iteration 			
-		PrevVal = Val;									
-														
-		// Create histograms 					
-		h0[*p++]++;	
-		h1[*p++]++;	
-		h2[*p++]++; 
-		h3[*p++]++;	
-	}													
-														
-	/* If all input values are already sorted, we just have to return and leave the 
-	 * previous list unchanged. That way the routine may take advantage of temporal 	
-	 * coherence, for example when used to sort transparent faces.
-	 */					
-	if(AlreadySorted) return;										
-																						
-	// Else there has been an early out and we must finish computing the histograms 
-	while(p!=pe)												
-	{															
-		// Continue to create histograms from where we left off	
-		h0[*p++]++;	
-		h1[*p++]++;	
-		h2[*p++]++;	
-		h3[*p++]++;			
-	}
-
-	
-	// Compute #negative values involved if needed
-	UInt32 NbNegativeValues = 0;
-	// An efficient way to compute the number of negatives values we'll have to deal with is simply to sum the 128
-	// last values of the last histogram. Last histogram because that's the one for the Most Significant Byte,
-	// responsible for the sign. 128 last values because the 128 first ones are related to positive numbers.
-	h3= &editHistogram(768);
-	for(UInt32 i=128;i<256;i++)	NbNegativeValues += h3[i];	// 768 for last histogram, 128 for negative part
-
-	// we index from these alternating arrays each pass, and they must be swapped each time. To avoid
-	// having to copy all of the elements each pass, we just use pointers to handle this
-	UInt32 * sortPtr = &editSort(0);
-	UInt32 * sort2Ptr = &editSort2(0);
-
-	// Radix sort, j is the pass number (0=LSB, 3=MSB)
-	for(UInt32 j=0;j<4;j++)
-	{
-		// Should we care about negative values?
-		if(j!=3)
-		{
-			// Here we deal with positive values only
-			// Shortcut to current counters 						
-			UInt32* CurCount = &editHistogram(j<<8);					
-																		
-			// Reset flag. The sorting pass is supposed to be performed. (default)
-			bool PerformPass = true;					
-																						
-			// Get first byte 								
-			UChar8 UniqueVal = *(((UChar8*)input)+j);			
-																	
-			// Check that byte's counter 	
-			if(CurCount[UniqueVal]==numParticles)	
-				PerformPass=false;	
-
-			if(PerformPass)
-			{
-				// Create offsets
-				editOffset(0) = 0;
-				for(UInt32 i=1;i<256;i++) 
-                {
-					editOffset(i) = getOffset(i-1) + CurCount[i-1];
-                }
-
-				// Perform Radix Sort
-				UChar8* InputBytes = (UChar8*)input;
-				UInt32* Indices	= sortPtr;
-				UInt32* IndicesEnd = &sortPtr[numParticles];
-				InputBytes += j;
-				while(Indices!=IndicesEnd)
-				{
-					UInt32 id = *Indices++;
-					sort2Ptr[editOffset(InputBytes[id<<2])++] = id;
-				}
-
-				// Swap pointers for next pass. Valid indices - the most recent ones - are in sortPtr after the swap.
-				UInt32* Tmp = sortPtr;	
-				sortPtr = sort2Ptr; 
-				sort2Ptr = Tmp;
-			}
-		}
-		else
-		{
-			// This is a special case to correctly handle negative values
-			/* Shortcut to current counters */						
-			UInt32* CurCount = &editHistogram(j<<8);				
-																						
-			/* Get first byte */									
-			UChar8 UniqueVal = *(((UChar8*)input)+j);			
-																
-			if(!(CurCount[UniqueVal]==numParticles))
-			{
-				// Create biased offsets, in order for negative numbers to be sorted as well
-				editOffset(0) = NbNegativeValues; // First positive number takes place after the negative ones
-				for(UInt32 i=1;i<128;i++)	editOffset(i) = getOffset(i-1) + CurCount[i-1];	// 1 to 128 for positive numbers
-
-				// We must reverse the sorting order for negative numbers!
-				editOffset(255) = 0;
-				for(UInt32 i=0;i<127;i++) 
-					editOffset(254-i) = getOffset(255-i) + CurCount[255-i]; // Fixing the wrong order for negative values
-				for(UInt32 i=128;i<256;i++) 
-					editOffset(i) += CurCount[i];	// Fixing the wrong place for negative values
-
-				// Perform Radix Sort
-				for(UInt32 i=0;i<numParticles;i++)
-				{
-					UInt32 Radix = input[sortPtr[i]]>>24;	// Radix byte, same as above. AND is useless here (UInt32).
-					if(Radix<128) 
-						sort2Ptr[editOffset(Radix)++] = sortPtr[i]; // Number is positive, same as above
-					else 
-						sort2Ptr[--editOffset(Radix)] = sortPtr[i]; // Number is negative, flip the sorting order
-				}
-				// Swap pointers for next pass. Valid indices - the most recent ones - are in sortPtr after the swap.
-				UInt32* Tmp = sortPtr;	
-				sortPtr = sort2Ptr; 
-				sort2Ptr = Tmp;
-			}
-			else
-			{
-				// The pass is useless, yet we still have to reverse the order of current list if all values are negative.
-				if(UniqueVal >= 128)
-				{
-					for(UInt32 i=0; i < numParticles; i++)	
-						sort2Ptr[i] = sortPtr[numParticles-i-1];
-
-					// Swap pointers for next pass. Valid indices - the most recent ones - are in sortPtr after the swap.
-				UInt32* Tmp = sortPtr;	
-				sortPtr = sort2Ptr; 
-				sort2Ptr = Tmp;
-				}
-			}
-		} //end if (j!=3)
-	} // end for (j<4...)
-}// end of doRadixSort()
 
 /*----------------------- constructors & destructors ----------------------*/
 

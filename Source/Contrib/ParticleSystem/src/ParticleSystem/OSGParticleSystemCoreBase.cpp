@@ -100,12 +100,8 @@ OSG_BEGIN_NAMESPACE
 */
 
 /*! \var UInt32          ParticleSystemCoreBase::_mfSort
-    Sort and Sort2 are used to keep track of indices used to draw particles from 
+    Sort is used to keep track of indices used to draw particles from 
     nearest to farthest.
-*/
-
-/*! \var UInt32          ParticleSystemCoreBase::_mfSort2
-    
 */
 
 /*! \var Real32          ParticleSystemCoreBase::_mfDistances
@@ -194,25 +190,13 @@ void ParticleSystemCoreBase::classDescInserter(TypeObject &oType)
     pDesc = new MFUInt32::Description(
         MFUInt32::getClassType(),
         "Sort",
-        "Sort and Sort2 are used to keep track of indices used to draw particles from \n"
+        "Sort is used to keep track of indices used to draw particles from \n"
         "nearest to farthest.\n",
         SortFieldId, SortFieldMask,
         false,
         (Field::MFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleSort),
         static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleSort));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new MFUInt32::Description(
-        MFUInt32::getClassType(),
-        "Sort2",
-        "",
-        Sort2FieldId, Sort2FieldMask,
-        true,
-        (Field::MFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleSort2),
-        static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleSort2));
 
     oType.addInitialDesc(pDesc);
 
@@ -334,17 +318,8 @@ ParticleSystemCoreBase::TypeObject ParticleSystemCoreBase::_type(
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"protected\"\n"
     "\t>\n"
-    "\tSort and Sort2 are used to keep track of indices used to draw particles from \n"
+    "\tSort is used to keep track of indices used to draw particles from \n"
     "\tnearest to farthest.\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Sort2\"\n"
-    "\t\ttype=\"UInt32\"\n"
-    "        category=\"data\"\n"
-    "\t\tcardinality=\"multi\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"Distances\"\n"
@@ -457,20 +432,6 @@ const MFUInt32 *ParticleSystemCoreBase::getMFSort(void) const
     return &_mfSort;
 }
 
-
-MFUInt32 *ParticleSystemCoreBase::editMFSort2(void)
-{
-    editMField(Sort2FieldMask, _mfSort2);
-
-    return &_mfSort2;
-}
-
-const MFUInt32 *ParticleSystemCoreBase::getMFSort2(void) const
-{
-    return &_mfSort2;
-}
-
-
 MFReal32 *ParticleSystemCoreBase::editMFDistances(void)
 {
     editMField(DistancesFieldMask, _mfDistances);
@@ -549,10 +510,6 @@ UInt32 ParticleSystemCoreBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _mfSort.getBinSize();
     }
-    if(FieldBits::NoField != (Sort2FieldMask & whichField))
-    {
-        returnValue += _mfSort2.getBinSize();
-    }
     if(FieldBits::NoField != (DistancesFieldMask & whichField))
     {
         returnValue += _mfDistances.getBinSize();
@@ -594,10 +551,6 @@ void ParticleSystemCoreBase::copyToBin(BinaryDataHandler &pMem,
     {
         _mfSort.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (Sort2FieldMask & whichField))
-    {
-        _mfSort2.copyToBin(pMem);
-    }
     if(FieldBits::NoField != (DistancesFieldMask & whichField))
     {
         _mfDistances.copyToBin(pMem);
@@ -636,10 +589,6 @@ void ParticleSystemCoreBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SortFieldMask & whichField))
     {
         _mfSort.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (Sort2FieldMask & whichField))
-    {
-        _mfSort2.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (DistancesFieldMask & whichField))
     {
@@ -786,7 +735,6 @@ ParticleSystemCoreBase::ParticleSystemCoreBase(void) :
     _sfDrawer                 (NULL),
     _sfSortingMode            (UInt32(ParticleSystemCore::NONE)),
     _mfSort                   (),
-    _mfSort2                  (),
     _mfDistances              (),
     _mfHistogram              (),
     _mfOffset                 (),
@@ -800,7 +748,6 @@ ParticleSystemCoreBase::ParticleSystemCoreBase(const ParticleSystemCoreBase &sou
     _sfDrawer                 (NULL),
     _sfSortingMode            (source._sfSortingMode            ),
     _mfSort                   (source._mfSort                   ),
-    _mfSort2                  (source._mfSort2                  ),
     _mfDistances              (source._mfDistances              ),
     _mfHistogram              (source._mfHistogram              ),
     _mfOffset                 (source._mfOffset                 ),
@@ -931,31 +878,6 @@ EditFieldHandlePtr ParticleSystemCoreBase::editHandleSort           (void)
 
 
     editMField(SortFieldMask, _mfSort);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ParticleSystemCoreBase::getHandleSort2           (void) const
-{
-    MFUInt32::GetHandlePtr returnValue(
-        new  MFUInt32::GetHandle(
-             &_mfSort2,
-             this->getType().getFieldDesc(Sort2FieldId),
-             const_cast<ParticleSystemCoreBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ParticleSystemCoreBase::editHandleSort2          (void)
-{
-    MFUInt32::EditHandlePtr returnValue(
-        new  MFUInt32::EditHandle(
-             &_mfSort2,
-             this->getType().getFieldDesc(Sort2FieldId),
-             this));
-
-
-    editMField(Sort2FieldMask, _mfSort2);
 
     return returnValue;
 }
@@ -1109,10 +1031,6 @@ void ParticleSystemCoreBase::resolveLinks(void)
 
 #ifdef OSG_MT_CPTR_ASPECT
     _mfSort.terminateShare(Thread::getCurrentAspect(),
-                                      oOffsets);
-#endif
-#ifdef OSG_MT_CPTR_ASPECT
-    _mfSort2.terminateShare(Thread::getCurrentAspect(),
                                       oOffsets);
 #endif
 #ifdef OSG_MT_CPTR_ASPECT

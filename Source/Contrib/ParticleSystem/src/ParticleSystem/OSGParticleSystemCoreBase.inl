@@ -171,23 +171,6 @@ UInt32 &ParticleSystemCoreBase::editSort(const UInt32 index)
     return _mfSort[index];
 }
 
-
-//! Get the value of the \a index element the ParticleSystemCore::_mfSort2 field.
-inline
-      UInt32  ParticleSystemCoreBase::getSort2(const UInt32 index) const
-{
-    return _mfSort2[index];
-}
-
-inline
-UInt32 &ParticleSystemCoreBase::editSort2(const UInt32 index)
-{
-    editMField(Sort2FieldMask, _mfSort2);
-
-    return _mfSort2[index];
-}
-
-
 //! Get the value of the \a index element the ParticleSystemCore::_mfDistances field.
 inline
       Real32  ParticleSystemCoreBase::getDistances(const UInt32 index) const
@@ -258,12 +241,6 @@ void ParticleSystemCoreBase::execSync (      ParticleSystemCoreBase *pFrom,
 
     if(FieldBits::NoField != (SortFieldMask & whichField))
         _mfSort.syncWith(pFrom->_mfSort,
-                                syncMode,
-                                uiSyncInfo,
-                                oOffsets);
-
-    if(FieldBits::NoField != (Sort2FieldMask & whichField))
-        _mfSort2.syncWith(pFrom->_mfSort2,
                                 syncMode,
                                 uiSyncInfo,
                                 oOffsets);
