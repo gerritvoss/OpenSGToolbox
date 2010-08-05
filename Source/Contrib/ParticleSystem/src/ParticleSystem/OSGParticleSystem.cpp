@@ -872,6 +872,19 @@ void ParticleSystem::removeAttributes(UInt32 Index)
     }
 }
 
+bool ParticleSystem::removeAttribute(const UInt32& Index, const std::string& AttributeKey)
+{
+	UInt32 removed(0);
+	if(getNumAttributes() > Index)
+	{
+		removed = editInternalAttributes(Index).erase(AttributeKey);
+	} else if(getNumAttributes() == 1)
+	{
+		removed = editInternalAttributes(0).erase(AttributeKey);
+	}
+
+	return (removed == 0)?(false):(true);
+}
 
 bool ParticleSystem::addParticle(const Pnt3f& Position,
                                  const Pnt3f& SecPosition,

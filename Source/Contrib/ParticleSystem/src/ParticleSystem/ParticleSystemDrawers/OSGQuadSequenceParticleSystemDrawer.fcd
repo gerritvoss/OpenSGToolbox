@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+    name="QuadSequenceParticleSystemDrawer"
+    parent="QuadParticleSystemDrawer"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
+    structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala, Dan Guilliams (djkabala/dan.guilliams@gmail.com)"
+>
+	<Field
+	    name="SequenceDimensions"
+	    type="Vec2b"
+	    category="data"
+	    cardinality="single"
+	    visibility="external"
+	    defaultValue="2,1"
+	    access="public"
+	>
+	This is the dimensions of the images sequence contained in the texture. 
+	For example, a value of (3,2) would indicate that the image sequence is
+	3 wide and 2 tall.
+	</Field>
+	<Field
+	    name="BorderOffsets"
+	    type="Vec2b"
+	    category="data"
+	    cardinality="single"
+	    visibility="external"
+	    defaultValue="0,0"
+	    access="public"
+	>
+	The size of the border between images of the sequences in pixels.  
+	Applies to all sides of each images.
+	</Field>
+	<Field
+	    name="SequenceFunction"
+	    type="ParticleFunction"
+	    category="pointer"
+	    cardinality="single"
+	    visibility="external"
+	    defaultValue="NULL"
+	    access="public"
+	>
+	Function used to determine which image from the image sequence should be used.
+	</Field>
+	<Field
+	    name="ImageDimensions"
+	    type="Vec2us"
+	    category="data"
+	    cardinality="single"
+	    visibility="external"
+	    defaultValue="250,250"
+	    access="public"
+	>
+	Dimensions of the image used to draw the quad sequence. Required for 
+	proper rendering of border offsets.
+	</Field>
+</FieldContainer>

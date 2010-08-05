@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+    name="AgeParticleFunction"
+    parent="ParticleFunction"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
+    structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala, Dan Guilliams (djkabala/dan.guilliams@gmail.com)"
+>
+	<Field
+		name="SequenceTime"
+		type="Real32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.5f"
+		access="public"
+	>
+	The length of time that each image will be used in the sequence.
+	</Field>
+	<Field
+		name="SequenceOrder"
+		type="Int32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="AgeParticleFunction::CYCLE"
+		access="public"
+	>
+	The order in which to use images.
+	CYCLE: Starts at 0, iterates through each image, then starts back over at 0.
+	REVERSE_CYCLE: Same as CYCLE, but reversed. Starts at the last image in the sequence.
+	CUSTOM: User defined ordering, as defined by the custom sequence field.
+	</Field>
+	<Field
+		name="CustomSequence"
+		type="UInt32"
+		category="data"
+		cardinality="multi"
+		visibility="external"
+		defaultValue=""
+		access="public"
+	>
+	Used to specify the sequence in which the individual sprites should be 
+	drawn in. Any value greater than the number of available sprites will be
+	"wrapped around".  For example, if there are 4 sprites in the sequence, 
+	and a value in CustomSequence is 6, then the 2nd sprite will be used.
+	</Field>
+</FieldContainer>
