@@ -221,6 +221,10 @@ void SpringLayout::updateLayout(const MFUnrecComponentPtr* Components, const Com
      }
 }
 
+void SpringLayout::clearConstraints(void)
+{
+    editConstraints().clear();
+}
 
 Vec2f SpringLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {

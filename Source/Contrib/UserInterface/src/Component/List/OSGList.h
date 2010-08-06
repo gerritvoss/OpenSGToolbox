@@ -205,6 +205,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
     ListSelectionModelPtr _SelectionModel;
 
 
+    virtual bool useBoundsForClipping(void) const;
 	void updateIndiciesDrawnFromModel(void);
 
 	//Updates the drawn Indices.  Called when the ClipBounds of the List

@@ -88,7 +88,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<NumberSpinnerFieldEditor *>::_type("NumberSpinnerFieldEditorPtr", "FieldEditorComponentPtr");
+DataType FieldTraits<NumberSpinnerFieldEditor *>::_type("NumberSpinnerFieldEditorPtr", "SingleFieldEditorComponentPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(NumberSpinnerFieldEditor *)
@@ -125,7 +125,7 @@ NumberSpinnerFieldEditorBase::TypeObject NumberSpinnerFieldEditorBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"NumberSpinnerFieldEditor\"\n"
-    "\tparent=\"FieldEditorComponent\"\n"
+    "\tparent=\"SingleFieldEditorComponent\"\n"
     "    library=\"ContribFieldContainerEditor\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"

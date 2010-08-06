@@ -76,7 +76,7 @@ void ImageFieldEditor::initMethod(InitPhase ePhase)
 
     if(ePhase == TypeObject::FactoryPost)
     {
-        FieldEditorFactory::the()->setDefaultEditor(&FieldTraits<Image*>::getType(), &getClassType());
+        FieldEditorFactory::the()->setSingleDefaultEditor(&FieldTraits<Image*>::getType(), &getClassType());
         FieldEditorFactory::the()->setEditorType(&FieldTraits<Image*>::getType(), &getClassType(),
                                                  "ImageLoader");
     }

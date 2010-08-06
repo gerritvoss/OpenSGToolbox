@@ -76,7 +76,7 @@ void BoolFieldEditor::initMethod(InitPhase ePhase)
     {
         const DataType* type(&FieldTraits<bool, 2>::getType());
         _EditableTypes.push_back(type);
-        FieldEditorFactory::the()->setDefaultEditor(type, &getClassType());
+        FieldEditorFactory::the()->setSingleDefaultEditor(type, &getClassType());
         FieldEditorFactory::the()->setEditorType(type, &getClassType(), "Checkbox");
     }
 }

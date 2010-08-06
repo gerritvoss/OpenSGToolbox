@@ -256,10 +256,16 @@ bool SetFieldValueCommand::addEdit(const UndoableEditPtr anEdit)
     if(dynamic_cast<const SetFieldValueCommand*>(anEdit.get()))
     {
         const SetFieldValueCommand* otherEdit(dynamic_cast<const SetFieldValueCommand*>(anEdit.get()));
-        return (otherEdit->_FC == _FC &&
-                otherEdit->_FieldId == _FieldId &&
-                otherEdit->_Index == _Index &&
-                otherEdit->_Value.compare(_Value) == 0);
+        if(otherEdit->_FC == _FC &&
+           otherEdit->_FieldId == _FieldId &&
+           otherEdit->_Index == _Index &&
+           (otherEdit->getTime() - getTime()) < getMaxReplaceTime())
+        {
+            _Value = otherEdit->_Value;
+            _PtrValue = otherEdit->_PtrValue;
+            _ExecuteTime = otherEdit->_ExecuteTime;
+            return true;
+        }
     }
 
     return false;
