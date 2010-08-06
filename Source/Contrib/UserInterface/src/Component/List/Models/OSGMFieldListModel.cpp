@@ -180,7 +180,7 @@ void MFieldListModel::containerChanged(FieldContainer * container, ConstFieldMas
     GetFieldHandlePtr TheFieldHandle = getContainer()->getField(getFieldId());
     if(whichField & TheFieldHandle->getDescription()->getFieldMask())
     {
-        produceListDataContentsChanged(this,0,TheFieldHandle->size());
+        //produceListDataContentsChanged(this,0,TheFieldHandle->size());
     }
 }
 
