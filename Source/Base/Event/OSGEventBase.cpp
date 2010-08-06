@@ -58,6 +58,8 @@
 
 
 
+
+
 #include "OSGFieldContainer.h"          // Source Class
 
 #include "OSGEventBase.h"
@@ -89,6 +91,10 @@ OSG_BEGIN_NAMESPACE
 
 /*! \var Time            EventBase::_sfTimeStamp
     The Timestamp of when this Event was produced.
+*/
+
+/*! \var bool            EventBase::_sfConsumed
+    
 */
 
 
@@ -137,6 +143,18 @@ void EventBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&Event::editHandleTimeStamp),
         static_cast<FieldGetMethodSig >(&Event::getHandleTimeStamp));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Consumed",
+        "",
+        ConsumedFieldId, ConsumedFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Event::editHandleConsumed),
+        static_cast<FieldGetMethodSig >(&Event::getHandleConsumed));
 
     oType.addInitialDesc(pDesc);
 }
@@ -192,6 +210,16 @@ EventBase::TypeObject EventBase::_type(
     "\t>\n"
     "    The Timestamp of when this Event was produced.\n"
     "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Consumed\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        publicRead=\"true\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     "Abstract Base class for Event Objects.  Event containers have onle read-only fields.  They are used to pass the state information for EventProducers.\n"
     );
@@ -242,6 +270,19 @@ const SFTime *EventBase::getSFTimeStamp(void) const
 }
 
 
+SFBool *EventBase::editSFConsumed(void)
+{
+    editSField(ConsumedFieldMask);
+
+    return &_sfConsumed;
+}
+
+const SFBool *EventBase::getSFConsumed(void) const
+{
+    return &_sfConsumed;
+}
+
+
 
 
 
@@ -260,6 +301,10 @@ UInt32 EventBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfTimeStamp.getBinSize();
     }
+    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
+    {
+        returnValue += _sfConsumed.getBinSize();
+    }
 
     return returnValue;
 }
@@ -277,6 +322,10 @@ void EventBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfTimeStamp.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
+    {
+        _sfConsumed.copyToBin(pMem);
+    }
 }
 
 void EventBase::copyFromBin(BinaryDataHandler &pMem,
@@ -292,8 +341,11 @@ void EventBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfTimeStamp.copyFromBin(pMem);
     }
+    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
+    {
+        _sfConsumed.copyFromBin(pMem);
+    }
 }
-
 
 
 
@@ -302,14 +354,16 @@ void EventBase::copyFromBin(BinaryDataHandler &pMem,
 EventBase::EventBase(void) :
     Inherited(),
     _sfSource                 (NULL),
-    _sfTimeStamp              (Time(0))
+    _sfTimeStamp              (Time(0)),
+    _sfConsumed               (bool(false))
 {
 }
 
 EventBase::EventBase(const EventBase &source) :
     Inherited(source),
     _sfSource                 (NULL),
-    _sfTimeStamp              (source._sfTimeStamp              )
+    _sfTimeStamp              (source._sfTimeStamp              ),
+    _sfConsumed               (source._sfConsumed               )
 {
 }
 
@@ -384,6 +438,32 @@ EditFieldHandlePtr EventBase::editHandleTimeStamp      (void)
 
     return returnValue;
 }
+
+GetFieldHandlePtr EventBase::getHandleConsumed        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfConsumed,
+             this->getType().getFieldDesc(ConsumedFieldId),
+             const_cast<EventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr EventBase::editHandleConsumed       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfConsumed,
+             this->getType().getFieldDesc(ConsumedFieldId),
+             this));
+
+
+    editSField(ConsumedFieldMask);
+
+    return returnValue;
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

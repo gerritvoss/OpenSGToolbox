@@ -61,107 +61,149 @@ WindowEventProducer is the base class for all Window specific Event producers. I
 	</Field>
 	<ProducedMethod
 		name="WindowOpened"
-		type="WindowEventPtr"
+		type="WindowEvent"
+		consumable="true"
 	>
+	This Event is fired when this window has opened.
 	</ProducedMethod>
 	<ProducedMethod
 		name="WindowClosing"
-		type="WindowEventPtr"
+		type="WindowEvent"
+		consumable="true"
 	>
+	This Event is fired when this window has received a close command, but has not yet closed.
 	</ProducedMethod>
 	<ProducedMethod
 		name="WindowClosed"
-		type="WindowEventPtr"
+		type="WindowEvent"
+		consumable="true"
 	>
+	This Event is fired when this window has closed.
 	</ProducedMethod>
 	<ProducedMethod
 		name="WindowIconified"
-		type="WindowEventPtr"
+		type="WindowEvent"
+		consumable="true"
 	>
+	This Event is fired when this window has closed.
 	</ProducedMethod>
 	<ProducedMethod
 		name="WindowDeiconified"
-		type="WindowEventPtr"
+		type="WindowEvent"
+		consumable="true"
 	>
+	This Event is fired when this window has closed.
 	</ProducedMethod>
 	<ProducedMethod
 		name="WindowActivated"
-		type="WindowEventPtr"
+		type="WindowEvent"
+		consumable="true"
 	>
+	This Event is fired when this window has closed.
 	</ProducedMethod>
 	<ProducedMethod
 		name="WindowDeactivated"
-		type="WindowEventPtr"
+		type="WindowEvent"
+		consumable="true"
 	>
+	This Event is fired when this window has closed.
 	</ProducedMethod>
 	<ProducedMethod
 		name="WindowEntered"
-		type="WindowEventPtr"
+		type="WindowEvent"
+		consumable="true"
 	>
+	This Event is fired when the cursor has entered this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="WindowExited"
-		type="WindowEventPtr"
+		type="WindowEvent"
+		consumable="true"
 	>
+	This Event is fired when the cursor has exited this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseClicked"
-		type="MouseEventPtr"
+		type="MouseEvent"
+		consumable="true"
 	>
+	This Event is fired when there is a mouse button click in this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseEntered"
-		type="MouseEventPtr"
+		type="MouseEvent"
+		consumable="true"
 	>
+	This Event is fired when the cursor has entered this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseExited"
-		type="MouseEventPtr"
+		type="MouseEvent"
+		consumable="true"
 	>
+	This Event is fired when the cursor has exited this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="MousePressed"
-		type="MouseEventPtr"
+		type="MouseEvent"
+		consumable="true"
 	>
+	This Event is fired when there is a mouse button press in this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseReleased"
-		type="MouseEventPtr"
+		type="MouseEvent"
+		consumable="true"
 	>
+	This Event is fired when there is a mouse button release in this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseMoved"
-		type="MouseEventPtr"
+		type="MouseEvent"
+		consumable="true"
 	>
+	This Event is fired when the mouse has moved in this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseDragged"
-		type="MouseEventPtr"
+		type="MouseEvent"
+		consumable="true"
 	>
+	This Event is fired when the mouse has moved, and one or more of the mouse buttons are down in this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseWheelMoved"
-		type="MouseWheelEventPtr"
+		type="MouseWheelEvent"
+		consumable="true"
 	>
+	This Event is fired when the mouse wheel has moved in this window.
 	</ProducedMethod>
 	<ProducedMethod
 		name="KeyPressed"
-		type="KeyEventPtr"
+		type="KeyEvent"
+		consumable="true"
 	>
+	This Event is fired when the a key has been pressed when this window has focus.
 	</ProducedMethod>
 	<ProducedMethod
 		name="KeyReleased"
-		type="KeyEventPtr"
+		type="KeyEvent"
+		consumable="true"
 	>
+	This Event is fired when the a key has been released when this window has focus.
 	</ProducedMethod>
 	<ProducedMethod
 		name="KeyTyped"
-		type="KeyEventPtr"
+		type="KeyEvent"
+		consumable="true"
 	>
+	This Event is fired when the a key has been typed when this window has focus.
 	</ProducedMethod>
 	<ProducedMethod
 		name="Update"
-		type="UpdateEventPtr"
+		type="UpdateEvent"
+		consumable="true"
 	>
+	This Event is fired by the main loop of this window whenever it is idle.
 	</ProducedMethod>
 </FieldContainer>

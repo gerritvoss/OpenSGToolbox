@@ -70,12 +70,32 @@
 
 #include "OSGWindowEventProducerFields.h"
 
-//Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+//Event Producer Headerss
+#include "OSGConsumableEventCombiner.h"
+#include "OSGActivity.h"
+#include <boost/signals2.hpp>
 
+#include "OSGWindowEventFields.h"
+#include "OSGWindowEventFields.h"
+#include "OSGWindowEventFields.h"
+#include "OSGWindowEventFields.h"
+#include "OSGWindowEventFields.h"
+#include "OSGWindowEventFields.h"
+#include "OSGWindowEventFields.h"
+#include "OSGWindowEventFields.h"
+#include "OSGWindowEventFields.h"
+#include "OSGMouseEventFields.h"
+#include "OSGMouseEventFields.h"
+#include "OSGMouseEventFields.h"
+#include "OSGMouseEventFields.h"
+#include "OSGMouseEventFields.h"
+#include "OSGMouseEventFields.h"
+#include "OSGMouseEventFields.h"
+#include "OSGMouseWheelEventFields.h"
+#include "OSGKeyEventFields.h"
+#include "OSGKeyEventFields.h"
+#include "OSGKeyEventFields.h"
+#include "OSGUpdateEventFields.h"
 OSG_BEGIN_NAMESPACE
 
 class WindowEventProducer;
@@ -93,6 +113,52 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducerBase : public Window
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(WindowEventProducer);
+    
+    
+    typedef WindowEvent        WindowOpenedEventType;
+    typedef WindowEvent        WindowClosingEventType;
+    typedef WindowEvent        WindowClosedEventType;
+    typedef WindowEvent        WindowIconifiedEventType;
+    typedef WindowEvent        WindowDeiconifiedEventType;
+    typedef WindowEvent        WindowActivatedEventType;
+    typedef WindowEvent        WindowDeactivatedEventType;
+    typedef WindowEvent        WindowEnteredEventType;
+    typedef WindowEvent        WindowExitedEventType;
+    typedef MouseEvent         MouseClickedEventType;
+    typedef MouseEvent         MouseEnteredEventType;
+    typedef MouseEvent         MouseExitedEventType;
+    typedef MouseEvent         MousePressedEventType;
+    typedef MouseEvent         MouseReleasedEventType;
+    typedef MouseEvent         MouseMovedEventType;
+    typedef MouseEvent         MouseDraggedEventType;
+    typedef MouseWheelEvent    MouseWheelMovedEventType;
+    typedef KeyEvent           KeyPressedEventType;
+    typedef KeyEvent           KeyReleasedEventType;
+    typedef KeyEvent           KeyTypedEventType;
+    typedef UpdateEvent        UpdateEventType;
+
+    typedef boost::signals2::signal<void (Event* const            , UInt32)> BaseMethodType;
+    typedef boost::signals2::signal<void (WindowEvent* const      , UInt32), ConsumableEventCombiner> WindowOpenedMethodType;
+    typedef boost::signals2::signal<void (WindowEvent* const      , UInt32), ConsumableEventCombiner> WindowClosingMethodType;
+    typedef boost::signals2::signal<void (WindowEvent* const      , UInt32), ConsumableEventCombiner> WindowClosedMethodType;
+    typedef boost::signals2::signal<void (WindowEvent* const      , UInt32), ConsumableEventCombiner> WindowIconifiedMethodType;
+    typedef boost::signals2::signal<void (WindowEvent* const      , UInt32), ConsumableEventCombiner> WindowDeiconifiedMethodType;
+    typedef boost::signals2::signal<void (WindowEvent* const      , UInt32), ConsumableEventCombiner> WindowActivatedMethodType;
+    typedef boost::signals2::signal<void (WindowEvent* const      , UInt32), ConsumableEventCombiner> WindowDeactivatedMethodType;
+    typedef boost::signals2::signal<void (WindowEvent* const      , UInt32), ConsumableEventCombiner> WindowEnteredMethodType;
+    typedef boost::signals2::signal<void (WindowEvent* const      , UInt32), ConsumableEventCombiner> WindowExitedMethodType;
+    typedef boost::signals2::signal<void (MouseEvent* const       , UInt32), ConsumableEventCombiner> MouseClickedMethodType;
+    typedef boost::signals2::signal<void (MouseEvent* const       , UInt32), ConsumableEventCombiner> MouseEnteredMethodType;
+    typedef boost::signals2::signal<void (MouseEvent* const       , UInt32), ConsumableEventCombiner> MouseExitedMethodType;
+    typedef boost::signals2::signal<void (MouseEvent* const       , UInt32), ConsumableEventCombiner> MousePressedMethodType;
+    typedef boost::signals2::signal<void (MouseEvent* const       , UInt32), ConsumableEventCombiner> MouseReleasedMethodType;
+    typedef boost::signals2::signal<void (MouseEvent* const       , UInt32), ConsumableEventCombiner> MouseMovedMethodType;
+    typedef boost::signals2::signal<void (MouseEvent* const       , UInt32), ConsumableEventCombiner> MouseDraggedMethodType;
+    typedef boost::signals2::signal<void (MouseWheelEvent* const  , UInt32), ConsumableEventCombiner> MouseWheelMovedMethodType;
+    typedef boost::signals2::signal<void (KeyEvent* const         , UInt32), ConsumableEventCombiner> KeyPressedMethodType;
+    typedef boost::signals2::signal<void (KeyEvent* const         , UInt32), ConsumableEventCombiner> KeyReleasedMethodType;
+    typedef boost::signals2::signal<void (KeyEvent* const         , UInt32), ConsumableEventCombiner> KeyTypedMethodType;
+    typedef boost::signals2::signal<void (UpdateEvent* const      , UInt32), ConsumableEventCombiner> UpdateMethodType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -105,8 +171,7 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducerBase : public Window
         UseCallbackForReshapeFieldId = UseCallbackForDrawFieldId + 1,
         LastUpdateTimeFieldId = UseCallbackForReshapeFieldId + 1,
         LockCursorFieldId = LastUpdateTimeFieldId + 1,
-        EventProducerFieldId = LockCursorFieldId + 1,
-        NextFieldId = EventProducerFieldId + 1
+        NextFieldId = LockCursorFieldId + 1
     };
 
     static const OSG::BitVector EnabledFieldMask =
@@ -119,8 +184,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducerBase : public Window
         (TypeTraits<BitVector>::One << LastUpdateTimeFieldId);
     static const OSG::BitVector LockCursorFieldMask =
         (TypeTraits<BitVector>::One << LockCursorFieldId);
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -129,7 +192,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducerBase : public Window
     typedef SFBool            SFUseCallbackForReshapeType;
     typedef SFTime            SFLastUpdateTimeType;
     typedef SFBool            SFLockCursorType;
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
@@ -248,36 +310,292 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducerBase : public Window
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+                                                         
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectMethod(UInt32 methodId, 
+                                              const BaseMethodType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectMethod(UInt32 methodId, 
+                                              const BaseMethodType::group_type &group,
+                                              const BaseMethodType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectMethod        (UInt32 methodId, const BaseMethodType::group_type &group);
+    virtual void   disconnectAllSlotsMethod(UInt32 methodId);
+    virtual bool   isEmptyMethod           (UInt32 methodId) const;
+    virtual UInt32 numSlotsMethod          (UInt32 methodId) const;
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
-
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Method Access                                 */
+    /*! \{                                                                 */
+    
+    //WindowOpened
+    boost::signals2::connection connectWindowOpened   (const WindowOpenedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowOpened   (const WindowOpenedMethodType::group_type &group,
+                                                       const WindowOpenedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowOpened           (const WindowOpenedMethodType::group_type &group);
+    void   disconnectAllSlotsWindowOpened   (void);
+    bool   isEmptyWindowOpened              (void) const;
+    UInt32 numSlotsWindowOpened             (void) const;
+    
+    //WindowClosing
+    boost::signals2::connection connectWindowClosing  (const WindowClosingMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowClosing  (const WindowClosingMethodType::group_type &group,
+                                                       const WindowClosingMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowClosing          (const WindowClosingMethodType::group_type &group);
+    void   disconnectAllSlotsWindowClosing  (void);
+    bool   isEmptyWindowClosing             (void) const;
+    UInt32 numSlotsWindowClosing            (void) const;
+    
+    //WindowClosed
+    boost::signals2::connection connectWindowClosed   (const WindowClosedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowClosed   (const WindowClosedMethodType::group_type &group,
+                                                       const WindowClosedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowClosed           (const WindowClosedMethodType::group_type &group);
+    void   disconnectAllSlotsWindowClosed   (void);
+    bool   isEmptyWindowClosed              (void) const;
+    UInt32 numSlotsWindowClosed             (void) const;
+    
+    //WindowIconified
+    boost::signals2::connection connectWindowIconified(const WindowIconifiedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowIconified(const WindowIconifiedMethodType::group_type &group,
+                                                       const WindowIconifiedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowIconified        (const WindowIconifiedMethodType::group_type &group);
+    void   disconnectAllSlotsWindowIconified(void);
+    bool   isEmptyWindowIconified           (void) const;
+    UInt32 numSlotsWindowIconified          (void) const;
+    
+    //WindowDeiconified
+    boost::signals2::connection connectWindowDeiconified(const WindowDeiconifiedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowDeiconified(const WindowDeiconifiedMethodType::group_type &group,
+                                                       const WindowDeiconifiedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowDeiconified      (const WindowDeiconifiedMethodType::group_type &group);
+    void   disconnectAllSlotsWindowDeiconified(void);
+    bool   isEmptyWindowDeiconified         (void) const;
+    UInt32 numSlotsWindowDeiconified        (void) const;
+    
+    //WindowActivated
+    boost::signals2::connection connectWindowActivated(const WindowActivatedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowActivated(const WindowActivatedMethodType::group_type &group,
+                                                       const WindowActivatedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowActivated        (const WindowActivatedMethodType::group_type &group);
+    void   disconnectAllSlotsWindowActivated(void);
+    bool   isEmptyWindowActivated           (void) const;
+    UInt32 numSlotsWindowActivated          (void) const;
+    
+    //WindowDeactivated
+    boost::signals2::connection connectWindowDeactivated(const WindowDeactivatedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowDeactivated(const WindowDeactivatedMethodType::group_type &group,
+                                                       const WindowDeactivatedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowDeactivated      (const WindowDeactivatedMethodType::group_type &group);
+    void   disconnectAllSlotsWindowDeactivated(void);
+    bool   isEmptyWindowDeactivated         (void) const;
+    UInt32 numSlotsWindowDeactivated        (void) const;
+    
+    //WindowEntered
+    boost::signals2::connection connectWindowEntered  (const WindowEnteredMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowEntered  (const WindowEnteredMethodType::group_type &group,
+                                                       const WindowEnteredMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowEntered          (const WindowEnteredMethodType::group_type &group);
+    void   disconnectAllSlotsWindowEntered  (void);
+    bool   isEmptyWindowEntered             (void) const;
+    UInt32 numSlotsWindowEntered            (void) const;
+    
+    //WindowExited
+    boost::signals2::connection connectWindowExited   (const WindowExitedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowExited   (const WindowExitedMethodType::group_type &group,
+                                                       const WindowExitedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowExited           (const WindowExitedMethodType::group_type &group);
+    void   disconnectAllSlotsWindowExited   (void);
+    bool   isEmptyWindowExited              (void) const;
+    UInt32 numSlotsWindowExited             (void) const;
+    
+    //MouseClicked
+    boost::signals2::connection connectMouseClicked   (const MouseClickedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseClicked   (const MouseClickedMethodType::group_type &group,
+                                                       const MouseClickedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseClicked           (const MouseClickedMethodType::group_type &group);
+    void   disconnectAllSlotsMouseClicked   (void);
+    bool   isEmptyMouseClicked              (void) const;
+    UInt32 numSlotsMouseClicked             (void) const;
+    
+    //MouseEntered
+    boost::signals2::connection connectMouseEntered   (const MouseEnteredMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseEntered   (const MouseEnteredMethodType::group_type &group,
+                                                       const MouseEnteredMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseEntered           (const MouseEnteredMethodType::group_type &group);
+    void   disconnectAllSlotsMouseEntered   (void);
+    bool   isEmptyMouseEntered              (void) const;
+    UInt32 numSlotsMouseEntered             (void) const;
+    
+    //MouseExited
+    boost::signals2::connection connectMouseExited    (const MouseExitedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseExited    (const MouseExitedMethodType::group_type &group,
+                                                       const MouseExitedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseExited            (const MouseExitedMethodType::group_type &group);
+    void   disconnectAllSlotsMouseExited    (void);
+    bool   isEmptyMouseExited               (void) const;
+    UInt32 numSlotsMouseExited              (void) const;
+    
+    //MousePressed
+    boost::signals2::connection connectMousePressed   (const MousePressedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMousePressed   (const MousePressedMethodType::group_type &group,
+                                                       const MousePressedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMousePressed           (const MousePressedMethodType::group_type &group);
+    void   disconnectAllSlotsMousePressed   (void);
+    bool   isEmptyMousePressed              (void) const;
+    UInt32 numSlotsMousePressed             (void) const;
+    
+    //MouseReleased
+    boost::signals2::connection connectMouseReleased  (const MouseReleasedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseReleased  (const MouseReleasedMethodType::group_type &group,
+                                                       const MouseReleasedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseReleased          (const MouseReleasedMethodType::group_type &group);
+    void   disconnectAllSlotsMouseReleased  (void);
+    bool   isEmptyMouseReleased             (void) const;
+    UInt32 numSlotsMouseReleased            (void) const;
+    
+    //MouseMoved
+    boost::signals2::connection connectMouseMoved     (const MouseMovedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseMoved     (const MouseMovedMethodType::group_type &group,
+                                                       const MouseMovedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseMoved             (const MouseMovedMethodType::group_type &group);
+    void   disconnectAllSlotsMouseMoved     (void);
+    bool   isEmptyMouseMoved                (void) const;
+    UInt32 numSlotsMouseMoved               (void) const;
+    
+    //MouseDragged
+    boost::signals2::connection connectMouseDragged   (const MouseDraggedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseDragged   (const MouseDraggedMethodType::group_type &group,
+                                                       const MouseDraggedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseDragged           (const MouseDraggedMethodType::group_type &group);
+    void   disconnectAllSlotsMouseDragged   (void);
+    bool   isEmptyMouseDragged              (void) const;
+    UInt32 numSlotsMouseDragged             (void) const;
+    
+    //MouseWheelMoved
+    boost::signals2::connection connectMouseWheelMoved(const MouseWheelMovedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseWheelMoved(const MouseWheelMovedMethodType::group_type &group,
+                                                       const MouseWheelMovedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseWheelMoved        (const MouseWheelMovedMethodType::group_type &group);
+    void   disconnectAllSlotsMouseWheelMoved(void);
+    bool   isEmptyMouseWheelMoved           (void) const;
+    UInt32 numSlotsMouseWheelMoved          (void) const;
+    
+    //KeyPressed
+    boost::signals2::connection connectKeyPressed     (const KeyPressedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectKeyPressed     (const KeyPressedMethodType::group_type &group,
+                                                       const KeyPressedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectKeyPressed             (const KeyPressedMethodType::group_type &group);
+    void   disconnectAllSlotsKeyPressed     (void);
+    bool   isEmptyKeyPressed                (void) const;
+    UInt32 numSlotsKeyPressed               (void) const;
+    
+    //KeyReleased
+    boost::signals2::connection connectKeyReleased    (const KeyReleasedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectKeyReleased    (const KeyReleasedMethodType::group_type &group,
+                                                       const KeyReleasedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectKeyReleased            (const KeyReleasedMethodType::group_type &group);
+    void   disconnectAllSlotsKeyReleased    (void);
+    bool   isEmptyKeyReleased               (void) const;
+    UInt32 numSlotsKeyReleased              (void) const;
+    
+    //KeyTyped
+    boost::signals2::connection connectKeyTyped       (const KeyTypedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectKeyTyped       (const KeyTypedMethodType::group_type &group,
+                                                       const KeyTypedMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectKeyTyped               (const KeyTypedMethodType::group_type &group);
+    void   disconnectAllSlotsKeyTyped       (void);
+    bool   isEmptyKeyTyped                  (void) const;
+    UInt32 numSlotsKeyTyped                 (void) const;
+    
+    //Update
+    boost::signals2::connection connectUpdate         (const UpdateMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectUpdate         (const UpdateMethodType::group_type &group,
+                                                       const UpdateMethodType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectUpdate                 (const UpdateMethodType::group_type &group);
+    void   disconnectAllSlotsUpdate         (void);
+    bool   isEmptyUpdate                    (void) const;
+    UInt32 numSlotsUpdate                   (void) const;
+    
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Method Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
-    
-    GetFieldHandlePtr  getHandleEventProducer        (void) const;
-    EditFieldHandlePtr editHandleEventProducer       (void);
 
+    //Event Method producers
+    WindowOpenedMethodType _WindowOpenedMethod;
+    WindowClosingMethodType _WindowClosingMethod;
+    WindowClosedMethodType _WindowClosedMethod;
+    WindowIconifiedMethodType _WindowIconifiedMethod;
+    WindowDeiconifiedMethodType _WindowDeiconifiedMethod;
+    WindowActivatedMethodType _WindowActivatedMethod;
+    WindowDeactivatedMethodType _WindowDeactivatedMethod;
+    WindowEnteredMethodType _WindowEnteredMethod;
+    WindowExitedMethodType _WindowExitedMethod;
+    MouseClickedMethodType _MouseClickedMethod;
+    MouseEnteredMethodType _MouseEnteredMethod;
+    MouseExitedMethodType _MouseExitedMethod;
+    MousePressedMethodType _MousePressedMethod;
+    MouseReleasedMethodType _MouseReleasedMethod;
+    MouseMovedMethodType _MouseMovedMethod;
+    MouseDraggedMethodType _MouseDraggedMethod;
+    MouseWheelMovedMethodType _MouseWheelMovedMethod;
+    KeyPressedMethodType _KeyPressedMethod;
+    KeyReleasedMethodType _KeyReleasedMethod;
+    KeyTypedMethodType _KeyTypedMethod;
+    UpdateMethodType _UpdateMethod;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -294,7 +612,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducerBase : public Window
     SFBool            _sfUseCallbackForReshape;
     SFTime            _sfLastUpdateTime;
     SFBool            _sfLockCursor;
-    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -333,6 +650,60 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducerBase : public Window
     GetFieldHandlePtr  getHandleLockCursor      (void) const;
     EditFieldHandlePtr editHandleLockCursor     (void);
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Method Access                     */
+    /*! \{                                                                 */
+
+    GetMethodHandlePtr getHandleWindowOpenedSignal(void) const;
+    GetMethodHandlePtr getHandleWindowClosingSignal(void) const;
+    GetMethodHandlePtr getHandleWindowClosedSignal(void) const;
+    GetMethodHandlePtr getHandleWindowIconifiedSignal(void) const;
+    GetMethodHandlePtr getHandleWindowDeiconifiedSignal(void) const;
+    GetMethodHandlePtr getHandleWindowActivatedSignal(void) const;
+    GetMethodHandlePtr getHandleWindowDeactivatedSignal(void) const;
+    GetMethodHandlePtr getHandleWindowEnteredSignal(void) const;
+    GetMethodHandlePtr getHandleWindowExitedSignal(void) const;
+    GetMethodHandlePtr getHandleMouseClickedSignal(void) const;
+    GetMethodHandlePtr getHandleMouseEnteredSignal(void) const;
+    GetMethodHandlePtr getHandleMouseExitedSignal(void) const;
+    GetMethodHandlePtr getHandleMousePressedSignal(void) const;
+    GetMethodHandlePtr getHandleMouseReleasedSignal(void) const;
+    GetMethodHandlePtr getHandleMouseMovedSignal(void) const;
+    GetMethodHandlePtr getHandleMouseDraggedSignal(void) const;
+    GetMethodHandlePtr getHandleMouseWheelMovedSignal(void) const;
+    GetMethodHandlePtr getHandleKeyPressedSignal(void) const;
+    GetMethodHandlePtr getHandleKeyReleasedSignal(void) const;
+    GetMethodHandlePtr getHandleKeyTypedSignal(void) const;
+    GetMethodHandlePtr getHandleUpdateSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Event Producer Firing                   */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 methodId, Event* const e);
+    
+    void produceWindowOpened        (WindowOpenedEventType* const e);
+    void produceWindowClosing       (WindowClosingEventType* const e);
+    void produceWindowClosed        (WindowClosedEventType* const e);
+    void produceWindowIconified     (WindowIconifiedEventType* const e);
+    void produceWindowDeiconified   (WindowDeiconifiedEventType* const e);
+    void produceWindowActivated     (WindowActivatedEventType* const e);
+    void produceWindowDeactivated   (WindowDeactivatedEventType* const e);
+    void produceWindowEntered       (WindowEnteredEventType* const e);
+    void produceWindowExited        (WindowExitedEventType* const e);
+    void produceMouseClicked        (MouseClickedEventType* const e);
+    void produceMouseEntered        (MouseEnteredEventType* const e);
+    void produceMouseExited         (MouseExitedEventType* const e);
+    void produceMousePressed        (MousePressedEventType* const e);
+    void produceMouseReleased       (MouseReleasedEventType* const e);
+    void produceMouseMoved          (MouseMovedEventType* const e);
+    void produceMouseDragged        (MouseDraggedEventType* const e);
+    void produceMouseWheelMoved     (MouseWheelMovedEventType* const e);
+    void produceKeyPressed          (KeyPressedEventType* const e);
+    void produceKeyReleased         (KeyReleasedEventType* const e);
+    void produceKeyTyped            (KeyTypedEventType* const e);
+    void produceUpdate              (UpdateEventType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */

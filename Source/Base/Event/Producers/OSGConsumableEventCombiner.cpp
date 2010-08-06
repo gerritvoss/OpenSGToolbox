@@ -1,12 +1,20 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+<<<<<<< Updated upstream:Source/Base/Event/Producers/OSGEventConnection.h
+ *                            OpenSGToolbox                                  *
+=======
+ *                        OpenSG ToolBox Toolbox                             *
+>>>>>>> Stashed changes:Source/Base/Event/Producers/OSGConsumableEventCombiner.cpp
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+<<<<<<< Updated upstream:Source/Base/Event/Producers/OSGEventConnection.h
+ *   Authors: David Kabala                                                   *
+=======
+ *                          Authors: David Kabala                            *
+>>>>>>> Stashed changes:Source/Base/Event/Producers/OSGConsumableEventCombiner.cpp
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +34,55 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+<<<<<<< Updated upstream:Source/Base/Event/Producers/OSGEventConnection.h
+
+
+#ifndef _OSGEVENTCONNECTION_H_
+#define _OSGEVENTCONNECTION_H_
+#ifdef __sgi
+#pragma once
+#endif
+
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
+#include <boost/function.hpp>
+
+OSG_BEGIN_NAMESPACE
+
+class OSG_BASE_DLLMAPPING EventConnection
+{
+    /*=========================  PUBLIC  ===============================*/
+  public:
+      typedef boost::function<bool (void)> IsConnectedFunctionType;
+      typedef boost::function<void (void)> DisconnectFunctionType;
+
+      EventConnection(IsConnectedFunctionType isConnectedFunc, DisconnectFunctionType disconnectedFunc);
+      
+      EventConnection(void);
+      
+      EventConnection(const EventConnection& c);
+
+      const EventConnection& operator=(const EventConnection& c);
+
+      bool isValid(void) const;
+
+      bool isConnected(void) const;
+
+      void disconnect(void);
+protected:
+    IsConnectedFunctionType _isConnectedFunc;
+    DisconnectFunctionType _disconnectedFunc;
+
+};
+
+OSG_END_NAMESPACE
+
+#include "OSGEventConnection.inl"
+
+#endif /* _OSGEVENTCONNECTION_H_ */
+
+
+=======
 /*---------------------------------------------------------------------------*\
  *                                Changes                                    *
  *                                                                           *
@@ -40,27 +97,31 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#ifndef _OSGCONTRIBPARTICLESYSTEMDEF_H_
-#define _OSGCONTRIBPARTICLESYSTEMDEF_H_
-#ifdef __sgi
-#pragma once
-#endif
+#include <stdlib.h>
+#include <stdio.h>
 
-//---------------------------------------------------------------------------
-//  Defines
-//---------------------------------------------------------------------------
-#if defined(WIN32)
-#   ifdef OSG_COMPILECONTRIBPARTICLESYSTEMLIB
-#       define OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING  __declspec(dllexport)
-#       define OSG_CONTRIBPARTICLESYSTEM_EXPIMP_TMPL 
-#   else
-#       define OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING  __declspec(dllimport)
-#       define OSG_CONTRIBPARTICLESYSTEM_EXPIMP_TMPL   extern
-#   endif
-#else
-#define OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING
-#define OSG_CONTRIBPARTICLESYSTEM_EXPIMP_TMPL
-#endif
+#include "OSGConfig.h"
 
-#endif /* _OSGPARTICLESYSTEMDEF_H_ */
+#include "OSGConsumableEventCombiner.h"
 
+OSG_BEGIN_NAMESPACE
+
+/***************************************************************************\
+ *                                    methods                              *
+\***************************************************************************/
+
+ConsumableEventCombiner::ConsumableEventCombiner(void) : _pEvent(NULL)
+{
+}
+
+ConsumableEventCombiner::ConsumableEventCombiner(Event const * e) : _pEvent(e)
+{
+}
+
+ConsumableEventCombiner::ConsumableEventCombiner(const ConsumableEventCombiner& ) : _pEvent(NULL)
+{
+}
+
+OSG_END_NAMESPACE
+
+>>>>>>> Stashed changes:Source/Base/Event/Producers/OSGConsumableEventCombiner.cpp

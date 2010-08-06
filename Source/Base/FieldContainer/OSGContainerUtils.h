@@ -27,7 +27,10 @@
 
 #include "OSGFieldContainer.h"
 #include "OSGEventProducerType.h"
+<<<<<<< Updated upstream
 #include "OSGEventProducer.h"
+=======
+>>>>>>> Stashed changes
 #include <set>
 #include <vector>
 
@@ -42,7 +45,10 @@ FieldContainerUnrecPtr OSG_BASE_DLLMAPPING getFieldContainer(const std::string &
 bool OSG_BASE_DLLMAPPING isFieldContentDerivedFrom(const FieldType &TheFieldType, const FieldContainerType* TheFCType);
 
 bool OSG_BASE_DLLMAPPING isEventProducer(const FieldContainerRefPtr TheFC);
+<<<<<<< Updated upstream
 EventProducerPtr OSG_BASE_DLLMAPPING getEventProducer(const FieldContainerRefPtr TheFC);
+=======
+>>>>>>> Stashed changes
 
 //std::vector<FieldContainerPtr> OSG_BASE_DLLMAPPING getAllContainersByType(const FieldContainerType *szType);
 std::vector<FieldContainerUnrecPtr> OSG_BASE_DLLMAPPING getAllContainersByDerivedType(const FieldContainerType *szType);

@@ -114,6 +114,31 @@ void EventBase::setTimeStamp(const Time &value)
 
     _sfTimeStamp.setValue(value);
 }
+//! Get the value of the Event::_sfConsumed field.
+
+inline
+bool &EventBase::editConsumed(void)
+{
+    editSField(ConsumedFieldMask);
+
+    return _sfConsumed.getValue();
+}
+
+//! Get the value of the Event::_sfConsumed field.
+inline
+      bool  EventBase::getConsumed(void) const
+{
+    return _sfConsumed.getValue();
+}
+
+//! Set the value of the Event::_sfConsumed field.
+inline
+void EventBase::setConsumed(const bool value)
+{
+    editSField(ConsumedFieldMask);
+
+    _sfConsumed.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -131,6 +156,9 @@ void EventBase::execSync (      EventBase *pFrom,
 
     if(FieldBits::NoField != (TimeStampFieldMask & whichField))
         _sfTimeStamp.syncWith(pFrom->_sfTimeStamp);
+
+    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
+        _sfConsumed.syncWith(pFrom->_sfConsumed);
 }
 #endif
 

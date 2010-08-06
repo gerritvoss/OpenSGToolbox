@@ -40,4 +40,10 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+bool Event::isConsumed(void) const
+{
+    return getConsumed();
+}
+
 OSG_END_NAMESPACE

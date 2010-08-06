@@ -78,6 +78,10 @@ class OSG_BASE_DLLMAPPING Event : public EventBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    virtual void consume(void);
+
+    bool isConsumed(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

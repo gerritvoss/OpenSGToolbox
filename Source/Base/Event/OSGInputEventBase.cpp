@@ -59,6 +59,8 @@
 
 
 
+
+
 #include "OSGInputEventBase.h"
 #include "OSGInputEvent.h"
 
@@ -82,10 +84,6 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var bool            InputEventBase::_sfConsumed
-    
-*/
-
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -108,20 +106,6 @@ OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
 
 void InputEventBase::classDescInserter(TypeObject &oType)
 {
-    FieldDescriptionBase *pDesc = NULL;
-
-
-    pDesc = new SFBool::Description(
-        SFBool::getClassType(),
-        "Consumed",
-        "",
-        ConsumedFieldId, ConsumedFieldMask,
-        true,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&InputEvent::editHandleConsumed),
-        static_cast<FieldGetMethodSig >(&InputEvent::getHandleConsumed));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -150,16 +134,6 @@ InputEventBase::TypeObject InputEventBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
-    "\t<Field\n"
-    "\t\tname=\"Consumed\"\n"
-    "\t\ttype=\"bool\"\n"
-    "        publicRead=\"true\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t\tdefaultValue=\"false\"\n"
-    "\t>\n"
-    "\t</Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -184,19 +158,6 @@ UInt32 InputEventBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-SFBool *InputEventBase::editSFConsumed(void)
-{
-    editSField(ConsumedFieldMask);
-
-    return &_sfConsumed;
-}
-
-const SFBool *InputEventBase::getSFConsumed(void) const
-{
-    return &_sfConsumed;
-}
-
-
 
 
 
@@ -207,10 +168,6 @@ UInt32 InputEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
-    {
-        returnValue += _sfConsumed.getBinSize();
-    }
 
     return returnValue;
 }
@@ -220,10 +177,6 @@ void InputEventBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
-    {
-        _sfConsumed.copyToBin(pMem);
-    }
 }
 
 void InputEventBase::copyFromBin(BinaryDataHandler &pMem,
@@ -231,10 +184,6 @@ void InputEventBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
-    {
-        _sfConsumed.copyFromBin(pMem);
-    }
 }
 
 //! create a new instance of the class
@@ -355,18 +304,15 @@ FieldContainerTransitPtr InputEventBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 InputEventBase::InputEventBase(void) :
-    Inherited(),
-    _sfConsumed               (bool(false))
+    Inherited()
 {
 }
 
 InputEventBase::InputEventBase(const InputEventBase &source) :
-    Inherited(source),
-    _sfConsumed               (source._sfConsumed               )
+    Inherited(source)
 {
 }
 
@@ -378,30 +324,6 @@ InputEventBase::~InputEventBase(void)
 }
 
 
-GetFieldHandlePtr InputEventBase::getHandleConsumed        (void) const
-{
-    SFBool::GetHandlePtr returnValue(
-        new  SFBool::GetHandle(
-             &_sfConsumed,
-             this->getType().getFieldDesc(ConsumedFieldId),
-             const_cast<InputEventBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr InputEventBase::editHandleConsumed       (void)
-{
-    SFBool::EditHandlePtr returnValue(
-        new  SFBool::EditHandle(
-             &_sfConsumed,
-             this->getType().getFieldDesc(ConsumedFieldId),
-             this));
-
-
-    editSField(ConsumedFieldMask);
-
-    return returnValue;
-}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

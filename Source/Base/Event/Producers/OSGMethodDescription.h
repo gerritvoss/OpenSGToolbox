@@ -38,11 +38,11 @@
 #include <boost/function.hpp>
 #include <vector>
 #include <string>
-#include "OSGEvent.h"
+#include <boost/shared_ptr.hpp>
+#include <boost/signals2.hpp>
+#include "OSGContainerForwards.h"
 
 OSG_BEGIN_NAMESPACE
-
-typedef boost::function<void ( const EventUnrecPtr )> FunctorAccessMethod;
 
 //---------------------------------------------------------------------------
 //   Class         
@@ -61,11 +61,12 @@ class OSG_BASE_DLLMAPPING MethodDescription
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-     MethodDescription(const std::string                  &szName,
-                       const std::string                  &Description,
-                       const  UInt32                  uiMethodId,
-                       const  TypeBase                &EventArgumentType,
-                              FunctorAccessMethod     fAccessFunctor);
+     MethodDescription(const std::string         &szName,
+                       const std::string         &szDescription,
+                       const  UInt32             uiMethodId,
+                       const  TypeBase           &EventArgumentType,
+                              bool               bConsumable,
+                              MethodGetMethod fAccessFunctor);
 
     MethodDescription(const MethodDescription &source                     );
 
@@ -81,21 +82,21 @@ class OSG_BASE_DLLMAPPING MethodDescription
     /*! \name                      Get                                     */
     /*! \{                                                                 */
 
-    const Char8        *getCName       (void                ) const;
-    const std::string     &getName        (void                ) const;
-    const std::string     &getDescription        (void                ) const;
-
-          UInt32     getMethodId       (void                ) const;
-
-    const TypeBase& getEventArgumentType   (void                ) const;
+    const Char8       *getCName           (void) const;
+    const std::string &getName            (void) const;
+    const std::string &getDescription     (void) const;
+          UInt32      getMethodId         (void) const;
+          bool        getConsumable       (void) const;
+    const TypeBase&   getEventArgumentType(void) const;
+    GetMethodHandlePtr getMethod(const ReflexiveContainer &oContainer) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Set                                     */
     /*! \{                                                                 */
 
-    void                setAccessFunctor     (FunctorAccessMethod fAccessFunctor);
-    FunctorAccessMethod getAccessFunctor     (void                              );
+    void                setAccessFunctor     (MethodGetMethod fAccessFunctor);
+    MethodGetMethod  getAccessFunctor     (void                              );
     void                setMethodId          (UInt32 uiMethodId                 );
     bool                isValid(void)  const;
 
@@ -108,12 +109,12 @@ class OSG_BASE_DLLMAPPING MethodDescription
     /*! \name                      Member                                  */
     /*! \{                                                                 */
 
-    std::string               _szName;
-    std::string               _Description;
-    UInt32                 _MethodId;
-    const TypeBase&  _EventArgumentType;
-
-    FunctorAccessMethod      _fAccessFunctor;
+    std::string        _szName;
+    std::string        _Description;
+    UInt32             _MethodId;
+    const TypeBase&    _EventArgumentType;
+    bool               _Consumable;
+    MethodGetMethod _fAccessFunctor;
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
@@ -128,6 +129,7 @@ class OSG_BASE_DLLMAPPING MethodDescription
 
 OSG_END_NAMESPACE
 
+#include "OSGMethodHandle.h"
 #include "OSGMethodDescription.inl"
 
 #endif /* _OSGMETHODDESCRIPTIONIMPL_H_ */

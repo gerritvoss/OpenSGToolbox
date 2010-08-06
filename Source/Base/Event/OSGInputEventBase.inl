@@ -73,31 +73,6 @@ OSG::UInt16 InputEventBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the value of the InputEvent::_sfConsumed field.
-
-inline
-bool &InputEventBase::editConsumed(void)
-{
-    editSField(ConsumedFieldMask);
-
-    return _sfConsumed.getValue();
-}
-
-//! Get the value of the InputEvent::_sfConsumed field.
-inline
-      bool  InputEventBase::getConsumed(void) const
-{
-    return _sfConsumed.getValue();
-}
-
-//! Set the value of the InputEvent::_sfConsumed field.
-inline
-void InputEventBase::setConsumed(const bool value)
-{
-    editSField(ConsumedFieldMask);
-
-    _sfConsumed.setValue(value);
-}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -109,9 +84,6 @@ void InputEventBase::execSync (      InputEventBase *pFrom,
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
-
-    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
-        _sfConsumed.syncWith(pFrom->_sfConsumed);
 }
 #endif
 

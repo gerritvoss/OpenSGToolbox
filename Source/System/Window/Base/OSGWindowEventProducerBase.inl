@@ -248,70 +248,951 @@ const Char8 *WindowEventProducerBase::getClassname(void)
 }
 
 inline
-EventConnection WindowEventProducerBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool WindowEventProducerBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 WindowEventProducerBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr WindowEventProducerBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void WindowEventProducerBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 WindowEventProducerBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumMethodDescs();
 }
 
 inline
 const MethodDescription *WindowEventProducerBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findMethodDescription(ProducedEventName);
 }
 
 inline
 const MethodDescription *WindowEventProducerBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getMethodDescription(ProducedEventId);
 }
 
 inline
 UInt32 WindowEventProducerBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *WindowEventProducerBase::editSFEventProducer(void)
+boost::signals2::connection  WindowEventProducerBase::connectWindowOpened(const WindowOpenedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _WindowOpenedMethod.connect(listener, at);
 }
 
-//! Get the value of the WindowEventProducer::_sfEventProducer field.
 inline
-EventProducerPtr &WindowEventProducerBase::editEventProducer(void)
+boost::signals2::connection  WindowEventProducerBase::connectWindowOpened(const WindowOpenedMethodType::group_type &group,
+                                                    const WindowOpenedMethodType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _WindowOpenedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectWindowOpened(const WindowOpenedMethodType::group_type &group)
+{
+    _WindowOpenedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsWindowOpened(void)
+{
+    _WindowOpenedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyWindowOpened(void) const
+{
+    return _WindowOpenedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsWindowOpened(void) const
+{
+    return _WindowOpenedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceWindowOpened(WindowOpenedEventType* const e)
+{
+    produceEvent(WindowOpenedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowClosing(const WindowClosingMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowClosingMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowClosing(const WindowClosingMethodType::group_type &group,
+                                                    const WindowClosingMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowClosingMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectWindowClosing(const WindowClosingMethodType::group_type &group)
+{
+    _WindowClosingMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsWindowClosing(void)
+{
+    _WindowClosingMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyWindowClosing(void) const
+{
+    return _WindowClosingMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsWindowClosing(void) const
+{
+    return _WindowClosingMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceWindowClosing(WindowClosingEventType* const e)
+{
+    produceEvent(WindowClosingMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowClosed(const WindowClosedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowClosedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowClosed(const WindowClosedMethodType::group_type &group,
+                                                    const WindowClosedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowClosedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectWindowClosed(const WindowClosedMethodType::group_type &group)
+{
+    _WindowClosedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsWindowClosed(void)
+{
+    _WindowClosedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyWindowClosed(void) const
+{
+    return _WindowClosedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsWindowClosed(void) const
+{
+    return _WindowClosedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceWindowClosed(WindowClosedEventType* const e)
+{
+    produceEvent(WindowClosedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowIconified(const WindowIconifiedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowIconifiedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowIconified(const WindowIconifiedMethodType::group_type &group,
+                                                    const WindowIconifiedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowIconifiedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectWindowIconified(const WindowIconifiedMethodType::group_type &group)
+{
+    _WindowIconifiedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsWindowIconified(void)
+{
+    _WindowIconifiedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyWindowIconified(void) const
+{
+    return _WindowIconifiedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsWindowIconified(void) const
+{
+    return _WindowIconifiedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceWindowIconified(WindowIconifiedEventType* const e)
+{
+    produceEvent(WindowIconifiedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowDeiconified(const WindowDeiconifiedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowDeiconifiedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowDeiconified(const WindowDeiconifiedMethodType::group_type &group,
+                                                    const WindowDeiconifiedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowDeiconifiedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectWindowDeiconified(const WindowDeiconifiedMethodType::group_type &group)
+{
+    _WindowDeiconifiedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsWindowDeiconified(void)
+{
+    _WindowDeiconifiedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyWindowDeiconified(void) const
+{
+    return _WindowDeiconifiedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsWindowDeiconified(void) const
+{
+    return _WindowDeiconifiedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceWindowDeiconified(WindowDeiconifiedEventType* const e)
+{
+    produceEvent(WindowDeiconifiedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowActivated(const WindowActivatedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowActivatedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowActivated(const WindowActivatedMethodType::group_type &group,
+                                                    const WindowActivatedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowActivatedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectWindowActivated(const WindowActivatedMethodType::group_type &group)
+{
+    _WindowActivatedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsWindowActivated(void)
+{
+    _WindowActivatedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyWindowActivated(void) const
+{
+    return _WindowActivatedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsWindowActivated(void) const
+{
+    return _WindowActivatedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceWindowActivated(WindowActivatedEventType* const e)
+{
+    produceEvent(WindowActivatedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowDeactivated(const WindowDeactivatedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowDeactivatedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowDeactivated(const WindowDeactivatedMethodType::group_type &group,
+                                                    const WindowDeactivatedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowDeactivatedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectWindowDeactivated(const WindowDeactivatedMethodType::group_type &group)
+{
+    _WindowDeactivatedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsWindowDeactivated(void)
+{
+    _WindowDeactivatedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyWindowDeactivated(void) const
+{
+    return _WindowDeactivatedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsWindowDeactivated(void) const
+{
+    return _WindowDeactivatedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceWindowDeactivated(WindowDeactivatedEventType* const e)
+{
+    produceEvent(WindowDeactivatedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowEntered(const WindowEnteredMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowEnteredMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowEntered(const WindowEnteredMethodType::group_type &group,
+                                                    const WindowEnteredMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowEnteredMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectWindowEntered(const WindowEnteredMethodType::group_type &group)
+{
+    _WindowEnteredMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsWindowEntered(void)
+{
+    _WindowEnteredMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyWindowEntered(void) const
+{
+    return _WindowEnteredMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsWindowEntered(void) const
+{
+    return _WindowEnteredMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceWindowEntered(WindowEnteredEventType* const e)
+{
+    produceEvent(WindowEnteredMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowExited(const WindowExitedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowExitedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectWindowExited(const WindowExitedMethodType::group_type &group,
+                                                    const WindowExitedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowExitedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectWindowExited(const WindowExitedMethodType::group_type &group)
+{
+    _WindowExitedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsWindowExited(void)
+{
+    _WindowExitedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyWindowExited(void) const
+{
+    return _WindowExitedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsWindowExited(void) const
+{
+    return _WindowExitedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceWindowExited(WindowExitedEventType* const e)
+{
+    produceEvent(WindowExitedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseClicked(const MouseClickedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseClickedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseClicked(const MouseClickedMethodType::group_type &group,
+                                                    const MouseClickedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseClickedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectMouseClicked(const MouseClickedMethodType::group_type &group)
+{
+    _MouseClickedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsMouseClicked(void)
+{
+    _MouseClickedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyMouseClicked(void) const
+{
+    return _MouseClickedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsMouseClicked(void) const
+{
+    return _MouseClickedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceMouseClicked(MouseClickedEventType* const e)
+{
+    produceEvent(MouseClickedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseEntered(const MouseEnteredMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseEnteredMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseEntered(const MouseEnteredMethodType::group_type &group,
+                                                    const MouseEnteredMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseEnteredMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectMouseEntered(const MouseEnteredMethodType::group_type &group)
+{
+    _MouseEnteredMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsMouseEntered(void)
+{
+    _MouseEnteredMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyMouseEntered(void) const
+{
+    return _MouseEnteredMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsMouseEntered(void) const
+{
+    return _MouseEnteredMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceMouseEntered(MouseEnteredEventType* const e)
+{
+    produceEvent(MouseEnteredMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseExited(const MouseExitedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseExitedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseExited(const MouseExitedMethodType::group_type &group,
+                                                    const MouseExitedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseExitedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectMouseExited(const MouseExitedMethodType::group_type &group)
+{
+    _MouseExitedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsMouseExited(void)
+{
+    _MouseExitedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyMouseExited(void) const
+{
+    return _MouseExitedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsMouseExited(void) const
+{
+    return _MouseExitedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceMouseExited(MouseExitedEventType* const e)
+{
+    produceEvent(MouseExitedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMousePressed(const MousePressedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MousePressedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMousePressed(const MousePressedMethodType::group_type &group,
+                                                    const MousePressedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MousePressedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectMousePressed(const MousePressedMethodType::group_type &group)
+{
+    _MousePressedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsMousePressed(void)
+{
+    _MousePressedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyMousePressed(void) const
+{
+    return _MousePressedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsMousePressed(void) const
+{
+    return _MousePressedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceMousePressed(MousePressedEventType* const e)
+{
+    produceEvent(MousePressedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseReleased(const MouseReleasedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseReleasedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseReleased(const MouseReleasedMethodType::group_type &group,
+                                                    const MouseReleasedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseReleasedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectMouseReleased(const MouseReleasedMethodType::group_type &group)
+{
+    _MouseReleasedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsMouseReleased(void)
+{
+    _MouseReleasedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyMouseReleased(void) const
+{
+    return _MouseReleasedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsMouseReleased(void) const
+{
+    return _MouseReleasedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceMouseReleased(MouseReleasedEventType* const e)
+{
+    produceEvent(MouseReleasedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseMoved(const MouseMovedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseMovedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseMoved(const MouseMovedMethodType::group_type &group,
+                                                    const MouseMovedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseMovedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectMouseMoved(const MouseMovedMethodType::group_type &group)
+{
+    _MouseMovedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsMouseMoved(void)
+{
+    _MouseMovedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyMouseMoved(void) const
+{
+    return _MouseMovedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsMouseMoved(void) const
+{
+    return _MouseMovedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceMouseMoved(MouseMovedEventType* const e)
+{
+    produceEvent(MouseMovedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseDragged(const MouseDraggedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseDraggedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseDragged(const MouseDraggedMethodType::group_type &group,
+                                                    const MouseDraggedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseDraggedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectMouseDragged(const MouseDraggedMethodType::group_type &group)
+{
+    _MouseDraggedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsMouseDragged(void)
+{
+    _MouseDraggedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyMouseDragged(void) const
+{
+    return _MouseDraggedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsMouseDragged(void) const
+{
+    return _MouseDraggedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceMouseDragged(MouseDraggedEventType* const e)
+{
+    produceEvent(MouseDraggedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseWheelMoved(const MouseWheelMovedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseWheelMovedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectMouseWheelMoved(const MouseWheelMovedMethodType::group_type &group,
+                                                    const MouseWheelMovedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseWheelMovedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectMouseWheelMoved(const MouseWheelMovedMethodType::group_type &group)
+{
+    _MouseWheelMovedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsMouseWheelMoved(void)
+{
+    _MouseWheelMovedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyMouseWheelMoved(void) const
+{
+    return _MouseWheelMovedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsMouseWheelMoved(void) const
+{
+    return _MouseWheelMovedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceMouseWheelMoved(MouseWheelMovedEventType* const e)
+{
+    produceEvent(MouseWheelMovedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectKeyPressed(const KeyPressedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _KeyPressedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectKeyPressed(const KeyPressedMethodType::group_type &group,
+                                                    const KeyPressedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _KeyPressedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectKeyPressed(const KeyPressedMethodType::group_type &group)
+{
+    _KeyPressedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsKeyPressed(void)
+{
+    _KeyPressedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyKeyPressed(void) const
+{
+    return _KeyPressedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsKeyPressed(void) const
+{
+    return _KeyPressedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceKeyPressed(KeyPressedEventType* const e)
+{
+    produceEvent(KeyPressedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectKeyReleased(const KeyReleasedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _KeyReleasedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectKeyReleased(const KeyReleasedMethodType::group_type &group,
+                                                    const KeyReleasedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _KeyReleasedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectKeyReleased(const KeyReleasedMethodType::group_type &group)
+{
+    _KeyReleasedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsKeyReleased(void)
+{
+    _KeyReleasedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyKeyReleased(void) const
+{
+    return _KeyReleasedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsKeyReleased(void) const
+{
+    return _KeyReleasedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceKeyReleased(KeyReleasedEventType* const e)
+{
+    produceEvent(KeyReleasedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectKeyTyped(const KeyTypedMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _KeyTypedMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectKeyTyped(const KeyTypedMethodType::group_type &group,
+                                                    const KeyTypedMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _KeyTypedMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectKeyTyped(const KeyTypedMethodType::group_type &group)
+{
+    _KeyTypedMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsKeyTyped(void)
+{
+    _KeyTypedMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyKeyTyped(void) const
+{
+    return _KeyTypedMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsKeyTyped(void) const
+{
+    return _KeyTypedMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceKeyTyped(KeyTypedEventType* const e)
+{
+    produceEvent(KeyTypedMethodId, e);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectUpdate(const UpdateMethodType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _UpdateMethod.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  WindowEventProducerBase::connectUpdate(const UpdateMethodType::group_type &group,
+                                                    const UpdateMethodType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _UpdateMethod.connect(group, listener, at);
+}
+
+inline
+void  WindowEventProducerBase::disconnectUpdate(const UpdateMethodType::group_type &group)
+{
+    _UpdateMethod.disconnect(group);
+}
+
+inline
+void  WindowEventProducerBase::disconnectAllSlotsUpdate(void)
+{
+    _UpdateMethod.disconnect_all_slots();
+}
+
+inline
+bool  WindowEventProducerBase::isEmptyUpdate(void) const
+{
+    return _UpdateMethod.empty();
+}
+
+inline
+UInt32  WindowEventProducerBase::numSlotsUpdate(void) const
+{
+    return _UpdateMethod.num_slots();
+}
+
+inline
+void WindowEventProducerBase::produceUpdate(UpdateEventType* const e)
+{
+    produceEvent(UpdateMethodId, e);
 }
 
 OSG_GEN_CONTAINERPTR(WindowEventProducer);

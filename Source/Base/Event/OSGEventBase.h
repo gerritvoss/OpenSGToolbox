@@ -67,6 +67,7 @@
 
 #include "OSGFieldContainerFields.h"    // Source type
 #include "OSGBaseFields.h"              // TimeStamp type
+#include "OSGSysFields.h"               // Consumed type
 
 #include "OSGEventFields.h"
 
@@ -87,6 +88,8 @@ class OSG_BASE_DLLMAPPING EventBase : public FieldContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(Event);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -96,18 +99,22 @@ class OSG_BASE_DLLMAPPING EventBase : public FieldContainer
     {
         SourceFieldId = Inherited::NextFieldId,
         TimeStampFieldId = SourceFieldId + 1,
-        NextFieldId = TimeStampFieldId + 1
+        ConsumedFieldId = TimeStampFieldId + 1,
+        NextFieldId = ConsumedFieldId + 1
     };
 
     static const OSG::BitVector SourceFieldMask =
         (TypeTraits<BitVector>::One << SourceFieldId);
     static const OSG::BitVector TimeStampFieldMask =
         (TypeTraits<BitVector>::One << TimeStampFieldId);
+    static const OSG::BitVector ConsumedFieldMask =
+        (TypeTraits<BitVector>::One << ConsumedFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecFieldContainerPtr SFSourceType;
     typedef SFTime            SFTimeStampType;
+    typedef SFBool            SFConsumedType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -136,16 +143,23 @@ class OSG_BASE_DLLMAPPING EventBase : public FieldContainer
 
             const SFTime              *getSFTimeStamp       (void) const;
 
+                  SFBool              *editSFConsumed       (void);
+            const SFBool              *getSFConsumed        (void) const;
+
 
                   FieldContainer * getSource         (void) const;
 
             const Time                &getTimeStamp       (void) const;
+
+                  bool                &editConsumed       (void);
+                  bool                 getConsumed        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+            void setConsumed       (const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -185,6 +199,7 @@ class OSG_BASE_DLLMAPPING EventBase : public FieldContainer
 
     SFUnrecFieldContainerPtr _sfSource;
     SFTime            _sfTimeStamp;
+    SFBool            _sfConsumed;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -217,6 +232,8 @@ class OSG_BASE_DLLMAPPING EventBase : public FieldContainer
     EditFieldHandlePtr editHandleSource         (void);
     GetFieldHandlePtr  getHandleTimeStamp       (void) const;
     EditFieldHandlePtr editHandleTimeStamp      (void);
+    GetFieldHandlePtr  getHandleConsumed        (void) const;
+    EditFieldHandlePtr editHandleConsumed       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

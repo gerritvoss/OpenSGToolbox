@@ -58,6 +58,29 @@
 
 
 
+#include "OSGWindowEvent.h"
+#include "OSGWindowEvent.h"
+#include "OSGWindowEvent.h"
+#include "OSGWindowEvent.h"
+#include "OSGWindowEvent.h"
+#include "OSGWindowEvent.h"
+#include "OSGWindowEvent.h"
+#include "OSGWindowEvent.h"
+#include "OSGWindowEvent.h"
+#include "OSGMouseEvent.h"
+#include "OSGMouseEvent.h"
+#include "OSGMouseEvent.h"
+#include "OSGMouseEvent.h"
+#include "OSGMouseEvent.h"
+#include "OSGMouseEvent.h"
+#include "OSGMouseEvent.h"
+#include "OSGMouseWheelEvent.h"
+#include "OSGKeyEvent.h"
+#include "OSGKeyEvent.h"
+#include "OSGKeyEvent.h"
+#include "OSGUpdateEvent.h"
+
+
 
 #include "OSGWindowEventProducerBase.h"
 #include "OSGWindowEventProducer.h"
@@ -191,17 +214,6 @@ void WindowEventProducerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&WindowEventProducer::getHandleLockCursor));
 
     oType.addInitialDesc(pDesc);
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        true,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&WindowEventProducer::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&WindowEventProducer::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -279,108 +291,150 @@ WindowEventProducerBase::TypeObject WindowEventProducerBase::_type(
     "\t</Field>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"WindowOpened\"\n"
-    "\t\ttype=\"WindowEventPtr\"\n"
+    "\t\ttype=\"WindowEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when this window has opened.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"WindowClosing\"\n"
-    "\t\ttype=\"WindowEventPtr\"\n"
+    "\t\ttype=\"WindowEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when this window has received a close command, but has not yet closed.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"WindowClosed\"\n"
-    "\t\ttype=\"WindowEventPtr\"\n"
+    "\t\ttype=\"WindowEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when this window has closed.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"WindowIconified\"\n"
-    "\t\ttype=\"WindowEventPtr\"\n"
+    "\t\ttype=\"WindowEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when this window has closed.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"WindowDeiconified\"\n"
-    "\t\ttype=\"WindowEventPtr\"\n"
+    "\t\ttype=\"WindowEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when this window has closed.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"WindowActivated\"\n"
-    "\t\ttype=\"WindowEventPtr\"\n"
+    "\t\ttype=\"WindowEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when this window has closed.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"WindowDeactivated\"\n"
-    "\t\ttype=\"WindowEventPtr\"\n"
+    "\t\ttype=\"WindowEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when this window has closed.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"WindowEntered\"\n"
-    "\t\ttype=\"WindowEventPtr\"\n"
+    "\t\ttype=\"WindowEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the cursor has entered this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"WindowExited\"\n"
-    "\t\ttype=\"WindowEventPtr\"\n"
+    "\t\ttype=\"WindowEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the cursor has exited this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"MouseClicked\"\n"
-    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t\ttype=\"MouseEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when there is a mouse button click in this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"MouseEntered\"\n"
-    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t\ttype=\"MouseEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the cursor has entered this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"MouseExited\"\n"
-    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t\ttype=\"MouseEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the cursor has exited this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"MousePressed\"\n"
-    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t\ttype=\"MouseEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when there is a mouse button press in this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"MouseReleased\"\n"
-    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t\ttype=\"MouseEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when there is a mouse button release in this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"MouseMoved\"\n"
-    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t\ttype=\"MouseEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the mouse has moved in this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"MouseDragged\"\n"
-    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t\ttype=\"MouseEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the mouse has moved, and one or more of the mouse buttons are down in this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"MouseWheelMoved\"\n"
-    "\t\ttype=\"MouseWheelEventPtr\"\n"
+    "\t\ttype=\"MouseWheelEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the mouse wheel has moved in this window.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"KeyPressed\"\n"
-    "\t\ttype=\"KeyEventPtr\"\n"
+    "\t\ttype=\"KeyEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the a key has been pressed when this window has focus.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"KeyReleased\"\n"
-    "\t\ttype=\"KeyEventPtr\"\n"
+    "\t\ttype=\"KeyEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the a key has been released when this window has focus.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"KeyTyped\"\n"
-    "\t\ttype=\"KeyEventPtr\"\n"
+    "\t\ttype=\"KeyEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired when the a key has been typed when this window has focus.\n"
     "\t</ProducedMethod>\n"
     "\t<ProducedMethod\n"
     "\t\tname=\"Update\"\n"
-    "\t\ttype=\"UpdateEventPtr\"\n"
+    "\t\ttype=\"UpdateEvent\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "\tThis Event is fired by the main loop of this window whenever it is idle.\n"
     "\t</ProducedMethod>\n"
     "</FieldContainer>\n",
     "WindowEventProducer is the base class for all Window specific Event producers. It also contains code for Window Manipulation: Position, size, iconify, enable, visible, fullscreen, etc.\n"
@@ -391,110 +445,152 @@ WindowEventProducerBase::TypeObject WindowEventProducerBase::_type(
 MethodDescription *WindowEventProducerBase::_methodDesc[] =
 {
     new MethodDescription("WindowOpened", 
-                    "",
-                     WindowOpenedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when this window has opened.",
+                          WindowOpenedMethodId, 
+                          FieldTraits<WindowEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleWindowOpenedSignal)),
+
     new MethodDescription("WindowClosing", 
-                    "",
-                     WindowClosingMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when this window has received a close command, but has not yet closed.",
+                          WindowClosingMethodId, 
+                          FieldTraits<WindowEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleWindowClosingSignal)),
+
     new MethodDescription("WindowClosed", 
-                    "",
-                     WindowClosedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when this window has closed.",
+                          WindowClosedMethodId, 
+                          FieldTraits<WindowEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleWindowClosedSignal)),
+
     new MethodDescription("WindowIconified", 
-                    "",
-                     WindowIconifiedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when this window has closed.",
+                          WindowIconifiedMethodId, 
+                          FieldTraits<WindowEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleWindowIconifiedSignal)),
+
     new MethodDescription("WindowDeiconified", 
-                    "",
-                     WindowDeiconifiedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when this window has closed.",
+                          WindowDeiconifiedMethodId, 
+                          FieldTraits<WindowEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleWindowDeiconifiedSignal)),
+
     new MethodDescription("WindowActivated", 
-                    "",
-                     WindowActivatedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when this window has closed.",
+                          WindowActivatedMethodId, 
+                          FieldTraits<WindowEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleWindowActivatedSignal)),
+
     new MethodDescription("WindowDeactivated", 
-                    "",
-                     WindowDeactivatedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when this window has closed.",
+                          WindowDeactivatedMethodId, 
+                          FieldTraits<WindowEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleWindowDeactivatedSignal)),
+
     new MethodDescription("WindowEntered", 
-                    "",
-                     WindowEnteredMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the cursor has entered this window.",
+                          WindowEnteredMethodId, 
+                          FieldTraits<WindowEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleWindowEnteredSignal)),
+
     new MethodDescription("WindowExited", 
-                    "",
-                     WindowExitedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the cursor has exited this window.",
+                          WindowExitedMethodId, 
+                          FieldTraits<WindowEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleWindowExitedSignal)),
+
     new MethodDescription("MouseClicked", 
-                    "",
-                     MouseClickedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when there is a mouse button click in this window.",
+                          MouseClickedMethodId, 
+                          FieldTraits<MouseEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleMouseClickedSignal)),
+
     new MethodDescription("MouseEntered", 
-                    "",
-                     MouseEnteredMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the cursor has entered this window.",
+                          MouseEnteredMethodId, 
+                          FieldTraits<MouseEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleMouseEnteredSignal)),
+
     new MethodDescription("MouseExited", 
-                    "",
-                     MouseExitedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the cursor has exited this window.",
+                          MouseExitedMethodId, 
+                          FieldTraits<MouseEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleMouseExitedSignal)),
+
     new MethodDescription("MousePressed", 
-                    "",
-                     MousePressedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when there is a mouse button press in this window.",
+                          MousePressedMethodId, 
+                          FieldTraits<MouseEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleMousePressedSignal)),
+
     new MethodDescription("MouseReleased", 
-                    "",
-                     MouseReleasedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when there is a mouse button release in this window.",
+                          MouseReleasedMethodId, 
+                          FieldTraits<MouseEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleMouseReleasedSignal)),
+
     new MethodDescription("MouseMoved", 
-                    "",
-                     MouseMovedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the mouse has moved in this window.",
+                          MouseMovedMethodId, 
+                          FieldTraits<MouseEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleMouseMovedSignal)),
+
     new MethodDescription("MouseDragged", 
-                    "",
-                     MouseDraggedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the mouse has moved, and one or more of the mouse buttons are down in this window.",
+                          MouseDraggedMethodId, 
+                          FieldTraits<MouseEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleMouseDraggedSignal)),
+
     new MethodDescription("MouseWheelMoved", 
-                    "",
-                     MouseWheelMovedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the mouse wheel has moved in this window.",
+                          MouseWheelMovedMethodId, 
+                          FieldTraits<MouseWheelEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleMouseWheelMovedSignal)),
+
     new MethodDescription("KeyPressed", 
-                    "",
-                     KeyPressedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the a key has been pressed when this window has focus.",
+                          KeyPressedMethodId, 
+                          FieldTraits<KeyEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleKeyPressedSignal)),
+
     new MethodDescription("KeyReleased", 
-                    "",
-                     KeyReleasedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the a key has been released when this window has focus.",
+                          KeyReleasedMethodId, 
+                          FieldTraits<KeyEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleKeyReleasedSignal)),
+
     new MethodDescription("KeyTyped", 
-                    "",
-                     KeyTypedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
+                          "This Event is fired when the a key has been typed when this window has focus.",
+                          KeyTypedMethodId, 
+                          FieldTraits<KeyEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleKeyTypedSignal)),
+
     new MethodDescription("Update", 
-                    "",
-                     UpdateMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+                          "This Event is fired by the main loop of this window whenever it is idle.",
+                          UpdateMethodId, 
+                          FieldTraits<UpdateEvent *>::getType(),
+                          true,
+                          static_cast<MethodGetMethod>(&WindowEventProducerBase::getHandleUpdateSignal))
+
 };
 
 EventProducerType WindowEventProducerBase::_producerType(
@@ -625,10 +721,6 @@ UInt32 WindowEventProducerBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfLockCursor.getBinSize();
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -658,10 +750,6 @@ void WindowEventProducerBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfLockCursor.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void WindowEventProducerBase::copyFromBin(BinaryDataHandler &pMem,
@@ -689,38 +777,618 @@ void WindowEventProducerBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfLockCursor.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 }
 
 
+
+/*------------------------- event producers ----------------------------------*/
+void WindowEventProducerBase::produceEvent(UInt32 methodId, Event* const e)
+{
+    switch(methodId)
+    {
+    case WindowOpenedMethodId:
+        assert(dynamic_cast<WindowOpenedEventType* const>(e));
+
+        _WindowOpenedMethod.set_combiner(ConsumableEventCombiner(e));
+        _WindowOpenedMethod(dynamic_cast<WindowOpenedEventType* const>(e), WindowOpenedMethodId);
+        break;
+    case WindowClosingMethodId:
+        assert(dynamic_cast<WindowClosingEventType* const>(e));
+
+        _WindowClosingMethod.set_combiner(ConsumableEventCombiner(e));
+        _WindowClosingMethod(dynamic_cast<WindowClosingEventType* const>(e), WindowClosingMethodId);
+        break;
+    case WindowClosedMethodId:
+        assert(dynamic_cast<WindowClosedEventType* const>(e));
+
+        _WindowClosedMethod.set_combiner(ConsumableEventCombiner(e));
+        _WindowClosedMethod(dynamic_cast<WindowClosedEventType* const>(e), WindowClosedMethodId);
+        break;
+    case WindowIconifiedMethodId:
+        assert(dynamic_cast<WindowIconifiedEventType* const>(e));
+
+        _WindowIconifiedMethod.set_combiner(ConsumableEventCombiner(e));
+        _WindowIconifiedMethod(dynamic_cast<WindowIconifiedEventType* const>(e), WindowIconifiedMethodId);
+        break;
+    case WindowDeiconifiedMethodId:
+        assert(dynamic_cast<WindowDeiconifiedEventType* const>(e));
+
+        _WindowDeiconifiedMethod.set_combiner(ConsumableEventCombiner(e));
+        _WindowDeiconifiedMethod(dynamic_cast<WindowDeiconifiedEventType* const>(e), WindowDeiconifiedMethodId);
+        break;
+    case WindowActivatedMethodId:
+        assert(dynamic_cast<WindowActivatedEventType* const>(e));
+
+        _WindowActivatedMethod.set_combiner(ConsumableEventCombiner(e));
+        _WindowActivatedMethod(dynamic_cast<WindowActivatedEventType* const>(e), WindowActivatedMethodId);
+        break;
+    case WindowDeactivatedMethodId:
+        assert(dynamic_cast<WindowDeactivatedEventType* const>(e));
+
+        _WindowDeactivatedMethod.set_combiner(ConsumableEventCombiner(e));
+        _WindowDeactivatedMethod(dynamic_cast<WindowDeactivatedEventType* const>(e), WindowDeactivatedMethodId);
+        break;
+    case WindowEnteredMethodId:
+        assert(dynamic_cast<WindowEnteredEventType* const>(e));
+
+        _WindowEnteredMethod.set_combiner(ConsumableEventCombiner(e));
+        _WindowEnteredMethod(dynamic_cast<WindowEnteredEventType* const>(e), WindowEnteredMethodId);
+        break;
+    case WindowExitedMethodId:
+        assert(dynamic_cast<WindowExitedEventType* const>(e));
+
+        _WindowExitedMethod.set_combiner(ConsumableEventCombiner(e));
+        _WindowExitedMethod(dynamic_cast<WindowExitedEventType* const>(e), WindowExitedMethodId);
+        break;
+    case MouseClickedMethodId:
+        assert(dynamic_cast<MouseClickedEventType* const>(e));
+
+        _MouseClickedMethod.set_combiner(ConsumableEventCombiner(e));
+        _MouseClickedMethod(dynamic_cast<MouseClickedEventType* const>(e), MouseClickedMethodId);
+        break;
+    case MouseEnteredMethodId:
+        assert(dynamic_cast<MouseEnteredEventType* const>(e));
+
+        _MouseEnteredMethod.set_combiner(ConsumableEventCombiner(e));
+        _MouseEnteredMethod(dynamic_cast<MouseEnteredEventType* const>(e), MouseEnteredMethodId);
+        break;
+    case MouseExitedMethodId:
+        assert(dynamic_cast<MouseExitedEventType* const>(e));
+
+        _MouseExitedMethod.set_combiner(ConsumableEventCombiner(e));
+        _MouseExitedMethod(dynamic_cast<MouseExitedEventType* const>(e), MouseExitedMethodId);
+        break;
+    case MousePressedMethodId:
+        assert(dynamic_cast<MousePressedEventType* const>(e));
+
+        _MousePressedMethod.set_combiner(ConsumableEventCombiner(e));
+        _MousePressedMethod(dynamic_cast<MousePressedEventType* const>(e), MousePressedMethodId);
+        break;
+    case MouseReleasedMethodId:
+        assert(dynamic_cast<MouseReleasedEventType* const>(e));
+
+        _MouseReleasedMethod.set_combiner(ConsumableEventCombiner(e));
+        _MouseReleasedMethod(dynamic_cast<MouseReleasedEventType* const>(e), MouseReleasedMethodId);
+        break;
+    case MouseMovedMethodId:
+        assert(dynamic_cast<MouseMovedEventType* const>(e));
+
+        _MouseMovedMethod.set_combiner(ConsumableEventCombiner(e));
+        _MouseMovedMethod(dynamic_cast<MouseMovedEventType* const>(e), MouseMovedMethodId);
+        break;
+    case MouseDraggedMethodId:
+        assert(dynamic_cast<MouseDraggedEventType* const>(e));
+
+        _MouseDraggedMethod.set_combiner(ConsumableEventCombiner(e));
+        _MouseDraggedMethod(dynamic_cast<MouseDraggedEventType* const>(e), MouseDraggedMethodId);
+        break;
+    case MouseWheelMovedMethodId:
+        assert(dynamic_cast<MouseWheelMovedEventType* const>(e));
+
+        _MouseWheelMovedMethod.set_combiner(ConsumableEventCombiner(e));
+        _MouseWheelMovedMethod(dynamic_cast<MouseWheelMovedEventType* const>(e), MouseWheelMovedMethodId);
+        break;
+    case KeyPressedMethodId:
+        assert(dynamic_cast<KeyPressedEventType* const>(e));
+
+        _KeyPressedMethod.set_combiner(ConsumableEventCombiner(e));
+        _KeyPressedMethod(dynamic_cast<KeyPressedEventType* const>(e), KeyPressedMethodId);
+        break;
+    case KeyReleasedMethodId:
+        assert(dynamic_cast<KeyReleasedEventType* const>(e));
+
+        _KeyReleasedMethod.set_combiner(ConsumableEventCombiner(e));
+        _KeyReleasedMethod(dynamic_cast<KeyReleasedEventType* const>(e), KeyReleasedMethodId);
+        break;
+    case KeyTypedMethodId:
+        assert(dynamic_cast<KeyTypedEventType* const>(e));
+
+        _KeyTypedMethod.set_combiner(ConsumableEventCombiner(e));
+        _KeyTypedMethod(dynamic_cast<KeyTypedEventType* const>(e), KeyTypedMethodId);
+        break;
+    case UpdateMethodId:
+        assert(dynamic_cast<UpdateEventType* const>(e));
+
+        _UpdateMethod.set_combiner(ConsumableEventCombiner(e));
+        _UpdateMethod(dynamic_cast<UpdateEventType* const>(e), UpdateMethodId);
+        break;
+    default:
+        assert(false && "No method defined with that ID");
+        break;
+    }
+}
+
+boost::signals2::connection WindowEventProducerBase::connectMethod(UInt32 methodId, 
+                                                             const BaseMethodType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(methodId)
+    {
+    case WindowOpenedMethodId:
+        return _WindowOpenedMethod.connect(listener, at);
+        break;
+    case WindowClosingMethodId:
+        return _WindowClosingMethod.connect(listener, at);
+        break;
+    case WindowClosedMethodId:
+        return _WindowClosedMethod.connect(listener, at);
+        break;
+    case WindowIconifiedMethodId:
+        return _WindowIconifiedMethod.connect(listener, at);
+        break;
+    case WindowDeiconifiedMethodId:
+        return _WindowDeiconifiedMethod.connect(listener, at);
+        break;
+    case WindowActivatedMethodId:
+        return _WindowActivatedMethod.connect(listener, at);
+        break;
+    case WindowDeactivatedMethodId:
+        return _WindowDeactivatedMethod.connect(listener, at);
+        break;
+    case WindowEnteredMethodId:
+        return _WindowEnteredMethod.connect(listener, at);
+        break;
+    case WindowExitedMethodId:
+        return _WindowExitedMethod.connect(listener, at);
+        break;
+    case MouseClickedMethodId:
+        return _MouseClickedMethod.connect(listener, at);
+        break;
+    case MouseEnteredMethodId:
+        return _MouseEnteredMethod.connect(listener, at);
+        break;
+    case MouseExitedMethodId:
+        return _MouseExitedMethod.connect(listener, at);
+        break;
+    case MousePressedMethodId:
+        return _MousePressedMethod.connect(listener, at);
+        break;
+    case MouseReleasedMethodId:
+        return _MouseReleasedMethod.connect(listener, at);
+        break;
+    case MouseMovedMethodId:
+        return _MouseMovedMethod.connect(listener, at);
+        break;
+    case MouseDraggedMethodId:
+        return _MouseDraggedMethod.connect(listener, at);
+        break;
+    case MouseWheelMovedMethodId:
+        return _MouseWheelMovedMethod.connect(listener, at);
+        break;
+    case KeyPressedMethodId:
+        return _KeyPressedMethod.connect(listener, at);
+        break;
+    case KeyReleasedMethodId:
+        return _KeyReleasedMethod.connect(listener, at);
+        break;
+    case KeyTypedMethodId:
+        return _KeyTypedMethod.connect(listener, at);
+        break;
+    case UpdateMethodId:
+        return _UpdateMethod.connect(listener, at);
+        break;
+    default:
+        assert(false && "No method defined with that ID");
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  WindowEventProducerBase::connectMethod(UInt32 methodId, 
+                                                              const BaseMethodType::group_type &group,
+                                                              const BaseMethodType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(methodId)
+    {
+    case WindowOpenedMethodId:
+        return _WindowOpenedMethod.connect(group, listener, at);
+        break;
+    case WindowClosingMethodId:
+        return _WindowClosingMethod.connect(group, listener, at);
+        break;
+    case WindowClosedMethodId:
+        return _WindowClosedMethod.connect(group, listener, at);
+        break;
+    case WindowIconifiedMethodId:
+        return _WindowIconifiedMethod.connect(group, listener, at);
+        break;
+    case WindowDeiconifiedMethodId:
+        return _WindowDeiconifiedMethod.connect(group, listener, at);
+        break;
+    case WindowActivatedMethodId:
+        return _WindowActivatedMethod.connect(group, listener, at);
+        break;
+    case WindowDeactivatedMethodId:
+        return _WindowDeactivatedMethod.connect(group, listener, at);
+        break;
+    case WindowEnteredMethodId:
+        return _WindowEnteredMethod.connect(group, listener, at);
+        break;
+    case WindowExitedMethodId:
+        return _WindowExitedMethod.connect(group, listener, at);
+        break;
+    case MouseClickedMethodId:
+        return _MouseClickedMethod.connect(group, listener, at);
+        break;
+    case MouseEnteredMethodId:
+        return _MouseEnteredMethod.connect(group, listener, at);
+        break;
+    case MouseExitedMethodId:
+        return _MouseExitedMethod.connect(group, listener, at);
+        break;
+    case MousePressedMethodId:
+        return _MousePressedMethod.connect(group, listener, at);
+        break;
+    case MouseReleasedMethodId:
+        return _MouseReleasedMethod.connect(group, listener, at);
+        break;
+    case MouseMovedMethodId:
+        return _MouseMovedMethod.connect(group, listener, at);
+        break;
+    case MouseDraggedMethodId:
+        return _MouseDraggedMethod.connect(group, listener, at);
+        break;
+    case MouseWheelMovedMethodId:
+        return _MouseWheelMovedMethod.connect(group, listener, at);
+        break;
+    case KeyPressedMethodId:
+        return _KeyPressedMethod.connect(group, listener, at);
+        break;
+    case KeyReleasedMethodId:
+        return _KeyReleasedMethod.connect(group, listener, at);
+        break;
+    case KeyTypedMethodId:
+        return _KeyTypedMethod.connect(group, listener, at);
+        break;
+    case UpdateMethodId:
+        return _UpdateMethod.connect(group, listener, at);
+        break;
+    default:
+        assert(false && "No method defined with that ID");
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  WindowEventProducerBase::disconnectMethod(UInt32 methodId, const BaseMethodType::group_type &group)
+{
+    switch(methodId)
+    {
+    case WindowOpenedMethodId:
+        _WindowOpenedMethod.disconnect(group);
+        break;
+    case WindowClosingMethodId:
+        _WindowClosingMethod.disconnect(group);
+        break;
+    case WindowClosedMethodId:
+        _WindowClosedMethod.disconnect(group);
+        break;
+    case WindowIconifiedMethodId:
+        _WindowIconifiedMethod.disconnect(group);
+        break;
+    case WindowDeiconifiedMethodId:
+        _WindowDeiconifiedMethod.disconnect(group);
+        break;
+    case WindowActivatedMethodId:
+        _WindowActivatedMethod.disconnect(group);
+        break;
+    case WindowDeactivatedMethodId:
+        _WindowDeactivatedMethod.disconnect(group);
+        break;
+    case WindowEnteredMethodId:
+        _WindowEnteredMethod.disconnect(group);
+        break;
+    case WindowExitedMethodId:
+        _WindowExitedMethod.disconnect(group);
+        break;
+    case MouseClickedMethodId:
+        _MouseClickedMethod.disconnect(group);
+        break;
+    case MouseEnteredMethodId:
+        _MouseEnteredMethod.disconnect(group);
+        break;
+    case MouseExitedMethodId:
+        _MouseExitedMethod.disconnect(group);
+        break;
+    case MousePressedMethodId:
+        _MousePressedMethod.disconnect(group);
+        break;
+    case MouseReleasedMethodId:
+        _MouseReleasedMethod.disconnect(group);
+        break;
+    case MouseMovedMethodId:
+        _MouseMovedMethod.disconnect(group);
+        break;
+    case MouseDraggedMethodId:
+        _MouseDraggedMethod.disconnect(group);
+        break;
+    case MouseWheelMovedMethodId:
+        _MouseWheelMovedMethod.disconnect(group);
+        break;
+    case KeyPressedMethodId:
+        _KeyPressedMethod.disconnect(group);
+        break;
+    case KeyReleasedMethodId:
+        _KeyReleasedMethod.disconnect(group);
+        break;
+    case KeyTypedMethodId:
+        _KeyTypedMethod.disconnect(group);
+        break;
+    case UpdateMethodId:
+        _UpdateMethod.disconnect(group);
+        break;
+    default:
+        assert(false && "No method defined with that ID");
+        break;
+    }
+}
+
+void  WindowEventProducerBase::disconnectAllSlotsMethod(UInt32 methodId)
+{
+    switch(methodId)
+    {
+    case WindowOpenedMethodId:
+        _WindowOpenedMethod.disconnect_all_slots();
+        break;
+    case WindowClosingMethodId:
+        _WindowClosingMethod.disconnect_all_slots();
+        break;
+    case WindowClosedMethodId:
+        _WindowClosedMethod.disconnect_all_slots();
+        break;
+    case WindowIconifiedMethodId:
+        _WindowIconifiedMethod.disconnect_all_slots();
+        break;
+    case WindowDeiconifiedMethodId:
+        _WindowDeiconifiedMethod.disconnect_all_slots();
+        break;
+    case WindowActivatedMethodId:
+        _WindowActivatedMethod.disconnect_all_slots();
+        break;
+    case WindowDeactivatedMethodId:
+        _WindowDeactivatedMethod.disconnect_all_slots();
+        break;
+    case WindowEnteredMethodId:
+        _WindowEnteredMethod.disconnect_all_slots();
+        break;
+    case WindowExitedMethodId:
+        _WindowExitedMethod.disconnect_all_slots();
+        break;
+    case MouseClickedMethodId:
+        _MouseClickedMethod.disconnect_all_slots();
+        break;
+    case MouseEnteredMethodId:
+        _MouseEnteredMethod.disconnect_all_slots();
+        break;
+    case MouseExitedMethodId:
+        _MouseExitedMethod.disconnect_all_slots();
+        break;
+    case MousePressedMethodId:
+        _MousePressedMethod.disconnect_all_slots();
+        break;
+    case MouseReleasedMethodId:
+        _MouseReleasedMethod.disconnect_all_slots();
+        break;
+    case MouseMovedMethodId:
+        _MouseMovedMethod.disconnect_all_slots();
+        break;
+    case MouseDraggedMethodId:
+        _MouseDraggedMethod.disconnect_all_slots();
+        break;
+    case MouseWheelMovedMethodId:
+        _MouseWheelMovedMethod.disconnect_all_slots();
+        break;
+    case KeyPressedMethodId:
+        _KeyPressedMethod.disconnect_all_slots();
+        break;
+    case KeyReleasedMethodId:
+        _KeyReleasedMethod.disconnect_all_slots();
+        break;
+    case KeyTypedMethodId:
+        _KeyTypedMethod.disconnect_all_slots();
+        break;
+    case UpdateMethodId:
+        _UpdateMethod.disconnect_all_slots();
+        break;
+    default:
+        assert(false && "No method defined with that ID");
+        break;
+    }
+}
+
+bool  WindowEventProducerBase::isEmptyMethod(UInt32 methodId) const
+{
+    switch(methodId)
+    {
+    case WindowOpenedMethodId:
+        return _WindowOpenedMethod.empty();
+        break;
+    case WindowClosingMethodId:
+        return _WindowClosingMethod.empty();
+        break;
+    case WindowClosedMethodId:
+        return _WindowClosedMethod.empty();
+        break;
+    case WindowIconifiedMethodId:
+        return _WindowIconifiedMethod.empty();
+        break;
+    case WindowDeiconifiedMethodId:
+        return _WindowDeiconifiedMethod.empty();
+        break;
+    case WindowActivatedMethodId:
+        return _WindowActivatedMethod.empty();
+        break;
+    case WindowDeactivatedMethodId:
+        return _WindowDeactivatedMethod.empty();
+        break;
+    case WindowEnteredMethodId:
+        return _WindowEnteredMethod.empty();
+        break;
+    case WindowExitedMethodId:
+        return _WindowExitedMethod.empty();
+        break;
+    case MouseClickedMethodId:
+        return _MouseClickedMethod.empty();
+        break;
+    case MouseEnteredMethodId:
+        return _MouseEnteredMethod.empty();
+        break;
+    case MouseExitedMethodId:
+        return _MouseExitedMethod.empty();
+        break;
+    case MousePressedMethodId:
+        return _MousePressedMethod.empty();
+        break;
+    case MouseReleasedMethodId:
+        return _MouseReleasedMethod.empty();
+        break;
+    case MouseMovedMethodId:
+        return _MouseMovedMethod.empty();
+        break;
+    case MouseDraggedMethodId:
+        return _MouseDraggedMethod.empty();
+        break;
+    case MouseWheelMovedMethodId:
+        return _MouseWheelMovedMethod.empty();
+        break;
+    case KeyPressedMethodId:
+        return _KeyPressedMethod.empty();
+        break;
+    case KeyReleasedMethodId:
+        return _KeyReleasedMethod.empty();
+        break;
+    case KeyTypedMethodId:
+        return _KeyTypedMethod.empty();
+        break;
+    case UpdateMethodId:
+        return _UpdateMethod.empty();
+        break;
+    default:
+        assert(false && "No method defined with that ID");
+        return true;
+        break;
+    }
+}
+
+UInt32  WindowEventProducerBase::numSlotsMethod(UInt32 methodId) const
+{
+    switch(methodId)
+    {
+    case WindowOpenedMethodId:
+        return _WindowOpenedMethod.num_slots();
+        break;
+    case WindowClosingMethodId:
+        return _WindowClosingMethod.num_slots();
+        break;
+    case WindowClosedMethodId:
+        return _WindowClosedMethod.num_slots();
+        break;
+    case WindowIconifiedMethodId:
+        return _WindowIconifiedMethod.num_slots();
+        break;
+    case WindowDeiconifiedMethodId:
+        return _WindowDeiconifiedMethod.num_slots();
+        break;
+    case WindowActivatedMethodId:
+        return _WindowActivatedMethod.num_slots();
+        break;
+    case WindowDeactivatedMethodId:
+        return _WindowDeactivatedMethod.num_slots();
+        break;
+    case WindowEnteredMethodId:
+        return _WindowEnteredMethod.num_slots();
+        break;
+    case WindowExitedMethodId:
+        return _WindowExitedMethod.num_slots();
+        break;
+    case MouseClickedMethodId:
+        return _MouseClickedMethod.num_slots();
+        break;
+    case MouseEnteredMethodId:
+        return _MouseEnteredMethod.num_slots();
+        break;
+    case MouseExitedMethodId:
+        return _MouseExitedMethod.num_slots();
+        break;
+    case MousePressedMethodId:
+        return _MousePressedMethod.num_slots();
+        break;
+    case MouseReleasedMethodId:
+        return _MouseReleasedMethod.num_slots();
+        break;
+    case MouseMovedMethodId:
+        return _MouseMovedMethod.num_slots();
+        break;
+    case MouseDraggedMethodId:
+        return _MouseDraggedMethod.num_slots();
+        break;
+    case MouseWheelMovedMethodId:
+        return _MouseWheelMovedMethod.num_slots();
+        break;
+    case KeyPressedMethodId:
+        return _KeyPressedMethod.num_slots();
+        break;
+    case KeyReleasedMethodId:
+        return _KeyReleasedMethod.num_slots();
+        break;
+    case KeyTypedMethodId:
+        return _KeyTypedMethod.num_slots();
+        break;
+    case UpdateMethodId:
+        return _UpdateMethod.num_slots();
+        break;
+    default:
+        assert(false && "No method defined with that ID");
+        return 0;
+        break;
+    }
+}
 
 
 /*------------------------- constructors ----------------------------------*/
 
 WindowEventProducerBase::WindowEventProducerBase(void) :
-    _Producer(&getProducerType()),
     Inherited(),
     _sfEnabled                (),
     _sfUseCallbackForDraw     (bool(false)),
     _sfUseCallbackForReshape  (bool(false)),
     _sfLastUpdateTime         (Time(-1.0)),
     _sfLockCursor             (bool(false))
-    ,_sfEventProducer(&_Producer)
 {
 }
 
 WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &source) :
-    _Producer(&source.getProducerType()),
     Inherited(source),
     _sfEnabled                (source._sfEnabled                ),
     _sfUseCallbackForDraw     (source._sfUseCallbackForDraw     ),
     _sfUseCallbackForReshape  (source._sfUseCallbackForReshape  ),
     _sfLastUpdateTime         (source._sfLastUpdateTime         ),
     _sfLockCursor             (source._sfLockCursor             )
-    ,_sfEventProducer(&_Producer)
 {
 }
 
@@ -858,27 +1526,233 @@ EditFieldHandlePtr WindowEventProducerBase::editHandleLockCursor     (void)
 }
 
 
-GetFieldHandlePtr WindowEventProducerBase::getHandleEventProducer        (void) const
+GetMethodHandlePtr WindowEventProducerBase::getHandleWindowOpenedSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<WindowOpenedMethodType>(
+             const_cast<WindowOpenedMethodType *>(&_WindowOpenedMethod),
+             _producerType.getMethodDescription(WindowOpenedMethodId),
              const_cast<WindowEventProducerBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr WindowEventProducerBase::editHandleEventProducer       (void)
+GetMethodHandlePtr WindowEventProducerBase::getHandleWindowClosingSignal(void) const
 {
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<WindowClosingMethodType>(
+             const_cast<WindowClosingMethodType *>(&_WindowClosingMethod),
+             _producerType.getMethodDescription(WindowClosingMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
 
+    return returnValue;
+}
 
-    editSField(EventProducerFieldMask);
+GetMethodHandlePtr WindowEventProducerBase::getHandleWindowClosedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<WindowClosedMethodType>(
+             const_cast<WindowClosedMethodType *>(&_WindowClosedMethod),
+             _producerType.getMethodDescription(WindowClosedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleWindowIconifiedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<WindowIconifiedMethodType>(
+             const_cast<WindowIconifiedMethodType *>(&_WindowIconifiedMethod),
+             _producerType.getMethodDescription(WindowIconifiedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleWindowDeiconifiedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<WindowDeiconifiedMethodType>(
+             const_cast<WindowDeiconifiedMethodType *>(&_WindowDeiconifiedMethod),
+             _producerType.getMethodDescription(WindowDeiconifiedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleWindowActivatedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<WindowActivatedMethodType>(
+             const_cast<WindowActivatedMethodType *>(&_WindowActivatedMethod),
+             _producerType.getMethodDescription(WindowActivatedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleWindowDeactivatedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<WindowDeactivatedMethodType>(
+             const_cast<WindowDeactivatedMethodType *>(&_WindowDeactivatedMethod),
+             _producerType.getMethodDescription(WindowDeactivatedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleWindowEnteredSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<WindowEnteredMethodType>(
+             const_cast<WindowEnteredMethodType *>(&_WindowEnteredMethod),
+             _producerType.getMethodDescription(WindowEnteredMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleWindowExitedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<WindowExitedMethodType>(
+             const_cast<WindowExitedMethodType *>(&_WindowExitedMethod),
+             _producerType.getMethodDescription(WindowExitedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleMouseClickedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<MouseClickedMethodType>(
+             const_cast<MouseClickedMethodType *>(&_MouseClickedMethod),
+             _producerType.getMethodDescription(MouseClickedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleMouseEnteredSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<MouseEnteredMethodType>(
+             const_cast<MouseEnteredMethodType *>(&_MouseEnteredMethod),
+             _producerType.getMethodDescription(MouseEnteredMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleMouseExitedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<MouseExitedMethodType>(
+             const_cast<MouseExitedMethodType *>(&_MouseExitedMethod),
+             _producerType.getMethodDescription(MouseExitedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleMousePressedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<MousePressedMethodType>(
+             const_cast<MousePressedMethodType *>(&_MousePressedMethod),
+             _producerType.getMethodDescription(MousePressedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleMouseReleasedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<MouseReleasedMethodType>(
+             const_cast<MouseReleasedMethodType *>(&_MouseReleasedMethod),
+             _producerType.getMethodDescription(MouseReleasedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleMouseMovedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<MouseMovedMethodType>(
+             const_cast<MouseMovedMethodType *>(&_MouseMovedMethod),
+             _producerType.getMethodDescription(MouseMovedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleMouseDraggedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<MouseDraggedMethodType>(
+             const_cast<MouseDraggedMethodType *>(&_MouseDraggedMethod),
+             _producerType.getMethodDescription(MouseDraggedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleMouseWheelMovedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<MouseWheelMovedMethodType>(
+             const_cast<MouseWheelMovedMethodType *>(&_MouseWheelMovedMethod),
+             _producerType.getMethodDescription(MouseWheelMovedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleKeyPressedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<KeyPressedMethodType>(
+             const_cast<KeyPressedMethodType *>(&_KeyPressedMethod),
+             _producerType.getMethodDescription(KeyPressedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleKeyReleasedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<KeyReleasedMethodType>(
+             const_cast<KeyReleasedMethodType *>(&_KeyReleasedMethod),
+             _producerType.getMethodDescription(KeyReleasedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleKeyTypedSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<KeyTypedMethodType>(
+             const_cast<KeyTypedMethodType *>(&_KeyTypedMethod),
+             _producerType.getMethodDescription(KeyTypedMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
+
+    return returnValue;
+}
+
+GetMethodHandlePtr WindowEventProducerBase::getHandleUpdateSignal(void) const
+{
+    GetMethodHandlePtr returnValue(
+        new  GetTypedMethodHandle<UpdateMethodType>(
+             const_cast<UpdateMethodType *>(&_UpdateMethod),
+             _producerType.getMethodDescription(UpdateMethodId),
+             const_cast<WindowEventProducerBase *>(this)));
 
     return returnValue;
 }

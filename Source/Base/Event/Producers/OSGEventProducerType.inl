@@ -125,6 +125,23 @@ UInt32 EventProducerType::getNumMethodDescs(void) const
     return _vDescVec.size();
 }
 
+<<<<<<< Updated upstream
+=======
+inline
+UInt32 EventProducerType::getProducedEventId(const std::string &ProducedEventName) const
+{
+    const MethodDescription * MethodDesc = findMethodDescription(ProducedEventName);
+    if(MethodDesc == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        return MethodDesc->getMethodId();
+    }
+}
+
+>>>>>>> Stashed changes
 
 /*-------------------------------------------------------------------------*/
 /*                                 Is                                      */

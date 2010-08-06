@@ -50,15 +50,11 @@
 #include "OSGThread.h"
 #include "OSGRenderAction.h"
 #include "OSGPathType.h"
-
-#include "OSGKeyListener.h"
 #include "OSGKeyEvent.h"
-#include "OSGEventConnection.h"
-#include "OSGMouseListener.h"
-#include "OSGMouseMotionListener.h"
-#include "OSGMouseWheelListener.h"
-#include "OSGWindowListener.h"
-#include "OSGUpdateListener.h"
+#include "OSGMouseEvent.h"
+#include "OSGMouseWheelEvent.h"
+#include "OSGWindowEvent.h"
+#include "OSGUpdateEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -136,28 +132,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    EventConnection addMouseListener(MouseListenerPtr Listener);
-    EventConnection addMouseMotionListener(MouseMotionListenerPtr Listener);
-    EventConnection addMouseWheelListener(MouseWheelListenerPtr Listener);
-    EventConnection addKeyListener(KeyListenerPtr Listener);
-    EventConnection addWindowListener(WindowListenerPtr Listener);
-    EventConnection addUpdateListener(UpdateListenerPtr Listener);
-    
-    bool isMouseListenerAttached(MouseListenerPtr Listener) const;
-    bool isMouseMotionListenerAttached(MouseMotionListenerPtr Listener) const;
-    bool isMouseWheelListenerAttached(MouseWheelListenerPtr Listener) const;
-    bool isKeyListenerAttached(KeyListenerPtr Listener) const;
-    bool isWindowListenerAttached(WindowListenerPtr Listener) const;
-    bool isUpdateListenerAttached(UpdateListenerPtr Listener) const;
-
-    void removeMouseListener(MouseListenerPtr Listener);
-    void removeMouseMotionListener(MouseMotionListenerPtr Listener);
-    void removeMouseWheelListener(MouseWheelListenerPtr Listener);
-    void removeKeyListener(KeyListenerPtr Listener);
-    void removeWindowListener(WindowListenerPtr Listener);
-    void removeUpdateListener(UpdateListenerPtr Listener);
-
-    void detatchAllListeners(void);
 
     virtual WindowUnrecPtr initWindow(void);
 
@@ -312,35 +286,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
 
 	CursorRegionList _CursorRegions;
 	void updateCursor(Pnt2f MousePos);
-
-	typedef std::set<MouseListenerPtr> MouseListenerSet;
-    typedef MouseListenerSet::iterator MouseListenerSetItor;
-    typedef MouseListenerSet::const_iterator MouseListenerSetConstItor;
-    typedef std::set<MouseMotionListenerPtr> MouseMotionListenerSet;
-    typedef MouseMotionListenerSet::iterator MouseMotionListenerSetItor;
-    typedef MouseMotionListenerSet::const_iterator MouseMotionListenerSetConstItor;
-    typedef std::set<MouseWheelListenerPtr> MouseWheelListenerSet;
-    typedef MouseWheelListenerSet::iterator MouseWheelListenerSetItor;
-    typedef MouseWheelListenerSet::const_iterator MouseWheelListenerSetConstItor;
-    typedef std::set<KeyListenerPtr> KeyListenerSet;
-    typedef KeyListenerSet::iterator KeyListenerSetItor;
-    typedef KeyListenerSet::const_iterator KeyListenerSetConstItor;
-	
-	typedef std::set<WindowListenerPtr> WindowListenerSet;
-    typedef WindowListenerSet::iterator WindowListenerSetItor;
-    typedef WindowListenerSet::const_iterator WindowListenerSetConstItor;
-
-    MouseListenerSet       _MouseListeners;
-    MouseMotionListenerSet _MouseMotionListeners;
-    MouseWheelListenerSet  _MouseWheelListeners;
-    KeyListenerSet         _KeyListeners;
-    WindowListenerSet       _WindowListeners;
-
-	typedef std::set<UpdateListenerPtr> UpdateListenerSet;
-    typedef UpdateListenerSet::iterator UpdateListenerSetItor;
-    typedef UpdateListenerSet::const_iterator UpdateListenerSetConstItor;
-	
-    UpdateListenerSet       _UpdateListeners;
 
     struct Click
     {

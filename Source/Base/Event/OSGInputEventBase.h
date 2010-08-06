@@ -65,7 +65,6 @@
 
 #include "OSGEvent.h" // Parent
 
-#include "OSGSysFields.h"               // Consumed type
 
 #include "OSGInputEventFields.h"
 
@@ -86,23 +85,13 @@ class OSG_BASE_DLLMAPPING InputEventBase : public Event
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(InputEvent);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
   public:
 
-    enum
-    {
-        ConsumedFieldId = Inherited::NextFieldId,
-        NextFieldId = ConsumedFieldId + 1
-    };
-
-    static const OSG::BitVector ConsumedFieldMask =
-        (TypeTraits<BitVector>::One << ConsumedFieldId);
-    static const OSG::BitVector NextFieldMask =
-        (TypeTraits<BitVector>::One << NextFieldId);
-        
-    typedef SFBool            SFConsumedType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -121,31 +110,6 @@ class OSG_BASE_DLLMAPPING InputEventBase : public Event
     virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-
-                  SFBool              *editSFConsumed       (void);
-            const SFBool              *getSFConsumed        (void) const;
-
-
-                  bool                &editConsumed       (void);
-                  bool                 getConsumed        (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-            void setConsumed       (const bool value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr MField Set                                */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -197,13 +161,6 @@ class OSG_BASE_DLLMAPPING InputEventBase : public Event
     static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFBool            _sfConsumed;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
@@ -228,8 +185,6 @@ class OSG_BASE_DLLMAPPING InputEventBase : public Event
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleConsumed        (void) const;
-    EditFieldHandlePtr editHandleConsumed       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

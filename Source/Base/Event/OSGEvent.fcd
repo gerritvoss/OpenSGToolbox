@@ -37,4 +37,17 @@ Abstract Base class for Event Objects.  Event containers have onle read-only fie
 	>
     The Timestamp of when this Event was produced.
 	</Field>
+<<<<<<< Updated upstream
+=======
+	<Field
+		name="Consumed"
+		type="bool"
+        publicRead="true"
+		cardinality="single"
+		visibility="internal"
+		access="public"
+		defaultValue="false"
+	>
+	</Field>
+>>>>>>> Stashed changes
 </FieldContainer>

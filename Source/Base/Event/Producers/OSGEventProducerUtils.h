@@ -36,31 +36,33 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+<<<<<<< Updated upstream:Source/Base/Event/Listeners/OSGEventListener.inl
+#ifndef _OSGEVENTLISTENER_INL_
+#define _OSGEVENTLISTENER_INL_
 
-#ifndef _OSGCONTRIBPARTICLESYSTEMDEF_H_
-#define _OSGCONTRIBPARTICLESYSTEMDEF_H_
-#ifdef __sgi
-#pragma once
-#endif
+OSG_BEGIN_NAMESPACE
 
-//---------------------------------------------------------------------------
-//  Defines
-//---------------------------------------------------------------------------
-#if defined(WIN32)
-#   ifdef OSG_COMPILECONTRIBPARTICLESYSTEMLIB
-#       define OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING  __declspec(dllexport)
-#       define OSG_CONTRIBPARTICLESYSTEM_EXPIMP_TMPL 
-#   else
-#       define OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING  __declspec(dllimport)
-#       define OSG_CONTRIBPARTICLESYSTEM_EXPIMP_TMPL   extern
-#   endif
-#else
-#define OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING
-#define OSG_CONTRIBPARTICLESYSTEM_EXPIMP_TMPL
-#endif
+OSG_END_NAMESPACE
 
-#endif /* _OSGPARTICLESYSTEMDEF_H_ */
 
+#endif /* _OSGEVENTLISTENER_INL_ */
+=======
+#ifndef _OSGEVENTPRODUCERUTILS_H_
+#define _OSGEVENTPRODUCERUTILS_H_
+
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
+#include "OSGBaseTypes.h"
+#include "OSGIOStream.h"
+#include "OSGEvent.h"
+
+
+OSG_BEGIN_NAMESPACE
+
+void OSG_BASE_DLLMAPPING putEventProducerToStream(OutStream &outVal, const ReflexiveContainer& container);
+bool OSG_BASE_DLLMAPPING getEventProducerFromCString(const Char8     *&inVal, ReflexiveContainer& container);
+
+OSG_END_NAMESPACE
+
+#endif /* _OSGEVENTPRODUCERUTILS_H_ */
+>>>>>>> Stashed changes:Source/Base/Event/Producers/OSGEventProducerUtils.h

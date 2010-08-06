@@ -36,31 +36,63 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+<<<<<<< Updated upstream:Source/Base/Event/Listeners/OSGEventListener.cpp
+#include "OSGConfig.h"
 
-#ifndef _OSGCONTRIBPARTICLESYSTEMDEF_H_
-#define _OSGCONTRIBPARTICLESYSTEMDEF_H_
-#ifdef __sgi
-#pragma once
-#endif
+#include "OSGEventListener.h"
+
+OSG_USING_NAMESPACE
 
 //---------------------------------------------------------------------------
-//  Defines
+//  Class
 //---------------------------------------------------------------------------
-#if defined(WIN32)
-#   ifdef OSG_COMPILECONTRIBPARTICLESYSTEMLIB
-#       define OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING  __declspec(dllexport)
-#       define OSG_CONTRIBPARTICLESYSTEM_EXPIMP_TMPL 
-#   else
-#       define OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING  __declspec(dllimport)
-#       define OSG_CONTRIBPARTICLESYSTEM_EXPIMP_TMPL   extern
-#   endif
-#else
-#define OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING
-#define OSG_CONTRIBPARTICLESYSTEM_EXPIMP_TMPL
-#endif
 
-#endif /* _OSGPARTICLESYSTEMDEF_H_ */
+void EventListener::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
+{
+    //Do Nothing
+}
 
+=======
+#ifndef _OSGCONSUMABLEEVENTCOMBINER_H_
+#define _OSGCONSUMABLEEVENTCOMBINER_H_
+
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
+
+#include "OSGEvent.h"
+
+
+OSG_BEGIN_NAMESPACE
+
+class OSG_BASE_DLLMAPPING ConsumableEventCombiner
+{
+private:
+    mutable const Event const * _pEvent;
+
+public:
+    ConsumableEventCombiner(void);
+
+    ConsumableEventCombiner(Event const * e);
+
+    ConsumableEventCombiner(const ConsumableEventCombiner& );
+
+    typedef void result_type;
+
+    template<typename InputIterator>
+    result_type operator()(InputIterator first, InputIterator last) const
+    {
+        while (first != last) 
+        {
+            if(_pEvent->isConsumed())
+            {
+                break;
+            }
+            ++first;
+        }
+        _pEvent = NULL;
+    }
+};
+OSG_END_NAMESPACE
+
+#endif /* _OSGCONSUMABLEEVENTCOMBINER_H_ */
+>>>>>>> Stashed changes:Source/Base/Event/Producers/OSGConsumableEventCombiner.h

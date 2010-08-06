@@ -77,7 +77,8 @@ class OSG_BASE_DLLMAPPING Activity : public ActivityBase
 
     /*! \}                                                                 */
 
-    virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId) = 0;
+    void eventProduced(Event* const EventDetails,
+                       UInt32 ProducedEventId);
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -107,6 +108,10 @@ class OSG_BASE_DLLMAPPING Activity : public ActivityBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+
+    //Connected Signals
+    //* to the container, MethodId
+    std::list< std::pair< ReflexiveContainer const *, UInt32> > _MethodsConnectedTo;
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -78,10 +78,6 @@ class OSG_BASE_DLLMAPPING InputEvent : public InputEventBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    virtual void consume(void);
-
-    bool isConsumed(void) const;
     
     /*=========================  PROTECTED  ===============================*/
 

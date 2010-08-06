@@ -12,6 +12,7 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
+<<<<<<< Updated upstream
 	<Field
 		name="Consumed"
 		type="bool"
@@ -22,4 +23,6 @@
 		defaultValue="false"
 	>
 	</Field>
+=======
+>>>>>>> Stashed changes
 </FieldContainer>
