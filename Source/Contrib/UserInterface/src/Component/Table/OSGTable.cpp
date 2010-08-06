@@ -90,6 +90,11 @@ void Table::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+bool Table::useBoundsForClipping(void) const
+{
+    return false;
+}
+
 void Table::startEditing(const UInt32& Row, const UInt32& Column)
 {
     //If the table is already editing

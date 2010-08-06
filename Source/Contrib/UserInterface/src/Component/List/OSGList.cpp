@@ -83,6 +83,12 @@ void List::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+bool List::useBoundsForClipping(void) const
+{
+    return false;
+}
+
 Vec2f List::getContentRequestedSize(void) const
 {
     UInt32 ListLength;

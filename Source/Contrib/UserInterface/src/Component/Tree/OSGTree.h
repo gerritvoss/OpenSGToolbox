@@ -395,6 +395,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    virtual bool useBoundsForClipping(void) const;
 
     TreeSelectionModelPtr _SelectionModel;
 
