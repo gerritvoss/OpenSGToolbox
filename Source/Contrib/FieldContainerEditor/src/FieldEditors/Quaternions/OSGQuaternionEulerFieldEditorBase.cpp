@@ -88,7 +88,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<QuaternionEulerFieldEditor *>::_type("QuaternionEulerFieldEditorPtr", "FieldEditorComponentPtr");
+DataType FieldTraits<QuaternionEulerFieldEditor *>::_type("QuaternionEulerFieldEditorPtr", "SingleFieldEditorComponentPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(QuaternionEulerFieldEditor *)
@@ -125,7 +125,7 @@ QuaternionEulerFieldEditorBase::TypeObject QuaternionEulerFieldEditorBase::_type
     "\n"
     "<FieldContainer\n"
     "\tname=\"QuaternionEulerFieldEditor\"\n"
-    "\tparent=\"FieldEditorComponent\"\n"
+    "\tparent=\"SingleFieldEditorComponent\"\n"
     "    library=\"ContribFieldContainerEditor\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"

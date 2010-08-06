@@ -57,7 +57,16 @@ protected:
 	typedef FieldEditCommand Inherited;
 	typedef SetFieldValueCommandPtr RefPtr;
 
-    SetFieldValueCommand(FieldContainer* FC, UInt32 FieldId, const std::string& Value, UInt32 Index = 0);
+    SetFieldValueCommand(FieldContainer* FC,
+                         UInt32 FieldId,
+                         const std::string& Value,
+                         UInt32 Index = 0);
+
+    SetFieldValueCommand(FieldContainer* FC,
+                         UInt32 FieldId,
+                         const std::string& Value,
+                         const std::string& PrevValue,
+                         UInt32 Index = 0);
 
 	SetFieldValueCommand(const SetFieldValueCommand& source);
 
@@ -91,7 +100,16 @@ public:
 
 	virtual ~SetFieldValueCommand(void);
 	
-	static SetFieldValueCommandPtr create(FieldContainer* FC, UInt32 FieldId, const std::string& Value, UInt32 Index = 0);
+	static SetFieldValueCommandPtr create(FieldContainer* FC,
+                                          UInt32 FieldId,
+                                          const std::string& Value,
+                                          UInt32 Index = 0);
+
+	static SetFieldValueCommandPtr create(FieldContainer* FC,
+                                          UInt32 FieldId,
+                                          const std::string& Value,
+                                          const std::string& PrevValue,
+                                          UInt32 Index = 0);
 };
 
 OSG_END_NAMESPACE

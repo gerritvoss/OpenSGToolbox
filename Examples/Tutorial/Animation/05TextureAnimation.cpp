@@ -148,6 +148,8 @@ public:
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
+	OSG::preloadSharedObject("OSGFileIO");
+    OSG::preloadSharedObject("OSGImageFileIO");
     // OSG init
     osgInit(argc,argv);
 

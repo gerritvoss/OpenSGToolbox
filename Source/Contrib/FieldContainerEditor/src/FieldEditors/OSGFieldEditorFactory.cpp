@@ -76,17 +76,17 @@ A FieldEditorFactory.
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool FieldEditorFactoryBase::setDefaultEditor(const DataType* type, const FieldContainerType* editorType)
+bool FieldEditorFactoryBase::setSingleDefaultEditor(const DataType* type, const FieldContainerType* editorType)
 {
     return setEditorType(type, editorType, "Default");
 }
 
-bool FieldEditorFactoryBase::addDefaultEditor(const DataType* type, const FieldContainerType* editorType)
+bool FieldEditorFactoryBase::addSingleDefaultEditor(const DataType* type, const FieldContainerType* editorType)
 {
     return addEditorType(type, editorType, "Default");
 }
 
-const FieldContainerType* FieldEditorFactoryBase::getDefaultEditorType(const DataType* type) const
+const FieldContainerType* FieldEditorFactoryBase::getSingleDefaultEditorType(const DataType* type) const
 {
     const FieldContainerType* editorType(getEditorType(type, "Default"));
     if(editorType == NULL)
@@ -101,9 +101,39 @@ const FieldContainerType* FieldEditorFactoryBase::getDefaultEditorType(const Dat
     return editorType;
 }
 
-bool FieldEditorFactoryBase::removeDefaultEditor(const DataType* type)
+bool FieldEditorFactoryBase::removeSingleDefaultEditor(const DataType* type)
 {
     return removeEditorType(type, "Default");
+}
+
+bool FieldEditorFactoryBase::setMultiDefaultEditor(const DataType* type, const FieldContainerType* editorType)
+{
+    return setEditorType(type, editorType, "MultiDefault");
+}
+
+bool FieldEditorFactoryBase::addMultiDefaultEditor(const DataType* type, const FieldContainerType* editorType)
+{
+    return addEditorType(type, editorType, "MultiDefault");
+}
+
+const FieldContainerType* FieldEditorFactoryBase::getMultiDefaultEditorType(const DataType* type) const
+{
+    const FieldContainerType* editorType(getEditorType(type, "MultiDefault"));
+    if(editorType == NULL)
+    {
+        EditorMap::const_iterator OuterMapItor(_Editors.find(type));
+        if(OuterMapItor != _Editors.end() &&
+            OuterMapItor->second.size() > 0)
+        {
+            editorType = OuterMapItor->second.begin()->second;
+        }
+    }
+    return editorType;
+}
+
+bool FieldEditorFactoryBase::removeMultiDefaultEditor(const DataType* type)
+{
+    return removeEditorType(type, "MultiDefault");
 }
 
 bool FieldEditorFactoryBase::setEditorType(const DataType* type, const FieldContainerType* editorType, const std::string& editorName)
@@ -188,13 +218,20 @@ const FieldContainerType* FieldEditorFactoryBase::getEditorType(const DataType* 
     return Itor->second;
 }
 
-
 FieldEditorComponentTransitPtr FieldEditorFactoryBase::createDefaultEditor(FieldContainer* fc, 
-                                                                         UInt32 FieldId, 
-                                                                         CommandManagerPtr CmdManager,
-                                                                         UInt32 FieldIndex) const
+                                                                                UInt32 FieldId, 
+                                                                                CommandManagerPtr CmdManager,
+                                                                                UInt32 FieldIndex) const
 {
-    const FieldContainerType* EditorType(getDefaultEditorType(&(fc->getFieldDescription(FieldId)->getFieldType().getContentType())));
+    const FieldContainerType* EditorType(NULL);
+    if(fc->getFieldDescription(FieldId)->getFieldType().getCardinality() == FieldType::SingleField)
+    {
+        EditorType = getSingleDefaultEditorType(&(fc->getFieldDescription(FieldId)->getFieldType().getContentType()));
+    }
+    else
+    {
+        EditorType = getMultiDefaultEditorType(&(fc->getFieldDescription(FieldId)->getFieldType().getContentType()));
+    }
 
     if(EditorType == NULL)
     {
@@ -204,6 +241,43 @@ FieldEditorComponentTransitPtr FieldEditorFactoryBase::createDefaultEditor(Field
     FieldEditorComponentTransitPtr comp = dynamic_pointer_cast<FieldEditorComponent>(EditorType->createContainer());
     comp->setCommandManager(CmdManager);
     comp->attachField(fc,FieldId, FieldIndex);
+
+    return comp;
+}
+
+FieldEditorComponentTransitPtr FieldEditorFactoryBase::createSingleDefaultEditor(FieldContainer* fc, 
+                                                                         UInt32 FieldId, 
+                                                                         CommandManagerPtr CmdManager,
+                                                                         UInt32 FieldIndex) const
+{
+    const FieldContainerType* EditorType(getSingleDefaultEditorType(&(fc->getFieldDescription(FieldId)->getFieldType().getContentType())));
+
+    if(EditorType == NULL)
+    {
+        return FieldEditorComponentTransitPtr(NULL);
+    }
+
+    FieldEditorComponentTransitPtr comp = dynamic_pointer_cast<FieldEditorComponent>(EditorType->createContainer());
+    comp->setCommandManager(CmdManager);
+    comp->attachField(fc,FieldId, FieldIndex);
+
+    return comp;
+}
+
+FieldEditorComponentTransitPtr FieldEditorFactoryBase::createMultiDefaultEditor(FieldContainer* fc, 
+                                                                         UInt32 FieldId, 
+                                                                         CommandManagerPtr CmdManager) const
+{
+    const FieldContainerType* EditorType(getMultiDefaultEditorType(&(fc->getFieldDescription(FieldId)->getFieldType().getContentType())));
+
+    if(EditorType == NULL)
+    {
+        return FieldEditorComponentTransitPtr(NULL);
+    }
+
+    FieldEditorComponentTransitPtr comp = dynamic_pointer_cast<FieldEditorComponent>(EditorType->createContainer());
+    comp->setCommandManager(CmdManager);
+    comp->attachField(fc,FieldId);
 
     return comp;
 }

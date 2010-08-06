@@ -119,6 +119,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var bool            FieldContainerTreeModelBase::_sfShowEventProducers
+    
+*/
+
 /*! \var bool            FieldContainerTreeModelBase::_sfShowCallbackFunctors
     
 */
@@ -261,6 +265,18 @@ void FieldContainerTreeModelBase::classDescInserter(TypeObject &oType)
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
+        "ShowEventProducers",
+        "",
+        ShowEventProducersFieldId, ShowEventProducersFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&FieldContainerTreeModel::editHandleShowEventProducers),
+        static_cast<FieldGetMethodSig >(&FieldContainerTreeModel::getHandleShowEventProducers));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
         "ShowCallbackFunctors",
         "",
         ShowCallbackFunctorsFieldId, ShowCallbackFunctorsFieldMask,
@@ -382,6 +398,16 @@ FieldContainerTreeModelBase::TypeObject FieldContainerTreeModelBase::_type(
     "   </Field>\n"
     "\t<Field\n"
     "\t\tname=\"ShowAttachments\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ShowEventProducers\"\n"
     "\t\ttype=\"bool\"\n"
     "        category=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
@@ -541,6 +567,19 @@ const SFBool *FieldContainerTreeModelBase::getSFShowAttachments(void) const
 }
 
 
+SFBool *FieldContainerTreeModelBase::editSFShowEventProducers(void)
+{
+    editSField(ShowEventProducersFieldMask);
+
+    return &_sfShowEventProducers;
+}
+
+const SFBool *FieldContainerTreeModelBase::getSFShowEventProducers(void) const
+{
+    return &_sfShowEventProducers;
+}
+
+
 SFBool *FieldContainerTreeModelBase::editSFShowCallbackFunctors(void)
 {
     editSField(ShowCallbackFunctorsFieldMask);
@@ -600,6 +639,10 @@ UInt32 FieldContainerTreeModelBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfShowAttachments.getBinSize();
     }
+    if(FieldBits::NoField != (ShowEventProducersFieldMask & whichField))
+    {
+        returnValue += _sfShowEventProducers.getBinSize();
+    }
     if(FieldBits::NoField != (ShowCallbackFunctorsFieldMask & whichField))
     {
         returnValue += _sfShowCallbackFunctors.getBinSize();
@@ -649,6 +692,10 @@ void FieldContainerTreeModelBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfShowAttachments.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ShowEventProducersFieldMask & whichField))
+    {
+        _sfShowEventProducers.copyToBin(pMem);
+    }
     if(FieldBits::NoField != (ShowCallbackFunctorsFieldMask & whichField))
     {
         _sfShowCallbackFunctors.copyToBin(pMem);
@@ -695,6 +742,10 @@ void FieldContainerTreeModelBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ShowAttachmentsFieldMask & whichField))
     {
         _sfShowAttachments.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ShowEventProducersFieldMask & whichField))
+    {
+        _sfShowEventProducers.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ShowCallbackFunctorsFieldMask & whichField))
     {
@@ -834,6 +885,7 @@ FieldContainerTreeModelBase::FieldContainerTreeModelBase(void) :
     _sfShowParentPtrFields    (bool(true)),
     _sfShowChildPtrFields     (bool(true)),
     _sfShowAttachments        (bool(true)),
+    _sfShowEventProducers     (bool(true)),
     _sfShowCallbackFunctors   (bool(false))
 {
 }
@@ -849,6 +901,7 @@ FieldContainerTreeModelBase::FieldContainerTreeModelBase(const FieldContainerTre
     _sfShowParentPtrFields    (source._sfShowParentPtrFields    ),
     _sfShowChildPtrFields     (source._sfShowChildPtrFields     ),
     _sfShowAttachments        (source._sfShowAttachments        ),
+    _sfShowEventProducers     (source._sfShowEventProducers     ),
     _sfShowCallbackFunctors   (source._sfShowCallbackFunctors   )
 {
 }
@@ -1096,6 +1149,31 @@ EditFieldHandlePtr FieldContainerTreeModelBase::editHandleShowAttachments(void)
 
 
     editSField(ShowAttachmentsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr FieldContainerTreeModelBase::getHandleShowEventProducers (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfShowEventProducers,
+             this->getType().getFieldDesc(ShowEventProducersFieldId),
+             const_cast<FieldContainerTreeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr FieldContainerTreeModelBase::editHandleShowEventProducers(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfShowEventProducers,
+             this->getType().getFieldDesc(ShowEventProducersFieldId),
+             this));
+
+
+    editSField(ShowEventProducersFieldMask);
 
     return returnValue;
 }

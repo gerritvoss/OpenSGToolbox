@@ -1,100 +1,385 @@
-<?xml version="1.0"?>
+<?xml version="1.0"  encoding="utf-8"?>
 
 <OSGFieldContainers>
-	<Joint
-		fieldcontainerid="246"
-		RelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 2.165881e+000 0.000000e+000 1.000000e+000 0.000000e+000 5.846494e+000 0.000000e+000 0.000000e+000 1.000000e+000 1.535601e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		BindRelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 2.165881e+000 0.000000e+000 1.000000e+000 0.000000e+000 5.846494e+000 0.000000e+000 0.000000e+000 1.000000e+000 1.535601e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		ChildJoints="247"
-		ParentJoint="245"
-		ParentSkeleton="249"
-		UseParentTranslation="FALSE"
+	<SkeletonBlendedGeometry
+		fieldcontainerid="672"
+		material="716"
+		types="711"
+		lengths="712"
+		properties="741;0;742"
+		propIndices=""
+		dlistCache="TRUE"
+		BaseGeometry="715"
+		InternalWeightIndexes="723"
+		InternalWeights="724"
+		InternalJoints="674;676;678;680;682;684;686;688;690;692;694;696;698;700;702;704;706;708;710"
+		InternalJointInvBindTransformations="1 -0 0 -0 -0 1 -0 -7 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -0 -0 1 -0 -12 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -3 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -5 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -6 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 1 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 3 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 5 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 6 -0 1 -0 -11.5 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -0 -0 1 -0 -13 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 -6 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 -3 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 0 0 -0 1 -0 -0 0 -0 1, 1 -0 0 -1 -0 1 -0 0 0 -0 1 -1 -0 0 -0 1, 1 -0 0 1 -0 1 -0 -6 0 -0 1 -0 -0 0 -0 1, 1 -0 0 1 -0 1 -0 -3 0 -0 1 -0 -0 0 -0 1, 1 -0 0 1 -0 1 -0 0 0 -0 1 -0 -0 0 -0 1, 1 -0 0 1 -0 1 -0 0 0 -0 1 -1 -0 0 -0 1"
+		BindTransformation="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
-	<Joint
-		fieldcontainerid="247"
-		RelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 6.220588e+000 0.000000e+000 1.000000e+000 0.000000e+000 1.404730e+000 0.000000e+000 0.000000e+000 1.000000e+000 8.065017e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		BindRelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 6.220588e+000 0.000000e+000 1.000000e+000 0.000000e+000 1.404730e+000 0.000000e+000 0.000000e+000 1.000000e+000 8.065017e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		ChildJoints="248"
-		ParentJoint="246"
-		ParentSkeleton="249"
-		UseParentTranslation="FALSE"
+	</SkeletonBlendedGeometry>
+	<Transform
+		fieldcontainerid="673"
+		matrix="1 0 0 0 0 1 0 7 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
-	<Joint
-		fieldcontainerid="248"
-		RelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 5.732986e+000 0.000000e+000 1.000000e+000 0.000000e+000 6.577885e-002 0.000000e+000 0.000000e+000 1.000000e+000 2.108928e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		BindRelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 5.732986e+000 0.000000e+000 1.000000e+000 0.000000e+000 6.577885e-002 0.000000e+000 0.000000e+000 1.000000e+000 2.108928e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		ChildJoints=""
-		ParentJoint="247"
-		ParentSkeleton="249"
-		UseParentTranslation="FALSE"
+	</Transform>
+	<Node
+		fieldcontainerid="674"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="0"
+		core="673"
+		children="676;696;704"
 	>
-	</Joint>
-	<Skeleton
-		fieldcontainerid="249"
-		RootJoints="240"
+	</Node>
+	<Transform
+		fieldcontainerid="675"
+		matrix="1 0 0 0 0 1 0 5 0 0 1 0 0 0 0 1"
 	>
-	</Skeleton>
-	<Joint
-		fieldcontainerid="240"
-		RelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		BindRelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		ChildJoints="241"
-		ParentJoint="0"
-		ParentSkeleton="249"
-		UseParentTranslation="FALSE"
+	</Transform>
+	<Node
+		fieldcontainerid="676"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="674"
+		core="675"
+		children="678;686;694"
 	>
-	</Joint>
-	<Joint
-		fieldcontainerid="241"
-		RelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 8.348172e+000 0.000000e+000 1.000000e+000 0.000000e+000 4.544924e+000 0.000000e+000 0.000000e+000 1.000000e+000 4.163035e-001 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		BindRelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 8.348172e+000 0.000000e+000 1.000000e+000 0.000000e+000 4.544924e+000 0.000000e+000 0.000000e+000 1.000000e+000 4.163035e-001 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		ChildJoints="242"
-		ParentJoint="240"
-		ParentSkeleton="249"
-		UseParentTranslation="FALSE"
+	</Node>
+	<Transform
+		fieldcontainerid="677"
+		matrix="1 0 0 1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
-	<Joint
-		fieldcontainerid="242"
-		RelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 1.766912e-002 0.000000e+000 1.000000e+000 0.000000e+000 5.654894e+000 0.000000e+000 0.000000e+000 1.000000e+000 3.359860e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		BindRelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 1.766912e-002 0.000000e+000 1.000000e+000 0.000000e+000 5.654894e+000 0.000000e+000 0.000000e+000 1.000000e+000 3.359860e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		ChildJoints="243"
-		ParentJoint="241"
-		ParentSkeleton="249"
-		UseParentTranslation="FALSE"
+	</Transform>
+	<Node
+		fieldcontainerid="678"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="676"
+		core="677"
+		children="680"
 	>
-	</Joint>
-	<Joint
-		fieldcontainerid="243"
-		RelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 7.504972e+000 0.000000e+000 1.000000e+000 0.000000e+000 9.904341e+000 0.000000e+000 0.000000e+000 1.000000e+000 1.875895e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		BindRelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 7.504972e+000 0.000000e+000 1.000000e+000 0.000000e+000 9.904341e+000 0.000000e+000 0.000000e+000 1.000000e+000 1.875895e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		ChildJoints="244"
-		ParentJoint="242"
-		ParentSkeleton="249"
-		UseParentTranslation="FALSE"
+	</Node>
+	<Transform
+		fieldcontainerid="683"
+		matrix="1 0 0 1 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
-	<Joint
-		fieldcontainerid="244"
-		RelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 5.733451e+000 0.000000e+000 1.000000e+000 0.000000e+000 3.512091e+000 0.000000e+000 0.000000e+000 1.000000e+000 3.662736e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		BindRelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 5.733451e+000 0.000000e+000 1.000000e+000 0.000000e+000 3.512091e+000 0.000000e+000 0.000000e+000 1.000000e+000 3.662736e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		ChildJoints="245"
-		ParentJoint="243"
-		ParentSkeleton="249"
-		UseParentTranslation="FALSE"
+	</Transform>
+	<Transform
+		fieldcontainerid="679"
+		matrix="1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
-	</Joint>
-	<Joint
-		fieldcontainerid="245"
-		RelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 9.508537e+000 0.000000e+000 1.000000e+000 0.000000e+000 6.416647e-001 0.000000e+000 0.000000e+000 1.000000e+000 1.325542e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		BindRelativeTransformation="1.000000e+000 0.000000e+000 0.000000e+000 9.508537e+000 0.000000e+000 1.000000e+000 0.000000e+000 6.416647e-001 0.000000e+000 0.000000e+000 1.000000e+000 1.325542e+000 0.000000e+000 0.000000e+000 0.000000e+000 1.000000e+000"
-		ChildJoints="246"
-		ParentJoint="244"
-		ParentSkeleton="249"
-		UseParentTranslation="FALSE"
+	</Transform>
+	<Node
+		fieldcontainerid="680"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="678"
+		core="679"
+		children="682"
 	>
-	</Joint>
+	</Node>
+	<Transform
+		fieldcontainerid="681"
+		matrix="1 0 0 2 0 1 0 0 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="682"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="680"
+		core="681"
+		children="684"
+	>
+	</Node>
+	<Node
+		fieldcontainerid="684"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="682"
+		core="683"
+		children=""
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="685"
+		matrix="1 0 0 -1 0 1 0 -0.5 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="686"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="676"
+		core="685"
+		children="688"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="687"
+		matrix="1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="688"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="686"
+		core="687"
+		children="690"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="689"
+		matrix="1 0 0 -2 0 1 0 0 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="690"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="688"
+		core="689"
+		children="692"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="691"
+		matrix="1 0 0 -1 0 1 0 0 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="692"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="690"
+		core="691"
+		children=""
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="693"
+		matrix="1 0 0 0 0 1 0 1 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="694"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="676"
+		core="693"
+		children=""
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="695"
+		matrix="1 0 0 1 0 1 0 -1 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="696"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="674"
+		core="695"
+		children="698"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="697"
+		matrix="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="698"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="696"
+		core="697"
+		children="700"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="699"
+		matrix="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="700"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="698"
+		core="699"
+		children="702"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="701"
+		matrix="1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="702"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="700"
+		core="701"
+		children=""
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="703"
+		matrix="1 0 0 -1 0 1 0 -1 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="704"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="674"
+		core="703"
+		children="706"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="705"
+		matrix="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="706"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="704"
+		core="705"
+		children="708"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="707"
+		matrix="1 0 0 0 0 1 0 -3 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="708"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="706"
+		core="707"
+		children="710"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="709"
+		matrix="1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="710"
+		volume="2 0 0 0 0 0 0"
+		travMask="4294967295"
+		parent="708"
+		core="709"
+		children=""
+	>
+	</Node>
+	<GeoUInt8Property
+		fieldcontainerid="711"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435456"
+		values="7"
+	>
+	</GeoUInt8Property>
+	<GeoUInt32Property
+		fieldcontainerid="712"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435456"
+		values="72"
+	>
+	</GeoUInt32Property>
+	<GeoPnt3fProperty
+		fieldcontainerid="713"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435457"
+		values="-0.5 6 0, 0.5 6 0, 0.5 12 0, -0.5 12 0, -0.5 12 0, 0.5 12 0, 0.5 13 0, -0.5 13 0, 0 11.5 0, 0 12.5 0, 1 12 0, 1 11 0, 1 11 0, 1 12 0, 3 12 0, 3 11 0, 3 11 0, 3 12 0, 5 12 0, 5 11 0, 5 11 0, 5 12 0, 6 12 0, 6 11 0, 0 11.5 0, 0 12.5 0, -1 12 0, -1 11 0, -1 11 0, -1 12 0, -3 12 0, -3 11 0, -3 11 0, -3 12 0, -5 12 0, -5 11 0, -5 11 0, -5 12 0, -6 12 0, -6 11 0, 0 6.5 0, 0.5 7.5 0, 1.5 6 0, 0.5 6 0, 0.5 6 0, 1.5 6 0, 1.5 3 0, 0.5 3 0, 0.5 3 0, 1.5 3 0, 1.5 0 0, 0.5 0 0, 0.5 0 0, 1.5 0 0, 1.5 0 1, 0.5 0 1, 0 6.5 0, -0.5 7.5 0, -1.5 6 0, -0.5 6 0, -0.5 6 0, -1.5 6 0, -1.5 3 0, -0.5 3 0, -0.5 3 0, -1.5 3 0, -1.5 0 0, -0.5 0 0, -0.5 0 0, -1.5 0 0, -1.5 0 1, -0.5 0 1"
+	>
+	</GeoPnt3fProperty>
+	<GeoVec3fProperty
+		fieldcontainerid="714"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435458"
+		values="0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 1 0, 0 1 0, 0 1 0, 0 1 0, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 1 0, 0 1 0, 0 1 0, 0 1 0"
+	>
+	</GeoVec3fProperty>
+	<Geometry
+		fieldcontainerid="715"
+		material="716"
+		types="711"
+		lengths="712"
+		properties="713;0;714"
+		propIndices=""
+		dlistCache="TRUE"
+	>
+	</Geometry>
+	<SimpleMaterial
+		fieldcontainerid="716"
+		sortKey="0"
+		transparencyMode="0"
+		chunks=""
+		slots=""
+		ambient="0.1 0.1 0.1"
+		diffuse="0.7 0.7 0.5"
+		specular="1 1 1"
+		shininess="20"
+		emission="0 0 0"
+		transparency="0"
+		lit="TRUE"
+		colorMaterial="GL_DIFFUSE"
+	>
+	</SimpleMaterial>
+	<GeoUInt32Property
+		fieldcontainerid="723"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435456"
+		values="0, 0, 0, 1, 0, 1, 2, 1, 2, 3, 1, 3, 4, 1, 4, 5, 1, 5, 6, 10, 6, 7, 10, 7, 8, 1, 8, 9, 1, 9, 10, 2, 10, 11, 2, 11, 12, 2, 12, 13, 2, 13, 14, 3, 14, 15, 3, 15, 14, 4, 16, 15, 4, 17, 16, 3, 18, 17, 3, 19, 18, 4, 20, 19, 4, 21, 20, 4, 22, 21, 4, 23, 22, 5, 24, 23, 5, 25, 24, 1, 26, 25, 1, 27, 26, 6, 28, 27, 6, 29, 28, 6, 30, 29, 6, 31, 30, 7, 32, 31, 7, 33, 32, 7, 34, 33, 7, 35, 34, 8, 36, 35, 8, 37, 36, 8, 38, 37, 8, 39, 38, 9, 40, 39, 9, 41, 40, 0, 42, 41, 0, 43, 42, 11, 44, 43, 11, 45, 44, 11, 46, 45, 11, 47, 46, 12, 48, 47, 12, 49, 48, 12, 50, 49, 12, 51, 50, 13, 52, 51, 13, 53, 52, 13, 54, 53, 13, 55, 54, 14, 56, 55, 14, 57, 56, 0, 58, 57, 0, 59, 58, 15, 60, 59, 15, 61, 60, 15, 62, 61, 15, 63, 62, 16, 64, 63, 16, 65, 64, 16, 66, 65, 16, 67, 66, 17, 68, 67, 17, 69, 68, 17, 70, 69, 17, 71, 70, 18, 72, 71, 18, 73"
+	>
+	</GeoUInt32Property>
+	<GeoVec1fProperty
+		fieldcontainerid="724"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435456"
+		values="1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.8, 0.8, 0.2, 0.2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1"
+	>
+	</GeoVec1fProperty>
+	<GeoPnt3fProperty
+		fieldcontainerid="741"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435457"
+		values="-0.5 6 0, 0.5 6 0, 0.5 12 0, -0.5 12 0, -0.5 12 0, 0.5 12 0, 0.5 13 0, -0.5 13 0, 0 11.5 0, 0 12.5 0, 1 12 0, 1 11 0, 1 11 0, 1 12 0, 3 12 0, 3 11 0, 3 11 0, 3 12 0, 5 12 0, 5 11 0, 5 11 0, 5 12 0, 6 12 0, 6 11 0, 0 11.5 0, 0 12.5 0, -1 12 0, -1 11 0, -1 11 0, -1 12 0, -3 12 0, -3 11 0, -3 11 0, -3 12 0, -5 12 0, -5 11 0, -5 11 0, -5 12 0, -6 12 0, -6 11 0, 0 6.5 0, 0.5 7.5 0, 1.5 6 0, 0.5 6 0, 0.5 6 0, 1.5 6 0, 1.5 3 0, 0.5 3 0, 0.5 3 0, 1.5 3 0, 1.5 0 0, 0.5 0 0, 0.5 0 0, 1.5 0 0, 1.5 0 1, 0.5 0 1, 0 6.5 0, -0.5 7.5 0, -1.5 6 0, -0.5 6 0, -0.5 6 0, -1.5 6 0, -1.5 3 0, -0.5 3 0, -0.5 3 0, -1.5 3 0, -1.5 0 0, -0.5 0 0, -0.5 0 0, -1.5 0 0, -1.5 0 1, -0.5 0 1"
+	>
+	</GeoPnt3fProperty>
+	<GeoVec3fProperty
+		fieldcontainerid="742"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435458"
+		values="0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 1 0, 0 1 0, 0 1 0, 0 1 0, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 1 0, 0 1 0, 0 1 0, 0 1 0"
+	>
+	</GeoVec3fProperty>
 </OSGFieldContainers>
 

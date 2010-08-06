@@ -32,7 +32,17 @@
 
 OSG_BEGIN_NAMESPACE
 
-std::set<FieldContainerUnrecPtr> OSG_TBFILEIO_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers, const std::set<FieldContainerUnrecPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes);
+std::set<FieldContainerUnrecPtr>
+OSG_TBFILEIO_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers,
+                                           const std::set<FieldContainerUnrecPtr>& IgnoreContainers,
+                                           const std::vector<const FieldContainerType*>& IgnoreTypes,
+                                           bool RecurseFilePathAttachedContainers=false);
+
+std::set<FieldContainerUnrecPtr>
+OSG_TBFILEIO_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers,
+                                           const std::set<FieldContainerUnrecPtr>& IgnoreContainers,
+                                           const std::vector<UInt32>& IgnoreTypes,
+                                           bool RecurseFilePathAttachedContainers=false);
 
 OSG_END_NAMESPACE
 

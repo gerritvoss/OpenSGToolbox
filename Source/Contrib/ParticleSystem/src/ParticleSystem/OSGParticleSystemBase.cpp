@@ -152,6 +152,10 @@ OSG_BEGIN_NAMESPACE
     A per-particle attribute map.  Used for storing user-defined data to particles.
 */
 
+/*! \var UInt32          ParticleSystemBase::_mfInternalIDs
+    Unique ID for each particle (At least up to 4,294,967,296)
+*/
+
 /*! \var UInt32          ParticleSystemBase::_sfMaxParticles
     
 */
@@ -378,6 +382,18 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
+    pDesc = new MFUInt32::Description(
+        MFUInt32::getClassType(),
+        "InternalIDs",
+        "Unique ID for each particle (At least up to 4,294,967,296)\n",
+        InternalIDsFieldId, InternalIDsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalIDs),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalIDs));
+
+    oType.addInitialDesc(pDesc);
+
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "MaxParticles",
@@ -492,7 +508,7 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&ParticleSystem::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&ParticleSystem::getHandleEventProducer));
@@ -664,6 +680,16 @@ ParticleSystemBase::TypeObject ParticleSystemBase::_type(
     "\t\taccess=\"protected\"\n"
     "\t>\n"
     "   A per-particle attribute map.  Used for storing user-defined data to particles.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalIDs\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\tUnique ID for each particle (At least up to 4,294,967,296)\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"MaxParticles\"\n"
@@ -1012,6 +1038,19 @@ const MFStringToUInt32Map *ParticleSystemBase::getMFInternalAttributes(void) con
 }
 
 
+MFUInt32 *ParticleSystemBase::editMFInternalIDs(void)
+{
+    editMField(InternalIDsFieldMask, _mfInternalIDs);
+
+    return &_mfInternalIDs;
+}
+
+const MFUInt32 *ParticleSystemBase::getMFInternalIDs(void) const
+{
+    return &_mfInternalIDs;
+}
+
+
 SFUInt32 *ParticleSystemBase::editSFMaxParticles(void)
 {
     editSField(MaxParticlesFieldMask);
@@ -1346,6 +1385,10 @@ UInt32 ParticleSystemBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _mfInternalAttributes.getBinSize();
     }
+    if(FieldBits::NoField != (InternalIDsFieldMask & whichField))
+    {
+        returnValue += _mfInternalIDs.getBinSize();
+    }
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
     {
         returnValue += _sfMaxParticles.getBinSize();
@@ -1443,6 +1486,10 @@ void ParticleSystemBase::copyToBin(BinaryDataHandler &pMem,
     {
         _mfInternalAttributes.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (InternalIDsFieldMask & whichField))
+    {
+        _mfInternalIDs.copyToBin(pMem);
+    }
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
     {
         _sfMaxParticles.copyToBin(pMem);
@@ -1537,6 +1584,10 @@ void ParticleSystemBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
     {
         _mfInternalAttributes.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (InternalIDsFieldMask & whichField))
+    {
+        _mfInternalIDs.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
     {
@@ -1716,6 +1767,7 @@ ParticleSystemBase::ParticleSystemBase(void) :
     _mfInternalSecVelocities  (),
     _mfInternalAccelerations  (),
     _mfInternalAttributes     (),
+    _mfInternalIDs            (),
     _sfMaxParticles           (UInt32(4294967295)),
     _sfDynamic                (bool(true)),
     _sfUpdateSecAttribs       (),
@@ -1744,6 +1796,7 @@ ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _mfInternalSecVelocities  (source._mfInternalSecVelocities  ),
     _mfInternalAccelerations  (source._mfInternalAccelerations  ),
     _mfInternalAttributes     (source._mfInternalAttributes     ),
+    _mfInternalIDs            (source._mfInternalIDs            ),
     _sfMaxParticles           (source._sfMaxParticles           ),
     _sfDynamic                (source._sfDynamic                ),
     _sfUpdateSecAttribs       (source._sfUpdateSecAttribs       ),
@@ -2111,6 +2164,31 @@ EditFieldHandlePtr ParticleSystemBase::editHandleInternalAttributes(void)
 
 
     editMField(InternalAttributesFieldMask, _mfInternalAttributes);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalIDs     (void) const
+{
+    MFUInt32::GetHandlePtr returnValue(
+        new  MFUInt32::GetHandle(
+             &_mfInternalIDs,
+             this->getType().getFieldDesc(InternalIDsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalIDs    (void)
+{
+    MFUInt32::EditHandlePtr returnValue(
+        new  MFUInt32::EditHandle(
+             &_mfInternalIDs,
+             this->getType().getFieldDesc(InternalIDsFieldId),
+             this));
+
+
+    editMField(InternalIDsFieldMask, _mfInternalIDs);
 
     return returnValue;
 }
@@ -2495,6 +2573,10 @@ void ParticleSystemBase::resolveLinks(void)
 #endif
 #ifdef OSG_MT_CPTR_ASPECT
     _mfInternalAttributes.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalIDs.terminateShare(Thread::getCurrentAspect(),
                                       oOffsets);
 #endif
 }

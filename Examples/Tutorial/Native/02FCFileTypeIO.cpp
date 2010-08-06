@@ -15,6 +15,7 @@
 #include "OSGGroup.h"
 #include "OSGDistanceLOD.h"
 #include "OSGBillboard.h"
+#include "OSGNameAttachment.h"
 
 
 #include "OSGFCFileHandler.h"
@@ -77,6 +78,7 @@ NodeUnrecPtr createScene(void)
 	CameraBeaconNode->addChild(ChildNode2);*/
 
 	NodeUnrecPtr BoxNode = makeBox(2.0,0.5,0.5,1,1,1);
+    setName(BoxNode, "Box\"\' <>& Node");
 
 	NodeUnrecPtr PlaneNode = makePlane(1.0,1.0,2,2);
 
@@ -91,6 +93,7 @@ NodeUnrecPtr createScene(void)
 	//LODNode->addChild(PlaneNode);
 	
 	NodeUnrecPtr BeaconNode = Node::create();
+    setName(BeaconNode, "Spotlight Beacon Node");
 	BeaconNode->setCore(Transform::create());
 
 
@@ -98,10 +101,11 @@ NodeUnrecPtr createScene(void)
 	SpotLightCore->setBeacon(BeaconNode);
 
 	NodeUnrecPtr TheNode = Node::create();
+    setName(TheNode, "Root Node");
 	TheNode->setCore(SpotLightCore);
     TheNode->addChild(BoxNode);
 	//TheNode->updateVolume();
 
-	return BoxNode;
+	return TheNode;
 }
 

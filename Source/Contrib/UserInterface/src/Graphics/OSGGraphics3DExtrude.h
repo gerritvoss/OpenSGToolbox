@@ -117,7 +117,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics3DExtrude : public Graphics3DE
                           const Vec2f& t3,
                           const Vec2f& t4,
                           const Color4f& color,
-                          TextureObjChunk* const Texture,
+                          const TextureBaseChunkUnrecPtr Texture,
                           const Real32& Opacity) const;
 
     virtual void drawQuad(const Pnt2f& p1,

@@ -214,6 +214,14 @@ int main(int argc, char **argv)
     scene->setCore(OSG::Group::create());
     scene->addChild(TorusGeometryNode);
 
+    // Create the SimpleSceneManager helper
+    mgr = new SimpleSceneManager;
+
+    // Tell the Manager what to manage
+    mgr->setWindow(TutorialWindow);
+    mgr->setRoot(scene);
+    TutorialViewport = mgr->getWindow()->getPort(0);
+
     // Create the Graphics
     GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
@@ -266,7 +274,7 @@ int main(int argc, char **argv)
 
     //Background Editor Field
     //FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(TutorialBackground, TheCommandManager);
-    FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(RedoButton, TheCommandManager);
+    FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(TutorialViewport, TheCommandManager);
     //FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(dynamic_cast<Geometry*>(TorusGeometryNode->getCore())->getMaterial(), TheCommandManager);
 
     ScrollPanelRefPtr EditorScrollPanel = ScrollPanel::create();
@@ -302,15 +310,8 @@ int main(int argc, char **argv)
 
     TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    TutorialViewport = mgr->getWindow()->getPort(0);
     TutorialViewport->addForeground(TutorialUIForeground);
     TutorialViewport->setBackground(TutorialBackground);
 

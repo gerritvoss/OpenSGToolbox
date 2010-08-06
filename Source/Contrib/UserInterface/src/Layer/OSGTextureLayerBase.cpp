@@ -58,7 +58,7 @@
 
 
 
-#include "OSGTextureObjChunk.h"         // Texture Class
+#include "OSGTextureBaseChunk.h"        // Texture Class
 #include "OSGTextureTransformChunk.h"   // Transformation Class
 
 #include "OSGTextureLayerBase.h"
@@ -84,7 +84,7 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var TextureObjChunk * TextureLayerBase::_sfTexture
+/*! \var TextureBaseChunk * TextureLayerBase::_sfTexture
     
 */
 
@@ -140,8 +140,8 @@ void TextureLayerBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecTextureObjChunkPtr::Description(
-        SFUnrecTextureObjChunkPtr::getClassType(),
+    pDesc = new SFUnrecTextureBaseChunkPtr::Description(
+        SFUnrecTextureBaseChunkPtr::getClassType(),
         "Texture",
         "",
         TextureFieldId, TextureFieldMask,
@@ -255,7 +255,7 @@ TextureLayerBase::TypeObject TextureLayerBase::_type(
     "UI Texture Background.\n"
     "\t<Field\n"
     "\t\tname=\"Texture\"\n"
-    "\t\ttype=\"TextureObjChunk\"\n"
+    "\t\ttype=\"TextureBaseChunk\"\n"
     "        category=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -348,12 +348,12 @@ UInt32 TextureLayerBase::getContainerSize(void) const
 
 
 //! Get the TextureLayer::_sfTexture field.
-const SFUnrecTextureObjChunkPtr *TextureLayerBase::getSFTexture(void) const
+const SFUnrecTextureBaseChunkPtr *TextureLayerBase::getSFTexture(void) const
 {
     return &_sfTexture;
 }
 
-SFUnrecTextureObjChunkPtr *TextureLayerBase::editSFTexture        (void)
+SFUnrecTextureBaseChunkPtr *TextureLayerBase::editSFTexture        (void)
 {
     editSField(TextureFieldMask);
 
@@ -718,8 +718,8 @@ void TextureLayerBase::onCreate(const TextureLayer *source)
 
 GetFieldHandlePtr TextureLayerBase::getHandleTexture         (void) const
 {
-    SFUnrecTextureObjChunkPtr::GetHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::GetHandle(
+    SFUnrecTextureBaseChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::GetHandle(
              &_sfTexture,
              this->getType().getFieldDesc(TextureFieldId),
              const_cast<TextureLayerBase *>(this)));
@@ -729,8 +729,8 @@ GetFieldHandlePtr TextureLayerBase::getHandleTexture         (void) const
 
 EditFieldHandlePtr TextureLayerBase::editHandleTexture        (void)
 {
-    SFUnrecTextureObjChunkPtr::EditHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::EditHandle(
+    SFUnrecTextureBaseChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::EditHandle(
              &_sfTexture,
              this->getType().getFieldDesc(TextureFieldId),
              this));

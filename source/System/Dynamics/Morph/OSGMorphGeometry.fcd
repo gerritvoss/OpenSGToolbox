@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="MorphGeometry"
+	parent="Geometry"
+    library="TBAnimation"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com),                            "
+>
+	<Field
+		name="BaseGeometry"
+		type="Geometry"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="InternalTargetGeometries"
+		type="Geometry"
+        category="pointer"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="InternalWeights"
+		type="GeoVectorProperty"
+        category="childpointer"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		childParentType="FieldContainer"
+		linkParentField="Parents"
+	>
+	</Field>
+	<Field
+		name="MorphProperties"
+		type="UInt16"
+        category="data"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

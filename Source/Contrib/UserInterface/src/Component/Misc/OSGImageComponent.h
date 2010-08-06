@@ -91,6 +91,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponent
     /*! \}                                                                 */
 
 	void setImage(Image* const Image);
+	void setImages(Image* const  Image);
+	void setImages(const BoostPath& fileName, const char *mimeType = 0);
 	void setImage(const char *fileName, const char *mimeType = 0);
 	
 	void setRolloverImage(Image* const Image);

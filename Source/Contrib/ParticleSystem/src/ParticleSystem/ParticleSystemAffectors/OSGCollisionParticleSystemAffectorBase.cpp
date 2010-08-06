@@ -149,7 +149,7 @@ void CollisionParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&CollisionParticleSystemAffector::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&CollisionParticleSystemAffector::getHandleEventProducer));

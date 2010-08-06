@@ -150,7 +150,7 @@ void GeometryCollisionParticleSystemAffectorBase::classDescInserter(TypeObject &
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&GeometryCollisionParticleSystemAffector::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&GeometryCollisionParticleSystemAffector::getHandleEventProducer));

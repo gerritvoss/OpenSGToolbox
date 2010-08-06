@@ -123,6 +123,10 @@ ComponentTransitPtr DefaultTreeComponentGenerator::getTreeComponent(Tree* const 
     {
         //Could not convert to string
     }
+    if(LabelText.empty())
+    {
+        LabelText = "[Unnamed]";
+    }
 
     return getTreeComponentText(Parent, LabelText, IsSelected, Expanded, Leaf, Row, HasFocus);
 }

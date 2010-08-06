@@ -76,6 +76,22 @@ void GenericEvent::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+GenericEventTransitPtr GenericEvent::create(FieldContainerRefPtr Source,
+                                            Time TimeStamp,
+                                            const StringToUInt32Map& strToIntMap,
+                                            const FieldContainerMap& fcMap)
+{
+    GenericEvent* TheEvent(GenericEvent::createEmpty());
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+    TheEvent->setNumberMap(strToIntMap);
+    TheEvent->setContainerMap(fcMap);
+
+
+    return GenericEventTransitPtr(TheEvent);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

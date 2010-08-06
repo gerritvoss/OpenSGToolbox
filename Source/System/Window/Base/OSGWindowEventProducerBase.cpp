@@ -196,7 +196,7 @@ void WindowEventProducerBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&WindowEventProducer::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&WindowEventProducer::getHandleEventProducer));

@@ -49,9 +49,15 @@
 #include "OSGFieldContainerFactory.h"
 #include "OSGFieldContainerEditorFactory.h"
 #include "OSGFieldEditorFactory.h"
-#include "OSGGridLayout.h"
-#include "OSGLabel.h"
-#include "OSGNameAttachment.h"
+#include "OSGBorderLayout.h"
+#include "OSGBorderLayoutConstraints.h"
+#include "OSGPanel.h"
+#include "OSGColorLayer.h"
+#include <boost/lexical_cast.hpp>
+#include "OSGImage.h"
+
+#include "OSGGridBagLayout.h"
+#include "OSGGridBagLayoutConstraints.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -99,9 +105,11 @@ void GenericFieldContainerEditor::initMethod(InitPhase ePhase)
 
 Vec2f GenericFieldContainerEditor::getContentRequestedSize(void) const
 {
-    GridLayoutRefPtr TheLayout = dynamic_cast<GridLayout*>(getLayout());
+    //GridLayoutRefPtr TheLayout = dynamic_cast<GridLayout*>(getLayout());
 
-    return TheLayout->preferredLayoutSize(getMFChildren(), this);//Vec2f(getPreferredSize().x(), (20.0f + TheLayout->getVerticalGap()) * (getMFChildren()->size()/+1));
+    //return TheLayout->preferredLayoutSize(getMFChildren(), this);//Vec2f(getPreferredSize().x(), (20.0f + TheLayout->getVerticalGap()) * (getMFChildren()->size()/+1));
+
+    return Vec2f(1.0,dynamic_cast<GridBagLayout*>(getLayout())->getRows()*24.0f);
 }
 
 const std::vector<const FieldContainerType*>& GenericFieldContainerEditor::getEditableTypes(void) const
@@ -123,53 +131,172 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
     FieldDescriptionBase* Desc;
     FieldEditorComponentUnrecPtr TheEditor;
     LabelUnrecPtr TheLabel;
+    GridBagLayoutConstraintsRefPtr LayoutConstraints;
+    PanelRefPtr FieldPanel;
+    UInt32 NumRows(0),NumRowsForField(1);
 
-    if(fc->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+    BorderLayoutRefPtr TheLayout = BorderLayout::create();
+    BorderLayoutConstraintsRefPtr WestConstraint = OSG::BorderLayoutConstraints::create();
+    WestConstraint->setRegion(BorderLayoutConstraints::BORDER_WEST);
+    BorderLayoutConstraintsRefPtr CenterConstraint = OSG::BorderLayoutConstraints::create();
+    CenterConstraint->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+
+    //Backgournds
+    ColorLayerRefPtr HeaderBgLayer = ColorLayer::create();
+    HeaderBgLayer->setColor(Color4f(0.7f,0.7f,0.7f,1.0f));
+
+    ColorLayerRefPtr LightBgLayer = ColorLayer::create();
+    LightBgLayer->setColor(Color4f(0.9f,0.9f,0.9f,1.0f));
+    ColorLayerRefPtr DarkBgLayer = ColorLayer::create();
+    DarkBgLayer->setColor(Color4f(0.8f,0.8f,0.8f,1.0f));
+
+    //Push the Type and Id Labels
+    _ContainerTypeLabel->setText(getEditingFC()->getType().getName());
+    _ContainerTypeLabel->setBackgrounds(NULL);
+    _ContainerTypeLabel->setConstraints(WestConstraint);
+    _ContainerTypeLabel->setPreferredSize(Vec2f(160.0f,22.0f));
+
+    _ContainerIdLabel->setText(boost::lexical_cast<std::string>(getEditingFC()->getId()));
+    _ContainerIdLabel->setBackgrounds(NULL);
+    _ContainerIdLabel->setConstraints(CenterConstraint);
+
+    LayoutConstraints = GridBagLayoutConstraints::create();
+
+    LayoutConstraints->setGridX(0);
+    LayoutConstraints->setGridY(NumRows);
+    LayoutConstraints->setGridHeight(1);
+    LayoutConstraints->setGridWidth(1);
+    LayoutConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
+
+    FieldPanel = Panel::createEmpty();
+    FieldPanel->setBackgrounds(HeaderBgLayer);
+    FieldPanel->setInset(Vec4f(1.0f,1.0f,1.0f,1.0f));
+    FieldPanel->pushToChildren(_ContainerIdLabel);
+    FieldPanel->pushToChildren(_ContainerTypeLabel);
+    FieldPanel->setLayout(TheLayout);
+    FieldPanel->setConstraints(LayoutConstraints);
+    pushToChildren(FieldPanel);
+    ++NumRows;
+
+    if(_GenericNameAttachmentEditor->isTypeEditable(fc->getType()))
     {
         //Create the Label
         TheLabel = Label::create();
         TheLabel->setText("Name");
+        TheLabel->setBackgrounds(NULL);
+        TheLabel->setConstraints(WestConstraint);
+        TheLabel->setPreferredSize(Vec2f(160.0f,22.0f));
 
-        pushToChildren(TheLabel);
-        pushToChildren(_NameEditTextField);
-        updateNameTextField();
+        //Attach the Generic Name Editor
+        _GenericNameAttachmentEditor->setCommandManager(_CmdManager);
+        _GenericNameAttachmentEditor->attachContainer(fc);
+        _GenericNameAttachmentEditor->setConstraints(CenterConstraint);
+
+        //Create the Panel
+        LayoutConstraints = GridBagLayoutConstraints::create();
+        LayoutConstraints->setGridX(0);
+        LayoutConstraints->setGridY(NumRows);
+        LayoutConstraints->setGridHeight(1);
+        LayoutConstraints->setGridWidth(1);
+        LayoutConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
+
+        FieldPanel = Panel::createEmpty();
+        FieldPanel->setInset(Vec4f(1.0f,1.0f,1.0f,1.0f));
+        FieldPanel->pushToChildren(TheLabel);
+        FieldPanel->pushToChildren(_GenericNameAttachmentEditor);
+        FieldPanel->setLayout(TheLayout);
+        FieldPanel->setConstraints(LayoutConstraints);
+        FieldPanel->setBackgrounds(LightBgLayer);
+
+        pushToChildren(FieldPanel);
+        ++NumRows;
     }
 
+    UInt32 UsedFieldCount(0);
     for(UInt32 i(1) ; i<=NumFields ; ++i)
     {
         Desc = fc->getFieldDescription(i);
         if(Desc != 0 &&
-           !Desc->isInternal())
+           !Desc->isInternal() &&
+           Desc->getFieldType().getClass() != FieldType::ParentPtrField &&
+           //HACK: Stop the pixel field from being editable on Images
+           !(fc->getType().isDerivedFrom(Image::getClassType()) &&
+             Desc->getFieldId() == Image::PixelFieldId))
         {
             //Create the Editor
             TheEditor = FieldEditorFactory::the()->createDefaultEditor(fc, Desc->getFieldId(), _CmdManager);
             if(TheEditor != NULL)
             {
+                if(Desc->getFieldType().getCardinality() == FieldType::SingleField)
+                {
+                    NumRowsForField = 1;
+                }
+                else
+                {
+                    NumRowsForField = 4;
+                }
                 pushToEditors(TheEditor);
+                TheEditor->setConstraints(CenterConstraint);
 
                 //Create the Label
                 TheLabel = Label::create();
                 TheLabel->setText(Desc->getCName());
+                TheLabel->setBackgrounds(NULL);
+                TheLabel->setConstraints(WestConstraint);
+                TheLabel->setPreferredSize(Vec2f(160.0f,22.0f));
 
-                pushToChildren(TheLabel);
-                pushToChildren(TheEditor);
+                //Create the Panel
+                LayoutConstraints = GridBagLayoutConstraints::create();
+                LayoutConstraints->setGridX(0);
+                LayoutConstraints->setGridY(NumRows);
+                LayoutConstraints->setGridHeight(NumRowsForField);
+                LayoutConstraints->setGridWidth(1);
+                LayoutConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
+
+
+                FieldPanel = Panel::createEmpty();
+                FieldPanel->setInset(Vec4f(1.0f,1.0f,1.0f,1.0f));
+                FieldPanel->pushToChildren(TheLabel);
+                FieldPanel->pushToChildren(TheEditor);
+                FieldPanel->setLayout(TheLayout);
+                FieldPanel->setConstraints(LayoutConstraints);
+                if((UsedFieldCount%2) == 0)
+                {
+                    FieldPanel->setBackgrounds(DarkBgLayer);
+                }
+                else
+                {
+                    FieldPanel->setBackgrounds(LightBgLayer);
+                }
+
+                pushToChildren(FieldPanel);
+                NumRows += NumRowsForField;
+                TheEditor->setPreferredSize(Vec2f(50.0f,22.0f * NumRowsForField));
+                ++UsedFieldCount;
             }
         }
     }
     //Set the number of rows for the grid layout
-    dynamic_cast<GridLayout*>(getLayout())->setRows(getMFChildren()->size()/2);
+    dynamic_cast<GridBagLayout*>(getLayout())->setRows(NumRows);
 
     return true;
 }
 
 bool GenericFieldContainerEditor::dettachFieldContainer(void)
 {
+    //Dettach the Name Editor
+    if(getEditingFC() &&
+       _GenericNameAttachmentEditor->isTypeEditable(getEditingFC()->getType()))
+    {
+        _GenericNameAttachmentEditor->dettachContainer();
+    }
+
     //Clear Children
     clearChildren();
     clearEditors();
 
     //Set the number of rows for the grid layout
-    dynamic_cast<GridLayout*>(getLayout())->setRows(0);
+    dynamic_cast<GridBagLayout*>(getLayout())->setRows(0);
 
     return Inherited::dettachFieldContainer();
 }
@@ -230,38 +357,23 @@ GenericFieldContainerEditor::~GenericFieldContainerEditor(void)
 {
 }
 
-void GenericFieldContainerEditor::updateNameTextField(void)
-{
-    if(getEditingFC() != NULL &&
-       getEditingFC()->getType().isDerivedFrom(AttachmentContainer::getClassType()))
-    {
-        const Char8* FCName = getName(dynamic_cast<AttachmentContainer*>(getEditingFC()));
-        if(FCName)
-        {
-            _NameEditTextField->setText(FCName);
-        }
-        else
-        {
-            _NameEditTextField->setText("");
-        }
-    }
-}
-
 /*----------------------------- class specific ----------------------------*/
 void GenericFieldContainerEditor::onCreate(const GenericFieldContainerEditor *Id)
 {
 	Inherited::onCreate(Id);
     if(Id != NULL)
     {
-        GridLayoutRefPtr TheLayout = OSG::GridLayout::create();
+        GridBagLayoutRefPtr TheLayout = GridBagLayout::create();
 
         TheLayout->setRows(0);
-        TheLayout->setColumns(2);
-        TheLayout->setHorizontalGap(1);
-        TheLayout->setVerticalGap(3);
+        TheLayout->setColumns(1);
         setLayout(TheLayout);
 
-        _NameEditTextField = TextField::create();
+        _ContainerTypeLabel = Label::create();
+        _ContainerTypeLabel->setAlignment(Vec2f(0.5f,0.5f));
+        _ContainerIdLabel = Label::create();
+        _ContainerIdLabel->setAlignment(Vec2f(0.5f,0.5f));
+        _GenericNameAttachmentEditor = GenericNameAttachmentEditor::create();
     }
 }
 

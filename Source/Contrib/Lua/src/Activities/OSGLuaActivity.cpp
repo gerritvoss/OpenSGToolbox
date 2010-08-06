@@ -52,6 +52,7 @@
 #include "OSGContainerUtils.h"
 #include <fstream>
 #include <sstream>
+#include <boost/algorithm/string.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -166,7 +167,11 @@ void LuaActivity::eventProduced(const EventUnrecPtr EventDetails, UInt32 Produce
     if(!getCode().empty())
     {
         //Run my Code
-        LuaManager::the()->runScript(getCode());
+        if(LuaManager::the()->runScript(getCode()) != 0)
+        {
+            //Failed to run the script
+            return;
+        }
     }
 
     //If there is an entry function then call it
@@ -176,7 +181,51 @@ void LuaActivity::eventProduced(const EventUnrecPtr EventDetails, UInt32 Produce
         lua_State *LuaState(LuaManager::the()->getLuaState());
 
         //Get the Lua function to be called
-        lua_getglobal(LuaState, getEntryFunction().c_str());
+        for(UInt32 i(0) ; i<_EntryFunctionPath.size() ; ++i)
+        {
+            if(i == 0)
+            {
+                lua_pushstring(LuaState,_EntryFunctionPath[i].c_str());             //push the name of the table on the stack
+                lua_gettable(LuaState, LUA_GLOBALSINDEX);  //Push The table onto the stack
+            }
+            else
+            {
+                //Check if the the value given is a table
+                if(!lua_istable(LuaState, -1))
+                {
+                    lua_pop(LuaState, 1); //Pop the value off the stack
+                    std::string TablePath("");
+                    for(UInt32 j(0) ; j<i ; ++j)
+                    {
+                        if(j!=0) TablePath += ".";
+                        TablePath += _EntryFunctionPath[j];
+                    }
+                    SWARNING << TablePath << " cannot be referenced in lua because it is not a table" << std::endl;
+                    return;
+                }
+            
+                lua_pushstring(LuaState,_EntryFunctionPath[i].c_str());             //push the name of the table on the stack
+                lua_gettable(LuaState, -2);  //Push The table onto the stack
+
+                //Remove the original table from the stack
+                lua_remove(LuaState, -2);
+            }
+        }
+
+        //Check if the the value given is a function
+        if(!lua_isfunction(LuaState, -1))
+        {
+            lua_pop(LuaState, 1); //Pop the value off the stack
+
+            std::string TablePath("");
+            for(UInt32 i(0) ; i<_EntryFunctionPath.size() ; ++i)
+            {
+                if(i!=0) TablePath += ".";
+                TablePath += _EntryFunctionPath[i];
+            }
+            SWARNING << TablePath << " cannot be referenced in lua because it is not a function" << std::endl;
+            return;
+        }
 
         //Push on the arguments
         push_FieldContainer_on_lua(LuaState, EventDetails);   //Argument 1: the EventUnrecPtr
@@ -220,6 +269,13 @@ void LuaActivity::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+
+    if(whichField & EntryFunctionFieldMask)
+    {
+        //Split the Entry function up by nested tables
+        boost::algorithm::split( _EntryFunctionPath, getEntryFunction(), boost::algorithm::is_any_of(std::string(".")) );
+    }
 }
 
 void LuaActivity::dump(      UInt32    ,

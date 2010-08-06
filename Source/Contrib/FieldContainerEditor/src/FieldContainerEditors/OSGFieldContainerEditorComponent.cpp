@@ -84,6 +84,8 @@ bool FieldContainerEditorComponent::attachFieldContainer(FieldContainer* fc)
         return false;
     }
 
+    dettachFieldContainer();
+
     setEditingFC(fc);
 
     return true;

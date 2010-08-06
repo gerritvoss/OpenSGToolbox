@@ -92,7 +92,9 @@ bool FieldEditorComponent::attachField(FieldContainer* fc, UInt32 fieldId, UInt3
     const FieldDescriptionBase* Desc(fc->getFieldDescription(fieldId));
     if(Desc == NULL)
     {
-        SWARNING << "Cannot attach to field with id" << fieldId << ", on a FieldContainer with type " << fc->getType().getCName() << " because that is an invalid field id." << std::endl;
+        SWARNING << "Cannot attach to field with id " << fieldId
+                 << ", on a FieldContainer with type " << fc->getType().getCName()
+                 << " because that is an invalid field id." << std::endl;
         return false;
     }
     //Check that this is a type to edit for this editor
@@ -108,24 +110,9 @@ bool FieldEditorComponent::attachField(FieldContainer* fc, UInt32 fieldId, UInt3
     GetFieldHandlePtr TheFieldHandle = fc->getField(fieldId);
     if(!TheFieldHandle.get())
     {
-        SWARNING << "Cannot attach to field " << Desc->getCName() 
-                 << ", on a FieldContainer with type " << fc->getType().getCName() << " because no GetFieldHandle is defined for that field type." << std::endl;
-        return false;
-    }
-
-    if(TheFieldHandle->getCardinality() != FieldType::MultiField &&
-       index != 0)
-    {
-        SWARNING << "Cannot attach to index " << index 
-                 <<", of field with id" << fieldId 
-                 << ", on a FieldContainer with type " << fc->getType().getCName() << " because that is not a multi-field." << std::endl;
-        return false;
-    }
-    if(TheFieldHandle->size() <= index)
-    {
-        SWARNING << "Cannot attach to index " << index 
-                 <<", of field with id" << fieldId 
-                 << ", on a FieldContainer with type " << fc->getType().getCName() << " because that index is out of bounds." << std::endl;
+        SWARNING << "Cannot attach to field " << TheFieldHandle->getDescription()->getName() 
+                 << ", on a FieldContainer with type " << fc->getType().getCName()
+                 << " because no GetFieldHandle is defined for that field type." << std::endl;
         return false;
     }
 
@@ -137,7 +124,6 @@ bool FieldEditorComponent::attachField(FieldContainer* fc, UInt32 fieldId, UInt3
     //Attach to the field
     setEditingFC(fc);
     setEditingFieldId(fieldId);
-    setEditingFieldIndex(index);
 
     //Tell the Editor that the field has changed
     fieldChanged(fc, Desc->getFieldMask());
@@ -156,7 +142,6 @@ bool FieldEditorComponent::dettachField(void)
     //Dettach from the field
     setEditingFC(NULL);
     setEditingFieldId(0);
-    setEditingFieldIndex(0);
 
     //Dettach from the Changed function callback for the container
     dettachFieldCallback();

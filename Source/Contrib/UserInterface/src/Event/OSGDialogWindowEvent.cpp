@@ -73,8 +73,9 @@ void DialogWindowEvent::initMethod(InitPhase ePhase)
 
 DialogWindowEventTransitPtr DialogWindowEvent::create( FieldContainerRefPtr Source,
                                                        Time TimeStamp,
-                                                       const UInt32& Option,
-                                                       const std::string& Input)
+                                                       UInt32 Option,
+                                                       const std::string& Input,
+                                                       UInt32 InputIndex)
 {
     DialogWindowEvent* TheEvent = DialogWindowEvent::createEmpty();
 
@@ -82,6 +83,7 @@ DialogWindowEventTransitPtr DialogWindowEvent::create( FieldContainerRefPtr Sour
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setOption(Option);
     TheEvent->setInput(Input);
+    TheEvent->setInputIndex(InputIndex);
 
     return DialogWindowEventTransitPtr(TheEvent);
 }

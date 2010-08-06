@@ -80,8 +80,8 @@ void BlendedKeyframeAnimator::initMethod(InitPhase ePhase)
 bool BlendedKeyframeAnimator::animate(UInt32 InterpType,
                          UInt32 ReplacementPolicy,
                                       bool Cycling,
-                                      const Real32& time,
-                                      const Real32& prevTime,
+                                      Real32 time,
+                                      Real32 prevTime,
                                       EditFieldHandlePtr Result,
                                       UInt32 Index)
 {
@@ -128,11 +128,15 @@ Real32 BlendedKeyframeAnimator::getLength(void) const
     }
 }
 
-const DataType &BlendedKeyframeAnimator::getDataType(void) const
+const DataType* BlendedKeyframeAnimator::getDataType(void) const
 {
    if( getMFKeyframeSequences()->size() != 0)
    {
        return getMFKeyframeSequences()->front()->getDataType();
+   }
+   else
+   {
+       return NULL;
    }
 }
 
@@ -152,10 +156,10 @@ bool BlendedKeyframeAnimator::checkSequencesValidity(void) const
     //Check that the types of the KeyframeSequences are all the same
     if(getMFKeyframeSequences()->size() > 0)
     {
-        const DataType &FrontDataType(getMFKeyframeSequences()->front()->getDataType());
+        const DataType &FrontDataType(*getMFKeyframeSequences()->front()->getDataType());
         for(UInt32 i(1) ; i< getMFKeyframeSequences()->size() ; ++i)
         {
-            if(FrontDataType != getKeyframeSequences(i)->getDataType())
+            if(FrontDataType != *getKeyframeSequences(i)->getDataType())
             {
                 SWARNING << "BlendedKeyframeAnimator: All of the KeyframeSequences attached to a BlenededKeyframeAnimator must work on the same data type."  << std::endl;
                 return false;

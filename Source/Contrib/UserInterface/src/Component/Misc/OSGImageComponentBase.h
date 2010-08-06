@@ -65,7 +65,7 @@
 
 #include "OSGComponent.h" // Parent
 
-#include "OSGTextureObjChunkFields.h"   // Texture type
+#include "OSGTextureBaseChunkFields.h"  // Texture type
 #include "OSGTextureTransformChunkFields.h" // Transformation type
 #include "OSGBaseFields.h"              // Color type
 #include "OSGSysFields.h"               // Scale type
@@ -133,10 +133,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecTextureObjChunkPtr SFTextureType;
-    typedef SFUnrecTextureObjChunkPtr SFRolloverTextureType;
-    typedef SFUnrecTextureObjChunkPtr SFDisabledTextureType;
-    typedef SFUnrecTextureObjChunkPtr SFFocusedTextureType;
+    typedef SFUnrecTextureBaseChunkPtr SFTextureType;
+    typedef SFUnrecTextureBaseChunkPtr SFRolloverTextureType;
+    typedef SFUnrecTextureBaseChunkPtr SFDisabledTextureType;
+    typedef SFUnrecTextureBaseChunkPtr SFFocusedTextureType;
     typedef SFUnrecTextureTransformChunkPtr SFTransformationType;
     typedef SFColor4f         SFColorType;
     typedef SFUInt32          SFScaleType;
@@ -167,14 +167,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecTextureObjChunkPtr *getSFTexture        (void) const;
-                  SFUnrecTextureObjChunkPtr *editSFTexture        (void);
-            const SFUnrecTextureObjChunkPtr *getSFRolloverTexture(void) const;
-                  SFUnrecTextureObjChunkPtr *editSFRolloverTexture(void);
-            const SFUnrecTextureObjChunkPtr *getSFDisabledTexture(void) const;
-                  SFUnrecTextureObjChunkPtr *editSFDisabledTexture(void);
-            const SFUnrecTextureObjChunkPtr *getSFFocusedTexture (void) const;
-                  SFUnrecTextureObjChunkPtr *editSFFocusedTexture (void);
+            const SFUnrecTextureBaseChunkPtr *getSFTexture        (void) const;
+                  SFUnrecTextureBaseChunkPtr *editSFTexture        (void);
+            const SFUnrecTextureBaseChunkPtr *getSFRolloverTexture(void) const;
+                  SFUnrecTextureBaseChunkPtr *editSFRolloverTexture(void);
+            const SFUnrecTextureBaseChunkPtr *getSFDisabledTexture(void) const;
+                  SFUnrecTextureBaseChunkPtr *editSFDisabledTexture(void);
+            const SFUnrecTextureBaseChunkPtr *getSFFocusedTexture (void) const;
+                  SFUnrecTextureBaseChunkPtr *editSFFocusedTexture (void);
             const SFUnrecTextureTransformChunkPtr *getSFTransformation (void) const;
                   SFUnrecTextureTransformChunkPtr *editSFTransformation (void);
 
@@ -194,13 +194,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
             const SFVec4f             *getSFImageClippingOffsets (void) const;
 
 
-                  TextureObjChunk * getTexture        (void) const;
+                  TextureBaseChunk * getTexture        (void) const;
 
-                  TextureObjChunk * getRolloverTexture(void) const;
+                  TextureBaseChunk * getRolloverTexture(void) const;
 
-                  TextureObjChunk * getDisabledTexture(void) const;
+                  TextureBaseChunk * getDisabledTexture(void) const;
 
-                  TextureObjChunk * getFocusedTexture (void) const;
+                  TextureBaseChunk * getFocusedTexture (void) const;
 
                   TextureTransformChunk * getTransformation (void) const;
 
@@ -224,10 +224,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setTexture        (TextureObjChunk * const value);
-            void setRolloverTexture(TextureObjChunk * const value);
-            void setDisabledTexture(TextureObjChunk * const value);
-            void setFocusedTexture (TextureObjChunk * const value);
+            void setTexture        (TextureBaseChunk * const value);
+            void setRolloverTexture(TextureBaseChunk * const value);
+            void setDisabledTexture(TextureBaseChunk * const value);
+            void setFocusedTexture (TextureBaseChunk * const value);
             void setTransformation (TextureTransformChunk * const value);
             void setColor          (const Color4f &value);
             void setScale          (const UInt32 value);
@@ -298,10 +298,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponentBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecTextureObjChunkPtr _sfTexture;
-    SFUnrecTextureObjChunkPtr _sfRolloverTexture;
-    SFUnrecTextureObjChunkPtr _sfDisabledTexture;
-    SFUnrecTextureObjChunkPtr _sfFocusedTexture;
+    SFUnrecTextureBaseChunkPtr _sfTexture;
+    SFUnrecTextureBaseChunkPtr _sfRolloverTexture;
+    SFUnrecTextureBaseChunkPtr _sfDisabledTexture;
+    SFUnrecTextureBaseChunkPtr _sfFocusedTexture;
     SFUnrecTextureTransformChunkPtr _sfTransformation;
     SFColor4f         _sfColor;
     SFUInt32          _sfScale;

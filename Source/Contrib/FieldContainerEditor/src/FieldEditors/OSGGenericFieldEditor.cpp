@@ -89,14 +89,17 @@ void GenericFieldEditor::initMethod(InitPhase ePhase)
         {
             type = dynamic_cast<DataType*>(TypeFactory::the()->findType(i));
             if(type != NULL &&
+               !(dynamic_cast<FieldType*>(type) &&
+                 (dynamic_cast<FieldType*>(type)->getClass() == FieldType::PtrField ||
+                  dynamic_cast<FieldType*>(type)->getClass() == FieldType::ChildPtrField)) &&
                 *type != FieldTraits<AttachmentMap>::getType() &&
                 *type != FieldTraits<ChangedFunctorCallback>::getType())
             {
                 _EditableTypes.push_back(type);
                 FieldEditorFactory::the()->setEditorType(type, &getClassType(), "Generic");
             }
-            FieldEditorFactory::the()->removeEditorType(&FieldTraits<MaterialMap>::getType(), "Generic");
         }
+        FieldEditorFactory::the()->removeEditorType(&FieldTraits<MaterialMap>::getType(), "Generic");
     }
 }
 

@@ -69,7 +69,7 @@
 #include "OSGVecFields.h"               // InternalPositions type
 #include "OSGBaseFields.h"              // InternalColors type
 #include "OSGStringToUInt32MapFields.h" // InternalAttributes type
-#include "OSGSysFields.h"               // MaxParticles type
+#include "OSGSysFields.h"               // InternalIDs type
 #include "OSGParticleGeneratorFields.h" // Generators type
 #include "OSGParticleAffectorFields.h"  // Affectors type
 #include "OSGParticleSystemAffectorFields.h" // SystemAffectors type
@@ -118,7 +118,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
         InternalSecVelocitiesFieldId = InternalVelocitiesFieldId + 1,
         InternalAccelerationsFieldId = InternalSecVelocitiesFieldId + 1,
         InternalAttributesFieldId = InternalAccelerationsFieldId + 1,
-        MaxParticlesFieldId = InternalAttributesFieldId + 1,
+        InternalIDsFieldId = InternalAttributesFieldId + 1,
+        MaxParticlesFieldId = InternalIDsFieldId + 1,
         DynamicFieldId = MaxParticlesFieldId + 1,
         UpdateSecAttribsFieldId = DynamicFieldId + 1,
         LastElapsedTimeFieldId = UpdateSecAttribsFieldId + 1,
@@ -155,6 +156,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
         (TypeTraits<BitVector>::One << InternalAccelerationsFieldId);
     static const OSG::BitVector InternalAttributesFieldMask =
         (TypeTraits<BitVector>::One << InternalAttributesFieldId);
+    static const OSG::BitVector InternalIDsFieldMask =
+        (TypeTraits<BitVector>::One << InternalIDsFieldId);
     static const OSG::BitVector MaxParticlesFieldMask =
         (TypeTraits<BitVector>::One << MaxParticlesFieldId);
     static const OSG::BitVector DynamicFieldMask =
@@ -190,6 +193,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     typedef MFVec3f           MFInternalSecVelocitiesType;
     typedef MFVec3f           MFInternalAccelerationsType;
     typedef MFStringToUInt32Map MFInternalAttributesType;
+    typedef MFUInt32          MFInternalIDsType;
     typedef SFUInt32          SFMaxParticlesType;
     typedef SFBool            SFDynamicType;
     typedef SFBool            SFUpdateSecAttribsType;
@@ -423,6 +427,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     MFVec3f           _mfInternalSecVelocities;
     MFVec3f           _mfInternalAccelerations;
     MFStringToUInt32Map _mfInternalAttributes;
+    MFUInt32          _mfInternalIDs;
     SFUInt32          _sfMaxParticles;
     SFBool            _sfDynamic;
     SFBool            _sfUpdateSecAttribs;
@@ -485,6 +490,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     EditFieldHandlePtr editHandleInternalAccelerations(void);
     GetFieldHandlePtr  getHandleInternalAttributes (void) const;
     EditFieldHandlePtr editHandleInternalAttributes(void);
+    GetFieldHandlePtr  getHandleInternalIDs     (void) const;
+    EditFieldHandlePtr editHandleInternalIDs    (void);
     GetFieldHandlePtr  getHandleMaxParticles    (void) const;
     EditFieldHandlePtr editHandleMaxParticles   (void);
     GetFieldHandlePtr  getHandleDynamic         (void) const;
@@ -543,6 +550,9 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
                   MFStringToUInt32Map *editMFInternalAttributes(void);
             const MFStringToUInt32Map *getMFInternalAttributes (void) const;
 
+                  MFUInt32            *editMFInternalIDs    (void);
+            const MFUInt32            *getMFInternalIDs     (void) const;
+
                   SFBoxVolume         *editSFVolume         (void);
 
                   SFVec3f             *editSFMaxParticleSize(void);
@@ -580,6 +590,9 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
 
                   StringToUInt32Map   &editInternalAttributes(const UInt32 index);
             const StringToUInt32Map   &getInternalAttributes (const UInt32 index) const;
+
+                  UInt32              &editInternalIDs    (const UInt32 index);
+                  UInt32               getInternalIDs     (const UInt32 index) const;
 
                   BoxVolume           &editVolume         (void);
 

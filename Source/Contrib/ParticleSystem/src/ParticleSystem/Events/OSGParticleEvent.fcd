@@ -25,6 +25,17 @@
 	>
 	</Field>
 	<Field
+		name="ParticleID"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="0"
+		publicRead="true"
+	>
+	</Field>
+	<Field
 		name="ParticlePosition"
 		type="Pnt3f"
         category="data"

@@ -215,8 +215,8 @@ int main(int argc, char **argv)
     ExampleLineParticleSystemDrawer->setEndPointFading(Vec2f(1.0,0.0));
     //Quad
     ExampleQuadParticleSystemDrawer = OSG::QuadParticleSystemDrawer::create();
-    ExampleQuadParticleSystemDrawer->setQuadSizeScaling(Vec2f(0.8,1.2));
-    ExampleQuadParticleSystemDrawer->setNormalSource(QuadParticleSystemDrawer::NORMAL_PARTICLE_NORMAL);
+    ExampleQuadParticleSystemDrawer->setQuadSizeScaling(Vec2f(0.1,0.1));
+    ExampleQuadParticleSystemDrawer->setNormalAndUpSource(QuadParticleSystemDrawer::NORMAL_PARTICLE_NORMAL,QuadParticleSystemDrawer::UP_STATIC);
 
     RateParticleGeneratorRefPtr ExampleGeneratorTheSequel = OSG::RateParticleGenerator::create();
 

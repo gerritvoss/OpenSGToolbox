@@ -122,11 +122,15 @@ class TreeEditorSelectionListener : public TreeSelectionListener
   protected:
     Tree* _EditorTree;
     FieldContainerEditorComponent* _Editor;
+    ScrollPanelRefPtr _EditorScroll;
     
   public:
-    TreeEditorSelectionListener(Tree* const tree, FieldContainerEditorComponent* const editor) :
+    TreeEditorSelectionListener(Tree* const tree,
+                                FieldContainerEditorComponent* const editor,
+                                ScrollPanel* const editorScroll) :
       _EditorTree(tree),
-      _Editor(editor)
+      _Editor(editor),
+      _EditorScroll(editorScroll)
     {
     }
     ~TreeEditorSelectionListener(void)
@@ -146,7 +150,26 @@ class TreeEditorSelectionListener : public TreeSelectionListener
 
                 if(ThePair._FieldID == 0)
                 {
-                    _Editor->attachFieldContainer(ThePair._Container);
+                    //Check if the container is NULL
+                    if(ThePair._Container == NULL)
+                    {
+                        _Editor->dettachFieldContainer();
+                    }
+                    else
+                    {
+                        //Check if this editor is already the default editor for
+                        //this type
+                        if(*FieldContainerEditorFactory::the()->getDefaultEditorType(&ThePair._Container->getType()) != _Editor->getType())
+                        {
+                            //If not then create a default editor for this type
+                            _Editor =
+                                FieldContainerEditorFactory::the()->createDefaultEditor(ThePair._Container,
+                                                                                        _Editor->getCommandManager());
+                            _EditorScroll->setViewComponent(_Editor);
+                        }
+                        //Attach the container to the editor
+                        _Editor->attachFieldContainer(ThePair._Container);
+                    }
                 }
             }
             catch(boost::bad_any_cast &ex)
@@ -184,7 +207,7 @@ DialogWindowTransitPtr createFCTreeEditorDialog       (FieldContainer* fc,
     TheTreeModel->setShowDataFields(false);
     TheTreeModel->setShowParentPtrFields(false);
     TheTreeModel->setShowChildPtrFields(true);
-    TheTreeModel->setShowAttachments(false);
+    TheTreeModel->setShowAttachments(true);
     TheTreeModel->setShowCallbackFunctors(false);
 
     //Field Container Tree Component Generator
@@ -198,7 +221,9 @@ DialogWindowTransitPtr createFCTreeEditorDialog       (FieldContainer* fc,
     TheTree->setModel(TheTreeModel);
     TheTree->setCellGenerator(TheTreeComponentGenerator);
     
-    TreeSelectionListenerRefPtr TheTreeEditorSelectionListener(new TreeEditorSelectionListener(TheTree, TheEditor));
+    TreeSelectionListenerRefPtr TheTreeEditorSelectionListener(new TreeEditorSelectionListener(TheTree,
+                                                                                           TheEditor,
+                                                                                           EditorScrollPanel));
     TheTree->getSelectionModel()->addTreeSelectionListener(TheTreeEditorSelectionListener.get());
     TheDialog->addTransientObject(boost::any(TheTreeEditorSelectionListener));
 

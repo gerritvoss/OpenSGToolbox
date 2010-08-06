@@ -136,7 +136,7 @@ class TutorialKeyListener : public KeyListener
         else {
             return;
         }
-        Example1ParticleSystemDrawer->setNormalSource(CHANGE_SOURCE);
+        Example1ParticleSystemDrawer->setNormalAndUpSource(CHANGE_SOURCE,QuadParticleSystemDrawer::UP_STATIC);
 
     }
 };

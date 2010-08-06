@@ -49,7 +49,7 @@
 #include "OSGGL.h"
 #include "OSGTextLayoutParam.h"
 #include "OSGTextLayoutResult.h"
-#include "OSGTextureObjChunk.h"
+#include "OSGTextureBaseChunk.h"
 #include "OSGDepthChunk.h"
 #include "OSGPrimeMaterial.h"
 
@@ -239,16 +239,17 @@ void Graphics2D::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, con
 
 void Graphics2D::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
                           const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-                          const Color4f& color, TextureObjChunk* const Texture,
+                          const Color4f& color, const TextureBaseChunkUnrecPtr Texture,
                           const Real32& Opacity) const
 {
     Real32 Alpha( Opacity * getOpacity() * color.alpha());
-    if(Alpha < 1.0 || (Texture->getImage() && Texture->getImage()->hasAlphaChannel()))
-    {
+    //if(Alpha < 1.0 ||
+       //(Texture-> && Texture->getImage()->hasAlphaChannel()))
+    //{
         //Setup the Blending equations properly
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
-    }
+    //}
 
     if(Texture != NULL)
     {
@@ -272,10 +273,10 @@ void Graphics2D::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, con
         Texture->deactivate(getDrawEnv());
     }
 
-    if(Alpha < 1.0 || (Texture->getImage() && Texture->getImage()->hasAlphaChannel()))
-    {
+    //if(Alpha < 1.0 || Texture->getImage()->hasAlphaChannel())
+    //{
         glDisable(GL_BLEND);
-    }
+    //}
 }
 
 void Graphics2D::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 

@@ -325,17 +325,23 @@ void ScrollPanel::updateLayout(void)
 
 void ScrollPanel::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
 {
-    if(getView() != NULL && getView()->isContained(e->getLocation(), true))
+    ComponentContainer::mouseWheelMoved(e);
+
+    if(getView() != NULL &&
+       getView()->isContained(e->getLocation(), true) &&
+       !e->getConsumed())
     {
         if(e->getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
         {
             if(getVerticalScrollBar()->getVisible())
             {
                 getVerticalScrollBar()->scrollBlock(-e->getScrollAmount());
+                e->setConsumed(true);
             }
             else if(getHorizontalScrollBar()->getVisible())
             {
                 getHorizontalScrollBar()->scrollBlock(-e->getScrollAmount());
+                e->setConsumed(true);
             }
         }
         else if(e->getScrollType() == MouseWheelEvent::UNIT_SCROLL)
@@ -343,14 +349,15 @@ void ScrollPanel::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
             if(getVerticalScrollBar()->getVisible())
             {
                 getVerticalScrollBar()->scrollUnit(-e->getUnitsToScroll());
+                e->setConsumed(true);
             }
             else if(getHorizontalScrollBar()->getVisible())
             {
                 getHorizontalScrollBar()->scrollUnit(-e->getUnitsToScroll());
+                e->setConsumed(true);
             }
         }
     }
-    ComponentContainer::mouseWheelMoved(e);
 }
 
 /*-------------------------------------------------------------------------*\

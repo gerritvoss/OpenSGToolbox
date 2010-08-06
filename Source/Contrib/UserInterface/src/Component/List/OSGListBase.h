@@ -96,7 +96,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
     enum
     {
         OrientationFieldId = Inherited::NextFieldId,
-        CellMajorAxisLengthFieldId = OrientationFieldId + 1,
+        SelectableFieldId = OrientationFieldId + 1,
+        CellMajorAxisLengthFieldId = SelectableFieldId + 1,
         ModelFieldId = CellMajorAxisLengthFieldId + 1,
         CellGeneratorFieldId = ModelFieldId + 1,
         AutoScrollToFocusedFieldId = CellGeneratorFieldId + 1,
@@ -105,6 +106,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
 
     static const OSG::BitVector OrientationFieldMask =
         (TypeTraits<BitVector>::One << OrientationFieldId);
+    static const OSG::BitVector SelectableFieldMask =
+        (TypeTraits<BitVector>::One << SelectableFieldId);
     static const OSG::BitVector CellMajorAxisLengthFieldMask =
         (TypeTraits<BitVector>::One << CellMajorAxisLengthFieldId);
     static const OSG::BitVector ModelFieldMask =
@@ -117,6 +120,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUInt32          SFOrientationType;
+    typedef SFBool            SFSelectableType;
     typedef SFUInt32          SFCellMajorAxisLengthType;
     typedef SFUnrecListModelPtr SFModelType;
     typedef SFUnrecComponentGeneratorPtr SFCellGeneratorType;
@@ -149,6 +153,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
                   SFUInt32            *editSFOrientation    (void);
             const SFUInt32            *getSFOrientation     (void) const;
 
+                  SFBool              *editSFSelectable     (void);
+            const SFBool              *getSFSelectable      (void) const;
+
                   SFUInt32            *editSFCellMajorAxisLength(void);
             const SFUInt32            *getSFCellMajorAxisLength (void) const;
             const SFUnrecListModelPtr *getSFModel          (void) const;
@@ -162,6 +169,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
 
                   UInt32              &editOrientation    (void);
                   UInt32               getOrientation     (void) const;
+
+                  bool                &editSelectable     (void);
+                  bool                 getSelectable      (void) const;
 
                   UInt32              &editCellMajorAxisLength(void);
                   UInt32               getCellMajorAxisLength (void) const;
@@ -179,6 +189,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
     /*! \{                                                                 */
 
             void setOrientation    (const UInt32 value);
+            void setSelectable     (const bool value);
             void setCellMajorAxisLength(const UInt32 value);
             void setModel          (ListModel * const value);
             void setCellGenerator  (ComponentGenerator * const value);
@@ -248,6 +259,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
     /*! \{                                                                 */
 
     SFUInt32          _sfOrientation;
+    SFBool            _sfSelectable;
     SFUInt32          _sfCellMajorAxisLength;
     SFUnrecListModelPtr _sfModel;
     SFUnrecComponentGeneratorPtr _sfCellGenerator;
@@ -282,6 +294,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
 
     GetFieldHandlePtr  getHandleOrientation     (void) const;
     EditFieldHandlePtr editHandleOrientation    (void);
+    GetFieldHandlePtr  getHandleSelectable      (void) const;
+    EditFieldHandlePtr editHandleSelectable     (void);
     GetFieldHandlePtr  getHandleCellMajorAxisLength (void) const;
     EditFieldHandlePtr editHandleCellMajorAxisLength(void);
     GetFieldHandlePtr  getHandleModel           (void) const;

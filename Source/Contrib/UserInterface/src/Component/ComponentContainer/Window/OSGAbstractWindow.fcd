@@ -19,7 +19,7 @@
 	   name="ParentDrawingSurface"
 	   type="FieldContainer"
 	   cardinality="single"
-	   visibility="external"
+	   visibility="internal"
 	   access="none"
        doRefCount="false"
        passFieldMask="true"

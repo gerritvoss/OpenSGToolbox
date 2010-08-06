@@ -58,7 +58,7 @@
 
 
 
-#include "OSGSkeleton.h"                // Skeleton Class
+#include "OSGSkeletonBlendedGeometry.h" // Skeleton Class
 
 #include "OSGSkeletonDrawableBase.h"
 #include "OSGSkeletonDrawable.h"
@@ -83,7 +83,7 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var Skeleton *      SkeletonDrawableBase::_sfSkeleton
+/*! \var SkeletonBlendedGeometry * SkeletonDrawableBase::_sfSkeleton
     
 */
 
@@ -131,8 +131,8 @@ void SkeletonDrawableBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecSkeletonPtr::Description(
-        SFUnrecSkeletonPtr::getClassType(),
+    pDesc = new SFUnrecSkeletonBlendedGeometryPtr::Description(
+        SFUnrecSkeletonBlendedGeometryPtr::getClassType(),
         "Skeleton",
         "",
         SkeletonFieldId, SkeletonFieldMask,
@@ -220,7 +220,7 @@ SkeletonDrawableBase::TypeObject SkeletonDrawableBase::_type(
     ">\n"
     "\t<Field\n"
     "\t\tname=\"Skeleton\"\n"
-    "\t\ttype=\"Skeleton\"\n"
+    "\t\ttype=\"SkeletonBlendedGeometry\"\n"
     "        category=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -293,12 +293,12 @@ UInt32 SkeletonDrawableBase::getContainerSize(void) const
 
 
 //! Get the SkeletonDrawable::_sfSkeleton field.
-const SFUnrecSkeletonPtr *SkeletonDrawableBase::getSFSkeleton(void) const
+const SFUnrecSkeletonBlendedGeometryPtr *SkeletonDrawableBase::getSFSkeleton(void) const
 {
     return &_sfSkeleton;
 }
 
-SFUnrecSkeletonPtr  *SkeletonDrawableBase::editSFSkeleton       (void)
+SFUnrecSkeletonBlendedGeometryPtr *SkeletonDrawableBase::editSFSkeleton       (void)
 {
     editSField(SkeletonFieldMask);
 
@@ -607,8 +607,8 @@ void SkeletonDrawableBase::onCreate(const SkeletonDrawable *source)
 
 GetFieldHandlePtr SkeletonDrawableBase::getHandleSkeleton        (void) const
 {
-    SFUnrecSkeletonPtr::GetHandlePtr returnValue(
-        new  SFUnrecSkeletonPtr::GetHandle(
+    SFUnrecSkeletonBlendedGeometryPtr::GetHandlePtr returnValue(
+        new  SFUnrecSkeletonBlendedGeometryPtr::GetHandle(
              &_sfSkeleton,
              this->getType().getFieldDesc(SkeletonFieldId),
              const_cast<SkeletonDrawableBase *>(this)));
@@ -618,8 +618,8 @@ GetFieldHandlePtr SkeletonDrawableBase::getHandleSkeleton        (void) const
 
 EditFieldHandlePtr SkeletonDrawableBase::editHandleSkeleton       (void)
 {
-    SFUnrecSkeletonPtr::EditHandlePtr returnValue(
-        new  SFUnrecSkeletonPtr::EditHandle(
+    SFUnrecSkeletonBlendedGeometryPtr::EditHandlePtr returnValue(
+        new  SFUnrecSkeletonBlendedGeometryPtr::EditHandle(
              &_sfSkeleton,
              this->getType().getFieldDesc(SkeletonFieldId),
              this));

@@ -65,7 +65,7 @@
 
 #include "OSGMaterialDrawable.h" // Parent
 
-#include "OSGSkeletonFields.h"          // Skeleton type
+#include "OSGSkeletonBlendedGeometryFields.h" // Skeleton type
 #include "OSGSysFields.h"               // DrawBindPose type
 #include "OSGBaseFields.h"              // BindPoseColor type
 
@@ -116,7 +116,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecSkeletonPtr SFSkeletonType;
+    typedef SFUnrecSkeletonBlendedGeometryPtr SFSkeletonType;
     typedef SFBool            SFDrawBindPoseType;
     typedef SFBool            SFDrawPoseType;
     typedef SFColor4f         SFBindPoseColorType;
@@ -145,8 +145,8 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecSkeletonPtr  *getSFSkeleton       (void) const;
-                  SFUnrecSkeletonPtr  *editSFSkeleton       (void);
+            const SFUnrecSkeletonBlendedGeometryPtr *getSFSkeleton       (void) const;
+                  SFUnrecSkeletonBlendedGeometryPtr *editSFSkeleton       (void);
 
                   SFBool              *editSFDrawBindPose   (void);
             const SFBool              *getSFDrawBindPose    (void) const;
@@ -161,7 +161,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
             const SFColor4f           *getSFPoseColor       (void) const;
 
 
-                  Skeleton * getSkeleton       (void) const;
+                  SkeletonBlendedGeometry * getSkeleton       (void) const;
 
                   bool                &editDrawBindPose   (void);
                   bool                 getDrawBindPose    (void) const;
@@ -180,7 +180,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setSkeleton       (Skeleton * const value);
+            void setSkeleton       (SkeletonBlendedGeometry * const value);
             void setDrawBindPose   (const bool value);
             void setDrawPose       (const bool value);
             void setBindPoseColor  (const Color4f &value);
@@ -249,7 +249,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecSkeletonPtr _sfSkeleton;
+    SFUnrecSkeletonBlendedGeometryPtr _sfSkeleton;
     SFBool            _sfDrawBindPose;
     SFBool            _sfDrawPose;
     SFColor4f         _sfBindPoseColor;

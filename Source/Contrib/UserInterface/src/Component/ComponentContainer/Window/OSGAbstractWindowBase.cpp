@@ -195,7 +195,7 @@ void AbstractWindowBase::classDescInserter(TypeObject &oType)
         "ParentDrawingSurface",
         "The DrawingSurface this Window is contained in.\n",
         ParentDrawingSurfaceFieldId, ParentDrawingSurfaceFieldMask,
-        false,
+        true,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&AbstractWindow::invalidEditField),
         static_cast     <FieldGetMethodSig >(&AbstractWindow::invalidGetField));

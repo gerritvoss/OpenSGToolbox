@@ -96,18 +96,22 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowEventBase : public Event
     {
         OptionFieldId = Inherited::NextFieldId,
         InputFieldId = OptionFieldId + 1,
-        NextFieldId = InputFieldId + 1
+        InputIndexFieldId = InputFieldId + 1,
+        NextFieldId = InputIndexFieldId + 1
     };
 
     static const OSG::BitVector OptionFieldMask =
         (TypeTraits<BitVector>::One << OptionFieldId);
     static const OSG::BitVector InputFieldMask =
         (TypeTraits<BitVector>::One << InputFieldId);
+    static const OSG::BitVector InputIndexFieldMask =
+        (TypeTraits<BitVector>::One << InputIndexFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUInt8           SFOptionType;
     typedef SFString          SFInputType;
+    typedef SFUInt32          SFInputIndexType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -137,10 +141,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowEventBase : public Event
 
             const SFString            *getSFInput           (void) const;
 
+            const SFUInt32            *getSFInputIndex      (void) const;
+
 
                   UInt8                getOption          (void) const;
 
             const std::string         &getInput           (void) const;
+
+                  UInt32               getInputIndex      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -208,6 +216,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowEventBase : public Event
 
     SFUInt8           _sfOption;
     SFString          _sfInput;
+    SFUInt32          _sfInputIndex;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -239,6 +248,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowEventBase : public Event
     EditFieldHandlePtr editHandleOption         (void);
     GetFieldHandlePtr  getHandleInput           (void) const;
     EditFieldHandlePtr editHandleInput          (void);
+    GetFieldHandlePtr  getHandleInputIndex      (void) const;
+    EditFieldHandlePtr editHandleInputIndex     (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -250,10 +261,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowEventBase : public Event
 
                   SFString            *editSFInput          (void);
 
+                  SFUInt32            *editSFInputIndex     (void);
+
 
                   UInt8               &editOption         (void);
 
                   std::string         &editInput          (void);
+
+                  UInt32              &editInputIndex     (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -262,6 +277,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowEventBase : public Event
 
             void setOption         (const UInt8 value);
             void setInput          (const std::string &value);
+            void setInputIndex     (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -49,7 +49,11 @@
 #include "OSGRenderAction.h"
 #include "OSGIntersectAction.h"
 
-#include <set>
+#include "OSGTypedGeoIntegralProperty.h"
+#include "OSGTypedGeoVectorProperty.h"
+#include <boost/bind.hpp>
+
+#include "OSGGeoPropertyUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -92,11 +96,212 @@ void SkeletonBlendedGeometry::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void SkeletonBlendedGeometry::addJointBlending(const UInt32& PositionIndex, const JointUnrecPtr TheJoint, const Real32& BlendAmount)
+
+UInt32 SkeletonBlendedGeometry::getNumJoints(void) const
 {
-    editMFPositionIndexes()->push_back(PositionIndex);
-    pushToJoints(TheJoint);
-    editMFBlendAmounts()->push_back(BlendAmount);
+    return getMFInternalJoints()->size();
+}
+
+Node* SkeletonBlendedGeometry::getJoint(UInt32 index) const
+{
+    if(index < getMFInternalJoints()->size())
+    {
+        return (*getMFInternalJoints())[index];
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+Matrix SkeletonBlendedGeometry::getJointInvBind(UInt32 index) const
+{
+    if(index < getMFInternalJointInvBindTransformations()->size())
+    {
+        return (*getMFInternalJointInvBindTransformations())[index];
+    }
+    else
+    {
+        return Matrix();
+    }
+}
+
+void SkeletonBlendedGeometry::pushToJoints(Node* const jointValue,
+                           const Matrix& invBind  )
+{
+    pushToInternalJoints(jointValue);
+    editMFInternalJointInvBindTransformations()->push_back(invBind);
+}
+
+void SkeletonBlendedGeometry::removeFromJoints(UInt32 uiIndex)
+{
+    removeFromInternalJoints(uiIndex);
+    editMFInternalJointInvBindTransformations()->erase(uiIndex);
+}
+
+void SkeletonBlendedGeometry::removeObjFromJoints(Node* const jointValue)
+{
+    editMFInternalJointInvBindTransformations()->erase(getMFInternalJoints()->findIndex(jointValue));
+    removeObjFromInternalJoints(jointValue);
+}
+
+void SkeletonBlendedGeometry::clearJoints(void)
+{
+    clearInternalJoints();
+    editMFInternalJointInvBindTransformations()->clear();
+}
+
+void SkeletonBlendedGeometry::drawPrimitives(DrawEnv *pEnv)
+{
+    if(getBaseGeometry())
+    {
+        calculateJointTransform();
+        if(_NeedRecalc)
+        {
+            calculatePositions();
+        }
+    }
+
+    Inherited::drawPrimitives(pEnv);
+}
+
+void SkeletonBlendedGeometry::skeletonUpdated(void)
+{
+	produceChangedEvent();
+    if(getBaseGeometry())
+    {
+        calculatePositions();
+    }
+}
+
+Matrix SkeletonBlendedGeometry::getAbsoluteTransformation(UInt32 index) const
+{
+    return getInternalJoints(index)->getToWorld();
+}
+
+Matrix SkeletonBlendedGeometry::getAbsoluteBindTransformation(UInt32 index) const
+{
+    Matrix Result(getInternalJointInvBindTransformations(index));
+    Result.invert();
+    return Result;
+}
+
+Int32 SkeletonBlendedGeometry::getJointIndex(Node* theJoint) const
+{
+    return getMFInternalJoints()->findIndex(theJoint);
+}
+
+Int32 SkeletonBlendedGeometry::getJointParentIndex(UInt32 index) const
+{
+    Node* ChildJoint(getJoint(index));
+
+    if(ChildJoint->getParent())
+    {
+        return getMFInternalJoints()->findIndex(ChildJoint->getParent());
+    }
+    return -1;
+}
+
+void SkeletonBlendedGeometry::addJointBlending(UInt32 VertexIndex, Node* const TheJoint, Real32 BlendAmount)
+{
+    if(getWeightIndexes() == NULL)
+    {
+        GeoUInt32PropertyUnrecPtr Indexes = GeoUInt32Property::create();
+        setWeightIndexes(Indexes);
+    }
+    if(getWeights() == NULL)
+    {
+        GeoVec1fPropertyUnrecPtr Weights = GeoVec1fProperty::create();
+        setWeights(Weights);
+    }
+    
+    Int32 JointIndex(getMFInternalJoints()->findIndex(TheJoint));
+    if(JointIndex < 0)
+    {
+        SFATAL << "Cannot add weight for joint, because that joint is not connected." << std::endl;
+        return;
+    }
+
+    //Vertex Index
+    getWeightIndexes()->push_back(VertexIndex);
+
+    //Joint Index
+    getWeightIndexes()->push_back(JointIndex);
+
+    //Weight Index
+    getWeightIndexes()->push_back(getWeights()->getSize());
+
+    getWeights()->push_back(Pnt1f(BlendAmount));
+}
+
+void SkeletonBlendedGeometry::addJointBlending(UInt32 VertexIndex,
+                                               UInt32 JointIndex,
+                                               Real32 BlendAmount)
+{
+    if(getWeightIndexes() == NULL)
+    {
+        GeoUInt32PropertyUnrecPtr Indexes = GeoUInt32Property::create();
+        setWeightIndexes(Indexes);
+    }
+    if(getWeights() == NULL)
+    {
+        GeoVec1fPropertyUnrecPtr Weights = GeoVec1fProperty::create();
+        setWeights(Weights);
+    }
+
+    //Vertex Index
+    getWeightIndexes()->push_back(VertexIndex);
+
+    //Joint Index
+    getWeightIndexes()->push_back(JointIndex);
+
+    //Weight Index
+    getWeightIndexes()->push_back(getWeights()->getSize());
+
+    getWeights()->push_back(Pnt1f(BlendAmount));
+}
+
+void SkeletonBlendedGeometry::addJointBlending(UInt32 VertexIndex,
+                                               UInt32 JointIndex,
+                                               UInt32 WeightIndex)
+{
+    if(getWeightIndexes() == NULL)
+    {
+        GeoUInt32PropertyUnrecPtr Indexes = GeoUInt32Property::create();
+        setWeightIndexes(Indexes);
+    }
+    if(getWeights() == NULL)
+    {
+        GeoVec1fPropertyUnrecPtr Weights = GeoVec1fProperty::create();
+        setWeights(Weights);
+    }
+
+    //Vertex Index
+    getWeightIndexes()->push_back(VertexIndex);
+
+    //Joint Index
+    getWeightIndexes()->push_back(JointIndex);
+
+    //Weight Index
+    getWeightIndexes()->push_back(WeightIndex);
+}
+
+void SkeletonBlendedGeometry::calculateJointTransform(void)
+{
+    //Precalculate the matrix for each joint
+    Matrix m;
+    for(UInt32 i(0) ; i<getNumJoints() ; ++i)
+    {
+        m.setValue(getBindTransformation());
+        m.multLeft(getInternalJointInvBindTransformations(i));
+        m.multLeft(getJoint(i)->getToWorld());
+
+        if( m != _JointPoseTransforms[i])
+        {
+            _JointPoseTransforms[i].setValue(m);
+            _NeedRecalc             = true;
+        }
+    }
 }
 
 void SkeletonBlendedGeometry::calculatePositions(void)
@@ -104,59 +309,47 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 	if(getBaseGeometry() == NULL)
 	{
 		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Base Geometry is NULL." << std::endl;
+		SWARNING << "Base Geometry is NULL." << std::endl;
         return;
+    }
 	if(getPositions() == NULL)
 	{
 		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Positions is NULL." << std::endl;
+		SWARNING << "Positions is NULL." << std::endl;
         return;
 	}
 	if(getBaseGeometry()->getPositions() == NULL)
 	{
 		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Base Geometry Postions is NULL." << std::endl;
-        return;
-	}
-	if(getMFPositionIndexes()->size() != getMFJoints()->size())
-	{
-		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Positions Indexes size is not the same as the affecting Joints size." << std::endl;
-        return;
-	}
-	}
-	if(getMFPositionIndexes()->size() != getMFBlendAmounts()->size())
-	{
-		//Error
-		SWARNING << "SkeletonBlendedGeometry::calculatePositions(): Positions Indexes size is not the same as the affecting blend amount size." << std::endl;
+		SWARNING << "Base Geometry Postions is NULL." << std::endl;
         return;
 	}
 
     Pnt3f CalculatedPoint;
-    Pnt3f PointTemp;
-    Vec3f CalculatedNormal;
+    Pnt3f BasePoint;
+    //Vec3f CalculatedNormal;
 
-
-    //Set the values of all points to 0
-    for (int i(0); i < getPositions()->size(); ++i)
-    {
-        getPositions()->setValue(Pnt3f(0, 0, 0), i);
-    }
+    //Zero the Position Property
+    zeroGeoProperty(getPositions());
 
     //Update the Positions and Normals
-    for(UInt32 i(0) ; i < getMFPositionIndexes()->size() ; ++i)
+    UInt32 WeightIndex, JointIndex, VertexIndex;
+	UInt32 NumWeightIndexTuples(getWeightIndexes()->size()/3);
+    for(UInt32 i(0) ; i < NumWeightIndexTuples ; ++i)
     {
+        VertexIndex = getWeightIndexes()->getValue<UInt32>( 3 * i     );
+        JointIndex  = getWeightIndexes()->getValue<UInt32>((3 * i) + 1);
+        WeightIndex = getWeightIndexes()->getValue<UInt32>((3 * i) + 2);
 
-        Matrix temp = getJoints(i)->getAbsoluteDifferenceTransformation();
-        temp.scale(getBlendAmounts(i));
-        getBaseGeometry()->getPositions()->getValue<Pnt3f>(PointTemp, getPositionIndexes(i));
-        temp.mult(PointTemp, CalculatedPoint);
-        //temp.mult(getBaseGeometry()->getNormals()->getValue(getPositionIndexes(i)), CalculatedNormal);
-        
+        //v*BSM*IBM*JM*JW
+        getBaseGeometry()->getPositions()->getValue<Pnt3f>(BasePoint, VertexIndex);
 
-        //Add
-        CalculatedPoint += PointTemp.subZero();
-        getPositions()->setValue<Pnt3f>(CalculatedPoint, getPositionIndexes(i));
+        _JointPoseTransforms[JointIndex].mult(BasePoint, BasePoint);
+
+        //Add the displacement to the value at this position
+        getPositions()->getValue<Pnt3f>(CalculatedPoint, VertexIndex);
+        CalculatedPoint += Vec3f(BasePoint) * getWeights()->getValue<Pnt1f>(WeightIndex)[0];
+        getPositions()->setValue<Pnt3f>(CalculatedPoint, VertexIndex);
     }
 
     for(UInt32 i = 0; i < _mfParents.size(); i++)
@@ -166,11 +359,38 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 
     _volumeCache.setValid();
     _volumeCache.setEmpty();
+
+    _NeedRecalc = false;
 }
 
-void SkeletonBlendedGeometry::skeletonChanged(const SkeletonEventUnrecPtr e)
+EventConnection SkeletonBlendedGeometry::addSkeletonListener(SkeletonListenerPtr Listener)
 {
-    calculatePositions();
+   _SkeletonListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&SkeletonBlendedGeometry::isSkeletonListenerAttached, this, Listener),
+       boost::bind(&SkeletonBlendedGeometry::removeSkeletonListener, this, Listener));
+}
+
+
+void SkeletonBlendedGeometry::removeSkeletonListener(SkeletonListenerPtr Listener)
+{
+   SkeletonListenerSetItor EraseIter(_SkeletonListeners.find(Listener));
+   if(EraseIter != _SkeletonListeners.end())
+   {
+      _SkeletonListeners.erase(EraseIter);
+   }
+}
+
+void SkeletonBlendedGeometry::produceChangedEvent(void)
+{
+	const SkeletonEventUnrecPtr TheEvent = SkeletonEvent::create( this, getTimeStamp());
+
+	SkeletonListenerSet ListenerSet(_SkeletonListeners);
+	for(SkeletonListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+	{
+	   (*SetItor)->skeletonChanged(TheEvent);
+	}
+    _Producer.produceEvent(SkeletonChangedMethodId,TheEvent);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -269,26 +489,19 @@ void SkeletonBlendedGeometry::changed(ConstFieldMaskArg whichField,
         setMaterial(getBaseGeometry()->getMaterial());
     }
 
-    if((whichField & JointsFieldMask) ||
-        (whichField & PositionIndexesFieldMask) ||
-        (whichField & BlendAmountsFieldMask))
+    if(whichField & InternalJointsFieldMask)
     {
-        calculatePositions();
+        _JointPoseTransforms.resize(getNumJoints());
     }
 
-    if(whichField & SkeletonsFieldMask)
+    if( (whichField & BaseGeometryFieldMask) ||
+        (whichField & InternalJointsFieldMask) ||
+        (whichField & InternalWeightIndexesFieldMask) ||
+        (whichField & InternalWeightsFieldMask) ||
+        (whichField & BindTransformationFieldMask))
     {
-        for(std::vector<EventConnection>::iterator Itor(_SkeletonListenerConnections.begin()) ; Itor != _SkeletonListenerConnections.end() ; ++Itor)
-        {
-            Itor->disconnect();
-        }
-
-        _SkeletonListenerConnections.clear();
-
-        for(UInt32 i(0) ; i<getMFSkeletons()->size() ; ++i)
-        {
-            _SkeletonListenerConnections.push_back(getSkeletons(i)->addSkeletonListener(this));
-        }
+        _JointPoseTransforms.resize(getNumJoints());
+        calculatePositions();
     }
 }
 

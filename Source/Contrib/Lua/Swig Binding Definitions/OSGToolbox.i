@@ -1,5 +1,6 @@
 
 %module OSGToolbox
+%include <std_except.i>
 %import  <OSGBase.i>
 %import  <OSGSystem.i>
 %include <lua/std_map.i>
@@ -59,6 +60,7 @@
 #include "OSGWindow.h"
 #include "OSGLuaActivity.h"
 #include "OSGGenericEvent.h"
+#include "OSGCgFXMaterial.h"
         
 %}
 
@@ -501,7 +503,7 @@ namespace OSG {
 //#else
                          KEY_MODIFIER_COMMAND     = KEY_MODIFIER_CONTROL
 //#endif
-         };
+                            };
          enum Key
           {
              KEY_UNKNOWN = 0,
@@ -705,11 +707,11 @@ namespace OSG {
         ~ParticleSystemRefPtr(void); 
         ParticleSystem *operator->(void);
     };
-    %extend ParticleSystemManagerRefPtr
+    %extend ParticleSystemRefPtr
     {
-        static ParticleSystemManagerRefPtr dcast(const FieldContainerRefPtr oIn)
+        static ParticleSystemRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            return OSG::dynamic_pointer_cast<OSG::ParticleSystemManager>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::ParticleSystem>(oIn);
         }
     };
     
@@ -723,7 +725,7 @@ namespace OSG {
         UInt32 getNumParticles(void) const;
         const Pnt3f& getPosition(const UInt32& Index) const;
         const Pnt3f& getSecPosition(const UInt32& Index) const;
-        const Vec3f getPositionChange(const UInt32& Index) const;
+        Vec3f getPositionChange(const UInt32& Index) const;
         const Vec3f& getNormal(const UInt32& Index) const;
         const Color4f& getColor(const UInt32& Index) const;
         const Vec3f& getSize(const UInt32& Index) const;
@@ -731,9 +733,11 @@ namespace OSG {
         Real32 getAge(const UInt32& Index) const;
         const Vec3f& getVelocity(const UInt32& Index) const;
         const Vec3f& getSecVelocity(const UInt32& Index) const;
-        const Vec3f getVelocityChange(const UInt32& Index) const;
+        Vec3f getVelocityChange(const UInt32& Index) const;
         const Vec3f& getAcceleration(const UInt32& Index) const;
         UInt32 getAttribute(const UInt32& Index, const std::string& AttributeKey) const;
+        UInt32 getID(const UInt32& Index) const;
+        Int64 getIndex(UInt32 ParticleID) const;
         const std::map<std::string, OSG::UInt32>& getAttributes(const UInt32& Index) const;
     
         void setPosition(const Pnt3f& Pos, const UInt32& Index);
@@ -790,6 +794,7 @@ namespace OSG {
                          const Vec3f& Acceleration);
     
         bool killParticle(UInt32 Index, bool KillNextUpdate = false);
+        bool killParticleByID(UInt32 ID, bool KillNextUpdate = false);
     
         bool attachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
         void dettachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
@@ -1293,6 +1298,39 @@ namespace OSG {
         static Distribution3DRefPtr dcast(const FieldContainerRefPtr oIn)
         {
             return OSG::dynamic_pointer_cast<OSG::Distribution3D>(oIn);
+        }
+    };
+
+    /******************************************************/
+    /*               CgFXMaterialRefPtr                    */
+    /******************************************************/
+    class CgFXMaterial : public AttachmentContainer
+    {
+      public:
+	bool setActiveTechnique(std::string techniqueName);
+	std::vector<std::string> getAvailableTechniques();
+      protected:
+        CgFXMaterial(void);
+        CgFXMaterial(const CgFXMaterial &source);
+        virtual ~CgFXMaterial(void); 
+    };
+    
+    class CgFXMaterialRefPtr : public AttachmentContainerRefPtr
+    {
+      public:
+         CgFXMaterialRefPtr(void);
+         CgFXMaterialRefPtr(const CgFXMaterialRefPtr               &source);
+         /*CgFXMaterialRefPtr(const NullFieldContainerRefPtr &source);*/
+
+
+        ~CgFXMaterialRefPtr(void); 
+        CgFXMaterial *operator->(void);
+    };
+    %extend CgFXMaterialRefPtr
+    {
+        static CgFXMaterialRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            return OSG::dynamic_pointer_cast<OSG::CgFXMaterial>(oIn);
         }
     };
 }

@@ -25,7 +25,7 @@
 #include "OSGMaterialChunk.h"
 
 //Animation
-#include "OSGSkeleton.h"
+//#include "OSGSkeleton.h"
 #include "OSGSkeletonDrawable.h"
 
 #include "OSGRandomPoolManager.h"

@@ -100,8 +100,8 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
 
     static LuaManager* the(void);
 
-    void runScript(const std::string& Script);
-    void runScript(const BoostPath& ScriptPath);
+    int runScript(const std::string& Script);
+    int runScript(const BoostPath& ScriptPath);
 
     static void report_errors(lua_State *L, int status);
 
@@ -141,7 +141,7 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
     UInt32                   getProducedEventId(const            Char8 *ProducedEventName) const;
 
     lua_State *getLuaState(void);
-
+    void checkError(int Status);
 
 #ifdef OSG_WITH_LUA_DEBUGGER
 
@@ -240,7 +240,6 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
     std::list<std::string> _LuaStack;
     bool _EnableStackTrace;
 
-    void checkError(int Status);
     void produceError(int Status);
 
 #ifdef OSG_WITH_LUA_DEBUGGER

@@ -97,7 +97,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
     enum
     {
         ParticleIndexFieldId = Inherited::NextFieldId,
-        ParticlePositionFieldId = ParticleIndexFieldId + 1,
+        ParticleIDFieldId = ParticleIndexFieldId + 1,
+        ParticlePositionFieldId = ParticleIDFieldId + 1,
         ParticleSecPositionFieldId = ParticlePositionFieldId + 1,
         ParticleNormalFieldId = ParticleSecPositionFieldId + 1,
         ParticleColorFieldId = ParticleNormalFieldId + 1,
@@ -113,6 +114,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
 
     static const OSG::BitVector ParticleIndexFieldMask =
         (TypeTraits<BitVector>::One << ParticleIndexFieldId);
+    static const OSG::BitVector ParticleIDFieldMask =
+        (TypeTraits<BitVector>::One << ParticleIDFieldId);
     static const OSG::BitVector ParticlePositionFieldMask =
         (TypeTraits<BitVector>::One << ParticlePositionFieldId);
     static const OSG::BitVector ParticleSecPositionFieldMask =
@@ -139,6 +142,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFInt32           SFParticleIndexType;
+    typedef SFUInt32          SFParticleIDType;
     typedef SFPnt3f           SFParticlePositionType;
     typedef SFPnt3f           SFParticleSecPositionType;
     typedef SFVec3f           SFParticleNormalType;
@@ -177,6 +181,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
 
             const SFInt32             *getSFParticleIndex   (void) const;
 
+            const SFUInt32            *getSFParticleID      (void) const;
+
             const SFPnt3f             *getSFParticlePosition (void) const;
 
             const SFPnt3f             *getSFParticleSecPosition (void) const;
@@ -201,6 +207,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
 
 
                   Int32                getParticleIndex   (void) const;
+
+                  UInt32               getParticleID      (void) const;
 
             const Pnt3f               &getParticlePosition (void) const;
 
@@ -289,6 +297,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
     /*! \{                                                                 */
 
     SFInt32           _sfParticleIndex;
+    SFUInt32          _sfParticleID;
     SFPnt3f           _sfParticlePosition;
     SFPnt3f           _sfParticleSecPosition;
     SFVec3f           _sfParticleNormal;
@@ -329,6 +338,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
 
     GetFieldHandlePtr  getHandleParticleIndex   (void) const;
     EditFieldHandlePtr editHandleParticleIndex  (void);
+    GetFieldHandlePtr  getHandleParticleID      (void) const;
+    EditFieldHandlePtr editHandleParticleID     (void);
     GetFieldHandlePtr  getHandleParticlePosition (void) const;
     EditFieldHandlePtr editHandleParticlePosition(void);
     GetFieldHandlePtr  getHandleParticleSecPosition (void) const;
@@ -360,6 +371,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
 
                   SFInt32             *editSFParticleIndex  (void);
 
+                  SFUInt32            *editSFParticleID     (void);
+
                   SFPnt3f             *editSFParticlePosition(void);
 
                   SFPnt3f             *editSFParticleSecPosition(void);
@@ -384,6 +397,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
 
 
                   Int32               &editParticleIndex  (void);
+
+                  UInt32              &editParticleID     (void);
 
                   Pnt3f               &editParticlePosition(void);
 
@@ -413,6 +428,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
     /*! \{                                                                 */
 
             void setParticleIndex  (const Int32 value);
+            void setParticleID     (const UInt32 value);
             void setParticlePosition(const Pnt3f &value);
             void setParticleSecPosition(const Pnt3f &value);
             void setParticleNormal (const Vec3f &value);

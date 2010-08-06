@@ -133,7 +133,8 @@ void TextureLayer::draw(Graphics* const TheGraphics, const Pnt2f& TopLeft, const
 	{
 	case SCALE_NONE:
 	   //Size in pixels Should be the Image size in pixels
-	   Size.setValues(getTexture()->getImage()->getWidth(), getTexture()->getImage()->getHeight());
+	   Size.setValues(dynamic_cast<TextureObjChunk*>(getTexture())->getImage()->getWidth(),
+                      dynamic_cast<TextureObjChunk*>(getTexture())->getImage()->getHeight());
 	   break;
 	case SCALE_STRETCH:
 	   Size.setValue(BackgroundSize);
@@ -142,7 +143,8 @@ void TextureLayer::draw(Graphics* const TheGraphics, const Pnt2f& TopLeft, const
 	   {
 	   //Figure out the aspect ratio of this Component
 	   Real32 AspectBackground = BackgroundSize.x()/BackgroundSize.y();
-	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
+	   Real32 AspectImage = static_cast<Real32>(dynamic_cast<TextureObjChunk*>(getTexture())->getImage()->getWidth()) / 
+           static_cast<Real32>(dynamic_cast<TextureObjChunk*>(getTexture())->getImage()->getHeight());
 
 	   Vec2f vector(0,0);
 	   if (AspectBackground < AspectImage)
@@ -162,7 +164,8 @@ void TextureLayer::draw(Graphics* const TheGraphics, const Pnt2f& TopLeft, const
 	   {
 	   //Figure out the aspect ratio of this Component
 	   Real32 AspectBackground = BackgroundSize.x()/BackgroundSize.y();
-	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
+	   Real32 AspectImage = static_cast<Real32>(dynamic_cast<TextureObjChunk*>(getTexture())->getImage()->getWidth()) /
+           static_cast<Real32>(dynamic_cast<TextureObjChunk*>(getTexture())->getImage()->getHeight());
 
 	   Vec2f vector(0,0);
 	   if (AspectBackground > AspectImage)
@@ -241,6 +244,17 @@ void TextureLayer::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if((whichField & TextureFieldMask) &&
+       getTexture() != NULL &&
+       getTexture()->getType() != TextureObjChunk::getClassType() &&
+       (getScale() == SCALE_NONE ||
+        getScale() == SCALE_MIN_AXIS ||
+        getScale() == SCALE_MAX_AXIS))
+    {
+        SWARNING << "Can only use scaling of SCALE_NONE, SCALE_MIN_AXIS, SCALE_MAX_AXIS, with TextureObjChunks." << std::endl;
+        setScale(SCALE_STRETCH);
+    }
 }
 
 void TextureLayer::dump(      UInt32    ,

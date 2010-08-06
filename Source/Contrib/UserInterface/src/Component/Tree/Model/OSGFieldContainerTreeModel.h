@@ -61,6 +61,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModel : public Field
     typedef FieldContainerTreeModelBase Inherited;
     typedef FieldContainerTreeModel     Self;
 
+    enum PseudoId 
+    {
+        //ATTACHMENT_MAP_ID = -1,
+        FIELD_CONTAINER_ID = 0,
+
+    };
+
     struct ContainerFieldIdPair
     {
       public:
@@ -68,7 +75,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModel : public Field
         ContainerFieldIdPair(void);
 
         FieldContainer* _Container;
-        UInt32                _FieldID;
+        Int32                _FieldID;
 
         bool operator==(const ContainerFieldIdPair& right) const;
     };
