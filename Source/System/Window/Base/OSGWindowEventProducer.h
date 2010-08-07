@@ -55,6 +55,7 @@
 #include "OSGMouseWheelEvent.h"
 #include "OSGWindowEvent.h"
 #include "OSGUpdateEvent.h"
+#include <boost/function.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -112,8 +113,8 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
 	typedef std::list<CursorRegion> CursorRegionList;
 	typedef CursorRegionList::iterator CursorRegionListItor;
 
-    typedef void (*DisplayCallbackFunc)(void);
-    typedef void (*ReshapeCallbackFunc)(Vec2f);
+    typedef boost::function<void (void)> DisplayCallbackFunc;
+    typedef boost::function<void (Vec2f)> ReshapeCallbackFunc;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -133,7 +134,7 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
 
     /*! \}                                                                 */
 
-    virtual WindowUnrecPtr initWindow(void);
+    virtual Window* initWindow(void);
 
     virtual void openWindow(const Pnt2f& ScreenPosition,
                        const Vec2f& Size,

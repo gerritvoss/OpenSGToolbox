@@ -86,6 +86,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var UInt32          ParticleEventBase::_sfParticleID
+    
+*/
+
 /*! \var Pnt3f           ParticleEventBase::_sfParticlePosition
     
 */
@@ -167,6 +171,18 @@ void ParticleEventBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&ParticleEvent::editHandleParticleIndex),
         static_cast<FieldGetMethodSig >(&ParticleEvent::getHandleParticleIndex));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ParticleID",
+        "",
+        ParticleIDFieldId, ParticleIDFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleEvent::editHandleParticleID),
+        static_cast<FieldGetMethodSig >(&ParticleEvent::getHandleParticleID));
 
     oType.addInitialDesc(pDesc);
 
@@ -342,6 +358,17 @@ ParticleEventBase::TypeObject ParticleEventBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
+    "\t\tname=\"ParticleID\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\tpublicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
     "\t\tname=\"ParticlePosition\"\n"
     "\t\ttype=\"Pnt3f\"\n"
     "        category=\"data\"\n"
@@ -495,6 +522,19 @@ SFInt32 *ParticleEventBase::editSFParticleIndex(void)
 const SFInt32 *ParticleEventBase::getSFParticleIndex(void) const
 {
     return &_sfParticleIndex;
+}
+
+
+SFUInt32 *ParticleEventBase::editSFParticleID(void)
+{
+    editSField(ParticleIDFieldMask);
+
+    return &_sfParticleID;
+}
+
+const SFUInt32 *ParticleEventBase::getSFParticleID(void) const
+{
+    return &_sfParticleID;
 }
 
 
@@ -655,6 +695,10 @@ UInt32 ParticleEventBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfParticleIndex.getBinSize();
     }
+    if(FieldBits::NoField != (ParticleIDFieldMask & whichField))
+    {
+        returnValue += _sfParticleID.getBinSize();
+    }
     if(FieldBits::NoField != (ParticlePositionFieldMask & whichField))
     {
         returnValue += _sfParticlePosition.getBinSize();
@@ -712,6 +756,10 @@ void ParticleEventBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfParticleIndex.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ParticleIDFieldMask & whichField))
+    {
+        _sfParticleID.copyToBin(pMem);
+    }
     if(FieldBits::NoField != (ParticlePositionFieldMask & whichField))
     {
         _sfParticlePosition.copyToBin(pMem);
@@ -766,6 +814,10 @@ void ParticleEventBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ParticleIndexFieldMask & whichField))
     {
         _sfParticleIndex.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ParticleIDFieldMask & whichField))
+    {
+        _sfParticleID.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ParticlePositionFieldMask & whichField))
     {
@@ -937,6 +989,7 @@ FieldContainerTransitPtr ParticleEventBase::shallowCopy(void) const
 ParticleEventBase::ParticleEventBase(void) :
     Inherited(),
     _sfParticleIndex          (Int32(-1)),
+    _sfParticleID             (UInt32(0)),
     _sfParticlePosition       (Pnt3f(0.0f,0.0f,0.0f)),
     _sfParticleSecPosition    (Pnt3f(0.0f,0.0f,0.0f)),
     _sfParticleNormal         (Vec3f(0.0f,0.0f,0.0f)),
@@ -954,6 +1007,7 @@ ParticleEventBase::ParticleEventBase(void) :
 ParticleEventBase::ParticleEventBase(const ParticleEventBase &source) :
     Inherited(source),
     _sfParticleIndex          (source._sfParticleIndex          ),
+    _sfParticleID             (source._sfParticleID             ),
     _sfParticlePosition       (source._sfParticlePosition       ),
     _sfParticleSecPosition    (source._sfParticleSecPosition    ),
     _sfParticleNormal         (source._sfParticleNormal         ),
@@ -997,6 +1051,31 @@ EditFieldHandlePtr ParticleEventBase::editHandleParticleIndex  (void)
 
 
     editSField(ParticleIndexFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleEventBase::getHandleParticleID      (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfParticleID,
+             this->getType().getFieldDesc(ParticleIDFieldId),
+             const_cast<ParticleEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleEventBase::editHandleParticleID     (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfParticleID,
+             this->getType().getFieldDesc(ParticleIDFieldId),
+             this));
+
+
+    editSField(ParticleIDFieldMask);
 
     return returnValue;
 }

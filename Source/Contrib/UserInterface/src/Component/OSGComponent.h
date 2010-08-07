@@ -257,6 +257,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
     virtual Layer* getDrawnBackground(void) const;
     virtual Layer* getDrawnForeground(void) const;
 
+    virtual bool useBoundsForClipping(void) const;
+
     class ComponentUpdater : public UpdateListener
     {
     public:

@@ -47,6 +47,8 @@
 
 #include "OSGKeyframeColorSequenceTmplFuncs.ins"
 #include "OSGKeyframeColorSequenceTmpl.ins"
+#include "OSGAnimator.h"
+#include "OSGKeyframeInterpolations.h"
 
 OSG_USING_NAMESPACE
 
@@ -68,21 +70,111 @@ EXPORT_SEQUENCE(KeyframeColorSequenceColor3fDescBase)
 EXPORT_SEQUENCE(KeyframeColorSequenceColor4fDescBase)
 
 KeyframeColorSequenceColor3fDescBase::InterpolationFuncMap KeyframeColorSequenceColor3fDescBase::_interpolationFuncs = KeyframeColorSequenceColor3fDescBase::InterpolationFuncMap();
+KeyframeColorSequenceColor3fDescBase::ReplaceFuncMap KeyframeColorSequenceColor3fDescBase::_replacementFuncs = KeyframeColorSequenceColor3fDescBase::ReplaceFuncMap();
 KeyframeColorSequenceColor4fDescBase::InterpolationFuncMap KeyframeColorSequenceColor4fDescBase::_interpolationFuncs = KeyframeColorSequenceColor4fDescBase::InterpolationFuncMap();
+KeyframeColorSequenceColor4fDescBase::ReplaceFuncMap KeyframeColorSequenceColor4fDescBase::_replacementFuncs = KeyframeColorSequenceColor4fDescBase::ReplaceFuncMap();
 
 //Fixed32
 EXPORT_SEQUENCE(KeyframeColorSequenceColor3fxDescBase)
 EXPORT_SEQUENCE(KeyframeColorSequenceColor4fxDescBase)
 
 KeyframeColorSequenceColor3fxDescBase::InterpolationFuncMap KeyframeColorSequenceColor3fxDescBase::_interpolationFuncs = KeyframeColorSequenceColor3fxDescBase::InterpolationFuncMap();
+KeyframeColorSequenceColor3fxDescBase::ReplaceFuncMap KeyframeColorSequenceColor3fxDescBase::_replacementFuncs = KeyframeColorSequenceColor3fxDescBase::ReplaceFuncMap();
 KeyframeColorSequenceColor4fxDescBase::InterpolationFuncMap KeyframeColorSequenceColor4fxDescBase::_interpolationFuncs = KeyframeColorSequenceColor4fxDescBase::InterpolationFuncMap();
+KeyframeColorSequenceColor4fxDescBase::ReplaceFuncMap KeyframeColorSequenceColor4fxDescBase::_replacementFuncs = KeyframeColorSequenceColor4fxDescBase::ReplaceFuncMap();
 
 //UInt8
 EXPORT_SEQUENCE(KeyframeColorSequenceColor3ubDescBase)
 EXPORT_SEQUENCE(KeyframeColorSequenceColor4ubDescBase)
 
 KeyframeColorSequenceColor3ubDescBase::InterpolationFuncMap KeyframeColorSequenceColor3ubDescBase::_interpolationFuncs = KeyframeColorSequenceColor3ubDescBase::InterpolationFuncMap();
+KeyframeColorSequenceColor3ubDescBase::ReplaceFuncMap KeyframeColorSequenceColor3ubDescBase::_replacementFuncs = KeyframeColorSequenceColor3ubDescBase::ReplaceFuncMap();
 KeyframeColorSequenceColor4ubDescBase::InterpolationFuncMap KeyframeColorSequenceColor4ubDescBase::_interpolationFuncs = KeyframeColorSequenceColor4ubDescBase::InterpolationFuncMap();
+KeyframeColorSequenceColor4ubDescBase::ReplaceFuncMap KeyframeColorSequenceColor4ubDescBase::_replacementFuncs = KeyframeColorSequenceColor4ubDescBase::ReplaceFuncMap();
+
+void KeyframeColorSequenceColor3fDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    }
+}
+
+void KeyframeColorSequenceColor4fDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    }
+}
+
+void KeyframeColorSequenceColor3fxDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    }
+}
+
+void KeyframeColorSequenceColor4fxDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    }
+}
+
+void KeyframeColorSequenceColor3ubDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    }
+}
+
+void KeyframeColorSequenceColor4ubDescBase::initMethod(InitPhase ePhase)
+{
+    if(ePhase == TypeObject::SystemPost)
+    {
+        _interpolationFuncs[Animator::STEP_INTERPOLATION]   = stepKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::LINEAR_INTERPOLATION] = lerpKeyframeSequence<StoredType>;
+        _interpolationFuncs[Animator::CUBIC_INTERPOLATION]  = splineKeyframeSequence<StoredType>;
+
+        _replacementFuncs[Animator::OVERWRITE]            = overwriteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_ABSOLUTE]    = additiveAbsoluteReplacement<StoredType>;
+        _replacementFuncs[Animator::ADDITIVE_SINCE_LAST]  = additiveSinceLastReplacement<StoredType>;
+    }
+}
 
 OSG_END_NAMESPACE
 

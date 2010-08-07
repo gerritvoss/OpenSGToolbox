@@ -40,20 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
 #define OSG_COMPILELUALIB
+//#define OSG_WITH_LUA_DEBUGGER
+
 
 #include "OSGConfig.h"
 
 #include "OSGLuaUtils.h"
 #include "OSGLuaManager.h"
 
-OSG_BEGIN_NAMESPACE
-
 #ifdef OSG_WITH_LUA_DEBUGGER
+
+OSG_BEGIN_NAMESPACE
 
 lua_details::State::State(void) //: step_event_(false, true), start_event_(false, true)
 {
@@ -532,7 +535,7 @@ const Char8* lua_details::StackFrame::sourcePath(void) const
     return 0;
 }
 
-#endif /* _OSGLUAMANAGER_H_ */
 
 OSG_END_NAMESPACE
+#endif /* OSG_WITH_LUA_DEBUGGER */
 

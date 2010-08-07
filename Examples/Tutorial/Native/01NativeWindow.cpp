@@ -49,48 +49,38 @@
 #include <OpenSG/OSGWindowEventProducer.h>
 #endif
 
+#include <boost/bind.hpp>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-
-WindowEventProducerRefPtr TheWindow;
-EventConnection MouseEventConnection;
-
 // forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-class TutorialMouseWheelListener : public MouseWheelListener
+void mouseWheelMoved(const MouseWheelEventUnrecPtr e, SimpleSceneManager *mgr )
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e)
-    {
-        std::cout << "Mouse Wheel Moved " << e->getScrollAmount() << std::endl;
-        Pnt3f Min,Max;
-        mgr->getRoot()->getVolume().getBounds(Min,Max);
-        Real32 Dist(Min.dist(Max));
-        mgr->getNavigator()->setDistance(mgr->getNavigator()->getDistance()+(Dist*e->getUnitsToScroll()*0.05));
-    }
-};
+    std::cout << "Mouse Wheel Moved " << e->getScrollAmount() << std::endl;
+    Pnt3f Min,Max;
+    mgr->getRoot()->getVolume().getBounds(Min,Max);
+    Real32 Dist(Min.dist(Max));
+    mgr->getNavigator()->setDistance(mgr->getNavigator()->getDistance()+(Dist*e->getUnitsToScroll()*0.05));
+}
 
 class TutorialMouseMotionListener : public MouseMotionListener
 {
     virtual void mouseMoved(const MouseEventUnrecPtr e)
     {
-        std::cout << "Mouse Move: " << e->getLocation().x() << ", " << e->getLocation().y() << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;
-        mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
+        //std::cout << "Mouse Move: " << e->getLocation().x() << ", " << e->getLocation().y() << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;
+        //mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
     virtual void mouseDragged(const MouseEventUnrecPtr e)
     {
-        std::cout << "Mouse Drag Button " << e->getButton() << ": " << e->getLocation().x() << ", " << e->getLocation().y()  << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;    
-        mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
+        //std::cout << "Mouse Drag Button " << e->getButton() << ": " << e->getLocation().x() << ", " << e->getLocation().y()  << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;    
+        //mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 };
 
@@ -114,12 +104,12 @@ class TutorialMouseListener : public MouseListener
     virtual void mousePressed(const MouseEventUnrecPtr e)
     {
         std::cout << "Button " << e->getButton() << " Pressed" << std::endl;
-        mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
+        //mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
     virtual void mouseReleased(const MouseEventUnrecPtr e)
     {
         std::cout << "Button " << e->getButton() << " Released" << std::endl;
-        mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
+        //mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
 };
 
@@ -130,6 +120,7 @@ public:
 
    virtual void keyPressed(const KeyEventUnrecPtr e)
     {
+        WindowEventProducer* TheWindow(dynamic_cast<WindowEventProducer*>(e->getSource()));
         std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar()<< " Pressed. Modifiers: " << e->getModifiers() << std::endl;
         switch(e->getKey()){
             case KeyEvent::KEY_ESCAPE:
@@ -297,61 +288,62 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-    // create the scene
-    NodeRecPtr scene = makeTorus(.5, 2, 16, 16);
+    {
+        // create the scene
+        NodeRecPtr scene = makeTorus(.5, 2, 16, 16);
 
-    //Create a Window object
-    TheWindow = createNativeWindow();
+        //Create a Window object
+        WindowEventProducerRefPtr TheWindow = createNativeWindow();
 
-    //Apply window settings
-    TheWindow->setUseCallbackForDraw(true);
-    TheWindow->setUseCallbackForReshape(true);
-    //TheWindow->setFullscreen(true);
-    
-    TheWindow->setDisplayCallback(display);
-    TheWindow->setReshapeCallback(reshape);
-    
-    //Attach Mouse Listener
-    TutorialMouseListener TheTutorialMouseListener;
-    MouseEventConnection = TheWindow->addMouseListener(&TheTutorialMouseListener);
-    //Attach Mouse Wheel Listener
-    TutorialMouseWheelListener TheTutorialMouseWheelListener;
-    TheWindow->addMouseWheelListener(&TheTutorialMouseWheelListener);
-    //Attach Key Listener
-    TutorialKeyListener TheTutorialKeyListener;
-    TheWindow->addKeyListener(&TheTutorialKeyListener);
-    //Attach Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TheWindow->addWindowListener(&TheTutorialWindowListener);
-    //Attach MouseMotion Listener
-    TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TheWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
-    
-    //Initialize Window
-    TheWindow->initWindow();
+        //Apply window settings
+        TheWindow->setUseCallbackForDraw(true);
+        TheWindow->setUseCallbackForReshape(true);
+        //TheWindow->setFullscreen(true);
+        
+        
+        //Attach Mouse Listener
+        TutorialMouseListener TheTutorialMouseListener;
+        TheWindow->addMouseListener(&TheTutorialMouseListener);
+        //Attach Mouse Wheel Listener
+        //TheWindow->addMouseWheelListener(&TheTutorialMouseWheelListener);
+        //Attach Key Listener
+        TutorialKeyListener TheTutorialKeyListener;
+        TheWindow->addKeyListener(&TheTutorialKeyListener);
+        //Attach Window Listener
+        TutorialWindowListener TheTutorialWindowListener;
+        TheWindow->addWindowListener(&TheTutorialWindowListener);
+        //Attach MouseMotion Listener
+        TutorialMouseMotionListener TheTutorialMouseMotionListener;
+        TheWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
+        
+        //Initialize Window
+        TheWindow->initWindow();
 
-    commitChanges();
-    
-    // create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        commitChanges();
+        
+        // create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TheWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TheWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    // tell the manager what to manage
-    mgr->setWindow(TheWindow);
-    mgr->setRoot  (scene);
+        // tell the manager what to manage
+        sceneManager.setWindow(TheWindow);
+        sceneManager.setRoot  (scene);
 
-    // show the whole scene
-    mgr->showAll();
+        // show the whole scene
+        sceneManager.showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TheWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TheWindow->getDesktopSize() - WinSize) *0.5);
-    TheWindow->openWindow(WinPos,
-                        WinSize,
-                        "17 Native Window");
+        //Open Window
+        Vec2f WinSize(TheWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TheWindow->getDesktopSize() - WinSize) *0.5);
+        TheWindow->openWindow(WinPos,
+                            WinSize,
+                            "01 Native Window");
 
-    //Enter main loop
-    TheWindow->mainLoop();
+        //Enter main loop
+        TheWindow->mainLoop();
+    }
 
     osgExit();
     return 0;
@@ -362,15 +354,13 @@ int main(int argc, char **argv)
 //
 
 // redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
-    commitChanges();
-
     mgr->redraw();
 }
 
 // react to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

@@ -98,6 +98,31 @@ void ListBase::setOrientation(const UInt32 value)
 
     _sfOrientation.setValue(value);
 }
+//! Get the value of the List::_sfSelectable field.
+
+inline
+bool &ListBase::editSelectable(void)
+{
+    editSField(SelectableFieldMask);
+
+    return _sfSelectable.getValue();
+}
+
+//! Get the value of the List::_sfSelectable field.
+inline
+      bool  ListBase::getSelectable(void) const
+{
+    return _sfSelectable.getValue();
+}
+
+//! Set the value of the List::_sfSelectable field.
+inline
+void ListBase::setSelectable(const bool value)
+{
+    editSField(SelectableFieldMask);
+
+    _sfSelectable.setValue(value);
+}
 //! Get the value of the List::_sfCellMajorAxisLength field.
 
 inline
@@ -194,6 +219,9 @@ void ListBase::execSync (      ListBase *pFrom,
 
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
         _sfOrientation.syncWith(pFrom->_sfOrientation);
+
+    if(FieldBits::NoField != (SelectableFieldMask & whichField))
+        _sfSelectable.syncWith(pFrom->_sfSelectable);
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
         _sfCellMajorAxisLength.syncWith(pFrom->_sfCellMajorAxisLength);

@@ -63,7 +63,7 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGFieldEditorComponent.h" // Parent
+#include "OSGSingleFieldEditorComponent.h" // Parent
 
 
 #include "OSGQuaternionEulerFieldEditorFields.h"
@@ -74,12 +74,12 @@ class QuaternionEulerFieldEditor;
 
 //! \brief QuaternionEulerFieldEditor Base Class.
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING QuaternionEulerFieldEditorBase : public FieldEditorComponent
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING QuaternionEulerFieldEditorBase : public SingleFieldEditorComponent
 {
   public:
 
-    typedef FieldEditorComponent Inherited;
-    typedef FieldEditorComponent ParentContainer;
+    typedef SingleFieldEditorComponent Inherited;
+    typedef SingleFieldEditorComponent ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;

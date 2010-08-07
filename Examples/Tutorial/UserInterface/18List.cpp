@@ -73,107 +73,110 @@ DefaultListModelRefPtr ExampleListModel2;
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
-public:
+  public:
 
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
+    virtual void keyPressed(const KeyEventUnrecPtr e)
+    {
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+        {
             TutorialWindow->closeWindow();
-       }
+        }
 
-       switch(e->getKey())
-       {
-       case KeyEvent::KEY_S:
+        switch(e->getKey())
+        {
+            case KeyEvent::KEY_S:
+                ExampleList->setSelectable(!ExampleList->getSelectable());
+                break;
+            case KeyEvent::KEY_M:
                 if(ExampleList->getModel() == ExampleListModel)
                 {
-		            ExampleList->setModel(ExampleListModel2);
+                    ExampleList->setModel(ExampleListModel2);
                 }
                 else
                 {
-		            ExampleList->setModel(ExampleListModel);
+                    ExampleList->setModel(ExampleListModel);
                 }
-           break;
-       }
-   }
+                break;
+        }
+    }
 
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
+    virtual void keyReleased(const KeyEventUnrecPtr e)
+    {
+    }
 
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
+    virtual void keyTyped(const KeyEventUnrecPtr e)
+    {
+    }
 };
 
 
 
 class SingleSelectionButtonSelectedListener : public ButtonSelectedListener
 {
-public:
+  public:
 
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
+    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {
 
-            SingleIntervalSelectionButton->setSelected(false);
+        SingleIntervalSelectionButton->setSelected(false);
 
-            MultipleIntervalSelectionButton->setSelected(false);
+        MultipleIntervalSelectionButton->setSelected(false);
 
         ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
-        
+
     }
-      virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
-   }
+    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
+    {
+    }
 
 };
 
 class SingleIntervalSelectionButtonSelectedListener : public ButtonSelectedListener
 {
-public:
+  public:
 
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
+    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {
-            SingleSelectionButton->setSelected(false);
+        SingleSelectionButton->setSelected(false);
 
-            MultipleIntervalSelectionButton->setSelected(false);
+        MultipleIntervalSelectionButton->setSelected(false);
 
         ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
+    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
+    {
 
-   }
+    }
 };
 
 class MultipleIntervalSelectionButtonSelectedListener : public ButtonSelectedListener
 {
-public:
+  public:
 
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
+    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {    
-            SingleSelectionButton->setSelected(false);
+        SingleSelectionButton->setSelected(false);
 
-            SingleIntervalSelectionButton->setSelected(false);
+        SingleIntervalSelectionButton->setSelected(false);
 
         ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
-   }
+    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
+    {
+    }
 
 };
 
 class AddItemButtonSelectedListener : public ActionListener
 {
-public:
+  public:
 
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
         std::cout << "Add Item Action" << std::endl;
-		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
+        UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
         ExampleListModel->insert(SelectedItemIndex, boost::any(std::string("Added")));
     }
 
@@ -181,13 +184,13 @@ public:
 
 class RemoveItemButtonSelectedListener : public ActionListener
 {
-public:
+  public:
 
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
         std::cout << "Remove Item Action" << std::endl;
-		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
-		ExampleListModel->erase(SelectedItemIndex);
+        UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
+        ExampleListModel->erase(SelectedItemIndex);
     }
 
 };

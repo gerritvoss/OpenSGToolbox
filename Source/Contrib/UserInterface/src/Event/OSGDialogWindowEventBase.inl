@@ -123,6 +123,31 @@ void DialogWindowEventBase::setInput(const std::string &value)
 
     _sfInput.setValue(value);
 }
+//! Get the value of the DialogWindowEvent::_sfInputIndex field.
+
+inline
+UInt32 &DialogWindowEventBase::editInputIndex(void)
+{
+    editSField(InputIndexFieldMask);
+
+    return _sfInputIndex.getValue();
+}
+
+//! Get the value of the DialogWindowEvent::_sfInputIndex field.
+inline
+      UInt32  DialogWindowEventBase::getInputIndex(void) const
+{
+    return _sfInputIndex.getValue();
+}
+
+//! Set the value of the DialogWindowEvent::_sfInputIndex field.
+inline
+void DialogWindowEventBase::setInputIndex(const UInt32 value)
+{
+    editSField(InputIndexFieldMask);
+
+    _sfInputIndex.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -140,6 +165,9 @@ void DialogWindowEventBase::execSync (      DialogWindowEventBase *pFrom,
 
     if(FieldBits::NoField != (InputFieldMask & whichField))
         _sfInput.syncWith(pFrom->_sfInput);
+
+    if(FieldBits::NoField != (InputIndexFieldMask & whichField))
+        _sfInputIndex.syncWith(pFrom->_sfInputIndex);
 }
 #endif
 

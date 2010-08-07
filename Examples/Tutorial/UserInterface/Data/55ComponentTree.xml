@@ -18,6 +18,7 @@
 
   <InternalWindow
     fieldcontainerid="254"
+    nameAttachment="Main Window"
     Title="Border Layout"
     Children="255;260;264;271;272"
     Layout="252"

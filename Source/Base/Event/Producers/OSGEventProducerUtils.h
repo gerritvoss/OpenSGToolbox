@@ -36,17 +36,6 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-<<<<<<< Updated upstream:Source/Base/Event/Listeners/OSGEventListener.inl
-#ifndef _OSGEVENTLISTENER_INL_
-#define _OSGEVENTLISTENER_INL_
-
-OSG_BEGIN_NAMESPACE
-
-OSG_END_NAMESPACE
-
-
-#endif /* _OSGEVENTLISTENER_INL_ */
-=======
 #ifndef _OSGEVENTPRODUCERUTILS_H_
 #define _OSGEVENTPRODUCERUTILS_H_
 
@@ -65,4 +54,3 @@ bool OSG_BASE_DLLMAPPING getEventProducerFromCString(const Char8     *&inVal, Re
 OSG_END_NAMESPACE
 
 #endif /* _OSGEVENTPRODUCERUTILS_H_ */
->>>>>>> Stashed changes:Source/Base/Event/Producers/OSGEventProducerUtils.h

@@ -58,7 +58,7 @@
 
 
 
-#include "OSGTextureObjChunk.h"         // Texture Class
+#include "OSGTextureBaseChunk.h"        // Texture Class
 #include "OSGTextureTransformChunk.h"   // Transformation Class
 
 #include "OSGImageComponentBase.h"
@@ -84,19 +84,19 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var TextureObjChunk * ImageComponentBase::_sfTexture
+/*! \var TextureBaseChunk * ImageComponentBase::_sfTexture
     
 */
 
-/*! \var TextureObjChunk * ImageComponentBase::_sfRolloverTexture
+/*! \var TextureBaseChunk * ImageComponentBase::_sfRolloverTexture
     
 */
 
-/*! \var TextureObjChunk * ImageComponentBase::_sfDisabledTexture
+/*! \var TextureBaseChunk * ImageComponentBase::_sfDisabledTexture
     
 */
 
-/*! \var TextureObjChunk * ImageComponentBase::_sfFocusedTexture
+/*! \var TextureBaseChunk * ImageComponentBase::_sfFocusedTexture
     
 */
 
@@ -152,8 +152,8 @@ void ImageComponentBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecTextureObjChunkPtr::Description(
-        SFUnrecTextureObjChunkPtr::getClassType(),
+    pDesc = new SFUnrecTextureBaseChunkPtr::Description(
+        SFUnrecTextureBaseChunkPtr::getClassType(),
         "Texture",
         "",
         TextureFieldId, TextureFieldMask,
@@ -164,8 +164,8 @@ void ImageComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecTextureObjChunkPtr::Description(
-        SFUnrecTextureObjChunkPtr::getClassType(),
+    pDesc = new SFUnrecTextureBaseChunkPtr::Description(
+        SFUnrecTextureBaseChunkPtr::getClassType(),
         "RolloverTexture",
         "",
         RolloverTextureFieldId, RolloverTextureFieldMask,
@@ -176,8 +176,8 @@ void ImageComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecTextureObjChunkPtr::Description(
-        SFUnrecTextureObjChunkPtr::getClassType(),
+    pDesc = new SFUnrecTextureBaseChunkPtr::Description(
+        SFUnrecTextureBaseChunkPtr::getClassType(),
         "DisabledTexture",
         "",
         DisabledTextureFieldId, DisabledTextureFieldMask,
@@ -188,8 +188,8 @@ void ImageComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecTextureObjChunkPtr::Description(
-        SFUnrecTextureObjChunkPtr::getClassType(),
+    pDesc = new SFUnrecTextureBaseChunkPtr::Description(
+        SFUnrecTextureBaseChunkPtr::getClassType(),
         "FocusedTexture",
         "",
         FocusedTextureFieldId, FocusedTextureFieldMask,
@@ -303,7 +303,7 @@ ImageComponentBase::TypeObject ImageComponentBase::_type(
     "A UI Button.\n"
     "\t<Field\n"
     "\t\tname=\"Texture\"\n"
-    "\t\ttype=\"TextureObjChunk\"\n"
+    "\t\ttype=\"TextureBaseChunk\"\n"
     "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -313,7 +313,7 @@ ImageComponentBase::TypeObject ImageComponentBase::_type(
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"RolloverTexture\"\n"
-    "\t\ttype=\"TextureObjChunk\"\n"
+    "\t\ttype=\"TextureBaseChunk\"\n"
     "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -323,7 +323,7 @@ ImageComponentBase::TypeObject ImageComponentBase::_type(
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"DisabledTexture\"\n"
-    "\t\ttype=\"TextureObjChunk\"\n"
+    "\t\ttype=\"TextureBaseChunk\"\n"
     "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -333,7 +333,7 @@ ImageComponentBase::TypeObject ImageComponentBase::_type(
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"FocusedTexture\"\n"
-    "\t\ttype=\"TextureObjChunk\"\n"
+    "\t\ttype=\"TextureBaseChunk\"\n"
     "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -422,12 +422,12 @@ UInt32 ImageComponentBase::getContainerSize(void) const
 
 
 //! Get the ImageComponent::_sfTexture field.
-const SFUnrecTextureObjChunkPtr *ImageComponentBase::getSFTexture(void) const
+const SFUnrecTextureBaseChunkPtr *ImageComponentBase::getSFTexture(void) const
 {
     return &_sfTexture;
 }
 
-SFUnrecTextureObjChunkPtr *ImageComponentBase::editSFTexture        (void)
+SFUnrecTextureBaseChunkPtr *ImageComponentBase::editSFTexture        (void)
 {
     editSField(TextureFieldMask);
 
@@ -435,12 +435,12 @@ SFUnrecTextureObjChunkPtr *ImageComponentBase::editSFTexture        (void)
 }
 
 //! Get the ImageComponent::_sfRolloverTexture field.
-const SFUnrecTextureObjChunkPtr *ImageComponentBase::getSFRolloverTexture(void) const
+const SFUnrecTextureBaseChunkPtr *ImageComponentBase::getSFRolloverTexture(void) const
 {
     return &_sfRolloverTexture;
 }
 
-SFUnrecTextureObjChunkPtr *ImageComponentBase::editSFRolloverTexture(void)
+SFUnrecTextureBaseChunkPtr *ImageComponentBase::editSFRolloverTexture(void)
 {
     editSField(RolloverTextureFieldMask);
 
@@ -448,12 +448,12 @@ SFUnrecTextureObjChunkPtr *ImageComponentBase::editSFRolloverTexture(void)
 }
 
 //! Get the ImageComponent::_sfDisabledTexture field.
-const SFUnrecTextureObjChunkPtr *ImageComponentBase::getSFDisabledTexture(void) const
+const SFUnrecTextureBaseChunkPtr *ImageComponentBase::getSFDisabledTexture(void) const
 {
     return &_sfDisabledTexture;
 }
 
-SFUnrecTextureObjChunkPtr *ImageComponentBase::editSFDisabledTexture(void)
+SFUnrecTextureBaseChunkPtr *ImageComponentBase::editSFDisabledTexture(void)
 {
     editSField(DisabledTextureFieldMask);
 
@@ -461,12 +461,12 @@ SFUnrecTextureObjChunkPtr *ImageComponentBase::editSFDisabledTexture(void)
 }
 
 //! Get the ImageComponent::_sfFocusedTexture field.
-const SFUnrecTextureObjChunkPtr *ImageComponentBase::getSFFocusedTexture(void) const
+const SFUnrecTextureBaseChunkPtr *ImageComponentBase::getSFFocusedTexture(void) const
 {
     return &_sfFocusedTexture;
 }
 
-SFUnrecTextureObjChunkPtr *ImageComponentBase::editSFFocusedTexture (void)
+SFUnrecTextureBaseChunkPtr *ImageComponentBase::editSFFocusedTexture (void)
 {
     editSField(FocusedTextureFieldMask);
 
@@ -879,8 +879,8 @@ void ImageComponentBase::onCreate(const ImageComponent *source)
 
 GetFieldHandlePtr ImageComponentBase::getHandleTexture         (void) const
 {
-    SFUnrecTextureObjChunkPtr::GetHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::GetHandle(
+    SFUnrecTextureBaseChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::GetHandle(
              &_sfTexture,
              this->getType().getFieldDesc(TextureFieldId),
              const_cast<ImageComponentBase *>(this)));
@@ -890,8 +890,8 @@ GetFieldHandlePtr ImageComponentBase::getHandleTexture         (void) const
 
 EditFieldHandlePtr ImageComponentBase::editHandleTexture        (void)
 {
-    SFUnrecTextureObjChunkPtr::EditHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::EditHandle(
+    SFUnrecTextureBaseChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::EditHandle(
              &_sfTexture,
              this->getType().getFieldDesc(TextureFieldId),
              this));
@@ -907,8 +907,8 @@ EditFieldHandlePtr ImageComponentBase::editHandleTexture        (void)
 
 GetFieldHandlePtr ImageComponentBase::getHandleRolloverTexture (void) const
 {
-    SFUnrecTextureObjChunkPtr::GetHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::GetHandle(
+    SFUnrecTextureBaseChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::GetHandle(
              &_sfRolloverTexture,
              this->getType().getFieldDesc(RolloverTextureFieldId),
              const_cast<ImageComponentBase *>(this)));
@@ -918,8 +918,8 @@ GetFieldHandlePtr ImageComponentBase::getHandleRolloverTexture (void) const
 
 EditFieldHandlePtr ImageComponentBase::editHandleRolloverTexture(void)
 {
-    SFUnrecTextureObjChunkPtr::EditHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::EditHandle(
+    SFUnrecTextureBaseChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::EditHandle(
              &_sfRolloverTexture,
              this->getType().getFieldDesc(RolloverTextureFieldId),
              this));
@@ -935,8 +935,8 @@ EditFieldHandlePtr ImageComponentBase::editHandleRolloverTexture(void)
 
 GetFieldHandlePtr ImageComponentBase::getHandleDisabledTexture (void) const
 {
-    SFUnrecTextureObjChunkPtr::GetHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::GetHandle(
+    SFUnrecTextureBaseChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::GetHandle(
              &_sfDisabledTexture,
              this->getType().getFieldDesc(DisabledTextureFieldId),
              const_cast<ImageComponentBase *>(this)));
@@ -946,8 +946,8 @@ GetFieldHandlePtr ImageComponentBase::getHandleDisabledTexture (void) const
 
 EditFieldHandlePtr ImageComponentBase::editHandleDisabledTexture(void)
 {
-    SFUnrecTextureObjChunkPtr::EditHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::EditHandle(
+    SFUnrecTextureBaseChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::EditHandle(
              &_sfDisabledTexture,
              this->getType().getFieldDesc(DisabledTextureFieldId),
              this));
@@ -963,8 +963,8 @@ EditFieldHandlePtr ImageComponentBase::editHandleDisabledTexture(void)
 
 GetFieldHandlePtr ImageComponentBase::getHandleFocusedTexture  (void) const
 {
-    SFUnrecTextureObjChunkPtr::GetHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::GetHandle(
+    SFUnrecTextureBaseChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::GetHandle(
              &_sfFocusedTexture,
              this->getType().getFieldDesc(FocusedTextureFieldId),
              const_cast<ImageComponentBase *>(this)));
@@ -974,8 +974,8 @@ GetFieldHandlePtr ImageComponentBase::getHandleFocusedTexture  (void) const
 
 EditFieldHandlePtr ImageComponentBase::editHandleFocusedTexture (void)
 {
-    SFUnrecTextureObjChunkPtr::EditHandlePtr returnValue(
-        new  SFUnrecTextureObjChunkPtr::EditHandle(
+    SFUnrecTextureBaseChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureBaseChunkPtr::EditHandle(
              &_sfFocusedTexture,
              this->getType().getFieldDesc(FocusedTextureFieldId),
              this));

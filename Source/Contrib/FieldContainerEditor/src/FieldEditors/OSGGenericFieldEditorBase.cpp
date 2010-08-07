@@ -88,7 +88,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<GenericFieldEditor *>::_type("GenericFieldEditorPtr", "FieldEditorComponentPtr");
+DataType FieldTraits<GenericFieldEditor *>::_type("GenericFieldEditorPtr", "SingleFieldEditorComponentPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(GenericFieldEditor *)
@@ -125,7 +125,7 @@ GenericFieldEditorBase::TypeObject GenericFieldEditorBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"GenericFieldEditor\"\n"
-    "\tparent=\"FieldEditorComponent\"\n"
+    "\tparent=\"SingleFieldEditorComponent\"\n"
     "    library=\"ContribFieldContainerEditor\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"

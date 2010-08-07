@@ -36,7 +36,10 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
+<<<<<<< HEAD:Source/Base/Event/Producers/OSGConsumableEventCombiner.h
 <<<<<<< Updated upstream:Source/Base/Event/Listeners/OSGEventListener.cpp
+=======
+>>>>>>> master:Source/Base/Event/Listeners/OSGEventListener.cpp
 #include "OSGConfig.h"
 
 #include "OSGEventListener.h"
@@ -52,6 +55,7 @@ void EventListener::eventProduced(const EventUnrecPtr EventDetails, UInt32 Produ
     //Do Nothing
 }
 
+<<<<<<< HEAD:Source/Base/Event/Producers/OSGConsumableEventCombiner.h
 =======
 #ifndef _OSGCONSUMABLEEVENTCOMBINER_H_
 #define _OSGCONSUMABLEEVENTCOMBINER_H_
@@ -96,3 +100,5 @@ OSG_END_NAMESPACE
 
 #endif /* _OSGCONSUMABLEEVENTCOMBINER_H_ */
 >>>>>>> Stashed changes:Source/Base/Event/Producers/OSGConsumableEventCombiner.h
+=======
+>>>>>>> master:Source/Base/Event/Listeners/OSGEventListener.cpp

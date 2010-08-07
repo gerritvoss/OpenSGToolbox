@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SineWaveParticleAffector"
+	parent="ParticleAffector"
+	library="ContribParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="true"
+    parentsystemcomponent="true"
+	decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
+>
+	<Field
+		name="Amplitude"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0f"
+	>
+	</Field>
+	<Field
+		name="Frequency"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="2.0f"
+	>
+	</Field>
+	<Field
+		name="UpDirSource"
+		type="Int32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="SineWaveParticleAffector::Y_AXIS"
+	>
+	Determines which direction to displace the particle.  Possible values:
+	Y_AXIS: Displaces along the Y-Axis
+	X_AXIS: Displaces along the X-Axis
+	Z_AXIS: Displaces along the Z-Axis
+	NORMAL: Displaces along the particle's normal.
+	CROSS_PRODUCT: Displaces along the axis defined by the cross product of the particle's normal and it's direction of travel.
+	</Field>
+</FieldContainer>

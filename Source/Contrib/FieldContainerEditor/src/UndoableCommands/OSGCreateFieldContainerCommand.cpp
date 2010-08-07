@@ -39,8 +39,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#define KE_COMPILEKABALAENGINELIB
-
 #include "OSGConfig.h"
 
 #include "OSGCreateFieldContainerCommand.h"

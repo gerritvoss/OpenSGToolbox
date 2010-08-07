@@ -65,6 +65,7 @@
 
 #include "OSGKeyframeSequence.h" // Parent
 
+#include "OSGFieldContainerFields.h"    // Values type
 
 #include "OSGKeyframeFCPtrSequenceFields.h"
 
@@ -90,6 +91,18 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
 
   public:
 
+    enum
+    {
+        ValuesFieldId = Inherited::NextFieldId,
+        NextFieldId = ValuesFieldId + 1
+    };
+
+    static const OSG::BitVector ValuesFieldMask =
+        (TypeTraits<BitVector>::One << ValuesFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFUnrecFieldContainerPtr MFValuesType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -122,6 +135,33 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  KeyframeFCPtrSequenceTransitPtr  create          (void);
+    static  KeyframeFCPtrSequence           *createEmpty     (void);
+
+    static  KeyframeFCPtrSequenceTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  KeyframeFCPtrSequence            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  KeyframeFCPtrSequenceTransitPtr  createDependent  (BitVector bFlags);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -131,6 +171,13 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
     static       void   classDescInserter(TypeObject &oType);
     static const Char8 *getClassname     (void             );
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    MFUnrecFieldContainerPtr _mfValues;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -150,12 +197,43 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
+    void onCreate(const KeyframeFCPtrSequence *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
+    GetFieldHandlePtr  getHandleValues          (void) const;
+    EditFieldHandlePtr editHandleValues         (void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+            const MFUnrecFieldContainerPtr *getMFValues          (void) const;
+                  MFUnrecFieldContainerPtr *editMFValues         (void);
+
+
+                  FieldContainer * getValues         (const UInt32 index) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToValues              (FieldContainer * const value   );
+    void assignValues              (const MFUnrecFieldContainerPtr &value);
+    void removeFromValues (UInt32                uiIndex );
+    void removeObjFromValues(FieldContainer * const value   );
+    void clearValues                (void                          );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -185,6 +263,11 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequenceBase : public KeyframeSequ
     /*---------------------------------------------------------------------*/
     /*! \name                     Aspect Create                            */
     /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

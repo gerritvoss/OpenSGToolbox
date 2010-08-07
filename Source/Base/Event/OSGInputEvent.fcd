@@ -12,17 +12,4 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
-<<<<<<< Updated upstream
-	<Field
-		name="Consumed"
-		type="bool"
-        publicRead="true"
-		cardinality="single"
-		visibility="internal"
-		access="public"
-		defaultValue="false"
-	>
-	</Field>
-=======
->>>>>>> Stashed changes
 </FieldContainer>

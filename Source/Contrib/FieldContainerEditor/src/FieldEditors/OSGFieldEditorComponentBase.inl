@@ -114,31 +114,6 @@ void FieldEditorComponentBase::setEditingFieldId(const UInt32 value)
 
     _sfEditingFieldId.setValue(value);
 }
-//! Get the value of the FieldEditorComponent::_sfEditingFieldIndex field.
-
-inline
-UInt32 &FieldEditorComponentBase::editEditingFieldIndex(void)
-{
-    editSField(EditingFieldIndexFieldMask);
-
-    return _sfEditingFieldIndex.getValue();
-}
-
-//! Get the value of the FieldEditorComponent::_sfEditingFieldIndex field.
-inline
-      UInt32  FieldEditorComponentBase::getEditingFieldIndex(void) const
-{
-    return _sfEditingFieldIndex.getValue();
-}
-
-//! Set the value of the FieldEditorComponent::_sfEditingFieldIndex field.
-inline
-void FieldEditorComponentBase::setEditingFieldIndex(const UInt32 value)
-{
-    editSField(EditingFieldIndexFieldMask);
-
-    _sfEditingFieldIndex.setValue(value);
-}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -156,9 +131,6 @@ void FieldEditorComponentBase::execSync (      FieldEditorComponentBase *pFrom,
 
     if(FieldBits::NoField != (EditingFieldIdFieldMask & whichField))
         _sfEditingFieldId.syncWith(pFrom->_sfEditingFieldId);
-
-    if(FieldBits::NoField != (EditingFieldIndexFieldMask & whichField))
-        _sfEditingFieldIndex.syncWith(pFrom->_sfEditingFieldIndex);
 }
 #endif
 

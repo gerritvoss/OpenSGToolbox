@@ -154,7 +154,7 @@ FCFileType::FCFileType(const ExtensionVector&  suffixArray,
 {
     SINFO << "Init FieldContainer File Type " <<  _suffixList[0] << std::endl;
 
-#ifndef OSG_EMBEDDED
+#ifndef OSG_EMBEDDED 
 	FCFileHandler::the()->addFCFileType(FCFileTypeP(this));
 #endif
 }

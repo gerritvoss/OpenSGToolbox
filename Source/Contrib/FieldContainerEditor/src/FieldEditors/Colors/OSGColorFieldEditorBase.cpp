@@ -88,7 +88,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<ColorFieldEditor *>::_type("ColorFieldEditorPtr", "FieldEditorComponentPtr");
+DataType FieldTraits<ColorFieldEditor *>::_type("ColorFieldEditorPtr", "SingleFieldEditorComponentPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(ColorFieldEditor *)
@@ -125,7 +125,7 @@ ColorFieldEditorBase::TypeObject ColorFieldEditorBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"ColorFieldEditor\"\n"
-    "\tparent=\"FieldEditorComponent\"\n"
+    "\tparent=\"SingleFieldEditorComponent\"\n"
     "    library=\"ContribFieldContainerEditor\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"

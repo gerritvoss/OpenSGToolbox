@@ -46,4 +46,36 @@ ListSelectionModelPtr List::getSelectionModel(void) const
    return _SelectionModel;
 }
 
+inline
+void List::setSelectedIndex(UInt32 index)
+{
+   _SelectionModel->setSelectionInterval(index,index);
+}
+
+inline
+Int32 List::getSelectedIndex(void) const
+{
+   return _SelectionModel->getMinSelectionIndex();
+}
+
+inline
+Int32 List::getMinSelectedIndex(void) const
+{
+   return _SelectionModel->getMinSelectionIndex();
+}
+
+inline
+Int32 List::getMaxSelectedIndex(void) const
+{
+   return _SelectionModel->getMaxSelectionIndex();
+}
+
+inline
+boost::any List::getSelectedItem(void) const
+{
+   return ( _SelectionModel->isSelectionEmpty() ?
+            boost::any() :
+            getValueAtIndex(getSelectedIndex()) );
+}
+
 OSG_END_NAMESPACE

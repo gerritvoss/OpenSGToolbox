@@ -16,7 +16,7 @@
 UI Texture Background.
 	<Field
 		name="Texture"
-		type="TextureObjChunk"
+		type="TextureBaseChunk"
         category="pointer"
 		cardinality="single"
 		visibility="external"

@@ -14,6 +14,26 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
+		name="System"
+		type="ParticleSystem"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	</Field>
+	<Field
+		name="Drawer"
+		type="ParticleSystemDrawer"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	</Field>
+	<Field
 		name="SortingMode"
 		type="UInt32"
         category="data"
@@ -35,25 +55,52 @@
 		visibility="external"
 		access="protected"
 	>
+	Sort and Sort2 are used to keep track of indices used to draw particles from 
+	nearest to farthest.
 	</Field>
 	<Field
-		name="System"
-		type="ParticleSystem"
-        category="pointer"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="NULL"
+		name="Sort2"
+		type="UInt32"
+        category="data"
+		cardinality="multi"
+		visibility="internal"
+		access="protected"
 	>
 	</Field>
 	<Field
-		name="Drawer"
-		type="ParticleSystemDrawer"
-        category="pointer"
+		name="Distances"
+		type="Real32"
+        category="data"
+		cardinality="multi"
+		visibility="internal"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="Histogram"
+		type="UInt32"
+        category="data"
+		cardinality="multi"
+		visibility="internal"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="Offset"
+		type="UInt32"
+        category="data"
+		cardinality="multi"
+		visibility="internal"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="PreviousSize"
+		type="UInt32"
+        category="data"
 		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="NULL"
+		visibility="internal"
+		access="protected"
 	>
 	</Field>
 </FieldContainer>

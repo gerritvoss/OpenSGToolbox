@@ -125,8 +125,6 @@ UInt32 EventProducerType::getNumMethodDescs(void) const
     return _vDescVec.size();
 }
 
-<<<<<<< Updated upstream
-=======
 inline
 UInt32 EventProducerType::getProducedEventId(const std::string &ProducedEventName) const
 {
@@ -141,7 +139,6 @@ UInt32 EventProducerType::getProducedEventId(const std::string &ProducedEventNam
     }
 }
 
->>>>>>> Stashed changes
 
 /*-------------------------------------------------------------------------*/
 /*                                 Is                                      */

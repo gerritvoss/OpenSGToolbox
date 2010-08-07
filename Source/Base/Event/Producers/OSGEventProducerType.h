@@ -111,14 +111,9 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
 
           MethodDescription *findMethodDescription(const std::string &szMethodName);
 
-<<<<<<< Updated upstream
-    const MethodDescription *findMethodDescription(
-        const std::string &szMethodName) const; 
-=======
     const MethodDescription *findMethodDescription(const std::string &szMethodName) const; 
 
     UInt32 getProducedEventId(const std::string &ProducedEventName) const;
->>>>>>> Stashed changes
 
     UInt32                 getNumMethodDescs(void) const;
 

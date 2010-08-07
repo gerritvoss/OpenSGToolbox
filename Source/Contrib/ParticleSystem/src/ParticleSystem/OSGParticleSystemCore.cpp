@@ -52,6 +52,7 @@
 #include "OSGCamera.h"
 #include "OSGMatrix.h"
 #include "OSGQuaternion.h"
+#include "OSGRadixSort.h"
 #include <stdio.h>
 #include <vector>
 #include <iterator>
@@ -66,8 +67,6 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
-
-ParticleSystemCore::ParticleSortByViewPosition ParticleSystemCore::TheSorter = ParticleSystemCore::ParticleSortByViewPosition();
 
 StatElemDesc<StatTimeElem> ParticleSystemCore::statParticleSortTime("ParticleSortTime", 
                                                                     "time for particles to be sorted");
@@ -108,8 +107,8 @@ void ParticleSystemCore::drawPrimitives (DrawEnv *pEnv)
     //If I have a Drawer tell it to draw the particles
     if(getDrawer() != NULL && getSystem() != NULL)
     {
-		
-		checkAndInitializeSort();
+        //Sorting particles
+        checkAndInitializeSort();
 		sortParticles(pEnv);
 
 		getDrawer()->draw(pEnv, getSystem(), *getMFSort());
@@ -137,11 +136,13 @@ void ParticleSystemCore::checkAndInitializeSort(void)
 
 	if(getMFSort()->size() != getSystem()->getNumParticles() && getSortingMode() != NONE)
 	{	// re-init _mfSort if there is a discrepency between number of particles in each
-		editMFSort()->resize(getSystem()->getNumParticles());
+		editMFSort()->resize(getSystem()->getNumParticles(),1);
+		editMFDistances()->resize(getSystem()->getNumParticles(), 0.0f);
 		//initialize _mfSort
 		for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
 		{
 			editSort(i) = i;
+			editDistances(i) = 0.0f;
 		}
 	}
 
@@ -187,99 +188,66 @@ void ParticleSystemCore::adjustVolume(Volume & volume)
 
 void ParticleSystemCore::sortParticles(DrawEnv *pEnv)
 {
-    //This should be called if the ParticleSystem has
-    //just finished an update
+    //This should be called if the ParticleSystem has just finished an update
 
-	//extract camera position
-	Pnt3f CameraLocation(0.0,0.0,0.0);
-    pEnv->getCameraToWorld().mult(CameraLocation,CameraLocation);
-    if(getSystem() != NULL && getSortingMode() != NONE && _mfSort.size() > 0)
+	UInt32 numParticles = getSystem()->getNumParticles();
+	if(getSystem() != NULL && getSortingMode() != NONE && getMFSort()->size() > 0)
     {
-		// initialize sort funcion struct
-		TheSorter = ParticleSortByViewPosition(getSystem(),CameraLocation,true);
+		//extract camera position
+		Pnt3f CameraLocation(0.0,0.0,0.0);
+		pEnv->getCameraToWorld().mult(CameraLocation,CameraLocation);
 
-		// get sorting order
+		/* 
+		 * Lots of time spent getting the sorting as best as possible
+		 * std::qsort averages 3 to 4 ticks w/ 500 particles. Fast enough, but not stable
+		 *	std::stable_sort averages 18 to 19 ticks w/ 500 particles, much too slow
+		 *	The radix sort we use here avgs. 1 to 2 ticks, and is stable	
+		 */
+	
+		// fill up the array of distances from the particles to the camera
 		switch(getSortingMode())
-        {
-			case FRONT_TO_BACK:
-				//Use the FrontToBack Comparitor, already initialized above
-				break;
-
+		{
 			case BACK_TO_FRONT:
-				//Use the BackToFront Comparitor, changes sorting order
-				TheSorter = ParticleSortByViewPosition(getSystem(),CameraLocation,false);
+			{
+				for(UInt32 i(0); i < numParticles; i++)
+				{
+					editDistances(i) = -(getSystem()->getPosition(i) - CameraLocation).squareLength();
+				}
 				break;
-        }
+			}
+
+			case FRONT_TO_BACK:
+			{
+				for(UInt32 i(0); i < numParticles; i++)
+				{
+					editDistances(i) = (getSystem()->getPosition(i) - CameraLocation).squareLength();
+				}
+				break;
+			}
+		}
 		
-		// particles sorted using stdlib's quicksort
-		std::qsort(&_mfSort[0],_mfSort.size(), sizeof(MFUInt32::StoredType),qSortComp);
-		// sort with std::sort
-		//std::sort(getSort().begin(), getSort().end(), TheSorter);
+		// perform the actual sort
+		RadixSort(numParticles ,_mfDistances, _mfSort);
     }
-}
-
-ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition(const ParticleSystem* TheSystem, Pnt3f TheCameraPos, bool SortByMinimum) 
-	: _System(TheSystem), _CameraPos(TheCameraPos.subZero()), _SortByMinimum(SortByMinimum)
-{
-}
-
-ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition() 
-	: _System(NULL), _CameraPos(Vec3f(0.0,0.0,0.0)), _SortByMinimum(true)
-{
-}
-
-
-/*  
- *	This comparison operator is left here in case we revert to std::sort again
- */
-bool ParticleSystemCore::ParticleSortByViewPosition::operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight)
-{
-	bool retFlag;
-	// relative distances squared are compared
-	if(_SortByMinimum){
-		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
-			< ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
-
-	} else
-	{
-		retFlag = ((Vec3f(_System->getPosition(ParticleIndexLeft)) - _CameraPos).squareLength()) 
-			> ((Vec3f(_System->getPosition(ParticleIndexRight)) - _CameraPos).squareLength());
-	}
-	return retFlag;
-}
-
-// function used for qsort comparisons
-int qSortComp(const void * a, const void * b)
-{
-	int ret;
-	// relative distances squared are compared
-	if(ParticleSystemCore::TheSorter._SortByMinimum){
-		ret = (Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)a) - ParticleSystemCore::TheSorter._CameraPos).squareLength()) 
-			- ((Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)b)) - ParticleSystemCore::TheSorter._CameraPos).squareLength());
-
-	} else
-	{
-		ret = Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)b) - ParticleSystemCore::TheSorter._CameraPos).squareLength() 
-			- Vec3f(ParticleSystemCore::TheSorter._System->getPosition(*(UInt32*)a) - ParticleSystemCore::TheSorter._CameraPos).squareLength();
-	}
-	return ret;
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+
+
 /*----------------------- constructors & destructors ----------------------*/
 
 ParticleSystemCore::ParticleSystemCore(void) :
     Inherited(),
-    _SystemUpdateListener(ParticleSystemCoreRefPtr(this))
+    _SystemUpdateListener(this)
 {
 }
 
 ParticleSystemCore::ParticleSystemCore(const ParticleSystemCore &source) :
     Inherited(source),
-    _SystemUpdateListener(ParticleSystemCoreRefPtr(this))
+    _SystemUpdateListener(this)
 {
 }
 
@@ -328,11 +296,13 @@ void ParticleSystemCore::changed(ConstFieldMaskArg whichField,
             if(getMFSort()->size() != getSystem()->getNumParticles())
             {
                 editMFSort()->resize(getSystem()->getNumParticles());
+                editMFDistances()->resize(getSystem()->getNumParticles());
 
                 //initialize _mfSort
                 for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
                 {
                     editSort(i) = i;
+                    editDistances(i) = 0.0f;
                 }
             }
         }
@@ -341,6 +311,7 @@ void ParticleSystemCore::changed(ConstFieldMaskArg whichField,
             if(getMFSort()->size() != 0)
             {
                 editMFSort()->clear();
+                editMFDistances()->clear();
             }
         }
     }
@@ -384,7 +355,11 @@ void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEven
 void ParticleSystemCore::handleParticleGenerated(const ParticleEventUnrecPtr e)
 {
     //add particle to _mfSort
-    if(getSortingMode() != NONE) editMFSort()->push_back(getMFSort()->size());
+    if(getSortingMode() != NONE)
+    {
+        editMFSort()->push_back(getMFSort()->size());
+		editMFDistances()->push_back(0.0f);
+    }
 }
 
 void ParticleSystemCore::handleParticleKilled(const ParticleEventUnrecPtr e)
@@ -395,6 +370,7 @@ void ParticleSystemCore::handleParticleKilled(const ParticleEventUnrecPtr e)
         if((*theItor) == _mfSort.size() - 1 ) 
         {
             _mfSort.erase(theItor);
+			_mfDistances.erase(--_mfDistances.end());
             break;
         }
     }
@@ -408,6 +384,7 @@ void ParticleSystemCore::handleParticleStolen(const ParticleEventUnrecPtr e)
         if((int)*theItor == _mfSort.size() - 1 ) 
         {
             _mfSort.erase(theItor);
+			_mfDistances.erase(--_mfDistances.end());
             break;
         }
     }

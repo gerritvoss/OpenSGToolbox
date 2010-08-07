@@ -98,6 +98,31 @@ void ParticleEventBase::setParticleIndex(const Int32 value)
 
     _sfParticleIndex.setValue(value);
 }
+//! Get the value of the ParticleEvent::_sfParticleID field.
+
+inline
+UInt32 &ParticleEventBase::editParticleID(void)
+{
+    editSField(ParticleIDFieldMask);
+
+    return _sfParticleID.getValue();
+}
+
+//! Get the value of the ParticleEvent::_sfParticleID field.
+inline
+      UInt32  ParticleEventBase::getParticleID(void) const
+{
+    return _sfParticleID.getValue();
+}
+
+//! Set the value of the ParticleEvent::_sfParticleID field.
+inline
+void ParticleEventBase::setParticleID(const UInt32 value)
+{
+    editSField(ParticleIDFieldMask);
+
+    _sfParticleID.setValue(value);
+}
 //! Get the value of the ParticleEvent::_sfParticlePosition field.
 
 inline
@@ -387,6 +412,9 @@ void ParticleEventBase::execSync (      ParticleEventBase *pFrom,
 
     if(FieldBits::NoField != (ParticleIndexFieldMask & whichField))
         _sfParticleIndex.syncWith(pFrom->_sfParticleIndex);
+
+    if(FieldBits::NoField != (ParticleIDFieldMask & whichField))
+        _sfParticleID.syncWith(pFrom->_sfParticleID);
 
     if(FieldBits::NoField != (ParticlePositionFieldMask & whichField))
         _sfParticlePosition.syncWith(pFrom->_sfParticlePosition);

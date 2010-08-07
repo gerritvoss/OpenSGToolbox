@@ -96,22 +96,18 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponentBase : publ
     {
         EditingFCFieldId = Inherited::NextFieldId,
         EditingFieldIdFieldId = EditingFCFieldId + 1,
-        EditingFieldIndexFieldId = EditingFieldIdFieldId + 1,
-        NextFieldId = EditingFieldIndexFieldId + 1
+        NextFieldId = EditingFieldIdFieldId + 1
     };
 
     static const OSG::BitVector EditingFCFieldMask =
         (TypeTraits<BitVector>::One << EditingFCFieldId);
     static const OSG::BitVector EditingFieldIdFieldMask =
         (TypeTraits<BitVector>::One << EditingFieldIdFieldId);
-    static const OSG::BitVector EditingFieldIndexFieldMask =
-        (TypeTraits<BitVector>::One << EditingFieldIndexFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecFieldContainerPtr SFEditingFCType;
     typedef SFUInt32          SFEditingFieldIdType;
-    typedef SFUInt32          SFEditingFieldIndexType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -159,7 +155,6 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponentBase : publ
 
     SFUnrecFieldContainerPtr _sfEditingFC;
     SFUInt32          _sfEditingFieldId;
-    SFUInt32          _sfEditingFieldIndex;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,8 +187,6 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponentBase : publ
     EditFieldHandlePtr editHandleEditingFC      (void);
     GetFieldHandlePtr  getHandleEditingFieldId  (void) const;
     EditFieldHandlePtr editHandleEditingFieldId (void);
-    GetFieldHandlePtr  getHandleEditingFieldIndex (void) const;
-    EditFieldHandlePtr editHandleEditingFieldIndex(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,17 +199,11 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponentBase : publ
                   SFUInt32            *editSFEditingFieldId (void);
             const SFUInt32            *getSFEditingFieldId  (void) const;
 
-                  SFUInt32            *editSFEditingFieldIndex(void);
-            const SFUInt32            *getSFEditingFieldIndex (void) const;
-
 
                   FieldContainer * getEditingFC      (void) const;
 
                   UInt32              &editEditingFieldId (void);
                   UInt32               getEditingFieldId  (void) const;
-
-                  UInt32              &editEditingFieldIndex(void);
-                  UInt32               getEditingFieldIndex (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -225,7 +212,6 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponentBase : publ
 
             void setEditingFC      (FieldContainer * const value);
             void setEditingFieldId (const UInt32 value);
-            void setEditingFieldIndex(const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

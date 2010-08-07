@@ -60,6 +60,81 @@ KeyframeRotationSequenceTmpl<SequenceDesc>::~KeyframeRotationSequenceTmpl(void)
 {
 }
 
+template <class SequenceDesc> inline 
+typename KeyframeRotationSequenceTmpl<SequenceDesc>::StoredType 
+  KeyframeRotationSequenceTmpl<SequenceDesc>::getRawKeyValue (const UInt32 index )
+{
+    return _field[index];
+}
+
+template <class SequenceDesc> inline 
+typename KeyframeRotationSequenceTmpl<SequenceDesc>::StoredType
+  KeyframeRotationSequenceTmpl<SequenceDesc>::getRawKeyValue (const UInt32 index ) const
+{
+    return _field[index];
+}
+
+template <class SequenceDesc> inline 
+void KeyframeRotationSequenceTmpl<SequenceDesc>::getRawKeyValue (StoredType   &val,
+                           const UInt32 index )
+{
+    val = _field[index];
+}
+
+template <class SequenceDesc> inline 
+void KeyframeRotationSequenceTmpl<SequenceDesc>::getRawKeyValue (StoredType   &val,
+                           const UInt32 index ) const
+{
+    val = _field[index];
+}
+
+
+template <class SequenceDesc> inline 
+void KeyframeRotationSequenceTmpl<SequenceDesc>::setRawKeyframe (const StoredType &val,
+                           const Real32     &key,
+                           const UInt32     index )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field[index] = val;
+    _mfInternalKeys[index] = key;
+}
+
+template <class SequenceDesc> inline 
+void KeyframeRotationSequenceTmpl<SequenceDesc>::addRawKeyframe (const StoredType &val,
+                           const Real32     &key )
+{
+    editMField(SequenceDataFieldMask, _field);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    _field.push_back(val);
+    _mfInternalKeys.push_back(key);
+}
+
+template <class SequenceDesc> inline 
+void KeyframeRotationSequenceTmpl<SequenceDesc>::insertRawKeyframe(const StoredType &val,
+                             const Real32     &key,
+                             const UInt32     index)
+{
+    if(_field.size() < index)
+    {
+        assert(false && "Index Out of bounds.");
+    }
+    else if(_field.size() == index)
+    {
+        addRawKeyframe(val,key);
+    }
+    else
+    {
+        editMField(SequenceDataFieldMask, _field);
+        editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+        _field.insert(_field.begin() + index, val);
+        this->_mfInternalKeys.insert(this->_mfInternalKeys.begin() + index, key);
+    }
+}
+
 #ifdef OSG_MT_CPTR_ASPECT
 template <class SequenceDesc> inline 
 typename KeyframeRotationSequenceTmpl<SequenceDesc>::ObjCPtr 
@@ -280,9 +355,9 @@ const Field& KeyframeRotationSequenceTmpl<SequenceDesc>::getKeyValues(void) cons
 /*! \copydoc OSG::KeyframeRotationSequence::size
  */
 template <class SequenceDesc> inline
-const DataType& KeyframeRotationSequenceTmpl<SequenceDesc>::getDataType(void) const
+const DataType*  KeyframeRotationSequenceTmpl<SequenceDesc>::getDataType(void) const
 {
-    return SequenceDesc::StoredFieldType::getClassType().getContentType();
+    return &SequenceDesc::StoredFieldType::getClassType().getContentType();
 }
 
 template <class SequenceDesc> inline 
@@ -329,23 +404,74 @@ void KeyframeRotationSequenceTmpl<SequenceDesc>::shrink(void)
 }
 
 template <class SequenceDesc> inline
-RawInterpFuncion KeyframeRotationSequenceTmpl<SequenceDesc>::bindInterpFunction(UInt32 InterpolationFunctionId) const
+bool KeyframeRotationSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                         Real32 time,
+                         Real32 prevTime,
+                         UInt32 ReplacePolicy,
+                         bool isCyclic,
+                         EditFieldHandlePtr Result,
+                         UInt32 Index,
+                         Real32 Blend)
 {
-    typename SequenceDesc::ConcreteInterpFunction f(SequenceDesc::getInterpolationFuncMap()[InterpolationFunctionId]);
-    if(f.empty())
+    if(Result->getCardinality() == FieldType::SingleField)
     {
-        return NULL;
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<SingleFieldType&>(*Result->getField()).getValue(),
+                           Blend);
     }
     else
     {
-        return boost::bind(f, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3);
+        return interpolate(Type,
+                           time,
+                           prevTime,
+                           ReplacePolicy,
+                           isCyclic,
+                           static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index],
+                           Blend);
     }
 }
 
 template <class SequenceDesc> inline
-ReplacementFuncion KeyframeRotationSequenceTmpl<SequenceDesc>::getReplacementFuncion(void) const
+void KeyframeRotationSequenceTmpl<SequenceDesc>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
 {
-    return &replacement<typename SequenceDesc::SingleFieldType>;
+    if(Result->getCardinality() == FieldType::SingleField)
+    {
+        zeroField(static_cast<SingleFieldType&>(*Result->getField()).getValue());
+    }
+    else
+    {
+        zeroField(static_cast<MField<typename SingleFieldType::StoredType>&>(*Result->getField())[Index]);
+    }
+}
+
+template <class SequenceDesc> inline
+bool KeyframeRotationSequenceTmpl<SequenceDesc>::interpolate(UInt32 Type,
+                                                           Real32 time,
+                                                           Real32 prevTime,
+                                                           UInt32 ReplacePolicy,
+                                                           bool isCyclic,
+                                                           StoredType& Result,
+                                                           Real32 Blend)
+{
+    typename SequenceDesc::ConcreteInterpFunction InterpFunc(SequenceDesc::getInterpolationFuncMap()[Type]);
+    if(InterpFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Interpolation function of type: " << Type << std::endl;
+        return false;
+    }
+    typename SequenceDesc::InterpReplaceFunction InterpReplaceFunc(boost::bind(InterpFunc, static_cast<const StoredFieldType&>(getKeyValues()),this->getKeys(),_1,_2,_3));
+    typename SequenceDesc::ConcreteReplaceFunction ReplaceFunc(SequenceDesc::getReplacementFuncMap()[ReplacePolicy]);
+    if(ReplaceFunc.empty())
+    {
+        SWARNING << "KeyframeSequence::interpolate(...): No Replacement function." << std::endl;
+        return false;
+    }
+
+    return ReplaceFunc(InterpReplaceFunc, time, prevTime, isCyclic, Result, Blend);
 }
 
 template <class SequenceDesc> inline
@@ -430,16 +556,9 @@ void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionDescBase>::g
 }
 
 template<> inline 
-void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFQuaternion&>(*Result->getField()).setValue(Quaternion(0.0,0.0,0.0,1.0));
-    }
-    else
-    {
-        static_cast<MFQuaternion&>(*Result->getField())[Index] = Quaternion(0.0,0.0,0.0,1.0);
-    }
+    Result = Quaternion(0.0,0.0,0.0,1.0);
 }
 
 template<> inline 
@@ -551,16 +670,9 @@ void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>:
 }
 
 template<> inline 
-void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::zeroField(StoredType& Result) const
 {
-    if(Result->getCardinality() == FieldType::SingleField)
-    {
-        static_cast<SFQuaternionfx&>(*Result->getField()).setValue(Quaternionfx(0.0f,0.0f,0.0f,1.0f));
-    }
-    else
-    {
-        static_cast<MFQuaternionfx&>(*Result->getField())[Index] = Quaternionfx(0.0f,0.0f,0.0f,1.0f);
-    }
+    Result = Quaternionfx(0.0f,0.0f,0.0f,1.0f);
 }
 
 template<> inline 
@@ -640,16 +752,9 @@ void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>:
 //}
 
 //template<> inline 
-//void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaterniondDescBase>::zeroField(EditFieldHandlePtr Result, UInt32 Index) const
+//void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaterniondDescBase>::zeroField(StoredType& Result) const
 //{
-    //if(Result->getCardinality() == FieldType::SingleField)
-    //{
-        //static_cast<SFQuaterniond&>(*Result->getField()).setValue(Quaterniond(0.0,0.0,0.0,1.0));
-    //}
-    //else
-    //{
-        //static_cast<MFQuaterniond&>(*Result->getField())[Index] = Quaterniond(0.0,0.0,0.0,1.0);
-    //}
+    //Result = Quaterniond(0.0,0.0,0.0,1.0);
 //}
 
 //template<> inline 

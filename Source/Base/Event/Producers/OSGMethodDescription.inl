@@ -36,21 +36,14 @@ MethodDescription::MethodDescription(const std::string                  &szName,
                                      const std::string                  &Description,
                                      const UInt32           uiMethodId,
                                      const TypeBase         &EventArgumentType,
-<<<<<<< Updated upstream
-                                     FunctorAccessMethod    fAccessFunctor) :
-=======
                                            bool               bConsumable,
                                      MethodGetMethod    fAccessFunctor) :
->>>>>>> Stashed changes
 
     _szName             (szName       ),
     _Description        (Description       ),
     _MethodId           (uiMethodId    ),
     _EventArgumentType  (EventArgumentType   ),
-<<<<<<< Updated upstream
-=======
     _Consumable         (bConsumable   ),
->>>>>>> Stashed changes
     _fAccessFunctor     (fAccessFunctor)
 {
 }
@@ -58,20 +51,12 @@ MethodDescription::MethodDescription(const std::string                  &szName,
 inline
 MethodDescription::MethodDescription(const MethodDescription &source) :
 
-<<<<<<< Updated upstream
-    _szName             (source._szName              ),
-    _Description        (source._Description              ),
-    _MethodId           (source._MethodId           ),
-    _EventArgumentType  (source._EventArgumentType          ),
-    _fAccessFunctor     (source._fAccessFunctor       )
-=======
     _szName             (source._szName           ),
     _Description        (source._Description      ),
     _MethodId           (source._MethodId         ),
     _EventArgumentType  (source._EventArgumentType),
     _Consumable         (source._Consumable       ),
     _fAccessFunctor     (source._fAccessFunctor   )
->>>>>>> Stashed changes
 {
 }
 
@@ -117,20 +102,12 @@ const TypeBase &MethodDescription::getEventArgumentType   (void) const
 }
 
 inline
-<<<<<<< Updated upstream
-void MethodDescription::setAccessFunctor(FunctorAccessMethod fAccessFunctor)
-=======
 void MethodDescription::setAccessFunctor(MethodGetMethod fAccessFunctor)
->>>>>>> Stashed changes
 {
     _fAccessFunctor = fAccessFunctor;
 }
 inline
-<<<<<<< Updated upstream
-FunctorAccessMethod MethodDescription::getAccessFunctor(void)
-=======
 MethodGetMethod MethodDescription::getAccessFunctor(void)
->>>>>>> Stashed changes
 {
     return _fAccessFunctor;
 }
@@ -141,8 +118,6 @@ bool MethodDescription::isValid(void)  const
     return (this != NULL && !_szName.empty()) ? true : false;
 }
 
-<<<<<<< Updated upstream
-=======
 inline
 GetMethodHandlePtr MethodDescription::getMethod(const ReflexiveContainer &oContainer) const
 {
@@ -153,7 +128,6 @@ GetMethodHandlePtr MethodDescription::getMethod(const ReflexiveContainer &oConta
     return GetMethodHandlePtr();
 }
 
->>>>>>> Stashed changes
 OSG_END_NAMESPACE
 
 #endif /* _OSGMETHODDESCRIPTIONIMPL_INL_ */

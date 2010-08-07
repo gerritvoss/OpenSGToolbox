@@ -76,14 +76,14 @@ OSG::UInt16 TextureLayerBase::getClassGroupId(void)
 
 //! Get the value of the TextureLayer::_sfTexture field.
 inline
-TextureObjChunk * TextureLayerBase::getTexture(void) const
+TextureBaseChunk * TextureLayerBase::getTexture(void) const
 {
     return _sfTexture.getValue();
 }
 
 //! Set the value of the TextureLayer::_sfTexture field.
 inline
-void TextureLayerBase::setTexture(TextureObjChunk * const value)
+void TextureLayerBase::setTexture(TextureBaseChunk * const value)
 {
     editSField(TextureFieldMask);
 

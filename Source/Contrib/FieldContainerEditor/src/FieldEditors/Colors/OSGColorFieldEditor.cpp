@@ -84,7 +84,7 @@ void ColorFieldEditor::initMethod(InitPhase ePhase)
         _EditableTypes.push_back(&FieldTraits<Color4ub>::getType());
         for(UInt32 i(0) ; i<_EditableTypes.size(); ++i)
         {
-            FieldEditorFactory::the()->setDefaultEditor(_EditableTypes[i], &getClassType());
+            FieldEditorFactory::the()->setSingleDefaultEditor(_EditableTypes[i], &getClassType());
             FieldEditorFactory::the()->setEditorType(_EditableTypes[i], &getClassType(), "ColorChooserWindow");
         }
     }

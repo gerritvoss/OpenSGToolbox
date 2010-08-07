@@ -395,6 +395,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Table : public TableBase,
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    virtual bool useBoundsForClipping(void) const;
 
     Int32 _EditingColumn;
 

@@ -149,7 +149,7 @@ void ComponentDecoratorBase::classDescInserter(TypeObject &oType)
         "ComponentDecoratorEventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&ComponentDecorator::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&ComponentDecorator::getHandleEventProducer));

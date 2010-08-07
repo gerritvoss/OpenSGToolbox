@@ -89,6 +89,12 @@ void Tree::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+bool Tree::useBoundsForClipping(void) const
+{
+    return false;
+}
+
 Vec2f Tree::getContentRequestedSize(void) const
 {
     return Vec2f(getPreferredSize().x(), getModelLayout()->getRowCount()* getModelLayout()->getRowHeight());

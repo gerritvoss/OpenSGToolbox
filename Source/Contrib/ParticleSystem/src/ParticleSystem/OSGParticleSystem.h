@@ -99,7 +99,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     UInt32 getNumParticles(void) const;
     const Pnt3f& getPosition(const UInt32& Index) const;
     const Pnt3f& getSecPosition(const UInt32& Index) const;
-    const Vec3f getPositionChange(const UInt32& Index) const;
+    Vec3f getPositionChange(const UInt32& Index) const;
     const Vec3f& getNormal(const UInt32& Index) const;
     const Color4f& getColor(const UInt32& Index) const;
     const Vec3f& getSize(const UInt32& Index) const;
@@ -107,11 +107,21 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     Real32 getAge(const UInt32& Index) const;
     const Vec3f& getVelocity(const UInt32& Index) const;
     const Vec3f& getSecVelocity(const UInt32& Index) const;
-    const Vec3f getVelocityChange(const UInt32& Index) const;
+    Vec3f getVelocityChange(const UInt32& Index) const;
     const Vec3f& getAcceleration(const UInt32& Index) const;
     UInt32 getAttribute(const UInt32& Index, const std::string& AttributeKey) const;
+	UInt32 getID(const UInt32& Index) const;
     const StringToUInt32Map& getAttributes(const UInt32& Index) const;
+	Int64 getIndex(UInt32 ParticleID) const;
 
+	Pnt3f getWorldSpacePosition(const UInt32& Index) const;
+	Pnt3f getWorldSpaceSecPosition(const UInt32& Index) const;
+	Vec3f getWorldSpacePositionChange(const UInt32& Index) const;
+	Vec3f getWorldSpaceNormal(const UInt32& Index) const;
+	Vec3f getWorldSpaceVelocity(const UInt32& Index) const;
+	Vec3f getWorldSpaceSecVelocity(const UInt32& Index) const;
+	Vec3f getWorldSpaceVelocityChange(const UInt32& Index) const;
+	Vec3f getWorldSpaceAcceleration(const UInt32& Index) const;
 
     void setPosition(const Pnt3f& Pos, const UInt32& Index);
     void setSecPosition(const Pnt3f& SecPosition, const UInt32& Index);
@@ -185,6 +195,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
 
 
     bool killParticle(UInt32 Index, bool KillNextUpdate = false);
+	bool killParticleByID(UInt32 ID, bool KillNextUpdate = false);
 
     void updateVolume(void);
 
@@ -266,7 +277,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
                                const Vec3f& Velocity,
                                const Vec3f& SecVelocity,
                                const Vec3f& Acceleration,
-                               const StringToUInt32Map& Attributes);
+                               const StringToUInt32Map& Attributes,
+                               UInt32& ID);
 
     void produceParticleStolen(
                                Int32 Index,
@@ -280,7 +292,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
                                const Vec3f& Velocity,
                                const Vec3f& SecVelocity,
                                const Vec3f& Acceleration,
-                               const StringToUInt32Map& Attributes);
+                               const StringToUInt32Map& Attributes,
+                               UInt32& ID);
 
     class SystemUpdateListener : public UpdateListener
     {
@@ -319,6 +332,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     void removeSecVelocity(UInt32 Index);
     void removeAcceleration(UInt32 Index);
     void removeAttributes(UInt32 Index);
+	void removeID(UInt32 Index);
 
     bool internalKillParticle(UInt32 Index);
     void internalKillParticles();
@@ -327,6 +341,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     std::set<UInt32, GreaterThanUInt32> _ParticlesToKill;
     EventConnection _UpdateEventConnection;
 
+	UInt32 _curID;
 
     void extendVolumeByParticle(UInt32 ParticleIndex);
     /*==========================  PRIVATE  ================================*/

@@ -260,7 +260,7 @@ void SoundBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&Sound::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&Sound::getHandleEventProducer));

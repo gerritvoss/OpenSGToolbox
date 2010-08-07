@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="GenericFieldEditor"
-	parent="FieldEditorComponent"
+	parent="SingleFieldEditorComponent"
     library="ContribFieldContainerEditor"
     pointerfieldtypes="both"
 	structure="concrete"

@@ -89,7 +89,7 @@ void NumberSpinnerFieldEditor::initMethod(InitPhase ePhase)
         
         for(UInt32 i(0) ; i<_EditableTypes.size(); ++i)
         {
-            FieldEditorFactory::the()->setDefaultEditor(_EditableTypes[i], &getClassType());
+            FieldEditorFactory::the()->setSingleDefaultEditor(_EditableTypes[i], &getClassType());
             FieldEditorFactory::the()->setEditorType(_EditableTypes[i], &getClassType(), "Spinner");
         }
     }
@@ -101,6 +101,8 @@ void NumberSpinnerFieldEditor::initMethod(InitPhase ePhase)
 \***************************************************************************/
 bool NumberSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 fieldId, UInt32 index)
 {
+    Inherited::internalAttachField(fc, fieldId, index);
+
     const DataType& type(fc->getFieldDescription(fieldId)->getFieldType().getContentType());
 
     if(type == FieldTraits<UInt8>::getType())

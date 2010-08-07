@@ -151,6 +151,43 @@ Action::ResultE QuadParticleSystemDrawer::draw(DrawEnv *pEnv, ParticleSystemUnre
     return Action::Continue;
 }
 
+bool QuadParticleSystemDrawer::setNormalAndUpSource(UInt32 NormalSource, UInt32 UpSource, Vec3f Normal, Vec3f Up)
+{
+    // set the values for the static normal and up vectors, since they won't necessarily be used
+    setNormal(Normal);
+    setUp(Up);
+
+    bool defaultsUsed = false;
+    // need to determine if the normal source and up direction source are compatible
+    // this checks all possible valid combinations we have decided to allow
+    if(	(NormalSource == NORMAL_VELOCITY && 
+         (UpSource ==UP_POSITION_CHANGE || UpSource == UP_VELOCITY_CHANGE)) ||
+
+        (UpSource == UP_VELOCITY && 
+         (NormalSource ==  NORMAL_POSITION_CHANGE || NormalSource == NORMAL_VELOCITY_CHANGE )) ||
+
+        (UpSource == UP_VIEW_DIRECTION && 
+         (NormalSource == NORMAL_VIEW_DIRECTION || NormalSource == NORMAL_VIEW_POSITION )) ||
+
+        (NormalSource == NORMAL_STATIC) || (UpSource == UP_STATIC))
+    {
+        // this is a valid combination, so use it!
+        setNormalSource(NormalSource);
+        setUpSource(UpSource);
+
+    }
+    else
+    {
+        // the combination of up and normal sources is incompatible, use defaults
+        setNormalSource(NORMAL_STATIC);
+        setUpSource(UP_STATIC);
+        defaultsUsed = true;
+    }
+
+    return !defaultsUsed;
+}
+
+
 void QuadParticleSystemDrawer::adjustVolume(ParticleSystemUnrecPtr System, Volume & volume)
 {
     //Get The Volume of the Particle System

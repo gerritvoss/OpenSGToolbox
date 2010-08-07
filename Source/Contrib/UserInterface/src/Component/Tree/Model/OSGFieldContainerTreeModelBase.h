@@ -103,7 +103,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
         ShowParentPtrFieldsFieldId = ShowDataFieldsFieldId + 1,
         ShowChildPtrFieldsFieldId = ShowParentPtrFieldsFieldId + 1,
         ShowAttachmentsFieldId = ShowChildPtrFieldsFieldId + 1,
-        ShowCallbackFunctorsFieldId = ShowAttachmentsFieldId + 1,
+        ShowEventProducersFieldId = ShowAttachmentsFieldId + 1,
+        ShowCallbackFunctorsFieldId = ShowEventProducersFieldId + 1,
         NextFieldId = ShowCallbackFunctorsFieldId + 1
     };
 
@@ -125,6 +126,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
         (TypeTraits<BitVector>::One << ShowChildPtrFieldsFieldId);
     static const OSG::BitVector ShowAttachmentsFieldMask =
         (TypeTraits<BitVector>::One << ShowAttachmentsFieldId);
+    static const OSG::BitVector ShowEventProducersFieldMask =
+        (TypeTraits<BitVector>::One << ShowEventProducersFieldId);
     static const OSG::BitVector ShowCallbackFunctorsFieldMask =
         (TypeTraits<BitVector>::One << ShowCallbackFunctorsFieldId);
     static const OSG::BitVector NextFieldMask =
@@ -139,6 +142,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
     typedef SFBool            SFShowParentPtrFieldsType;
     typedef SFBool            SFShowChildPtrFieldsType;
     typedef SFBool            SFShowAttachmentsType;
+    typedef SFBool            SFShowEventProducersType;
     typedef SFBool            SFShowCallbackFunctorsType;
 
     /*---------------------------------------------------------------------*/
@@ -189,6 +193,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
                   SFBool              *editSFShowAttachments(void);
             const SFBool              *getSFShowAttachments (void) const;
 
+                  SFBool              *editSFShowEventProducers(void);
+            const SFBool              *getSFShowEventProducers (void) const;
+
                   SFBool              *editSFShowCallbackFunctors(void);
             const SFBool              *getSFShowCallbackFunctors (void) const;
 
@@ -217,6 +224,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
                   bool                &editShowAttachments(void);
                   bool                 getShowAttachments (void) const;
 
+                  bool                &editShowEventProducers(void);
+                  bool                 getShowEventProducers (void) const;
+
                   bool                &editShowCallbackFunctors(void);
                   bool                 getShowCallbackFunctors (void) const;
 
@@ -233,6 +243,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
             void setShowParentPtrFields(const bool value);
             void setShowChildPtrFields(const bool value);
             void setShowAttachments(const bool value);
+            void setShowEventProducers(const bool value);
             void setShowCallbackFunctors(const bool value);
 
     /*! \}                                                                 */
@@ -307,6 +318,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
     SFBool            _sfShowParentPtrFields;
     SFBool            _sfShowChildPtrFields;
     SFBool            _sfShowAttachments;
+    SFBool            _sfShowEventProducers;
     SFBool            _sfShowCallbackFunctors;
 
     /*! \}                                                                 */
@@ -354,6 +366,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModelBase : public A
     EditFieldHandlePtr editHandleShowChildPtrFields(void);
     GetFieldHandlePtr  getHandleShowAttachments (void) const;
     EditFieldHandlePtr editHandleShowAttachments(void);
+    GetFieldHandlePtr  getHandleShowEventProducers (void) const;
+    EditFieldHandlePtr editHandleShowEventProducers(void);
     GetFieldHandlePtr  getHandleShowCallbackFunctors (void) const;
     EditFieldHandlePtr editHandleShowCallbackFunctors(void);
 

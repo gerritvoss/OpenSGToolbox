@@ -56,6 +56,7 @@
 #include "OSGEventConnection.h"
 #include "OSGComboBox.h"
 #include "OSGTextField.h"
+#include "OSGList.h"
 #include "OSGColorChooser.h"
 #include <boost/any.hpp>
 
@@ -82,7 +83,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
     {
         INPUT_BTNS  = 0,
         INPUT_COMBO = 1,
-        INPUT_TEXT  = 2
+        INPUT_TEXT  = 2,
+        INPUT_LIST  = 4,
+        INPUT_MESSAGE  = 5
     };
 
 	enum DialogButtons
@@ -124,23 +127,63 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
 	bool isEventListenerAttached(EventListenerPtr Listener) const;
     void removeEventListener(EventListenerPtr Listener);
 	
-	virtual void close(UInt32 intOption, std::string strInput);
+	virtual void close(UInt32 intOption, std::string strInput, UInt32 intInputIndex);
     
-	static DialogWindowUnrecPtr createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
-	static DialogWindowUnrecPtr createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
+	static DialogWindowUnrecPtr createMessageDialog(const std::string& Title,
+                                                    const std::string& Message,
+                                                    bool showCancel,
+                                                    const std::string& ConfirmBtnText = "OK",
+                                                    const std::string& CancelBtnText = "Cancel");
+
+	static DialogWindowUnrecPtr createInputDialog(const std::string& Title,
+                                                  const std::string& Message,
+                                                  UInt32 Type,
+                                                  bool showCancel,
+                                                  const std::vector<std::string>& InputValues,
+                                                  const std::string& ConfirmBtnText = "OK",
+                                                  const std::string& CancelBtnText = "Cancel");
+
+	static DialogWindowUnrecPtr createButtonsInputDialog(const std::string& Title,
+                                                  const std::string& Message,
+                                                  bool showCancel,
+                                                  const std::vector<std::string>& InputValues,
+                                                  const std::string& ConfirmBtnText = "OK",
+                                                  const std::string& CancelBtnText = "Cancel");
+
+	static DialogWindowUnrecPtr createListInputDialog(const std::string& Title,
+                                                  const std::string& Message,
+                                                  bool showCancel,
+                                                  const std::vector<std::string>& InputValues,
+                                                  const std::string& ConfirmBtnText = "OK",
+                                                  const std::string& CancelBtnText = "Cancel");
+
+	static DialogWindowUnrecPtr createComboInputDialog(const std::string& Title,
+                                                  const std::string& Message,
+                                                  bool showCancel,
+                                                  const std::vector<std::string>& InputValues,
+                                                  const std::string& ConfirmBtnText = "OK",
+                                                  const std::string& CancelBtnText = "Cancel");
+
+	static DialogWindowUnrecPtr createTextInputDialog(const std::string& Title,
+                                                  const std::string& Message,
+                                                  bool showCancel,
+                                                  const std::vector<std::string>& InputValues,
+                                                  const std::string& ConfirmBtnText = "OK",
+                                                  const std::string& CancelBtnText = "Cancel");
 	
     static DialogWindowUnrecPtr createColorChooserDialog(const std::string& Title, 
-                                                           const std::string& Message, 
-                                                           bool showAlpha,
-                                                           ColorSelectionModelPtr colorModel,
-                                                           bool showCancel, 
-                                                           const std::string& ConfirmBtnText = "OK", 
-                                                           const std::string& CancelBtnText = "Cancel");
+                                                         const std::string& Message, 
+                                                         bool showAlpha,
+                                                         ColorSelectionModelPtr colorModel,
+                                                         bool showCancel, 
+                                                         const std::string& ConfirmBtnText = "OK", 
+                                                         const std::string& CancelBtnText = "Cancel");
 
     ActionListener* getConfirmButtonListener(void);
     ActionListener* getCancelButtonListener (void);
     ActionListener* getInputButtonListener  (void);
     ActionListener* getComboButtonListener  (void);
+    //ActionListener* getListListener  (void);
     ActionListener* getTextButtonListener   (void);
 
     void addTransientObject(const boost::any& obj);
@@ -202,6 +245,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
     };
     InputButtonListener _InputButtonListener;
 
+    class ListButtonListener : public ActionListener
+    {
+      public :
+        ListButtonListener(DialogWindow* const TheDialogWindow);
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
+      protected :
+        DialogWindow* _DialogWindow;
+    };
+    ListButtonListener _ListButtonListener;
+
     class ComboButtonListener : public ActionListener
     {
       public :
@@ -234,11 +287,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
 	
     EventListenerSet       _EventListeners;
 	
-	virtual void produceDialogWindowClosing(UInt32 intOption, std::string strInput);
-    virtual void produceDialogWindowClosed(UInt32 intOption, std::string strInput);
+	virtual void produceDialogWindowClosing(UInt32 intOption,
+                                            std::string strInput,
+                                            UInt32 intInputIndex);
+    virtual void produceDialogWindowClosed(UInt32 intOption,
+                                           std::string strInput,
+                                           UInt32 intInputIndex);
 
     ComboBoxRefPtr _InputComboBox;
+    ListRefPtr _InputList;
     TextFieldRefPtr _InputTextField;
+    UInt32 _InputType;
 
 	static TextAreaTransitPtr createTransparentTextArea(const std::string& Message);
 	static void handleInputButton(Button* const btn);

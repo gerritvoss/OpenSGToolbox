@@ -93,6 +93,52 @@ OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceString *, KeyframeBasicSeque
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
+//Bool
+#if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
+//! KeyframeBasicSequencePtr
+
+OSG_GEN_CONTAINERPTR(KeyframeBasicSequenceBool);
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpKeyframeSequences
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldTraits<KeyframeBasicSequenceBool *> : 
+    public FieldTraitsFCPtrBase<KeyframeBasicSequenceBool *>
+{
+  private:
+
+    static DataType             _type;                       
+
+  public:
+
+    typedef FieldTraits<KeyframeBasicSequenceBool *>  Self;
+
+    enum                        { StringConvertable = 0x00 };
+
+    static OSG_TBANIMATION_DLLMAPPING 
+                     DataType &getType (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8 *getSName(void); 
+
+    template<typename RefCountPolicy> inline
+    static const Char8 *getMName(void); 
+};
+
+
+OSG_FIELD_TRAITS_NAME_INST(KeyframeBasicSequenceBool *, KeyframeBasicSequenceBoolPtr)
+
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceBool *, KeyframeBasicSequenceBoolPtr);
+
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+
 //GLenum
 #if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
 //! KeyframeBasicSequencePtr

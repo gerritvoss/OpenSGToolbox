@@ -89,8 +89,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowEvent : public DialogWindo
 
     static  DialogWindowEventTransitPtr      create( FieldContainerRefPtr Source,
                                                      Time TimeStamp,
-                                                     const UInt32& Option,
-                                                     const std::string& Input); 
+                                                     UInt32 Option,
+                                                     const std::string& Input,
+                                                     UInt32 InputIndex); 
 
     /*=========================  PROTECTED  ===============================*/
 

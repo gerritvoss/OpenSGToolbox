@@ -355,6 +355,7 @@ void GLViewport::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
     {
         setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()-(_OffsetMultipliers.z()*e->getUnitsToScroll()) ));
     }
+    e->setConsumed(true);
 }
 
 void GLViewport::lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up)

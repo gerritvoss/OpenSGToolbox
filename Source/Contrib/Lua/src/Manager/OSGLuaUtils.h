@@ -51,9 +51,9 @@
 #include <vector>
 #include <map>
 
-OSG_BEGIN_NAMESPACE
-
 #ifdef OSG_WITH_LUA_DEBUGGER
+
+OSG_BEGIN_NAMESPACE
 
 namespace lua_details
 {

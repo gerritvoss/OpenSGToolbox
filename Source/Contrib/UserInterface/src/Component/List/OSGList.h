@@ -110,6 +110,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
 
     ListSelectionModelPtr getSelectionModel(void) const;
 
+    void setSelectedIndex(UInt32 index);
+
+    Int32 getSelectedIndex(void) const;
+
+    Int32 getMinSelectedIndex(void) const;
+
+    Int32 getMaxSelectedIndex(void) const;
+
+    boost::any getSelectedItem(void) const;
+
 	virtual Vec2f getContentRequestedSize(void) const;
 	
     virtual void mousePressed(const MouseEventUnrecPtr e);
@@ -126,7 +136,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
     Int32 getIndexClosestToLocation(const Pnt2f& Location) const;
 
     Component* getComponentAtIndex(const UInt32& Index);
-    boost::any getValueAtIndex(const UInt32& Index);
+    boost::any getValueAtIndex(const UInt32& Index) const;
     
 	
 	//Scrollable Interface
@@ -184,10 +194,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const List *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
 
     ListSelectionModelPtr _SelectionModel;
 
 
+    virtual bool useBoundsForClipping(void) const;
 	void updateIndiciesDrawnFromModel(void);
 
 	//Updates the drawn Indices.  Called when the ClipBounds of the List

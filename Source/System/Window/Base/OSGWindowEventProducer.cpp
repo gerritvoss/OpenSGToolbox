@@ -134,7 +134,7 @@ bool WindowEventProducer::removeCursorRegion(CursorRegionListItor RegionItor)
 	}
 }
 
-WindowUnrecPtr WindowEventProducer::initWindow(void)
+Window* WindowEventProducer::initWindow(void)
 {
     //TODO
 	_RenderAction = RenderAction::create();

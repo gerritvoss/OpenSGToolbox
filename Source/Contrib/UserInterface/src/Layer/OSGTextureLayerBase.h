@@ -65,7 +65,7 @@
 
 #include "OSGLayer.h" // Parent
 
-#include "OSGTextureObjChunkFields.h"   // Texture type
+#include "OSGTextureBaseChunkFields.h"  // Texture type
 #include "OSGTextureTransformChunkFields.h" // Transformation type
 #include "OSGBaseFields.h"              // Color type
 #include "OSGSysFields.h"               // Scale type
@@ -124,7 +124,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextureLayerBase : public Layer
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecTextureObjChunkPtr SFTextureType;
+    typedef SFUnrecTextureBaseChunkPtr SFTextureType;
     typedef SFUnrecTextureTransformChunkPtr SFTransformationType;
     typedef SFColor4f         SFColorType;
     typedef SFUInt32          SFScaleType;
@@ -155,8 +155,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextureLayerBase : public Layer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecTextureObjChunkPtr *getSFTexture        (void) const;
-                  SFUnrecTextureObjChunkPtr *editSFTexture        (void);
+            const SFUnrecTextureBaseChunkPtr *getSFTexture        (void) const;
+                  SFUnrecTextureBaseChunkPtr *editSFTexture        (void);
             const SFUnrecTextureTransformChunkPtr *getSFTransformation (void) const;
                   SFUnrecTextureTransformChunkPtr *editSFTransformation (void);
 
@@ -176,7 +176,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextureLayerBase : public Layer
             const SFReal32            *getSFHorizontalAlignment (void) const;
 
 
-                  TextureObjChunk * getTexture        (void) const;
+                  TextureBaseChunk * getTexture        (void) const;
 
                   TextureTransformChunk * getTransformation (void) const;
 
@@ -200,7 +200,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextureLayerBase : public Layer
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setTexture        (TextureObjChunk * const value);
+            void setTexture        (TextureBaseChunk * const value);
             void setTransformation (TextureTransformChunk * const value);
             void setColor          (const Color4f &value);
             void setScale          (const UInt32 value);
@@ -271,7 +271,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextureLayerBase : public Layer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecTextureObjChunkPtr _sfTexture;
+    SFUnrecTextureBaseChunkPtr _sfTexture;
     SFUnrecTextureTransformChunkPtr _sfTransformation;
     SFColor4f         _sfColor;
     SFUInt32          _sfScale;

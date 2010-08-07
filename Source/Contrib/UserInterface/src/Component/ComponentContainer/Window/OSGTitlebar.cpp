@@ -179,30 +179,33 @@ void Titlebar::updateClipBounds(void)
 
         //Get Parent Container's Clip Bounds
         Pnt2f ContainerClipTopLeft, ContainerClipBottomRight;
-        dynamic_cast<InternalWindow*>(getParentWindow())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
+        if(dynamic_cast<InternalWindow*>(getParentWindow()))
+        {
+            dynamic_cast<InternalWindow*>(getParentWindow())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
 
-        //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
-        //We need to convert them to this Components Coordinate space
-        ContainerClipTopLeft -= Vec2f(getPosition());
-        ContainerClipBottomRight -= Vec2f(getPosition());
+            //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
+            //We need to convert them to this Components Coordinate space
+            ContainerClipTopLeft -= Vec2f(getPosition());
+            ContainerClipBottomRight -= Vec2f(getPosition());
 
-        //Get Parent Container's Titlebar Bounds
-        Pnt2f ContainerInsetTopLeft, ContainerInsetBottomRight;
-        dynamic_cast<InternalWindow*>(getParentWindow())->getTitlebarBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
+            //Get Parent Container's Titlebar Bounds
+            Pnt2f ContainerInsetTopLeft, ContainerInsetBottomRight;
+            dynamic_cast<InternalWindow*>(getParentWindow())->getTitlebarBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
 
-        //Parent Container's Inset Bounds are in the Parent Container's Coordinate space
-        //We need to convert them to this Components Coordinate space
-        ContainerInsetTopLeft -= Vec2f(getPosition());
-        ContainerInsetBottomRight -= Vec2f(getPosition());
+            //Parent Container's Inset Bounds are in the Parent Container's Coordinate space
+            //We need to convert them to this Components Coordinate space
+            ContainerInsetTopLeft -= Vec2f(getPosition());
+            ContainerInsetBottomRight -= Vec2f(getPosition());
 
-        //Get the intersection of my bounds with my parent containers clip bounds
-        quadIntersection(MyTopLeft,MyBottomRight,
-                         ContainerClipTopLeft,ContainerClipBottomRight,
-                         TopLeft, BottomRight);
+            //Get the intersection of my bounds with my parent containers clip bounds
+            quadIntersection(MyTopLeft,MyBottomRight,
+                             ContainerClipTopLeft,ContainerClipBottomRight,
+                             TopLeft, BottomRight);
 
-        quadIntersection(TopLeft,BottomRight,
-                         ContainerInsetTopLeft,ContainerInsetBottomRight,
-                         TopLeft, BottomRight);
+            quadIntersection(TopLeft,BottomRight,
+                             ContainerInsetTopLeft,ContainerInsetBottomRight,
+                             TopLeft, BottomRight);
+        }
     }
     //The Clip Bounds calculated are in my Parent Containers coordinate space
     //Translate these bounds into my own coordinate space

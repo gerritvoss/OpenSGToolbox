@@ -93,7 +93,8 @@ EventConnection MenuButton::addMenuActionListener(ActionListenerPtr Listener)
 
 void MenuButton::hidePopup(void)
 {
-    if(getMenuButtonPopupMenu()->getVisible())
+    if(getMenuButtonPopupMenu() &&
+       getMenuButtonPopupMenu()->getVisible())
     {
         getMenuButtonPopupMenu()->cancel();
     }

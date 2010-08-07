@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGKeyframeFCPtrSequenceBase.h"
-#include "OSGVector.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -61,8 +60,6 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequence : public KeyframeFCPtrSeq
 
     typedef KeyframeFCPtrSequenceBase Inherited;
     typedef KeyframeFCPtrSequence     Self;
-
-    typedef FieldContainerUnrecPtr          GenericType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -83,30 +80,44 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequence : public KeyframeFCPtrSeq
     /*! \}                                                                 */
 
 
-    virtual GenericType getKeyValue (const UInt32       index )       = 0;
+    virtual FieldContainer* getKeyValue (const UInt32       index )      ;
 
-    virtual GenericType getKeyValue (const UInt32       index ) const = 0;
-
-    virtual void        getKeyValue (      GenericType &val,
-                                  const UInt32       index )       = 0;
-
-    virtual void        getKeyValue (      GenericType &val,
-                                  const UInt32       index ) const = 0;
+    virtual FieldContainer* getKeyValue (const UInt32       index ) const;
 
 
-    virtual void        setKeyframe (const GenericType &val,
-                                          const Real32 &key,
-                                  const UInt32       index )       = 0;
+    virtual void        setKeyframe (FieldContainer* const val,
+                                     const Real32 &key,
+                                     const UInt32       index )      ;
 
-    virtual void        addKeyframe (const GenericType &val,
-                                          const Real32 &key   )       = 0;
+    virtual void        addKeyframe (FieldContainer* const val,
+                                     const Real32 &key   )      ;
 
-    virtual void        insertKeyframe(const GenericType &val,
-                                          const Real32 &key,
-                                    const UInt32 index)            = 0;
+    virtual void        insertKeyframe(FieldContainer* const val,
+                                       const Real32 &key,
+                                       const UInt32 index)           ;
 
-    virtual void        push_back(const GenericType &val,
-                                          const Real32 &key   )       = 0;
+    virtual void        push_back(FieldContainer* const val,
+                                  const Real32 &key   );
+
+    virtual UInt32      size       (void) const;
+    virtual bool        isBlendable(void) const;
+
+    virtual const Field& getKeyValues(void) const;
+
+    virtual const DataType* getDataType(void) const;
+
+    virtual void        clear    (      void               );
+
+    virtual bool interpolate(UInt32 Type,
+                             Real32 time,
+                             Real32 prevTime,
+                             UInt32 ReplacePolicy,
+                             bool isCyclic,
+                             EditFieldHandlePtr Result,
+                             UInt32 Index,
+                             Real32 Blend);
+
+    virtual void zeroField(EditFieldHandlePtr Result, UInt32 Index) const;
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -136,8 +147,9 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequence : public KeyframeFCPtrSeq
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+    bool isTypeSameAsValues(const DataType& type) const;
     /*==========================  PRIVATE  ================================*/
-
+    DataType *_SequenceDataType;
   private:
 
     friend class FieldContainer;

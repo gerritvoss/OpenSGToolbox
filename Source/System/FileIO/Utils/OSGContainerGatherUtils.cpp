@@ -3,10 +3,33 @@
 #include "OSGAttachmentContainer.h"
 #include "OSGFieldContainerFactory.h"
 #include "OSGFilePathAttachment.h"
+#include "OSGDrawableStatsAttachment.h"
+#include "OSGEventProducer.h"
+#include "OSGEventProducerPtrType.h"
 
 OSG_BEGIN_NAMESPACE
 
-std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers, const std::set<FieldContainerUnrecPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes)
+std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers,
+                                                    const std::set<FieldContainerUnrecPtr>& IgnoreContainers,
+                                                    const std::vector<const FieldContainerType*>& IgnoreTypes,
+                                                    bool RecurseFilePathAttachedContainers)
+{
+    std::vector<UInt32> IgnoreTypeIds;
+    for(UInt32 i = 0; i < IgnoreTypes.size(); ++i)
+    {
+        IgnoreTypeIds.push_back(IgnoreTypes[i]->getId());
+    }
+    
+    return getAllDependantFCs(Containers,
+                              IgnoreContainers,
+                              IgnoreTypeIds,
+                              RecurseFilePathAttachedContainers);
+}
+
+std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers,
+                                                    const std::set<FieldContainerUnrecPtr>& IgnoreContainers,
+                                                    const std::vector<UInt32>& IgnoreTypes,
+                                                    bool RecurseFilePathAttachedContainers)
 {
     std::set<FieldContainerUnrecPtr> AllContainers(Containers);
     std::set<FieldContainerUnrecPtr> NewIgnores(IgnoreContainers);
@@ -28,6 +51,15 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
 
         if((*ContainersItor)->getType().isDerivedFrom(AttachmentContainer::getClassType()))
         {
+            //If the Container has a FilePathAttachment, and the RecurseFilePathAttachedContainers
+            //flag is true then dependent containers of this container should be
+            //skipped
+            if(!RecurseFilePathAttachedContainers &&
+               FilePathAttachment::getFilePath(dynamic_pointer_cast<AttachmentContainer>(*ContainersItor)) != NULL)
+            {
+                continue;
+            }
+
             //All of the Attachments
             std::vector<std::string> AttachmentIds;
             AttachmentMap::const_iterator MapItor(dynamic_pointer_cast<AttachmentContainer>(*ContainersItor)->getSFAttachments()->getValue().begin());
@@ -35,7 +67,8 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
             for( ; MapItor!=MapEnd  ; ++MapItor)
             {
                 if(MapItor->second->getType() != Name::getClassType() &&
-                   MapItor->second->getType() != FilePathAttachment::getClassType())
+                   MapItor->second->getType() != FilePathAttachment::getClassType() &&
+                   MapItor->second->getType() != DrawableStatsAttachment::getClassType())
                 {
                     std::set<FieldContainerUnrecPtr> TheContainer;
                     TheContainer.insert(MapItor->second);
@@ -112,6 +145,39 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
 
                                 AllContainers.insert(NewContainers.begin(), NewContainers.end());
                                 NewIgnores.insert(NewContainers.begin(), NewContainers.end());
+                            }
+                        }
+                    }
+                }
+                //If this is a EventProducer field
+                else if(TheFieldDesc->getFieldType().getContentType() ==
+                        FieldTraits<EventProducerPtr>::getType())
+                {
+                    //Get all of the Activities
+                    if(static_cast<const SFEventProducerPtr*>(TheField)->getValue() != NULL)
+                    {
+                        Activity* TheActvitiy;
+                        EventProducerPtr TheProducer(static_cast<const SFEventProducerPtr*>(TheField)->getValue());
+                        for(UInt32 i(1) ; i<=TheProducer->getNumProducedEvents() ; ++i)
+                        {
+                            for(UInt32 j(0) ; j<TheProducer->getNumActivitiesAttached(i) ; ++j)
+                            {
+                                TheActvitiy = TheProducer->getAttachedActivity(i,j);
+                                if(AllContainers.find(TheActvitiy) == AllContainers.end() &&
+                                   NewIgnores.find(TheActvitiy) == NewIgnores.end() && 
+                                   std::find(IgnoreTypes.begin(), IgnoreTypes.end(), TheActvitiy->getTypeId()) == IgnoreTypes.end())
+                                {
+                                    std::set<FieldContainerUnrecPtr> TheContainer;
+                                    TheContainer.insert(TheActvitiy);
+                                    
+                                    AllContainers.insert(TheActvitiy);
+                                    NewIgnores.insert(Containers.begin(), Containers.end());
+
+                                    std::set<FieldContainerUnrecPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
+
+                                    AllContainers.insert(NewContainers.begin(), NewContainers.end());
+                                    NewIgnores.insert(NewContainers.begin(), NewContainers.end());
+                                }
                             }
                         }
                     }

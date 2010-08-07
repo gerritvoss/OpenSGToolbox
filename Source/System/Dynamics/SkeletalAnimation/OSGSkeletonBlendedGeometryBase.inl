@@ -64,6 +64,19 @@ OSG::UInt32 SkeletonBlendedGeometryBase::getClassTypeId(void)
 {
     return _type.getId();
 }
+//! access the producer type of the class
+inline
+const EventProducerType &SkeletonBlendedGeometryBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 SkeletonBlendedGeometryBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
 
 inline
 OSG::UInt16 SkeletonBlendedGeometryBase::getClassGroupId(void)
@@ -89,77 +102,86 @@ void SkeletonBlendedGeometryBase::setBaseGeometry(Geometry * const value)
 
     _sfBaseGeometry.setValue(value);
 }
-//! Get the value of the SkeletonBlendedGeometry::_sfBlendMode field.
 
+//! Get the value of the SkeletonBlendedGeometry::_sfInternalWeightIndexes field.
 inline
-UInt32 &SkeletonBlendedGeometryBase::editBlendMode(void)
+GeoIntegralProperty * SkeletonBlendedGeometryBase::getInternalWeightIndexes(void) const
 {
-    editSField(BlendModeFieldMask);
-
-    return _sfBlendMode.getValue();
+    return _sfInternalWeightIndexes.getValue();
 }
 
-//! Get the value of the SkeletonBlendedGeometry::_sfBlendMode field.
+//! Set the value of the SkeletonBlendedGeometry::_sfInternalWeightIndexes field.
 inline
-      UInt32  SkeletonBlendedGeometryBase::getBlendMode(void) const
+void SkeletonBlendedGeometryBase::setInternalWeightIndexes(GeoIntegralProperty * const value)
 {
-    return _sfBlendMode.getValue();
+    editSField(InternalWeightIndexesFieldMask);
+
+    _sfInternalWeightIndexes.setValue(value);
 }
 
-//! Set the value of the SkeletonBlendedGeometry::_sfBlendMode field.
+//! Get the value of the SkeletonBlendedGeometry::_sfInternalWeights field.
 inline
-void SkeletonBlendedGeometryBase::setBlendMode(const UInt32 value)
+GeoVectorProperty * SkeletonBlendedGeometryBase::getInternalWeights(void) const
 {
-    editSField(BlendModeFieldMask);
-
-    _sfBlendMode.setValue(value);
+    return _sfInternalWeights.getValue();
 }
 
-//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfJoints field.
+//! Set the value of the SkeletonBlendedGeometry::_sfInternalWeights field.
 inline
-Joint * SkeletonBlendedGeometryBase::getJoints(const UInt32 index) const
+void SkeletonBlendedGeometryBase::setInternalWeights(GeoVectorProperty * const value)
 {
-    return _mfJoints[index];
-}
+    editSField(InternalWeightsFieldMask);
 
-//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfPositionIndexes field.
-inline
-      UInt32  SkeletonBlendedGeometryBase::getPositionIndexes(const UInt32 index) const
-{
-    return _mfPositionIndexes[index];
+    _sfInternalWeights.setValue(value);
 }
+//! Get the value of the SkeletonBlendedGeometry::_sfBindTransformation field.
 
 inline
-UInt32 &SkeletonBlendedGeometryBase::editPositionIndexes(const UInt32 index)
+Matrix &SkeletonBlendedGeometryBase::editBindTransformation(void)
 {
-    editMField(PositionIndexesFieldMask, _mfPositionIndexes);
+    editSField(BindTransformationFieldMask);
 
-    return _mfPositionIndexes[index];
+    return _sfBindTransformation.getValue();
 }
 
-
-//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfBlendAmounts field.
+//! Get the value of the SkeletonBlendedGeometry::_sfBindTransformation field.
 inline
-      Real32  SkeletonBlendedGeometryBase::getBlendAmounts(const UInt32 index) const
+const Matrix &SkeletonBlendedGeometryBase::getBindTransformation(void) const
 {
-    return _mfBlendAmounts[index];
+    return _sfBindTransformation.getValue();
+}
+
+//! Set the value of the SkeletonBlendedGeometry::_sfBindTransformation field.
+inline
+void SkeletonBlendedGeometryBase::setBindTransformation(const Matrix &value)
+{
+    editSField(BindTransformationFieldMask);
+
+    _sfBindTransformation.setValue(value);
+}
+
+//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfInternalJoints field.
+inline
+Node * SkeletonBlendedGeometryBase::getInternalJoints(const UInt32 index) const
+{
+    return _mfInternalJoints[index];
+}
+
+//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfInternalJointInvBindTransformations field.
+inline
+const Matrix &SkeletonBlendedGeometryBase::getInternalJointInvBindTransformations(const UInt32 index) const
+{
+    return _mfInternalJointInvBindTransformations[index];
 }
 
 inline
-Real32 &SkeletonBlendedGeometryBase::editBlendAmounts(const UInt32 index)
+Matrix &SkeletonBlendedGeometryBase::editInternalJointInvBindTransformations(const UInt32 index)
 {
-    editMField(BlendAmountsFieldMask, _mfBlendAmounts);
+    editMField(InternalJointInvBindTransformationsFieldMask, _mfInternalJointInvBindTransformations);
 
-    return _mfBlendAmounts[index];
+    return _mfInternalJointInvBindTransformations[index];
 }
 
-
-//! Get the value of the \a index element the SkeletonBlendedGeometry::_mfSkeletons field.
-inline
-Skeleton * SkeletonBlendedGeometryBase::getSkeletons(const UInt32 index) const
-{
-    return _mfSkeletons[index];
-}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -175,32 +197,26 @@ void SkeletonBlendedGeometryBase::execSync (      SkeletonBlendedGeometryBase *p
     if(FieldBits::NoField != (BaseGeometryFieldMask & whichField))
         _sfBaseGeometry.syncWith(pFrom->_sfBaseGeometry);
 
-    if(FieldBits::NoField != (JointsFieldMask & whichField))
-        _mfJoints.syncWith(pFrom->_mfJoints,
+    if(FieldBits::NoField != (InternalWeightIndexesFieldMask & whichField))
+        _sfInternalWeightIndexes.syncWith(pFrom->_sfInternalWeightIndexes);
+
+    if(FieldBits::NoField != (InternalWeightsFieldMask & whichField))
+        _sfInternalWeights.syncWith(pFrom->_sfInternalWeights);
+
+    if(FieldBits::NoField != (InternalJointsFieldMask & whichField))
+        _mfInternalJoints.syncWith(pFrom->_mfInternalJoints,
                                 syncMode,
                                 uiSyncInfo,
                                 oOffsets);
 
-    if(FieldBits::NoField != (PositionIndexesFieldMask & whichField))
-        _mfPositionIndexes.syncWith(pFrom->_mfPositionIndexes,
+    if(FieldBits::NoField != (InternalJointInvBindTransformationsFieldMask & whichField))
+        _mfInternalJointInvBindTransformations.syncWith(pFrom->_mfInternalJointInvBindTransformations,
                                 syncMode,
                                 uiSyncInfo,
                                 oOffsets);
 
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.syncWith(pFrom->_mfBlendAmounts,
-                                syncMode,
-                                uiSyncInfo,
-                                oOffsets);
-
-    if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
-        _mfSkeletons.syncWith(pFrom->_mfSkeletons,
-                                syncMode,
-                                uiSyncInfo,
-                                oOffsets);
-
-    if(FieldBits::NoField != (BlendModeFieldMask & whichField))
-        _sfBlendMode.syncWith(pFrom->_sfBlendMode);
+    if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
+        _sfBindTransformation.syncWith(pFrom->_sfBindTransformation);
 }
 #endif
 
@@ -210,6 +226,74 @@ const Char8 *SkeletonBlendedGeometryBase::getClassname(void)
 {
     return "SkeletonBlendedGeometry";
 }
+
+inline
+EventConnection SkeletonBlendedGeometryBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
+{
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
+}
+
+inline
+bool SkeletonBlendedGeometryBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
+{
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
+}
+
+inline
+UInt32 SkeletonBlendedGeometryBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
+{
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
+}
+
+inline
+ActivityRefPtr SkeletonBlendedGeometryBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+{
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
+}
+
+inline
+void SkeletonBlendedGeometryBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
+{
+    _Producer.detachActivity(TheActivity, ProducedEventId);
+}
+
+inline
+UInt32 SkeletonBlendedGeometryBase::getNumProducedEvents(void) const
+{
+    return _Producer.getNumProducedEvents();
+}
+
+inline
+const MethodDescription *SkeletonBlendedGeometryBase::getProducedEventDescription(const std::string &ProducedEventName) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventName);
+}
+
+inline
+const MethodDescription *SkeletonBlendedGeometryBase::getProducedEventDescription(UInt32 ProducedEventId) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventId);
+}
+
+inline
+UInt32 SkeletonBlendedGeometryBase::getProducedEventId(const std::string &ProducedEventName) const
+{
+    return _Producer.getProducedEventId(ProducedEventName);
+}
+
+inline
+SFEventProducerPtr *SkeletonBlendedGeometryBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the SkeletonBlendedGeometry::_sfEventProducer field.
+inline
+EventProducerPtr &SkeletonBlendedGeometryBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
 OSG_GEN_CONTAINERPTR(SkeletonBlendedGeometry);
 
 OSG_END_NAMESPACE

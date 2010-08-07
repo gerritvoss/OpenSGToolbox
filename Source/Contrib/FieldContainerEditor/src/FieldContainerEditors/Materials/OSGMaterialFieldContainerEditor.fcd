@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="MaterialFieldContainerEditor"
+	parent="AbstractFieldContainerEditor"
+    library="ContribFieldContainerEditor"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+	decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+	<Field
+		name="MaterialShape"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="MaterialFieldContainerEditor::SPHERE_SHAPE"
+	>
+    The Geometric shape used to present the material.
+	</Field>
+	<Field
+		name="AnimateRate"
+		type="Real32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="1.0f"
+	>
+    The rate to rotate the geometry presenting the material.
+	</Field>
+</FieldContainer>

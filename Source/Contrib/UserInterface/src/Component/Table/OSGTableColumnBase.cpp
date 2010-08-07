@@ -229,7 +229,7 @@ void TableColumnBase::classDescInserter(TypeObject &oType)
         "EventProducer",
         "Event Producer",
         EventProducerFieldId,EventProducerFieldMask,
-        true,
+        false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast     <FieldEditMethodSig>(&TableColumn::editHandleEventProducer),
         static_cast     <FieldGetMethodSig >(&TableColumn::getHandleEventProducer));
