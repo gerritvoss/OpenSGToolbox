@@ -80,7 +80,7 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldListEditComponentGene
 
     /*! \}                                                                 */
 	
-	virtual ComponentRefPtr getListComponent(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus);
+	virtual ComponentTransitPtr getListComponent(List* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus);
 
     void              setCommandManager(CommandManagerPtr manager);
     CommandManagerPtr getCommandManager(void                     ) const;

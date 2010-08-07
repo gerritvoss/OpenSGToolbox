@@ -225,8 +225,8 @@ void List::focusGained(const FocusEventUnrecPtr e)
     {
         //Find this component
         List::MFChildrenType::iterator Child =
-            editMFChildren()->find(ComponentUnrecPtr(dynamic_cast<Component*>(e->getSource())));
-        if(Child != getMFChildren()->end())
+            _mfChildren.find(dynamic_cast<Component*>(e->getSource()));
+        if(Child != _mfChildren.end())
         {
             UInt32 index(0);
             for( ; index< getMFChildren()->size(); ++index)
@@ -251,8 +251,8 @@ void List::focusLost(const FocusEventUnrecPtr e)
     {
         //Find this component
         List::MFChildrenType::iterator Child =
-            editMFChildren()->find(ComponentUnrecPtr(dynamic_cast<Component*>(e->getSource())));
-        if(Child != getMFChildren()->end())
+            _mfChildren.find(ComponentUnrecPtr(dynamic_cast<Component*>(e->getSource())));
+        if(Child != _mfChildren.end())
         {
             UInt32 index(0);
             for( ; index< getMFChildren()->size(); ++index)
@@ -313,14 +313,14 @@ void List::mousePressed(const MouseEventUnrecPtr e)
                 //if(!getChildren(i)->getType().isDerivedFrom(ComponentContainer::getClassType()))
                 //{
                 if(getParentWindow() != NULL &&
-                   getParentWindow()->getDrawingSurface() != NULL &&
-                   getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+                   getParentWindow()->getParentDrawingSurface() != NULL &&
+                   getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
                 {
-                    if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+                    if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
                     {
                         getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), getListIndexFromDrawnIndex(i));
                     }
-                    else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+                    else if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
                     {
                         getSelectionModel()->removeSelectionInterval(getListIndexFromDrawnIndex(i),i);// this toggles the interval
                     }

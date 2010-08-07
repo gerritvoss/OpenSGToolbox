@@ -73,6 +73,7 @@
 #include "OSGDerivedFieldContainerComboBoxModel.h"
 #include "OSGContainerUtils.h"
 #include "OSGDefaultListSelectionModel.h"
+#include "OSGUIDrawingSurface.h"
 
 #include "OSGFCPtrEditorAllStore.h"
 #include "OSGNameAttachment.h"
@@ -287,12 +288,12 @@ void FCPtrFieldEditor::openCreateHandler(void)
                                                                    inputValues);
     TheDialog->addDialogWindowListener(&_CreateContainerDialogListener);
 
-    Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getParentDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
     TheDialog->setPosition(CenteredPosition);
     TheDialog->setAllwaysOnTop(true);
     TheDialog->setResizable(true);
 
-    getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+    getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
 }
 
 void FCPtrFieldEditor::openFindContainerHandler(void)
@@ -327,12 +328,12 @@ void FCPtrFieldEditor::openFindContainerHandler(void)
                                                                    inputValues);
     TheDialog->addDialogWindowListener(&_FindContainerDialogListener);
 
-    Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getParentDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
     TheDialog->setPosition(CenteredPosition);
     TheDialog->setAllwaysOnTop(true);
     TheDialog->setResizable(true);
 
-    getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+    getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
 }
 
 void FCPtrFieldEditor::handleMenuSelected(const ActionEventUnrecPtr e)

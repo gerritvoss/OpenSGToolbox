@@ -248,10 +248,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
     class ListButtonListener : public ActionListener
     {
       public :
-        ListButtonListener(DialogWindowRefPtr TheDialogWindow);
+        ListButtonListener(DialogWindow* const TheDialogWindow);
         virtual void actionPerformed(const ActionEventUnrecPtr e);
       protected :
-        DialogWindowRefPtr _DialogWindow;
+        DialogWindow* _DialogWindow;
     };
     ListButtonListener _ListButtonListener;
 

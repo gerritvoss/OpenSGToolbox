@@ -110,9 +110,9 @@ void DialogWindow::close(UInt32 intOption,
     produceDialogWindowClosing(intOption,strInput,intInputIndex);
     produceWindowClosing();
 
-    if(!_VetoWindowClose && getDrawingSurface() != NULL)
+    if(!_VetoWindowClose && getParentDrawingSurface() != NULL)
     {
-        getDrawingSurface()->closeWindow(DialogWindowRefPtr(this));
+        getParentDrawingSurface()->closeWindow(DialogWindowRefPtr(this));
         produceDialogWindowClosed(intOption,strInput,intInputIndex);
         produceWindowClosed();
     }
@@ -870,7 +870,7 @@ DialogWindowUnrecPtr DialogWindow::createMessageDialog(const std::string& Title,
     return TheDialog;
 }
 
-DialogWindow::ConfirmButtonListener::ConfirmButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::ConfirmButtonListener::ConfirmButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -879,7 +879,7 @@ void DialogWindow::ConfirmButtonListener::actionPerformed(const ActionEventUnrec
     _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_OK,"",0);
 }
 
-DialogWindow::CancelButtonListener::CancelButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::CancelButtonListener::CancelButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -888,7 +888,7 @@ void DialogWindow::CancelButtonListener::actionPerformed(const ActionEventUnrecP
     _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_CANCEL,"",0);
 }
 
-DialogWindow::InputButtonListener::InputButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::InputButtonListener::InputButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -898,7 +898,7 @@ void DialogWindow::InputButtonListener::actionPerformed(const ActionEventUnrecPt
 }
 
 
-DialogWindow::ListButtonListener::ListButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::ListButtonListener::ListButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -909,7 +909,7 @@ void DialogWindow::ListButtonListener::actionPerformed(const ActionEventUnrecPtr
                          _DialogWindow->_InputList->getSelectedIndex());
 }
 
-DialogWindow::ComboButtonListener::ComboButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::ComboButtonListener::ComboButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -920,7 +920,7 @@ void DialogWindow::ComboButtonListener::actionPerformed(const ActionEventUnrecPt
                          _DialogWindow->_InputComboBox->getSelectedIndex());
 }
 
-DialogWindow::TextButtonListener::TextButtonListener(DialogWindowRefPtr TheDialogWindow) : _DialogWindow(TheDialogWindow)
+DialogWindow::TextButtonListener::TextButtonListener(DialogWindow* const TheDialogWindow) : _DialogWindow(TheDialogWindow)
 {
 }
 
@@ -929,7 +929,7 @@ void DialogWindow::TextButtonListener::actionPerformed(const ActionEventUnrecPtr
     _DialogWindow->close(DialogWindowEvent::DIALOG_OPTION_OK,_DialogWindow->_InputTextField->getText(),0);
 }
 
-TextAreaRefPtr DialogWindow::createTransparentTextArea(const std::string& Message)
+TextAreaTransitPtr DialogWindow::createTransparentTextArea(const std::string& Message)
 {
     TextAreaRefPtr TransparentTextArea = TextArea::create();
     EmptyLayerRefPtr TransparentTextAreaBackground = EmptyLayer::create();
@@ -941,7 +941,7 @@ TextAreaRefPtr DialogWindow::createTransparentTextArea(const std::string& Messag
     TransparentTextArea->setText(Message);
     TransparentTextArea->setEditable(false);
 
-    return TransparentTextArea;
+    return TextAreaTransitPtr(TransparentTextArea);
 }
 
 DialogWindowUnrecPtr DialogWindow::createColorChooserDialog(const std::string& Title, 

@@ -85,10 +85,10 @@ void MultiFieldListEditComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentRefPtr MultiFieldListEditComponentGenerator::getListComponent(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentTransitPtr MultiFieldListEditComponentGenerator::getListComponent(List* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
 	if(Value.empty()){
-		return NULL;
+		return ComponentTransitPtr(NULL);
 	}
 
     MFieldListModel::MFieldIndexed MFieldValuePair;
@@ -98,7 +98,7 @@ ComponentRefPtr MultiFieldListEditComponentGenerator::getListComponent(ListRefPt
     }
     catch(boost::bad_any_cast &)
     {
-        return NULL;
+        return ComponentTransitPtr(NULL);
     }
 
 
@@ -186,7 +186,7 @@ ComponentRefPtr MultiFieldListEditComponentGenerator::getListComponent(ListRefPt
     ThePanel->setLayout(PanelLayout);
 
 
-	return ThePanel;
+	return ComponentTransitPtr(ThePanel);
 }
 
 /*-------------------------------------------------------------------------*\

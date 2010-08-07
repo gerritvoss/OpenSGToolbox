@@ -120,8 +120,8 @@ class TreeEditorSelectionListener : public TreeSelectionListener
 {
     /*=========================  PUBLIC  ===============================*/
   protected:
-    Tree* _EditorTree;
-    FieldContainerEditorComponent* _Editor;
+    TreeRefPtr _EditorTree;
+    FieldContainerEditorComponentRefPtr _Editor;
     ScrollPanelRefPtr _EditorScroll;
     
   public:

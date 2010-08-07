@@ -133,7 +133,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponent
     /*! \}                                                                 */
 
 	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
-    virtual TextureObjChunk* getDrawnTexture(void) const;
+    virtual TextureBaseChunk* getDrawnTexture(void) const;
     static TextureObjChunkTransitPtr createTexture(Image* Image);
     
     /*==========================  PRIVATE  ================================*/
