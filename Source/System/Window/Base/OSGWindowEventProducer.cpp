@@ -134,12 +134,12 @@ bool WindowEventProducer::removeCursorRegion(CursorRegionListItor RegionItor)
 	}
 }
 
-WindowUnrecPtr WindowEventProducer::initWindow(void)
+Window* WindowEventProducer::initWindow(void)
 {
     //TODO
 	_RenderAction = RenderAction::create();
 
-    return WindowUnrecPtr(this);
+    return this;
 }
 
 void WindowEventProducer::setDisplayCallback(DisplayCallbackFunc Callback)
@@ -289,7 +289,7 @@ void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(WindowUnrecPtr(this), t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 	   
        MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
@@ -313,7 +313,7 @@ void WindowEventProducer::produceMouseEntered(const Pnt2f& Location)
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(WindowUnrecPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
+	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
        MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
@@ -336,7 +336,7 @@ void WindowEventProducer::produceMouseExited(const Pnt2f& Location)
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(WindowUnrecPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
+	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
        MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
@@ -362,7 +362,7 @@ void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(WindowUnrecPtr(this), t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 	   MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
@@ -387,7 +387,7 @@ void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Bu
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(WindowUnrecPtr(this), t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 	   MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
@@ -415,7 +415,7 @@ void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, con
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseWheelEventUnrecPtr TheEvent = MouseWheelEvent::create( WindowUnrecPtr(this), getSystemTime(), WheelRotation, TheScrollType,MouseWheelEvent::SCROLL_ORIENTATION_VERTICAL, ViewportLocation, ResultViewport );
+	   const MouseWheelEventUnrecPtr TheEvent = MouseWheelEvent::create( this, getSystemTime(), WheelRotation, TheScrollType,MouseWheelEvent::SCROLL_ORIENTATION_VERTICAL, ViewportLocation, ResultViewport );
 	   for(MouseWheelListenerSetConstItor SetItor(_MouseWheelListeners.begin()) ; SetItor != _MouseWheelListeners.end() ; ++SetItor)
 	   {
             //If the event is consumed then stop sending the event
@@ -437,7 +437,7 @@ void WindowEventProducer::produceMouseMoved(const Pnt2f& Location, const Vec2f& 
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(WindowUnrecPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport,Delta );
+	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport,Delta );
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
             //If the event is consumed then stop sending the event
@@ -459,7 +459,7 @@ void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(WindowUnrecPtr(this), getSystemTime(), Button, 0, ViewportLocation, ResultViewport,Delta );
+	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, getSystemTime(), Button, 0, ViewportLocation, ResultViewport,Delta );
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
             //If the event is consumed then stop sending the event
@@ -476,7 +476,7 @@ void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const U
     //Check if Input is blocked
     if(_BlockInput) { return; }
 
-   const KeyEventUnrecPtr TheEvent = KeyEvent::create( WindowUnrecPtr(this), getSystemTime(), TheKey, Modifiers, WindowUnrecPtr(this) );
+   const KeyEventUnrecPtr TheEvent = KeyEvent::create( this, getSystemTime(), TheKey, Modifiers, this );
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
@@ -494,7 +494,7 @@ void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const 
     //Check if Input is blocked
     if(_BlockInput) { return; }
 
-   const KeyEventUnrecPtr TheEvent = KeyEvent::create( WindowUnrecPtr(this), getSystemTime(), TheKey, Modifiers, WindowUnrecPtr(this) );
+   const KeyEventUnrecPtr TheEvent = KeyEvent::create( this, getSystemTime(), TheKey, Modifiers, this );
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
@@ -511,7 +511,7 @@ void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UIn
     //Check if Input is blocked
     if(_BlockInput) { return; }
 
-   const KeyEventUnrecPtr TheEvent = KeyEvent::create( WindowUnrecPtr(this), getSystemTime(), TheKey, Modifiers, WindowUnrecPtr(this) );
+   const KeyEventUnrecPtr TheEvent = KeyEvent::create( this, getSystemTime(), TheKey, Modifiers, this );
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
@@ -525,7 +525,7 @@ void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UIn
 
 void WindowEventProducer::produceWindowOpened(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(WindowUnrecPtr(this), getSystemTime());
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowOpened(TheEvent);
@@ -535,7 +535,7 @@ void WindowEventProducer::produceWindowOpened(void)
 
 void WindowEventProducer::produceWindowClosing(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(WindowUnrecPtr(this), getSystemTime());
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosing(TheEvent);
@@ -545,7 +545,7 @@ void WindowEventProducer::produceWindowClosing(void)
 
 void WindowEventProducer::produceWindowClosed(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(WindowUnrecPtr(this), getSystemTime());
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create(NULL, getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosed(TheEvent);
@@ -555,7 +555,7 @@ void WindowEventProducer::produceWindowClosed(void)
 
 void WindowEventProducer::produceWindowIconified(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(WindowUnrecPtr(this), getSystemTime());
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowIconified(TheEvent);
@@ -565,7 +565,7 @@ void WindowEventProducer::produceWindowIconified(void)
 
 void WindowEventProducer::produceWindowDeiconified(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(WindowUnrecPtr(this), getSystemTime());
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeiconified(TheEvent);
@@ -575,7 +575,7 @@ void WindowEventProducer::produceWindowDeiconified(void)
 
 void WindowEventProducer::produceWindowActivated(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(WindowUnrecPtr(this), getSystemTime());
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowActivated(TheEvent);
@@ -585,7 +585,7 @@ void WindowEventProducer::produceWindowActivated(void)
 
 void WindowEventProducer::produceWindowDeactivated(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(WindowUnrecPtr(this), getSystemTime());
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeactivated(TheEvent);
@@ -595,7 +595,7 @@ void WindowEventProducer::produceWindowDeactivated(void)
 
 void WindowEventProducer::produceWindowEntered(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(WindowUnrecPtr(this), getSystemTime());
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowEntered(TheEvent);
@@ -605,7 +605,7 @@ void WindowEventProducer::produceWindowEntered(void)
 
 void WindowEventProducer::produceWindowExited(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(WindowUnrecPtr(this), getSystemTime());
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowExited(TheEvent);
@@ -616,7 +616,7 @@ void WindowEventProducer::produceWindowExited(void)
 
 void WindowEventProducer::produceUpdate(const Time& ElapsedTime)
 {
-   const UpdateEventUnrecPtr TheEvent = UpdateEvent::create( WindowUnrecPtr(this), getSystemTime(),ElapsedTime);
+   const UpdateEventUnrecPtr TheEvent = UpdateEvent::create( this, getSystemTime(),ElapsedTime);
    UpdateListenerSet ListenerSet(_UpdateListeners);
    for(UpdateListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
