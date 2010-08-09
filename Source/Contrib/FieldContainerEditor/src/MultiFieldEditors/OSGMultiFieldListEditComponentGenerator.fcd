@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="MultiFieldListEditComponentGenerator"
+	parent="ListComponentGenerator"
+	library="ContribFieldContainerEditor"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="false"
+	isNodeCore="false"
+	authors="David Kabala (djkabala@gmail.com)                             "
+>
+	<Field
+		name="ShowIndex"
+		type="bool"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+	>
+	</Field>
+</FieldContainer>

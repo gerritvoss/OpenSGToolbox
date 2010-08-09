@@ -88,6 +88,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var bool            ListBase::_sfSelectable
+    
+*/
+
 /*! \var UInt32          ListBase::_sfCellMajorAxisLength
     
 */
@@ -141,6 +145,18 @@ void ListBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&List::editHandleOrientation),
         static_cast<FieldGetMethodSig >(&List::getHandleOrientation));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Selectable",
+        "",
+        SelectableFieldId, SelectableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&List::editHandleSelectable),
+        static_cast<FieldGetMethodSig >(&List::getHandleSelectable));
 
     oType.addInitialDesc(pDesc);
 
@@ -232,6 +248,16 @@ ListBase::TypeObject ListBase::_type(
     "\t\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
+    "\t\tname=\"Selectable\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
     "\t\tname=\"CellMajorAxisLength\"\n"
     "\t\ttype=\"UInt32\"\n"
     "\t\tcategory=\"data\"\n"
@@ -308,6 +334,19 @@ const SFUInt32 *ListBase::getSFOrientation(void) const
 }
 
 
+SFBool *ListBase::editSFSelectable(void)
+{
+    editSField(SelectableFieldMask);
+
+    return &_sfSelectable;
+}
+
+const SFBool *ListBase::getSFSelectable(void) const
+{
+    return &_sfSelectable;
+}
+
+
 SFUInt32 *ListBase::editSFCellMajorAxisLength(void)
 {
     editSField(CellMajorAxisLengthFieldMask);
@@ -374,6 +413,10 @@ UInt32 ListBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfOrientation.getBinSize();
     }
+    if(FieldBits::NoField != (SelectableFieldMask & whichField))
+    {
+        returnValue += _sfSelectable.getBinSize();
+    }
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
         returnValue += _sfCellMajorAxisLength.getBinSize();
@@ -403,6 +446,10 @@ void ListBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfOrientation.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (SelectableFieldMask & whichField))
+    {
+        _sfSelectable.copyToBin(pMem);
+    }
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
         _sfCellMajorAxisLength.copyToBin(pMem);
@@ -429,6 +476,10 @@ void ListBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
         _sfOrientation.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (SelectableFieldMask & whichField))
+    {
+        _sfSelectable.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
@@ -572,6 +623,7 @@ FieldContainerTransitPtr ListBase::shallowCopy(void) const
 ListBase::ListBase(void) :
     Inherited(),
     _sfOrientation            (UInt32(List::VERTICAL_ORIENTATION)),
+    _sfSelectable             (bool(true)),
     _sfCellMajorAxisLength    (UInt32(50)),
     _sfModel                  (NULL),
     _sfCellGenerator          (NULL),
@@ -582,6 +634,7 @@ ListBase::ListBase(void) :
 ListBase::ListBase(const ListBase &source) :
     Inherited(source),
     _sfOrientation            (source._sfOrientation            ),
+    _sfSelectable             (source._sfSelectable             ),
     _sfCellMajorAxisLength    (source._sfCellMajorAxisLength    ),
     _sfModel                  (NULL),
     _sfCellGenerator          (NULL),
@@ -631,6 +684,31 @@ EditFieldHandlePtr ListBase::editHandleOrientation    (void)
 
 
     editSField(OrientationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ListBase::getHandleSelectable      (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfSelectable,
+             this->getType().getFieldDesc(SelectableFieldId),
+             const_cast<ListBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListBase::editHandleSelectable     (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfSelectable,
+             this->getType().getFieldDesc(SelectableFieldId),
+             this));
+
+
+    editSField(SelectableFieldMask);
 
     return returnValue;
 }

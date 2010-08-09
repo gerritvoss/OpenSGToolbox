@@ -91,10 +91,6 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var UInt32          FieldEditorComponentBase::_sfEditingFieldIndex
-    
-*/
-
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -146,18 +142,6 @@ void FieldEditorComponentBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FieldEditorComponent::getHandleEditingFieldId));
 
     oType.addInitialDesc(pDesc);
-
-    pDesc = new SFUInt32::Description(
-        SFUInt32::getClassType(),
-        "EditingFieldIndex",
-        "",
-        EditingFieldIndexFieldId, EditingFieldIndexFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&FieldEditorComponent::editHandleEditingFieldIndex),
-        static_cast<FieldGetMethodSig >(&FieldEditorComponent::getHandleEditingFieldIndex));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -200,16 +184,6 @@ FieldEditorComponentBase::TypeObject FieldEditorComponentBase::_type(
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"EditingFieldId\"\n"
-    "\t\ttype=\"UInt32\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t\tdefaultValue=\"0\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"EditingFieldIndex\"\n"
     "\t\ttype=\"UInt32\"\n"
     "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
@@ -268,19 +242,6 @@ const SFUInt32 *FieldEditorComponentBase::getSFEditingFieldId(void) const
 }
 
 
-SFUInt32 *FieldEditorComponentBase::editSFEditingFieldIndex(void)
-{
-    editSField(EditingFieldIndexFieldMask);
-
-    return &_sfEditingFieldIndex;
-}
-
-const SFUInt32 *FieldEditorComponentBase::getSFEditingFieldIndex(void) const
-{
-    return &_sfEditingFieldIndex;
-}
-
-
 
 
 
@@ -299,10 +260,6 @@ UInt32 FieldEditorComponentBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfEditingFieldId.getBinSize();
     }
-    if(FieldBits::NoField != (EditingFieldIndexFieldMask & whichField))
-    {
-        returnValue += _sfEditingFieldIndex.getBinSize();
-    }
 
     return returnValue;
 }
@@ -320,10 +277,6 @@ void FieldEditorComponentBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfEditingFieldId.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (EditingFieldIndexFieldMask & whichField))
-    {
-        _sfEditingFieldIndex.copyToBin(pMem);
-    }
 }
 
 void FieldEditorComponentBase::copyFromBin(BinaryDataHandler &pMem,
@@ -339,10 +292,6 @@ void FieldEditorComponentBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfEditingFieldId.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (EditingFieldIndexFieldMask & whichField))
-    {
-        _sfEditingFieldIndex.copyFromBin(pMem);
-    }
 }
 
 
@@ -353,16 +302,14 @@ void FieldEditorComponentBase::copyFromBin(BinaryDataHandler &pMem,
 FieldEditorComponentBase::FieldEditorComponentBase(void) :
     Inherited(),
     _sfEditingFC              (NULL),
-    _sfEditingFieldId         (UInt32(0)),
-    _sfEditingFieldIndex      (UInt32(0))
+    _sfEditingFieldId         (UInt32(0))
 {
 }
 
 FieldEditorComponentBase::FieldEditorComponentBase(const FieldEditorComponentBase &source) :
     Inherited(source),
     _sfEditingFC              (NULL),
-    _sfEditingFieldId         (source._sfEditingFieldId         ),
-    _sfEditingFieldIndex      (source._sfEditingFieldIndex      )
+    _sfEditingFieldId         (source._sfEditingFieldId         )
 {
 }
 
@@ -434,31 +381,6 @@ EditFieldHandlePtr FieldEditorComponentBase::editHandleEditingFieldId (void)
 
 
     editSField(EditingFieldIdFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr FieldEditorComponentBase::getHandleEditingFieldIndex (void) const
-{
-    SFUInt32::GetHandlePtr returnValue(
-        new  SFUInt32::GetHandle(
-             &_sfEditingFieldIndex,
-             this->getType().getFieldDesc(EditingFieldIndexFieldId),
-             const_cast<FieldEditorComponentBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr FieldEditorComponentBase::editHandleEditingFieldIndex(void)
-{
-    SFUInt32::EditHandlePtr returnValue(
-        new  SFUInt32::EditHandle(
-             &_sfEditingFieldIndex,
-             this->getType().getFieldDesc(EditingFieldIndexFieldId),
-             this));
-
-
-    editSField(EditingFieldIndexFieldMask);
 
     return returnValue;
 }

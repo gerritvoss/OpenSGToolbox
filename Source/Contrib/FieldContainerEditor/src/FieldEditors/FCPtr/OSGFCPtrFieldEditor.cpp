@@ -134,6 +134,7 @@ void FCPtrFieldEditor::setDefaultFindFCStorePrototype(FCPtrEditorStorePtr fcStor
 \***************************************************************************/
 bool FCPtrFieldEditor::internalAttachField (FieldContainer* fc, UInt32 fieldId, UInt32 index)
 {
+    Inherited::internalAttachField(fc, fieldId, index);
     if(!_FindFCStore)
     {
         const FieldContainerType* ThePtrType(getFieldContainerTypeFromPtrType(fc->getFieldDescription(fieldId)->getFieldType().getContentType()));

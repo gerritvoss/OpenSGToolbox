@@ -113,6 +113,11 @@ void Component::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+bool Component::useBoundsForClipping(void) const
+{
+    return true;
+}
+
 EventConnection Component::addKeyListener(KeyListenerPtr Listener)
 {
     _KeyListeners.insert(Listener);
@@ -561,13 +566,13 @@ void Component::drawUnclipped(const GraphicsWeakPtr TheGraphics, Real32 Opacity)
 void Component::updateClipBounds(void)
 {
     Pnt2f TopLeft, BottomRight;
-    if(getParentContainer() == NULL ||
-       getParentContainer()->getType() == RotatedComponent::getClassType())
+    if((getParentContainer() == NULL && useBoundsForClipping()) ||
+       (getParentContainer() && getParentContainer()->getType() == RotatedComponent::getClassType()))
     {
         //If I have no parent container use my bounds
         getBounds(TopLeft, BottomRight);
     }
-    else
+    else if(getParentContainer() != NULL)
     {
         //Get the intersection of:
         //My Bounds

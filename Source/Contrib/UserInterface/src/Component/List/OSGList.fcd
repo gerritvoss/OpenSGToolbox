@@ -25,6 +25,16 @@
 		>
 	</Field>
 	<Field
+		name="Selectable"
+		type="bool"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+		>
+	</Field>
+	<Field
 		name="CellMajorAxisLength"
 		type="UInt32"
 		category="data"
