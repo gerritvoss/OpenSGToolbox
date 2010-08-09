@@ -103,6 +103,11 @@ void AbsoluteLayoutConstraints::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if((whichField & PositionFieldMask))
+    {
+        updateParentLayouts();
+    }
 }
 
 void AbsoluteLayoutConstraints::dump(      UInt32    ,

@@ -118,9 +118,9 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING SimpleParticleTrailGenerator : public 
 	void onCreate(const SimpleParticleTrailGenerator *Id = NULL);
 	void onDestroy();
 
-	virtual void internalUpdate(const ParticleSystemEventUnrecPtr e);
-	virtual void internalKill(const ParticleEventUnrecPtr e);
-	virtual void internalGenerated(const ParticleEventUnrecPtr e);
+	virtual void internalUpdate(ParticleSystemEventDetails* const details);
+	virtual void internalKill(ParticleEventDetails* const details);
+	virtual void internalGenerated(ParticleEventDetails* const details);
 	virtual void internalTrailSectGenerated(const TrailSection& ts, const Vec3f& ppVel);
 	virtual void internalTrailSectKilled(const TrailSection& ts);
 

@@ -58,7 +58,7 @@ A CreateFieldContainerCommand.
  *                           Class variables                               *
 \***************************************************************************/
 
-CommandType CreateFieldContainerCommand::_Type("CreateFieldContainerCommand", "CommandType");
+CommandType CreateFieldContainerCommand::_Type("CreateFieldContainerCommand", "Command");
 
 /***************************************************************************\
  *                           Class methods                                 *

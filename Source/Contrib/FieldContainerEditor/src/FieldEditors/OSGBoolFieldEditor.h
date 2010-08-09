@@ -43,7 +43,8 @@
 #endif
 
 #include "OSGBoolFieldEditorBase.h"
-#include "OSGCheckboxButton.h"
+#include "OSGCheckboxButtonFields.h"
+#include "OSGButtonSelectedEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -115,6 +116,13 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING BoolFieldEditor : public BoolFi
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     virtual void internalFieldChanged (void);
     virtual void internalStartEditing (void);
     virtual void internalStopEditing  (void);
@@ -125,20 +133,10 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING BoolFieldEditor : public BoolFi
     static std::vector<const DataType*> _EditableTypes;
     CheckboxButtonRefPtr _EditingCheckbox;
     
-    class CheckboxListener : public ButtonSelectedListener
-    {
-      public :
-           CheckboxListener(BoolFieldEditor* const ptr);
-           virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e);
-           virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e);
-
-      protected :
-        BoolFieldEditor* _BoolFieldEditor ;
-    };
-
-    friend class CheckboxListener;
-
-    CheckboxListener _CheckboxListener;
+    void handleButtonSelected(ButtonSelectedEventDetails* const details);
+    void handleButtonDeselected(ButtonSelectedEventDetails* const details);
+    boost::signals2::connection _ButtonSelectedConnection,
+                                _ButtonDeselectedConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:

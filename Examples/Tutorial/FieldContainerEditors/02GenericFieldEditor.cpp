@@ -58,264 +58,213 @@
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
-ListRefPtr UndoRedoList;
-UndoManagerPtr TheUndoManager;
-CommandManagerPtr TheCommandManager;
-DefaultListModelRefPtr UndoRedoListModel;
-ButtonRefPtr UndoButton;
-ButtonRefPtr RedoButton;
 
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+//Ctrl+q handler
+void keyTyped(KeyEventDetails* const details)
 {
-public:
-
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
-
-class UndoButtonActionListener : public ActionListener
-{
-protected:
-
-public:
-
-	UndoButtonActionListener(void) : ActionListener()
-	{
-	}
-
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() &
+       KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
-		TheUndoManager->undo();
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
-};
+}
 
-class RedoButtonActionListener : public ActionListener
+void handleUndoButtonAction(ActionEventDetails* const details,
+                            UndoManagerPtr TheUndoManager)
 {
-protected:
+	TheUndoManager->undo();
+}
 
-public:
+void handleRedoButtonActionPerformed(ActionEventDetails* const details,
+                            UndoManagerPtr TheUndoManager)
+{
+	TheUndoManager->redo();
+}
 
-	RedoButtonActionListener(void) : ActionListener()
+void handleUndoManagerStateChanged(ChangeEventDetails* const details,
+                                   Button* const undoButton,
+                                   Button* const redoButton,
+                                   DefaultListModel* const undoRedoListModel,
+                                   UndoManagerPtr TheUndoManager)
+{
+	while(undoRedoListModel->getSize()-1 > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 	{
+		undoRedoListModel->popBack();
 	}
 
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-		TheUndoManager->redo();
-    }
-};
-
-class UndoManagerChangeListener : public ChangeListener
-{
-public:
-
-	virtual void stateChanged(const ChangeEventUnrecPtr e)
+	//Resize
+	while(undoRedoListModel->getSize()-1 < TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 	{
-		while(UndoRedoListModel->getSize()-1 > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
-		{
-			UndoRedoListModel->popBack();
-		}
-
-		//Resize
-		while(UndoRedoListModel->getSize()-1 < TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
-		{
-			UndoRedoListModel->pushBack(boost::any(std::string("")));
-		}
-
-		UInt32 UndoCount(TheUndoManager->numberOfUndos());
-		for(UInt32 i(0) ; i<UndoCount ; ++i)
-		{
-			UndoRedoListModel->set(i+1, boost::any(std::string(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
-		}
-		UInt32 RedoCount(TheUndoManager->numberOfRedos());
-		for(UInt32 i(0) ; i<RedoCount ; ++i)
-		{
-			UndoRedoListModel->set(i+TheUndoManager->numberOfUndos()+1, boost::any(std::string(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
-		}
-
-		if((UndoCount == 0 && UndoButton->getEnabled()) ||
-			(UndoCount != 0 && !UndoButton->getEnabled()) )
-		{
-				UndoButton->setEnabled(UndoCount != 0);
-		}
-		if((RedoCount == 0 && RedoButton->getEnabled()) ||
-			(RedoCount != 0 && !RedoButton->getEnabled()) )
-		{
-				RedoButton->setEnabled(RedoCount != 0);
-		}
+		undoRedoListModel->pushBack(boost::any(std::string("")));
 	}
-};
+
+	UInt32 UndoCount(TheUndoManager->numberOfUndos());
+	for(UInt32 i(0) ; i<UndoCount ; ++i)
+	{
+		undoRedoListModel->set(i+1, boost::any(std::string(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
+	}
+	UInt32 RedoCount(TheUndoManager->numberOfRedos());
+	for(UInt32 i(0) ; i<RedoCount ; ++i)
+	{
+		undoRedoListModel->set(i+TheUndoManager->numberOfUndos()+1, boost::any(std::string(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
+	}
+
+	if((UndoCount == 0 && undoButton->getEnabled()) ||
+		(UndoCount != 0 && !undoButton->getEnabled()) )
+	{
+			undoButton->setEnabled(UndoCount != 0);
+	}
+	if((RedoCount == 0 && redoButton->getEnabled()) ||
+		(RedoCount != 0 && !redoButton->getEnabled()) )
+	{
+			redoButton->setEnabled(RedoCount != 0);
+	}
+}
 
 // Setup a FontListener to change the label's font
 // when a different item in the FontList is
 // selected
-class UndoRedoListListener: public ListSelectionListener
+void handleUndoRedoListSelectionChanged(ListSelectionEventDetails* const details,
+                                        UndoManagerPtr TheUndoManager)
 {
-  public:
-    virtual void selectionChanged(const ListSelectionEventUnrecPtr e)
+	if(!dynamic_cast<ListSelectionModel*>(details->getSource())->isSelectionEmpty())
     {
-		if(!UndoRedoList->getSelectionModel()->isSelectionEmpty())
-        {
-			Int32 ListSelectedIndex(UndoRedoList->getSelectionModel()->getAnchorSelectionIndex());
+		Int32 ListSelectedIndex(dynamic_cast<ListSelectionModel*>(details->getSource())->getAnchorSelectionIndex());
 
-
-			TheUndoManager->undoOrRedoTo(ListSelectedIndex);
-        }
+		TheUndoManager->undoOrRedoTo(ListSelectedIndex);
     }
-};
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1));
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-    scene->setCore(OSG::Group::create());
-    scene->addChild(TorusGeometryNode);
+        // Make Main Scene Node and add the Torus
+        NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
+        scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //Background
-    SolidBackgroundRefPtr TutorialBackground = SolidBackground::create();
-    TutorialBackground->setColor(Color3f(1.0,0.0,0.0));
+        //Background
+        SolidBackgroundRefPtr TutorialBackground = SolidBackground::create();
+        TutorialBackground->setColor(Color3f(1.0,0.0,0.0));
+    		    
+        UndoManagerPtr TheUndoManager = UndoManager::create();
+        CommandManagerPtr TheCommandManager = CommandManager::create(TheUndoManager);
 
-	TheUndoManager = UndoManager::create();
-	UndoManagerChangeListener TheUndoManagerChangeListener;
-	TheUndoManager->addChangeListener(&TheUndoManagerChangeListener);
-    TheCommandManager = CommandManager::create(TheUndoManager);
-	
-    //UndoList
-	UndoRedoListModel = DefaultListModel::create();
-    UndoRedoListModel->pushBack(boost::any(std::string("Top")));
-	ListSelectionModelPtr UndoRedoListSelectionModel(new DefaultListSelectionModel());
+        //UndoList
+	    DefaultListModelRecPtr UndoRedoListModel = DefaultListModel::create();
+        UndoRedoListModel->pushBack(boost::any(std::string("Top")));
 
-	UndoRedoList = List::create();
-    UndoRedoList->setPreferredSize(Vec2f(200, 300));
-    UndoRedoList->setOrientation(List::VERTICAL_ORIENTATION);
-	UndoRedoList->setModel(UndoRedoListModel);
+	    ListRecPtr UndoRedoList = List::create();
+        UndoRedoList->setPreferredSize(Vec2f(200, 300));
+        UndoRedoList->setOrientation(List::VERTICAL_ORIENTATION);
+	    UndoRedoList->setModel(UndoRedoListModel);
 
-    UndoRedoList->setSelectionModel(UndoRedoListSelectionModel);
+        UndoRedoList->getSelectionModel()->connectSelectionChanged(boost::bind(&handleUndoRedoListSelectionChanged, _1, TheUndoManager));
 
-    UndoRedoListListener TheUndoRedoListListener;
-    UndoRedoList->getSelectionModel()->addListSelectionListener(&TheUndoRedoListListener);
+        ButtonRecPtr UndoButton = OSG::Button::create();
+        UndoButton->setText("Undo");
+	    UndoButton->setEnabled(false);
+        UndoButton->connectActionPerformed(boost::bind(&handleUndoButtonAction, _1, TheUndoManager));
+    	
 
-    UndoButton = OSG::Button::create();
-    UndoButton->setText("Undo");
-	UndoButton->setEnabled(TheUndoManager->numberOfUndos() != 0);
-    UndoButtonActionListener TheUndoButtonActionListener;
-    UndoButton->addActionListener(&TheUndoButtonActionListener);
-	
+        ButtonRecPtr RedoButton = OSG::Button::create();
+        RedoButton->setText("Redo");
+	    RedoButton->setEnabled(false);
+        RedoButton->connectActionPerformed(boost::bind(&handleRedoButtonActionPerformed, _1, TheUndoManager));
 
-    RedoButton = OSG::Button::create();
-    RedoButton->setText("Redo");
-	RedoButton->setEnabled(TheUndoManager->numberOfRedos() != 0);
-    RedoButtonActionListener TheRedoButtonActionListener;
-    RedoButton->addActionListener(&TheRedoButtonActionListener);
+        TheUndoManager->connectStateChanged(boost::bind(&handleUndoManagerStateChanged, _1, UndoButton.get(), RedoButton.get(), UndoRedoListModel.get(), TheUndoManager));
 
-    // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelRefPtr UndoRedoScrollPanel = ScrollPanel::create();
-    UndoRedoScrollPanel->setPreferredSize(Vec2f(200,200));
-    UndoRedoScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    UndoRedoScrollPanel->setViewComponent(UndoRedoList);
+        // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
+        ScrollPanelRefPtr UndoRedoScrollPanel = ScrollPanel::create();
+        UndoRedoScrollPanel->setPreferredSize(Vec2f(200,200));
+        UndoRedoScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        UndoRedoScrollPanel->setViewComponent(UndoRedoList);
 
-    //Background Editor Field
-    //FieldEditorComponentRefPtr TheEditor = FieldEditorFactory::the()->createDefaultEditor(TutorialBackground, SolidBackground::ColorFieldId, TheCommandManager);
-    FieldEditorComponentRefPtr TheEditor = FieldEditorFactory::the()->createDefaultEditor(RedoButton, Button::TextFieldId, TheCommandManager);
-    TheEditor->setPreferredSize(Vec2f(100.0f, 20.0f));
+        //Background Editor Field
+        //FieldEditorComponentRefPtr TheEditor = FieldEditorFactory::the()->createDefaultEditor(TutorialBackground, SolidBackground::ColorFieldId, TheCommandManager);
+        FieldEditorComponentRefPtr TheEditor = FieldEditorFactory::the()->createDefaultEditor(RedoButton, Button::TextFieldId, TheCommandManager);
+        TheEditor->setPreferredSize(Vec2f(100.0f, 20.0f));
 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
-    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
-    MainInternalWindow->pushToChildren(TheEditor);
-    MainInternalWindow->pushToChildren(UndoRedoScrollPanel);
-    MainInternalWindow->pushToChildren(UndoButton);
-    MainInternalWindow->pushToChildren(RedoButton);
-    MainInternalWindow->setLayout(MainInternalWindowLayout);
-    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.95f,0.95f));
-    MainInternalWindow->setDrawTitlebar(false);
-    MainInternalWindow->setResizable(false);
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+        InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+        LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+        MainInternalWindow->pushToChildren(TheEditor);
+        MainInternalWindow->pushToChildren(UndoRedoScrollPanel);
+        MainInternalWindow->pushToChildren(UndoButton);
+        MainInternalWindow->pushToChildren(RedoButton);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.95f,0.95f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
-    TutorialDrawingSurface->setGraphics(TutorialGraphics);
-    TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
-	
-	// Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        // Create the Drawing Surface
+        UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
+        
+	    TutorialDrawingSurface->openWindow(MainInternalWindow);
+    	
+	    // Create the UI Foreground Object
+        UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
+        sceneManager.setRoot(scene);
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
+        // Add the UI Foreground Object to the Scene
+        ViewportRefPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
+        TutorialViewport->setBackground(TutorialBackground);
 
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    TutorialViewport->addForeground(TutorialUIForeground);
-    TutorialViewport->setBackground(TutorialBackground);
+        // Show the whole Scene
+        sceneManager.showAll();
 
-    // Show the whole Scene
-    mgr->showAll();
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                    WinSize,
+                                    "02GenericFieldEditor");
 
-
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-                                WinSize,
-                                "02GenericFieldEditor");
-
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -327,13 +276,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

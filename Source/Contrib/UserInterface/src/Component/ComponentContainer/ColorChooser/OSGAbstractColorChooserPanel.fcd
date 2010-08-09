@@ -11,17 +11,17 @@
 	decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
+    childFields="multi"
     authors="David Kabala (djkabala@gmail.com)                             "
     >
     A UI AbstractColorChooserPanel.
-    <Field
-        name="ParentChooser"
-        type="ColorChooser"
-        category="pointer"
-        cardinality="single"
-        visibility="external"
-        access="public"
-        defaultValue="NULL"
-        >
-    </Field>
+	<Field
+	   name="InternalParentChooser"
+	   type="ColorChooser"
+       category="weakpointer"
+	   cardinality="single"
+	   visibility="internal"
+	   access="protected"
+	   >
+	</Field>
 </FieldContainer>

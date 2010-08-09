@@ -48,6 +48,9 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGTextEventDetails.h"
+#include "OSGCaretEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -377,6 +380,94 @@ const Char8 *TextComponentBase::getClassname(void)
 {
     return "TextComponent";
 }
+inline
+boost::signals2::connection  TextComponentBase::connectTextValueChanged(const TextValueChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _TextValueChangedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TextComponentBase::connectTextValueChanged(const TextValueChangedEventType::group_type &group,
+                                                    const TextValueChangedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _TextValueChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  TextComponentBase::disconnectTextValueChanged(const TextValueChangedEventType::group_type &group)
+{
+    _TextValueChangedEvent.disconnect(group);
+}
+
+inline
+void  TextComponentBase::disconnectAllSlotsTextValueChanged(void)
+{
+    _TextValueChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TextComponentBase::isEmptyTextValueChanged(void) const
+{
+    return _TextValueChangedEvent.empty();
+}
+
+inline
+UInt32  TextComponentBase::numSlotsTextValueChanged(void) const
+{
+    return _TextValueChangedEvent.num_slots();
+}
+
+inline
+void TextComponentBase::produceTextValueChanged(TextValueChangedEventDetailsType* const e)
+{
+    produceEvent(TextValueChangedEventId, e);
+}
+
+inline
+boost::signals2::connection  TextComponentBase::connectCaretChanged(const CaretChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _CaretChangedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TextComponentBase::connectCaretChanged(const CaretChangedEventType::group_type &group,
+                                                    const CaretChangedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _CaretChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  TextComponentBase::disconnectCaretChanged(const CaretChangedEventType::group_type &group)
+{
+    _CaretChangedEvent.disconnect(group);
+}
+
+inline
+void  TextComponentBase::disconnectAllSlotsCaretChanged(void)
+{
+    _CaretChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TextComponentBase::isEmptyCaretChanged(void) const
+{
+    return _CaretChangedEvent.empty();
+}
+
+inline
+UInt32  TextComponentBase::numSlotsCaretChanged(void) const
+{
+    return _CaretChangedEvent.num_slots();
+}
+
+inline
+void TextComponentBase::produceCaretChanged(CaretChangedEventDetailsType* const e)
+{
+    produceEvent(CaretChangedEventId, e);
+}
+
 OSG_GEN_CONTAINERPTR(TextComponent);
 
 OSG_END_NAMESPACE

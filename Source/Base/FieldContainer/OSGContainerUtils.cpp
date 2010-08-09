@@ -2,7 +2,6 @@
 #include "OSGNameAttachment.h"
 #include "OSGAttachmentContainer.h"
 #include "OSGFieldContainerFactory.h"
-#include "OSGEventProducerPtrType.h"
 //#include "OSGFilePathAttachment.h"
 
 OSG_BEGIN_NAMESPACE
@@ -187,41 +186,6 @@ bool isFieldContentDerivedFrom(const FieldType &TheFieldType, const FieldContain
         return false;
     }
     return false;
-}
-
-bool isEventProducer(const FieldContainerRefPtr TheFC)
-{
-    GetFieldHandlePtr TheField(TheFC->getField("EventProducer"));
-
-    if(TheField != NULL)
-    {
-        return TheField->getType().getContentType() == FieldTraits<EventProducerPtr>::getType();
-    }
-    else
-    {
-        return false;
-    }
-}
-
-EventProducerPtr getEventProducer(const FieldContainerRefPtr TheFC)
-{
-    EditFieldHandlePtr TheFieldHandle(TheFC->editField("EventProducer"));
-    if(TheFieldHandle == NULL)
-    {
-        return NULL;
-    }
-
-    SFEventProducerPtr*
-        TheField(static_cast<SFEventProducerPtr*>(TheFieldHandle->getField()));
-
-    if(TheField == NULL)
-    {
-        return NULL;
-    }
-    else
-    {
-        return TheField->getValue();
-    }
 }
 
 OSG_END_NAMESPACE

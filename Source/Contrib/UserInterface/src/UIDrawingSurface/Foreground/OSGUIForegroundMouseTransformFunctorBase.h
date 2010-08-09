@@ -86,6 +86,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundMouseTransformFunctorBase 
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(UIForegroundMouseTransformFunctor);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -102,7 +104,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundMouseTransformFunctorBase 
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecUIForegroundPtr SFParentType;
+    typedef SFWeakUIForegroundPtr SFParentType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -175,7 +177,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundMouseTransformFunctorBase 
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecUIForegroundPtr _sfParent;
+    SFWeakUIForegroundPtr _sfParent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -212,8 +214,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundMouseTransformFunctorBase 
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecUIForegroundPtr *getSFParent          (void) const;
-                  SFUnrecUIForegroundPtr *editSFParent         (void);
+            const SFWeakUIForegroundPtr *getSFParent          (void) const;
+                  SFWeakUIForegroundPtr *editSFParent         (void);
 
 
                   UIForeground * getParent         (void) const;

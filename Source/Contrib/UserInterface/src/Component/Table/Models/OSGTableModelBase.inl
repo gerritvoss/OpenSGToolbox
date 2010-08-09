@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGTableModelEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -108,70 +110,203 @@ const Char8 *TableModelBase::getClassname(void)
 }
 
 inline
-EventConnection TableModelBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool TableModelBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 TableModelBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr TableModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void TableModelBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 TableModelBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *TableModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *TableModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *TableModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *TableModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 TableModelBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *TableModelBase::editSFEventProducer(void)
+boost::signals2::connection  TableModelBase::connectContentsHeaderRowChanged(const ContentsHeaderRowChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _ContentsHeaderRowChangedEvent.connect(listener, at);
 }
 
-//! Get the value of the TableModel::_sfEventProducer field.
 inline
-EventProducerPtr &TableModelBase::editEventProducer(void)
+boost::signals2::connection  TableModelBase::connectContentsHeaderRowChanged(const ContentsHeaderRowChangedEventType::group_type &group,
+                                                    const ContentsHeaderRowChangedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _ContentsHeaderRowChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableModelBase::disconnectContentsHeaderRowChanged(const ContentsHeaderRowChangedEventType::group_type &group)
+{
+    _ContentsHeaderRowChangedEvent.disconnect(group);
+}
+
+inline
+void  TableModelBase::disconnectAllSlotsContentsHeaderRowChanged(void)
+{
+    _ContentsHeaderRowChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableModelBase::isEmptyContentsHeaderRowChanged(void) const
+{
+    return _ContentsHeaderRowChangedEvent.empty();
+}
+
+inline
+UInt32  TableModelBase::numSlotsContentsHeaderRowChanged(void) const
+{
+    return _ContentsHeaderRowChangedEvent.num_slots();
+}
+
+inline
+void TableModelBase::produceContentsHeaderRowChanged(ContentsHeaderRowChangedEventDetailsType* const e)
+{
+    produceEvent(ContentsHeaderRowChangedEventId, e);
+}
+
+inline
+boost::signals2::connection  TableModelBase::connectContentsChanged(const ContentsChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ContentsChangedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TableModelBase::connectContentsChanged(const ContentsChangedEventType::group_type &group,
+                                                    const ContentsChangedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ContentsChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableModelBase::disconnectContentsChanged(const ContentsChangedEventType::group_type &group)
+{
+    _ContentsChangedEvent.disconnect(group);
+}
+
+inline
+void  TableModelBase::disconnectAllSlotsContentsChanged(void)
+{
+    _ContentsChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableModelBase::isEmptyContentsChanged(void) const
+{
+    return _ContentsChangedEvent.empty();
+}
+
+inline
+UInt32  TableModelBase::numSlotsContentsChanged(void) const
+{
+    return _ContentsChangedEvent.num_slots();
+}
+
+inline
+void TableModelBase::produceContentsChanged(ContentsChangedEventDetailsType* const e)
+{
+    produceEvent(ContentsChangedEventId, e);
+}
+
+inline
+boost::signals2::connection  TableModelBase::connectIntervalAdded(const IntervalAddedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _IntervalAddedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TableModelBase::connectIntervalAdded(const IntervalAddedEventType::group_type &group,
+                                                    const IntervalAddedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _IntervalAddedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableModelBase::disconnectIntervalAdded(const IntervalAddedEventType::group_type &group)
+{
+    _IntervalAddedEvent.disconnect(group);
+}
+
+inline
+void  TableModelBase::disconnectAllSlotsIntervalAdded(void)
+{
+    _IntervalAddedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableModelBase::isEmptyIntervalAdded(void) const
+{
+    return _IntervalAddedEvent.empty();
+}
+
+inline
+UInt32  TableModelBase::numSlotsIntervalAdded(void) const
+{
+    return _IntervalAddedEvent.num_slots();
+}
+
+inline
+void TableModelBase::produceIntervalAdded(IntervalAddedEventDetailsType* const e)
+{
+    produceEvent(IntervalAddedEventId, e);
+}
+
+inline
+boost::signals2::connection  TableModelBase::connectIntervalRemoved(const IntervalRemovedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _IntervalRemovedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TableModelBase::connectIntervalRemoved(const IntervalRemovedEventType::group_type &group,
+                                                    const IntervalRemovedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _IntervalRemovedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableModelBase::disconnectIntervalRemoved(const IntervalRemovedEventType::group_type &group)
+{
+    _IntervalRemovedEvent.disconnect(group);
+}
+
+inline
+void  TableModelBase::disconnectAllSlotsIntervalRemoved(void)
+{
+    _IntervalRemovedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableModelBase::isEmptyIntervalRemoved(void) const
+{
+    return _IntervalRemovedEvent.empty();
+}
+
+inline
+UInt32  TableModelBase::numSlotsIntervalRemoved(void) const
+{
+    return _IntervalRemovedEvent.num_slots();
+}
+
+inline
+void TableModelBase::produceIntervalRemoved(IntervalRemovedEventDetailsType* const e)
+{
+    produceEvent(IntervalRemovedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(TableModel);

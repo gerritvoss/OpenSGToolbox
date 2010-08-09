@@ -48,11 +48,6 @@
 #include "OSGUIFont.h"
 #include "OSGUIDrawObjectCanvas.h"
 #include "OSGTextureObjChunk.h"
-#include "OSGActionListener.h"
-#include "OSGMouseAdapter.h"
-#include "OSGUpdateListener.h"
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -97,19 +92,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
     /*! \}                                                                 */
     virtual Vec2f getContentRequestedSize(void) const;
 
-	virtual void mouseClicked(const MouseEventUnrecPtr e);
-    virtual void mouseEntered(const MouseEventUnrecPtr e);
-    virtual void mouseExited(const MouseEventUnrecPtr e);
-    virtual void mousePressed(const MouseEventUnrecPtr e);
-    virtual void mouseReleased(const MouseEventUnrecPtr e);
-
-    EventConnection addActionListener(ActionListenerPtr Listener);
-	bool isActionListenerAttached(ActionListenerPtr Listener) const;
-    void removeActionListener(ActionListenerPtr Listener);
-
-    EventConnection addMousePressedActionListener(ActionListenerPtr Listener);
-	bool isMousePressedActionListenerAttached(ActionListenerPtr Listener) const;
-    void removeMousePressedActionListener(ActionListenerPtr Listener);
+	virtual void mouseClicked(MouseEventDetails* const e);
+    virtual void mouseEntered(MouseEventDetails* const e);
+    virtual void mouseExited(MouseEventDetails* const e);
+    virtual void mousePressed(MouseEventDetails* const e);
+    virtual void mouseReleased(MouseEventDetails* const e);
 
     void setTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setActiveTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
@@ -171,9 +158,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
 
-    virtual void actionPreformed(const ActionEventUnrecPtr e);
-    virtual void mousePressedActionPreformed(const ActionEventUnrecPtr e);
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
+    static UIDrawObjectCanvasTransitPtr createTexturedDrawObjectCanvas(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+
+    virtual void actionPreformed(ActionEventDetails* const e);
+    virtual void mousePressedActionPreformed(ActionEventDetails* const e);
 
 	virtual void drawInternal(Graphics* const TheGraphics, Real32 Opacity = 1.0f) const;
 	virtual void drawText(Graphics* const TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
@@ -186,39 +181,19 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
 	virtual UIDrawObjectCanvas* getBaseDrawObject(void) const;
     virtual Vec2f getDrawnOffset(void) const;
     
-	class ButtonArmedListener : public MouseAdapter,public UpdateListener
-	{
-	public :
-		ButtonArmedListener(Button* const TheButton);
 		
-		virtual void mouseReleased(const MouseEventUnrecPtr e);
-        virtual void update(const UpdateEventUnrecPtr e);
-        void reset(void);
-	protected :
-		Button* _Button;
-	    Time _ActionFireElps;
-	};
+	void handleArmedMouseReleased(MouseEventDetails* const e);
+    void resetArmed(void);
+    void handleArmedUpdate(UpdateEventDetails* const e);
+    boost::signals2::connection   _ArmedUpdateEventConnection;
+    boost::signals2::connection   _ArmedMouseReleasedConnection;
 
-	friend class ButtonArmedListener;
-
-	ButtonArmedListener _ButtonArmedListener;
+    Time _ActionFireElps;
     bool _Armed;
-    
-    static UIDrawObjectCanvasTransitPtr createTexturedDrawObjectCanvas(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
-
     bool _Active;
-    EventConnection   _ArmedUpdateEventConnection;
-    EventConnection   _ArmedMouseEventConnection;
 	
-	typedef std::set<ActionListenerPtr> ActionListenerSet;
-    typedef ActionListenerSet::iterator ActionListenerSetItor;
-    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
-	
-    ActionListenerSet       _ActionListeners;
-    ActionListenerSet       _MousePressedActionListeners;
-	
-    virtual void produceActionPerformed(const ActionEventUnrecPtr e);
-    virtual void produceMousePressedActionPerformed(const ActionEventUnrecPtr e);
+    virtual void produceActionPerformed(void);
+    virtual void produceMousePressedActionPerformed(void);
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -49,9 +49,7 @@
 #include "OSGColorLayer.h"
 #include "OSGLineBorder.h"
 #include "OSGEmptyBorder.h"
-#include "OSGTextField.h"
 #include "OSGStringUtils.h"
-#include "OSGTable.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -122,9 +120,9 @@ ComponentTransitPtr DefaultTableCellEditor::getTableCellEditorComponent(Table* c
     TheTextField->setBorder(tempBorder);
 
     setDefaultStringEditor(TheTextField);
-    getDefaultStringEditor()->addActionListener(&_DefaultStringEditorListener);
-    getDefaultStringEditor()->addFocusListener(&_DefaultStringEditorListener);
-    getDefaultStringEditor()->addKeyListener(&_DefaultStringEditorListener);
+    _EditorActionConnection = getDefaultStringEditor()->connectActionPerformed(boost::bind(&DefaultTableCellEditor::handleEditorAction, this, _1));
+    _EditorFocusLostConnection = getDefaultStringEditor()->connectFocusLost(boost::bind(&DefaultTableCellEditor::handleEditorFocusLost, this, _1));
+    _EditorKeyPressedConnection = getDefaultStringEditor()->connectKeyPressed(boost::bind(&DefaultTableCellEditor::handleEditorKeyPressed, this, _1));
     return ComponentTransitPtr(getDefaultStringEditor());
 }
 
@@ -135,12 +133,9 @@ ComponentTransitPtr DefaultTableCellEditor::getCellEditor(const boost::any& Valu
 
 void DefaultTableCellEditor::cancelCellEditing(void)
 {
-    if(getDefaultStringEditor() != NULL)
-    {
-        getDefaultStringEditor()->removeActionListener(&_DefaultStringEditorListener);
-        getDefaultStringEditor()->removeFocusListener(&_DefaultStringEditorListener);
-        getDefaultStringEditor()->removeKeyListener(&_DefaultStringEditorListener);
-    }
+    _EditorActionConnection.disconnect();
+    _EditorFocusLostConnection.disconnect();
+    _EditorKeyPressedConnection.disconnect();
     AbstractCellEditor::cancelCellEditing();
     setDefaultStringEditor(NULL);
 }
@@ -151,11 +146,11 @@ boost::any DefaultTableCellEditor::getCellEditorValue(void) const
     return boost::any(_Value);
 }
 
-bool DefaultTableCellEditor::isCellEditable(const EventUnrecPtr anEvent) const
+bool DefaultTableCellEditor::isCellEditable(EventDetails* const anEvent) const
 {
-    if(/*anEvent.getType() != MouseEvent::getClassType() ||*/
-       (anEvent->getType().isDerivedFrom(MouseEvent::getClassType()) &&
-        dynamic_pointer_cast<MouseEvent>(anEvent)->getClickCount() >= getClickCountToStart()))
+    if(/*anEvent.getType() != MouseEventDetails::getClassType() ||*/
+       (anEvent->getType().isDerivedFrom(MouseEventDetails::getClassType()) &&
+        dynamic_cast<MouseEventDetails* const>(anEvent)->getClickCount() >= getClickCountToStart()))
     {
         return AbstractCellEditor::isCellEditable(anEvent);
     }
@@ -165,45 +160,37 @@ bool DefaultTableCellEditor::isCellEditable(const EventUnrecPtr anEvent) const
     }
 }
 
-bool DefaultTableCellEditor::shouldSelectCell(const EventUnrecPtr anEvent) const
+bool DefaultTableCellEditor::shouldSelectCell(EventDetails* const anEvent) const
 {
     return Inherited::shouldSelectCell(anEvent);
 }
 
 bool DefaultTableCellEditor::stopCellEditing(void)
 {
-    if(getDefaultStringEditor() != NULL)
-    {
-        getDefaultStringEditor()->removeActionListener(&_DefaultStringEditorListener);
-        getDefaultStringEditor()->removeFocusListener(&_DefaultStringEditorListener);
-        getDefaultStringEditor()->removeKeyListener(&_DefaultStringEditorListener);
-    }
+    _EditorActionConnection.disconnect();
+    _EditorFocusLostConnection.disconnect();
+    _EditorKeyPressedConnection.disconnect();
     bool Return =  AbstractCellEditor::stopCellEditing();
     setDefaultStringEditor(NULL);
     return Return;
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::actionPerformed(const ActionEventUnrecPtr e)
+void DefaultTableCellEditor::handleEditorAction(ActionEventDetails* const e)
 {
-    _DefaultTableCellEditor->stopCellEditing();
+    stopCellEditing();
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::focusGained(const FocusEventUnrecPtr e)
+void DefaultTableCellEditor::handleEditorFocusLost(FocusEventDetails* const e)
 {
-    //Do nothing
+    stopCellEditing();
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::focusLost(const FocusEventUnrecPtr e)
+void DefaultTableCellEditor::handleEditorKeyPressed(KeyEventDetails* const e)
 {
-    _DefaultTableCellEditor->stopCellEditing();
-}
-
-void DefaultTableCellEditor::DefaultStringEditorListener::keyPressed(const KeyEventUnrecPtr e)
-{
-    if(e->getKey() == KeyEvent::KEY_ESCAPE ||
-       e->getKey() == KeyEvent::KEY_CANCEL)
+    if(e->getKey() == KeyEventDetails::KEY_ESCAPE ||
+       e->getKey() == KeyEventDetails::KEY_CANCEL)
     {
-        _DefaultTableCellEditor->cancelCellEditing();
+        cancelCellEditing();
     }
 }
 
@@ -215,14 +202,12 @@ void DefaultTableCellEditor::DefaultStringEditorListener::keyPressed(const KeyEv
 
 DefaultTableCellEditor::DefaultTableCellEditor(void) :
     Inherited(),
-        _DefaultStringEditorListener(this),
         _Value()
 {
 }
 
 DefaultTableCellEditor::DefaultTableCellEditor(const DefaultTableCellEditor &source) :
     Inherited(source),
-        _DefaultStringEditorListener(this),
         _Value()
 {
 }

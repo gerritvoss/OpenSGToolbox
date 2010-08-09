@@ -84,14 +84,6 @@ void ScrollBar::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection ScrollBar::addAdjustmentListener(AdjustmentListenerPtr Listener)
-{
-    _AdjustmentListeners.insert(Listener);
-    return EventConnection(
-                           boost::bind(&ScrollBar::isAdjustmentListenerAttached, this, Listener),
-                           boost::bind(&ScrollBar::removeAdjustmentListener, this, Listener));
-}
-
 void ScrollBar::updateLayout(void)
 {
     UInt16 MajorAxis, MinorAxis;
@@ -225,13 +217,9 @@ void ScrollBar::updateScrollBarLayout(void)
     }
 }
 
-void  ScrollBar::produceAdjustmentValueChanged(const AdjustmentEventUnrecPtr e)
+void  ScrollBar::produceAdjustmentValueChanged(AdjustmentEventDetails* const Details)
 {
-    for(AdjustmentListenerSetConstItor SetItor(_AdjustmentListeners.begin()) ; SetItor != _AdjustmentListeners.end() ; ++SetItor)
-    {
-        (*SetItor)->adjustmentValueChanged(e);
-    }
-    _Producer.produceEvent(AdjustmentValueChangedMethodId,e);
+    Inherited::produceAdjustmentValueChanged(Details);
 }
 
 void ScrollBar::scrollUnit(const Int32 Units)
@@ -314,15 +302,15 @@ void ScrollBar::setMajorAxisScrollBarPosition(const Pnt2f& Pos)
     getRangeModel()->setValue(ScrollValue);
 }
 
-void ScrollBar::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
+void ScrollBar::mouseWheelMoved(MouseWheelEventDetails* const e)
 {
     if(getEnabled())
     {
-        if(e->getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
+        if(e->getScrollType() == MouseWheelEventDetails::BLOCK_SCROLL)
         {
             scrollBlock(-e->getScrollAmount());
         }
-        else if(e->getScrollType() == MouseWheelEvent::UNIT_SCROLL)
+        else if(e->getScrollType() == MouseWheelEventDetails::UNIT_SCROLL)
         {
             scrollUnit(-e->getUnitsToScroll());
         }
@@ -381,7 +369,14 @@ Button* ScrollBar::editScrollBar(void) const
 void ScrollBar::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    _ScrollBarDraggedListener.disconnect();
+    _RangeModelConnection.disconnect();
+    _ScrollBarDragMouseDraggedConnection.disconnect();
+    _ScrollBarDragMouseReleasedConnection.disconnect();
+
+    _MinActionConnection.disconnect();
+    _MaxActionConnection.disconnect();
+    _ScrollBarMousePressedConnection.disconnect();
+    _ScrollFieldActionConnection.disconnect();
 }
 
 void ScrollBar::setRangeModel(BoundedRangeModel * const value)
@@ -448,24 +443,12 @@ void ScrollBar::onDestroy()
 /*----------------------- constructors & destructors ----------------------*/
 
 ScrollBar::ScrollBar(void) :
-    Inherited(),
-    _BoundedRangeModelChangeListener(this),
-    _MinButtonActionListener(this),
-    _MaxButtonActionListener(this),
-    _ScrollBarListener(this),
-    _ScrollBarDraggedListener(this),
-    _ScrollFieldListener(this)
+    Inherited()
 {
 }
 
 ScrollBar::ScrollBar(const ScrollBar &source) :
-    Inherited(source),
-    _BoundedRangeModelChangeListener(this),
-    _MinButtonActionListener(this),
-    _MaxButtonActionListener(this),
-    _ScrollBarListener(this),
-    _ScrollBarDraggedListener(this),
-    _ScrollFieldListener(this)
+    Inherited(source)
 {
 }
 
@@ -508,52 +491,81 @@ void ScrollBar::changed(ConstFieldMaskArg whichField,
             }
     }
 
-    if((whichField & VerticalMinButtonFieldMask) &&
-        getVerticalMinButton() != NULL)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
-        getVerticalMinButton()->addMousePressedActionListener(&_MinButtonActionListener);
-    }
+        if(whichField & VerticalMinButtonFieldMask)
+        {
+            _MinActionConnection.disconnect();
+            if(getVerticalMinButton() != NULL)
+            {
+                _MinActionConnection = getVerticalMinButton()->connectMousePressedActionPerformed(boost::bind(&ScrollBar::handleMinButtonAction, this, _1));
+            }
+        }
 
-    if((whichField & VerticalMaxButtonFieldMask) &&
-        getVerticalMaxButton() != NULL)
-    {
-        getVerticalMaxButton()->addMousePressedActionListener(&_MaxButtonActionListener);
+        if(whichField & VerticalMaxButtonFieldMask)
+        {
+            _MaxActionConnection.disconnect();
+            if(getVerticalMaxButton() != NULL)
+            {
+                _MaxActionConnection = getVerticalMaxButton()->connectMousePressedActionPerformed(boost::bind(&ScrollBar::handleMaxButtonAction, this, _1));
+            }
+        }
+        
+        if(whichField & VerticalScrollBarFieldMask)
+        {
+            _ScrollBarMousePressedConnection.disconnect();
+            if(getVerticalScrollBar() != NULL)
+            {
+                _ScrollBarMousePressedConnection = getVerticalScrollBar()->connectMousePressed(boost::bind(&ScrollBar::handleScrollBarMousePressed, this, _1));
+            }
+        }
+        
+        if(whichField & VerticalScrollFieldFieldMask)
+        {
+            _ScrollFieldActionConnection.disconnect();
+            if(getVerticalScrollField() != NULL)
+            {
+                _ScrollFieldActionConnection = getVerticalScrollField()->connectActionPerformed(boost::bind(&ScrollBar::handleScrollFieldAction, this, _1));
+            }
+        }
     }
-    
-    if((whichField & VerticalScrollBarFieldMask) &&
-        getVerticalScrollBar() != NULL)
+    else
     {
-        getVerticalScrollBar()->addMouseListener(&_ScrollBarListener);
-    }
-    
-    if((whichField & VerticalScrollFieldFieldMask) &&
-        getVerticalScrollField() != NULL)
-    {
-        getVerticalScrollField()->addMousePressedActionListener(&_ScrollFieldListener);
-    }
-    
-    if((whichField & HorizontalMinButtonFieldMask) &&
-        getHorizontalMinButton() != NULL)
-    {
-        getHorizontalMinButton()->addMousePressedActionListener(&_MinButtonActionListener);
-    }
+        if(whichField & HorizontalMinButtonFieldMask)
+        {
+            _MinActionConnection.disconnect();
+            if(getHorizontalMinButton() != NULL)
+            {
+                _MinActionConnection = getHorizontalMinButton()->connectMousePressedActionPerformed(boost::bind(&ScrollBar::handleMinButtonAction, this, _1));
+            }
+        }
 
-    if((whichField & HorizontalMaxButtonFieldMask) &&
-        getHorizontalMaxButton() != NULL)
-    {
-        getHorizontalMaxButton()->addMousePressedActionListener(&_MaxButtonActionListener);
-    }
-    
-    if((whichField & HorizontalScrollBarFieldMask) &&
-        getHorizontalScrollBar() != NULL)
-    {
-        getHorizontalScrollBar()->addMouseListener(&_ScrollBarListener);
-    }
-    
-    if((whichField & HorizontalScrollFieldFieldMask) &&
-        getHorizontalScrollField() != NULL)
-    {
-        getHorizontalScrollField()->addMousePressedActionListener(&_ScrollFieldListener);
+        if(whichField & HorizontalMaxButtonFieldMask)
+        {
+            _MaxActionConnection.disconnect();
+            if(getHorizontalMaxButton() != NULL)
+            {
+                _MaxActionConnection = getHorizontalMaxButton()->connectMousePressedActionPerformed(boost::bind(&ScrollBar::handleMaxButtonAction, this, _1));
+            }
+        }
+        
+        if(whichField & HorizontalScrollBarFieldMask)
+        {
+            _ScrollBarMousePressedConnection.disconnect();
+            if(getHorizontalScrollBar() != NULL)
+            {
+                _ScrollBarMousePressedConnection = getHorizontalScrollBar()->connectMousePressed(boost::bind(&ScrollBar::handleScrollBarMousePressed, this, _1));
+            }
+        }
+        
+        if(whichField & HorizontalScrollFieldFieldMask)
+        {
+            _ScrollFieldActionConnection.disconnect();
+            if(getHorizontalScrollField() != NULL)
+            {
+                _ScrollFieldActionConnection = getHorizontalScrollField()->connectActionPerformed(boost::bind(&ScrollBar::handleScrollFieldAction, this, _1));
+            }
+        }
     }
 
 	if(whichField & EnabledFieldMask)
@@ -593,9 +605,10 @@ void ScrollBar::changed(ConstFieldMaskArg whichField,
 	}
     if(whichField & RangeModelFieldMask)
     {
+        _RangeModelConnection.disconnect();
         if(getRangeModel() != NULL)
         {
-            _RangeModelConnection = getRangeModel()->addChangeListener(&_BoundedRangeModelChangeListener);
+            _RangeModelConnection = getRangeModel()->connectStateChanged(boost::bind(&ScrollBar::handleRangeModelStateChanged, this, _1));
         }
     }
 }
@@ -606,80 +619,76 @@ void ScrollBar::dump(      UInt32    ,
     SLOG << "Dump ScrollBar NI" << std::endl;
 }
 
-void ScrollBar::BoundedRangeModelChangeListener::stateChanged(const ChangeEventUnrecPtr e)
+void ScrollBar::handleRangeModelStateChanged(ChangeEventDetails* const e)
 {
-    _ScrollBar->updateScrollBarLayout();
+    updateScrollBarLayout();
 }
 
-void ScrollBar::MinButtonActionListener::actionPerformed(const ActionEventUnrecPtr e)
+void ScrollBar::handleMinButtonAction(ActionEventDetails* const e)
 {
-	if(_ScrollBar->getEnabled())
+	if(getEnabled())
 	{
-		_ScrollBar->scrollUnit(-1);
+		scrollUnit(-1);
 	}
 }
 
-void ScrollBar::MaxButtonActionListener::actionPerformed(const ActionEventUnrecPtr e)
+void ScrollBar::handleMaxButtonAction(ActionEventDetails* const e)
 {
-	if(_ScrollBar->getEnabled())
+	if(getEnabled())
 	{
-		_ScrollBar->scrollUnit(1);
+		scrollUnit(1);
 	}
 }
 
-void ScrollBar::ScrollBarListener::mousePressed(const MouseEventUnrecPtr e)
+void ScrollBar::handleScrollBarMousePressed(MouseEventDetails* const e)
 {
-	if(_ScrollBar->getEnabled() && e->getButton() == e->BUTTON1)
+    if(getEnabled() && e->getButton() == MouseEventDetails::BUTTON1)
 	{
-        _ScrollBar->_ScrollBarDraggedListener.setInitialMousePosition(ViewportToComponent(e->getLocation(), _ScrollBar, e->getViewport()));
-        _ScrollBar->_ScrollBarDraggedListener.setInitialScrollBarPosition(_ScrollBar->editScrollBar()->getPosition());
-        _ScrollBar->getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_ScrollBar->_ScrollBarDraggedListener));
-        _ScrollBar->getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(&(_ScrollBar->_ScrollBarDraggedListener));
+        _ScrollBarInitialMousePosition = ViewportToComponent(e->getLocation(), this, e->getViewport());
+        _ScrollBarInitialScrollBarPosition = editScrollBar()->getPosition();
+
+        _ScrollBarDragMouseDraggedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseDragged(boost::bind(&ScrollBar::handleScrollBarDragMouseDragged, this, _1));
+        _ScrollBarDragMouseReleasedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseReleased(boost::bind(&ScrollBar::handleScrollBarDragMouseReleased, this, _1));
     }
 }
 
-void ScrollBar::ScrollBarDraggedListener::mouseReleased(const MouseEventUnrecPtr e)
+void ScrollBar::handleScrollBarDragMouseReleased(MouseEventDetails* const e)
 {
-	if(e->getButton() == e->BUTTON1)
+	if(e->getButton() == MouseEventDetails::BUTTON1)
 	{
-        disconnect();
+        _ScrollBarDragMouseDraggedConnection.disconnect();
+        _ScrollBarDragMouseReleasedConnection.disconnect();
     }
 }
 
-void ScrollBar::ScrollBarDraggedListener::disconnect(void)
+void ScrollBar::handleScrollBarDragMouseDragged(MouseEventDetails* const e)
 {
-    _ScrollBar->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-    _ScrollBar->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseListener(this);
-}
+    Pnt2f ComponentMousePosition(ViewportToComponent(e->getLocation(), this, e->getViewport()));
 
-void ScrollBar::ScrollBarDraggedListener::mouseDragged(const MouseEventUnrecPtr e)
-{
-    Pnt2f ComponentMousePosition(ViewportToComponent(e->getLocation(), _ScrollBar, e->getViewport()));
-
-    _ScrollBar->setMajorAxisScrollBarPosition(_InitialScrollBarPosition + (ComponentMousePosition - _InitialMousePosition));
+    setMajorAxisScrollBarPosition(_ScrollBarInitialScrollBarPosition + (ComponentMousePosition - _ScrollBarInitialMousePosition));
 }
 
 
-void ScrollBar::ScrollFieldListener::actionPerformed(const ActionEventUnrecPtr e)
+void ScrollBar::handleScrollFieldAction(ActionEventDetails* const e)
 {
-	if(_ScrollBar->getEnabled())
+	if(getEnabled())
 	{
 		UInt32 AxisIndex(0);
-		if(_ScrollBar->getOrientation() == ScrollBar::HORIZONTAL_ORIENTATION ) AxisIndex = 0;
+		if(getOrientation() == ScrollBar::HORIZONTAL_ORIENTATION ) AxisIndex = 0;
 		else  AxisIndex = 1;
 
-		Pnt2f ComponentMousePosition(DrawingSurfaceToComponent(_ScrollBar->getParentWindow()->getParentDrawingSurface()->getMousePosition(), _ScrollBar));
+		Pnt2f ComponentMousePosition(DrawingSurfaceToComponent(getParentWindow()->getParentDrawingSurface()->getMousePosition(), this));
 		//Is Mouse Major axis on the min or max side of the scroll bar
-		if(ComponentMousePosition[AxisIndex] < _ScrollBar->editScrollBar()->getPosition()[AxisIndex])
+		if(ComponentMousePosition[AxisIndex] < editScrollBar()->getPosition()[AxisIndex])
 		{
 			//Move the Bounded range model one block in the Min direction
-			_ScrollBar->scrollBlock(-1);
+			scrollBlock(-1);
 		}
 		else if(ComponentMousePosition[AxisIndex] > 
-			(_ScrollBar->editScrollBar()->getPosition()[AxisIndex] + _ScrollBar->editScrollBar()->getSize()[AxisIndex]))
+			(editScrollBar()->getPosition()[AxisIndex] + editScrollBar()->getSize()[AxisIndex]))
 		{
 			//Move the Bounded range model one block in the Max direction
-			_ScrollBar->scrollBlock(1);
+			scrollBlock(1);
 		}
 	}
 }

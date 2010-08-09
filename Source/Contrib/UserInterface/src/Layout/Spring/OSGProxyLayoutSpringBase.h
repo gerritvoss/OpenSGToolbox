@@ -88,6 +88,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProxyLayoutSpringBase : public LayoutS
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ProxyLayoutSpring);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -111,8 +113,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProxyLayoutSpringBase : public LayoutS
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUInt32          SFEdgeType;
-    typedef SFUnrecComponentPtr SFComponentType;
-    typedef SFUnrecSpringLayoutPtr SFLayoutType;
+    typedef SFWeakComponentPtr SFComponentType;
+    typedef SFWeakSpringLayoutPtr SFLayoutType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -140,10 +142,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProxyLayoutSpringBase : public LayoutS
 
                   SFUInt32            *editSFEdge           (void);
             const SFUInt32            *getSFEdge            (void) const;
-            const SFUnrecComponentPtr *getSFComponent      (void) const;
-                  SFUnrecComponentPtr *editSFComponent      (void);
-            const SFUnrecSpringLayoutPtr *getSFLayout         (void) const;
-                  SFUnrecSpringLayoutPtr *editSFLayout         (void);
+            const SFWeakComponentPtr  *getSFComponent      (void) const;
+                  SFWeakComponentPtr  *editSFComponent      (void);
+            const SFWeakSpringLayoutPtr *getSFLayout         (void) const;
+                  SFWeakSpringLayoutPtr *editSFLayout         (void);
 
 
                   UInt32              &editEdge           (void);
@@ -226,8 +228,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProxyLayoutSpringBase : public LayoutS
     /*! \{                                                                 */
 
     SFUInt32          _sfEdge;
-    SFUnrecComponentPtr _sfComponent;
-    SFUnrecSpringLayoutPtr _sfLayout;
+    SFWeakComponentPtr _sfComponent;
+    SFWeakSpringLayoutPtr _sfLayout;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -54,6 +54,8 @@
 #include "OSGListModel.h"
 #include "OSGScrollBar.h"
 #include "OSGDefaultListSelectionModel.h"
+#include "OSGListSelectionEventDetails.h"
+#include "OSGListDataEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -110,7 +112,7 @@ Vec2f List::getContentRequestedSize(void) const
     }
 }
 
-Component* List::getComponentAtPoint(const MouseEventUnrecPtr e)
+Component* List::getComponentAtPoint(MouseEventDetails* const e)
 {
     Pnt2f PointInComponent(ViewportToComponent(e->getLocation(), this, e->getViewport()));
 
@@ -126,7 +128,7 @@ Component* List::getComponentAtPoint(const MouseEventUnrecPtr e)
     }
 }
 
-boost::any List::getValueAtPoint(const MouseEventUnrecPtr e)
+boost::any List::getValueAtPoint(MouseEventDetails* const e)
 {
     Pnt2f PointInComponent(ViewportToComponent(e->getLocation(), this, e->getViewport()));
 
@@ -157,7 +159,10 @@ void List::cleanItem(const UInt32& Index)
     if(Index >= 0 && Index < getMFChildren()->size() &&
        getSelectable())
     {
-        _DrawnIndices[Index]->removeFocusListener(this);
+        _ItemFocusGainedConnections[_DrawnIndices[Index]].disconnect();
+        _ItemFocusGainedConnections.erase(_ItemFocusGainedConnections.find(_DrawnIndices[Index]));
+        _ItemFocusLostConnections[_DrawnIndices[Index]].disconnect();
+        _ItemFocusLostConnections.erase(_ItemFocusLostConnections.find(_DrawnIndices[Index]));
     }
 }
 
@@ -174,7 +179,8 @@ void List::initItem(const UInt32& Index)
             {
                 getParentWindow()->setFocusedComponent(_DrawnIndices[Index]);
             }
-            _DrawnIndices[Index]->addFocusListener(this);
+            _ItemFocusGainedConnections[_DrawnIndices[Index]] = _DrawnIndices[Index]->connectFocusGained(boost::bind(&List::handleItemFocusGained, this, _1));
+            _ItemFocusLostConnections[_DrawnIndices[Index]] = _DrawnIndices[Index]->connectFocusLost(boost::bind(&List::handleItemFocusLost, this, _1));
             _DrawnIndices[Index]->setFocused(getListIndexFromDrawnIndex(Index) == _FocusedIndex);
         }
 
@@ -211,7 +217,7 @@ void List::initItem(const UInt32& Index)
 
 
 
-void List::selectionChanged(const ListSelectionEventUnrecPtr e)
+void List::handleSelectionChanged(ListSelectionEventDetails* const e)
 {
     for(Int32 i(e->getFirstIndex()) ; i<=e->getLastIndex() ; ++i)
     {
@@ -219,7 +225,7 @@ void List::selectionChanged(const ListSelectionEventUnrecPtr e)
     }
 }
 
-void List::focusGained(const FocusEventUnrecPtr e)
+void List::handleItemFocusGained(FocusEventDetails* const e)
 {
     if(getSelectable())
     {
@@ -245,7 +251,7 @@ void List::focusGained(const FocusEventUnrecPtr e)
     }
 }
 
-void List::focusLost(const FocusEventUnrecPtr e)
+void List::handleItemFocusLost(FocusEventDetails* const e)
 {
     if(getSelectable())
     {
@@ -297,7 +303,7 @@ Int32 List::getDrawnIndexFromListIndex(const Int32& Index) const
     }
 }
 
-void List::mousePressed(const MouseEventUnrecPtr e)
+void List::mousePressed(MouseEventDetails* const e)
 {
     if(getSelectable())
     {
@@ -316,11 +322,11 @@ void List::mousePressed(const MouseEventUnrecPtr e)
                    getParentWindow()->getParentDrawingSurface() != NULL &&
                    getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
                 {
-                    if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+                    if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT)
                     {
                         getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), getListIndexFromDrawnIndex(i));
                     }
-                    else if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+                    else if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
                     {
                         getSelectionModel()->removeSelectionInterval(getListIndexFromDrawnIndex(i),i);// this toggles the interval
                     }
@@ -353,7 +359,7 @@ void List::mousePressed(const MouseEventUnrecPtr e)
     }
 }
 
-void List::keyTyped(const KeyEventUnrecPtr e)
+void List::keyTyped(KeyEventDetails* const e)
 {
     if(getSelectable())
     {
@@ -361,25 +367,25 @@ void List::keyTyped(const KeyEventUnrecPtr e)
         Int32 ListIndex(0);
         switch(e->getKey())
         {
-            case KeyEvent::KEY_UP:
-            case KeyEvent::KEY_DOWN:
-            case KeyEvent::KEY_RIGHT:
-            case KeyEvent::KEY_LEFT:
-                if ( (getOrientation() == List::VERTICAL_ORIENTATION && e->getKey() == KeyEvent::KEY_UP) ||
-                     (getOrientation() == List::HORIZONTAL_ORIENTATION && e->getKey() == KeyEvent::KEY_LEFT))
+            case KeyEventDetails::KEY_UP:
+            case KeyEventDetails::KEY_DOWN:
+            case KeyEventDetails::KEY_RIGHT:
+            case KeyEventDetails::KEY_LEFT:
+                if ( (getOrientation() == List::VERTICAL_ORIENTATION && e->getKey() == KeyEventDetails::KEY_UP) ||
+                     (getOrientation() == List::HORIZONTAL_ORIENTATION && e->getKey() == KeyEventDetails::KEY_LEFT))
                 {
                     ListIndex = osgMax(_FocusedIndex-1,0);
                     UpdateSelectionIndex = true;
                 }
-                else if ((getOrientation() == List::VERTICAL_ORIENTATION && e->getKey() == KeyEvent::KEY_DOWN) ||
-                         (getOrientation() == List::HORIZONTAL_ORIENTATION && e->getKey() == KeyEvent::KEY_RIGHT))
+                else if ((getOrientation() == List::VERTICAL_ORIENTATION && e->getKey() == KeyEventDetails::KEY_DOWN) ||
+                         (getOrientation() == List::HORIZONTAL_ORIENTATION && e->getKey() == KeyEventDetails::KEY_RIGHT))
                 {
                     ListIndex = osgMin<Int32>((_FocusedIndex+1), getModel()->getSize()-1);
                     UpdateSelectionIndex = true;
                 }
                 break;
-            case KeyEvent::KEY_ENTER:
-                if (e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+            case KeyEventDetails::KEY_ENTER:
+                if (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
                 {
                     getSelectionModel()->removeSelectionInterval(_FocusedIndex,_FocusedIndex);// this toggles the interval
                 }
@@ -388,19 +394,19 @@ void List::keyTyped(const KeyEventUnrecPtr e)
                     getSelectionModel()->setSelectionInterval(_FocusedIndex, _FocusedIndex);
                 }
                 break;
-            case KeyEvent::KEY_HOME:
+            case KeyEventDetails::KEY_HOME:
                 ListIndex = 0;
                 UpdateSelectionIndex = true;
                 break;
-            case KeyEvent::KEY_END:
+            case KeyEventDetails::KEY_END:
                 ListIndex = getModel()->getSize()-1;
                 UpdateSelectionIndex = true;
                 break;
-            case KeyEvent::KEY_PAGE_UP:
+            case KeyEventDetails::KEY_PAGE_UP:
                 ListIndex = osgMax(_FocusedIndex-(_BottomDrawnIndex - _TopDrawnIndex),0);
                 UpdateSelectionIndex = true;
                 break;
-            case KeyEvent::KEY_PAGE_DOWN:
+            case KeyEventDetails::KEY_PAGE_DOWN:
                 ListIndex = osgMin<Int32>(_FocusedIndex+(_BottomDrawnIndex - _TopDrawnIndex), getModel()->getSize()-1);
                 UpdateSelectionIndex = true;
                 break;
@@ -410,7 +416,7 @@ void List::keyTyped(const KeyEventUnrecPtr e)
         {
             focusIndex(ListIndex);
             getSelectionModel()->setLeadSelectionIndex(ListIndex);
-            if (e->getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+            if (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT)
             {
                 getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), ListIndex);
             }
@@ -438,7 +444,7 @@ void List::updateIndiciesDrawnFromModel(void)
     updateIndicesDrawn();
 }
 
-void List::contentsChanged(const ListDataEventUnrecPtr e)
+void List::handleContentsChanged(ListDataEventDetails* const e)
 {
     updateIndiciesDrawnFromModel();
 
@@ -458,7 +464,7 @@ void List::contentsChanged(const ListDataEventUnrecPtr e)
       }*/
 }
 
-void List::intervalAdded(const ListDataEventUnrecPtr e)
+void List::handleIntervalAdded(ListDataEventDetails* const e)
 {
     updatePreferredSize();
     UInt32 NumInserted(e->getIndex1() - e->getIndex0() + 1);
@@ -534,7 +540,7 @@ void List::intervalAdded(const ListDataEventUnrecPtr e)
 
 }
 
-void List::intervalRemoved(const ListDataEventUnrecPtr e)
+void List::handleIntervalRemoved(ListDataEventDetails* const e)
 {
     UInt32 NumRemoved(e->getIndex1() - e->getIndex0() + 1);
     //The Selected Items
@@ -625,20 +631,6 @@ void List::intervalRemoved(const ListDataEventUnrecPtr e)
 
     updatePreferredSize();
     getSelectionModel()->removeIndexInterval(e->getIndex0(), e->getIndex1());
-}
-
-void List::setSelectionModel(ListSelectionModelPtr SelectionModel)
-{
-    if(_SelectionModel != NULL)
-    {
-        _SelectionModel->removeListSelectionListener(this);
-    }
-    _SelectionModel = SelectionModel;
-
-    if(_SelectionModel != NULL)
-    {
-        _SelectionModel->addListSelectionListener(this);
-    }
 }
 
 void List::updateLayout(void)
@@ -847,15 +839,27 @@ Int32 List::getIndexForLocation(const Pnt2f& Location) const
 
 }
 
+Int32 List::getIndexForDrawingSurfaceLocation(const Pnt2f& Location) const
+{
+    Pnt2f ComponentSpaceLoc(DrawingSurfaceToComponent(Location, this));
+    return getIndexForLocation(ComponentSpaceLoc);
+}
+
+Int32 List::getIndexClosestToDrawingSurfaceLocation(const Pnt2f& Location) const
+{
+    Pnt2f ComponentSpaceLoc(DrawingSurfaceToComponent(Location, this));
+    return getIndexClosestToLocation(ComponentSpaceLoc);
+}
+
 ComponentTransitPtr List::createIndexComponent(const UInt32& Index)
 {
     if(getModel() != NULL && getCellGenerator() != NULL)
     {
         bool Selected;
 
-        if(_SelectionModel != NULL)
+        if(getSelectionModel() != NULL)
         {
-            Selected = _SelectionModel->isSelectedIndex(Index);
+            Selected = getSelectionModel()->isSelectedIndex(Index);
         }
         else
         {
@@ -975,9 +979,9 @@ void List::scrollToFocused(void)
 
 void List::scrollToSelection(void)
 {
-    if(_SelectionModel != NULL)
+    if(getSelectionModel() != NULL)
     {
-        Int32 Index(_SelectionModel->getMinSelectionIndex());
+        Int32 Index(getSelectionModel()->getMinSelectionIndex());
 
         if(Index >= 0)
         {
@@ -1019,7 +1023,7 @@ void List::onCreate(const List * Id)
 
     if(Id != NULL)
     {
-        ListSelectionModelPtr TheListSelectionModel(new DefaultListSelectionModel());
+        ListSelectionModelUnrecPtr TheListSelectionModel(DefaultListSelectionModel::create());
         setSelectionModel(TheListSelectionModel);
     }
 }
@@ -1028,11 +1032,33 @@ void List::onDestroy()
 {
 }
 
+void List::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _DrawnIndices.clear();
+
+    std::map<Component*, boost::signals2::connection>::iterator MapItor;
+    for(MapItor = _ItemFocusGainedConnections.begin() ; MapItor!= _ItemFocusGainedConnections.end() ; ++MapItor)
+    {
+        MapItor->second.disconnect();
+    }
+    for(MapItor = _ItemFocusLostConnections.begin() ; MapItor!= _ItemFocusLostConnections.end() ; ++MapItor)
+    {
+        MapItor->second.disconnect();
+    }
+    _ItemFocusGainedConnections.clear();
+    _ItemFocusLostConnections.clear();
+    _SelectionChangedConnection.disconnect();
+    _ContentsChangedConnection.disconnect();
+    _IntervalAddedConnection.disconnect();
+    _IntervalRemovedConnection.disconnect();
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 List::List(void) :
     Inherited(),
-		_SelectionModel(),
         _TopDrawnIndex(-1),
         _BottomDrawnIndex(-1),
 		_FocusedIndex(-1)
@@ -1041,7 +1067,6 @@ List::List(void) :
 
 List::List(const List &source) :
     Inherited(source),
-		_SelectionModel(source._SelectionModel),
         _TopDrawnIndex(-1),
         _BottomDrawnIndex(-1),
 		_FocusedIndex(-1)
@@ -1065,7 +1090,17 @@ void List::changed(ConstFieldMaskArg whichField,
     {
 		updatePreferredSize();
     }
-	
+
+    if(whichField & SelectionModelFieldMask)
+    {
+        _SelectionChangedConnection.disconnect();
+
+        if(getSelectionModel() != NULL)
+        {
+            _SelectionChangedConnection = getSelectionModel()->connectSelectionChanged(boost::bind(&List::handleSelectionChanged, this, _1));
+        }
+    }
+    	
     if(whichField & List::ClipBoundsFieldMask)
     {
         updateIndicesDrawn();
@@ -1083,7 +1118,9 @@ void List::changed(ConstFieldMaskArg whichField,
 
 		if(getModel() != NULL)
 		{
-			getModel()->addListDataListener(this);
+            _ContentsChangedConnection = getModel()->connectListDataContentsChanged(boost::bind(&List::handleContentsChanged, this, _1));
+            _IntervalAddedConnection = getModel()->connectListDataIntervalAdded(boost::bind(&List::handleIntervalAdded, this, _1));
+            _IntervalRemovedConnection = getModel()->connectListDataIntervalRemoved(boost::bind(&List::handleIntervalRemoved, this, _1));
 		}
 		
 		updateIndiciesDrawnFromModel();

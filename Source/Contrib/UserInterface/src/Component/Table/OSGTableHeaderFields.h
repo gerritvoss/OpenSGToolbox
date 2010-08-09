@@ -146,6 +146,77 @@ const Char8 *FieldTraits<TableHeader *, 0>::getMName<NoRefCountPolicy>(void)
 }
 
 
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+ */
+template <>
+struct FieldTraits<TableHeader *, 1> :
+    public FieldTraitsFCPtrBase<TableHeader *, 1>
+{
+  private:
+
+  public:
+    typedef FieldTraits<TableHeader *, 1>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+};
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 1>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecChildTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 1>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecChildTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 1>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakChildTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 1>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdChildTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 1>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecChildTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 1>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecChildTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 1>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakChildTableHeaderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TableHeader *, 1>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdChildTableHeaderPtr"; 
+}
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribUserInterfaceFieldSFields */
 typedef PointerSField<TableHeader *,
@@ -174,6 +245,13 @@ typedef PointerMField<TableHeader *,
 typedef PointerMField<TableHeader *,
                       NoRefCountPolicy        > MFUncountedTableHeaderPtr;
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef ChildPointerSField<
+          TableHeader *, 
+          UnrecordedRefCountPolicy,
+          1             > SFUnrecChildTableHeaderPtr;
 
 
 
@@ -214,6 +292,14 @@ struct MFUncountedTableHeaderPtr :
     public PointerMField<TableHeader *,
                          NoRefCountPolicy        > {};
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecChildTableHeaderPtr :
+    public ChildPointerSField<
+        TableHeader *, 
+        UnrecordedRefCountPolicy,
+        1             > {};
 
 
 #endif // these are the doxygen hacks

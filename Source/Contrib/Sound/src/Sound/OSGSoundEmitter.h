@@ -44,7 +44,6 @@
 
 #include "OSGSoundEmitterBase.h"
 #include "OSGSound.h"
-#include "OSGUpdateListener.h"
 #include "OSGWindowEventProducerFields.h"
 
 #include <set>
@@ -83,8 +82,9 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundEmitter : public SoundEmitterBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    bool attachUpdateListener(WindowEventProducerUnrecPtr UpdateProducer);
-    void dettachUpdateListener(WindowEventProducerUnrecPtr UpdateProducer);
+
+    void attachUpdateProducer(ReflexiveContainer* const producer);
+    void detachUpdateProducer(void);
 
     void emitSound(void);
     /*=========================  PROTECTED  ===============================*/
@@ -116,20 +116,8 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundEmitter : public SoundEmitterBase
 
     /*! \}                                                                 */
 
-	class SystemUpdateListener : public UpdateListener
-	{
-	public:
-		SystemUpdateListener(SoundEmitterUnrecPtr TheSystem);
-        virtual void update(const UpdateEventUnrecPtr e);
-	private:
-		SoundEmitterUnrecPtr _System;
-	};
-
-	friend class SystemUpdateListener;
-
-	SystemUpdateListener _SystemUpdateListener;
-	
-    virtual void update(const Time& elps);
+    virtual void update(EventDetails* const details);
+    boost::signals2::connection _UpdateEventConnection;
 
     std::set<UInt32> _EmittedSoundChannels;
 

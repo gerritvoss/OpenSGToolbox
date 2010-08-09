@@ -146,6 +146,77 @@ const Char8 *FieldTraits<LayoutConstraints *, 0>::getMName<NoRefCountPolicy>(voi
 }
 
 
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+ */
+template <>
+struct FieldTraits<LayoutConstraints *, 1> :
+    public FieldTraitsFCPtrBase<LayoutConstraints *, 1>
+{
+  private:
+
+  public:
+    typedef FieldTraits<LayoutConstraints *, 1>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+};
+
+template<> inline
+const Char8 *FieldTraits<LayoutConstraints *, 1>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecChildLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayoutConstraints *, 1>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecChildLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayoutConstraints *, 1>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakChildLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayoutConstraints *, 1>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdChildLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayoutConstraints *, 1>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecChildLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayoutConstraints *, 1>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecChildLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayoutConstraints *, 1>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakChildLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayoutConstraints *, 1>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdChildLayoutConstraintsPtr"; 
+}
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribUserInterfaceFieldSFields */
 typedef PointerSField<LayoutConstraints *,
@@ -174,6 +245,13 @@ typedef PointerMField<LayoutConstraints *,
 typedef PointerMField<LayoutConstraints *,
                       NoRefCountPolicy        > MFUncountedLayoutConstraintsPtr;
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef ChildPointerSField<
+          LayoutConstraints *, 
+          UnrecordedRefCountPolicy,
+          1             > SFUnrecChildLayoutConstraintsPtr;
 
 
 
@@ -214,6 +292,14 @@ struct MFUncountedLayoutConstraintsPtr :
     public PointerMField<LayoutConstraints *,
                          NoRefCountPolicy        > {};
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecChildLayoutConstraintsPtr :
+    public ChildPointerSField<
+        LayoutConstraints *, 
+        UnrecordedRefCountPolicy,
+        1             > {};
 
 
 #endif // these are the doxygen hacks

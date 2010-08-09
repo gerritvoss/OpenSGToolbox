@@ -43,7 +43,7 @@
 #endif
 
 #include "OSGAbstractTreeModelLayoutBase.h"
-#include <set>
+#include "OSGTreeModelEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,18 +79,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    virtual EventConnection addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
-	virtual bool isTreeModelLayoutListenerAttached(TreeModelLayoutListenerPtr Listener) const;
-
-    virtual void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
-
-	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual EventConnection addTreeModelListener(TreeModelListenerPtr l);
-	virtual bool isTreeModelListenerAttached(TreeModelListenerPtr l) const;
-
-	//Removes a listener previously added with addTreeModelListener.
-	virtual void removeTreeModelListener(TreeModelListenerPtr l);
 
 	//Returns the rows that the TreePath instances in path are being displayed at.
 	virtual std::vector<Int32> getRowsForPaths(const std::vector<TreePath>& paths) const;
@@ -215,29 +203,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
     TreePathSet _ExpandedPathSet;
     TreePathSet _VisiblePathSet;
 
-    class ModelListener : public TreeModelListener
-    {
-      public :
-        ModelListener(AbstractTreeModelLayout* const TheAbstractTreeModelLayout);
-
-        virtual void treeNodesChanged(const TreeModelEventUnrecPtr e);
-        virtual void treeNodesInserted(const TreeModelEventUnrecPtr e);
-        virtual void treeNodesWillBeRemoved(const TreeModelEventUnrecPtr e);
-        virtual void treeNodesRemoved(const TreeModelEventUnrecPtr e);
-        virtual void treeStructureChanged(const TreeModelEventUnrecPtr e);
-      protected :
-        AbstractTreeModelLayout* _AbstractTreeModelLayout;
-    };
-
-    friend class ModelListener;
-
-    ModelListener _ModelListener;
-
-    typedef std::set<TreeModelLayoutListenerPtr> TreeModelLayoutListenerSet;
-    typedef TreeModelLayoutListenerSet::iterator TreeModelLayoutListenerSetItor;
-    typedef TreeModelLayoutListenerSet::const_iterator TreeModelLayoutListenerSetConstItor;
-
-    TreeModelLayoutListenerSet       _TreeModelLayoutListeners;
+    void handleTreeNodesChanged(TreeModelEventDetails* const e);
+    void handleTreeNodesInserted(TreeModelEventDetails* const e);
+    void handleTreeNodesWillBeRemoved(TreeModelEventDetails* const e);
+    void handleTreeNodesRemoved(TreeModelEventDetails* const e);
+    void handleTreeStructureChanged(TreeModelEventDetails* const e);
+    boost::signals2::connection _TreeNodesChangedConnection,
+                                _TreeNodesInsertedConnection,
+                                _TreeNodesWillBeRemovedConnection,
+                                _TreeNodesRemovedConnection,
+                                _TreeStructureChangedConnection;
 
     void produceTreeCollapsed(const TreePath& Path);
     void produceTreeExpanded(const TreePath& Path);
@@ -251,16 +226,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
     void removeVisiblePath(const TreePath& Path);
     void removeExpandedPath(const TreePath& Path);
 
-    typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
-    typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
-    typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
-    TreeModelListenerSet _ModelListeners;
-
-    void produceTreeNodesChanged(const TreeModelEventUnrecPtr e);
-    void produceTreeNodesInserted(const TreeModelEventUnrecPtr e);
-    void produceTreeNodesWillBeRemoved(const TreeModelEventUnrecPtr e);
-    void produceTreeNodesRemoved(const TreeModelEventUnrecPtr e);
-	void produceTreeStructureChanged(const TreeModelEventUnrecPtr e);
+    void produceTreeNodesChanged(TreeModelEventDetails* const e);
+    void produceTreeNodesInserted(TreeModelEventDetails* const e);
+    void produceTreeNodesWillBeRemoved(TreeModelEventDetails* const e);
+    void produceTreeNodesRemoved(TreeModelEventDetails* const e);
+	void produceTreeStructureChanged(TreeModelEventDetails* const e);
 
     /*==========================  PRIVATE  ================================*/
 

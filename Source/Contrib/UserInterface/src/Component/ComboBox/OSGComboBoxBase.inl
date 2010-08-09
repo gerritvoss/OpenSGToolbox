@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGActionEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -276,6 +278,50 @@ const Char8 *ComboBoxBase::getClassname(void)
 {
     return "ComboBox";
 }
+inline
+boost::signals2::connection  ComboBoxBase::connectActionPerformed(const ActionPerformedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ActionPerformedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComboBoxBase::connectActionPerformed(const ActionPerformedEventType::group_type &group,
+                                                    const ActionPerformedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ActionPerformedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComboBoxBase::disconnectActionPerformed(const ActionPerformedEventType::group_type &group)
+{
+    _ActionPerformedEvent.disconnect(group);
+}
+
+inline
+void  ComboBoxBase::disconnectAllSlotsActionPerformed(void)
+{
+    _ActionPerformedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComboBoxBase::isEmptyActionPerformed(void) const
+{
+    return _ActionPerformedEvent.empty();
+}
+
+inline
+UInt32  ComboBoxBase::numSlotsActionPerformed(void) const
+{
+    return _ActionPerformedEvent.num_slots();
+}
+
+inline
+void ComboBoxBase::produceActionPerformed(ActionPerformedEventDetailsType* const e)
+{
+    produceEvent(ActionPerformedEventId, e);
+}
+
 OSG_GEN_CONTAINERPTR(ComboBox);
 
 OSG_END_NAMESPACE

@@ -4,8 +4,6 @@
 #include "OSGFieldContainerFactory.h"
 #include "OSGFilePathAttachment.h"
 #include "OSGDrawableStatsAttachment.h"
-#include "OSGEventProducer.h"
-#include "OSGEventProducerPtrType.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -150,38 +148,38 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
                     }
                 }
                 //If this is a EventProducer field
-                else if(TheFieldDesc->getFieldType().getContentType() ==
-                        FieldTraits<EventProducerPtr>::getType())
-                {
-                    //Get all of the Activities
-                    if(static_cast<const SFEventProducerPtr*>(TheField)->getValue() != NULL)
-                    {
-                        Activity* TheActvitiy;
-                        EventProducerPtr TheProducer(static_cast<const SFEventProducerPtr*>(TheField)->getValue());
-                        for(UInt32 i(1) ; i<=TheProducer->getNumProducedEvents() ; ++i)
-                        {
-                            for(UInt32 j(0) ; j<TheProducer->getNumActivitiesAttached(i) ; ++j)
-                            {
-                                TheActvitiy = TheProducer->getAttachedActivity(i,j);
-                                if(AllContainers.find(TheActvitiy) == AllContainers.end() &&
-                                   NewIgnores.find(TheActvitiy) == NewIgnores.end() && 
-                                   std::find(IgnoreTypes.begin(), IgnoreTypes.end(), TheActvitiy->getTypeId()) == IgnoreTypes.end())
-                                {
-                                    std::set<FieldContainerUnrecPtr> TheContainer;
-                                    TheContainer.insert(TheActvitiy);
-                                    
-                                    AllContainers.insert(TheActvitiy);
-                                    NewIgnores.insert(Containers.begin(), Containers.end());
+                //else if(TheFieldDesc->getFieldType().getContentType() ==
+                //        FieldTraits<EventProducerPtr>::getType())
+                //{
+                //    //Get all of the Activities
+                //    if(static_cast<const SFEventProducerPtr*>(TheField)->getValue() != NULL)
+                //    {
+                //        Activity* TheActvitiy;
+                //        EventProducerPtr TheProducer(static_cast<const SFEventProducerPtr*>(TheField)->getValue());
+                //        for(UInt32 i(1) ; i<=TheProducer->getNumProducedEvents() ; ++i)
+                //        {
+                //            for(UInt32 j(0) ; j<TheProducer->getNumActivitiesAttached(i) ; ++j)
+                //            {
+                //                TheActvitiy = TheProducer->getAttachedActivity(i,j);
+                //                if(AllContainers.find(TheActvitiy) == AllContainers.end() &&
+                //                   NewIgnores.find(TheActvitiy) == NewIgnores.end() && 
+                //                   std::find(IgnoreTypes.begin(), IgnoreTypes.end(), TheActvitiy->getTypeId()) == IgnoreTypes.end())
+                //                {
+                //                    std::set<FieldContainerUnrecPtr> TheContainer;
+                //                    TheContainer.insert(TheActvitiy);
+                //                    
+                //                    AllContainers.insert(TheActvitiy);
+                //                    NewIgnores.insert(Containers.begin(), Containers.end());
 
-                                    std::set<FieldContainerUnrecPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
+                //                    std::set<FieldContainerUnrecPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
 
-                                    AllContainers.insert(NewContainers.begin(), NewContainers.end());
-                                    NewIgnores.insert(NewContainers.begin(), NewContainers.end());
-                                }
-                            }
-                        }
-                    }
-                }
+                //                    AllContainers.insert(NewContainers.begin(), NewContainers.end());
+                //                    NewIgnores.insert(NewContainers.begin(), NewContainers.end());
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
             }
         }
     }

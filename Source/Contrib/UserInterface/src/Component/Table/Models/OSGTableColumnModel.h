@@ -46,8 +46,6 @@
 #include "OSGField.h"
 #include "OSGTableColumn.h"
 #include "OSGListSelectionModel.h"
-#include "OSGTableColumnModelListener.h"
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,12 +81,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModel : public TableColumnM
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    //Adds a listener for table column model events.
-    virtual EventConnection addColumnModelListener(TableColumnModelListenerPtr l) = 0;
-	virtual bool isColumnModelListenerAttached(TableColumnModelListenerPtr l) const = 0;
-
-    //Removes a listener for table column model events.
-    virtual void removeColumnModelListener(TableColumnModelListenerPtr l) = 0;
 
     //Appends aColumn to the end of the tableColumns array.
     virtual void addColumn(TableColumn* const aColumn) = 0;
@@ -117,9 +109,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModel : public TableColumnM
     //Returns an array of indicies of all selected columns.
     virtual std::vector<UInt32> getSelectedColumns(void) const = 0;
 
-    //Returns the current selection model.
-    virtual ListSelectionModelPtr getSelectionModel(void) const = 0;
-
     //Returns the total width of all the columns.
     virtual UInt32 getTotalColumnWidth(void) const = 0;
 
@@ -134,9 +123,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumnModel : public TableColumnM
 
     //Sets whether the columns in this model may be selected.
     virtual void setColumnSelectionAllowed(const bool& flag) = 0;
-
-    //Sets the selection model.
-    virtual void setSelectionModel(ListSelectionModelPtr newModel) = 0;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

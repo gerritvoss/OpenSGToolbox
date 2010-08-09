@@ -35,9 +35,6 @@
 #include "OSGContribUserInterfaceDef.h"
 
 #include "OSGComponentFields.h"
-#include "OSGEventConnection.h"
-#include "OSGDragGestureListener.h"
-#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -46,24 +43,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DragGestureRecognizer
    /*=========================  PUBLIC  ===============================*/
 public:
 
-    //Register a new DragGestureListener.
-    EventConnection addDragGestureListener(DragGestureListenerPtr Listener);
-	bool isDragGestureListenerAttached(DragGestureListenerPtr Listener) const;
-
     //Reset the Recognizer, if its currently recognizing a gesture, ignore it.
     virtual void resetRecognizer(void) = 0;
 
-    //unregister the current DragGestureListener
-    void removeDragGestureListener(DragGestureListenerPtr Listener); 
-
 protected:
-	typedef std::set<DragGestureListenerPtr> DragGestureListenerSet;
-    typedef DragGestureListenerSet::iterator DragGestureListenerSetItor;
-    typedef DragGestureListenerSet::const_iterator DragGestureListenerSetConstItor;
-	
-    DragGestureListenerSet       _DragGestureListeners;
 
-    void produceDragGestureRecognized(ComponentRefPtr TheComponent, const Pnt2f &DragLocation) const;
+    //void produceDragGestureRecognized(ComponentRefPtr TheComponent, const Pnt2f &DragLocation) const;
 
 };
 

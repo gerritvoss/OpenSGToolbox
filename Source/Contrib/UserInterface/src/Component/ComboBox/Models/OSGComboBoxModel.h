@@ -43,9 +43,6 @@
 #endif
 
 #include "OSGComboBoxModelBase.h"
-#include "OSGComboBoxSelectionListener.h"
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -93,11 +90,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxModel : public ComboBoxModelBa
 	
 	//Set the selected item.
 	virtual void setSelectedItem(const boost::any& anObject) = 0;
-	
-	virtual EventConnection addSelectionListener(ComboBoxSelectionListenerPtr l) = 0;
-	virtual bool isSelectionListenerAttached(ComboBoxSelectionListenerPtr l) const = 0;
-
-	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l) = 0;
 
     /*=========================  PROTECTED  ===============================*/
 

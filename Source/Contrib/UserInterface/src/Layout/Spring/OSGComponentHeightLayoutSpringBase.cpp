@@ -119,8 +119,8 @@ void ComponentHeightLayoutSpringBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecComponentPtr::Description(
-        SFUnrecComponentPtr::getClassType(),
+    pDesc = new SFWeakComponentPtr::Description(
+        SFWeakComponentPtr::getClassType(),
         "Component",
         "",
         ComponentFieldId, ComponentFieldMask,
@@ -175,7 +175,7 @@ ComponentHeightLayoutSpringBase::TypeObject ComponentHeightLayoutSpringBase::_ty
     "\t<Field\n"
     "\t\tname=\"Component\"\n"
     "\t\ttype=\"Component\"\n"
-    "        category=\"pointer\"\n"
+    "        category=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "      visibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -217,12 +217,12 @@ UInt32 ComponentHeightLayoutSpringBase::getContainerSize(void) const
 
 
 //! Get the ComponentHeightLayoutSpring::_sfComponent field.
-const SFUnrecComponentPtr *ComponentHeightLayoutSpringBase::getSFComponent(void) const
+const SFWeakComponentPtr *ComponentHeightLayoutSpringBase::getSFComponent(void) const
 {
     return &_sfComponent;
 }
 
-SFUnrecComponentPtr *ComponentHeightLayoutSpringBase::editSFComponent      (void)
+SFWeakComponentPtr  *ComponentHeightLayoutSpringBase::editSFComponent      (void)
 {
     editSField(ComponentFieldMask);
 
@@ -412,7 +412,6 @@ FieldContainerTransitPtr ComponentHeightLayoutSpringBase::shallowCopy(void) cons
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 ComponentHeightLayoutSpringBase::ComponentHeightLayoutSpringBase(void) :
@@ -450,8 +449,8 @@ void ComponentHeightLayoutSpringBase::onCreate(const ComponentHeightLayoutSpring
 
 GetFieldHandlePtr ComponentHeightLayoutSpringBase::getHandleComponent       (void) const
 {
-    SFUnrecComponentPtr::GetHandlePtr returnValue(
-        new  SFUnrecComponentPtr::GetHandle(
+    SFWeakComponentPtr::GetHandlePtr returnValue(
+        new  SFWeakComponentPtr::GetHandle(
              &_sfComponent,
              this->getType().getFieldDesc(ComponentFieldId),
              const_cast<ComponentHeightLayoutSpringBase *>(this)));
@@ -461,8 +460,8 @@ GetFieldHandlePtr ComponentHeightLayoutSpringBase::getHandleComponent       (voi
 
 EditFieldHandlePtr ComponentHeightLayoutSpringBase::editHandleComponent      (void)
 {
-    SFUnrecComponentPtr::EditHandlePtr returnValue(
-        new  SFUnrecComponentPtr::EditHandle(
+    SFWeakComponentPtr::EditHandlePtr returnValue(
+        new  SFWeakComponentPtr::EditHandle(
              &_sfComponent,
              this->getType().getFieldDesc(ComponentFieldId),
              this));
@@ -500,6 +499,7 @@ EditFieldHandlePtr ComponentHeightLayoutSpringBase::editHandleSizeField      (vo
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

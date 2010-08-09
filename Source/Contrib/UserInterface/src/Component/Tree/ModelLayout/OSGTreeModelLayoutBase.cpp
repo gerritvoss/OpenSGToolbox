@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -109,19 +109,6 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void TreeModelLayoutBase::classDescInserter(TypeObject &oType)
 {
-    FieldDescriptionBase *pDesc = NULL;
-
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&TreeModelLayout::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&TreeModelLayout::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -152,104 +139,131 @@ TreeModelLayoutBase::TypeObject TreeModelLayoutBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI Tree Model Layout.\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeCollapsed\"\n"
-    "\t\ttype=\"TreeModelLayoutEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelLayoutEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeExpanded\"\n"
-    "\t\ttype=\"TreeModelLayoutEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelLayoutEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeWillCollapse\"\n"
-    "\t\ttype=\"TreeModelLayoutEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelLayoutEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeWillExpand\"\n"
-    "\t\ttype=\"TreeModelLayoutEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelLayoutEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeNodesChanged\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeNodesInserted\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeNodesRemoved\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeNodesWillBeRemoved\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeStructureChanged\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Tree Model Layout.\n"
     );
 
-//! TreeModelLayout Produced Methods
+//! TreeModelLayout Produced Events
 
-MethodDescription *TreeModelLayoutBase::_methodDesc[] =
+EventDescription *TreeModelLayoutBase::_eventDesc[] =
 {
-    new MethodDescription("TreeCollapsed", 
-                    "",
-                     TreeCollapsedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeExpanded", 
-                    "",
-                     TreeExpandedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeWillCollapse", 
-                    "",
-                     TreeWillCollapseMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeWillExpand", 
-                    "",
-                     TreeWillExpandMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeNodesChanged", 
-                    "",
-                     TreeNodesChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeNodesInserted", 
-                    "",
-                     TreeNodesInsertedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeNodesRemoved", 
-                    "",
-                     TreeNodesRemovedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeNodesWillBeRemoved", 
-                    "",
-                     TreeNodesWillBeRemovedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeStructureChanged", 
-                    "",
-                     TreeStructureChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("TreeCollapsed", 
+                          "",
+                          TreeCollapsedEventId, 
+                          FieldTraits<TreeModelLayoutEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelLayoutBase::getHandleTreeCollapsedSignal)),
+
+    new EventDescription("TreeExpanded", 
+                          "",
+                          TreeExpandedEventId, 
+                          FieldTraits<TreeModelLayoutEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelLayoutBase::getHandleTreeExpandedSignal)),
+
+    new EventDescription("TreeWillCollapse", 
+                          "",
+                          TreeWillCollapseEventId, 
+                          FieldTraits<TreeModelLayoutEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelLayoutBase::getHandleTreeWillCollapseSignal)),
+
+    new EventDescription("TreeWillExpand", 
+                          "",
+                          TreeWillExpandEventId, 
+                          FieldTraits<TreeModelLayoutEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelLayoutBase::getHandleTreeWillExpandSignal)),
+
+    new EventDescription("TreeNodesChanged", 
+                          "",
+                          TreeNodesChangedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelLayoutBase::getHandleTreeNodesChangedSignal)),
+
+    new EventDescription("TreeNodesInserted", 
+                          "",
+                          TreeNodesInsertedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelLayoutBase::getHandleTreeNodesInsertedSignal)),
+
+    new EventDescription("TreeNodesRemoved", 
+                          "",
+                          TreeNodesRemovedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelLayoutBase::getHandleTreeNodesRemovedSignal)),
+
+    new EventDescription("TreeNodesWillBeRemoved", 
+                          "",
+                          TreeNodesWillBeRemovedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelLayoutBase::getHandleTreeNodesWillBeRemovedSignal)),
+
+    new EventDescription("TreeStructureChanged", 
+                          "",
+                          TreeStructureChangedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelLayoutBase::getHandleTreeStructureChangedSignal))
+
 };
 
 EventProducerType TreeModelLayoutBase::_producerType(
@@ -257,8 +271,8 @@ EventProducerType TreeModelLayoutBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -295,10 +309,6 @@ UInt32 TreeModelLayoutBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -308,10 +318,6 @@ void TreeModelLayoutBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void TreeModelLayoutBase::copyFromBin(BinaryDataHandler &pMem,
@@ -319,28 +325,320 @@ void TreeModelLayoutBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 }
 
 
+
+/*------------------------- event producers ----------------------------------*/
+void TreeModelLayoutBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case TreeCollapsedEventId:
+        OSG_ASSERT(dynamic_cast<TreeCollapsedEventDetailsType* const>(e));
+
+        _TreeCollapsedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeCollapsedEvent(dynamic_cast<TreeCollapsedEventDetailsType* const>(e), TreeCollapsedEventId);
+        break;
+    case TreeExpandedEventId:
+        OSG_ASSERT(dynamic_cast<TreeExpandedEventDetailsType* const>(e));
+
+        _TreeExpandedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeExpandedEvent(dynamic_cast<TreeExpandedEventDetailsType* const>(e), TreeExpandedEventId);
+        break;
+    case TreeWillCollapseEventId:
+        OSG_ASSERT(dynamic_cast<TreeWillCollapseEventDetailsType* const>(e));
+
+        _TreeWillCollapseEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeWillCollapseEvent(dynamic_cast<TreeWillCollapseEventDetailsType* const>(e), TreeWillCollapseEventId);
+        break;
+    case TreeWillExpandEventId:
+        OSG_ASSERT(dynamic_cast<TreeWillExpandEventDetailsType* const>(e));
+
+        _TreeWillExpandEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeWillExpandEvent(dynamic_cast<TreeWillExpandEventDetailsType* const>(e), TreeWillExpandEventId);
+        break;
+    case TreeNodesChangedEventId:
+        OSG_ASSERT(dynamic_cast<TreeNodesChangedEventDetailsType* const>(e));
+
+        _TreeNodesChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeNodesChangedEvent(dynamic_cast<TreeNodesChangedEventDetailsType* const>(e), TreeNodesChangedEventId);
+        break;
+    case TreeNodesInsertedEventId:
+        OSG_ASSERT(dynamic_cast<TreeNodesInsertedEventDetailsType* const>(e));
+
+        _TreeNodesInsertedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeNodesInsertedEvent(dynamic_cast<TreeNodesInsertedEventDetailsType* const>(e), TreeNodesInsertedEventId);
+        break;
+    case TreeNodesRemovedEventId:
+        OSG_ASSERT(dynamic_cast<TreeNodesRemovedEventDetailsType* const>(e));
+
+        _TreeNodesRemovedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeNodesRemovedEvent(dynamic_cast<TreeNodesRemovedEventDetailsType* const>(e), TreeNodesRemovedEventId);
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        OSG_ASSERT(dynamic_cast<TreeNodesWillBeRemovedEventDetailsType* const>(e));
+
+        _TreeNodesWillBeRemovedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeNodesWillBeRemovedEvent(dynamic_cast<TreeNodesWillBeRemovedEventDetailsType* const>(e), TreeNodesWillBeRemovedEventId);
+        break;
+    case TreeStructureChangedEventId:
+        OSG_ASSERT(dynamic_cast<TreeStructureChangedEventDetailsType* const>(e));
+
+        _TreeStructureChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeStructureChangedEvent(dynamic_cast<TreeStructureChangedEventDetailsType* const>(e), TreeStructureChangedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection TreeModelLayoutBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case TreeCollapsedEventId:
+        return _TreeCollapsedEvent.connect(listener, at);
+        break;
+    case TreeExpandedEventId:
+        return _TreeExpandedEvent.connect(listener, at);
+        break;
+    case TreeWillCollapseEventId:
+        return _TreeWillCollapseEvent.connect(listener, at);
+        break;
+    case TreeWillExpandEventId:
+        return _TreeWillExpandEvent.connect(listener, at);
+        break;
+    case TreeNodesChangedEventId:
+        return _TreeNodesChangedEvent.connect(listener, at);
+        break;
+    case TreeNodesInsertedEventId:
+        return _TreeNodesInsertedEvent.connect(listener, at);
+        break;
+    case TreeNodesRemovedEventId:
+        return _TreeNodesRemovedEvent.connect(listener, at);
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        return _TreeNodesWillBeRemovedEvent.connect(listener, at);
+        break;
+    case TreeStructureChangedEventId:
+        return _TreeStructureChangedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  TreeModelLayoutBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case TreeCollapsedEventId:
+        return _TreeCollapsedEvent.connect(group, listener, at);
+        break;
+    case TreeExpandedEventId:
+        return _TreeExpandedEvent.connect(group, listener, at);
+        break;
+    case TreeWillCollapseEventId:
+        return _TreeWillCollapseEvent.connect(group, listener, at);
+        break;
+    case TreeWillExpandEventId:
+        return _TreeWillExpandEvent.connect(group, listener, at);
+        break;
+    case TreeNodesChangedEventId:
+        return _TreeNodesChangedEvent.connect(group, listener, at);
+        break;
+    case TreeNodesInsertedEventId:
+        return _TreeNodesInsertedEvent.connect(group, listener, at);
+        break;
+    case TreeNodesRemovedEventId:
+        return _TreeNodesRemovedEvent.connect(group, listener, at);
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        return _TreeNodesWillBeRemovedEvent.connect(group, listener, at);
+        break;
+    case TreeStructureChangedEventId:
+        return _TreeStructureChangedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  TreeModelLayoutBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case TreeCollapsedEventId:
+        _TreeCollapsedEvent.disconnect(group);
+        break;
+    case TreeExpandedEventId:
+        _TreeExpandedEvent.disconnect(group);
+        break;
+    case TreeWillCollapseEventId:
+        _TreeWillCollapseEvent.disconnect(group);
+        break;
+    case TreeWillExpandEventId:
+        _TreeWillExpandEvent.disconnect(group);
+        break;
+    case TreeNodesChangedEventId:
+        _TreeNodesChangedEvent.disconnect(group);
+        break;
+    case TreeNodesInsertedEventId:
+        _TreeNodesInsertedEvent.disconnect(group);
+        break;
+    case TreeNodesRemovedEventId:
+        _TreeNodesRemovedEvent.disconnect(group);
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        _TreeNodesWillBeRemovedEvent.disconnect(group);
+        break;
+    case TreeStructureChangedEventId:
+        _TreeStructureChangedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  TreeModelLayoutBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case TreeCollapsedEventId:
+        _TreeCollapsedEvent.disconnect_all_slots();
+        break;
+    case TreeExpandedEventId:
+        _TreeExpandedEvent.disconnect_all_slots();
+        break;
+    case TreeWillCollapseEventId:
+        _TreeWillCollapseEvent.disconnect_all_slots();
+        break;
+    case TreeWillExpandEventId:
+        _TreeWillExpandEvent.disconnect_all_slots();
+        break;
+    case TreeNodesChangedEventId:
+        _TreeNodesChangedEvent.disconnect_all_slots();
+        break;
+    case TreeNodesInsertedEventId:
+        _TreeNodesInsertedEvent.disconnect_all_slots();
+        break;
+    case TreeNodesRemovedEventId:
+        _TreeNodesRemovedEvent.disconnect_all_slots();
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        _TreeNodesWillBeRemovedEvent.disconnect_all_slots();
+        break;
+    case TreeStructureChangedEventId:
+        _TreeStructureChangedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  TreeModelLayoutBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case TreeCollapsedEventId:
+        return _TreeCollapsedEvent.empty();
+        break;
+    case TreeExpandedEventId:
+        return _TreeExpandedEvent.empty();
+        break;
+    case TreeWillCollapseEventId:
+        return _TreeWillCollapseEvent.empty();
+        break;
+    case TreeWillExpandEventId:
+        return _TreeWillExpandEvent.empty();
+        break;
+    case TreeNodesChangedEventId:
+        return _TreeNodesChangedEvent.empty();
+        break;
+    case TreeNodesInsertedEventId:
+        return _TreeNodesInsertedEvent.empty();
+        break;
+    case TreeNodesRemovedEventId:
+        return _TreeNodesRemovedEvent.empty();
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        return _TreeNodesWillBeRemovedEvent.empty();
+        break;
+    case TreeStructureChangedEventId:
+        return _TreeStructureChangedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  TreeModelLayoutBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case TreeCollapsedEventId:
+        return _TreeCollapsedEvent.num_slots();
+        break;
+    case TreeExpandedEventId:
+        return _TreeExpandedEvent.num_slots();
+        break;
+    case TreeWillCollapseEventId:
+        return _TreeWillCollapseEvent.num_slots();
+        break;
+    case TreeWillExpandEventId:
+        return _TreeWillExpandEvent.num_slots();
+        break;
+    case TreeNodesChangedEventId:
+        return _TreeNodesChangedEvent.num_slots();
+        break;
+    case TreeNodesInsertedEventId:
+        return _TreeNodesInsertedEvent.num_slots();
+        break;
+    case TreeNodesRemovedEventId:
+        return _TreeNodesRemovedEvent.num_slots();
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        return _TreeNodesWillBeRemovedEvent.num_slots();
+        break;
+    case TreeStructureChangedEventId:
+        return _TreeStructureChangedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
 
 
 /*------------------------- constructors ----------------------------------*/
 
 TreeModelLayoutBase::TreeModelLayoutBase(void) :
-    _Producer(&getProducerType()),
-    Inherited(),
-    _sfEventProducer(&_Producer)
+    Inherited()
 {
 }
 
 TreeModelLayoutBase::TreeModelLayoutBase(const TreeModelLayoutBase &source) :
-    _Producer(&source.getProducerType()),
-    Inherited(source),
-    _sfEventProducer(&_Producer)
+    Inherited(source)
 {
 }
 
@@ -353,27 +651,101 @@ TreeModelLayoutBase::~TreeModelLayoutBase(void)
 
 
 
-GetFieldHandlePtr TreeModelLayoutBase::getHandleEventProducer        (void) const
+GetEventHandlePtr TreeModelLayoutBase::getHandleTreeCollapsedSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeCollapsedEventType>(
+             const_cast<TreeCollapsedEventType *>(&_TreeCollapsedEvent),
+             _producerType.getEventDescription(TreeCollapsedEventId),
              const_cast<TreeModelLayoutBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr TreeModelLayoutBase::editHandleEventProducer       (void)
+GetEventHandlePtr TreeModelLayoutBase::getHandleTreeExpandedSignal(void) const
 {
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeExpandedEventType>(
+             const_cast<TreeExpandedEventType *>(&_TreeExpandedEvent),
+             _producerType.getEventDescription(TreeExpandedEventId),
+             const_cast<TreeModelLayoutBase *>(this)));
 
+    return returnValue;
+}
 
-    editSField(EventProducerFieldMask);
+GetEventHandlePtr TreeModelLayoutBase::getHandleTreeWillCollapseSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeWillCollapseEventType>(
+             const_cast<TreeWillCollapseEventType *>(&_TreeWillCollapseEvent),
+             _producerType.getEventDescription(TreeWillCollapseEventId),
+             const_cast<TreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TreeModelLayoutBase::getHandleTreeWillExpandSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeWillExpandEventType>(
+             const_cast<TreeWillExpandEventType *>(&_TreeWillExpandEvent),
+             _producerType.getEventDescription(TreeWillExpandEventId),
+             const_cast<TreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TreeModelLayoutBase::getHandleTreeNodesChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeNodesChangedEventType>(
+             const_cast<TreeNodesChangedEventType *>(&_TreeNodesChangedEvent),
+             _producerType.getEventDescription(TreeNodesChangedEventId),
+             const_cast<TreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TreeModelLayoutBase::getHandleTreeNodesInsertedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeNodesInsertedEventType>(
+             const_cast<TreeNodesInsertedEventType *>(&_TreeNodesInsertedEvent),
+             _producerType.getEventDescription(TreeNodesInsertedEventId),
+             const_cast<TreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TreeModelLayoutBase::getHandleTreeNodesRemovedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeNodesRemovedEventType>(
+             const_cast<TreeNodesRemovedEventType *>(&_TreeNodesRemovedEvent),
+             _producerType.getEventDescription(TreeNodesRemovedEventId),
+             const_cast<TreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TreeModelLayoutBase::getHandleTreeNodesWillBeRemovedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeNodesWillBeRemovedEventType>(
+             const_cast<TreeNodesWillBeRemovedEventType *>(&_TreeNodesWillBeRemovedEvent),
+             _producerType.getEventDescription(TreeNodesWillBeRemovedEventId),
+             const_cast<TreeModelLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TreeModelLayoutBase::getHandleTreeStructureChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeStructureChangedEventType>(
+             const_cast<TreeStructureChangedEventType *>(&_TreeStructureChangedEvent),
+             _producerType.getEventDescription(TreeStructureChangedEventId),
+             const_cast<TreeModelLayoutBase *>(this)));
 
     return returnValue;
 }

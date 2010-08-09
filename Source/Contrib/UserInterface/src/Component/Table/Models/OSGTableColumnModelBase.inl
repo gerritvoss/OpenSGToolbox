@@ -48,6 +48,10 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGTableColumnModelEventDetails.h"
+#include "OSGChangeEventDetails.h"
+#include "OSGListSelectionEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -87,6 +91,22 @@ OSG::UInt16 TableColumnModelBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
+//! Get the value of the TableColumnModel::_sfSelectionModel field.
+inline
+ListSelectionModel * TableColumnModelBase::getSelectionModel(void) const
+{
+    return _sfSelectionModel.getValue();
+}
+
+//! Set the value of the TableColumnModel::_sfSelectionModel field.
+inline
+void TableColumnModelBase::setSelectionModel(ListSelectionModel * const value)
+{
+    editSField(SelectionModelFieldMask);
+
+    _sfSelectionModel.setValue(value);
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -97,6 +117,9 @@ void TableColumnModelBase::execSync (      TableColumnModelBase *pFrom,
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pFrom->_sfSelectionModel);
 }
 #endif
 
@@ -108,70 +131,247 @@ const Char8 *TableColumnModelBase::getClassname(void)
 }
 
 inline
-EventConnection TableColumnModelBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool TableColumnModelBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 TableColumnModelBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr TableColumnModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void TableColumnModelBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 TableColumnModelBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *TableColumnModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *TableColumnModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *TableColumnModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *TableColumnModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 TableColumnModelBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *TableColumnModelBase::editSFEventProducer(void)
+boost::signals2::connection  TableColumnModelBase::connectColumnAdded(const ColumnAddedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _ColumnAddedEvent.connect(listener, at);
 }
 
-//! Get the value of the TableColumnModel::_sfEventProducer field.
 inline
-EventProducerPtr &TableColumnModelBase::editEventProducer(void)
+boost::signals2::connection  TableColumnModelBase::connectColumnAdded(const ColumnAddedEventType::group_type &group,
+                                                    const ColumnAddedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _ColumnAddedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableColumnModelBase::disconnectColumnAdded(const ColumnAddedEventType::group_type &group)
+{
+    _ColumnAddedEvent.disconnect(group);
+}
+
+inline
+void  TableColumnModelBase::disconnectAllSlotsColumnAdded(void)
+{
+    _ColumnAddedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableColumnModelBase::isEmptyColumnAdded(void) const
+{
+    return _ColumnAddedEvent.empty();
+}
+
+inline
+UInt32  TableColumnModelBase::numSlotsColumnAdded(void) const
+{
+    return _ColumnAddedEvent.num_slots();
+}
+
+inline
+void TableColumnModelBase::produceColumnAdded(ColumnAddedEventDetailsType* const e)
+{
+    produceEvent(ColumnAddedEventId, e);
+}
+
+inline
+boost::signals2::connection  TableColumnModelBase::connectColumnMoved(const ColumnMovedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ColumnMovedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TableColumnModelBase::connectColumnMoved(const ColumnMovedEventType::group_type &group,
+                                                    const ColumnMovedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ColumnMovedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableColumnModelBase::disconnectColumnMoved(const ColumnMovedEventType::group_type &group)
+{
+    _ColumnMovedEvent.disconnect(group);
+}
+
+inline
+void  TableColumnModelBase::disconnectAllSlotsColumnMoved(void)
+{
+    _ColumnMovedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableColumnModelBase::isEmptyColumnMoved(void) const
+{
+    return _ColumnMovedEvent.empty();
+}
+
+inline
+UInt32  TableColumnModelBase::numSlotsColumnMoved(void) const
+{
+    return _ColumnMovedEvent.num_slots();
+}
+
+inline
+void TableColumnModelBase::produceColumnMoved(ColumnMovedEventDetailsType* const e)
+{
+    produceEvent(ColumnMovedEventId, e);
+}
+
+inline
+boost::signals2::connection  TableColumnModelBase::connectColumnRemoved(const ColumnRemovedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ColumnRemovedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TableColumnModelBase::connectColumnRemoved(const ColumnRemovedEventType::group_type &group,
+                                                    const ColumnRemovedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ColumnRemovedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableColumnModelBase::disconnectColumnRemoved(const ColumnRemovedEventType::group_type &group)
+{
+    _ColumnRemovedEvent.disconnect(group);
+}
+
+inline
+void  TableColumnModelBase::disconnectAllSlotsColumnRemoved(void)
+{
+    _ColumnRemovedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableColumnModelBase::isEmptyColumnRemoved(void) const
+{
+    return _ColumnRemovedEvent.empty();
+}
+
+inline
+UInt32  TableColumnModelBase::numSlotsColumnRemoved(void) const
+{
+    return _ColumnRemovedEvent.num_slots();
+}
+
+inline
+void TableColumnModelBase::produceColumnRemoved(ColumnRemovedEventDetailsType* const e)
+{
+    produceEvent(ColumnRemovedEventId, e);
+}
+
+inline
+boost::signals2::connection  TableColumnModelBase::connectColumnMarginChanged(const ColumnMarginChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ColumnMarginChangedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TableColumnModelBase::connectColumnMarginChanged(const ColumnMarginChangedEventType::group_type &group,
+                                                    const ColumnMarginChangedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ColumnMarginChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableColumnModelBase::disconnectColumnMarginChanged(const ColumnMarginChangedEventType::group_type &group)
+{
+    _ColumnMarginChangedEvent.disconnect(group);
+}
+
+inline
+void  TableColumnModelBase::disconnectAllSlotsColumnMarginChanged(void)
+{
+    _ColumnMarginChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableColumnModelBase::isEmptyColumnMarginChanged(void) const
+{
+    return _ColumnMarginChangedEvent.empty();
+}
+
+inline
+UInt32  TableColumnModelBase::numSlotsColumnMarginChanged(void) const
+{
+    return _ColumnMarginChangedEvent.num_slots();
+}
+
+inline
+void TableColumnModelBase::produceColumnMarginChanged(ColumnMarginChangedEventDetailsType* const e)
+{
+    produceEvent(ColumnMarginChangedEventId, e);
+}
+
+inline
+boost::signals2::connection  TableColumnModelBase::connectColumnSelectionChanged(const ColumnSelectionChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ColumnSelectionChangedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TableColumnModelBase::connectColumnSelectionChanged(const ColumnSelectionChangedEventType::group_type &group,
+                                                    const ColumnSelectionChangedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ColumnSelectionChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableColumnModelBase::disconnectColumnSelectionChanged(const ColumnSelectionChangedEventType::group_type &group)
+{
+    _ColumnSelectionChangedEvent.disconnect(group);
+}
+
+inline
+void  TableColumnModelBase::disconnectAllSlotsColumnSelectionChanged(void)
+{
+    _ColumnSelectionChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableColumnModelBase::isEmptyColumnSelectionChanged(void) const
+{
+    return _ColumnSelectionChangedEvent.empty();
+}
+
+inline
+UInt32  TableColumnModelBase::numSlotsColumnSelectionChanged(void) const
+{
+    return _ColumnSelectionChangedEvent.num_slots();
+}
+
+inline
+void TableColumnModelBase::produceColumnSelectionChanged(ColumnSelectionChangedEventDetailsType* const e)
+{
+    produceEvent(ColumnSelectionChangedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(TableColumnModel);

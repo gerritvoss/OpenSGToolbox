@@ -41,19 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool TextComponent::isTextListenerAttached(TextListenerPtr Listener) const
-{
-    return _TextListeners.find(Listener) != _TextListeners.end();
-}
-
-inline
-bool TextComponent::isCaretListenerAttached(CaretListenerPtr Listener) const
-{
-    return _CaretListeners.find(Listener) != _CaretListeners.end();
-}
-
-
-inline
 bool TextComponent::hasSelection(void) const
 {
     return _TextSelectionEnd > _TextSelectionStart;

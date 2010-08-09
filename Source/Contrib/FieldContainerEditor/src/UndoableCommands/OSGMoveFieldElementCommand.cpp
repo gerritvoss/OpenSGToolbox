@@ -119,17 +119,9 @@ void MoveFieldElementCommand::execute(void)
     if(TheFieldHandle->isPointerField())
     {
         EditMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
-        FieldContainer* FromFC = TheHandle->get(_FromIndex);
-
-        TheHandle->insert(_ToIndex, FromFC);
-        if(_ToIndex < _FromIndex)
-        {
-            TheHandle->remove(_FromIndex + 1);
-        }
-        else
-        {
-            TheHandle->remove(_FromIndex);
-        }
+        FieldContainerUnrecPtr ToFC = TheHandle->get(_FromIndex);
+        TheHandle->remove(_FromIndex);
+        TheHandle->insert(_ToIndex, ToFC);
     }
     else
     {
@@ -184,17 +176,9 @@ void MoveFieldElementCommand::redo(void)
     if(TheFieldHandle->isPointerField())
     {
         EditMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
-        FieldContainer* FromFC = TheHandle->get(_FromIndex);
-
-        TheHandle->insert(_ToIndex, FromFC);
-        if(_ToIndex < _FromIndex)
-        {
-            TheHandle->remove(_FromIndex + 1);
-        }
-        else
-        {
-            TheHandle->remove(_FromIndex);
-        }
+        FieldContainerUnrecPtr ToFC = TheHandle->get(_FromIndex);
+        TheHandle->remove(_FromIndex);
+        TheHandle->insert(_ToIndex, ToFC);
     }
     else
     {
@@ -227,17 +211,9 @@ void MoveFieldElementCommand::undo(void)
     if(TheFieldHandle->isPointerField())
     {
         EditMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
-        if(_ToIndex < _FromIndex)
-        {
-            FieldContainer* FromFC = TheHandle->get(_ToIndex);
-            TheHandle->insert(_FromIndex+1, FromFC);
-        }
-        else
-        {
-            FieldContainer* FromFC = TheHandle->get(_ToIndex-1);
-            TheHandle->insert(_FromIndex, FromFC);
-        }
+        FieldContainerUnrecPtr ToFC = TheHandle->get(_ToIndex);
         TheHandle->remove(_ToIndex);
+        TheHandle->insert(_FromIndex, ToFC);
     }
     else
     {

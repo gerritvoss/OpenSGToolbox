@@ -40,9 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-QuaternionEulerFieldEditor::SpinnerListener::SpinnerListener(QuaternionEulerFieldEditor * const ptr) : _QuaternionEulerFieldEditor(ptr)
-{
-}
-
 OSG_END_NAMESPACE

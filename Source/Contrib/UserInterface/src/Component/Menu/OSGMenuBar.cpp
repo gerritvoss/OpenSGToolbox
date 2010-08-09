@@ -106,9 +106,7 @@ void MenuBar::updateLayout(void)
     Vec2f NewSize( TotalWidth+InsetSize.x(), MaxHeight+InsetSize.y());
     if(getPreferredSize() != NewSize)
     {
-            setPreferredSize(NewSize);
-            //Sneakily set my size
-            //setSize(NewSize);
+        setPreferredSize(NewSize);
     }
     
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
@@ -117,8 +115,8 @@ void MenuBar::updateLayout(void)
 	Real32 LeftOffset(InsetsTopLeft.x());
     for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-            getChildren(i)->setSize(Vec2f(getChildren(i)->getPreferredSize().x(), MaxHeight));
-            getChildren(i)->setPosition(Pnt2f(LeftOffset, InsetsTopLeft.y()));
+        getChildren(i)->setSize(Vec2f(getChildren(i)->getPreferredSize().x(), MaxHeight));
+        getChildren(i)->setPosition(Pnt2f(LeftOffset, InsetsTopLeft.y()));
 
         LeftOffset += getChildren(i)->getPreferredSize().x();
     }
@@ -176,34 +174,39 @@ void MenuBar::updateClipBounds(void)
 			ContainerInsetTopLeft,ContainerInsetBottomRight,
 			TopLeft, BottomRight);
 	}
+
 	//The Clip Bounds calculated are in my Parent Containers coordinate space
 	//Translate these bounds into my own coordinate space
-		setClipTopLeft(TopLeft);
-		setClipBottomRight(BottomRight);
+	setClipTopLeft(TopLeft);
+	setClipBottomRight(BottomRight);
 }
 
-void MenuBar::addMenu(Menu* const Menu)
+void MenuBar::addMenu(Menu* const menu)
 {
-    pushToChildren(Menu);
-    Menu->setTopLevelMenu(true);
-    Menu->getInternalPopupMenu()->addPopupMenuListener(&_MenuSelectionListener);
+    pushToChildren(menu);
+    menu->setTopLevelMenu(true);
+    _PopupMenuCanceledConnections[menu] = menu->getInternalPopupMenu()->connectPopupMenuCanceled(boost::bind(&MenuBar::handleMenuArmedPopupMenuCanceled, this, _1));
 }
 
-void MenuBar::addMenu(Menu* const Menu, const UInt32& Index)
+void MenuBar::addMenu(Menu* const menu, const UInt32& Index)
 {
     if(Index < getMFChildren()->size())
     {
-        insertIntoChildren(Index, Menu);
-        Menu->setTopLevelMenu(true);
-        Menu->getInternalPopupMenu()->addPopupMenuListener(&_MenuSelectionListener);
+        insertIntoChildren(Index, menu);
+        menu->setTopLevelMenu(true);
+        _PopupMenuCanceledConnections[menu] = menu->getInternalPopupMenu()->connectPopupMenuCanceled(boost::bind(&MenuBar::handleMenuArmedPopupMenuCanceled, this, _1));
     }
 }
 
-void MenuBar::removeMenu(Menu* const Menu)
+void MenuBar::removeMenu(Menu* const menu)
 {
-    removeObjFromChildren(Menu);
-    Menu->setTopLevelMenu(false);
-    Menu->getInternalPopupMenu()->removePopupMenuListener(&_MenuSelectionListener);
+    removeObjFromChildren(menu);
+    menu->setTopLevelMenu(false);
+    if(_PopupMenuCanceledConnections.find(menu) != _PopupMenuCanceledConnections.end())
+    {
+        _PopupMenuCanceledConnections[menu].disconnect();
+        _PopupMenuCanceledConnections.erase(_PopupMenuCanceledConnections.find(menu));
+    }
 }
 
 void MenuBar::removeMenu(const UInt32& Index)
@@ -214,11 +217,15 @@ void MenuBar::removeMenu(const UInt32& Index)
         removeFromChildren(Index);
 
         Item->setTopLevelMenu(false);
-        Item->getInternalPopupMenu()->removePopupMenuListener(&_MenuSelectionListener);
+        if(_PopupMenuCanceledConnections.find(Item) != _PopupMenuCanceledConnections.end())
+        {
+            _PopupMenuCanceledConnections[Item].disconnect();
+            _PopupMenuCanceledConnections.erase(_PopupMenuCanceledConnections.find(Item));
+        }
     }
 }
 
-void MenuBar::mousePressed(const MouseEventUnrecPtr e)
+void MenuBar::mousePressed(MouseEventDetails* const e)
 {
     UInt32 i(0);
     while (i<getMFChildren()->size())
@@ -226,7 +233,8 @@ void MenuBar::mousePressed(const MouseEventUnrecPtr e)
         if(getChildren(i)->isContained(e->getLocation(), true))
         {
             getSelectionModel()->setSelectedIndex(i);
-            _SelectionMouseEventConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
+            _MouseMovedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseMoved(boost::bind(&MenuBar::handleMenuArmedMouseMoved, this, _1));
+            _MouseDraggedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseDragged(boost::bind(&MenuBar::handleMenuArmedMouseDragged, this, _1));
             break;
         }
         ++i;
@@ -237,21 +245,28 @@ void MenuBar::mousePressed(const MouseEventUnrecPtr e)
 void MenuBar::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    _SelectionMouseEventConnection.disconnect();
+    _SelectionChangedConnection.disconnect();
+    _MouseMovedConnection.disconnect();
+    _MouseDraggedConnection.disconnect();
+    for(std::map<Menu*, boost::signals2::connection>::iterator MapItor(_PopupMenuCanceledConnections.begin()) ;
+        MapItor != _PopupMenuCanceledConnections.end();
+        ++MapItor)
+    {
+        MapItor->second.disconnect();
+    }
+    _PopupMenuCanceledConnections.clear();
+    _KeyTypedConnection.disconnect();
 }
 
 void MenuBar::setParentWindow(InternalWindow* const parent)
 {
-    if(getParentWindow() != NULL)
-    {
-        getParentWindow()->removeKeyListener(&_MenuSelectionListener);
-    }
+    _KeyTypedConnection.disconnect();
 
     Inherited::setParentWindow(parent);
 
     if(getParentWindow() != NULL)
     {
-        getParentWindow()->addKeyListener(&_MenuSelectionListener);
+        _KeyTypedConnection = getParentWindow()->connectKeyTyped(boost::bind(&MenuBar::handleMenuArmedKeyTyped, this, _1));
     }
 }
 
@@ -274,14 +289,12 @@ void MenuBar::onDestroy()
 /*----------------------- constructors & destructors ----------------------*/
 
 MenuBar::MenuBar(void) :
-    Inherited(),
-    _MenuSelectionListener(this)
+    Inherited()
 {
 }
 
 MenuBar::MenuBar(const MenuBar &source) :
-    Inherited(source),
-    _MenuSelectionListener(this)
+    Inherited(source)
 {
 }
 
@@ -297,9 +310,13 @@ void MenuBar::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-    if(whichField & SelectionModelFieldMask && getSelectionModel() != NULL)
+    if(whichField & SelectionModelFieldMask)
     {
-        getSelectionModel()->addSelectionListener(&_MenuSelectionListener);
+        _SelectionChangedConnection.disconnect();
+        if(getSelectionModel() != NULL)
+        {
+            _SelectionChangedConnection = getSelectionModel()->connectSelectionChanged(boost::bind(&MenuBar::handleMenuArmedSelectionChanged, this, _1));
+        }
     }
 }
 
@@ -309,90 +326,73 @@ void MenuBar::dump(      UInt32    ,
     SLOG << "Dump MenuBar NI" << std::endl;
 }
 
-void MenuBar::MenuSelectionListener::selectionChanged(const SelectionEventUnrecPtr e)
+void MenuBar::handleMenuArmedSelectionChanged(SelectionEventDetails* const e)
 {
     for(UInt32 i(0) ; i<e->getMFPreviouslySelected()->size() ; ++i)
     {
-        if(dynamic_cast<MenuItem*>(_MenuBar->getChildren(e->getPreviouslySelected(i)))->getSelected())
+        if(dynamic_cast<MenuItem*>(getChildren(e->getPreviouslySelected(i)))->getSelected())
         {
-                dynamic_cast<MenuItem*>(_MenuBar->getChildren(e->getPreviouslySelected(i)))->setSelected(false);
+            dynamic_cast<MenuItem*>(getChildren(e->getPreviouslySelected(i)))->setSelected(false);
         }
     }
 
     for(UInt32 i(0) ; i<e->getMFSelected()->size() ; ++i)
     {
-        if(!dynamic_cast<MenuItem*>(_MenuBar->getChildren(e->getSelected(i)))->getSelected())
+        if(!dynamic_cast<MenuItem*>(getChildren(e->getSelected(i)))->getSelected())
         {
-                dynamic_cast<MenuItem*>(_MenuBar->getChildren(e->getSelected(i)))->setSelected(true);
+            dynamic_cast<MenuItem*>(getChildren(e->getSelected(i)))->setSelected(true);
         }
     }
 }
 
-void MenuBar::MenuSelectionListener::mouseMoved(const MouseEventUnrecPtr e)
+void MenuBar::handleMenuArmedMouseMoved(MouseEventDetails* const e)
 {
     UInt32 i(0);
-    while (i<_MenuBar->getMFChildren()->size())
+    while (i<getMFChildren()->size())
     {
-        if(_MenuBar->getChildren(i)->isContained(e->getLocation(), true))
+        if(getChildren(i)->isContained(e->getLocation(), true))
         {
-            _MenuBar->getSelectionModel()->setSelectedIndex(i);
+            getSelectionModel()->setSelectedIndex(i);
             break;
         }
         ++i;
     }
 }
 
-void MenuBar::MenuSelectionListener::mouseDragged(const MouseEventUnrecPtr e)
+void MenuBar::handleMenuArmedMouseDragged(MouseEventDetails* const e)
 {
     UInt32 i(0);
-    while (i<_MenuBar->getMFChildren()->size())
+    while (i<getMFChildren()->size())
     {
-        if(_MenuBar->getChildren(i)->isContained(e->getLocation(), true))
+        if(getChildren(i)->isContained(e->getLocation(), true))
         {
-            _MenuBar->getSelectionModel()->setSelectedIndex(i);
+            getSelectionModel()->setSelectedIndex(i);
             break;
         }
         ++i;
     }
 }
 
-void MenuBar::MenuSelectionListener::popupMenuCanceled(const PopupMenuEventUnrecPtr e)
+void MenuBar::handleMenuArmedPopupMenuCanceled(PopupMenuEventDetails* const e)
 {
-	if(_MenuBar->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
-	{
-		_MenuBar->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-	}
+    _MouseMovedConnection.disconnect();
+    _MouseDraggedConnection.disconnect();
     
-    _MenuBar->getSelectionModel()->clearSelection();
+    getSelectionModel()->clearSelection();
 }
 
-void MenuBar::MenuSelectionListener::popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e)
+void MenuBar::handleMenuArmedKeyTyped(KeyEventDetails* const e)
 {
-    //Do Nothing
-}
+    //UInt32 RelevantModifiers = (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_ALT) |
+    //                           (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL) |
+    //                           (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT) |
+    //                           (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_META);
 
-void MenuBar::MenuSelectionListener::popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e)
-{
-    //Do Nothing
-}
-
-void MenuBar::MenuSelectionListener::popupMenuContentsChanged(const PopupMenuEventUnrecPtr e)
-{
-    //Do Nothing
-}
-
-void MenuBar::MenuSelectionListener::keyTyped(const KeyEventUnrecPtr e)
-{
-    //UInt32 RelevantModifiers = (e->getModifiers() & KeyEvent::KEY_MODIFIER_ALT) |
-    //                           (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) |
-    //                           (e->getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT) |
-    //                           (e->getModifiers() & KeyEvent::KEY_MODIFIER_META);
-
-    if(e->getModifiers() & KeyEvent::KEY_MODIFIER_ALT)
+    if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_ALT)
     {
-        for(UInt32 i(0) ; i<_MenuBar->getMFChildren()->size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
-            if(dynamic_cast<MenuItem*>(_MenuBar->getChildren(i))->getMnemonicKey() == e->getKey() )
+            if(dynamic_cast<MenuItem*>(getChildren(i))->getMnemonicKey() == e->getKey() )
             {
                 //std::cout << e->getKeyChar() << std::endl;
             }

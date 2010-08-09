@@ -54,8 +54,8 @@
 #include "OSGTable.h"
 
 #include "OSGTableHeader.h"
-#include "OSGTableColumnModelEvent.h"
-#include "OSGTableModelEvent.h"
+#include "OSGTableColumnModelEventDetails.h"
+#include "OSGTableModelEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -99,7 +99,10 @@ TableColumn* TableHeader::columnAtPoint(const Pnt2f& point) const
     }
 }
 
-
+Table* TableHeader::getTable(void) const
+{
+    return dynamic_cast<Table*> (_sfTable.getValue());
+}
 
 void TableHeader::updateColumnHeadersComponents(void)
 {
@@ -170,7 +173,7 @@ void TableHeader::updateLayout(void)
     }
 }
 
-void TableHeader::mouseExited(const MouseEventUnrecPtr e)
+void TableHeader::mouseExited(MouseEventDetails* const e)
 {
     if(getResizingAllowed())
     {
@@ -179,7 +182,7 @@ void TableHeader::mouseExited(const MouseEventUnrecPtr e)
     Inherited::mouseExited(e);
 }
 
-void TableHeader::mousePressed(const MouseEventUnrecPtr e)
+void TableHeader::mousePressed(MouseEventDetails* const e)
 {
     if(getResizingAllowed())
     {
@@ -191,8 +194,8 @@ void TableHeader::mousePressed(const MouseEventUnrecPtr e)
             if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
                MousePosInComponent.x() <= CumulativeHeaderWidth + getColumnModel()->getColumnMargin() + getResizingCursorDriftAllowance())
             {
-                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_MarginDraggedListener));
-                getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(&(_MarginDraggedListener));
+                _ColBorderMouseDraggedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseDragged(boost::bind(&TableHeader::handleColBorderMouseDragged, this, _1));
+                _ColBorderMouseReleasedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseReleased(boost::bind(&TableHeader::mouseColBorderMouseReleased, this, _1));
                 _ResizingColumn = i;
                 return;
             }
@@ -202,7 +205,7 @@ void TableHeader::mousePressed(const MouseEventUnrecPtr e)
     Inherited::mousePressed(e);
 }
 
-void TableHeader::mouseMoved(const MouseEventUnrecPtr e)
+void TableHeader::mouseMoved(MouseEventDetails* const e)
 {
     if(getResizingAllowed())
     {
@@ -211,7 +214,7 @@ void TableHeader::mouseMoved(const MouseEventUnrecPtr e)
     Inherited::mouseMoved(e);
 }
 
-void TableHeader::checkMouseMargins(const MouseEventUnrecPtr e)
+void TableHeader::checkMouseMargins(MouseEventDetails* const e)
 {
     if(isContainedClipBounds(e->getLocation(), this))
     {
@@ -235,20 +238,28 @@ void TableHeader::checkMouseMargins(const MouseEventUnrecPtr e)
 void TableHeader::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    _MarginDraggedListener.disconnect();
+    _ResizingColumn = -1;
+    _ColBorderMouseDraggedConnection.disconnect();
+    _ColBorderMouseReleasedConnection.disconnect();
+
 }
 
 void TableHeader::setColumnModel(TableColumnModel * const value)
 {
-    //if(_ColumnModel.get() != NULL)
-    //{
-    //    getColumnModel()->removeColumnModelListener(&_ColumnModelListener);
-    //}
-    //_ColumnModel = columnModel;
+    _ColumnAddedConnection.disconnect();
+    _ColumnMarginChangedConnection.disconnect();
+    _ColumnMovedConnection.disconnect();
+    _ColumnRemovedConnection.disconnect();
+    _ColumnSelectionChangedConnection.disconnect();
+
     updateColumnHeadersComponents();
     if(getColumnModel() != NULL)
     {
-        getColumnModel()->addColumnModelListener(&_ColumnModelListener);
+        _ColumnAddedConnection = getColumnModel()->connectColumnAdded(boost::bind(&TableHeader::handleColumnAdded, this, _1));
+        _ColumnMarginChangedConnection = getColumnModel()->connectColumnMarginChanged(boost::bind(&TableHeader::handleColumnMarginChanged, this, _1));
+        _ColumnMovedConnection = getColumnModel()->connectColumnMoved(boost::bind(&TableHeader::handleColumnMoved, this, _1));
+        _ColumnRemovedConnection = getColumnModel()->connectColumnRemoved(boost::bind(&TableHeader::handleColumnRemoved, this, _1));
+        _ColumnSelectionChangedConnection = getColumnModel()->connectColumnSelectionChanged(boost::bind(&TableHeader::handleColumnSelectionChanged, this, _1));
     }
 }
 
@@ -262,33 +273,36 @@ void TableHeader::onCreate(const TableHeader * Id)
 
     if(getColumnModel() != NULL)
     {
-        getColumnModel()->addColumnModelListener(&_ColumnModelListener);
+        _ColumnAddedConnection = getColumnModel()->connectColumnAdded(boost::bind(&TableHeader::handleColumnAdded, this, _1));
+        _ColumnMarginChangedConnection = getColumnModel()->connectColumnMarginChanged(boost::bind(&TableHeader::handleColumnMarginChanged, this, _1));
+        _ColumnMovedConnection = getColumnModel()->connectColumnMoved(boost::bind(&TableHeader::handleColumnMoved, this, _1));
+        _ColumnRemovedConnection = getColumnModel()->connectColumnRemoved(boost::bind(&TableHeader::handleColumnRemoved, this, _1));
+        _ColumnSelectionChangedConnection = getColumnModel()->connectColumnSelectionChanged(boost::bind(&TableHeader::handleColumnSelectionChanged, this, _1));
     }
 }
 
 void TableHeader::onDestroy()
 {
-    if(getColumnModel() != NULL)
-    {
-        getColumnModel()->removeColumnModelListener(&_ColumnModelListener);
-    }
+    _ColumnAddedConnection.disconnect();
+    _ColumnMarginChangedConnection.disconnect();
+    _ColumnMovedConnection.disconnect();
+    _ColumnRemovedConnection.disconnect();
+    _ColumnSelectionChangedConnection.disconnect();
+    _ColBorderMouseDraggedConnection.disconnect();
+    _ColBorderMouseReleasedConnection.disconnect();
 }
 
 /*----------------------- constructors & destructors ----------------------*/
 
 TableHeader::TableHeader(void) :
-    Inherited(),
-    _ColumnModelListener(this),
-    _MarginDraggedListener(this)
+    Inherited()
 
 {
 }
 
 TableHeader::TableHeader(const TableHeader &source) :
     Inherited(source),
-    _DefaultTableHeaderRenderer(source._DefaultTableHeaderRenderer),
-    _ColumnModelListener(this),
-    _MarginDraggedListener(this)
+    _DefaultTableHeaderRenderer(source._DefaultTableHeaderRenderer)
 
 {
 }
@@ -313,49 +327,44 @@ void TableHeader::dump(      UInt32    ,
     SLOG << "Dump TableHeader NI" << std::endl;
 }
 		
-void TableHeader::ColumnModelListener::columnAdded(const TableColumnModelEventUnrecPtr e)
+void TableHeader::handleColumnAdded(TableColumnModelEventDetails* const e)
 {
     //Update the Component* vector of the headers
-    _TableHeader->updateColumnHeadersComponents();
+    updateColumnHeadersComponents();
 }
 
-void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEventUnrecPtr e)
+void TableHeader::handleColumnMarginChanged(ChangeEventDetails* const e)
 {
     //This will require a layout update
-    _TableHeader->updateLayout();
+    updateLayout();
 }
 
-void TableHeader::ColumnModelListener::columnMoved(const TableColumnModelEventUnrecPtr e)
+void TableHeader::handleColumnMoved(TableColumnModelEventDetails* const e)
 {
     //Update the Component* vector of the headers
-    _TableHeader->updateColumnHeadersComponents();
+    updateColumnHeadersComponents();
 }
 
-void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEventUnrecPtr e)
+void TableHeader::handleColumnRemoved(TableColumnModelEventDetails* const e)
 {
     //Update the Component* vector of the headers
-    _TableHeader->updateColumnHeadersComponents();
+    updateColumnHeadersComponents();
 }
 
-void TableHeader::ColumnModelListener::columnSelectionChanged(const ListSelectionEventUnrecPtr e)
+void TableHeader::handleColumnSelectionChanged(ListSelectionEventDetails* const e)
 {
-    _TableHeader->updateColumnHeadersComponents();
+    updateColumnHeadersComponents();
 }
 
-void TableHeader::MarginDraggedListener::mouseMoved(const MouseEventUnrecPtr e)
+void TableHeader::handleColBorderMouseDragged(MouseEventDetails* const e)
 {
-    //Do nothing
-}
-
-void TableHeader::MarginDraggedListener::mouseDragged(const MouseEventUnrecPtr e)
-{
-	if(e->getButton() == e->BUTTON1)
+	if(e->getButton() == MouseEventDetails::BUTTON1)
 	{
-		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), _TableHeader, e->getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), this, e->getViewport());
 
 
-        TableColumnRefPtr TheColumn(_TableHeader->getColumnModel()->getColumn(_TableHeader->_ResizingColumn));
-        Real32 NewWidth(MousePosInComponent.x() - _TableHeader->getColumnHeaders(_TableHeader->_ResizingColumn)->getPosition().x());
+        TableColumnRefPtr TheColumn(getColumnModel()->getColumn(_ResizingColumn));
+        Real32 NewWidth(MousePosInComponent.x() - getColumnHeaders(_ResizingColumn)->getPosition().x());
 
         if(NewWidth <= 0 || NewWidth < TheColumn->getMinWidth())
         {
@@ -368,44 +377,19 @@ void TableHeader::MarginDraggedListener::mouseDragged(const MouseEventUnrecPtr e
         }
         
 		//Get the new desired center for this margin
-	        TheColumn->setWidth(NewWidth);
-        _TableHeader->updateLayout();
+	    TheColumn->setWidth(NewWidth);
+        updateLayout();
 	}
 }
 
-void TableHeader::MarginDraggedListener::mouseClicked(const MouseEventUnrecPtr e)
+void TableHeader::mouseColBorderMouseReleased(MouseEventDetails* const e)
 {
-    //Do nothing
-}
-
-void TableHeader::MarginDraggedListener::mouseEntered(const MouseEventUnrecPtr e)
-{
-    //Do nothing
-}
-
-void TableHeader::MarginDraggedListener::mouseExited(const MouseEventUnrecPtr e)
-{
-    //Do nothing
-}
-
-void TableHeader::MarginDraggedListener::mousePressed(const MouseEventUnrecPtr e)
-{
-    //Do nothing
-}
-
-void TableHeader::MarginDraggedListener::mouseReleased(const MouseEventUnrecPtr e)
-{
-	if(_TableHeader->getParentWindow() != NULL)
+	if(getParentWindow() != NULL)
 	{
-        disconnect();
+        _ResizingColumn = -1;
+        _ColBorderMouseDraggedConnection.disconnect();
+        _ColBorderMouseReleasedConnection.disconnect();
 	}
-}
-
-void TableHeader::MarginDraggedListener::disconnect(void)
-{
-    _TableHeader->_ResizingColumn = -1;
-    _TableHeader->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_TableHeader->_MarginDraggedListener));
-    _TableHeader->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseListener(&(_TableHeader->_MarginDraggedListener));
 }
 
 OSG_END_NAMESPACE

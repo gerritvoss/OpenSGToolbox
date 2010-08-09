@@ -43,14 +43,6 @@
 #endif
 
 #include "OSGTextFieldBase.h"
-#include "OSGActionListener.h"
-#include "OSGWindowEventProducer.h"
-#include "OSGMouseAdapter.h"
-#include "OSGMouseMotionAdapter.h"
-#include "OSGKeyAdapter.h"
-
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -89,17 +81,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextField : public TextFieldBase
 
 	Vec2f getContentRequestedSize(void) const;
 
-	virtual void keyTyped(const KeyEventUnrecPtr e);
+	virtual void keyTyped(KeyEventDetails* const e);
 
-	virtual void mouseClicked(const MouseEventUnrecPtr e);
-	virtual void mousePressed(const MouseEventUnrecPtr e);
+	virtual void mouseClicked(MouseEventDetails* const e);
+	virtual void mousePressed(MouseEventDetails* const e);
 	
-	virtual void focusGained(const FocusEventUnrecPtr e);
-	virtual void focusLost(const FocusEventUnrecPtr e);
-
-    EventConnection addActionListener(ActionListenerPtr Listener);
-	bool isActionListenerAttached(ActionListenerPtr Listener) const;
-    void removeActionListener(ActionListenerPtr Listener);
+	virtual void focusGained(FocusEventDetails* const e);
+	virtual void focusLost(FocusEventDetails* const e);
 
 	virtual std::string getDrawnText(void) const;
 
@@ -136,52 +124,20 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextField : public TextFieldBase
     
 	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 	void calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2f& TopLeft, Pnt2f& BottomRight);
-
-	typedef std::set<ActionListenerPtr> ActionListenerSet;
-    typedef ActionListenerSet::iterator ActionListenerSetItor;
-    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
 	
-    ActionListenerSet       _ActionListeners;
-	
-    virtual void produceActionPerformed(const ActionEventUnrecPtr e);
+    virtual void produceActionPerformed(void);
 	
 	Time _CurrentCaretBlinkElps;
+    void handleCaretUpdate(UpdateEventDetails* const e);
+    boost::signals2::connection _CaretUpdateConnection;
 
-	class CaretUpdateListener : public UpdateListener
-	{
-	public:
-		CaretUpdateListener(TextField* const TheTextField);
-        virtual void update(const UpdateEventUnrecPtr e);
+    void handleMouseDownKeyTyped(KeyEventDetails* const e);
+    void handleMouseDownMouseReleased(MouseEventDetails* const e);
+    void handleMouseDownMouseDragged(MouseEventDetails* const e);
+    boost::signals2::connection _MouseDownKeyTypedConnection,
+                                _MouseDownMouseReleasedConnection,
+                                _MouseDownMouseDraggedConnection;
 
-        void disconnect(void);
-	private:
-		TextField* _TextField;
-	};
-
-	friend class CarentUpdateListener;
-
-	CaretUpdateListener _CaretUpdateListener;
-    
-	class MouseDownListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
-	{
-	public :
-		MouseDownListener(TextField* const TheTextField);
-		
-        virtual void keyTyped(const KeyEventUnrecPtr e);
-
-        virtual void mouseReleased(const MouseEventUnrecPtr e);
-        virtual void mouseDragged(const MouseEventUnrecPtr e);
-
-        void disconnect(void);
-	protected :
-		TextField* _TextField;
-	};
-
-	friend class MouseDownListener;
-
-	MouseDownListener _MouseDownListener;
-
-    void mouseDraggedAfterArming(const MouseEventUnrecPtr e);
     /*==========================  PRIVATE  ================================*/
 
   private:

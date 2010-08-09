@@ -30,10 +30,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool DragGestureRecognizer::isDragGestureListenerAttached(DragGestureListenerPtr Listener) const
-{
-    return _DragGestureListeners.find(Listener) != _DragGestureListeners.end();
-}
-
 OSG_END_NAMESPACE

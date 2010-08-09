@@ -46,12 +46,11 @@
 #include <OSGConfig.h>
 
 #include "OSGParticleSystem.h"
-#include "OSGParticleEvent.h"
-#include "OSGWindowEventProducer.h"
 #include "OSGParticleAffector.h"
 #include "OSGParticleSystemAffector.h"
 #include "OSGParticleGenerator.h"
 #include "OSGIntersectAction.h"
+#include "OSGUpdateEventDetails.h"
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
@@ -102,26 +101,27 @@ void ParticleSystem::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection ParticleSystem::addParticleSystemListener(ParticleSystemListenerPtr Listener)
+void ParticleSystem::attachUpdateProducer(ReflexiveContainer* const producer)
 {
-    _ParticleSystemListeners.insert(Listener);
-    return EventConnection(
-                           boost::bind(&ParticleSystem::isParticleSystemListenerAttached, this, Listener),
-                           boost::bind(&ParticleSystem::removeParticleSystemListener, this, Listener));
-}
-
-bool ParticleSystem::isParticleSystemListenerAttached(ParticleSystemListenerPtr Listener) const
-{
-    return _ParticleSystemListeners.find(Listener) != _ParticleSystemListeners.end();
-}
-
-void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr Listener)
-{
-    ParticleSystemListenerSetItor EraseIter(_ParticleSystemListeners.find(Listener));
-    if(EraseIter != _ParticleSystemListeners.end())
+    if(_UpdateEventConnection.connected())
     {
-        _ParticleSystemListeners.erase(EraseIter);
+        _UpdateEventConnection.disconnect();
     }
+    //Get the Id of the UpdateEvent
+    const EventDescription* Desc(producer->getProducerType().findEventDescription("Update"));
+    if(Desc == NULL)
+    {
+        SWARNING << "There is no Update event defined on " << producer->getType().getName() << " types." << std::endl;
+    }
+    else
+    {
+        _UpdateEventConnection = producer->connectEvent(Desc->getEventId(), boost::bind(&ParticleSystem::attachedUpdate, this, _1));
+    }
+}
+
+void ParticleSystem::attachedUpdate(EventDetails* const details)
+{
+    update(dynamic_cast<UpdateEventDetails* const>(details)->getElapsedTime());
 }
 
 //Particle to Geometry Intersection
@@ -184,7 +184,7 @@ std::vector<UInt32> ParticleSystem::intersect(const NodeRefPtr CollisionNode, bo
 
     if(sort)
     {
-        //std::sort(Result.begin(), Result.end(), ParticlePositionSort(ParticleSystemRefPtr(this), Ray.getPosition()));
+        //std::sort(Result.begin(), Result.end(), ParticlePositionSort(this, Ray.getPosition()));
     }
     return Result;
 }
@@ -910,7 +910,7 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
     //Affect Particles with Affectors
     for(UInt32 j(0) ; j<getMFAffectors()->size(); ++j)
     {
-        getAffectors(j)->affect(ParticleSystemRefPtr(this), getMFInternalPositions()->size()-1, Age);
+        getAffectors(j)->affect(this, getMFInternalPositions()->size()-1, Age);
     }
 
     //If not currently updating the whole system, then update the volume
@@ -1622,7 +1622,7 @@ void ParticleSystem::update(const Time& elps)
         //Affect Particles with Affectors
         for(UInt32 j(0) ; j<getMFAffectors()->size(); ++j)
         {
-            if(getAffectors(j)->affect(ParticleSystemRefPtr(this), i, elps))
+            if(getAffectors(j)->affect(this, i, elps))
             {
                 killParticle(i);
                 continue;
@@ -1641,7 +1641,7 @@ void ParticleSystem::update(const Time& elps)
     UInt32 NumGenerators(getMFGenerators()->size());
     for(UInt32 j(0) ; j<NumGenerators; )
     {
-        if(getGenerators(j)->generate(ParticleSystemRefPtr(this), elps))
+        if(getGenerators(j)->generate(this, elps))
         {
             removeFromGenerators(j); 
             --NumGenerators;
@@ -1656,7 +1656,7 @@ void ParticleSystem::update(const Time& elps)
     //Affect Particles with System Affectors
     for(UInt32 j(0) ; j<getMFSystemAffectors()->size(); ++j)
     {
-        getSystemAffectors(j)->affect(ParticleSystemRefPtr(this), elps);
+        getSystemAffectors(j)->affect(this, elps);
     }
 
     _isUpdating = false;
@@ -1676,9 +1676,10 @@ void ParticleSystem::update(const Time& elps)
 
 void ParticleSystem::produceParticleGenerated(Int32 Index)
 {
-    if(_ParticleSystemListeners.size() > 0 || getNumActivitiesAttached(ParticleGeneratedMethodId)>0)
+    if(numSlotsParticleGenerated() > 0)
     {
-        const ParticleEventUnrecPtr TheEvent = ParticleEvent::create( ParticleSystemRefPtr(this), getSystemTime(),
+        ParticleEventDetailsUnrecPtr Details = ParticleEventDetails::create(this, 
+                                                                      getSystemTime(),
                                                                       Index,
                                                                       getPosition(Index),
                                                                       getSecPosition(Index),
@@ -1691,16 +1692,9 @@ void ParticleSystem::produceParticleGenerated(Int32 Index)
                                                                       getSecVelocity(Index),
                                                                       getAcceleration(Index),
                                                                       getAttributes(Index),
-                                                                      getID(Index) );
-        ParticleSystemListenerSetItor NextItor;
-        for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
-        {
-            NextItor = SetItor;
-            ++NextItor;
-            (*SetItor)->particleGenerated(TheEvent);
-            SetItor = NextItor;
-        }
-        _Producer.produceEvent(ParticleGeneratedMethodId,TheEvent);
+                                                                      getID(Index));
+       
+        Inherited::produceParticleGenerated(Details);
     }
 }
 
@@ -1718,16 +1712,9 @@ void ParticleSystem::produceParticleKilled(Int32 Index,
                                            const StringToUInt32Map& Attributes,
                                            UInt32& ID)
 {
-    const ParticleEventUnrecPtr TheEvent = ParticleEvent::create( ParticleSystemRefPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes,ID );
-    ParticleSystemListenerSetItor NextItor;
-    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
-    {
-        NextItor = SetItor;
-        ++NextItor;
-        (*SetItor)->particleKilled(TheEvent);
-        SetItor = NextItor;
-    }
-    _Producer.produceEvent(ParticleKilledMethodId,TheEvent);
+    ParticleEventDetailsUnrecPtr Details = ParticleEventDetails::create(this, getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes,ID);
+   
+    Inherited::produceParticleKilled(Details);
 }
 
 void ParticleSystem::produceParticleStolen(Int32 Index,
@@ -1744,71 +1731,25 @@ void ParticleSystem::produceParticleStolen(Int32 Index,
                                            const StringToUInt32Map& Attributes,
                                            UInt32& ID)
 {
-    const ParticleEventUnrecPtr TheEvent = ParticleEvent::create( ParticleSystemRefPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes,ID );
-
-    ParticleSystemListenerSetItor NextItor;
-    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
-    {
-        NextItor = SetItor;
-        ++NextItor;
-        (*SetItor)->particleStolen(TheEvent);
-        SetItor = NextItor;
-    }
-    _Producer.produceEvent(ParticleStolenMethodId,TheEvent);
+    ParticleEventDetailsUnrecPtr Details = ParticleEventDetails::create(this, getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes,ID);
+   
+    Inherited::produceParticleStolen(Details);
 }
 
 void ParticleSystem::produceSystemUpdated()
 {
-    const ParticleSystemEventUnrecPtr TheEvent = ParticleSystemEvent::create( ParticleSystemRefPtr(this), getSystemTime());
-    ParticleSystemListenerSetItor NextItor;
-    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
-    {
-        NextItor = SetItor;
-        ++NextItor;
-        (*SetItor)->systemUpdated(TheEvent);
-        SetItor = NextItor;
-    }
-    _Producer.produceEvent(SystemUpdatedMethodId,TheEvent);
+    ParticleSystemEventDetailsUnrecPtr Details = ParticleSystemEventDetails::create(this, getSystemTime());
+   
+    Inherited::produceSystemUpdated(Details);
 }
 
 void ParticleSystem::produceVolumeChanged()
 {
-    const ParticleSystemEventUnrecPtr TheEvent = ParticleSystemEvent::create( ParticleSystemRefPtr(this), getSystemTime());
-    ParticleSystemListenerSetItor NextItor;
-    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
-    {
-        NextItor = SetItor;
-        ++NextItor;
-        (*SetItor)->volumeChanged(TheEvent);
-        SetItor = NextItor;
-    }
-    _Producer.produceEvent(VolumeChangedMethodId,TheEvent);
+    ParticleSystemEventDetailsUnrecPtr Details = ParticleSystemEventDetails::create(this, getSystemTime());
+   
+    Inherited::produceVolumeChanged(Details);
 }
 
-bool ParticleSystem::attachUpdateListener(WindowEventProducerRefPtr UpdateProducer)
-{
-    if(UpdateProducer == NULL)
-    {
-        return false;
-    }
-
-    UpdateProducer->addUpdateListener(&_SystemUpdateListener);
-
-    return true;
-}
-
-void ParticleSystem::dettachUpdateListener(WindowEventProducerRefPtr UpdateProducer)
-{
-    if(UpdateProducer != NULL)
-    {
-        UpdateProducer->removeUpdateListener(&_SystemUpdateListener);
-    }
-}
-
-void ParticleSystem::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
-{
-    update(dynamic_pointer_cast<UpdateEvent>(EventDetails)->getElapsedTime());
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -1817,7 +1758,6 @@ void ParticleSystem::eventProduced(const EventUnrecPtr EventDetails, UInt32 Prod
 
 ParticleSystem::ParticleSystem(void) :
     Inherited(),
-    _SystemUpdateListener(this),
     _isUpdating(false),
 	_curID(0)
 {
@@ -1825,7 +1765,6 @@ ParticleSystem::ParticleSystem(void) :
 
 ParticleSystem::ParticleSystem(const ParticleSystem &source) :
     Inherited(source),
-    _SystemUpdateListener(this),
     _isUpdating(false),
 	_curID(source._curID)
 {
@@ -1913,12 +1852,6 @@ void ParticleSystem::dump(      UInt32    ,
 {
     SLOG << "Dump ParticleSystem NI" << std::endl;
 }
-
-void ParticleSystem::SystemUpdateListener::update(const UpdateEventUnrecPtr e)
-{
-    _System->update(e->getElapsedTime());
-}
-
 
 ParticleSystem::ParticlePositionSort::ParticlePositionSort(const ParticleSystem* System, const Pnt3f& Pos) : _System(System), _Pos(Pos)
 {

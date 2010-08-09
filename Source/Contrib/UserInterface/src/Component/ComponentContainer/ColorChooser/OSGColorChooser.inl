@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-ColorChooser::ColorSelectedChangeListener::ColorSelectedChangeListener(ColorChooser* const TheColorChooser) :
-_ColorChooser(TheColorChooser)
-{
-}
-
 OSG_END_NAMESPACE

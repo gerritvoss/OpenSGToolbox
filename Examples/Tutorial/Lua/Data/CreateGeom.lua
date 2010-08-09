@@ -1,24 +1,20 @@
 -- Create a Material for the Geometry
 local BlinnMat = OSG.getFieldContainer("Blinn Material")
 if(not BlinnMat) then
-    BlinnMat = OSG.createFieldContainer("BlinnMaterial")
+    BlinnMat = OSG.createFieldContainer("SimpleMaterial")
     BlinnMat:setName("Blinn Material")
 end
 
-BlinnMat:setFieldValue("Color", OSG.Color3f(1,1,1))
-BlinnMat:setFieldValue("AmbientColor", OSG.Color3f(0,0,0))
-BlinnMat:setFieldValue("SpecularColor", OSG.Color3f(0,0,1))
-BlinnMat:setFieldValue("SpecularEccentricity", 0.5)
-BlinnMat:setFieldValue("SpecularRolloff", 0.95)
-BlinnMat:setFieldValue("Diffuse", 0.65)
+BlinnMat:setFieldValue("ambient", OSG.Color3f(0.2,0.2,0.2))
+BlinnMat:setFieldValue("diffuse", OSG.Color3f(0.6,0.6,0.6))
+BlinnMat:setFieldValue("specular", OSG.Color3f(1.0,1.0,1.0))
+BlinnMat:setFieldValue("shininess", 50.0)
 
 -- Create a Sphere Geometry
 local SphereGeo = OSG.getFieldContainer("Sphere Geometry")
 if(not SphereGeo) then
     SphereGeo = OSG.makeSphereGeo(2,3.0)
     SphereGeo:setName("Sphere Geometry")
-    -- Generate the tangents for the geometry
-    OSG.calcVertexTangents(OSG.GeometryPtr_dcast(SphereGeo), 0 ,SphereGeo:getType():findFieldDescription("texCoords6"):getFieldId(),SphereGeo:getType():findFieldDescription("texCoords7"):getFieldId())
 end
 
 SphereGeo:setFieldValue("material", BlinnMat)

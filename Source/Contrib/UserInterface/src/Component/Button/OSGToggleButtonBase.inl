@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGButtonSelectedEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -134,6 +136,94 @@ const Char8 *ToggleButtonBase::getClassname(void)
 {
     return "ToggleButton";
 }
+inline
+boost::signals2::connection  ToggleButtonBase::connectButtonSelected(const ButtonSelectedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ButtonSelectedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ToggleButtonBase::connectButtonSelected(const ButtonSelectedEventType::group_type &group,
+                                                    const ButtonSelectedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ButtonSelectedEvent.connect(group, listener, at);
+}
+
+inline
+void  ToggleButtonBase::disconnectButtonSelected(const ButtonSelectedEventType::group_type &group)
+{
+    _ButtonSelectedEvent.disconnect(group);
+}
+
+inline
+void  ToggleButtonBase::disconnectAllSlotsButtonSelected(void)
+{
+    _ButtonSelectedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ToggleButtonBase::isEmptyButtonSelected(void) const
+{
+    return _ButtonSelectedEvent.empty();
+}
+
+inline
+UInt32  ToggleButtonBase::numSlotsButtonSelected(void) const
+{
+    return _ButtonSelectedEvent.num_slots();
+}
+
+inline
+void ToggleButtonBase::produceButtonSelected(ButtonSelectedEventDetailsType* const e)
+{
+    produceEvent(ButtonSelectedEventId, e);
+}
+
+inline
+boost::signals2::connection  ToggleButtonBase::connectButtonDeselected(const ButtonDeselectedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ButtonDeselectedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ToggleButtonBase::connectButtonDeselected(const ButtonDeselectedEventType::group_type &group,
+                                                    const ButtonDeselectedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ButtonDeselectedEvent.connect(group, listener, at);
+}
+
+inline
+void  ToggleButtonBase::disconnectButtonDeselected(const ButtonDeselectedEventType::group_type &group)
+{
+    _ButtonDeselectedEvent.disconnect(group);
+}
+
+inline
+void  ToggleButtonBase::disconnectAllSlotsButtonDeselected(void)
+{
+    _ButtonDeselectedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ToggleButtonBase::isEmptyButtonDeselected(void) const
+{
+    return _ButtonDeselectedEvent.empty();
+}
+
+inline
+UInt32  ToggleButtonBase::numSlotsButtonDeselected(void) const
+{
+    return _ButtonDeselectedEvent.num_slots();
+}
+
+inline
+void ToggleButtonBase::produceButtonDeselected(ButtonDeselectedEventDetailsType* const e)
+{
+    produceEvent(ButtonDeselectedEventId, e);
+}
+
 OSG_GEN_CONTAINERPTR(ToggleButton);
 
 OSG_END_NAMESPACE

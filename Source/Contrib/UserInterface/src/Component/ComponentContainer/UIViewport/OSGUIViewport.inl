@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool UIViewport::isChangeListenerAttached(ChangeListenerPtr Listener) const
-{
-    return _ChangeListeners.find(Listener) != _ChangeListeners.end();
-}
-
 OSG_END_NAMESPACE

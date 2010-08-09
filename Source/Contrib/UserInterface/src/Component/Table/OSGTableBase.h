@@ -72,6 +72,7 @@
 #include "OSGSysFields.h"               // AutoCreateColumnsFromModel type
 #include "OSGBaseFields.h"              // GridColor type
 #include "OSGCellEditorFields.h"        // GlobalCellEditor type
+#include "OSGListSelectionModelFields.h" // RowSelectionModel type
 
 #include "OSGTableFields.h"
 
@@ -92,6 +93,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(Table);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -112,7 +115,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
         ShowVerticalLinesFieldId = ShowHorizontalLinesFieldId + 1,
         GridColorFieldId = ShowVerticalLinesFieldId + 1,
         GlobalCellEditorFieldId = GridColorFieldId + 1,
-        NextFieldId = GlobalCellEditorFieldId + 1
+        RowSelectionModelFieldId = GlobalCellEditorFieldId + 1,
+        NextFieldId = RowSelectionModelFieldId + 1
     };
 
     static const OSG::BitVector HeaderFieldMask =
@@ -141,10 +145,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
         (TypeTraits<BitVector>::One << GridColorFieldId);
     static const OSG::BitVector GlobalCellEditorFieldMask =
         (TypeTraits<BitVector>::One << GlobalCellEditorFieldId);
+    static const OSG::BitVector RowSelectionModelFieldMask =
+        (TypeTraits<BitVector>::One << RowSelectionModelFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecTableHeaderPtr SFHeaderType;
+    typedef SFUnrecChildTableHeaderPtr SFHeaderType;
     typedef SFUnrecTableModelPtr SFModelType;
     typedef SFUnrecTableColumnModelPtr SFColumnModelType;
     typedef MFUnrecComponentPtr MFTableType;
@@ -157,6 +163,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
     typedef SFBool            SFShowVerticalLinesType;
     typedef SFColor4f         SFGridColorType;
     typedef SFUnrecCellEditorPtr SFGlobalCellEditorType;
+    typedef SFUnrecListSelectionModelPtr SFRowSelectionModelType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -181,8 +188,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecTableHeaderPtr *getSFHeader         (void) const;
-                  SFUnrecTableHeaderPtr *editSFHeader         (void);
+            const SFUnrecChildTableHeaderPtr *getSFHeader         (void) const;
+                  SFUnrecChildTableHeaderPtr *editSFHeader         (void);
             const SFUnrecTableModelPtr *getSFModel          (void) const;
                   SFUnrecTableModelPtr *editSFModel          (void);
             const SFUnrecTableColumnModelPtr *getSFColumnModel    (void) const;
@@ -213,6 +220,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
             const SFColor4f           *getSFGridColor       (void) const;
             const SFUnrecCellEditorPtr *getSFGlobalCellEditor(void) const;
                   SFUnrecCellEditorPtr *editSFGlobalCellEditor(void);
+            const SFUnrecListSelectionModelPtr *getSFRowSelectionModel(void) const;
+                  SFUnrecListSelectionModelPtr *editSFRowSelectionModel(void);
 
 
                   TableHeader * getHeader         (void) const;
@@ -247,6 +256,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
 
                   CellEditor * getGlobalCellEditor(void) const;
 
+                  ListSelectionModel * getRowSelectionModel(void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -264,6 +275,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
             void setShowVerticalLines(const bool value);
             void setGridColor      (const Color4f &value);
             void setGlobalCellEditor(CellEditor * const value);
+            void setRowSelectionModel(ListSelectionModel * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -328,7 +340,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecTableHeaderPtr _sfHeader;
+    SFUnrecChildTableHeaderPtr _sfHeader;
     SFUnrecTableModelPtr _sfModel;
     SFUnrecTableColumnModelPtr _sfColumnModel;
     MFUnrecComponentPtr _mfTable;
@@ -341,6 +353,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
     SFBool            _sfShowVerticalLines;
     SFColor4f         _sfGridColor;
     SFUnrecCellEditorPtr _sfGlobalCellEditor;
+    SFUnrecListSelectionModelPtr _sfRowSelectionModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -363,6 +376,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
     /*! \{                                                                 */
 
     void onCreate(const Table *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Child linking                                                */
+    /*! \{                                                                 */
+
+    virtual bool unlinkChild(FieldContainer * const pChild,
+                             UInt16           const childFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -395,6 +416,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableBase : public ComponentContainer
     EditFieldHandlePtr editHandleGridColor      (void);
     GetFieldHandlePtr  getHandleGlobalCellEditor (void) const;
     EditFieldHandlePtr editHandleGlobalCellEditor(void);
+    GetFieldHandlePtr  getHandleRowSelectionModel (void) const;
+    EditFieldHandlePtr editHandleRowSelectionModel(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

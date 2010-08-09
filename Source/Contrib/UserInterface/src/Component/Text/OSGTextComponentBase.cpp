@@ -65,7 +65,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -397,34 +397,40 @@ TextComponentBase::TypeObject TextComponentBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TextValueChanged\"\n"
-    "\t\ttype=\"TextEventPtr\"\n"
+    "\t\tdetailsType=\"TextEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"CaretChanged\"\n"
-    "\t\ttype=\"CaretEventPtr\"\n"
+    "\t\tdetailsType=\"CaretEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Button.\n"
     );
 
-//! TextComponent Produced Methods
+//! TextComponent Produced Events
 
-MethodDescription *TextComponentBase::_methodDesc[] =
+EventDescription *TextComponentBase::_eventDesc[] =
 {
-    new MethodDescription("TextValueChanged", 
-                    "",
-                     TextValueChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("CaretChanged", 
-                    "",
-                     CaretChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("TextValueChanged", 
+                          "",
+                          TextValueChangedEventId, 
+                          FieldTraits<TextEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TextComponentBase::getHandleTextValueChangedSignal)),
+
+    new EventDescription("CaretChanged", 
+                          "",
+                          CaretChangedEventId, 
+                          FieldTraits<CaretEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TextComponentBase::getHandleCaretChangedSignal))
+
 };
 
 EventProducerType TextComponentBase::_producerType(
@@ -432,8 +438,8 @@ EventProducerType TextComponentBase::_producerType(
     "ComponentProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -740,6 +746,134 @@ void TextComponentBase::copyFromBin(BinaryDataHandler &pMem,
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void TextComponentBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case TextValueChangedEventId:
+        OSG_ASSERT(dynamic_cast<TextValueChangedEventDetailsType* const>(e));
+
+        _TextValueChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TextValueChangedEvent(dynamic_cast<TextValueChangedEventDetailsType* const>(e), TextValueChangedEventId);
+        break;
+    case CaretChangedEventId:
+        OSG_ASSERT(dynamic_cast<CaretChangedEventDetailsType* const>(e));
+
+        _CaretChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _CaretChangedEvent(dynamic_cast<CaretChangedEventDetailsType* const>(e), CaretChangedEventId);
+        break;
+    default:
+        Inherited::produceEvent(eventId, e);
+        break;
+    }
+}
+
+boost::signals2::connection TextComponentBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case TextValueChangedEventId:
+        return _TextValueChangedEvent.connect(listener, at);
+        break;
+    case CaretChangedEventId:
+        return _CaretChangedEvent.connect(listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  TextComponentBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case TextValueChangedEventId:
+        return _TextValueChangedEvent.connect(group, listener, at);
+        break;
+    case CaretChangedEventId:
+        return _CaretChangedEvent.connect(group, listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, group, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  TextComponentBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case TextValueChangedEventId:
+        _TextValueChangedEvent.disconnect(group);
+        break;
+    case CaretChangedEventId:
+        _CaretChangedEvent.disconnect(group);
+        break;
+    default:
+        return Inherited::disconnectEvent(eventId, group);
+        break;
+    }
+}
+
+void  TextComponentBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case TextValueChangedEventId:
+        _TextValueChangedEvent.disconnect_all_slots();
+        break;
+    case CaretChangedEventId:
+        _CaretChangedEvent.disconnect_all_slots();
+        break;
+    default:
+        Inherited::disconnectAllSlotsEvent(eventId);
+        break;
+    }
+}
+
+bool  TextComponentBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case TextValueChangedEventId:
+        return _TextValueChangedEvent.empty();
+        break;
+    case CaretChangedEventId:
+        return _CaretChangedEvent.empty();
+        break;
+    default:
+        return Inherited::isEmptyEvent(eventId);
+        break;
+    }
+}
+
+UInt32  TextComponentBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case TextValueChangedEventId:
+        return _TextValueChangedEvent.num_slots();
+        break;
+    case CaretChangedEventId:
+        return _CaretChangedEvent.num_slots();
+        break;
+    default:
+        return Inherited::numSlotsEvent(eventId);
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
@@ -756,7 +890,6 @@ TextComponentBase::TextComponentBase(void) :
     _sfDisabledTextColor      (),
     _sfTextColor              ()
 {
-    _Producer.setType(&_producerType);
 }
 
 TextComponentBase::TextComponentBase(const TextComponentBase &source) :
@@ -1042,6 +1175,29 @@ EditFieldHandlePtr TextComponentBase::editHandleTextColor      (void)
 
 
     editSField(TextColorFieldMask);
+
+    return returnValue;
+}
+
+
+GetEventHandlePtr TextComponentBase::getHandleTextValueChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TextValueChangedEventType>(
+             const_cast<TextValueChangedEventType *>(&_TextValueChangedEvent),
+             _producerType.getEventDescription(TextValueChangedEventId),
+             const_cast<TextComponentBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TextComponentBase::getHandleCaretChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<CaretChangedEventType>(
+             const_cast<CaretChangedEventType *>(&_CaretChangedEvent),
+             _producerType.getEventDescription(CaretChangedEventId),
+             const_cast<TextComponentBase *>(this)));
 
     return returnValue;
 }

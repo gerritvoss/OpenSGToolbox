@@ -41,18 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool Button::isActionListenerAttached(ActionListenerPtr Listener) const
-{
-    return _ActionListeners.find(Listener) != _ActionListeners.end();
-}
-
-inline
-bool Button::isMousePressedActionListenerAttached(ActionListenerPtr Listener) const
-{
-    return _MousePressedActionListeners.find(Listener) != _MousePressedActionListeners.end();
-}
-
-inline
 bool Button::getActive(void) const
 {
     return _Active;
@@ -65,24 +53,7 @@ void Button::setActive(bool Value)
 }
 
 inline
-Button::ButtonArmedListener::ButtonArmedListener(Button* const TheButton) :
-_Button(TheButton)
-{
-}
-
-inline
-void Button::removeMousePressedActionListener(ActionListenerPtr Listener)
-{
-   ActionListenerSetItor EraseIter(_MousePressedActionListeners.find(Listener));
-   if(EraseIter != _MousePressedActionListeners.end())
-   {
-      _MousePressedActionListeners.erase(EraseIter);
-   }
-}
-
-
-inline
-void Button::ButtonArmedListener::reset(void)
+void Button::resetArmed(void)
 {
     _ActionFireElps = 0.0;
 }

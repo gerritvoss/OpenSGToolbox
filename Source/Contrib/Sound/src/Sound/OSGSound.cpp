@@ -74,7 +74,7 @@ void Sound::initMethod(InitPhase ePhase)
 }
 
 //! create a new instance of the class
-SoundUnrecPtr Sound::create(void)
+SoundTransitPtr Sound::create(void)
 {
     return SoundManager::the()->createSound(); 
 }
@@ -83,87 +83,46 @@ SoundUnrecPtr Sound::create(void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection Sound::addSoundListener(SoundListenerPtr Listener)
-{
-   _SoundListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&Sound::isSoundListenerAttached, this, Listener),
-       boost::bind(&Sound::removeSoundListener, this, Listener));
-}
-
-void Sound::removeSoundListener(SoundListenerPtr Listener)
-{
-   SoundListenerSetItor EraseIter(_SoundListeners.find(Listener));
-   if(EraseIter != _SoundListeners.end())
-   {
-      _SoundListeners.erase(EraseIter);
-   }
-}
-
 void Sound::produceSoundPlayed(UInt32 TheChannel)
 {
-    const SoundEventUnrecPtr e = SoundEvent::create(SoundUnrecPtr(this), getTimeStamp(), TheChannel);
-    SoundListenerSet ListenerSet(_SoundListeners);
-    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->soundPlayed(e);
-    }
-    _Producer.produceEvent(SoundPlayedMethodId,e);
+    SoundEventDetailsUnrecPtr Details = SoundEventDetails::create(this,getTimeStamp(), TheChannel);
+   
+    Inherited::produceSoundPlayed(Details);
 }
 
 void Sound::produceSoundStopped(UInt32 TheChannel)
 {
-    const SoundEventUnrecPtr e = SoundEvent::create(SoundUnrecPtr(this), getTimeStamp(), TheChannel);
-    SoundListenerSet ListenerSet(_SoundListeners);
-    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->soundStopped(e);
-    }
-    _Producer.produceEvent(SoundStoppedMethodId,e);
+    SoundEventDetailsUnrecPtr Details = SoundEventDetails::create(this,getTimeStamp(), TheChannel);
+   
+    Inherited::produceSoundStopped(Details);
 }
 
 void Sound::produceSoundPaused(UInt32 TheChannel)
 {
-    const SoundEventUnrecPtr e = SoundEvent::create(SoundUnrecPtr(this), getTimeStamp(), TheChannel);
-    SoundListenerSet ListenerSet(_SoundListeners);
-    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->soundPaused(e);
-    }
-    _Producer.produceEvent(SoundPausedMethodId,e);
+    SoundEventDetailsUnrecPtr Details = SoundEventDetails::create(this,getTimeStamp(), TheChannel);
+   
+    Inherited::produceSoundPaused(Details);
 }
 
 void Sound::produceSoundUnpaused(UInt32 TheChannel)
 {
-    const SoundEventUnrecPtr e = SoundEvent::create(SoundUnrecPtr(this), getTimeStamp(), TheChannel);
-    SoundListenerSet ListenerSet(_SoundListeners);
-    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->soundUnpaused(e);
-    }
-    _Producer.produceEvent(SoundUnpausedMethodId,e);
+    SoundEventDetailsUnrecPtr Details = SoundEventDetails::create(this,getTimeStamp(), TheChannel);
+   
+    Inherited::produceSoundUnpaused(Details);
 }
 
 void Sound::produceSoundLooped(UInt32 TheChannel)
 {
-    const SoundEventUnrecPtr e = SoundEvent::create(SoundUnrecPtr(this), getTimeStamp(), TheChannel);
-    SoundListenerSet ListenerSet(_SoundListeners);
-    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->soundLooped(e);
-    }
-    _Producer.produceEvent(SoundLoopedMethodId,e);
+    SoundEventDetailsUnrecPtr Details = SoundEventDetails::create(this,getTimeStamp(), TheChannel);
+   
+    Inherited::produceSoundLooped(Details);
 }
 
 void Sound::produceSoundEnded(UInt32 TheChannel)
 {
-    const SoundEventUnrecPtr e = SoundEvent::create(SoundUnrecPtr(this), getTimeStamp(), TheChannel);
-    SoundListenerSet ListenerSet(_SoundListeners);
-    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->soundEnded(e);
-    }
-    _Producer.produceEvent(SoundEndedMethodId,e);
+    SoundEventDetailsUnrecPtr Details = SoundEventDetails::create(this,getTimeStamp(), TheChannel);
+   
+    Inherited::produceSoundEnded(Details);
 }
 
 /*-------------------------------------------------------------------------*\

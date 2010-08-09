@@ -70,16 +70,6 @@ information:
 #include "OSGGraphics2D.h"
 #include "OSGLookAndFeelManager.h"
 
-// Activate the OpenSG namespace
-OSG_USING_NAMESPACE
-
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-
-// Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
-
 // 01 Button Headers
 #include "OSGButton.h"
 #include "OSGToggleButton.h"
@@ -89,33 +79,22 @@ void reshape(Vec2f Size);
 #include "OSGPolygonUIDrawObject.h"
 #include "OSGUIDrawObjectCanvas.h"
 
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+// Activate the OpenSG namespace
+OSG_USING_NAMESPACE
+
+// Forward declaration so we can have the interesting stuff upfront
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
+
+//Ctrl+q handler
+void keyTyped(KeyEventDetails* const details)
 {
-  protected:
-    WindowEventProducer* _TutorialWindow;
-  public:
-    TutorialKeyListener(WindowEventProducer* const win) : _TutorialWindow(win)
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() &
+       KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
-
-    virtual void keyPressed(const KeyEventUnrecPtr e)
-    {
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() &
-           KeyEvent::KEY_MODIFIER_COMMAND)
-        {
-            _TutorialWindow->closeWindow();
-        }
-    }
-
-    virtual void keyReleased(const KeyEventUnrecPtr e)
-    {
-    }
-
-    virtual void keyTyped(const KeyEventUnrecPtr e)
-    {
-    }
-};
+}
 
 /******************************************************
 
@@ -125,222 +104,207 @@ class TutorialKeyListener : public KeyListener
 
  ******************************************************/
 
-class ExampleButtonActionListener : public ActionListener
+void actionPerformed(ActionEventDetails* const details)
 {
-  public:
-
-    virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        std::cout << "Button 1 Action" << std::endl;
-    }
-};
+    std::cout << "Button 1 Action" << std::endl;
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
-    ButtonWeakPtr ExampleButtonWeak;
     
     {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    // Set up Window
-    WindowEventProducerRefPtr TutorialWindow;
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    TutorialKeyListener TheKeyListener(TutorialWindow);
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1));
 
-    // Create the SimpleSceneManager helper
-    SimpleSceneManager TheManager;
-    mgr = &TheManager;
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Tell the Manager what to manage
-    TheManager.setWindow(TutorialWindow);
+        // Make Main Scene Node and add the Torus
+        NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
+        scene->addChild(TorusGeometryNode);
 
+        // Create the Graphics
+        GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-    scene->setCore(OSG::Group::create());
-    scene->addChild(TorusGeometryNode);
+        /******************************************************
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+          Create an Button Component and
+          a simple Font.
+          See 17Label_Font for more
+          information about Fonts.
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+         ******************************************************/
+        ButtonRefPtr ExampleButton = OSG::Button::create();
 
-    /******************************************************
+        UIFontRefPtr ExampleFont = OSG::UIFont::create();
+        ExampleFont->setSize(16);
 
-      Create an Button Component and
-      a simple Font.
-      See 17Label_Font for more
-      information about Fonts.
+        /******************************************************
 
-     ******************************************************/
-    ButtonRefPtr ExampleButton = OSG::Button::create();
-    ExampleButtonWeak = ExampleButton;
+          Edit the Button's characteristics.
+            Note: the first 4 functions can
+            be used with any Component and 
+            are not specific to Button.
 
-    UIFontRefPtr ExampleFont = OSG::UIFont::create();
-    ExampleFont->setSize(16);
+            -setMinSize(Vec2f): Determine the 
+            Minimum Size of the Component.
+            Some Layouts will automatically
+            resize Components; this prevents
+            the Size from going below a
+            certain value.
+            -setMaxSize(Vec2f): Determine the 
+            Maximum Size of the Component.
+            -setPreferredSize(Vec2f): Determine
+            the Preferred Size of the Component.
+            This is what the Component will
+            be displayed at unless changed by
+            another Component (such as a 
+            Layout).
+            -setToolTipText("Text"): Determine
+            what text is displayed while
+            Mouse is hovering above Component.
+            The word Text will be displayed
+            in this case.
 
-    /******************************************************
+            Functions specfic to Button:
+            -setText("DesiredText"): Determine 
+            the Button's text.  It will read
+            DesiredText in this case.
+            -setFont(FontName): Determine the 
+            Font to be used on the Button.
+            -setTextColor(Color4f): Determine the
+            Color for the text.
+            -setRolloverTextColor(Color4f): Determine
+            what the text Color will be when
+            the Mouse Cursor is above the 
+            Button.
+            -setActiveTextColor(Color4f): Determine
+            what the text Color will be when
+            the Button is pressed (denoted by
+            Active).
+            -setAlignment(Vec2f):
+            Determine the Vertical Alignment
+            of the text.  The value is 
+            in [0.0, 1.0].
 
-      Edit the Button's characteristics.
-        Note: the first 4 functions can
-        be used with any Component and 
-        are not specific to Button.
+         ******************************************************/
+        ExampleButton->setMinSize(Vec2f(50, 25));
+        ExampleButton->setMaxSize(Vec2f(200, 100));
+        ExampleButton->setPreferredSize(Vec2f(100, 50));
+        ExampleButton->setToolTipText("Button 1 ToolTip");
 
-        -setMinSize(Vec2f): Determine the 
-        Minimum Size of the Component.
-        Some Layouts will automatically
-        resize Components; this prevents
-        the Size from going below a
-        certain value.
-        -setMaxSize(Vec2f): Determine the 
-        Maximum Size of the Component.
-        -setPreferredSize(Vec2f): Determine
-        the Preferred Size of the Component.
-        This is what the Component will
-        be displayed at unless changed by
-        another Component (such as a 
-        Layout).
-        -setToolTipText("Text"): Determine
-        what text is displayed while
-        Mouse is hovering above Component.
-        The word Text will be displayed
-        in this case.
+        ExampleButton->setText("Button 1");
+        ExampleButton->setFont(ExampleFont);
+        ExampleButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+        ExampleButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+        ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+        ExampleButton->setAlignment(Vec2f(1.0,0.0));
 
-        Functions specfic to Button:
-        -setText("DesiredText"): Determine 
-        the Button's text.  It will read
-        DesiredText in this case.
-        -setFont(FontName): Determine the 
-        Font to be used on the Button.
-        -setTextColor(Color4f): Determine the
-        Color for the text.
-        -setRolloverTextColor(Color4f): Determine
-        what the text Color will be when
-        the Mouse Cursor is above the 
-        Button.
-        -setActiveTextColor(Color4f): Determine
-        what the text Color will be when
-        the Button is pressed (denoted by
-        Active).
-        -setAlignment(Vec2f):
-        Determine the Vertical Alignment
-        of the text.  The value is 
-        in [0.0, 1.0].
+        // Create an ActionListener and assign it to ExampleButton
+        // This Class is defined above, and will cause the output
+        // window to display "Button 1 Action" when pressed
+        ExampleButton->connectActionPerformed(boost::bind(actionPerformed, _1));
 
-     ******************************************************/
-    ExampleButton->setMinSize(Vec2f(50, 25));
-    ExampleButton->setMaxSize(Vec2f(200, 100));
-    ExampleButton->setPreferredSize(Vec2f(100, 50));
-    ExampleButton->setToolTipText("Button 1 ToolTip");
+        /******************************************************
 
-    ExampleButton->setText("Button 1");
-    ExampleButton->setFont(ExampleFont);
-    ExampleButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-    ExampleButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
-    ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-    ExampleButton->setAlignment(Vec2f(1.0,0.0));
+          Create a ToggleButton and determine its 
+          characteristics.  ToggleButton inherits
+          off of Button, so all characteristsics
+          used above can be used with ToggleButtons
+          as well.
 
-    // Create an ActionListener and assign it to ExampleButton
-    // This Class is defined above, and will cause the output
-    // window to display "Button 1 Action" when pressed
-    ExampleButtonActionListener TheExampleButtonActionListener;
-    ExampleButton->addActionListener(&TheExampleButtonActionListener);
+          The only difference is that when pressed,
+          ToggleButton remains pressed until pressed 
+          again.
 
-    /******************************************************
+          -setSelected(bool): Determine whether the 
+          ToggleButton is Selected (true) or
+          deselected (false).  
 
-      Create a ToggleButton and determine its 
-      characteristics.  ToggleButton inherits
-      off of Button, so all characteristsics
-      used above can be used with ToggleButtons
-      as well.
+         ******************************************************/
+        ToggleButtonRefPtr ExampleToggleButton = OSG::ToggleButton::create();
 
-      The only difference is that when pressed,
-      ToggleButton remains pressed until pressed 
-      again.
+        ExampleToggleButton->setSelected(false);
+        ExampleToggleButton->setText("ToggleMe");
+        ExampleToggleButton->setToolTipText("Toggle Button ToolTip");
 
-      -setSelected(bool): Determine whether the 
-      ToggleButton is Selected (true) or
-      deselected (false).  
+        //Button with Image
+        ButtonRefPtr ExampleDrawObjectButton = OSG::Button::create();
+        ExampleDrawObjectButton->setDrawObjectToTextAlignment(Button::ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT);
+        ExampleDrawObjectButton->setText("Icon");
 
-     ******************************************************/
-    ToggleButtonRefPtr ExampleToggleButton = OSG::ToggleButton::create();
+        ExampleDrawObjectButton->setImage(std::string("Data/Icon.png"));
+        ExampleDrawObjectButton->setActiveImage(std::string("Data/Icon.png"));
+        ExampleDrawObjectButton->setFocusedImage(std::string("Data/Icon.png"));
+        ExampleDrawObjectButton->setRolloverImage(std::string("Data/Icon.png"));
+        ExampleDrawObjectButton->setDisabledImage(std::string("Data/Icon.png"));
 
-    ExampleToggleButton->setSelected(false);
-    ExampleToggleButton->setText("ToggleMe");
-    ExampleToggleButton->setToolTipText("Toggle Button ToolTip");
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+        InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+        LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+        MainInternalWindow->pushToChildren(ExampleButton);
+        MainInternalWindow->pushToChildren(ExampleToggleButton);
+        MainInternalWindow->pushToChildren(ExampleDrawObjectButton);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
 
-    //Button with Image
-    ButtonRefPtr ExampleDrawObjectButton = OSG::Button::create();
-    ExampleDrawObjectButton->setDrawObjectToTextAlignment(Button::ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT);
-    ExampleDrawObjectButton->setText("Icon");
+        // Create the Drawing Surface
+        UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
 
-    ExampleDrawObjectButton->setImage(std::string("Data/Icon.png"));
-    ExampleDrawObjectButton->setActiveImage(std::string("Data/Icon.png"));
-    ExampleDrawObjectButton->setFocusedImage(std::string("Data/Icon.png"));
-    ExampleDrawObjectButton->setRolloverImage(std::string("Data/Icon.png"));
-    ExampleDrawObjectButton->setDisabledImage(std::string("Data/Icon.png"));
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
-    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
-    MainInternalWindow->pushToChildren(ExampleButton);
-    MainInternalWindow->pushToChildren(ExampleToggleButton);
-    MainInternalWindow->pushToChildren(ExampleDrawObjectButton);
-    MainInternalWindow->setLayout(MainInternalWindowLayout);
-    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-    MainInternalWindow->setDrawTitlebar(false);
-    MainInternalWindow->setResizable(false);
+        // Create the UI Foreground Object
+        UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
-    TutorialDrawingSurface->setGraphics(TutorialGraphics);
-    TutorialDrawingSurface->setEventProducer(TutorialWindow);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
-    TutorialDrawingSurface->openWindow(MainInternalWindow);
+        sceneManager.setRoot(scene);
 
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        // Add the UI Foreground Object to the Scene
+        ViewportRefPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
-    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-
-    TheManager.setRoot(scene);
-
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = TheManager.getWindow()->getPort(0);
-    TutorialViewport->addForeground(TutorialUIForeground);
-
-    // Show the whole Scene
-    TheManager.showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-                               WinSize,
-                               "01Button");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "01Button");
 
-    commitChanges();
+        commitChanges();
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
-
+        //Enter main Loop
+        TutorialWindow->mainLoop();
     }
 
     osgExit();
@@ -353,13 +317,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

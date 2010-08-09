@@ -86,6 +86,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleMouseTransformFunctorBase :
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(UIRectangleMouseTransformFunctor);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -102,7 +104,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleMouseTransformFunctorBase :
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecUIRectanglePtr SFParentType;
+    typedef SFWeakUIRectanglePtr SFParentType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -175,7 +177,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleMouseTransformFunctorBase :
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecUIRectanglePtr _sfParent;
+    SFWeakUIRectanglePtr _sfParent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -212,8 +214,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleMouseTransformFunctorBase :
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecUIRectanglePtr *getSFParent          (void) const;
-                  SFUnrecUIRectanglePtr *editSFParent         (void);
+            const SFWeakUIRectanglePtr *getSFParent          (void) const;
+                  SFWeakUIRectanglePtr *editSFParent         (void);
 
 
                   UIRectangle * getParent         (void) const;

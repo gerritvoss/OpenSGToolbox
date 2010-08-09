@@ -51,34 +51,40 @@
         defaultValue="-1.0"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="AnimationsStarted"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationsStopped"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationsPaused"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationsUnpaused"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationsEnded"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationsCycled"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

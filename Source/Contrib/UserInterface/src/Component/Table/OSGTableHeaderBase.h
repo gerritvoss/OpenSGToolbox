@@ -65,7 +65,7 @@
 
 #include "OSGComponentContainer.h" // Parent
 
-#include "OSGTableFields.h"             // Table type
+#include "OSGFieldContainerFields.h"    // Table type
 #include "OSGTableColumnModelFields.h"  // ColumnModel type
 #include "OSGSysFields.h"               // ReorderingAllowed type
 #include "OSGUIDrawObjectCanvasFields.h" // DefaultMarginDrawObject type
@@ -90,6 +90,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeaderBase : public ComponentCont
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(TableHeader);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -127,7 +129,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeaderBase : public ComponentCont
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecTablePtr   SFTableType;
+    typedef SFParentFieldContainerPtr SFTableType;
     typedef SFUnrecTableColumnModelPtr SFColumnModelType;
     typedef SFBool            SFReorderingAllowedType;
     typedef SFBool            SFResizingAllowedType;
@@ -159,8 +161,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeaderBase : public ComponentCont
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecTablePtr     *getSFTable          (void) const;
-                  SFUnrecTablePtr     *editSFTable          (void);
             const SFUnrecTableColumnModelPtr *getSFColumnModel    (void) const;
                   SFUnrecTableColumnModelPtr *editSFColumnModel    (void);
 
@@ -175,8 +175,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeaderBase : public ComponentCont
             const SFUnrecUIDrawObjectCanvasPtr *getSFDefaultMarginDrawObject(void) const;
                   SFUnrecUIDrawObjectCanvasPtr *editSFDefaultMarginDrawObject(void);
 
-
-                  Table * getTable          (void) const;
 
                   TableColumnModel * getColumnModel    (void) const;
 
@@ -196,7 +194,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeaderBase : public ComponentCont
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setTable          (Table * const value);
             void setColumnModel    (TableColumnModel * const value);
             void setReorderingAllowed(const bool value);
             void setResizingAllowed(const bool value);
@@ -266,7 +263,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeaderBase : public ComponentCont
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecTablePtr   _sfTable;
+    SFParentFieldContainerPtr _sfTable;
     SFUnrecTableColumnModelPtr _sfColumnModel;
     SFBool            _sfReorderingAllowed;
     SFBool            _sfResizingAllowed;
@@ -296,6 +293,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeaderBase : public ComponentCont
     /*! \{                                                                 */
 
     void onCreate(const TableHeader *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

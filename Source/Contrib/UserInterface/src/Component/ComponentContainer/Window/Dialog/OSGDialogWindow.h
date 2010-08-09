@@ -43,21 +43,15 @@
 #endif
 
 #include "OSGDialogWindowBase.h"
-#include "OSGDialogWindowListener.h"
 #include "OSGTextAreaFields.h"
 #include "OSGButtonFields.h"
-#include "OSGTextArea.h"
-#include "OSGButton.h"
-#include <set>
 #include <vector>
 
-#include "OSGEventListener.h"
-
-#include "OSGEventConnection.h"
-#include "OSGComboBox.h"
-#include "OSGTextField.h"
-#include "OSGList.h"
-#include "OSGColorChooser.h"
+#include "OSGComboBoxFields.h"
+#include "OSGTextFieldFields.h"
+#include "OSGListFields.h"
+#include "OSGColorChooserFields.h"
+#include "OSGColorSelectionModelFields.h"
 #include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
@@ -118,14 +112,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    EventConnection addDialogWindowListener(DialogWindowListenerPtr Listener);
-	bool isDialogWindowListenerAttached(DialogWindowListenerPtr Listener) const;
-    void removeDialogWindowListener(DialogWindowListenerPtr Listener);
-
-    EventConnection addEventListener(EventListenerPtr Listener);
-	bool isEventListenerAttached(EventListenerPtr Listener) const;
-    void removeEventListener(EventListenerPtr Listener);
 	
 	virtual void close(UInt32 intOption, std::string strInput, UInt32 intInputIndex);
     
@@ -174,19 +160,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
     static DialogWindowUnrecPtr createColorChooserDialog(const std::string& Title, 
                                                          const std::string& Message, 
                                                          bool showAlpha,
-                                                         ColorSelectionModelPtr colorModel,
+                                                         ColorSelectionModel* const colorModel,
                                                          bool showCancel, 
                                                          const std::string& ConfirmBtnText = "OK", 
                                                          const std::string& CancelBtnText = "Cancel");
 
-    ActionListener* getConfirmButtonListener(void);
-    ActionListener* getCancelButtonListener (void);
-    ActionListener* getInputButtonListener  (void);
-    ActionListener* getComboButtonListener  (void);
-    //ActionListener* getListListener  (void);
-    ActionListener* getTextButtonListener   (void);
-
-    void addTransientObject(const boost::any& obj);
+    void handleConfirmButtonAction(ActionEventDetails* const e);
+    void handleCancelButtonAction(ActionEventDetails* const e);
+    void handleInputButtonAction(ActionEventDetails* const e);
+    void handleListButtonAction(ActionEventDetails* const e);
+    void handleComboButtonAction(ActionEventDetails* const e);
+    void handleTextButtonAction(ActionEventDetails* const e);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -215,78 +199,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindow : public DialogWindowBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    class ConfirmButtonListener : public ActionListener
-    {
-      public :
-        ConfirmButtonListener(DialogWindow* const TheDialogWindow);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-      protected :
-        DialogWindow* _DialogWindow;
-    };
-    ConfirmButtonListener _ConfirmButtonListener;
+    boost::signals2::connection _ConfirmButtonActionConnection;
 
-    class CancelButtonListener : public ActionListener
-    {
-      public :
-        CancelButtonListener(DialogWindow* const TheDialogWindow);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-      protected :
-        DialogWindow* _DialogWindow;
-    };
-    CancelButtonListener _CancelButtonListener;
+    boost::signals2::connection _CancelButtonActionConnection;
 
-    class InputButtonListener : public ActionListener
-    {
-      public :
-        InputButtonListener(DialogWindow* const TheDialogWindow);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-      protected :
-        DialogWindow* _DialogWindow;
-    };
-    InputButtonListener _InputButtonListener;
+    boost::signals2::connection _InputButtonActionConnection;
 
-    class ListButtonListener : public ActionListener
-    {
-      public :
-        ListButtonListener(DialogWindow* const TheDialogWindow);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-      protected :
-        DialogWindow* _DialogWindow;
-    };
-    ListButtonListener _ListButtonListener;
+    boost::signals2::connection _ListButtonActionConnection;
 
-    class ComboButtonListener : public ActionListener
-    {
-      public :
-        ComboButtonListener(DialogWindow* const TheDialogWindow);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-      protected :
-        DialogWindow* _DialogWindow;
-    };
-    ComboButtonListener _ComboButtonListener;
+    boost::signals2::connection _ComboButtonActionConnection;
 
-    class TextButtonListener : public ActionListener
-    {
-      public :
-        TextButtonListener(DialogWindow* const TheDialogWindow);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-      protected :
-        DialogWindow* _DialogWindow;
-    };
-    TextButtonListener _TextButtonListener;
+    boost::signals2::connection _TextButtonActionConnection;
 
-    typedef std::set<DialogWindowListenerPtr> DialogWindowListenerSet;
-    typedef DialogWindowListenerSet::iterator DialogWindowListenerSetItor;
-    typedef DialogWindowListenerSet::const_iterator DialogWindowListenerSetConstItor;
-	
-    DialogWindowListenerSet       _DialogWindowListeners;
-	    
-	typedef std::set<EventListenerPtr> EventListenerSet;
-    typedef EventListenerSet::iterator EventListenerSetItor;
-    typedef EventListenerSet::const_iterator EventListenerSetConstItor;
-	
-    EventListenerSet       _EventListeners;
-	
 	virtual void produceDialogWindowClosing(UInt32 intOption,
                                             std::string strInput,
                                             UInt32 intInputIndex);

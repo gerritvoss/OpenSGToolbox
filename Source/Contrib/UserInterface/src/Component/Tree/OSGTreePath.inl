@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include "OSGConfig.h"
-
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -72,11 +70,6 @@ UInt32 TreePath::getDepth(void) const
     return _Path.size();
 }
 
-inline
-bool TreePath::empty(void) const
-{
-    return (_Model == NULL || _Path.size() == 0);
-}
 
 inline
 bool TreePath::isAncestor(const TreePath& aTreePath) const
@@ -122,56 +115,5 @@ TreePath TreePath::getChildPath(boost::any child) const
     return TreePath(*this, child);
 }
 
-inline
-TreePath::TreePath(const TreePath& p) :
-  _Path(p._Path), _Model(p._Model)
-{
-}
-
-inline
-TreePath::TreePath(const PathVectorType& path, TreeModel * const theModel) :
-  _Path(path), _Model(theModel)
-{
-}
-
-inline
-TreePath::TreePath(const TreePath& p, boost::any child) :
-    _Path(p._Path),
-    _Model(p._Model)
-{
-    _Path.push_back(child);
-}
-
-inline
-TreePath::TreePath(boost::any value, TreeModel * const theModel) :
-    _Path(1, value),
-    _Model(theModel)
-{
-}
-
-
-inline
-TreePath::TreePath(const std::deque<boost::any>& path, TreeModel * const theModel) :
-  _Path(path.begin(), path.end()), _Model(theModel)
-{
-}
-
-inline
-TreePath::TreePath(const TreePath& p, UInt32 len) : _Model(p._Model)
-{
-    if(len <= p._Path.size())
-    {
-        _Path.insert(_Path.begin(), p._Path.begin(), p._Path.begin() + len);
-    }
-}
-
-inline
-TreePath::TreePath(void) :
-  _Path(), _Model(NULL)
-{
-}
-
 OSG_END_NAMESPACE
-
-#define OSGTREEPATH_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

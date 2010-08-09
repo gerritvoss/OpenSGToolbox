@@ -205,70 +205,291 @@ const Char8 *AnimationGroupBase::getClassname(void)
 }
 
 inline
-EventConnection AnimationGroupBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool AnimationGroupBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 AnimationGroupBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr AnimationGroupBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void AnimationGroupBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 AnimationGroupBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *AnimationGroupBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *AnimationGroupBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *AnimationGroupBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *AnimationGroupBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 AnimationGroupBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *AnimationGroupBase::editSFEventProducer(void)
+boost::signals2::connection  AnimationGroupBase::connectAnimationsStarted(const AnimationsStartedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _AnimationsStartedEvent.connect(listener, at);
 }
 
-//! Get the value of the AnimationGroup::_sfEventProducer field.
 inline
-EventProducerPtr &AnimationGroupBase::editEventProducer(void)
+boost::signals2::connection  AnimationGroupBase::connectAnimationsStarted(const AnimationsStartedEventType::group_type &group,
+                                                    const AnimationsStartedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _AnimationsStartedEvent.connect(group, listener, at);
+}
+
+inline
+void  AnimationGroupBase::disconnectAnimationsStarted(const AnimationsStartedEventType::group_type &group)
+{
+    _AnimationsStartedEvent.disconnect(group);
+}
+
+inline
+void  AnimationGroupBase::disconnectAllSlotsAnimationsStarted(void)
+{
+    _AnimationsStartedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AnimationGroupBase::isEmptyAnimationsStarted(void) const
+{
+    return _AnimationsStartedEvent.empty();
+}
+
+inline
+UInt32  AnimationGroupBase::numSlotsAnimationsStarted(void) const
+{
+    return _AnimationsStartedEvent.num_slots();
+}
+
+inline
+void AnimationGroupBase::produceAnimationsStarted(AnimationsStartedEventDetailsType* const e)
+{
+    produceEvent(AnimationsStartedEventId, e);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsStopped(const AnimationsStoppedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _AnimationsStoppedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsStopped(const AnimationsStoppedEventType::group_type &group,
+                                                    const AnimationsStoppedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _AnimationsStoppedEvent.connect(group, listener, at);
+}
+
+inline
+void  AnimationGroupBase::disconnectAnimationsStopped(const AnimationsStoppedEventType::group_type &group)
+{
+    _AnimationsStoppedEvent.disconnect(group);
+}
+
+inline
+void  AnimationGroupBase::disconnectAllSlotsAnimationsStopped(void)
+{
+    _AnimationsStoppedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AnimationGroupBase::isEmptyAnimationsStopped(void) const
+{
+    return _AnimationsStoppedEvent.empty();
+}
+
+inline
+UInt32  AnimationGroupBase::numSlotsAnimationsStopped(void) const
+{
+    return _AnimationsStoppedEvent.num_slots();
+}
+
+inline
+void AnimationGroupBase::produceAnimationsStopped(AnimationsStoppedEventDetailsType* const e)
+{
+    produceEvent(AnimationsStoppedEventId, e);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsPaused(const AnimationsPausedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _AnimationsPausedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsPaused(const AnimationsPausedEventType::group_type &group,
+                                                    const AnimationsPausedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _AnimationsPausedEvent.connect(group, listener, at);
+}
+
+inline
+void  AnimationGroupBase::disconnectAnimationsPaused(const AnimationsPausedEventType::group_type &group)
+{
+    _AnimationsPausedEvent.disconnect(group);
+}
+
+inline
+void  AnimationGroupBase::disconnectAllSlotsAnimationsPaused(void)
+{
+    _AnimationsPausedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AnimationGroupBase::isEmptyAnimationsPaused(void) const
+{
+    return _AnimationsPausedEvent.empty();
+}
+
+inline
+UInt32  AnimationGroupBase::numSlotsAnimationsPaused(void) const
+{
+    return _AnimationsPausedEvent.num_slots();
+}
+
+inline
+void AnimationGroupBase::produceAnimationsPaused(AnimationsPausedEventDetailsType* const e)
+{
+    produceEvent(AnimationsPausedEventId, e);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsUnpaused(const AnimationsUnpausedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _AnimationsUnpausedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsUnpaused(const AnimationsUnpausedEventType::group_type &group,
+                                                    const AnimationsUnpausedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _AnimationsUnpausedEvent.connect(group, listener, at);
+}
+
+inline
+void  AnimationGroupBase::disconnectAnimationsUnpaused(const AnimationsUnpausedEventType::group_type &group)
+{
+    _AnimationsUnpausedEvent.disconnect(group);
+}
+
+inline
+void  AnimationGroupBase::disconnectAllSlotsAnimationsUnpaused(void)
+{
+    _AnimationsUnpausedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AnimationGroupBase::isEmptyAnimationsUnpaused(void) const
+{
+    return _AnimationsUnpausedEvent.empty();
+}
+
+inline
+UInt32  AnimationGroupBase::numSlotsAnimationsUnpaused(void) const
+{
+    return _AnimationsUnpausedEvent.num_slots();
+}
+
+inline
+void AnimationGroupBase::produceAnimationsUnpaused(AnimationsUnpausedEventDetailsType* const e)
+{
+    produceEvent(AnimationsUnpausedEventId, e);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsEnded(const AnimationsEndedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _AnimationsEndedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsEnded(const AnimationsEndedEventType::group_type &group,
+                                                    const AnimationsEndedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _AnimationsEndedEvent.connect(group, listener, at);
+}
+
+inline
+void  AnimationGroupBase::disconnectAnimationsEnded(const AnimationsEndedEventType::group_type &group)
+{
+    _AnimationsEndedEvent.disconnect(group);
+}
+
+inline
+void  AnimationGroupBase::disconnectAllSlotsAnimationsEnded(void)
+{
+    _AnimationsEndedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AnimationGroupBase::isEmptyAnimationsEnded(void) const
+{
+    return _AnimationsEndedEvent.empty();
+}
+
+inline
+UInt32  AnimationGroupBase::numSlotsAnimationsEnded(void) const
+{
+    return _AnimationsEndedEvent.num_slots();
+}
+
+inline
+void AnimationGroupBase::produceAnimationsEnded(AnimationsEndedEventDetailsType* const e)
+{
+    produceEvent(AnimationsEndedEventId, e);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsCycled(const AnimationsCycledEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _AnimationsCycledEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AnimationGroupBase::connectAnimationsCycled(const AnimationsCycledEventType::group_type &group,
+                                                    const AnimationsCycledEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _AnimationsCycledEvent.connect(group, listener, at);
+}
+
+inline
+void  AnimationGroupBase::disconnectAnimationsCycled(const AnimationsCycledEventType::group_type &group)
+{
+    _AnimationsCycledEvent.disconnect(group);
+}
+
+inline
+void  AnimationGroupBase::disconnectAllSlotsAnimationsCycled(void)
+{
+    _AnimationsCycledEvent.disconnect_all_slots();
+}
+
+inline
+bool  AnimationGroupBase::isEmptyAnimationsCycled(void) const
+{
+    return _AnimationsCycledEvent.empty();
+}
+
+inline
+UInt32  AnimationGroupBase::numSlotsAnimationsCycled(void) const
+{
+    return _AnimationsCycledEvent.num_slots();
+}
+
+inline
+void AnimationGroupBase::produceAnimationsCycled(AnimationsCycledEventDetailsType* const e)
+{
+    produceEvent(AnimationsCycledEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(AnimationGroup);

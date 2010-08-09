@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="GenericEventDetails"
+	parent="EventDetails"
+    library="Base"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+	supportUnregisteredCreate="true"
+    authors="Robert Goetz                                                  "
+>
+	<Field
+		name="NumberMap"
+		type="StringToUInt32Map"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="ContainerMap"
+		type="FieldContainerMap"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

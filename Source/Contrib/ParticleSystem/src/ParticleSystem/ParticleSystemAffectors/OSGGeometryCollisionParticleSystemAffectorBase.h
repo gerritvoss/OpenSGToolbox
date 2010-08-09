@@ -71,10 +71,10 @@
 #include "OSGGeometryCollisionParticleSystemAffectorFields.h"
 
 //Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+#include "OSGActivity.h"
+#include "OSGConsumableEventCombiner.h"
+
+#include "OSGParticleGeometryCollisionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -93,6 +93,12 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeometryCollisionParticleSystemAffect
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(GeometryCollisionParticleSystemAffector);
+    
+    
+    typedef ParticleGeometryCollisionEventDetails ParticleCollisionEventDetailsType;
+
+    typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
+    typedef boost::signals2::signal<void (ParticleGeometryCollisionEventDetails* const, UInt32), ConsumableEventCombiner> ParticleCollisionEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -102,27 +108,23 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeometryCollisionParticleSystemAffect
     {
         CollisionAffectorsFieldId = Inherited::NextFieldId,
         CollisionNodeFieldId = CollisionAffectorsFieldId + 1,
-        EventProducerFieldId = CollisionNodeFieldId + 1,
-        NextFieldId = EventProducerFieldId + 1
+        NextFieldId = CollisionNodeFieldId + 1
     };
 
     static const OSG::BitVector CollisionAffectorsFieldMask =
         (TypeTraits<BitVector>::One << CollisionAffectorsFieldId);
     static const OSG::BitVector CollisionNodeFieldMask =
         (TypeTraits<BitVector>::One << CollisionNodeFieldId);
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef MFUnrecParticleAffectorPtr MFCollisionAffectorsType;
     typedef SFUnrecNodePtr    SFCollisionNodeType;
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        ParticleCollisionMethodId = 1,
-        NextProducedMethodId = ParticleCollisionMethodId + 1
+        ParticleCollisionEventId = 1,
+        NextProducedEventId = ParticleCollisionEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -197,28 +199,46 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeometryCollisionParticleSystemAffect
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+                                                         
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
-
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //ParticleCollision
+    boost::signals2::connection connectParticleCollision(const ParticleCollisionEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectParticleCollision(const ParticleCollisionEventType::group_type &group,
+                                                       const ParticleCollisionEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectParticleCollision      (const ParticleCollisionEventType::group_type &group);
+    void   disconnectAllSlotsParticleCollision(void);
+    bool   isEmptyParticleCollision         (void) const;
+    UInt32 numSlotsParticleCollision        (void) const;
+    
+    
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
@@ -251,13 +271,11 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeometryCollisionParticleSystemAffect
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Event Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
-    
-    GetFieldHandlePtr  getHandleEventProducer        (void) const;
-    EditFieldHandlePtr editHandleEventProducer       (void);
 
+    //Event Event producers
+    ParticleCollisionEventType _ParticleCollisionEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -271,7 +289,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeometryCollisionParticleSystemAffect
 
     MFUnrecParticleAffectorPtr _mfCollisionAffectors;
     SFUnrecNodePtr    _sfCollisionNode;
-    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -305,6 +322,20 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeometryCollisionParticleSystemAffect
     GetFieldHandlePtr  getHandleCollisionNode   (void) const;
     EditFieldHandlePtr editHandleCollisionNode  (void);
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleParticleCollisionSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceParticleCollision   (ParticleCollisionEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -355,7 +386,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeometryCollisionParticleSystemAffect
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

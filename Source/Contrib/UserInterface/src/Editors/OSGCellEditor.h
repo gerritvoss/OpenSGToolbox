@@ -43,11 +43,9 @@
 #endif
 
 #include "OSGCellEditorBase.h"
-#include "OSGEvent.h"
-#include "OSGCellEditorListener.h"
+#include "OSGEventDetails.h"
 #include <boost/any.hpp>
 #include "OSGComponentFields.h"
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,13 +82,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CellEditor : public CellEditorBase
 
     /*! \}                                                                 */
 
-    //Adds a listener to the list that's notified when the editor stops, or cancels editing.
-    virtual EventConnection addCellEditorListener(CellEditorListenerPtr l) = 0;
-	virtual bool isCellEditorListenerAttached(CellEditorListenerPtr l) const = 0;
-
-    //Removes a listener from the list that's notified
-    virtual void removeCellEditorListener(CellEditorListenerPtr l) = 0;
-
     //Tells the editor to cancel editing and not accept any partially edited value.
     virtual void cancelCellEditing(void) = 0;
 
@@ -98,10 +89,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CellEditor : public CellEditorBase
     virtual boost::any getCellEditorValue(void) const = 0;
 
     //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const EventUnrecPtr anEvent) const = 0;
+    virtual bool isCellEditable(EventDetails* const anEvent) const = 0;
 
     //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const EventUnrecPtr anEvent) const = 0;
+    virtual bool shouldSelectCell(EventDetails* const anEvent) const = 0;
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void) = 0;

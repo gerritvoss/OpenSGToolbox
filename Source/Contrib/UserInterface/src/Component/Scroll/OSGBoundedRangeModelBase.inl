@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGChangeEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -108,70 +110,71 @@ const Char8 *BoundedRangeModelBase::getClassname(void)
 }
 
 inline
-EventConnection BoundedRangeModelBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool BoundedRangeModelBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 BoundedRangeModelBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr BoundedRangeModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void BoundedRangeModelBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 BoundedRangeModelBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *BoundedRangeModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *BoundedRangeModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *BoundedRangeModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *BoundedRangeModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 BoundedRangeModelBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *BoundedRangeModelBase::editSFEventProducer(void)
+boost::signals2::connection  BoundedRangeModelBase::connectStateChanged(const StateChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _StateChangedEvent.connect(listener, at);
 }
 
-//! Get the value of the BoundedRangeModel::_sfEventProducer field.
 inline
-EventProducerPtr &BoundedRangeModelBase::editEventProducer(void)
+boost::signals2::connection  BoundedRangeModelBase::connectStateChanged(const StateChangedEventType::group_type &group,
+                                                    const StateChangedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _StateChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  BoundedRangeModelBase::disconnectStateChanged(const StateChangedEventType::group_type &group)
+{
+    _StateChangedEvent.disconnect(group);
+}
+
+inline
+void  BoundedRangeModelBase::disconnectAllSlotsStateChanged(void)
+{
+    _StateChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  BoundedRangeModelBase::isEmptyStateChanged(void) const
+{
+    return _StateChangedEvent.empty();
+}
+
+inline
+UInt32  BoundedRangeModelBase::numSlotsStateChanged(void) const
+{
+    return _StateChangedEvent.num_slots();
+}
+
+inline
+void BoundedRangeModelBase::produceStateChanged(StateChangedEventDetailsType* const e)
+{
+    produceEvent(StateChangedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(BoundedRangeModel);

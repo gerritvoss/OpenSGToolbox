@@ -71,6 +71,7 @@ protected:
 	virtual void undo(void);
 
     std::string _Value;
+    FieldContainerUnrecPtr _InsertedPtr;
     UInt32 _Index;
 
 public:

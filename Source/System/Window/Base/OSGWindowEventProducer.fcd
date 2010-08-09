@@ -59,151 +59,151 @@ WindowEventProducer is the base class for all Window specific Event producers. I
 		defaultValue="false"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="WindowOpened"
-		type="WindowEvent"
+		detailsType="WindowEventDetails"
 		consumable="true"
 	>
 	This Event is fired when this window has opened.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="WindowClosing"
-		type="WindowEvent"
+		detailsType="WindowEventDetails"
 		consumable="true"
 	>
 	This Event is fired when this window has received a close command, but has not yet closed.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="WindowClosed"
-		type="WindowEvent"
+		detailsType="WindowEventDetails"
 		consumable="true"
 	>
 	This Event is fired when this window has closed.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="WindowIconified"
-		type="WindowEvent"
+		detailsType="WindowEventDetails"
 		consumable="true"
 	>
 	This Event is fired when this window has closed.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="WindowDeiconified"
-		type="WindowEvent"
+		detailsType="WindowEventDetails"
 		consumable="true"
 	>
 	This Event is fired when this window has closed.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="WindowActivated"
-		type="WindowEvent"
+		detailsType="WindowEventDetails"
 		consumable="true"
 	>
 	This Event is fired when this window has closed.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="WindowDeactivated"
-		type="WindowEvent"
+		detailsType="WindowEventDetails"
 		consumable="true"
 	>
 	This Event is fired when this window has closed.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="WindowEntered"
-		type="WindowEvent"
+		detailsType="WindowEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the cursor has entered this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="WindowExited"
-		type="WindowEvent"
+		detailsType="WindowEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the cursor has exited this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseClicked"
-		type="MouseEvent"
+		detailsType="MouseEventDetails"
 		consumable="true"
 	>
 	This Event is fired when there is a mouse button click in this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseEntered"
-		type="MouseEvent"
+		detailsType="MouseEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the cursor has entered this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseExited"
-		type="MouseEvent"
+		detailsType="MouseEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the cursor has exited this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MousePressed"
-		type="MouseEvent"
+		detailsType="MouseEventDetails"
 		consumable="true"
 	>
 	This Event is fired when there is a mouse button press in this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseReleased"
-		type="MouseEvent"
+		detailsType="MouseEventDetails"
 		consumable="true"
 	>
 	This Event is fired when there is a mouse button release in this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseMoved"
-		type="MouseEvent"
+		detailsType="MouseEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the mouse has moved in this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseDragged"
-		type="MouseEvent"
+		detailsType="MouseEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the mouse has moved, and one or more of the mouse buttons are down in this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseWheelMoved"
-		type="MouseWheelEvent"
+		detailsType="MouseWheelEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the mouse wheel has moved in this window.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="KeyPressed"
-		type="KeyEvent"
+		detailsType="KeyEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the a key has been pressed when this window has focus.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="KeyReleased"
-		type="KeyEvent"
+		detailsType="KeyEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the a key has been released when this window has focus.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="KeyTyped"
-		type="KeyEvent"
+		detailsType="KeyEventDetails"
 		consumable="true"
 	>
 	This Event is fired when the a key has been typed when this window has focus.
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="Update"
-		type="UpdateEvent"
+		detailsType="UpdateEventDetails"
 		consumable="true"
 	>
 	This Event is fired by the main loop of this window whenever it is idle.
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

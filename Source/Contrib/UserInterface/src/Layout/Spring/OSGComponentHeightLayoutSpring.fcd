@@ -17,7 +17,7 @@ A UI ComponentHeight LayoutSpring.
 	<Field
 		name="Component"
 		type="Component"
-        category="pointer"
+        category="weakpointer"
 		cardinality="single"
       visibility="external"
 		defaultValue="NULL"

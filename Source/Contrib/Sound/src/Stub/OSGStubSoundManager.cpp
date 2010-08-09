@@ -85,13 +85,13 @@ StubSoundManager *StubSoundManager::the(void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void StubSoundManager::update(const UpdateEventUnrecPtr e)
+void StubSoundManager::update(const Time& ElapsedTime)
 {
 }
 
-SoundUnrecPtr StubSoundManager::createSound(void) const
+SoundTransitPtr StubSoundManager::createSound(void) const
 {
-    return StubSound::create();
+    return SoundTransitPtr(StubSound::create());
 }
 
 /*-------------------------------------------------------------------------*\

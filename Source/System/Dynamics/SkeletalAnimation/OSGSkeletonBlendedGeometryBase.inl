@@ -228,70 +228,71 @@ const Char8 *SkeletonBlendedGeometryBase::getClassname(void)
 }
 
 inline
-EventConnection SkeletonBlendedGeometryBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool SkeletonBlendedGeometryBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 SkeletonBlendedGeometryBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr SkeletonBlendedGeometryBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void SkeletonBlendedGeometryBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 SkeletonBlendedGeometryBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *SkeletonBlendedGeometryBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *SkeletonBlendedGeometryBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *SkeletonBlendedGeometryBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *SkeletonBlendedGeometryBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 SkeletonBlendedGeometryBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *SkeletonBlendedGeometryBase::editSFEventProducer(void)
+boost::signals2::connection  SkeletonBlendedGeometryBase::connectSkeletonChanged(const SkeletonChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _SkeletonChangedEvent.connect(listener, at);
 }
 
-//! Get the value of the SkeletonBlendedGeometry::_sfEventProducer field.
 inline
-EventProducerPtr &SkeletonBlendedGeometryBase::editEventProducer(void)
+boost::signals2::connection  SkeletonBlendedGeometryBase::connectSkeletonChanged(const SkeletonChangedEventType::group_type &group,
+                                                    const SkeletonChangedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _SkeletonChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  SkeletonBlendedGeometryBase::disconnectSkeletonChanged(const SkeletonChangedEventType::group_type &group)
+{
+    _SkeletonChangedEvent.disconnect(group);
+}
+
+inline
+void  SkeletonBlendedGeometryBase::disconnectAllSlotsSkeletonChanged(void)
+{
+    _SkeletonChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  SkeletonBlendedGeometryBase::isEmptySkeletonChanged(void) const
+{
+    return _SkeletonChangedEvent.empty();
+}
+
+inline
+UInt32  SkeletonBlendedGeometryBase::numSlotsSkeletonChanged(void) const
+{
+    return _SkeletonChangedEvent.num_slots();
+}
+
+inline
+void SkeletonBlendedGeometryBase::produceSkeletonChanged(SkeletonChangedEventDetailsType* const e)
+{
+    produceEvent(SkeletonChangedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(SkeletonBlendedGeometry);

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,41 +36,96 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_DEFAULT_COLOR_SELECTION_MODEL_H_
-#define _OSG_DEFAULT_COLOR_SELECTION_MODEL_H_
+#ifndef _OSGDEFAULTCOLORSELECTIONMODEL_H_
+#define _OSGDEFAULTCOLORSELECTIONMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGConfig.h"
-#include "OSGContribUserInterfaceDef.h"
-
-#include "OSGAbstractColorSelectionModel.h"
+#include "OSGDefaultColorSelectionModelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultColorSelectionModel class. See \ref 
-           PageUserInterfaceDefaultColorSelectionModel for a description.
+/*! \brief DefaultColorSelectionModel class. See \ref
+           PageContribUserInterfaceDefaultColorSelectionModel for a description.
 */
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultColorSelectionModel : public AbstractColorSelectionModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultColorSelectionModel : public DefaultColorSelectionModelBase
 {
+  protected:
+
     /*==========================  PUBLIC  =================================*/
+
   public:
-	  
+
+    typedef DefaultColorSelectionModelBase Inherited;
+    typedef DefaultColorSelectionModel     Self;
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0,
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
 	virtual Color4f getSelectedColor(void) const;
 
 	virtual void setSelectedColor(const Color4f& Value, bool isValueAdjusting);
+    /*=========================  PROTECTED  ===============================*/
 
   protected:
-	  Color4f _SelectedColor;
 
+    // Variables should all be in DefaultColorSelectionModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    DefaultColorSelectionModel(void);
+    DefaultColorSelectionModel(const DefaultColorSelectionModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DefaultColorSelectionModel(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
+
+    friend class FieldContainer;
+    friend class DefaultColorSelectionModelBase;
+
+    // prohibit default functions (move to 'public' if you need one)
+    void operator =(const DefaultColorSelectionModel &source);
 };
 
-typedef DefaultColorSelectionModel *DefaultColorSelectionModelPtr;
+typedef DefaultColorSelectionModel *DefaultColorSelectionModelP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_DEFAULT_COLOR_SELECTION_MODEL_H_ */
+#include "OSGDefaultColorSelectionModelBase.inl"
+#include "OSGDefaultColorSelectionModel.inl"
+
+#endif /* _OSGDEFAULTCOLORSELECTIONMODEL_H_ */

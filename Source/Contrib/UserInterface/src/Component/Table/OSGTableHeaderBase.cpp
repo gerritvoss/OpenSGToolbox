@@ -58,7 +58,7 @@
 
 
 
-#include "OSGTable.h"                   // Table Class
+#include "OSGFieldContainer.h"          // Table Class
 #include "OSGTableColumnModel.h"        // ColumnModel Class
 #include "OSGUIDrawObjectCanvas.h"      // DefaultMarginDrawObject Class
 #include "OSGComponent.h"               // ColumnHeaders Class
@@ -86,7 +86,7 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var Table *         TableHeaderBase::_sfTable
+/*! \var FieldContainer * TableHeaderBase::_sfTable
     
 */
 
@@ -137,6 +137,18 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            TableHeader *,
                            0);
 
+DataType &FieldTraits< TableHeader *, 1 >::getType(void)
+{
+    return FieldTraits<TableHeader *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_SFIELD(ChildPointerSField,
+                      TableHeader *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
+
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
@@ -146,15 +158,15 @@ void TableHeaderBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecTablePtr::Description(
-        SFUnrecTablePtr::getClassType(),
+    pDesc = new SFParentFieldContainerPtr::Description(
+        SFParentFieldContainerPtr::getClassType(),
         "Table",
         "",
         TableFieldId, TableFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&TableHeader::editHandleTable),
-        static_cast<FieldGetMethodSig >(&TableHeader::getHandleTable));
+        static_cast     <FieldEditMethodSig>(&TableHeader::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&TableHeader::invalidGetField));
 
     oType.addInitialDesc(pDesc);
 
@@ -268,19 +280,21 @@ TableHeaderBase::TypeObject TableHeaderBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    childFields=\"single\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     "    >\n"
     "    A UI Table Header.\n"
-    "    <Field\n"
-    "        name=\"Table\"\n"
-    "        type=\"Table\"\n"
-    "        category=\"pointer\"\n"
-    "        cardinality=\"single\"\n"
-    "        visibility=\"external\"\n"
-    "        defaultValue=\"NULL\"\n"
-    "        access=\"public\"\n"
-    "        >\n"
-    "    </Field>\n"
+    "\t<Field\n"
+    "\t   name=\"Table\"\n"
+    "\t   type=\"FieldContainer\"\n"
+    "\t   cardinality=\"single\"\n"
+    "\t   visibility=\"external\"\n"
+    "\t   access=\"none\"\n"
+    "       doRefCount=\"false\"\n"
+    "       passFieldMask=\"true\"\n"
+    "       category=\"parentpointer\"\n"
+    "\t   >\n"
+    "\t</Field>\n"
     "    <Field\n"
     "        name=\"ColumnModel\"\n"
     "        type=\"TableColumnModel\"\n"
@@ -373,18 +387,6 @@ UInt32 TableHeaderBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-//! Get the TableHeader::_sfTable field.
-const SFUnrecTablePtr *TableHeaderBase::getSFTable(void) const
-{
-    return &_sfTable;
-}
-
-SFUnrecTablePtr     *TableHeaderBase::editSFTable          (void)
-{
-    editSField(TableFieldMask);
-
-    return &_sfTable;
-}
 
 //! Get the TableHeader::_sfColumnModel field.
 const SFUnrecTableColumnModelPtr *TableHeaderBase::getSFColumnModel(void) const
@@ -825,7 +827,6 @@ FieldContainerTransitPtr TableHeaderBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 TableHeaderBase::TableHeaderBase(void) :
@@ -860,6 +861,77 @@ TableHeaderBase::TableHeaderBase(const TableHeaderBase &source) :
 TableHeaderBase::~TableHeaderBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
+
+bool TableHeaderBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
+{
+    if(parentFieldId == TableFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            FieldContainer *pOldParent =
+                _sfTable.getValue         ();
+
+            UInt16 oldChildFieldId =
+                _sfTable.getParentFieldPos();
+
+            if(pOldParent != NULL)
+            {
+                pOldParent->unlinkChild(this, oldChildFieldId);
+            }
+
+            editSField(TableFieldMask);
+
+            _sfTable.setValue(static_cast<FieldContainer *>(pParent), childFieldId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
+}
+
+bool TableHeaderBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
+{
+    if(parentFieldId == TableFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            if(_sfTable.getValue() == pParent)
+            {
+                editSField(TableFieldMask);
+
+                _sfTable.setValue(NULL, 0xFFFF);
+
+                return true;
+            }
+
+            FWARNING(("TableHeaderBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
 
 void TableHeaderBase::onCreate(const TableHeader *source)
 {
@@ -868,8 +940,6 @@ void TableHeaderBase::onCreate(const TableHeader *source)
     if(source != NULL)
     {
         TableHeader *pThis = static_cast<TableHeader *>(this);
-
-        pThis->setTable(source->getTable());
 
         pThis->setColumnModel(source->getColumnModel());
 
@@ -903,28 +973,14 @@ void TableHeaderBase::onCreate(const TableHeader *source)
 
 GetFieldHandlePtr TableHeaderBase::getHandleTable           (void) const
 {
-    SFUnrecTablePtr::GetHandlePtr returnValue(
-        new  SFUnrecTablePtr::GetHandle(
-             &_sfTable,
-             this->getType().getFieldDesc(TableFieldId),
-             const_cast<TableHeaderBase *>(this)));
+    SFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
 EditFieldHandlePtr TableHeaderBase::editHandleTable          (void)
 {
-    SFUnrecTablePtr::EditHandlePtr returnValue(
-        new  SFUnrecTablePtr::EditHandle(
-             &_sfTable,
-             this->getType().getFieldDesc(TableFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&TableHeader::setTable,
-                    static_cast<TableHeader *>(this), _1));
-
-    editSField(TableFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
@@ -1135,6 +1191,7 @@ EditFieldHandlePtr TableHeaderBase::editHandleColumnHeaders  (void)
 }
 
 
+
 #ifdef OSG_MT_CPTR_ASPECT
 void TableHeaderBase::execSyncV(      FieldContainer    &oFrom,
                                         ConstFieldMaskArg  whichField,
@@ -1170,8 +1227,6 @@ FieldContainer *TableHeaderBase::createAspectCopy(
 void TableHeaderBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
-
-    static_cast<TableHeader *>(this)->setTable(NULL);
 
     static_cast<TableHeader *>(this)->setColumnModel(NULL);
 

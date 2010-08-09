@@ -205,29 +205,24 @@ void TextArea::scrollToLine(const UInt32& line)
 	}
 }
 
-void TextArea::focusGained(const FocusEventUnrecPtr e)
+void TextArea::focusGained(FocusEventDetails* const e)
 {
 	if( getParentWindow() != NULL &&
 		getParentWindow()->getParentDrawingSurface() != NULL &&
 		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
-		getParentWindow()->getParentDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
+        _CaretUpdateConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectUpdate(boost::bind(&TextArea::handleCaretUpdate, this, _1));
 	}
 	Inherited::focusGained(e);
 }
 
-void TextArea::focusLost(const FocusEventUnrecPtr e)
+void TextArea::focusLost(FocusEventDetails* const e)
 {
-	if( getParentWindow() != NULL &&
-		getParentWindow()->getParentDrawingSurface() != NULL &&
-		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
-    {
-        _CaretUpdateListener.disconnect();
-	}
+    _CaretUpdateConnection.disconnect();
 	Inherited::focusLost(e);
 }
 
-void TextArea::keyTyped(const KeyEventUnrecPtr e)//broken
+void TextArea::keyTyped(KeyEventDetails* const e)//broken
 {
 	if(getEnabled() && getEditable())
 	{
@@ -247,24 +242,24 @@ void TextArea::keyTyped(const KeyEventUnrecPtr e)//broken
 
     switch(e->getKey())
     {
-    case KeyEvent::KEY_HOME:
+    case KeyEventDetails::KEY_HOME:
         moveCaretToBeginOfLine();
         break;
-    case KeyEvent::KEY_END:
+    case KeyEventDetails::KEY_END:
         moveCaretToEndOfLine();
         break;
-    case KeyEvent::KEY_UP:
-    case KeyEvent::KEY_KEYPAD_UP:
+    case KeyEventDetails::KEY_UP:
+    case KeyEventDetails::KEY_KEYPAD_UP:
         moveCaretLine(-1);
         break;
-    case KeyEvent::KEY_DOWN:
-    case KeyEvent::KEY_KEYPAD_DOWN:
+    case KeyEventDetails::KEY_DOWN:
+    case KeyEventDetails::KEY_KEYPAD_DOWN:
         moveCaretLine(1);
         break;
-    case KeyEvent::KEY_PAGE_UP:
+    case KeyEventDetails::KEY_PAGE_UP:
         moveCaretLine(-static_cast<Int32>(numVisibleLines()));
         break;
-    case KeyEvent::KEY_PAGE_DOWN:
+    case KeyEventDetails::KEY_PAGE_DOWN:
         moveCaretLine(numVisibleLines());
         break;
 	}
@@ -290,7 +285,7 @@ void TextArea::moveCaretLine(Int32 delta)
                     setCaretPosition(NewPosition);
             }
             if(getParentWindow() != NULL && getParentWindow()->getParentDrawingSurface()!=NULL&&getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL 
-                && getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+                && getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT)
             {
                 if(OriginalPosition == _TextSelectionEnd)
                 {
@@ -351,12 +346,12 @@ UInt32 TextArea::numLines(void) const
     return _LineContents.size();
 }
 
-void TextArea::mouseClicked(const MouseEventUnrecPtr e)
+void TextArea::mouseClicked(MouseEventDetails* const e)
 {	
 	Int32 Position(0);
 	Int32 BeginWord = 0;
 	Int32 EndWord = getText().size();
-	if(e->getButton() == e->BUTTON1)
+	if(e->getButton() == MouseEventDetails::BUTTON1)
 	{
 
 		if(e->getClickCount() == 2)
@@ -389,16 +384,16 @@ void TextArea::mouseClicked(const MouseEventUnrecPtr e)
 			}
 			_TextSelectionEnd = EndWord;
 			_TextSelectionStart = BeginWord;
-				setCaretPosition(EndWord);
+		    setCaretPosition(EndWord);
 		}
 	}
 	Inherited::mouseClicked(e);
 
 }
 
-void TextArea::mousePressed(const MouseEventUnrecPtr e)
+void TextArea::mousePressed(MouseEventDetails* const e)
 {
-	if(e->getButton() == e->BUTTON1)
+	if(e->getButton() == MouseEventDetails::BUTTON1)
 	{
 		//set caret position to proper place
 			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), this)));
@@ -408,47 +403,12 @@ void TextArea::mousePressed(const MouseEventUnrecPtr e)
 	}
 	if(getParentWindow() != NULL && getParentWindow()->getParentDrawingSurface()!=NULL&& getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 	{
-        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseListener(&_MouseDownListener);
-        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addKeyListener(&_MouseDownListener);
-        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseDownListener);
+        _MouseDownKeyTypedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectKeyTyped(boost::bind(&TextArea::handleMouseDownKeyTyped, this, _1));
+        _MouseDownMouseReleasedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseReleased(boost::bind(&TextArea::handleMouseDownMouseReleased, this, _1));
+        _MouseDownMouseDraggedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseDragged(boost::bind(&TextArea::handleMouseDownMouseDragged, this, _1));
     }
 	Inherited::mousePressed(e);
 }
-
-void TextArea::mouseDraggedAfterArming(const MouseEventUnrecPtr e)
-{
-	Int32 OriginalPosition = getCaretPosition();
-	if(e->getButton() == e->BUTTON1)
-	{
-		//set caret position to proper place
-		
-			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), this)));
-		if(getCaretPosition() < OriginalPosition)
-		{
-			if(getCaretPosition() < _TextSelectionStart)
-			{
-				_TextSelectionStart = getCaretPosition();
-			}
-			else
-			{
-				_TextSelectionEnd = getCaretPosition();
-			}
-		}
-		else if(getCaretPosition() > OriginalPosition)
-		{
-			if(getCaretPosition() > _TextSelectionEnd)
-			{
-				_TextSelectionEnd = getCaretPosition();
-			}
-			else
-			{
-				_TextSelectionStart = getCaretPosition();
-			}
-		}
-	}
-}
-
-
 
 Int32 TextArea::findTextPosition(OSG::Pnt2f Input)
 {
@@ -548,8 +508,10 @@ Int32 TextArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, cons
 void TextArea::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    _CaretUpdateListener.disconnect();
-    _MouseDownListener.disconnect();
+    _CaretUpdateConnection.disconnect();
+    _MouseDownKeyTypedConnection.disconnect();
+    _MouseDownMouseReleasedConnection.disconnect();
+    _MouseDownMouseDraggedConnection.disconnect();
 }
 
 /*-------------------------------------------------------------------------*\
@@ -560,17 +522,13 @@ void TextArea::detachFromEventProducer(void)
 
 TextArea::TextArea(void) :
     Inherited(),
-		_CurrentCaretBlinkElps(0.0),
-	    _CaretUpdateListener(this),
-		_MouseDownListener(this)
+		_CurrentCaretBlinkElps(0.0)
 {
 }
 
 TextArea::TextArea(const TextArea &source) :
     Inherited(source),
-		_CurrentCaretBlinkElps(0.0),
-	    _CaretUpdateListener(this),
-		_MouseDownListener(this)
+		_CurrentCaretBlinkElps(0.0)
 {
 }
 
@@ -717,52 +675,63 @@ void TextArea::dump(      UInt32    ,
     SLOG << "Dump TextArea NI" << std::endl;
 }
 
-void TextArea::CaretUpdateListener::update(const UpdateEventUnrecPtr e)
+void TextArea::handleCaretUpdate(UpdateEventDetails* const e)
 {
-   _TextArea->_CurrentCaretBlinkElps += e->getElapsedTime();
-   if(_TextArea->_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
+   _CurrentCaretBlinkElps += e->getElapsedTime();
+   if(_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
    {
-       Int32 Div = _TextArea->_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
-	   _TextArea->_CurrentCaretBlinkElps -= static_cast<OSG::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+       Int32 Div = _CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+	   _CurrentCaretBlinkElps -= static_cast<OSG::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
    }
 }
 
-void TextArea::CaretUpdateListener::disconnect(void)
+void TextArea::handleMouseDownKeyTyped(KeyEventDetails* const e)
 {
-    _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(this);
-}
-
-
-
-void TextArea::MouseDownListener::keyTyped(const KeyEventUnrecPtr e)
-{
-    if(e->getKey() == KeyEvent::KEY_ESCAPE)
+    if(e->getKey() == KeyEventDetails::KEY_ESCAPE)
     {
-	    if(_TextArea->getParentWindow() != NULL && _TextArea->getParentWindow()->getParentDrawingSurface()!=NULL&& _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
-	    {
-            disconnect();
-        }
+        _MouseDownKeyTypedConnection.disconnect();
+        _MouseDownMouseReleasedConnection.disconnect();
+        _MouseDownMouseDraggedConnection.disconnect();
     }
 }
 
-void TextArea::MouseDownListener::mouseReleased(const MouseEventUnrecPtr e)
+void TextArea::handleMouseDownMouseReleased(MouseEventDetails* const e)
 {
-	if(_TextArea->getParentWindow() != NULL && _TextArea->getParentWindow()->getParentDrawingSurface()!=NULL&& _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
+    _MouseDownKeyTypedConnection.disconnect();
+    _MouseDownMouseReleasedConnection.disconnect();
+    _MouseDownMouseDraggedConnection.disconnect();
+}
+
+void TextArea::handleMouseDownMouseDragged(MouseEventDetails* const e)
+{
+	Int32 OriginalPosition = getCaretPosition();
+	if(e->getButton() == MouseEventDetails::BUTTON1)
 	{
-        disconnect();
-    }
-}
-
-void TextArea::MouseDownListener::mouseDragged(const MouseEventUnrecPtr e)
-{
-    _TextArea->mouseDraggedAfterArming(e);
-}
-
-void TextArea::MouseDownListener::disconnect(void)
-{
-    _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseListener(this);
-    _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeKeyListener(this);
-    _TextArea->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+		//set caret position to proper place
+		setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), this)));
+		if(getCaretPosition() < OriginalPosition)
+		{
+			if(getCaretPosition() < _TextSelectionStart)
+			{
+				_TextSelectionStart = getCaretPosition();
+			}
+			else
+			{
+				_TextSelectionEnd = getCaretPosition();
+			}
+		}
+		else if(getCaretPosition() > OriginalPosition)
+		{
+			if(getCaretPosition() > _TextSelectionEnd)
+			{
+				_TextSelectionEnd = getCaretPosition();
+			}
+			else
+			{
+				_TextSelectionStart = getCaretPosition();
+			}
+		}
+	}
 }
 
 OSG_END_NAMESPACE

@@ -48,8 +48,7 @@
 #include "OSGConfig.h"
 
 #include "OSGAbstractSpinnerModel.h"
-
-#include <boost/bind.hpp>
+#include "OSGChangeEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -73,37 +72,11 @@ A AbstractSpinnerModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-EventConnection AbstractSpinnerModel::addChangeListener(ChangeListenerPtr l)
-{
-    _ChangeListeners.insert(l);
-    return EventConnection(
-                           boost::bind(&AbstractSpinnerModel::isChangeListenerAttached, this, l),
-                           boost::bind(&AbstractSpinnerModel::removeChangeListener, this, l));
-}
-
-bool AbstractSpinnerModel::isChangeListenerAttached(ChangeListenerPtr l) const
-{
-    return _ChangeListeners.find(l) != _ChangeListeners.end();
-}
-
-void AbstractSpinnerModel::removeChangeListener(ChangeListenerPtr l)
-{
-    ChangeListenerSetItor EraseIter(_ChangeListeners.find(l));
-    if(EraseIter != _ChangeListeners.end())
-    {
-        _ChangeListeners.erase(EraseIter);
-    }
-}
-
 void AbstractSpinnerModel::produceStateChanged(void)
 {
-    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(NULL, getSystemTime());
-    ChangeListenerSet ModelListenerSet(_ChangeListeners);
-    for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->stateChanged(TheEvent);
-    }
+    ChangeEventDetailsUnrecPtr Details = ChangeEventDetails::create(NULL, getSystemTime());
+   
+    Inherited::produceStateChanged(Details);
 }
 
 /*-------------------------------------------------------------------------*\

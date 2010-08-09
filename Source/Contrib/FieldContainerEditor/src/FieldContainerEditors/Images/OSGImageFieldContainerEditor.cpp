@@ -159,6 +159,13 @@ void ImageFieldContainerEditor::onDestroy()
 {
 }
 
+void ImageFieldContainerEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _ImageDisplayComponent = NULL;
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 ImageFieldContainerEditor::ImageFieldContainerEditor(void) :

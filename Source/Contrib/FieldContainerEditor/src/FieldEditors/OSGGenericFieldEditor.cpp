@@ -58,6 +58,7 @@
 #include "OSGFieldContainerMFieldHandle.h"
 #include "OSGMaterialMapFields.h"
 #include <boost/lexical_cast.hpp>
+#include "OSGTextField.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -204,14 +205,12 @@ void GenericFieldEditor::updateLayout(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 GenericFieldEditor::GenericFieldEditor(void) :
-    Inherited(),
-    _TextFieldListener(this)
+    Inherited()
 {
 }
 
 GenericFieldEditor::GenericFieldEditor(const GenericFieldEditor &source) :
-    Inherited(source),
-    _TextFieldListener(this)
+    Inherited(source)
 {
 }
 
@@ -227,14 +226,27 @@ void GenericFieldEditor::onCreate(const GenericFieldEditor *Id)
     {
         _EditingTextField = TextField::create();
         pushToChildren(_EditingTextField);
-        _EditingTextField->addFocusListener(&_TextFieldListener);
-        _EditingTextField->addActionListener(&_TextFieldListener);
-        _EditingTextField->addKeyListener(&_TextFieldListener);
+        _TextFieldFocusGainedConnection = _EditingTextField->connectFocusGained(boost::bind(&GenericFieldEditor::handleTextFieldFocusGained, this, _1));
+        _TextFieldFocusLostConnection = _EditingTextField->connectFocusLost(boost::bind(&GenericFieldEditor::handleTextFieldFocusLost, this, _1));
+        _TextFieldActionPerformedConnection = _EditingTextField->connectActionPerformed(boost::bind(&GenericFieldEditor::handleTextFieldActionPerformed, this, _1));
+        _TextFieldKeyTypedConnection = _EditingTextField->connectKeyTyped(boost::bind(&GenericFieldEditor::handleTextFieldKeyTyped, this, _1));
     }
 }
 
 void GenericFieldEditor::onDestroy()
 {
+}
+
+void GenericFieldEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _EditingTextField = NULL;
+
+    _TextFieldFocusGainedConnection.disconnect();
+    _TextFieldFocusLostConnection.disconnect();
+    _TextFieldActionPerformedConnection.disconnect();
+    _TextFieldKeyTypedConnection.disconnect();
 }
 
 void GenericFieldEditor::changed(ConstFieldMaskArg whichField, 
@@ -250,28 +262,28 @@ void GenericFieldEditor::dump(      UInt32    ,
     SLOG << "Dump GenericFieldEditor NI" << std::endl;
 }
 
-void GenericFieldEditor::TextFieldListener::focusGained    (const FocusEventUnrecPtr  e)
+void GenericFieldEditor::handleTextFieldFocusGained    (FocusEventDetails* const details)
 {
-    _GenericFieldEditor->startEditing();
+    startEditing();
 }
 
-void GenericFieldEditor::TextFieldListener::focusLost      (const FocusEventUnrecPtr  e)
+void GenericFieldEditor::handleTextFieldFocusLost      (FocusEventDetails* const details)
 {
-    _GenericFieldEditor->stopEditing();
+    stopEditing();
 }
 
-void GenericFieldEditor::TextFieldListener::actionPerformed(const ActionEventUnrecPtr e)
+void GenericFieldEditor::handleTextFieldActionPerformed(ActionEventDetails* const details)
 {
-    _GenericFieldEditor->stopEditing();
-    _GenericFieldEditor->startEditing();
+    stopEditing();
+    startEditing();
 }
 
-void GenericFieldEditor::TextFieldListener::keyTyped       (const KeyEventUnrecPtr    e)
+void GenericFieldEditor::handleTextFieldKeyTyped       (KeyEventDetails* const details)
 {
-    if(e->getKey() == KeyEvent::KEY_ESCAPE)
+    if(details->getKey() == KeyEventDetails::KEY_ESCAPE)
     {
-        _GenericFieldEditor->cancelEditing();
-        _GenericFieldEditor->startEditing();
+        cancelEditing();
+        startEditing();
     }
 }
 

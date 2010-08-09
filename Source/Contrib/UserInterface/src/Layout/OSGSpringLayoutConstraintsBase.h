@@ -87,6 +87,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayoutConstraintsBase : public L
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(SpringLayoutConstraints);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -139,7 +141,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayoutConstraintsBase : public L
     typedef SFUnrecLayoutSpringPtr SFHorizontalCenterSpringType;
     typedef SFUnrecLayoutSpringPtr SFVerticalCenterSpringType;
     typedef SFUnrecLayoutSpringPtr SFBaselineSpringType;
-    typedef SFUnrecComponentPtr SFComponentType;
+    typedef SFWeakComponentPtr SFComponentType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -182,8 +184,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayoutConstraintsBase : public L
                   SFUnrecLayoutSpringPtr *editSFVerticalCenterSpring(void);
             const SFUnrecLayoutSpringPtr *getSFBaselineSpring (void) const;
                   SFUnrecLayoutSpringPtr *editSFBaselineSpring (void);
-            const SFUnrecComponentPtr *getSFComponent      (void) const;
-                  SFUnrecComponentPtr *editSFComponent      (void);
+            const SFWeakComponentPtr  *getSFComponent      (void) const;
+                  SFWeakComponentPtr  *editSFComponent      (void);
 
 
                   LayoutSpring * getNorthSpring    (void) const;
@@ -294,7 +296,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayoutConstraintsBase : public L
     SFUnrecLayoutSpringPtr _sfHorizontalCenterSpring;
     SFUnrecLayoutSpringPtr _sfVerticalCenterSpring;
     SFUnrecLayoutSpringPtr _sfBaselineSpring;
-    SFUnrecComponentPtr _sfComponent;
+    SFWeakComponentPtr _sfComponent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

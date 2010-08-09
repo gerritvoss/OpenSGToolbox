@@ -59,6 +59,8 @@
 
 
 
+#include "OSGParticleSystem.h"          // SystemToTrail Class
+
 #include "OSGParticleTrailGeneratorBase.h"
 #include "OSGParticleTrailGenerator.h"
 
@@ -81,6 +83,10 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                        Field Documentation                              *
 \***************************************************************************/
+
+/*! \var ParticleSystem * ParticleTrailGeneratorBase::_sfSystemToTrail
+    ParticleSystem that will be used to generate the trail.
+*/
 
 /*! \var Real32          ParticleTrailGeneratorBase::_sfTrailLength
     This value determines the length the particle trails have. Determined by
@@ -138,6 +144,18 @@ void ParticleTrailGeneratorBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
+    pDesc = new SFUnrecParticleSystemPtr::Description(
+        SFUnrecParticleSystemPtr::getClassType(),
+        "SystemToTrail",
+        "ParticleSystem that will be used to generate the trail.\n",
+        SystemToTrailFieldId, SystemToTrailFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleTrailGenerator::editHandleSystemToTrail),
+        static_cast<FieldGetMethodSig >(&ParticleTrailGenerator::getHandleSystemToTrail));
+
+    oType.addInitialDesc(pDesc);
+
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "TrailLength",
@@ -153,7 +171,6 @@ void ParticleTrailGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleTrailGenerator::getHandleTrailLength));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -171,7 +188,6 @@ void ParticleTrailGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal64::Description(
         SFReal64::getClassType(),
         "TrailResolution",
@@ -186,7 +202,6 @@ void ParticleTrailGeneratorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "TrailResolutionMethod",
@@ -200,7 +215,6 @@ void ParticleTrailGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleTrailGenerator::getHandleTrailResolutionMethod));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -230,6 +244,17 @@ ParticleTrailGeneratorBase::TypeObject ParticleTrailGeneratorBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
     ">\n"
+    "\t<Field\n"
+    "\t\tname=\"SystemToTrail\"\n"
+    "\t\ttype=\"ParticleSystem\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\tParticleSystem that will be used to generate the trail.\n"
+    "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"TrailLength\"\n"
     "\t\ttype=\"Real32\"\n"
@@ -290,7 +315,6 @@ ParticleTrailGeneratorBase::TypeObject ParticleTrailGeneratorBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &ParticleTrailGeneratorBase::getType(void)
@@ -310,6 +334,19 @@ UInt32 ParticleTrailGeneratorBase::getContainerSize(void) const
 
 /*------------------------- decorator get ------------------------------*/
 
+
+//! Get the ParticleTrailGenerator::_sfSystemToTrail field.
+const SFUnrecParticleSystemPtr *ParticleTrailGeneratorBase::getSFSystemToTrail(void) const
+{
+    return &_sfSystemToTrail;
+}
+
+SFUnrecParticleSystemPtr *ParticleTrailGeneratorBase::editSFSystemToTrail  (void)
+{
+    editSField(SystemToTrailFieldMask);
+
+    return &_sfSystemToTrail;
+}
 
 SFReal32 *ParticleTrailGeneratorBase::editSFTrailLength(void)
 {
@@ -373,6 +410,10 @@ UInt32 ParticleTrailGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (SystemToTrailFieldMask & whichField))
+    {
+        returnValue += _sfSystemToTrail.getBinSize();
+    }
     if(FieldBits::NoField != (TrailLengthFieldMask & whichField))
     {
         returnValue += _sfTrailLength.getBinSize();
@@ -398,6 +439,10 @@ void ParticleTrailGeneratorBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (SystemToTrailFieldMask & whichField))
+    {
+        _sfSystemToTrail.copyToBin(pMem);
+    }
     if(FieldBits::NoField != (TrailLengthFieldMask & whichField))
     {
         _sfTrailLength.copyToBin(pMem);
@@ -421,6 +466,10 @@ void ParticleTrailGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (SystemToTrailFieldMask & whichField))
+    {
+        _sfSystemToTrail.copyFromBin(pMem);
+    }
     if(FieldBits::NoField != (TrailLengthFieldMask & whichField))
     {
         _sfTrailLength.copyFromBin(pMem);
@@ -441,11 +490,11 @@ void ParticleTrailGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 ParticleTrailGeneratorBase::ParticleTrailGeneratorBase(void) :
     Inherited(),
+    _sfSystemToTrail          (NULL),
     _sfTrailLength            (Real32(3.0f)),
     _sfTrailLengthMethod      (UInt32(ParticleTrailGenerator::TIME)),
     _sfTrailResolution        (Real64(3.0f)),
@@ -455,6 +504,7 @@ ParticleTrailGeneratorBase::ParticleTrailGeneratorBase(void) :
 
 ParticleTrailGeneratorBase::ParticleTrailGeneratorBase(const ParticleTrailGeneratorBase &source) :
     Inherited(source),
+    _sfSystemToTrail          (NULL),
     _sfTrailLength            (source._sfTrailLength            ),
     _sfTrailLengthMethod      (source._sfTrailLengthMethod      ),
     _sfTrailResolution        (source._sfTrailResolution        ),
@@ -469,6 +519,45 @@ ParticleTrailGeneratorBase::~ParticleTrailGeneratorBase(void)
 {
 }
 
+void ParticleTrailGeneratorBase::onCreate(const ParticleTrailGenerator *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ParticleTrailGenerator *pThis = static_cast<ParticleTrailGenerator *>(this);
+
+        pThis->setSystemToTrail(source->getSystemToTrail());
+    }
+}
+
+GetFieldHandlePtr ParticleTrailGeneratorBase::getHandleSystemToTrail   (void) const
+{
+    SFUnrecParticleSystemPtr::GetHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::GetHandle(
+             &_sfSystemToTrail,
+             this->getType().getFieldDesc(SystemToTrailFieldId),
+             const_cast<ParticleTrailGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleTrailGeneratorBase::editHandleSystemToTrail  (void)
+{
+    SFUnrecParticleSystemPtr::EditHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::EditHandle(
+             &_sfSystemToTrail,
+             this->getType().getFieldDesc(SystemToTrailFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ParticleTrailGenerator::setSystemToTrail,
+                    static_cast<ParticleTrailGenerator *>(this), _1));
+
+    editSField(SystemToTrailFieldMask);
+
+    return returnValue;
+}
 
 GetFieldHandlePtr ParticleTrailGeneratorBase::getHandleTrailLength     (void) const
 {
@@ -571,6 +660,7 @@ EditFieldHandlePtr ParticleTrailGeneratorBase::editHandleTrailResolutionMethod(v
 }
 
 
+
 #ifdef OSG_MT_CPTR_ASPECT
 void ParticleTrailGeneratorBase::execSyncV(      FieldContainer    &oFrom,
                                         ConstFieldMaskArg  whichField,
@@ -593,6 +683,8 @@ void ParticleTrailGeneratorBase::execSyncV(      FieldContainer    &oFrom,
 void ParticleTrailGeneratorBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
+
+    static_cast<ParticleTrailGenerator *>(this)->setSystemToTrail(NULL);
 
 
 }

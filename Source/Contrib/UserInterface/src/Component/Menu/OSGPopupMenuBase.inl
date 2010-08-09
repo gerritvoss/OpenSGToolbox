@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGPopupMenuEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -191,6 +193,182 @@ const Char8 *PopupMenuBase::getClassname(void)
 {
     return "PopupMenu";
 }
+inline
+boost::signals2::connection  PopupMenuBase::connectPopupMenuWillBecomeVisible(const PopupMenuWillBecomeVisibleEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _PopupMenuWillBecomeVisibleEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  PopupMenuBase::connectPopupMenuWillBecomeVisible(const PopupMenuWillBecomeVisibleEventType::group_type &group,
+                                                    const PopupMenuWillBecomeVisibleEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _PopupMenuWillBecomeVisibleEvent.connect(group, listener, at);
+}
+
+inline
+void  PopupMenuBase::disconnectPopupMenuWillBecomeVisible(const PopupMenuWillBecomeVisibleEventType::group_type &group)
+{
+    _PopupMenuWillBecomeVisibleEvent.disconnect(group);
+}
+
+inline
+void  PopupMenuBase::disconnectAllSlotsPopupMenuWillBecomeVisible(void)
+{
+    _PopupMenuWillBecomeVisibleEvent.disconnect_all_slots();
+}
+
+inline
+bool  PopupMenuBase::isEmptyPopupMenuWillBecomeVisible(void) const
+{
+    return _PopupMenuWillBecomeVisibleEvent.empty();
+}
+
+inline
+UInt32  PopupMenuBase::numSlotsPopupMenuWillBecomeVisible(void) const
+{
+    return _PopupMenuWillBecomeVisibleEvent.num_slots();
+}
+
+inline
+void PopupMenuBase::producePopupMenuWillBecomeVisible(PopupMenuWillBecomeVisibleEventDetailsType* const e)
+{
+    produceEvent(PopupMenuWillBecomeVisibleEventId, e);
+}
+
+inline
+boost::signals2::connection  PopupMenuBase::connectPopupMenuWillBecomeInvisible(const PopupMenuWillBecomeInvisibleEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _PopupMenuWillBecomeInvisibleEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  PopupMenuBase::connectPopupMenuWillBecomeInvisible(const PopupMenuWillBecomeInvisibleEventType::group_type &group,
+                                                    const PopupMenuWillBecomeInvisibleEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _PopupMenuWillBecomeInvisibleEvent.connect(group, listener, at);
+}
+
+inline
+void  PopupMenuBase::disconnectPopupMenuWillBecomeInvisible(const PopupMenuWillBecomeInvisibleEventType::group_type &group)
+{
+    _PopupMenuWillBecomeInvisibleEvent.disconnect(group);
+}
+
+inline
+void  PopupMenuBase::disconnectAllSlotsPopupMenuWillBecomeInvisible(void)
+{
+    _PopupMenuWillBecomeInvisibleEvent.disconnect_all_slots();
+}
+
+inline
+bool  PopupMenuBase::isEmptyPopupMenuWillBecomeInvisible(void) const
+{
+    return _PopupMenuWillBecomeInvisibleEvent.empty();
+}
+
+inline
+UInt32  PopupMenuBase::numSlotsPopupMenuWillBecomeInvisible(void) const
+{
+    return _PopupMenuWillBecomeInvisibleEvent.num_slots();
+}
+
+inline
+void PopupMenuBase::producePopupMenuWillBecomeInvisible(PopupMenuWillBecomeInvisibleEventDetailsType* const e)
+{
+    produceEvent(PopupMenuWillBecomeInvisibleEventId, e);
+}
+
+inline
+boost::signals2::connection  PopupMenuBase::connectPopupMenuCanceled(const PopupMenuCanceledEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _PopupMenuCanceledEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  PopupMenuBase::connectPopupMenuCanceled(const PopupMenuCanceledEventType::group_type &group,
+                                                    const PopupMenuCanceledEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _PopupMenuCanceledEvent.connect(group, listener, at);
+}
+
+inline
+void  PopupMenuBase::disconnectPopupMenuCanceled(const PopupMenuCanceledEventType::group_type &group)
+{
+    _PopupMenuCanceledEvent.disconnect(group);
+}
+
+inline
+void  PopupMenuBase::disconnectAllSlotsPopupMenuCanceled(void)
+{
+    _PopupMenuCanceledEvent.disconnect_all_slots();
+}
+
+inline
+bool  PopupMenuBase::isEmptyPopupMenuCanceled(void) const
+{
+    return _PopupMenuCanceledEvent.empty();
+}
+
+inline
+UInt32  PopupMenuBase::numSlotsPopupMenuCanceled(void) const
+{
+    return _PopupMenuCanceledEvent.num_slots();
+}
+
+inline
+void PopupMenuBase::producePopupMenuCanceled(PopupMenuCanceledEventDetailsType* const e)
+{
+    produceEvent(PopupMenuCanceledEventId, e);
+}
+
+inline
+boost::signals2::connection  PopupMenuBase::connectPopupMenuContentsChanged(const PopupMenuContentsChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _PopupMenuContentsChangedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  PopupMenuBase::connectPopupMenuContentsChanged(const PopupMenuContentsChangedEventType::group_type &group,
+                                                    const PopupMenuContentsChangedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _PopupMenuContentsChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  PopupMenuBase::disconnectPopupMenuContentsChanged(const PopupMenuContentsChangedEventType::group_type &group)
+{
+    _PopupMenuContentsChangedEvent.disconnect(group);
+}
+
+inline
+void  PopupMenuBase::disconnectAllSlotsPopupMenuContentsChanged(void)
+{
+    _PopupMenuContentsChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  PopupMenuBase::isEmptyPopupMenuContentsChanged(void) const
+{
+    return _PopupMenuContentsChangedEvent.empty();
+}
+
+inline
+UInt32  PopupMenuBase::numSlotsPopupMenuContentsChanged(void) const
+{
+    return _PopupMenuContentsChangedEvent.num_slots();
+}
+
+inline
+void PopupMenuBase::producePopupMenuContentsChanged(PopupMenuContentsChangedEventDetailsType* const e)
+{
+    produceEvent(PopupMenuContentsChangedEventId, e);
+}
+
 OSG_GEN_CONTAINERPTR(PopupMenu);
 
 OSG_END_NAMESPACE

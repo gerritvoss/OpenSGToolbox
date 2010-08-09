@@ -43,14 +43,11 @@
 #endif
 
 #include "OSGTableHeaderBase.h"
-#include "OSGTableHeaderBase.h"
 #include "OSGTableCellRenderer.h"
-#include "OSGTableColumn.h"
-#include "OSGTableColumnModelListener.h"
-#include "OSGUIDrawObjectCanvas.h"
-
-#include "OSGMouseListener.h"
-#include "OSGMouseMotionListener.h"
+#include "OSGTableColumnFields.h"
+#include "OSGTableColumnModelEventDetailsFields.h"
+#include "OSGChangeEventDetailsFields.h"
+#include "OSGListSelectionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -87,9 +84,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeader : public TableHeaderBase
 
     /*! \}                                                                 */
     
-    virtual void mouseExited(const MouseEventUnrecPtr e);
-    virtual void mouseMoved(const MouseEventUnrecPtr e);
-    virtual void mousePressed(const MouseEventUnrecPtr e);
+    virtual void mouseExited(MouseEventDetails* const e);
+    virtual void mouseMoved(MouseEventDetails* const e);
+    virtual void mousePressed(MouseEventDetails* const e);
     
     virtual void updateLayout(void);
     
@@ -133,6 +130,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeader : public TableHeaderBase
     virtual void detachFromEventProducer(void);
 	
 	void setColumnModel    (TableColumnModel * const value);
+
+    Table* getTable(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -181,54 +180,26 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableHeader : public TableHeaderBase
     //The index of the column being resized.
     Int32 _ResizingColumn;
 
-    //TableColumnModelListener
-    class ColumnModelListener : public TableColumnModelListener
-    {
-      public :
-        ColumnModelListener(TableHeader* TheTableHeader);
+    void handleColumnAdded(TableColumnModelEventDetails* const e);
+    void handleColumnMarginChanged(ChangeEventDetails* const e);
+    void handleColumnMoved(TableColumnModelEventDetails* const e);
+    void handleColumnRemoved(TableColumnModelEventDetails* const e);
+    void handleColumnSelectionChanged(ListSelectionEventDetails* const e);
+    boost::signals2::connection _ColumnAddedConnection,
+                                _ColumnMarginChangedConnection,
+                                _ColumnMovedConnection,
+                                _ColumnRemovedConnection,
+                                _ColumnSelectionChangedConnection;
 
-        virtual void columnAdded(const TableColumnModelEventUnrecPtr e);
+    void handleColBorderMouseDragged(MouseEventDetails* const e);
+    void mouseColBorderMouseReleased(MouseEventDetails* const e);
+    boost::signals2::connection _ColBorderMouseDraggedConnection,
+                                _ColBorderMouseReleasedConnection;
 
-        virtual void columnMarginChanged(const ChangeEventUnrecPtr e);
+        
+    void updateColumnHeadersComponents(void);
 
-        virtual void columnMoved(const TableColumnModelEventUnrecPtr e);
-
-        virtual void columnRemoved(const TableColumnModelEventUnrecPtr e);
-
-        virtual void columnSelectionChanged(const ListSelectionEventUnrecPtr e);
-      protected :
-        TableHeader* _TableHeader;
-    };
-
-    friend class ColumnModelListener;
-
-    ColumnModelListener _ColumnModelListener;
-
-    class MarginDraggedListener : public MouseMotionListener, public MouseListener
-    {
-      public :
-        MarginDraggedListener(TableHeader* ptr);
-        virtual void mouseMoved(const MouseEventUnrecPtr e);
-        virtual void mouseDragged(const MouseEventUnrecPtr e);
-
-        virtual void mouseClicked(const MouseEventUnrecPtr e);
-        virtual void mouseEntered(const MouseEventUnrecPtr e);
-        virtual void mouseExited(const MouseEventUnrecPtr e);
-        virtual void mousePressed(const MouseEventUnrecPtr e);
-        virtual void mouseReleased(const MouseEventUnrecPtr e);
-
-        void disconnect(void);
-      protected :
-        TableHeader* _TableHeader;
-    };
-
-	friend class _MarginDraggedListener;
-
-	MarginDraggedListener _MarginDraggedListener;
-
-	void updateColumnHeadersComponents(void);
-
-	void checkMouseMargins(const MouseEventUnrecPtr e);
+	void checkMouseMargins(MouseEventDetails* const e);
     
     /*==========================  PRIVATE  ================================*/
 
@@ -247,6 +218,7 @@ OSG_END_NAMESPACE
 
 #include "OSGTable.h"
 #include "OSGTableColumnModel.h"
+#include "OSGUIDrawObjectCanvas.h"
 #include "OSGTableHeaderBase.inl"
 #include "OSGTableHeader.inl"
 

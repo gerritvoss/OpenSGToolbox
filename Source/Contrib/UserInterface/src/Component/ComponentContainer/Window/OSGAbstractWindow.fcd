@@ -206,49 +206,58 @@
         defaultValue="3"
         >
     </Field>
-    <ProducedMethod
+    <ProducedEvent
         name="WindowOpened"
-        type="WindowEventPtr"
+        detailsType="WindowEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
-    <ProducedMethod
+    </ProducedEvent>
+    <ProducedEvent
         name="WindowClosing"
-        type="WindowEventPtr"
+        detailsType="WindowEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
-    <ProducedMethod
+    </ProducedEvent>
+    <ProducedEvent
         name="WindowClosed"
-        type="WindowEventPtr"
+        detailsType="WindowEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
-    <ProducedMethod
+    </ProducedEvent>
+    <ProducedEvent
         name="WindowIconified"
-        type="WindowEventPtr"
+        detailsType="WindowEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
-    <ProducedMethod
+    </ProducedEvent>
+    <ProducedEvent
         name="WindowDeiconified"
-        type="WindowEventPtr"
+        detailsType="WindowEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
-    <ProducedMethod
+    </ProducedEvent>
+    <ProducedEvent
         name="WindowActivated"
-        type="WindowEventPtr"
+        detailsType="WindowEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
-    <ProducedMethod
+    </ProducedEvent>
+    <ProducedEvent
         name="WindowDeactivated"
-        type="WindowEventPtr"
+        detailsType="WindowEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
-    <ProducedMethod
+    </ProducedEvent>
+    <ProducedEvent
         name="WindowEntered"
-        type="WindowEventPtr"
+        detailsType="WindowEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
-    <ProducedMethod
+    </ProducedEvent>
+    <ProducedEvent
         name="WindowExited"
-        type="WindowEventPtr"
+        detailsType="WindowEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
+    </ProducedEvent>
 </FieldContainer>

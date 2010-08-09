@@ -44,7 +44,8 @@
 
 #include "OSGGenericNameAttachmentEditorBase.h"
 #include "OSGCommandManager.h"
-#include "OSGTextField.h"
+#include "OSGTextFieldFields.h"
+#include "OSGActionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -129,6 +130,13 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericNameAttachmentEditor : p
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     void fieldChanged         (FieldContainer *fc, 
                                ConstFieldMaskArg whichField);
 
@@ -137,21 +145,15 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericNameAttachmentEditor : p
 
     TextFieldRefPtr _EditingTextField;
     std::string _InitialValue;
-    
-    class TextFieldListener : public FocusListener, public ActionListener, public KeyAdapter
-    {
-      public :
-           TextFieldListener(GenericNameAttachmentEditor * ptr);
-           virtual void focusGained    (const FocusEventUnrecPtr  e);
-           virtual void focusLost      (const FocusEventUnrecPtr  e);
-           virtual void actionPerformed(const ActionEventUnrecPtr e);
-           virtual void keyTyped       (const KeyEventUnrecPtr    e);
 
-      protected :
-        GenericNameAttachmentEditor *_GenericNameAttachmentEditor ;
-    };
-
-    TextFieldListener _TextFieldListener;
+    void handleTextFieldFocusGained    (FocusEventDetails* const details);
+    void handleTextFieldFocusLost      (FocusEventDetails* const details);
+    void handleTextFieldActionPerformed(ActionEventDetails* const details);
+    void handleTextFieldKeyTyped       (KeyEventDetails* const details);
+    boost::signals2::connection _TextFieldFocusGainedConnection,
+                                _TextFieldFocusLostConnection,
+                                _TextFieldActionPerformedConnection,
+                                _TextFieldKeyTypedConnection;
 
     CommandManagerPtr _CmdManager;
     bool              _isEditing;

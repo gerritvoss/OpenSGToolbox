@@ -55,6 +55,8 @@
 #include "OSGLayoutSpring.h"
 #include "OSGSpringLayout.h"
 #include "OSGSpringLayoutConstraints.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGenericMultiFieldEditor.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -126,6 +128,12 @@ ComponentTransitPtr MultiFieldListEditComponentGenerator::getListComponent(List*
     InsertButton->setBackgrounds(NULL);
     InsertButton->setText("+");
     InsertButton->setAlignment(Vec2f(0.5f,0.5f));
+    InsertButton->connectActionPerformed(boost::bind(&MultiFieldListEditComponentGenerator::handleInsertButtonAction, 
+                                                     this,
+                                                     _1,
+                                                     MFieldValuePair.first->getContainer(),
+                                                     MFieldValuePair.first->getDescription()->getFieldId(),
+                                                     MFieldValuePair.second));
 
     //Delete Button
     ButtonRefPtr DeleteButton = Button::create();
@@ -134,6 +142,12 @@ ComponentTransitPtr MultiFieldListEditComponentGenerator::getListComponent(List*
     DeleteButton->setBackgrounds(NULL);
     DeleteButton->setText("-");
     DeleteButton->setAlignment(Vec2f(0.5f,0.5f));
+    DeleteButton->connectActionPerformed(boost::bind(&MultiFieldListEditComponentGenerator::handleRemoveButtonAction, 
+                                                     this,
+                                                     _1,
+                                                     MFieldValuePair.first->getContainer(),
+                                                     MFieldValuePair.first->getDescription()->getFieldId(),
+                                                     MFieldValuePair.second));
 
     //Layout
     PanelRefPtr ThePanel = Panel::createEmpty();
@@ -192,6 +206,30 @@ ComponentTransitPtr MultiFieldListEditComponentGenerator::getListComponent(List*
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void MultiFieldListEditComponentGenerator::handleRemoveButtonAction(EventDetails* const details,
+                                                       FieldContainer* const fc,
+                                                       UInt32 fieldID,
+                                                       UInt32 index)
+{
+    GenericMultiFieldEditor::removeIndex(fc,
+                                         fieldID,
+                                         index,
+                                         dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface(),
+                                         _CmdManager.get());
+}
+
+void MultiFieldListEditComponentGenerator::handleInsertButtonAction(EventDetails* const details,
+                                                         FieldContainer* const fc,
+                                                         UInt32 fieldID,
+                                                         UInt32 index)
+{
+    GenericMultiFieldEditor::insertAtIndex(fc,
+                                         fieldID,
+                                         index,
+                                         dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface(),
+                                         _CmdManager.get());
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 

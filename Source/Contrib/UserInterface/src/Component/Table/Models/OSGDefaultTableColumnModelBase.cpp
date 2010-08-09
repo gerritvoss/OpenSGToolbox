@@ -414,7 +414,6 @@ FieldContainerTransitPtr DefaultTableColumnModelBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 DefaultTableColumnModelBase::DefaultTableColumnModelBase(void) :
@@ -494,6 +493,7 @@ EditFieldHandlePtr DefaultTableColumnModelBase::editHandleInternalColumns(void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

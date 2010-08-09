@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -89,6 +90,131 @@ void MaterialLayerBase::setMaterial(Material * const value)
 
     _sfMaterial.setValue(value);
 }
+//! Get the value of the MaterialLayer::_sfColor field.
+
+inline
+Color4f &MaterialLayerBase::editColor(void)
+{
+    editSField(ColorFieldMask);
+
+    return _sfColor.getValue();
+}
+
+//! Get the value of the MaterialLayer::_sfColor field.
+inline
+const Color4f &MaterialLayerBase::getColor(void) const
+{
+    return _sfColor.getValue();
+}
+
+//! Set the value of the MaterialLayer::_sfColor field.
+inline
+void MaterialLayerBase::setColor(const Color4f &value)
+{
+    editSField(ColorFieldMask);
+
+    _sfColor.setValue(value);
+}
+//! Get the value of the MaterialLayer::_sfScale field.
+
+inline
+UInt32 &MaterialLayerBase::editScale(void)
+{
+    editSField(ScaleFieldMask);
+
+    return _sfScale.getValue();
+}
+
+//! Get the value of the MaterialLayer::_sfScale field.
+inline
+      UInt32  MaterialLayerBase::getScale(void) const
+{
+    return _sfScale.getValue();
+}
+
+//! Set the value of the MaterialLayer::_sfScale field.
+inline
+void MaterialLayerBase::setScale(const UInt32 value)
+{
+    editSField(ScaleFieldMask);
+
+    _sfScale.setValue(value);
+}
+//! Get the value of the MaterialLayer::_sfScaleAbsoluteSize field.
+
+inline
+Vec2s &MaterialLayerBase::editScaleAbsoluteSize(void)
+{
+    editSField(ScaleAbsoluteSizeFieldMask);
+
+    return _sfScaleAbsoluteSize.getValue();
+}
+
+//! Get the value of the MaterialLayer::_sfScaleAbsoluteSize field.
+inline
+const Vec2s &MaterialLayerBase::getScaleAbsoluteSize(void) const
+{
+    return _sfScaleAbsoluteSize.getValue();
+}
+
+//! Set the value of the MaterialLayer::_sfScaleAbsoluteSize field.
+inline
+void MaterialLayerBase::setScaleAbsoluteSize(const Vec2s &value)
+{
+    editSField(ScaleAbsoluteSizeFieldMask);
+
+    _sfScaleAbsoluteSize.setValue(value);
+}
+//! Get the value of the MaterialLayer::_sfVerticalAlignment field.
+
+inline
+Real32 &MaterialLayerBase::editVerticalAlignment(void)
+{
+    editSField(VerticalAlignmentFieldMask);
+
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Get the value of the MaterialLayer::_sfVerticalAlignment field.
+inline
+      Real32  MaterialLayerBase::getVerticalAlignment(void) const
+{
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Set the value of the MaterialLayer::_sfVerticalAlignment field.
+inline
+void MaterialLayerBase::setVerticalAlignment(const Real32 value)
+{
+    editSField(VerticalAlignmentFieldMask);
+
+    _sfVerticalAlignment.setValue(value);
+}
+//! Get the value of the MaterialLayer::_sfHorizontalAlignment field.
+
+inline
+Real32 &MaterialLayerBase::editHorizontalAlignment(void)
+{
+    editSField(HorizontalAlignmentFieldMask);
+
+    return _sfHorizontalAlignment.getValue();
+}
+
+//! Get the value of the MaterialLayer::_sfHorizontalAlignment field.
+inline
+      Real32  MaterialLayerBase::getHorizontalAlignment(void) const
+{
+    return _sfHorizontalAlignment.getValue();
+}
+
+//! Set the value of the MaterialLayer::_sfHorizontalAlignment field.
+inline
+void MaterialLayerBase::setHorizontalAlignment(const Real32 value)
+{
+    editSField(HorizontalAlignmentFieldMask);
+
+    _sfHorizontalAlignment.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -103,6 +229,21 @@ void MaterialLayerBase::execSync (      MaterialLayerBase *pFrom,
 
     if(FieldBits::NoField != (MaterialFieldMask & whichField))
         _sfMaterial.syncWith(pFrom->_sfMaterial);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pFrom->_sfColor);
+
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+        _sfScale.syncWith(pFrom->_sfScale);
+
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+        _sfScaleAbsoluteSize.syncWith(pFrom->_sfScaleAbsoluteSize);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pFrom->_sfVerticalAlignment);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pFrom->_sfHorizontalAlignment);
 }
 #endif
 

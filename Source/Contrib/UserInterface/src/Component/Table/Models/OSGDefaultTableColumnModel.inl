@@ -40,16 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-DefaultTableColumnModel::TableSelectionListener::TableSelectionListener(DefaultTableColumnModel* const TheDefaultTableColumnModel) :
-_DefaultTableColumnModel(TheDefaultTableColumnModel)
-{
-}
-
-/*inline
-DefaultTableColumnModel::TableFieldChangeListener::TableFieldChangeListener(DefaultTableColumnModel* const TheDefaultTableColumnModel) :
-_DefaultTableColumnModel(TheDefaultTableColumnModel)
-{
-}*/
-
 OSG_END_NAMESPACE

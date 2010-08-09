@@ -85,6 +85,8 @@ class OSG_CONTRIBVIDEO_DLLMAPPING DirectShowVideoWrapperBase : public VideoWrapp
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(DirectShowVideoWrapper);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

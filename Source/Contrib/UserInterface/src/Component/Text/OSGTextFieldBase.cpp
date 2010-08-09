@@ -65,7 +65,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -246,24 +246,27 @@ TextFieldBase::TypeObject TextFieldBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ActionPerformed\"\n"
-    "\t\ttype=\"ActionEventPtr\"\n"
+    "\t\tdetailsType=\"ActionEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Text Field\n"
     );
 
-//! TextField Produced Methods
+//! TextField Produced Events
 
-MethodDescription *TextFieldBase::_methodDesc[] =
+EventDescription *TextFieldBase::_eventDesc[] =
 {
-    new MethodDescription("ActionPerformed", 
-                    "",
-                     ActionPerformedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("ActionPerformed", 
+                          "",
+                          ActionPerformedEventId, 
+                          FieldTraits<ActionEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TextFieldBase::getHandleActionPerformedSignal))
+
 };
 
 EventProducerType TextFieldBase::_producerType(
@@ -271,8 +274,8 @@ EventProducerType TextFieldBase::_producerType(
     "TextComponentProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -545,6 +548,110 @@ FieldContainerTransitPtr TextFieldBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void TextFieldBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        OSG_ASSERT(dynamic_cast<ActionPerformedEventDetailsType* const>(e));
+
+        _ActionPerformedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ActionPerformedEvent(dynamic_cast<ActionPerformedEventDetailsType* const>(e), ActionPerformedEventId);
+        break;
+    default:
+        Inherited::produceEvent(eventId, e);
+        break;
+    }
+}
+
+boost::signals2::connection TextFieldBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.connect(listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  TextFieldBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.connect(group, listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, group, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  TextFieldBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        _ActionPerformedEvent.disconnect(group);
+        break;
+    default:
+        return Inherited::disconnectEvent(eventId, group);
+        break;
+    }
+}
+
+void  TextFieldBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        _ActionPerformedEvent.disconnect_all_slots();
+        break;
+    default:
+        Inherited::disconnectAllSlotsEvent(eventId);
+        break;
+    }
+}
+
+bool  TextFieldBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.empty();
+        break;
+    default:
+        return Inherited::isEmptyEvent(eventId);
+        break;
+    }
+}
+
+UInt32  TextFieldBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.num_slots();
+        break;
+    default:
+        return Inherited::numSlotsEvent(eventId);
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
@@ -555,7 +662,6 @@ TextFieldBase::TextFieldBase(void) :
     _sfEmptyDescText          (),
     _sfEmptyDescTextColor     (Color4f(0.3,0.3,0.3,1.0))
 {
-    _Producer.setType(&_producerType);
 }
 
 TextFieldBase::TextFieldBase(const TextFieldBase &source) :
@@ -685,6 +791,18 @@ EditFieldHandlePtr TextFieldBase::editHandleEmptyDescTextColor(void)
 
 
     editSField(EmptyDescTextColorFieldMask);
+
+    return returnValue;
+}
+
+
+GetEventHandlePtr TextFieldBase::getHandleActionPerformedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ActionPerformedEventType>(
+             const_cast<ActionPerformedEventType *>(&_ActionPerformedEvent),
+             _producerType.getEventDescription(ActionPerformedEventId),
+             const_cast<TextFieldBase *>(this)));
 
     return returnValue;
 }

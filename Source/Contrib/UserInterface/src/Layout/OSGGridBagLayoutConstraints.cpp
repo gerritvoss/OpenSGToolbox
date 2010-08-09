@@ -103,6 +103,25 @@ void GridBagLayoutConstraints::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if( whichField & (GridXFieldMask |
+                      GridYFieldMask |
+                      GridWidthFieldMask |
+                      GridHeightFieldMask |
+                      FillFieldMask |
+                      HorizontalAlignmentFieldMask |
+                      VerticalAlignmentFieldMask |
+                      WeightXFieldMask |
+                      WeightYFieldMask |
+                      InternalPadXFieldMask |
+                      InternalPadYFieldMask |
+                      PadLeftFieldMask |
+                      PadRightFieldMask |
+                      PadTopFieldMask |
+                      PadBottomFieldMask))
+    {
+        updateParentLayouts();
+    }
 }
 
 void GridBagLayoutConstraints::dump(      UInt32    ,

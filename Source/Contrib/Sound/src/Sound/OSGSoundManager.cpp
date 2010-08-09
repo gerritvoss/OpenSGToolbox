@@ -50,6 +50,7 @@
 #include "OSGSoundManager.h"
 
 #include "OSGSound.h"
+#include "OSGUpdateEventDetails.h"
 #include "OSGStubSoundManager.h"
 
 #ifdef OSG_WITH_FMOD
@@ -108,6 +109,29 @@ SoundManager* SoundManager::getDefaultSoundManager(void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void SoundManager::attachUpdateProducer(ReflexiveContainer* const producer)
+{
+    if(_UpdateEventConnection.connected())
+    {
+        _UpdateEventConnection.disconnect();
+    }
+    //Get the Id of the UpdateEvent
+    const EventDescription* Desc(producer->getProducerType().findEventDescription("Update"));
+    if(Desc == NULL)
+    {
+        SWARNING << "There is no Update event defined on " << producer->getType().getName() << " types." << std::endl;
+    }
+    else
+    {
+        _UpdateEventConnection = producer->connectEvent(Desc->getEventId(), boost::bind(&SoundManager::attachedUpdate, this, _1));
+    }
+}
+
+void SoundManager::attachedUpdate(EventDetails* const details)
+{
+    update(dynamic_cast<UpdateEventDetails* const>(details)->getElapsedTime());
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

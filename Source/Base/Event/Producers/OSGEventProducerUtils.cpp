@@ -51,19 +51,19 @@
 #include "OSGContainerUtils.h"
 #include "OSGContainerPtrFuncs.h"
 #include "OSGActivity.h"
-#include "OSGMethodDescription.h"
+#include "OSGEventDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
- *                                    methods                              *
+ *                                    events                              *
 \***************************************************************************/
 
 void putEventProducerToStream(OutStream &outVal, const ReflexiveContainer& container)
 {
     bool isFirstItemWritten(true);
     //Loop through all of the Produced Event Ids
-    for(UInt32 ProdEventId(1) ; ProdEventId <= container.getNumMethods() ; ++ProdEventId)
+    for(UInt32 ProdEventId(1) ; ProdEventId <= container.getNumEvents() ; ++ProdEventId)
     {
         //Loop through all activies attached to this Event
         /*for(UInt32 AttachedActivityIndex(0) ; AttachedActivityIndex < getNumActivitiesAttached(ProdEventId) ; ++AttachedActivityIndex)
@@ -120,26 +120,26 @@ bool getEventProducerFromCString(const Char8     *&inVal, ReflexiveContainer& co
         {
             ProdEventId = boost::lexical_cast<UInt32>(ProdEventString);
             
-            //Check the Method Id
-            if(ProdEventId == 0 || ProdEventId > container.getNumMethods())
+            //Check the Event Id
+            if(ProdEventId == 0 || ProdEventId > container.getNumEvents())
             {
                 SWARNING <<
                     "ERROR in EventProducer::getFromString(): Cannot attach a Activity to a produced event with id: "
-                     << ProdEventId << " because the valid MethodIds for this producer are 1-" << container.getNumMethods() << " ProducedMethods that can be attached to."
+                     << ProdEventId << " because the valid EventIds for this producer are 1-" << container.getNumEvents() << " ProducedEvents that can be attached to."
                      << std::endl;
                 return false;
             }
         }
         catch(boost::bad_lexical_cast &)
         {
-            //Couldn't cast it to a UInt32, try to find a produced method by that name
-            ProdEventId = container.getMethodDescription(ProdEventString.c_str())->getMethodId();
+            //Couldn't cast it to a UInt32, try to find a produced event by that name
+            ProdEventId = container.getEventDescription(ProdEventString.c_str())->getEventId();
 
             if(ProdEventId == 0)
             {
                 SWARNING <<
                     "ERROR in EventProducer::getFromString(): Cannot attach a Activity to a produced event with id: "
-                     << ProdEventString << " because there are produced methods by that name."
+                     << ProdEventString << " because there are produced events by that name."
                      << std::endl;
                 return false;
             }
@@ -171,7 +171,7 @@ bool getEventProducerFromCString(const Char8     *&inVal, ReflexiveContainer& co
         {
             FieldContainerID = boost::lexical_cast<UInt32>(FieldContainerIDString);
             
-            //Check the Method Id
+            //Check the Event Id
             if(FieldContainerID == 0)
             {
                 SWARNING <<

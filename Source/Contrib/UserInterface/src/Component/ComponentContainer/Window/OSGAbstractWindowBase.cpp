@@ -66,7 +66,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -452,7 +452,7 @@ AbstractWindowBase::TypeObject AbstractWindowBase::_type(
     "\t   name=\"ParentDrawingSurface\"\n"
     "\t   type=\"FieldContainer\"\n"
     "\t   cardinality=\"single\"\n"
-    "\t   visibility=\"external\"\n"
+    "\t   visibility=\"internal\"\n"
     "\t   access=\"none\"\n"
     "       doRefCount=\"false\"\n"
     "       passFieldMask=\"true\"\n"
@@ -639,104 +639,131 @@ AbstractWindowBase::TypeObject AbstractWindowBase::_type(
     "        defaultValue=\"3\"\n"
     "        >\n"
     "    </Field>\n"
-    "    <ProducedMethod\n"
+    "    <ProducedEvent\n"
     "        name=\"WindowOpened\"\n"
-    "        type=\"WindowEventPtr\"\n"
+    "        detailsType=\"WindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
-    "    <ProducedMethod\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
     "        name=\"WindowClosing\"\n"
-    "        type=\"WindowEventPtr\"\n"
+    "        detailsType=\"WindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
-    "    <ProducedMethod\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
     "        name=\"WindowClosed\"\n"
-    "        type=\"WindowEventPtr\"\n"
+    "        detailsType=\"WindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
-    "    <ProducedMethod\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
     "        name=\"WindowIconified\"\n"
-    "        type=\"WindowEventPtr\"\n"
+    "        detailsType=\"WindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
-    "    <ProducedMethod\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
     "        name=\"WindowDeiconified\"\n"
-    "        type=\"WindowEventPtr\"\n"
+    "        detailsType=\"WindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
-    "    <ProducedMethod\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
     "        name=\"WindowActivated\"\n"
-    "        type=\"WindowEventPtr\"\n"
+    "        detailsType=\"WindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
-    "    <ProducedMethod\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
     "        name=\"WindowDeactivated\"\n"
-    "        type=\"WindowEventPtr\"\n"
+    "        detailsType=\"WindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
-    "    <ProducedMethod\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
     "        name=\"WindowEntered\"\n"
-    "        type=\"WindowEventPtr\"\n"
+    "        detailsType=\"WindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
-    "    <ProducedMethod\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
     "        name=\"WindowExited\"\n"
-    "        type=\"WindowEventPtr\"\n"
+    "        detailsType=\"WindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
+    "    </ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Abstract Window.\n"
     );
 
-//! AbstractWindow Produced Methods
+//! AbstractWindow Produced Events
 
-MethodDescription *AbstractWindowBase::_methodDesc[] =
+EventDescription *AbstractWindowBase::_eventDesc[] =
 {
-    new MethodDescription("WindowOpened", 
-                    "",
-                     WindowOpenedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("WindowClosing", 
-                    "",
-                     WindowClosingMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("WindowClosed", 
-                    "",
-                     WindowClosedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("WindowIconified", 
-                    "",
-                     WindowIconifiedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("WindowDeiconified", 
-                    "",
-                     WindowDeiconifiedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("WindowActivated", 
-                    "",
-                     WindowActivatedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("WindowDeactivated", 
-                    "",
-                     WindowDeactivatedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("WindowEntered", 
-                    "",
-                     WindowEnteredMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("WindowExited", 
-                    "",
-                     WindowExitedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("WindowOpened", 
+                          "",
+                          WindowOpenedEventId, 
+                          FieldTraits<WindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AbstractWindowBase::getHandleWindowOpenedSignal)),
+
+    new EventDescription("WindowClosing", 
+                          "",
+                          WindowClosingEventId, 
+                          FieldTraits<WindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AbstractWindowBase::getHandleWindowClosingSignal)),
+
+    new EventDescription("WindowClosed", 
+                          "",
+                          WindowClosedEventId, 
+                          FieldTraits<WindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AbstractWindowBase::getHandleWindowClosedSignal)),
+
+    new EventDescription("WindowIconified", 
+                          "",
+                          WindowIconifiedEventId, 
+                          FieldTraits<WindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AbstractWindowBase::getHandleWindowIconifiedSignal)),
+
+    new EventDescription("WindowDeiconified", 
+                          "",
+                          WindowDeiconifiedEventId, 
+                          FieldTraits<WindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AbstractWindowBase::getHandleWindowDeiconifiedSignal)),
+
+    new EventDescription("WindowActivated", 
+                          "",
+                          WindowActivatedEventId, 
+                          FieldTraits<WindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AbstractWindowBase::getHandleWindowActivatedSignal)),
+
+    new EventDescription("WindowDeactivated", 
+                          "",
+                          WindowDeactivatedEventId, 
+                          FieldTraits<WindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AbstractWindowBase::getHandleWindowDeactivatedSignal)),
+
+    new EventDescription("WindowEntered", 
+                          "",
+                          WindowEnteredEventId, 
+                          FieldTraits<WindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AbstractWindowBase::getHandleWindowEnteredSignal)),
+
+    new EventDescription("WindowExited", 
+                          "",
+                          WindowExitedEventId, 
+                          FieldTraits<WindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AbstractWindowBase::getHandleWindowExitedSignal))
+
 };
 
 EventProducerType AbstractWindowBase::_producerType(
@@ -744,8 +771,8 @@ EventProducerType AbstractWindowBase::_producerType(
     "ComponentProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -1265,6 +1292,302 @@ void AbstractWindowBase::copyFromBin(BinaryDataHandler &pMem,
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void AbstractWindowBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case WindowOpenedEventId:
+        OSG_ASSERT(dynamic_cast<WindowOpenedEventDetailsType* const>(e));
+
+        _WindowOpenedEvent.set_combiner(ConsumableEventCombiner(e));
+        _WindowOpenedEvent(dynamic_cast<WindowOpenedEventDetailsType* const>(e), WindowOpenedEventId);
+        break;
+    case WindowClosingEventId:
+        OSG_ASSERT(dynamic_cast<WindowClosingEventDetailsType* const>(e));
+
+        _WindowClosingEvent.set_combiner(ConsumableEventCombiner(e));
+        _WindowClosingEvent(dynamic_cast<WindowClosingEventDetailsType* const>(e), WindowClosingEventId);
+        break;
+    case WindowClosedEventId:
+        OSG_ASSERT(dynamic_cast<WindowClosedEventDetailsType* const>(e));
+
+        _WindowClosedEvent.set_combiner(ConsumableEventCombiner(e));
+        _WindowClosedEvent(dynamic_cast<WindowClosedEventDetailsType* const>(e), WindowClosedEventId);
+        break;
+    case WindowIconifiedEventId:
+        OSG_ASSERT(dynamic_cast<WindowIconifiedEventDetailsType* const>(e));
+
+        _WindowIconifiedEvent.set_combiner(ConsumableEventCombiner(e));
+        _WindowIconifiedEvent(dynamic_cast<WindowIconifiedEventDetailsType* const>(e), WindowIconifiedEventId);
+        break;
+    case WindowDeiconifiedEventId:
+        OSG_ASSERT(dynamic_cast<WindowDeiconifiedEventDetailsType* const>(e));
+
+        _WindowDeiconifiedEvent.set_combiner(ConsumableEventCombiner(e));
+        _WindowDeiconifiedEvent(dynamic_cast<WindowDeiconifiedEventDetailsType* const>(e), WindowDeiconifiedEventId);
+        break;
+    case WindowActivatedEventId:
+        OSG_ASSERT(dynamic_cast<WindowActivatedEventDetailsType* const>(e));
+
+        _WindowActivatedEvent.set_combiner(ConsumableEventCombiner(e));
+        _WindowActivatedEvent(dynamic_cast<WindowActivatedEventDetailsType* const>(e), WindowActivatedEventId);
+        break;
+    case WindowDeactivatedEventId:
+        OSG_ASSERT(dynamic_cast<WindowDeactivatedEventDetailsType* const>(e));
+
+        _WindowDeactivatedEvent.set_combiner(ConsumableEventCombiner(e));
+        _WindowDeactivatedEvent(dynamic_cast<WindowDeactivatedEventDetailsType* const>(e), WindowDeactivatedEventId);
+        break;
+    case WindowEnteredEventId:
+        OSG_ASSERT(dynamic_cast<WindowEnteredEventDetailsType* const>(e));
+
+        _WindowEnteredEvent.set_combiner(ConsumableEventCombiner(e));
+        _WindowEnteredEvent(dynamic_cast<WindowEnteredEventDetailsType* const>(e), WindowEnteredEventId);
+        break;
+    case WindowExitedEventId:
+        OSG_ASSERT(dynamic_cast<WindowExitedEventDetailsType* const>(e));
+
+        _WindowExitedEvent.set_combiner(ConsumableEventCombiner(e));
+        _WindowExitedEvent(dynamic_cast<WindowExitedEventDetailsType* const>(e), WindowExitedEventId);
+        break;
+    default:
+        Inherited::produceEvent(eventId, e);
+        break;
+    }
+}
+
+boost::signals2::connection AbstractWindowBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case WindowOpenedEventId:
+        return _WindowOpenedEvent.connect(listener, at);
+        break;
+    case WindowClosingEventId:
+        return _WindowClosingEvent.connect(listener, at);
+        break;
+    case WindowClosedEventId:
+        return _WindowClosedEvent.connect(listener, at);
+        break;
+    case WindowIconifiedEventId:
+        return _WindowIconifiedEvent.connect(listener, at);
+        break;
+    case WindowDeiconifiedEventId:
+        return _WindowDeiconifiedEvent.connect(listener, at);
+        break;
+    case WindowActivatedEventId:
+        return _WindowActivatedEvent.connect(listener, at);
+        break;
+    case WindowDeactivatedEventId:
+        return _WindowDeactivatedEvent.connect(listener, at);
+        break;
+    case WindowEnteredEventId:
+        return _WindowEnteredEvent.connect(listener, at);
+        break;
+    case WindowExitedEventId:
+        return _WindowExitedEvent.connect(listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  AbstractWindowBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case WindowOpenedEventId:
+        return _WindowOpenedEvent.connect(group, listener, at);
+        break;
+    case WindowClosingEventId:
+        return _WindowClosingEvent.connect(group, listener, at);
+        break;
+    case WindowClosedEventId:
+        return _WindowClosedEvent.connect(group, listener, at);
+        break;
+    case WindowIconifiedEventId:
+        return _WindowIconifiedEvent.connect(group, listener, at);
+        break;
+    case WindowDeiconifiedEventId:
+        return _WindowDeiconifiedEvent.connect(group, listener, at);
+        break;
+    case WindowActivatedEventId:
+        return _WindowActivatedEvent.connect(group, listener, at);
+        break;
+    case WindowDeactivatedEventId:
+        return _WindowDeactivatedEvent.connect(group, listener, at);
+        break;
+    case WindowEnteredEventId:
+        return _WindowEnteredEvent.connect(group, listener, at);
+        break;
+    case WindowExitedEventId:
+        return _WindowExitedEvent.connect(group, listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, group, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  AbstractWindowBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case WindowOpenedEventId:
+        _WindowOpenedEvent.disconnect(group);
+        break;
+    case WindowClosingEventId:
+        _WindowClosingEvent.disconnect(group);
+        break;
+    case WindowClosedEventId:
+        _WindowClosedEvent.disconnect(group);
+        break;
+    case WindowIconifiedEventId:
+        _WindowIconifiedEvent.disconnect(group);
+        break;
+    case WindowDeiconifiedEventId:
+        _WindowDeiconifiedEvent.disconnect(group);
+        break;
+    case WindowActivatedEventId:
+        _WindowActivatedEvent.disconnect(group);
+        break;
+    case WindowDeactivatedEventId:
+        _WindowDeactivatedEvent.disconnect(group);
+        break;
+    case WindowEnteredEventId:
+        _WindowEnteredEvent.disconnect(group);
+        break;
+    case WindowExitedEventId:
+        _WindowExitedEvent.disconnect(group);
+        break;
+    default:
+        return Inherited::disconnectEvent(eventId, group);
+        break;
+    }
+}
+
+void  AbstractWindowBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case WindowOpenedEventId:
+        _WindowOpenedEvent.disconnect_all_slots();
+        break;
+    case WindowClosingEventId:
+        _WindowClosingEvent.disconnect_all_slots();
+        break;
+    case WindowClosedEventId:
+        _WindowClosedEvent.disconnect_all_slots();
+        break;
+    case WindowIconifiedEventId:
+        _WindowIconifiedEvent.disconnect_all_slots();
+        break;
+    case WindowDeiconifiedEventId:
+        _WindowDeiconifiedEvent.disconnect_all_slots();
+        break;
+    case WindowActivatedEventId:
+        _WindowActivatedEvent.disconnect_all_slots();
+        break;
+    case WindowDeactivatedEventId:
+        _WindowDeactivatedEvent.disconnect_all_slots();
+        break;
+    case WindowEnteredEventId:
+        _WindowEnteredEvent.disconnect_all_slots();
+        break;
+    case WindowExitedEventId:
+        _WindowExitedEvent.disconnect_all_slots();
+        break;
+    default:
+        Inherited::disconnectAllSlotsEvent(eventId);
+        break;
+    }
+}
+
+bool  AbstractWindowBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case WindowOpenedEventId:
+        return _WindowOpenedEvent.empty();
+        break;
+    case WindowClosingEventId:
+        return _WindowClosingEvent.empty();
+        break;
+    case WindowClosedEventId:
+        return _WindowClosedEvent.empty();
+        break;
+    case WindowIconifiedEventId:
+        return _WindowIconifiedEvent.empty();
+        break;
+    case WindowDeiconifiedEventId:
+        return _WindowDeiconifiedEvent.empty();
+        break;
+    case WindowActivatedEventId:
+        return _WindowActivatedEvent.empty();
+        break;
+    case WindowDeactivatedEventId:
+        return _WindowDeactivatedEvent.empty();
+        break;
+    case WindowEnteredEventId:
+        return _WindowEnteredEvent.empty();
+        break;
+    case WindowExitedEventId:
+        return _WindowExitedEvent.empty();
+        break;
+    default:
+        return Inherited::isEmptyEvent(eventId);
+        break;
+    }
+}
+
+UInt32  AbstractWindowBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case WindowOpenedEventId:
+        return _WindowOpenedEvent.num_slots();
+        break;
+    case WindowClosingEventId:
+        return _WindowClosingEvent.num_slots();
+        break;
+    case WindowClosedEventId:
+        return _WindowClosedEvent.num_slots();
+        break;
+    case WindowIconifiedEventId:
+        return _WindowIconifiedEvent.num_slots();
+        break;
+    case WindowDeiconifiedEventId:
+        return _WindowDeiconifiedEvent.num_slots();
+        break;
+    case WindowActivatedEventId:
+        return _WindowActivatedEvent.num_slots();
+        break;
+    case WindowDeactivatedEventId:
+        return _WindowDeactivatedEvent.num_slots();
+        break;
+    case WindowEnteredEventId:
+        return _WindowEnteredEvent.num_slots();
+        break;
+    case WindowExitedEventId:
+        return _WindowExitedEvent.num_slots();
+        break;
+    default:
+        return Inherited::numSlotsEvent(eventId);
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
@@ -1290,7 +1613,6 @@ AbstractWindowBase::AbstractWindowBase(void) :
     _sfScalingInDrawingSurface(Vec2f(-1.0,-1.0)),
     _sfResizeModifyCursorWidth(UInt32(3))
 {
-    _Producer.setType(&_producerType);
 }
 
 AbstractWindowBase::AbstractWindowBase(const AbstractWindowBase &source) :
@@ -1870,6 +2192,106 @@ EditFieldHandlePtr AbstractWindowBase::editHandleResizeModifyCursorWidth(void)
 
 
     editSField(ResizeModifyCursorWidthFieldMask);
+
+    return returnValue;
+}
+
+
+GetEventHandlePtr AbstractWindowBase::getHandleWindowOpenedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<WindowOpenedEventType>(
+             const_cast<WindowOpenedEventType *>(&_WindowOpenedEvent),
+             _producerType.getEventDescription(WindowOpenedEventId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AbstractWindowBase::getHandleWindowClosingSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<WindowClosingEventType>(
+             const_cast<WindowClosingEventType *>(&_WindowClosingEvent),
+             _producerType.getEventDescription(WindowClosingEventId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AbstractWindowBase::getHandleWindowClosedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<WindowClosedEventType>(
+             const_cast<WindowClosedEventType *>(&_WindowClosedEvent),
+             _producerType.getEventDescription(WindowClosedEventId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AbstractWindowBase::getHandleWindowIconifiedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<WindowIconifiedEventType>(
+             const_cast<WindowIconifiedEventType *>(&_WindowIconifiedEvent),
+             _producerType.getEventDescription(WindowIconifiedEventId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AbstractWindowBase::getHandleWindowDeiconifiedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<WindowDeiconifiedEventType>(
+             const_cast<WindowDeiconifiedEventType *>(&_WindowDeiconifiedEvent),
+             _producerType.getEventDescription(WindowDeiconifiedEventId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AbstractWindowBase::getHandleWindowActivatedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<WindowActivatedEventType>(
+             const_cast<WindowActivatedEventType *>(&_WindowActivatedEvent),
+             _producerType.getEventDescription(WindowActivatedEventId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AbstractWindowBase::getHandleWindowDeactivatedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<WindowDeactivatedEventType>(
+             const_cast<WindowDeactivatedEventType *>(&_WindowDeactivatedEvent),
+             _producerType.getEventDescription(WindowDeactivatedEventId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AbstractWindowBase::getHandleWindowEnteredSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<WindowEnteredEventType>(
+             const_cast<WindowEnteredEventType *>(&_WindowEnteredEvent),
+             _producerType.getEventDescription(WindowEnteredEventId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AbstractWindowBase::getHandleWindowExitedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<WindowExitedEventType>(
+             const_cast<WindowExitedEventType *>(&_WindowExitedEvent),
+             _producerType.getEventDescription(WindowExitedEventId),
+             const_cast<AbstractWindowBase *>(this)));
 
     return returnValue;
 }

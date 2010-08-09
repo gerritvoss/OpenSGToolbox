@@ -88,7 +88,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentWidthLayoutSpring : public Co
 
     /*! \}                                                                 */
 
-    static  ComponentWidthLayoutSpringTransitPtr      create          (ComponentRefPtr TheComponent, UInt32 SizeField = PREFERRED_SIZE); 
+    static  ComponentWidthLayoutSpringTransitPtr      create          (Component* const TheComponent, UInt32 SizeField = PREFERRED_SIZE); 
     
 
     //Returns the maximum value of this LayoutSpringRefPtr.

@@ -248,6 +248,8 @@ void MaterialFieldContainerEditor::onCreate(const MaterialFieldContainerEditor *
 	Inherited::onCreate(Id);
     if(Id != NULL)
     {
+        pushToChildren(_GenericEditor);
+
         //Create the Viewport, geometry, camera, light
         createGLViewport();
 
@@ -266,12 +268,20 @@ void MaterialFieldContainerEditor::onCreate(const MaterialFieldContainerEditor *
 
         setLayout(TheLayout);
         pushToChildren(_MaterialViewport);
-        pushToChildren(_GenericEditor);
     }
 }
 
 void MaterialFieldContainerEditor::onDestroy()
 {
+}
+
+void MaterialFieldContainerEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _MaterialViewport = NULL;
+
+    _MaterialGeometry = NULL;
 }
 
 /*----------------------- constructors & destructors ----------------------*/

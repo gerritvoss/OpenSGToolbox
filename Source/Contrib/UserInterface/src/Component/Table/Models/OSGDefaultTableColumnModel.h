@@ -43,8 +43,6 @@
 #endif
 
 #include "OSGDefaultTableColumnModelBase.h"
-#include "OSGListSelectionListener.h"
-#include "OSGFieldChangeListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -108,9 +106,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     //Returns an array of indicies of all selected columns.
     virtual std::vector<UInt32> getSelectedColumns(void) const;
 
-    //Returns the current selection model.
-    virtual ListSelectionModelPtr getSelectionModel(void) const;
-
     //Returns the total width of all the columns.
     virtual UInt32 getTotalColumnWidth(void) const;
 
@@ -126,12 +121,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     //Sets whether the columns in this model may be selected.
     virtual void setColumnSelectionAllowed(const bool& flag);
 
-    //Sets the selection model.
-    virtual void setSelectionModel(ListSelectionModelPtr newModel);
-    
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+
+    // Variables should all be in DefaultTableColumnModelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -164,36 +158,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     ListSelectionModelPtr _SelectionModel;
     UInt32 _TotalColumnWidth;
     
-    
-    class TableSelectionListener : public ListSelectionListener
-    {
-      public :
-        TableSelectionListener(DefaultTableColumnModel* const TheDefaultTableColumnModel);
-
-        //A ListSelectionListener that forwards ListSelectionEvents when there is a column selection change
-        virtual void selectionChanged(const ListSelectionEventUnrecPtr e);
-      protected :
-        DefaultTableColumnModel* _DefaultTableColumnModel;
-    };
-
-	friend class TableSelectionListener;
-
-	TableSelectionListener _TableSelectionListener;
-    
-	/*class TableFieldChangeListener : public FieldChangeListener
-	{
-	public :
-		TableFieldChangeListener(DefaultTableColumnModel* const TheDefaultTableColumnModel);
-		
-        virtual void fieldChanged(const FieldChangeEventUnrecPtr e);
-	protected :
-		DefaultTableColumnModel* _DefaultTableColumnModel;
-	};
-
-	friend class TableFieldChangeListener;
-
-	TableFieldChangeListener _TableFieldChangeListener;*/
-
+    void handleSelectionChanged(ListSelectionEventDetails* const e);
+    boost::signals2::connection _SelectionChangedConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:

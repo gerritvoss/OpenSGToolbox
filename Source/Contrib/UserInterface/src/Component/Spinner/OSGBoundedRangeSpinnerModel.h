@@ -48,9 +48,6 @@
 
 #include "OSGBoundedRangeModel.h"
 #include "OSGNumberSpinnerModel.h"
-#include <set>
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -60,53 +57,35 @@ typedef boost::shared_ptr<BoundedRangeSpinnerModel> BoundedRangeSpinnerModelPtr;
 
 class OSG_CONTRIBUSERINTERFACE_DLLMAPPING BoundedRangeSpinnerModel
 {
-  private:
-
-  protected:
-    BoundedRangeModelRefPtr _TheBoundedRangeModel;
-    Int32SpinnerModelPtr _TheSpinnerModel;
-
-    typedef std::set<ChangeListenerPtr> ChangeListenerSet;
-    typedef ChangeListenerSet::iterator ChangeListenerSetItor;
-    typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
-    ChangeListenerSet _ChangeListeners;
-
-    void produceStateChanged(void);
-
-    //BoundedRangeModel Listener
-    class BoundedRangeModelChangeListener : public ChangeListener
-    {
-      public :
-        BoundedRangeModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
-
-        virtual void stateChanged(const ChangeEventUnrecPtr e);
-      private:
-        BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
-    };
-
-    friend class BoundedRangeModelChangeListener;
-
-    BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
-
-    //SpinnerModel Listener
-    class SpinnerModelChangeListener : public ChangeListener
-    {
-      public :
-        SpinnerModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
-
-        virtual void stateChanged(const ChangeEventUnrecPtr e);
-      private:
-        BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
-    };
-
-    friend class SpinnerModelChangeListener;
-
-    SpinnerModelChangeListener _SpinnerModelChangeListener;
-
-    void attachListenersToModels(void);
-
-    void dettachListenersFromModels(void);
   public:
+    typedef ChangeEventDetails StateChangedEventDetailsType;
+    typedef boost::signals2::signal<void (StateChangedEventDetailsType* const, UInt32), ConsumableEventCombiner> StateChangedEventType;
+
+    enum
+    {
+        StateChangedEventId = 1,
+        NextEventId     = StateChangedEventId            + 1
+    };
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
+    virtual const EventProducerType &getProducerType(void) const; 
+
+    boost::signals2::connection          attachActivity(UInt32 eventId,
+                                                       Activity* TheActivity);
+    UInt32                   getNumProducedEvents(void)          const;
+    const EventDescription *getProducedEventDescription(const   Char8 *ProducedEventName) const;
+    const EventDescription *getProducedEventDescription(UInt32  ProducedEventId) const;
+    UInt32                   getProducedEventId(const            Char8 *ProducedEventName) const;
+
+    boost::signals2::connection connectStateChanged(const StateChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectStateChanged(const StateChangedEventType::group_type &group,
+                                                       const StateChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectStateChanged       (const StateChangedEventType::group_type &group);
+    void   disconnectAllSlotsStateChanged(void);
+    bool   isEmptyStateChanged          (void) const;
+    UInt32 numSlotsStateChanged         (void) const;
     //Returns the model's maximum.
     virtual Int32 getMaximum(void) const;
 
@@ -125,10 +104,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING BoundedRangeSpinnerModel
     //Sets the model's current value to newValue if newValue satisfies the model's constraints.
     virtual void setValue(Int32 newValue);
 
-    virtual EventConnection addChangeListener(ChangeListenerPtr Listener);
-    bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
-    virtual void removeChangeListener(ChangeListenerPtr Listener);
-
     BoundedRangeModel* getBoundedRangeModel(void);
 
     SpinnerModelPtr getSpinnerModel(void);
@@ -136,6 +111,32 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING BoundedRangeSpinnerModel
     BoundedRangeSpinnerModel(void);
     BoundedRangeSpinnerModel(const BoundedRangeSpinnerModel &source);
     ~BoundedRangeSpinnerModel(void);
+  private:
+
+  protected:
+    BoundedRangeModelRefPtr _TheBoundedRangeModel;
+    Int32SpinnerModelPtr _TheSpinnerModel;
+
+    void produceStateChanged(void);
+
+    //BoundedRangeModel
+    void handleRangeModelStateChanged(ChangeEventDetails* const e);
+    boost::signals2::connection _RangeModelStateChangedConnection;
+
+    //BoundedRangeSpinnerModel
+    void handleSpinnerModelStateChanged(ChangeEventDetails* const e);
+    boost::signals2::connection _SpinnerModelStateChangedConnection;
+
+    void attachListenersToModels(void);
+
+    void dettachListenersFromModels(void);
+
+    static EventDescription   *_eventDesc[];
+    static EventProducerType _producerType;
+    StateChangedEventType _StateChangedEvent;
+    
+    void produceStateChanged(StateChangedEventDetailsType* const e);
+
 };
 
 

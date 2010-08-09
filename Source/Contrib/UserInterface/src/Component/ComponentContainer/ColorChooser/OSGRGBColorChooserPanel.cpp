@@ -52,6 +52,7 @@
 #include "OSGSpringLayout.h"
 #include "OSGSpringLayoutConstraints.h"
 #include "OSGLayoutSpring.h"
+#include "OSGGradientLayer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -417,31 +418,34 @@ void RGBColorChooserPanel::buildChooser(void)
 
 void RGBColorChooserPanel::updateColorSelectedModel(void)
 {
-    bool isValueAdjusting = _RedModel->getBoundedRangeModel()->getValueIsAdjusting() ||
-        _GreenModel->getBoundedRangeModel()->getValueIsAdjusting() ||
-        _BlueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
-        _AlphaModel->getBoundedRangeModel()->getValueIsAdjusting();
-    getColorSelectionModel()->setSelectedColor(Color4f(static_cast<Real32>(_RedModel->getValue())/static_cast<Real32>(_RedModel->getMaximum()),
-                                                       static_cast<Real32>(_GreenModel->getValue())/static_cast<Real32>(_GreenModel->getMaximum()),
-                                                       static_cast<Real32>(_BlueModel->getValue())/static_cast<Real32>(_BlueModel->getMaximum()),
-                                                       static_cast<Real32>(_AlphaModel->getValue())/static_cast<Real32>(_AlphaModel->getMaximum())),
-                                               isValueAdjusting);
+    if(getColorSelectionModel())
+    {
+        bool isValueAdjusting = _RedModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+            _GreenModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+            _BlueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+            _AlphaModel->getBoundedRangeModel()->getValueIsAdjusting();
+        getColorSelectionModel()->setSelectedColor(Color4f(static_cast<Real32>(_RedModel->getValue())/static_cast<Real32>(_RedModel->getMaximum()),
+                                                           static_cast<Real32>(_GreenModel->getValue())/static_cast<Real32>(_GreenModel->getMaximum()),
+                                                           static_cast<Real32>(_BlueModel->getValue())/static_cast<Real32>(_BlueModel->getMaximum()),
+                                                           static_cast<Real32>(_AlphaModel->getValue())/static_cast<Real32>(_AlphaModel->getMaximum())),
+                                                   isValueAdjusting);
+    }
 }
 
 void RGBColorChooserPanel::attachModelListener(void)
 {
-    _RedModel->addChangeListener(&_BoundedRangeSpinnerChangeListener);
-    _GreenModel->addChangeListener(&_BoundedRangeSpinnerChangeListener);
-    _BlueModel->addChangeListener(&_BoundedRangeSpinnerChangeListener);
-    _AlphaModel->addChangeListener(&_BoundedRangeSpinnerChangeListener);
+    _RedModelStateChangedConnection = _RedModel->getSpinnerModel()->connectStateChanged(boost::bind(&RGBColorChooserPanel::handleControlStateChanged, this, _1));
+    _GreenModelStateChangedConnection = _GreenModel->getSpinnerModel()->connectStateChanged(boost::bind(&RGBColorChooserPanel::handleControlStateChanged, this, _1));
+    _BlueModelStateChangedConnection = _BlueModel->getSpinnerModel()->connectStateChanged(boost::bind(&RGBColorChooserPanel::handleControlStateChanged, this, _1));
+    _AlphaModelStateChangedConnection = _AlphaModel->getSpinnerModel()->connectStateChanged(boost::bind(&RGBColorChooserPanel::handleControlStateChanged, this, _1));
 }
 
 void RGBColorChooserPanel::dettachModelListener(void)
 {
-    if(_RedModel){ _RedModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
-    if(_GreenModel){ _GreenModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
-    if(_BlueModel){ _BlueModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
-    if(_AlphaModel){ _AlphaModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
+    _RedModelStateChangedConnection.disconnect();
+    _GreenModelStateChangedConnection.disconnect();
+    _BlueModelStateChangedConnection.disconnect();
+    _AlphaModelStateChangedConnection.disconnect();
 }
 
 void RGBColorChooserPanel::init(void)
@@ -458,17 +462,35 @@ void RGBColorChooserPanel::init(void)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void RGBColorChooserPanel::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _RedSpinner = NULL;
+    _GreenSpinner = NULL;
+    _BlueSpinner = NULL;
+    _AlphaSpinner = NULL;
+
+    _RedSliderTrackBackground = NULL;
+    _GreenSliderTrackBackground = NULL;
+    _BlueSliderTrackBackground = NULL;
+    _AlphaSliderTrackBackground = NULL;
+
+    _RedSlider = NULL;
+    _GreenSlider = NULL;
+    _BlueSlider = NULL;
+    _AlphaSlider = NULL;
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 RGBColorChooserPanel::RGBColorChooserPanel(void) :
-    Inherited(),
-	_BoundedRangeSpinnerChangeListener(this)
+    Inherited()
 {
 }
 
 RGBColorChooserPanel::RGBColorChooserPanel(const RGBColorChooserPanel &source) :
-    Inherited(source),
-	_BoundedRangeSpinnerChangeListener(this)
+    Inherited(source)
 {
     init();
 }
@@ -493,10 +515,10 @@ void RGBColorChooserPanel::dump(      UInt32    ,
     SLOG << "Dump RGBColorChooserPanel NI" << std::endl;
 }
 
-void RGBColorChooserPanel::BoundedRangeSpinnerChangeListener::stateChanged(const ChangeEventUnrecPtr e)
+void RGBColorChooserPanel::handleControlStateChanged(ChangeEventDetails* const e)
 {
 	//Update the Color Selected Model
-	_RGBColorChooserPanel->updateColorSelectedModel();
+	updateColorSelectedModel();
 }
 
 OSG_END_NAMESPACE

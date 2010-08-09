@@ -360,70 +360,291 @@ const Char8 *SoundBase::getClassname(void)
 }
 
 inline
-EventConnection SoundBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool SoundBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 SoundBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr SoundBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void SoundBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 SoundBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *SoundBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *SoundBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *SoundBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *SoundBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 SoundBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *SoundBase::editSFEventProducer(void)
+boost::signals2::connection  SoundBase::connectSoundPlayed(const SoundPlayedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _SoundPlayedEvent.connect(listener, at);
 }
 
-//! Get the value of the Sound::_sfEventProducer field.
 inline
-EventProducerPtr &SoundBase::editEventProducer(void)
+boost::signals2::connection  SoundBase::connectSoundPlayed(const SoundPlayedEventType::group_type &group,
+                                                    const SoundPlayedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _SoundPlayedEvent.connect(group, listener, at);
+}
+
+inline
+void  SoundBase::disconnectSoundPlayed(const SoundPlayedEventType::group_type &group)
+{
+    _SoundPlayedEvent.disconnect(group);
+}
+
+inline
+void  SoundBase::disconnectAllSlotsSoundPlayed(void)
+{
+    _SoundPlayedEvent.disconnect_all_slots();
+}
+
+inline
+bool  SoundBase::isEmptySoundPlayed(void) const
+{
+    return _SoundPlayedEvent.empty();
+}
+
+inline
+UInt32  SoundBase::numSlotsSoundPlayed(void) const
+{
+    return _SoundPlayedEvent.num_slots();
+}
+
+inline
+void SoundBase::produceSoundPlayed(SoundPlayedEventDetailsType* const e)
+{
+    produceEvent(SoundPlayedEventId, e);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundStopped(const SoundStoppedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _SoundStoppedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundStopped(const SoundStoppedEventType::group_type &group,
+                                                    const SoundStoppedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _SoundStoppedEvent.connect(group, listener, at);
+}
+
+inline
+void  SoundBase::disconnectSoundStopped(const SoundStoppedEventType::group_type &group)
+{
+    _SoundStoppedEvent.disconnect(group);
+}
+
+inline
+void  SoundBase::disconnectAllSlotsSoundStopped(void)
+{
+    _SoundStoppedEvent.disconnect_all_slots();
+}
+
+inline
+bool  SoundBase::isEmptySoundStopped(void) const
+{
+    return _SoundStoppedEvent.empty();
+}
+
+inline
+UInt32  SoundBase::numSlotsSoundStopped(void) const
+{
+    return _SoundStoppedEvent.num_slots();
+}
+
+inline
+void SoundBase::produceSoundStopped(SoundStoppedEventDetailsType* const e)
+{
+    produceEvent(SoundStoppedEventId, e);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundPaused(const SoundPausedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _SoundPausedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundPaused(const SoundPausedEventType::group_type &group,
+                                                    const SoundPausedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _SoundPausedEvent.connect(group, listener, at);
+}
+
+inline
+void  SoundBase::disconnectSoundPaused(const SoundPausedEventType::group_type &group)
+{
+    _SoundPausedEvent.disconnect(group);
+}
+
+inline
+void  SoundBase::disconnectAllSlotsSoundPaused(void)
+{
+    _SoundPausedEvent.disconnect_all_slots();
+}
+
+inline
+bool  SoundBase::isEmptySoundPaused(void) const
+{
+    return _SoundPausedEvent.empty();
+}
+
+inline
+UInt32  SoundBase::numSlotsSoundPaused(void) const
+{
+    return _SoundPausedEvent.num_slots();
+}
+
+inline
+void SoundBase::produceSoundPaused(SoundPausedEventDetailsType* const e)
+{
+    produceEvent(SoundPausedEventId, e);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundUnpaused(const SoundUnpausedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _SoundUnpausedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundUnpaused(const SoundUnpausedEventType::group_type &group,
+                                                    const SoundUnpausedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _SoundUnpausedEvent.connect(group, listener, at);
+}
+
+inline
+void  SoundBase::disconnectSoundUnpaused(const SoundUnpausedEventType::group_type &group)
+{
+    _SoundUnpausedEvent.disconnect(group);
+}
+
+inline
+void  SoundBase::disconnectAllSlotsSoundUnpaused(void)
+{
+    _SoundUnpausedEvent.disconnect_all_slots();
+}
+
+inline
+bool  SoundBase::isEmptySoundUnpaused(void) const
+{
+    return _SoundUnpausedEvent.empty();
+}
+
+inline
+UInt32  SoundBase::numSlotsSoundUnpaused(void) const
+{
+    return _SoundUnpausedEvent.num_slots();
+}
+
+inline
+void SoundBase::produceSoundUnpaused(SoundUnpausedEventDetailsType* const e)
+{
+    produceEvent(SoundUnpausedEventId, e);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundLooped(const SoundLoopedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _SoundLoopedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundLooped(const SoundLoopedEventType::group_type &group,
+                                                    const SoundLoopedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _SoundLoopedEvent.connect(group, listener, at);
+}
+
+inline
+void  SoundBase::disconnectSoundLooped(const SoundLoopedEventType::group_type &group)
+{
+    _SoundLoopedEvent.disconnect(group);
+}
+
+inline
+void  SoundBase::disconnectAllSlotsSoundLooped(void)
+{
+    _SoundLoopedEvent.disconnect_all_slots();
+}
+
+inline
+bool  SoundBase::isEmptySoundLooped(void) const
+{
+    return _SoundLoopedEvent.empty();
+}
+
+inline
+UInt32  SoundBase::numSlotsSoundLooped(void) const
+{
+    return _SoundLoopedEvent.num_slots();
+}
+
+inline
+void SoundBase::produceSoundLooped(SoundLoopedEventDetailsType* const e)
+{
+    produceEvent(SoundLoopedEventId, e);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundEnded(const SoundEndedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _SoundEndedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundEnded(const SoundEndedEventType::group_type &group,
+                                                    const SoundEndedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _SoundEndedEvent.connect(group, listener, at);
+}
+
+inline
+void  SoundBase::disconnectSoundEnded(const SoundEndedEventType::group_type &group)
+{
+    _SoundEndedEvent.disconnect(group);
+}
+
+inline
+void  SoundBase::disconnectAllSlotsSoundEnded(void)
+{
+    _SoundEndedEvent.disconnect_all_slots();
+}
+
+inline
+bool  SoundBase::isEmptySoundEnded(void) const
+{
+    return _SoundEndedEvent.empty();
+}
+
+inline
+UInt32  SoundBase::numSlotsSoundEnded(void) const
+{
+    return _SoundEndedEvent.num_slots();
+}
+
+inline
+void SoundBase::produceSoundEnded(SoundEndedEventDetailsType* const e)
+{
+    produceEvent(SoundEndedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(Sound);

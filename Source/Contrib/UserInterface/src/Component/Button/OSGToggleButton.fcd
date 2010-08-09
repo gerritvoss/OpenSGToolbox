@@ -25,14 +25,16 @@ A UI Toggle Button.
 		access="public"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="ButtonSelected"
-		type="ButtonSelectedEventPtr"
+		detailsType="ButtonSelectedEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ButtonDeselected"
-		type="ButtonSelectedEventPtr"
+		detailsType="ButtonSelectedEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

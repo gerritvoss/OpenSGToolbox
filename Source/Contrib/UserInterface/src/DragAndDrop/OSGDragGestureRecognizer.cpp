@@ -27,38 +27,18 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 #include "OSGDragGestureRecognizer.h"
-#include "OSGDragGestureEvent.h"
+#include "OSGDragGestureEventDetails.h"
 #include "OSGComponent.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
-
-EventConnection DragGestureRecognizer::addDragGestureListener(DragGestureListenerPtr Listener)
-{
-    _DragGestureListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&DragGestureRecognizer::isDragGestureListenerAttached, this, Listener),
-       boost::bind(&DragGestureRecognizer::removeDragGestureListener, this, Listener));
-}
-
-void DragGestureRecognizer::removeDragGestureListener(DragGestureListenerPtr Listener)
-{
-   DragGestureListenerSetItor EraseIter(_DragGestureListeners.find(Listener));
-   if(EraseIter != _DragGestureListeners.end())
-   {
-      _DragGestureListeners.erase(EraseIter);
-   }
-}
-
-void DragGestureRecognizer::produceDragGestureRecognized(ComponentRefPtr TheComponent, const Pnt2f &DragLocation) const
-{
-    const DragGestureEventUnrecPtr e = DragGestureEvent::create(TheComponent, getSystemTime(), DragLocation);
-	DragGestureListenerSet Listeners(_DragGestureListeners);
-    for(DragGestureListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
-    {
-	    (*SetItor)->draqGestureRecognized(e);
-    }
-}
+//
+//void DragGestureRecognizer::produceDragGestureRecognized(ComponentRefPtr TheComponent, const Pnt2f &DragLocation) const
+//{
+//    DragGestureEventDetailsUnrecPtr Details = DragGestureEventDetails::create(TheComponent, getSystemTime(), DragLocation);
+//
+//    produceDragGestureRecognized(Details);
+//}
 
 OSG_END_NAMESPACE

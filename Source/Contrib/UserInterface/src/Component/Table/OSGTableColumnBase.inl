@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGChangeEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -295,70 +297,71 @@ const Char8 *TableColumnBase::getClassname(void)
 }
 
 inline
-EventConnection TableColumnBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool TableColumnBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 TableColumnBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr TableColumnBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void TableColumnBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 TableColumnBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *TableColumnBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *TableColumnBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *TableColumnBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *TableColumnBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 TableColumnBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *TableColumnBase::editSFEventProducer(void)
+boost::signals2::connection  TableColumnBase::connectFieldChanged(const FieldChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _FieldChangedEvent.connect(listener, at);
 }
 
-//! Get the value of the TableColumn::_sfEventProducer field.
 inline
-EventProducerPtr &TableColumnBase::editEventProducer(void)
+boost::signals2::connection  TableColumnBase::connectFieldChanged(const FieldChangedEventType::group_type &group,
+                                                    const FieldChangedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _FieldChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  TableColumnBase::disconnectFieldChanged(const FieldChangedEventType::group_type &group)
+{
+    _FieldChangedEvent.disconnect(group);
+}
+
+inline
+void  TableColumnBase::disconnectAllSlotsFieldChanged(void)
+{
+    _FieldChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TableColumnBase::isEmptyFieldChanged(void) const
+{
+    return _FieldChangedEvent.empty();
+}
+
+inline
+UInt32  TableColumnBase::numSlotsFieldChanged(void) const
+{
+    return _FieldChangedEvent.num_slots();
+}
+
+inline
+void TableColumnBase::produceFieldChanged(FieldChangedEventDetailsType* const e)
+{
+    produceEvent(FieldChangedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(TableColumn);

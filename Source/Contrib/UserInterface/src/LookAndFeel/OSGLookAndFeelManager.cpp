@@ -1,4 +1,5 @@
 #include "OSGLookAndFeelManager.h"
+#include "OSGBaseInitFunctions.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -14,13 +15,19 @@ LookAndFeelManager* LookAndFeelManager::the(void)
    return _the;
 }
 
+bool LookAndFeelManager::uninitialize(void)
+{
+    _LookAndFeel = NULL;
+
+    return true;
+}
+
 void LookAndFeelManager::setLookAndFeel(LookAndFeel* const TheLookAndFeel)
 {
 	if(TheLookAndFeel != NULL)
 	{
 		_LookAndFeel = TheLookAndFeel;
 	}
-
 }
 
 OSG_END_NAMESPACE

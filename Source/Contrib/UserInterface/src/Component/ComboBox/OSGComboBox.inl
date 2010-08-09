@@ -41,18 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool ComboBox::isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const
-{
-    return getComboListPopupMenu()->isPopupMenuListenerAttached(Listener);
-}
-
-inline
-bool ComboBox::isActionListenerAttached(ActionListenerPtr Listener) const
-{
-    return _ActionListeners.find(Listener) != _ActionListeners.end();
-}
-
-inline
 UInt32 ComboBox::getSelectedIndex(void) const
 {
 	return getModel()->getSelectedItemIndex();
@@ -89,12 +77,6 @@ void ComboBox::setSelectedItem(const boost::any& anObject)
 }
 
 inline
-void ComboBox::removePopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	getComboListPopupMenu()->removePopupMenuListener(Listener);
-}
-
-inline
 bool ComboBox::isPopupVisible(void) const
 {
 	return getComboListPopupMenu()->getVisible();
@@ -104,18 +86,6 @@ inline
 void ComboBox::hidePopup(void)
 {
 	getComboListPopupMenu()->clearSelection();
-}
-
-inline
-ComboBox::ExpandButtonSelectedListener::ExpandButtonSelectedListener(ComboBox* const TheComboBox) :
-   _ComboBox(TheComboBox)
-{
-}
-
-inline
-ComboBox::EditorListener::EditorListener(ComboBox* const TheComboBox) :
-   _ComboBox(TheComboBox)
-{
 }
 
 OSG_END_NAMESPACE

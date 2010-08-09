@@ -41,7 +41,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-ImageRefPtr VideoWrapper::getImage(void) const
+Image* VideoWrapper::getImage(void) const
 {
 	return _VideoImage;
 }

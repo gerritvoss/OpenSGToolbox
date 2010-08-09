@@ -57,10 +57,6 @@
 #endif
 
 #include "OSGPhysicsSpaceBase.h"
-#include "OSGCollisionListener.h"
-#include <set>
-#include "OSGCollisionListener.h"
-#include "OSGEventConnection.h"
 
 //#include "rapidxml.h"
 //#include "rapidxml_iterators.h"
@@ -116,7 +112,7 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 	  /*! \name                   Class Specific Get Field                    */
 	  /*! \{                                                                 */
       dSpaceID getSpaceID(void) const;
-      PhysicsHandlerUnrecPtr getParentHandler(void) const;
+      PhysicsHandler* getParentHandler(void) const;
 	  /*! \}                                                                 */
 
 	  /*---------------------------------------------------------------------*/
@@ -137,13 +133,13 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 	  Int32 GetNumGeoms();
 	  dGeomID GetGeom( Int32 i );
 
-	  void Collide( PhysicsWorldUnrecPtr w );
+	  void Collide( PhysicsWorld* const w );
       static void collisionCallback (void *data, dGeomID o1, dGeomID o2);
 
-      void addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParametersUnrecPtr ContactParams);
+      void addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParameters* const ContactParams);
       void removeCollisionContactCategory(UInt64 Category1, UInt64 Category2);
-      CollisionContactParametersUnrecPtr getCollisionContactCategory(UInt64 Category1, UInt64 Category2);
-      CollisionContactParametersUnrecPtr getCollisionContact(UInt64 Category1, UInt64 Category2);
+      CollisionContactParameters* getCollisionContactCategory(UInt64 Category1, UInt64 Category2);
+      CollisionContactParameters* getCollisionContact(UInt64 Category1, UInt64 Category2);
 
       
       void addCollisionListenerCategory();
@@ -154,14 +150,20 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
 
 	  /*! \}                                                                 */
-    EventConnection addCollisionListener(CollisionListenerPtr Listener, UInt64 Category, Real32 SpeedThreshold);
-    bool isCollisionListenerAttached(CollisionListenerPtr Listener) const;
-    void removeCollisionListener(CollisionListenerPtr Listener);
-      
-	static bool xmlReadHandler (rapidxml::xml_node<char>&, const XMLFCFileType::IDLookupMap&,const FieldContainerUnrecPtr&);
-	static bool xmlWriteHandler (const FieldContainerUnrecPtr&);
+      boost::signals2::connection connectCollision(const CollisionEventType::slot_type &listener, 
+                                                   UInt64 Category,
+                                                   Real32 SpeedThreshold,
+                                                   boost::signals2::connect_position at= boost::signals2::at_back);
+      boost::signals2::connection connectCollision(const CollisionEventType::group_type &group,
+                                                   const CollisionEventType::slot_type &listener, 
+                                                   UInt64 Category,
+                                                   Real32 SpeedThreshold,
+                                                   boost::signals2::connect_position at= boost::signals2::at_back);
+        
+	  static bool xmlReadHandler (rapidxml::xml_node<char>&, const XMLFCFileType::IDLookupMap&,const FieldContainerUnrecPtr&);
+	  static bool xmlWriteHandler (const FieldContainerUnrecPtr&);
 
-    static bool registerXMLHandler(void);
+      static bool registerXMLHandler(void);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -210,22 +212,19 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
     {
         UInt64 _Category;
         Real32 _SpeedThreshold;
-        CollisionListenerPtr _Listener;
+        const CollisionEventType::slot_type* _Listener;
+
+        CollisionListenParams(UInt64 Category, Real32 SpeedThreshold, const CollisionEventType::slot_type* Listener);
     };
     std::vector<CollisionListenParams> _CollisionListenParamsVec; 
 
     void collisionCallback (dGeomID o1, dGeomID o2);
-
-	typedef std::set<CollisionListenerPtr> CollisionListenerSet;
-    typedef CollisionListenerSet::iterator CollisionListenerSetItor;
-    typedef CollisionListenerSet::const_iterator CollisionListenerSetConstItor;
-    CollisionListenerSet       _CollisionListeners;
         
-    void produceCollision(CollisionListenerPtr _Listener, 
+    void produceCollision(const CollisionEventType::slot_type* Listener, 
                           const Pnt3f& Position,
                           const Vec3f& Normal, 
-                          PhysicsGeomUnrecPtr Geom1,
-                          PhysicsGeomUnrecPtr Geom2,
+                          PhysicsGeom* const Geom1,
+                          PhysicsGeom* const Geom2,
                           UInt64 Geom1Cat,
                           UInt64 Geom1Col,
                           UInt64 Geom2Cat,
@@ -236,8 +235,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
     void produceCollision(const Pnt3f& Position,
                             const Vec3f& Normal, 
-                            PhysicsGeomUnrecPtr Geom1,
-                            PhysicsGeomUnrecPtr Geom2,
+                            PhysicsGeom* const Geom1,
+                            PhysicsGeom* const Geom2,
                             UInt64 Geom1Cat,
                             UInt64 Geom1Col,
                             UInt64 Geom2Cat,
@@ -266,6 +265,7 @@ OSG_END_NAMESPACE
 
 #include "OSGPhysicsGeom.h"
 #include "OSGCollisionContactParameters.h"
+#include "OSGCollisionEventDetails.h"
 
 #include "OSGPhysicsSpaceBase.inl"
 #include "OSGPhysicsSpace.inl"

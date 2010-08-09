@@ -36,7 +36,7 @@ A UI Default Mutable Tree Node.
 	<Field
 		name="ParentInternal"
 		type="MutableTreeNode"
-        category="pointer"
+        category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"

@@ -43,7 +43,7 @@
 #include "OSGBaseDef.h"
 #include "OSGBaseTypes.h"
 #include "OSGIOStream.h"
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 
 OSG_BEGIN_NAMESPACE

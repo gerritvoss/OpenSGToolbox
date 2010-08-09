@@ -48,7 +48,7 @@
 #include "OSGEventProducerType.h"
 #include "OSGEventProducerFactory.h"
 
-#include "OSGMethodDescription.h"
+#include "OSGEventDescription.h"
 #include "OSGLog.h"
 
 OSG_USING_NAMESPACE
@@ -57,6 +57,7 @@ OSG_USING_NAMESPACE
 //  Class
 //---------------------------------------------------------------------------
 
+EventProducerType EventProducerType::_baseType( "EventProducerType" );
 /*-------------------------------------------------------------------------*/
 /*                              Register                                   */
 
@@ -76,8 +77,8 @@ EventProducerType::EventProducerType(const std::string &szName,
                                    const std::string &szParentName,
                                    const std::string &szGroupName,
                                    //PrototypeCreateF    fPrototypeCreate,
-                                   InitEventProducerFunctor      fInitMethod,
-                                   MethodDescription  **pDesc,
+                                   InitEventProducerFunctor      fInitEvent,
+                                   EventDescription  **pDesc,
                                    UInt32              uiDescByteCounter) :
      Inherited        (szName.c_str(), 
                        szParentName.c_str()     ),
@@ -101,8 +102,8 @@ EventProducerType::EventProducerType(const std::string &szName,
 {
     registerType(szGroupName);
 
-    if(!fInitMethod.empty())
-        fInitMethod();
+    if(!fInitEvent.empty())
+        fInitEvent();
 }
 
 EventProducerType::EventProducerType(const EventProducerType &obj) :
@@ -129,8 +130,8 @@ EventProducerType::EventProducerType(const EventProducerType &obj) :
     //if(_pPrototype != NullFC)
     //    addRefCP(_pPrototype);
 
-    initMethods();
-    initParentMethods();
+    initEvents();
+    initParentEvents();
 
     _bInitialized = true;
 }
@@ -149,14 +150,14 @@ EventProducerType::~EventProducerType(void)
 /*-------------------------------------------------------------------------*/
 /*                            Add / Sub                                    */
 
-UInt32 EventProducerType::addDescription(const MethodDescription &desc)
+UInt32 EventProducerType::addDescription(const EventDescription &desc)
 {
     UInt32            returnValue = 0;
     DescMapConstIt    descIt;
     DescVecIt         descVIt;
 
-    MethodDescription  *pDesc;
-    MethodDescription  *pNullDesc = NULL;
+    EventDescription  *pDesc;
+    EventDescription  *pNullDesc = NULL;
 
     //if(_bDescsAddable == false)
     //    return returnValue;
@@ -167,7 +168,7 @@ UInt32 EventProducerType::addDescription(const MethodDescription &desc)
     {
         if(descIt == _mDescMap.end())
         {
-            pDesc = new MethodDescription(desc);
+            pDesc = new EventDescription(desc);
 
             _mDescMap[pDesc->getName()] = pDesc;
 
@@ -191,25 +192,25 @@ UInt32 EventProducerType::addDescription(const MethodDescription &desc)
         }
         else
         {
-            SWARNING << "ERROR: Double method description "
+            SWARNING << "ERROR: Double event description "
                         << "in " << _szName << " from "
                         << desc.getCName() << " (id:"
-                        << desc.getMethodId() << ")" << std::endl;
+                        << desc.getEventId() << ")" << std::endl;
         }
     }
     else
     {
-        SWARNING << "ERROR: Invalid method description "
+        SWARNING << "ERROR: Invalid event description "
                     << "in " << _szName << " from "
-                    << desc.getMethodId() << std::endl;
+                    << desc.getEventId() << std::endl;
     }
 
     return returnValue;
 }
 
-bool EventProducerType::subDescription(UInt32 uiMethodId)
+bool EventProducerType::subDescription(UInt32 uiEventId)
 {
-    MethodDescription  *pDesc = getMethodDescription(uiMethodId);
+    EventDescription  *pDesc = getEventDescription(uiEventId);
     DescMapIt          descMIt;
     DescVecIt          descVIt;
     bool               returnValue = true;
@@ -295,7 +296,7 @@ void EventProducerType::dump(      UInt32    OSG_CHECK_ARG(uiIndent),
     return _bInitialized;
 }*/
 
-bool EventProducerType::initMethods(void)
+bool EventProducerType::initEvents(void)
 {
     UInt32    i;
     DescMapIt descIt;
@@ -305,7 +306,7 @@ bool EventProducerType::initMethods(void)
 	if(_pDesc == NULL)
 		return true;
 
-    for(i = 0; i < _uiDescByteCounter / sizeof(MethodDescription *); i++)
+    for(i = 0; i < _uiDescByteCounter / sizeof(EventDescription *); i++)
     {
         if(_pDesc[i]->isValid())
         {
@@ -319,31 +320,31 @@ bool EventProducerType::initMethods(void)
             }
             else
             {
-                SWARNING << "ERROR: Double method description "
+                SWARNING << "ERROR: Double event description "
                             << "in " << _szName << " from "
                             << _pDesc[i]->getName() << " (id:"
-                            << _pDesc[i]->getMethodId() << ")" << std::endl;
+                            << _pDesc[i]->getEventId() << ")" << std::endl;
 
                 _bInitialized = false;
             }
         }
         else
         {
-            SWARNING << "ERROR: Invalid method description "
+            SWARNING << "ERROR: Invalid event description "
                         << "in " << _szName << "from "
-                        << (_pDesc[i]?_pDesc[i]->getMethodId():0) << std::endl;
+                        << (_pDesc[i]?_pDesc[i]->getEventId():0) << std::endl;
 
             _bInitialized = false;
         }
 
     }
 
-    std::sort(_vDescVec.begin(), _vDescVec.end(), MethodDescriptionPLT());
+    std::sort(_vDescVec.begin(), _vDescVec.end(), EventDescriptionPLT());
 
     return _bInitialized;
 }
 
-bool EventProducerType::initParentMethods(void)
+bool EventProducerType::initParentEvents(void)
 {
     DescMapIt dPIt;
 
@@ -373,7 +374,7 @@ bool EventProducerType::initParentMethods(void)
                 }
                 else
                 {
-                    SWARNING << "ERROR: Can't add method "
+                    SWARNING << "ERROR: Can't add event "
                                 << "description a second time: "
                                 << (*dPIt).first
                                 << " to producer of type " << getCName() << std::endl;
@@ -404,12 +405,12 @@ bool EventProducerType::initialize(void)
     if(_bInitialized == true)
         return _bInitialized;
 
-    _bInitialized = initParentMethods();
+    _bInitialized = initParentEvents();
 
     if(_bInitialized == false)
         return _bInitialized;
 
-    _bInitialized = initMethods      ();
+    _bInitialized = initEvents      ();
 
     if(_bInitialized == false)
         return _bInitialized;
@@ -433,7 +434,7 @@ void EventProducerType::terminate(void)
 
     _bInitialized = false;
 
-    for(i = 0; i < _uiDescByteCounter / sizeof(MethodDescription *); i++)
+    for(i = 0; i < _uiDescByteCounter / sizeof(EventDescription *); i++)
     {
         delete _pDesc[i];
     }

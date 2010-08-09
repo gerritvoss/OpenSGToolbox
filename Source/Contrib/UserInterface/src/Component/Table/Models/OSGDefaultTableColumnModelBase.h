@@ -86,6 +86,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModelBase : public A
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(DefaultTableColumnModel);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

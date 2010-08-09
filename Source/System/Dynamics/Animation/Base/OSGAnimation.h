@@ -45,9 +45,7 @@
 #include "OSGAnimationBase.h"
 
 //#include "OSGAnimationAdvancer.h"
-#include "OSGAnimationListener.h"
-#include <set>
-#include "OSGEventConnection.h"
+#include "OSGAnimationEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -93,15 +91,10 @@ class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
     virtual bool isPlaying(void) const;
     virtual void stop(bool DisconnectFromEventProducer = true);
 
-    EventConnection addAnimationListener(AnimationListenerPtr Listener);
-    bool isAnimationListenerAttached(AnimationListenerPtr Listener) const;
-
-    void removeAnimationListener(AnimationListenerPtr Listener);
-
     virtual Real32 getLength(void) const;
     virtual Real32 getCycleLength(void) const = 0;
 
-    void attachUpdateProducer(EventProducerPtr TheProducer);
+    void attachUpdateProducer(ReflexiveContainer* const producer);
     void detachUpdateProducer(void);
     /*=========================  PROTECTED  ===============================*/
 
@@ -131,36 +124,22 @@ class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-   void produceAnimationStarted(void);
-   void produceAnimationStopped(void);
-   void produceAnimationPaused(void);
-   void produceAnimationUnpaused(void);
-   void produceAnimationEnded(void);
-   void produceAnimationCycled(void);
+    void produceAnimationStarted(void);
+    void produceAnimationStopped(void);
+    void produceAnimationPaused(void);
+    void produceAnimationUnpaused(void);
+    void produceAnimationEnded(void);
+    void produceAnimationCycled(void);
 
     virtual void internalUpdate(Real32 t, const Real32 prev_t)=0;
 
-    class UpdateHandler : public EventListener
-    {
-        public:
-            UpdateHandler(AnimationRefPtr TheAnimation);
+    void attachedUpdate(EventDetails* const details);
 
-            virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId);
-        private:
-            AnimationRefPtr _AttachedAnimation;
-    };
+    boost::signals2::connection _UpdateEventConnection;
 
-    UpdateHandler _UpdateHandler;
-    EventConnection _UpdateEventConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:
-
-	typedef std::set<AnimationListenerPtr> AnimationListenerSet;
-    typedef AnimationListenerSet::iterator AnimationListenerSetItor;
-    typedef AnimationListenerSet::const_iterator AnimationListenerSetConstItor;
-	
-    AnimationListenerSet       _AnimationListeners;
     Time _CurrentTime,_PrevTime;
     bool _IsPlaying,_IsPaused;
 

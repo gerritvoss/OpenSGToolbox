@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGDefaultBoundedRangeModelBase.h"
-#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -111,10 +110,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultBoundedRangeModel : public Defa
     
     //This attribute indicates that any upcoming changes to the value of the model should be considered a single event
     virtual void setValueIsAdjusting(bool b);
-    
-	virtual EventConnection addChangeListener(ChangeListenerPtr Listener);
-	virtual bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
-	virtual void removeChangeListener(ChangeListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -143,13 +138,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultBoundedRangeModel : public Defa
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    
-	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
-    typedef ChangeListenerSet::iterator ChangeListenerSetItor;
-    typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
-	
-    ChangeListenerSet       _ChangeListeners;
-    void produceStateChanged(const ChangeEventUnrecPtr e);
+
+    void produceStateChanged(ChangeEventDetails* const e);
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -43,11 +43,10 @@
 #endif
 
 #include "OSGListBase.h"
-#include "OSGFocusListener.h"
-#include "OSGListDataListener.h"
-#include "OSGListSelectionListener.h"
 #include "OSGListSelectionModel.h"
 #include "OSGComponentGenerator.h"
+#include "OSGListSelectionEventDetailsFields.h"
+#include "OSGListDataEventDetailsFields.h"
 #include <boost/any.hpp>
 
 #include <deque>
@@ -58,7 +57,7 @@ OSG_BEGIN_NAMESPACE
            PageContribUserInterfaceList for a description.
 */
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSelectionListener, public ListDataListener, public FocusListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase
 {
   protected:
 
@@ -92,23 +91,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
 
     /*! \}                                                                 */
 
-	//Focus Events
-	virtual void focusGained(const FocusEventUnrecPtr e);
-	virtual void focusLost(const FocusEventUnrecPtr e);
-
-    //Selection Event
-	virtual void selectionChanged(const ListSelectionEventUnrecPtr e);
-
-	//List Data Events
-	virtual void contentsChanged(const ListDataEventUnrecPtr e);
-	virtual void intervalAdded(const ListDataEventUnrecPtr e);
-	virtual void intervalRemoved(const ListDataEventUnrecPtr e);
    
     virtual void updateLayout(void);
-
-    void setSelectionModel(ListSelectionModelPtr SelectionModel);
-
-    ListSelectionModelPtr getSelectionModel(void) const;
 
     void setSelectedIndex(UInt32 index);
 
@@ -122,18 +106,24 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
 
 	virtual Vec2f getContentRequestedSize(void) const;
 	
-    virtual void mousePressed(const MouseEventUnrecPtr e);
-	virtual void keyTyped(const KeyEventUnrecPtr e);
+    virtual void mousePressed(MouseEventDetails* const e);
+	virtual void keyTyped(KeyEventDetails* const e);
 
-    Component* getComponentAtPoint(const MouseEventUnrecPtr e);
-    boost::any getValueAtPoint(const MouseEventUnrecPtr e);
+    Component* getComponentAtPoint(MouseEventDetails* const e);
+    boost::any getValueAtPoint(MouseEventDetails* const e);
 
     //Returns the row for the specified location.
 	//The Location should be in Component space
     Int32 getIndexForLocation(const Pnt2f& Location) const;
 
-	
+	//The Location should be in Component space
     Int32 getIndexClosestToLocation(const Pnt2f& Location) const;
+
+	//The Location should be in DrawingSurface space
+    Int32 getIndexForDrawingSurfaceLocation(const Pnt2f& Location) const;
+
+	//The Location should be in DrawingSurface space
+    Int32 getIndexClosestToDrawingSurfaceLocation(const Pnt2f& Location) const;
 
     Component* getComponentAtIndex(const UInt32& Index);
     boost::any getValueAtIndex(const UInt32& Index) const;
@@ -201,10 +191,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
 
-    ListSelectionModelPtr _SelectionModel;
+    virtual void resolveLinks(void);
 
-
+    /*! \}                                                                 */
     virtual bool useBoundsForClipping(void) const;
 	void updateIndiciesDrawnFromModel(void);
 
@@ -239,6 +232,24 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSel
 	Int32 _FocusedIndex;
 
     std::deque<ComponentRefPtr> _DrawnIndices;
+
+	//Focus Events
+	void handleItemFocusGained(FocusEventDetails* const e);
+	void handleItemFocusLost(FocusEventDetails* const e);
+    std::map<Component*, boost::signals2::connection> _ItemFocusGainedConnections,
+                                             _ItemFocusLostConnections;
+
+    //Selection Event
+	void handleSelectionChanged(ListSelectionEventDetails* const e);
+    boost::signals2::connection _SelectionChangedConnection;
+
+	//List Data Events
+	void handleContentsChanged(ListDataEventDetails* const e);
+	void handleIntervalAdded(ListDataEventDetails* const e);
+	void handleIntervalRemoved(ListDataEventDetails* const e);
+    boost::signals2::connection _ContentsChangedConnection,
+                                _IntervalAddedConnection,
+                                _IntervalRemovedConnection;
 
     /*==========================  PRIVATE  ================================*/
 

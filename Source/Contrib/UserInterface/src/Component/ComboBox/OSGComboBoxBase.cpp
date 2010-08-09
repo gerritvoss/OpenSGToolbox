@@ -70,7 +70,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -356,24 +356,27 @@ ComboBoxBase::TypeObject ComboBoxBase::_type(
     "        defaultValue=\"NULL\"\n"
     "        >\n"
     "    </Field>\n"
-    "    <ProducedMethod\n"
+    "    <ProducedEvent\n"
     "        name=\"ActionPerformed\"\n"
-    "        type=\"ActionEvent\"\n"
+    "        detailsType=\"ActionEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
+    "    </ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI ComboBox\n"
     );
 
-//! ComboBox Produced Methods
+//! ComboBox Produced Events
 
-MethodDescription *ComboBoxBase::_methodDesc[] =
+EventDescription *ComboBoxBase::_eventDesc[] =
 {
-    new MethodDescription("ActionPerformed", 
-                    "",
-                     ActionPerformedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("ActionPerformed", 
+                          "",
+                          ActionPerformedEventId, 
+                          FieldTraits<ActionEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ComboBoxBase::getHandleActionPerformedSignal))
+
 };
 
 EventProducerType ComboBoxBase::_producerType(
@@ -381,8 +384,8 @@ EventProducerType ComboBoxBase::_producerType(
     "ComponentProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -755,6 +758,110 @@ FieldContainerTransitPtr ComboBoxBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void ComboBoxBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        OSG_ASSERT(dynamic_cast<ActionPerformedEventDetailsType* const>(e));
+
+        _ActionPerformedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ActionPerformedEvent(dynamic_cast<ActionPerformedEventDetailsType* const>(e), ActionPerformedEventId);
+        break;
+    default:
+        Inherited::produceEvent(eventId, e);
+        break;
+    }
+}
+
+boost::signals2::connection ComboBoxBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.connect(listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  ComboBoxBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.connect(group, listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, group, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  ComboBoxBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        _ActionPerformedEvent.disconnect(group);
+        break;
+    default:
+        return Inherited::disconnectEvent(eventId, group);
+        break;
+    }
+}
+
+void  ComboBoxBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        _ActionPerformedEvent.disconnect_all_slots();
+        break;
+    default:
+        Inherited::disconnectAllSlotsEvent(eventId);
+        break;
+    }
+}
+
+bool  ComboBoxBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.empty();
+        break;
+    default:
+        return Inherited::isEmptyEvent(eventId);
+        break;
+    }
+}
+
+UInt32  ComboBoxBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.num_slots();
+        break;
+    default:
+        return Inherited::numSlotsEvent(eventId);
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
@@ -769,7 +876,6 @@ ComboBoxBase::ComboBoxBase(void) :
     _sfMaxRowCount            (UInt32(5)),
     _sfComboListPopupMenu     (NULL)
 {
-    _Producer.setType(&_producerType);
 }
 
 ComboBoxBase::ComboBoxBase(const ComboBoxBase &source) :
@@ -1028,6 +1134,18 @@ EditFieldHandlePtr ComboBoxBase::editHandleComboListPopupMenu(void)
                     static_cast<ComboBox *>(this), _1));
 
     editSField(ComboListPopupMenuFieldMask);
+
+    return returnValue;
+}
+
+
+GetEventHandlePtr ComboBoxBase::getHandleActionPerformedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ActionPerformedEventType>(
+             const_cast<ActionPerformedEventType *>(&_ActionPerformedEvent),
+             _producerType.getEventDescription(ActionPerformedEventId),
+             const_cast<ComboBoxBase *>(this)));
 
     return returnValue;
 }

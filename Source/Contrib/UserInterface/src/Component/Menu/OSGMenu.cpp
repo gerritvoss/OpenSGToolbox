@@ -92,7 +92,7 @@ void Menu::drawInternal(Graphics* const Graphics, Real32 Opacity) const
     }
 }
 
-void Menu::mouseReleased(const MouseEventUnrecPtr e)
+void Menu::mouseReleased(MouseEventDetails* const e)
 {
     Component::mouseReleased(e);
 }
@@ -155,7 +155,6 @@ void Menu::addItem(MenuItem* const Item)
 {
     getInternalPopupMenu()->addItem(Item);
     pushToMenuItems(Item);
-    Item->setParentMenu(this);
     Item->setParentWindow(getParentWindow());
 }
 
@@ -169,11 +168,8 @@ void Menu::addItem(MenuItem* const Item, const UInt32& Index)
 {
     getInternalPopupMenu()->addItem(Item, Index);
 
-    Menu::MFMenuItemsType::iterator Itor(editMFMenuItems()->begin());
-    for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
-    editMFMenuItems()->insert(Itor, Item);
+    insertIntoMenuItems(Index,Item);
 
-    Item->setParentMenu(this);
     Item->setParentWindow(getParentWindow());
 }
 
@@ -181,7 +177,6 @@ void Menu::removeItem(MenuItem* const Item)
 {
     getInternalPopupMenu()->removeItem(Item);
 
-    Item->setParentMenu(NULL);
     Item->setParentWindow(NULL);
 
     removeObjFromMenuItems(Item);
@@ -189,7 +184,6 @@ void Menu::removeItem(MenuItem* const Item)
 
 void Menu::removeItem(const UInt32& Index)
 {
-    getMenuItems(Index)->setParentMenu(NULL);
     getMenuItems(Index)->setParentWindow(NULL);
 
     removeFromMenuItems(Index);
@@ -242,14 +236,12 @@ void Menu::onDestroy()
 /*----------------------- constructors & destructors ----------------------*/
 
 Menu::Menu(void) :
-    Inherited(),
-    _PopupUpdateListener(this)
+    Inherited()
 {
 }
 
 Menu::Menu(const Menu &source) :
-    Inherited(source),
-    _PopupUpdateListener(this)
+    Inherited(source)
 {
 }
 
@@ -274,19 +266,14 @@ void Menu::changed(ConstFieldMaskArg whichField,
                getParentWindow()->getParentDrawingSurface() != NULL &&
                getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
             {
-                _PopupUpdateListener.reset();
-                _PopupUpdateEventConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
+                _PopupElps = 0.0;
+                _PopupUpdateEventConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectUpdate(boost::bind(&Menu::popupUpdate, this, _1));
             }
         }
         else
         {
             setPopupVisible(false);
-            if(getParentWindow() != NULL &&
-               getParentWindow()->getParentDrawingSurface() != NULL &&
-               getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
-            {
-                getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(&_PopupUpdateListener);
-            }
+            _PopupUpdateEventConnection.disconnect();
         }
     }
 
@@ -318,15 +305,15 @@ void Menu::dump(      UInt32    ,
     SLOG << "Dump Menu NI" << std::endl;
 }
 
-void Menu::PopupUpdateListener::update(const UpdateEventUnrecPtr e)
+void Menu::popupUpdate(UpdateEventDetails* const e)
 {
     _PopupElps += e->getElapsedTime();
     if(_PopupElps > LookAndFeelManager::the()->getLookAndFeel()->getSubMenuPopupTime())
     {
         //Tell the menu to popup the submenu
-        _Menu->setPopupVisible(true);
+        setPopupVisible(true);
         //Remove myself from the update
-		_Menu->getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+		_PopupUpdateEventConnection.disconnect();
     }
 }
 

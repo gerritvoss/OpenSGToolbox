@@ -50,6 +50,7 @@
 #include "OSGFieldEditorFactory.h"
 #include "OSGSysFieldTraits.h"
 #include "OSGStringUtils.h"
+#include "OSGSpinner.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -205,7 +206,7 @@ bool NumberSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
     {
         return false;
     }
-    _EditingSpinnerModel->addChangeListener(&_SpinnerListener);
+    _SpinnerStateChangedConnection = _EditingSpinnerModel->connectStateChanged(boost::bind(&NumberSpinnerFieldEditor::handleSpinnerStateChanged, this, _1));
     _EditingSpinner->setModel(_EditingSpinnerModel);
 
     return true;
@@ -216,7 +217,7 @@ void NumberSpinnerFieldEditor::internalFieldChanged (void)
     const DataType& type(getEditingFC()->getFieldDescription(getEditingFieldId())->getFieldType().getContentType());
     GetFieldHandlePtr TheFieldHandle = getEditingFC()->getField(getEditingFieldId());
 
-    _EditingSpinnerModel->removeChangeListener(&_SpinnerListener);
+    _SpinnerStateChangedConnection.disconnect();
     if(type == FieldTraits<UInt8>::getType())
     {
         UInt8 Value;
@@ -377,7 +378,7 @@ void NumberSpinnerFieldEditor::internalFieldChanged (void)
     {
         assert(false && "Should not reach this.");
     }
-    _EditingSpinnerModel->addChangeListener(&_SpinnerListener);
+    _SpinnerStateChangedConnection = _EditingSpinnerModel->connectStateChanged(boost::bind(&NumberSpinnerFieldEditor::handleSpinnerStateChanged, this, _1));
 }
 
 void NumberSpinnerFieldEditor::internalStartEditing (void)
@@ -424,14 +425,12 @@ void NumberSpinnerFieldEditor::updateLayout(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 NumberSpinnerFieldEditor::NumberSpinnerFieldEditor(void) :
-    Inherited(),
-    _SpinnerListener(this)
+    Inherited()
 {
 }
 
 NumberSpinnerFieldEditor::NumberSpinnerFieldEditor(const NumberSpinnerFieldEditor &source) :
-    Inherited(source),
-    _SpinnerListener(this)
+    Inherited(source)
 {
 }
 
@@ -454,6 +453,15 @@ void NumberSpinnerFieldEditor::onDestroy()
 {
 }
 
+void NumberSpinnerFieldEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _EditingSpinner = NULL;
+
+    _SpinnerStateChangedConnection.disconnect();
+}
+
 void NumberSpinnerFieldEditor::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
@@ -467,9 +475,9 @@ void NumberSpinnerFieldEditor::dump(      UInt32    ,
     SLOG << "Dump NumberSpinnerFieldEditor NI" << std::endl;
 }
 
-void NumberSpinnerFieldEditor::SpinnerListener::stateChanged(const ChangeEventUnrecPtr e)
+void NumberSpinnerFieldEditor::handleSpinnerStateChanged(ChangeEventDetails* const details)
 {
-    _NumberSpinnerFieldEditor->runCommand();
+    runCommand();
 }
 
 OSG_END_NAMESPACE

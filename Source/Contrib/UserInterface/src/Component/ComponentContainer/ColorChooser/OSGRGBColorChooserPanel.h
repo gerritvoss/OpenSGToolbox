@@ -43,10 +43,10 @@
 #endif
 
 #include "OSGRGBColorChooserPanelBase.h"
-#include "OSGSpinner.h"
-#include "OSGSlider.h"
+#include "OSGSpinnerFields.h"
+#include "OSGSliderFields.h"
 #include "OSGBoundedRangeSpinnerModel.h"
-#include "OSGGradientLayer.h"
+#include "OSGGradientLayerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -117,7 +117,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RGBColorChooserPanel : public RGBColor
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
+
 	//Builds a new chooser panel.
 	virtual void buildChooser(void);
     
@@ -141,19 +148,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RGBColorChooserPanel : public RGBColor
 	SliderRefPtr _BlueSlider;
 	SliderRefPtr _AlphaSlider;
 	
-    class BoundedRangeSpinnerChangeListener : public ChangeListener
-    {
-      public :
-        BoundedRangeSpinnerChangeListener(RGBColorChooserPanel* const TheRGBColorChooserPanel);
-
-        virtual void stateChanged(const ChangeEventUnrecPtr e);
-      private:
-        RGBColorChooserPanel* _RGBColorChooserPanel;
-    };
-
-    friend class BoundedRangeSpinnerChangeListener;
-
-	BoundedRangeSpinnerChangeListener _BoundedRangeSpinnerChangeListener;
+    void handleControlStateChanged(ChangeEventDetails* const e);
+    boost::signals2::connection _RedModelStateChangedConnection,
+                                _GreenModelStateChangedConnection,
+                                _BlueModelStateChangedConnection,
+                                _AlphaModelStateChangedConnection;
 
 	void updateColorSelectedModel(void);
 	virtual void attachModelListener(void);

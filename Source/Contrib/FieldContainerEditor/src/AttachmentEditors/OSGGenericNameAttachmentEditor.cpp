@@ -48,6 +48,7 @@
 #include "OSGGenericNameAttachmentEditor.h"
 #include "OSGNameAttachment.h"
 #include "OSGSetFieldValueCommand.h"
+#include "OSGTextField.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -220,6 +221,31 @@ void GenericNameAttachmentEditor::dettachFieldCallback(void)
     }
 }
 
+void GenericNameAttachmentEditor::handleTextFieldFocusGained    (FocusEventDetails* const details)
+{
+    startEditing();
+}
+
+void GenericNameAttachmentEditor::handleTextFieldFocusLost      (FocusEventDetails* const details)
+{
+    stopEditing();
+}
+
+void GenericNameAttachmentEditor::handleTextFieldActionPerformed(ActionEventDetails* const details)
+{
+    stopEditing();
+    startEditing();
+}
+
+void GenericNameAttachmentEditor::handleTextFieldKeyTyped       (KeyEventDetails* const details)
+{
+    if(details->getKey() == KeyEventDetails::KEY_ESCAPE)
+    {
+        cancelEditing();
+        startEditing();
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -230,9 +256,11 @@ void GenericNameAttachmentEditor::onCreate(const GenericNameAttachmentEditor *Id
     {
         _EditingTextField = TextField::create();
         pushToChildren(_EditingTextField);
-        _EditingTextField->addFocusListener(&_TextFieldListener);
-        _EditingTextField->addActionListener(&_TextFieldListener);
-        _EditingTextField->addKeyListener(&_TextFieldListener);
+
+        _TextFieldFocusGainedConnection = _EditingTextField->connectFocusGained(boost::bind(&GenericNameAttachmentEditor::handleTextFieldFocusGained, this, _1));
+        _TextFieldFocusLostConnection = _EditingTextField->connectFocusLost(boost::bind(&GenericNameAttachmentEditor::handleTextFieldFocusLost, this, _1));
+        _TextFieldActionPerformedConnection = _EditingTextField->connectActionPerformed(boost::bind(&GenericNameAttachmentEditor::handleTextFieldActionPerformed, this, _1));
+        _TextFieldKeyTypedConnection = _EditingTextField->connectKeyTyped(boost::bind(&GenericNameAttachmentEditor::handleTextFieldKeyTyped, this, _1));
     }
 }
 
@@ -240,17 +268,27 @@ void GenericNameAttachmentEditor::onDestroy()
 {
 }
 
+void GenericNameAttachmentEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _EditingTextField = NULL;
+
+    _TextFieldFocusGainedConnection.disconnect();
+    _TextFieldFocusLostConnection.disconnect();
+    _TextFieldActionPerformedConnection.disconnect();
+    _TextFieldKeyTypedConnection.disconnect();
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 GenericNameAttachmentEditor::GenericNameAttachmentEditor(void) :
-    Inherited(),
-    _TextFieldListener(this)
+    Inherited()
 {
 }
 
 GenericNameAttachmentEditor::GenericNameAttachmentEditor(const GenericNameAttachmentEditor &source) :
-    Inherited(source),
-    _TextFieldListener(this)
+    Inherited(source)
 {
 }
 
@@ -271,31 +309,6 @@ void GenericNameAttachmentEditor::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump GenericNameAttachmentEditor NI" << std::endl;
-}
-
-void GenericNameAttachmentEditor::TextFieldListener::focusGained    (const FocusEventUnrecPtr  e)
-{
-    _GenericNameAttachmentEditor->startEditing();
-}
-
-void GenericNameAttachmentEditor::TextFieldListener::focusLost      (const FocusEventUnrecPtr  e)
-{
-    _GenericNameAttachmentEditor->stopEditing();
-}
-
-void GenericNameAttachmentEditor::TextFieldListener::actionPerformed(const ActionEventUnrecPtr e)
-{
-    _GenericNameAttachmentEditor->stopEditing();
-    _GenericNameAttachmentEditor->startEditing();
-}
-
-void GenericNameAttachmentEditor::TextFieldListener::keyTyped       (const KeyEventUnrecPtr    e)
-{
-    if(e->getKey() == KeyEvent::KEY_ESCAPE)
-    {
-        _GenericNameAttachmentEditor->cancelEditing();
-        _GenericNameAttachmentEditor->startEditing();
-    }
 }
 
 OSG_END_NAMESPACE

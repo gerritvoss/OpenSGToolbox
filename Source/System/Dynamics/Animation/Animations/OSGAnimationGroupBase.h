@@ -71,10 +71,10 @@
 #include "OSGAnimationGroupFields.h"
 
 //Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+#include "OSGActivity.h"
+#include "OSGConsumableEventCombiner.h"
+
+#include "OSGAnimationEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -93,6 +93,22 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(AnimationGroup);
+    
+    
+    typedef AnimationEventDetails AnimationsStartedEventDetailsType;
+    typedef AnimationEventDetails AnimationsStoppedEventDetailsType;
+    typedef AnimationEventDetails AnimationsPausedEventDetailsType;
+    typedef AnimationEventDetails AnimationsUnpausedEventDetailsType;
+    typedef AnimationEventDetails AnimationsEndedEventDetailsType;
+    typedef AnimationEventDetails AnimationsCycledEventDetailsType;
+
+    typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
+    typedef boost::signals2::signal<void (AnimationEventDetails* const, UInt32), ConsumableEventCombiner> AnimationsStartedEventType;
+    typedef boost::signals2::signal<void (AnimationEventDetails* const, UInt32), ConsumableEventCombiner> AnimationsStoppedEventType;
+    typedef boost::signals2::signal<void (AnimationEventDetails* const, UInt32), ConsumableEventCombiner> AnimationsPausedEventType;
+    typedef boost::signals2::signal<void (AnimationEventDetails* const, UInt32), ConsumableEventCombiner> AnimationsUnpausedEventType;
+    typedef boost::signals2::signal<void (AnimationEventDetails* const, UInt32), ConsumableEventCombiner> AnimationsEndedEventType;
+    typedef boost::signals2::signal<void (AnimationEventDetails* const, UInt32), ConsumableEventCombiner> AnimationsCycledEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -104,8 +120,7 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
         ScaleFieldId = AnimationsFieldId + 1,
         OffsetFieldId = ScaleFieldId + 1,
         SpanFieldId = OffsetFieldId + 1,
-        EventProducerFieldId = SpanFieldId + 1,
-        NextFieldId = EventProducerFieldId + 1
+        NextFieldId = SpanFieldId + 1
     };
 
     static const OSG::BitVector AnimationsFieldMask =
@@ -116,8 +131,6 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
         (TypeTraits<BitVector>::One << OffsetFieldId);
     static const OSG::BitVector SpanFieldMask =
         (TypeTraits<BitVector>::One << SpanFieldId);
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -125,17 +138,16 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
     typedef SFReal32          SFScaleType;
     typedef SFReal32          SFOffsetType;
     typedef SFReal32          SFSpanType;
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        AnimationsStartedMethodId = 1,
-        AnimationsStoppedMethodId = AnimationsStartedMethodId + 1,
-        AnimationsPausedMethodId = AnimationsStoppedMethodId + 1,
-        AnimationsUnpausedMethodId = AnimationsPausedMethodId + 1,
-        AnimationsEndedMethodId = AnimationsUnpausedMethodId + 1,
-        AnimationsCycledMethodId = AnimationsEndedMethodId + 1,
-        NextProducedMethodId = AnimationsCycledMethodId + 1
+        AnimationsStartedEventId = 1,
+        AnimationsStoppedEventId = AnimationsStartedEventId + 1,
+        AnimationsPausedEventId = AnimationsStoppedEventId + 1,
+        AnimationsUnpausedEventId = AnimationsPausedEventId + 1,
+        AnimationsEndedEventId = AnimationsUnpausedEventId + 1,
+        AnimationsCycledEventId = AnimationsEndedEventId + 1,
+        NextProducedEventId = AnimationsCycledEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -226,28 +238,101 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //AnimationsStarted
+    boost::signals2::connection connectAnimationsStarted(const AnimationsStartedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectAnimationsStarted(const AnimationsStartedEventType::group_type &group,
+                                                       const AnimationsStartedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectAnimationsStarted      (const AnimationsStartedEventType::group_type &group);
+    void   disconnectAllSlotsAnimationsStarted(void);
+    bool   isEmptyAnimationsStarted         (void) const;
+    UInt32 numSlotsAnimationsStarted        (void) const;
+    
+    //AnimationsStopped
+    boost::signals2::connection connectAnimationsStopped(const AnimationsStoppedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectAnimationsStopped(const AnimationsStoppedEventType::group_type &group,
+                                                       const AnimationsStoppedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectAnimationsStopped      (const AnimationsStoppedEventType::group_type &group);
+    void   disconnectAllSlotsAnimationsStopped(void);
+    bool   isEmptyAnimationsStopped         (void) const;
+    UInt32 numSlotsAnimationsStopped        (void) const;
+    
+    //AnimationsPaused
+    boost::signals2::connection connectAnimationsPaused(const AnimationsPausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectAnimationsPaused(const AnimationsPausedEventType::group_type &group,
+                                                       const AnimationsPausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectAnimationsPaused       (const AnimationsPausedEventType::group_type &group);
+    void   disconnectAllSlotsAnimationsPaused(void);
+    bool   isEmptyAnimationsPaused          (void) const;
+    UInt32 numSlotsAnimationsPaused         (void) const;
+    
+    //AnimationsUnpaused
+    boost::signals2::connection connectAnimationsUnpaused(const AnimationsUnpausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectAnimationsUnpaused(const AnimationsUnpausedEventType::group_type &group,
+                                                       const AnimationsUnpausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectAnimationsUnpaused     (const AnimationsUnpausedEventType::group_type &group);
+    void   disconnectAllSlotsAnimationsUnpaused(void);
+    bool   isEmptyAnimationsUnpaused        (void) const;
+    UInt32 numSlotsAnimationsUnpaused       (void) const;
+    
+    //AnimationsEnded
+    boost::signals2::connection connectAnimationsEnded(const AnimationsEndedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectAnimationsEnded(const AnimationsEndedEventType::group_type &group,
+                                                       const AnimationsEndedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectAnimationsEnded        (const AnimationsEndedEventType::group_type &group);
+    void   disconnectAllSlotsAnimationsEnded(void);
+    bool   isEmptyAnimationsEnded           (void) const;
+    UInt32 numSlotsAnimationsEnded          (void) const;
+    
+    //AnimationsCycled
+    boost::signals2::connection connectAnimationsCycled(const AnimationsCycledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectAnimationsCycled(const AnimationsCycledEventType::group_type &group,
+                                                       const AnimationsCycledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectAnimationsCycled       (const AnimationsCycledEventType::group_type &group);
+    void   disconnectAllSlotsAnimationsCycled(void);
+    bool   isEmptyAnimationsCycled          (void) const;
+    UInt32 numSlotsAnimationsCycled         (void) const;
+    
+    
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
@@ -280,13 +365,16 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Event Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
-    
-    GetFieldHandlePtr  getHandleEventProducer        (void) const;
-    EditFieldHandlePtr editHandleEventProducer       (void);
 
+    //Event Event producers
+    AnimationsStartedEventType _AnimationsStartedEvent;
+    AnimationsStoppedEventType _AnimationsStoppedEvent;
+    AnimationsPausedEventType _AnimationsPausedEvent;
+    AnimationsUnpausedEventType _AnimationsUnpausedEvent;
+    AnimationsEndedEventType _AnimationsEndedEvent;
+    AnimationsCycledEventType _AnimationsCycledEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -302,7 +390,6 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
     SFReal32          _sfScale;
     SFReal32          _sfOffset;
     SFReal32          _sfSpan;
-    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -340,6 +427,30 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
     GetFieldHandlePtr  getHandleSpan            (void) const;
     EditFieldHandlePtr editHandleSpan           (void);
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleAnimationsStartedSignal(void) const;
+    GetEventHandlePtr getHandleAnimationsStoppedSignal(void) const;
+    GetEventHandlePtr getHandleAnimationsPausedSignal(void) const;
+    GetEventHandlePtr getHandleAnimationsUnpausedSignal(void) const;
+    GetEventHandlePtr getHandleAnimationsEndedSignal(void) const;
+    GetEventHandlePtr getHandleAnimationsCycledSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceAnimationsStarted   (AnimationsStartedEventDetailsType* const e);
+    void produceAnimationsStopped   (AnimationsStoppedEventDetailsType* const e);
+    void produceAnimationsPaused    (AnimationsPausedEventDetailsType* const e);
+    void produceAnimationsUnpaused  (AnimationsUnpausedEventDetailsType* const e);
+    void produceAnimationsEnded     (AnimationsEndedEventDetailsType* const e);
+    void produceAnimationsCycled    (AnimationsCycledEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -390,7 +501,7 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGWindowEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -604,6 +606,402 @@ const Char8 *AbstractWindowBase::getClassname(void)
 {
     return "AbstractWindow";
 }
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowOpened(const WindowOpenedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowOpenedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowOpened(const WindowOpenedEventType::group_type &group,
+                                                    const WindowOpenedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowOpenedEvent.connect(group, listener, at);
+}
+
+inline
+void  AbstractWindowBase::disconnectWindowOpened(const WindowOpenedEventType::group_type &group)
+{
+    _WindowOpenedEvent.disconnect(group);
+}
+
+inline
+void  AbstractWindowBase::disconnectAllSlotsWindowOpened(void)
+{
+    _WindowOpenedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AbstractWindowBase::isEmptyWindowOpened(void) const
+{
+    return _WindowOpenedEvent.empty();
+}
+
+inline
+UInt32  AbstractWindowBase::numSlotsWindowOpened(void) const
+{
+    return _WindowOpenedEvent.num_slots();
+}
+
+inline
+void AbstractWindowBase::produceWindowOpened(WindowOpenedEventDetailsType* const e)
+{
+    produceEvent(WindowOpenedEventId, e);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowClosing(const WindowClosingEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowClosingEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowClosing(const WindowClosingEventType::group_type &group,
+                                                    const WindowClosingEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowClosingEvent.connect(group, listener, at);
+}
+
+inline
+void  AbstractWindowBase::disconnectWindowClosing(const WindowClosingEventType::group_type &group)
+{
+    _WindowClosingEvent.disconnect(group);
+}
+
+inline
+void  AbstractWindowBase::disconnectAllSlotsWindowClosing(void)
+{
+    _WindowClosingEvent.disconnect_all_slots();
+}
+
+inline
+bool  AbstractWindowBase::isEmptyWindowClosing(void) const
+{
+    return _WindowClosingEvent.empty();
+}
+
+inline
+UInt32  AbstractWindowBase::numSlotsWindowClosing(void) const
+{
+    return _WindowClosingEvent.num_slots();
+}
+
+inline
+void AbstractWindowBase::produceWindowClosing(WindowClosingEventDetailsType* const e)
+{
+    produceEvent(WindowClosingEventId, e);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowClosed(const WindowClosedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowClosedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowClosed(const WindowClosedEventType::group_type &group,
+                                                    const WindowClosedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowClosedEvent.connect(group, listener, at);
+}
+
+inline
+void  AbstractWindowBase::disconnectWindowClosed(const WindowClosedEventType::group_type &group)
+{
+    _WindowClosedEvent.disconnect(group);
+}
+
+inline
+void  AbstractWindowBase::disconnectAllSlotsWindowClosed(void)
+{
+    _WindowClosedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AbstractWindowBase::isEmptyWindowClosed(void) const
+{
+    return _WindowClosedEvent.empty();
+}
+
+inline
+UInt32  AbstractWindowBase::numSlotsWindowClosed(void) const
+{
+    return _WindowClosedEvent.num_slots();
+}
+
+inline
+void AbstractWindowBase::produceWindowClosed(WindowClosedEventDetailsType* const e)
+{
+    produceEvent(WindowClosedEventId, e);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowIconified(const WindowIconifiedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowIconifiedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowIconified(const WindowIconifiedEventType::group_type &group,
+                                                    const WindowIconifiedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowIconifiedEvent.connect(group, listener, at);
+}
+
+inline
+void  AbstractWindowBase::disconnectWindowIconified(const WindowIconifiedEventType::group_type &group)
+{
+    _WindowIconifiedEvent.disconnect(group);
+}
+
+inline
+void  AbstractWindowBase::disconnectAllSlotsWindowIconified(void)
+{
+    _WindowIconifiedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AbstractWindowBase::isEmptyWindowIconified(void) const
+{
+    return _WindowIconifiedEvent.empty();
+}
+
+inline
+UInt32  AbstractWindowBase::numSlotsWindowIconified(void) const
+{
+    return _WindowIconifiedEvent.num_slots();
+}
+
+inline
+void AbstractWindowBase::produceWindowIconified(WindowIconifiedEventDetailsType* const e)
+{
+    produceEvent(WindowIconifiedEventId, e);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowDeiconified(const WindowDeiconifiedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowDeiconifiedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowDeiconified(const WindowDeiconifiedEventType::group_type &group,
+                                                    const WindowDeiconifiedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowDeiconifiedEvent.connect(group, listener, at);
+}
+
+inline
+void  AbstractWindowBase::disconnectWindowDeiconified(const WindowDeiconifiedEventType::group_type &group)
+{
+    _WindowDeiconifiedEvent.disconnect(group);
+}
+
+inline
+void  AbstractWindowBase::disconnectAllSlotsWindowDeiconified(void)
+{
+    _WindowDeiconifiedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AbstractWindowBase::isEmptyWindowDeiconified(void) const
+{
+    return _WindowDeiconifiedEvent.empty();
+}
+
+inline
+UInt32  AbstractWindowBase::numSlotsWindowDeiconified(void) const
+{
+    return _WindowDeiconifiedEvent.num_slots();
+}
+
+inline
+void AbstractWindowBase::produceWindowDeiconified(WindowDeiconifiedEventDetailsType* const e)
+{
+    produceEvent(WindowDeiconifiedEventId, e);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowActivated(const WindowActivatedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowActivatedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowActivated(const WindowActivatedEventType::group_type &group,
+                                                    const WindowActivatedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowActivatedEvent.connect(group, listener, at);
+}
+
+inline
+void  AbstractWindowBase::disconnectWindowActivated(const WindowActivatedEventType::group_type &group)
+{
+    _WindowActivatedEvent.disconnect(group);
+}
+
+inline
+void  AbstractWindowBase::disconnectAllSlotsWindowActivated(void)
+{
+    _WindowActivatedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AbstractWindowBase::isEmptyWindowActivated(void) const
+{
+    return _WindowActivatedEvent.empty();
+}
+
+inline
+UInt32  AbstractWindowBase::numSlotsWindowActivated(void) const
+{
+    return _WindowActivatedEvent.num_slots();
+}
+
+inline
+void AbstractWindowBase::produceWindowActivated(WindowActivatedEventDetailsType* const e)
+{
+    produceEvent(WindowActivatedEventId, e);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowDeactivated(const WindowDeactivatedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowDeactivatedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowDeactivated(const WindowDeactivatedEventType::group_type &group,
+                                                    const WindowDeactivatedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowDeactivatedEvent.connect(group, listener, at);
+}
+
+inline
+void  AbstractWindowBase::disconnectWindowDeactivated(const WindowDeactivatedEventType::group_type &group)
+{
+    _WindowDeactivatedEvent.disconnect(group);
+}
+
+inline
+void  AbstractWindowBase::disconnectAllSlotsWindowDeactivated(void)
+{
+    _WindowDeactivatedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AbstractWindowBase::isEmptyWindowDeactivated(void) const
+{
+    return _WindowDeactivatedEvent.empty();
+}
+
+inline
+UInt32  AbstractWindowBase::numSlotsWindowDeactivated(void) const
+{
+    return _WindowDeactivatedEvent.num_slots();
+}
+
+inline
+void AbstractWindowBase::produceWindowDeactivated(WindowDeactivatedEventDetailsType* const e)
+{
+    produceEvent(WindowDeactivatedEventId, e);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowEntered(const WindowEnteredEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowEnteredEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowEntered(const WindowEnteredEventType::group_type &group,
+                                                    const WindowEnteredEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowEnteredEvent.connect(group, listener, at);
+}
+
+inline
+void  AbstractWindowBase::disconnectWindowEntered(const WindowEnteredEventType::group_type &group)
+{
+    _WindowEnteredEvent.disconnect(group);
+}
+
+inline
+void  AbstractWindowBase::disconnectAllSlotsWindowEntered(void)
+{
+    _WindowEnteredEvent.disconnect_all_slots();
+}
+
+inline
+bool  AbstractWindowBase::isEmptyWindowEntered(void) const
+{
+    return _WindowEnteredEvent.empty();
+}
+
+inline
+UInt32  AbstractWindowBase::numSlotsWindowEntered(void) const
+{
+    return _WindowEnteredEvent.num_slots();
+}
+
+inline
+void AbstractWindowBase::produceWindowEntered(WindowEnteredEventDetailsType* const e)
+{
+    produceEvent(WindowEnteredEventId, e);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowExited(const WindowExitedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _WindowExitedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  AbstractWindowBase::connectWindowExited(const WindowExitedEventType::group_type &group,
+                                                    const WindowExitedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _WindowExitedEvent.connect(group, listener, at);
+}
+
+inline
+void  AbstractWindowBase::disconnectWindowExited(const WindowExitedEventType::group_type &group)
+{
+    _WindowExitedEvent.disconnect(group);
+}
+
+inline
+void  AbstractWindowBase::disconnectAllSlotsWindowExited(void)
+{
+    _WindowExitedEvent.disconnect_all_slots();
+}
+
+inline
+bool  AbstractWindowBase::isEmptyWindowExited(void) const
+{
+    return _WindowExitedEvent.empty();
+}
+
+inline
+UInt32  AbstractWindowBase::numSlotsWindowExited(void) const
+{
+    return _WindowExitedEvent.num_slots();
+}
+
+inline
+void AbstractWindowBase::produceWindowExited(WindowExitedEventDetailsType* const e)
+{
+    produceEvent(WindowExitedEventId, e);
+}
+
 OSG_GEN_CONTAINERPTR(AbstractWindow);
 
 OSG_END_NAMESPACE

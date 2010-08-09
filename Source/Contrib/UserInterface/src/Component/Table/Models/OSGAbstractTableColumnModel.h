@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGAbstractTableColumnModelBase.h"
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,13 +78,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTableColumnModel : public Abst
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    //Adds a listener for table column model events.
-    virtual EventConnection addColumnModelListener(TableColumnModelListenerPtr l);
-	virtual bool isColumnModelListenerAttached(TableColumnModelListenerPtr l) const;
-
-    //Removes a listener for table column model events.
-    virtual void removeColumnModelListener(TableColumnModelListenerPtr l);
     
     /*=========================  PROTECTED  ===============================*/
 
@@ -115,16 +107,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTableColumnModel : public Abst
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-	typedef std::set<TableColumnModelListenerPtr> TableColumnModelListenerSet;
-    typedef TableColumnModelListenerSet::iterator TableColumnModelListenerSetItor;
-    typedef TableColumnModelListenerSet::const_iterator TableColumnModelListenerSetConstItor;
-	TableColumnModelListenerSet _ModelListeners;
 
     void produceColumnAdded(const UInt32& ToIndex);
     void produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex);
     void produceColumnRemoved(const UInt32& FromIndex);
     void produceColumnMarginChanged(void);
-    void produceColumnSelectionChanged(const ListSelectionEventUnrecPtr e);
+    void produceColumnSelectionChanged(ListSelectionEventDetails* const e);
     
     /*==========================  PRIVATE  ================================*/
 

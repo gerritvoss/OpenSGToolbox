@@ -100,7 +100,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayoutConstraints : public Sprin
 
     static  SpringLayoutConstraintsTransitPtr create(LayoutSpringRefPtr XSpring, LayoutSpringRefPtr YSpring); 
     static  SpringLayoutConstraintsTransitPtr create(LayoutSpringRefPtr XSpring, LayoutSpringRefPtr YSpring, LayoutSpringRefPtr WidthSpring, LayoutSpringRefPtr HeightSpring); 
-    static  SpringLayoutConstraintsTransitPtr create(ComponentRefPtr TheComponent); 
+    static  SpringLayoutConstraintsTransitPtr create(Component* const TheComponent); 
     
     
     void setX(LayoutSpringRefPtr x);

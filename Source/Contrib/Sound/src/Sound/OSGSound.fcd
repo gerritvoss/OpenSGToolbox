@@ -111,34 +111,40 @@ A Sound Interface.
         defaultValue="false"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="SoundPlayed"
-		type="SoundEvent"
+		detailsType="SoundEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="SoundStopped"
-		type="SoundEvent"
+		detailsType="SoundEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="SoundPaused"
-		type="SoundEvent"
+		detailsType="SoundEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="SoundUnpaused"
-		type="SoundEvent"
+		detailsType="SoundEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="SoundLooped"
-		type="SoundEvent"
+		detailsType="SoundEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="SoundEnded"
-		type="SoundEvent"
+		detailsType="SoundEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

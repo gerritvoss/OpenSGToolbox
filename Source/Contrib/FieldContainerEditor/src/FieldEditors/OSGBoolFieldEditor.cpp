@@ -50,6 +50,7 @@
 #include "OSGTypeFactory.h"
 #include "OSGFieldEditorFactory.h"
 #include "OSGSysFieldTraits.h"
+#include "OSGCheckboxButton.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -102,11 +103,14 @@ void BoolFieldEditor::internalFieldChanged (void)
 
     if(_EditingCheckbox->getSelected() != Value)
     {
-        _EditingCheckbox->removeButtonSelectedListener(&_CheckboxListener);
+        _ButtonSelectedConnection.disconnect();
+        _ButtonDeselectedConnection.disconnect();
+
         _EditingCheckbox->setSelected(Value);
-        _EditingCheckbox->addButtonSelectedListener(&_CheckboxListener);
     }
-    
+
+    _ButtonSelectedConnection = _EditingCheckbox->connectButtonSelected(boost::bind(&BoolFieldEditor::handleButtonSelected, this, _1));
+    _ButtonDeselectedConnection = _EditingCheckbox->connectButtonDeselected(boost::bind(&BoolFieldEditor::handleButtonDeselected, this, _1));
 
 }
 
@@ -170,14 +174,12 @@ void BoolFieldEditor::updateLayout(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 BoolFieldEditor::BoolFieldEditor(void) :
-    Inherited(),
-    _CheckboxListener(this)
+    Inherited()
 {
 }
 
 BoolFieldEditor::BoolFieldEditor(const BoolFieldEditor &source) :
-    Inherited(source),
-    _CheckboxListener(this)
+    Inherited(source)
 {
 }
 
@@ -201,6 +203,17 @@ void BoolFieldEditor::onDestroy()
 {
 }
 
+void BoolFieldEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _EditingCheckbox = NULL;
+
+    _ButtonSelectedConnection.disconnect();
+    _ButtonDeselectedConnection.disconnect();
+}
+
+
 void BoolFieldEditor::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
@@ -214,14 +227,14 @@ void BoolFieldEditor::dump(      UInt32    ,
     SLOG << "Dump BoolFieldEditor NI" << std::endl;
 }
 
-void BoolFieldEditor::CheckboxListener::buttonSelected(const ButtonSelectedEventUnrecPtr e)
+void BoolFieldEditor::handleButtonSelected(ButtonSelectedEventDetails* const details)
 {
-    _BoolFieldEditor->runCommand(true);
+    runCommand(true);
 }
 
-void BoolFieldEditor::CheckboxListener::buttonDeselected(const ButtonSelectedEventUnrecPtr e)
+void BoolFieldEditor::handleButtonDeselected(ButtonSelectedEventDetails* const details)
 {
-    _BoolFieldEditor->runCommand(false);
+    runCommand(false);
 }
 
 OSG_END_NAMESPACE

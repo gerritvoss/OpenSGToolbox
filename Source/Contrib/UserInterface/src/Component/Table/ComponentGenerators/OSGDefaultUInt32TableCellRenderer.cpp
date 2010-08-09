@@ -45,14 +45,13 @@
 
 #include "OSGConfig.h"
 
+#include "OSGDefaultUInt32TableCellRenderer.h"
+#include <boost/lexical_cast.hpp>
+#include "OSGTable.h"
 #include "OSGColorLayer.h"
 #include "OSGLineBorder.h"
 #include "OSGEmptyBorder.h"
 #include "OSGLabel.h"
-
-#include "OSGDefaultUInt32TableCellRenderer.h"
-#include <boost/lexical_cast.hpp>
-#include "OSGTable.h"
 
 OSG_BEGIN_NAMESPACE
 

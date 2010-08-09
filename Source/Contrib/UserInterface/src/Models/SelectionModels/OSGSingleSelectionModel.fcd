@@ -14,9 +14,10 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI SingleSelectionModel.
-	<ProducedMethod
+	<ProducedEvent
 		name="SelectionChanged"
-		type="SelectionEventPtr"
+		detailsType="SelectionEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGComponentMenuItemBase.h"
-#include "OSGKeyAcceleratorListener.h"
 #include "OSGMenuFields.h"
 
 OSG_BEGIN_NAMESPACE

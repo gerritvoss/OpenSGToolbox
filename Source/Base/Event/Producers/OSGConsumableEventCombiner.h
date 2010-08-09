@@ -36,34 +36,13 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-<<<<<<< HEAD:Source/Base/Event/Producers/OSGConsumableEventCombiner.h
-<<<<<<< Updated upstream:Source/Base/Event/Listeners/OSGEventListener.cpp
-=======
->>>>>>> master:Source/Base/Event/Listeners/OSGEventListener.cpp
-#include "OSGConfig.h"
-
-#include "OSGEventListener.h"
-
-OSG_USING_NAMESPACE
-
-//---------------------------------------------------------------------------
-//  Class
-//---------------------------------------------------------------------------
-
-void EventListener::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
-{
-    //Do Nothing
-}
-
-<<<<<<< HEAD:Source/Base/Event/Producers/OSGConsumableEventCombiner.h
-=======
 #ifndef _OSGCONSUMABLEEVENTCOMBINER_H_
 #define _OSGCONSUMABLEEVENTCOMBINER_H_
 
 #include "OSGConfig.h"
 #include "OSGBaseDef.h"
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -71,12 +50,12 @@ OSG_BEGIN_NAMESPACE
 class OSG_BASE_DLLMAPPING ConsumableEventCombiner
 {
 private:
-    mutable const Event const * _pEvent;
+    mutable const EventDetails const * _pDetails;
 
 public:
     ConsumableEventCombiner(void);
 
-    ConsumableEventCombiner(Event const * e);
+    ConsumableEventCombiner(EventDetails const * e);
 
     ConsumableEventCombiner(const ConsumableEventCombiner& );
 
@@ -87,18 +66,17 @@ public:
     {
         while (first != last) 
         {
-            if(_pEvent->isConsumed())
+            *first;
+            if(_pDetails->isConsumed())
             {
                 break;
             }
             ++first;
         }
-        _pEvent = NULL;
+        _pDetails = NULL;
     }
 };
+
 OSG_END_NAMESPACE
 
 #endif /* _OSGCONSUMABLEEVENTCOMBINER_H_ */
->>>>>>> Stashed changes:Source/Base/Event/Producers/OSGConsumableEventCombiner.h
-=======
->>>>>>> master:Source/Base/Event/Listeners/OSGEventListener.cpp

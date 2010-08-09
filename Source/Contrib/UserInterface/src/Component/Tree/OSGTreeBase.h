@@ -70,6 +70,7 @@
 #include "OSGCellEditorFields.h"        // CellEditor type
 #include "OSGComponentGeneratorFields.h" // CellGenerator type
 #include "OSGTreeModelLayoutFields.h"   // ModelLayout type
+#include "OSGTreeSelectionModelFields.h" // SelectionModel type
 
 #include "OSGTreeFields.h"
 
@@ -90,6 +91,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeBase : public ComponentContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(Tree);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -109,7 +112,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeBase : public ComponentContainer
         CellEditorFieldId = VisibleRowCountFieldId + 1,
         CellGeneratorFieldId = CellEditorFieldId + 1,
         ModelLayoutFieldId = CellGeneratorFieldId + 1,
-        NextFieldId = ModelLayoutFieldId + 1
+        SelectionModelFieldId = ModelLayoutFieldId + 1,
+        NextFieldId = SelectionModelFieldId + 1
     };
 
     static const OSG::BitVector ModelFieldMask =
@@ -136,6 +140,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeBase : public ComponentContainer
         (TypeTraits<BitVector>::One << CellGeneratorFieldId);
     static const OSG::BitVector ModelLayoutFieldMask =
         (TypeTraits<BitVector>::One << ModelLayoutFieldId);
+    static const OSG::BitVector SelectionModelFieldMask =
+        (TypeTraits<BitVector>::One << SelectionModelFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -151,6 +157,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeBase : public ComponentContainer
     typedef SFUnrecCellEditorPtr SFCellEditorType;
     typedef SFUnrecComponentGeneratorPtr SFCellGeneratorType;
     typedef SFUnrecTreeModelLayoutPtr SFModelLayoutType;
+    typedef SFUnrecTreeSelectionModelPtr SFSelectionModelType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -207,6 +214,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeBase : public ComponentContainer
                   SFUnrecComponentGeneratorPtr *editSFCellGenerator  (void);
             const SFUnrecTreeModelLayoutPtr *getSFModelLayout    (void) const;
                   SFUnrecTreeModelLayoutPtr *editSFModelLayout    (void);
+            const SFUnrecTreeSelectionModelPtr *getSFSelectionModel (void) const;
+                  SFUnrecTreeSelectionModelPtr *editSFSelectionModel (void);
 
 
                   TreeModel * getModel          (void) const;
@@ -241,6 +250,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeBase : public ComponentContainer
 
                   TreeModelLayout * getModelLayout    (void) const;
 
+                  TreeSelectionModel * getSelectionModel (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -258,6 +269,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeBase : public ComponentContainer
             void setCellEditor     (CellEditor * const value);
             void setCellGenerator  (ComponentGenerator * const value);
             void setModelLayout    (TreeModelLayout * const value);
+            void setSelectionModel (TreeSelectionModel * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -334,6 +346,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeBase : public ComponentContainer
     SFUnrecCellEditorPtr _sfCellEditor;
     SFUnrecComponentGeneratorPtr _sfCellGenerator;
     SFUnrecTreeModelLayoutPtr _sfModelLayout;
+    SFUnrecTreeSelectionModelPtr _sfSelectionModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -386,6 +399,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeBase : public ComponentContainer
     EditFieldHandlePtr editHandleCellGenerator  (void);
     GetFieldHandlePtr  getHandleModelLayout     (void) const;
     EditFieldHandlePtr editHandleModelLayout    (void);
+    GetFieldHandlePtr  getHandleSelectionModel  (void) const;
+    EditFieldHandlePtr editHandleSelectionModel (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

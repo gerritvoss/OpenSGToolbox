@@ -220,6 +220,13 @@ bool FieldEditorComponent::isTypeEditable(const DataType& type) const
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void FieldEditorComponent::resolveLinks(void)
+{
+    dettachFieldCallback();
+
+    Inherited::resolveLinks();
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 FieldEditorComponent::FieldEditorComponent(void) :

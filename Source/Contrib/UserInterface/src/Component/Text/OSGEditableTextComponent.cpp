@@ -79,20 +79,20 @@ void EditableTextComponent::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void EditableTextComponent::keyPressed(const KeyEventUnrecPtr e)
+void EditableTextComponent::keyPressed(KeyEventDetails* const e)
 {
 	Inherited::keyPressed(e);
 }
 
-void EditableTextComponent::keyReleased(const KeyEventUnrecPtr e)
+void EditableTextComponent::keyReleased(KeyEventDetails* const e)
 {
 	Inherited::keyReleased(e);
 }
 
-void EditableTextComponent::keyTyped(const KeyEventUnrecPtr e)
+void EditableTextComponent::keyTyped(KeyEventDetails* const e)
 {
 	
-    if(getEnabled() && getEditable() && !(e->getModifiers() &( KeyEvent::KEY_MODIFIER_ALT | KeyEvent::KEY_MODIFIER_CONTROL | KeyEvent::KEY_MODIFIER_META )))
+    if(getEnabled() && getEditable() && !(e->getModifiers() &( KeyEventDetails::KEY_MODIFIER_ALT | KeyEventDetails::KEY_MODIFIER_CONTROL | KeyEventDetails::KEY_MODIFIER_META )))
 	{
 		if(e->getKeyChar()>31 && e->getKeyChar() < 127)
 		{
@@ -140,34 +140,34 @@ void EditableTextComponent::keyTyped(const KeyEventUnrecPtr e)
 	
     switch(e->getKey())
     {
-    case KeyEvent::KEY_RIGHT:
-    case KeyEvent::KEY_KEYPAD_RIGHT:
+    case KeyEventDetails::KEY_RIGHT:
+    case KeyEventDetails::KEY_KEYPAD_RIGHT:
         moveCaret(1);
         break;
-    case KeyEvent::KEY_LEFT:
-    case KeyEvent::KEY_KEYPAD_LEFT:
+    case KeyEventDetails::KEY_LEFT:
+    case KeyEventDetails::KEY_KEYPAD_LEFT:
         moveCaret(-1);
         break;
-    case KeyEvent::KEY_V:
-        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+    case KeyEventDetails::KEY_V:
+        if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
         {
             paste();
         }
         break;
-    case KeyEvent::KEY_C:
-        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+    case KeyEventDetails::KEY_C:
+        if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
         {
             copy();
         }
         break;
-    case KeyEvent::KEY_X:
-        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+    case KeyEventDetails::KEY_X:
+        if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
         {
             cut();
         }
         break;
-    case KeyEvent::KEY_A:
-        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+    case KeyEventDetails::KEY_A:
+        if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
         {
             selectAll();
         }

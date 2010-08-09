@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -74,20 +75,20 @@ OSG::UInt16 AbstractColorChooserPanelBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
-//! Get the value of the AbstractColorChooserPanel::_sfParentChooser field.
+//! Get the value of the AbstractColorChooserPanel::_sfInternalParentChooser field.
 inline
-ColorChooser * AbstractColorChooserPanelBase::getParentChooser(void) const
+ColorChooser * AbstractColorChooserPanelBase::getInternalParentChooser(void) const
 {
-    return _sfParentChooser.getValue();
+    return _sfInternalParentChooser.getValue();
 }
 
-//! Set the value of the AbstractColorChooserPanel::_sfParentChooser field.
+//! Set the value of the AbstractColorChooserPanel::_sfInternalParentChooser field.
 inline
-void AbstractColorChooserPanelBase::setParentChooser(ColorChooser * const value)
+void AbstractColorChooserPanelBase::setInternalParentChooser(ColorChooser * const value)
 {
-    editSField(ParentChooserFieldMask);
+    editSField(InternalParentChooserFieldMask);
 
-    _sfParentChooser.setValue(value);
+    _sfInternalParentChooser.setValue(value);
 }
 
 
@@ -101,8 +102,8 @@ void AbstractColorChooserPanelBase::execSync (      AbstractColorChooserPanelBas
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-    if(FieldBits::NoField != (ParentChooserFieldMask & whichField))
-        _sfParentChooser.syncWith(pFrom->_sfParentChooser);
+    if(FieldBits::NoField != (InternalParentChooserFieldMask & whichField))
+        _sfInternalParentChooser.syncWith(pFrom->_sfInternalParentChooser);
 }
 #endif
 

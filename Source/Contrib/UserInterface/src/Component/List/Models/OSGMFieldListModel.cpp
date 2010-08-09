@@ -180,13 +180,23 @@ void MFieldListModel::containerChanged(FieldContainer * container, ConstFieldMas
     GetFieldHandlePtr TheFieldHandle = getContainer()->getField(getFieldId());
     if(whichField & TheFieldHandle->getDescription()->getFieldMask())
     {
-        //produceListDataContentsChanged(this,0,TheFieldHandle->size());
+        produceListDataContentsChanged(this,0,TheFieldHandle->size());
     }
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void MFieldListModel::resolveLinks(void)
+{
+    if(getContainer())
+    {
+        getContainer()->subChangedFunctor(boost::bind(&MFieldListModel::containerChanged, this, _1, _2));
+    }
+
+    Inherited::resolveLinks();
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 

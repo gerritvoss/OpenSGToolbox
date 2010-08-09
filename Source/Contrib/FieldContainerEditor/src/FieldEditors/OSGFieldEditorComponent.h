@@ -122,6 +122,12 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FieldEditorComponent : public F
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
             void fieldChanged         (FieldContainer *fc, 
                                        ConstFieldMaskArg whichField);
     virtual void internalFieldChanged (void                        ) = 0;

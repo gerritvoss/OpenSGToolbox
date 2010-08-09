@@ -45,7 +45,6 @@
 #include "OSGListGeneratedPopupMenuBase.h"
 #include "OSGListModel.h"
 #include "OSGComponentGenerator.h"
-#include "OSGListDataListener.h"
 #include "OSGPopupMenu.h"
 
 OSG_BEGIN_NAMESPACE
@@ -122,24 +121,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListGeneratedPopupMenu : public ListGe
 
 	void updateMenuItems(void);
     
-	class ModelListener : public ListDataListener
-	{
-	public :
-		ModelListener(ListGeneratedPopupMenu* const TheListGeneratedPopupMenu);
-		
-		//Sent when the contents of the list has changed in a way that's too complex to characterize with the previous methods.
-		virtual void contentsChanged(const ListDataEventUnrecPtr e);
-		//Sent after the indices in the index0,index1 interval have been inserted in the data model.
-		virtual void intervalAdded(const ListDataEventUnrecPtr e);
-		//Sent after the indices in the index0,index1 interval have been removed from the data model.
-		virtual void intervalRemoved(const ListDataEventUnrecPtr e);
-	protected :
-		ListGeneratedPopupMenu* _ListGeneratedPopupMenu;
-	};
+	//Sent when the contents of the list has changed in a way that's too complex to characterize with the previous methods.
+	void handleListContentsChanged(ListDataEventDetails* const e);
+	//Sent after the indices in the index0,index1 interval have been inserted in the data model.
+	void handleListIntervalAdded(ListDataEventDetails* const e);
+	//Sent after the indices in the index0,index1 interval have been removed from the data model.
+	void handleListIntervalRemoved(ListDataEventDetails* const e);
 
-	friend class ModelListener;
-
-	ModelListener _ModelListener;
+    boost::signals2::connection _ListContentsChangedConnection,
+                                _ListIntervalAddedConnection,
+                                _ListIntervalRemovedConnection;
     
     /*==========================  PRIVATE  ================================*/
 

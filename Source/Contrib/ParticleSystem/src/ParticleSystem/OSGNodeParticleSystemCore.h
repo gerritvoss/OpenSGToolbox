@@ -43,7 +43,8 @@
 #endif
 
 #include "OSGNodeParticleSystemCoreBase.h"
-#include "OSGParticleSystemListener.h"
+#include "OSGParticleSystemEventDetailsFields.h"
+#include "OSGParticleEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -133,25 +134,18 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING NodeParticleSystemCore : public NodeP
 
     /*! \}                                                                 */
 
-    class SystemUpdateListener : public ParticleSystemListener
-    {
-      public:
-        SystemUpdateListener(NodeParticleSystemCoreRefPtr TheCore);
-        virtual void systemUpdated(const ParticleSystemEventUnrecPtr e);
-        virtual void volumeChanged(const ParticleSystemEventUnrecPtr e);
-        virtual void particleGenerated(const ParticleEventUnrecPtr e);
-        virtual void particleKilled(const ParticleEventUnrecPtr e);
-        virtual void particleStolen(const ParticleEventUnrecPtr e);
-      private:
-        NodeParticleSystemCoreRefPtr _Core;
-    };
-
-    friend class SystemUpdateListener;
-
-    SystemUpdateListener _SystemUpdateListener;
-
     Vec3f getNodeNormal(ParticleSystemRefPtr System, UInt32 Index);
     Vec3f getNodeUpDir(ParticleSystemRefPtr System, UInt32 Index);
+
+	void handleVolumeChanged(ParticleSystemEventDetails* const details);
+	void handleParticleGenerated(ParticleEventDetails* const details);
+	void handleParticleKilled(ParticleEventDetails* const details);
+	void handleParticleStolen(ParticleEventDetails* const details);
+    
+    boost::signals2::connection _VolumeChangedConnection;
+    boost::signals2::connection _ParticleGeneratedConnection;
+    boost::signals2::connection _ParticleKilledConnection;
+    boost::signals2::connection _ParticleStolenConnection;
 
     /*==========================  PRIVATE  ================================*/
 

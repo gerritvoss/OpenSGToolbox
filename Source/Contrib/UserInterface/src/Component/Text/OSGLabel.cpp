@@ -144,14 +144,14 @@ void Label::calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, 
 	BottomRight = BottomRight + Vec2f(AlignmentOffset);
 }
 
-void Label::mouseClicked(const MouseEventUnrecPtr e)
+void Label::mouseClicked(MouseEventDetails* const e)
 {	
     if(getTextSelectable())
     {
 	    Int32 Position(0);
 	    Int32 BeginWord = 0;
 	    Int32 EndWord = getText().size();
-	    if(e->getButton() == e->BUTTON1)
+	    if(e->getButton() == MouseEventDetails::BUTTON1)
 	    {
 
 		    if(e->getClickCount() == 2)
@@ -222,7 +222,7 @@ void Label::mouseClicked(const MouseEventUnrecPtr e)
 }
 
 
-void Label::mousePressed(const MouseEventUnrecPtr e)
+void Label::mousePressed(MouseEventDetails* const e)
 {
     if(getTextSelectable())
     {
@@ -232,7 +232,7 @@ void Label::mousePressed(const MouseEventUnrecPtr e)
 	    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
         getInsideBorderBounds(TopLeft, BottomRight);
         TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getAlignment().y(), getAlignment().x());
-	    if(e->getButton() == e->BUTTON1)
+	    if(e->getButton() == MouseEventDetails::BUTTON1)
 	    {
 		    //set caret position to proper place
 		    //if the mouse is to the left of the text, set it to the begining.
@@ -275,7 +275,7 @@ void Label::mousePressed(const MouseEventUnrecPtr e)
 	Inherited::mousePressed(e);
 }
 
-void Label::mouseDragged(const MouseEventUnrecPtr e)
+void Label::mouseDragged(MouseEventDetails* const e)
 {
     if(getTextSelectable())
     {
@@ -286,7 +286,7 @@ void Label::mouseDragged(const MouseEventUnrecPtr e)
 	    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
         getInsideBorderBounds(TopLeft, BottomRight);
         TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getAlignment().y(), getAlignment().x());
-	    if(e->getButton() == e->BUTTON1)
+	    if(e->getButton() == MouseEventDetails::BUTTON1)
 	    {
 		    //set caret position to proper place
 		    //if the mouse is to the left of the text, set it to the begining.

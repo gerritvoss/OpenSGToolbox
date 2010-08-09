@@ -40,9 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-ParticleSystemCore::SystemUpdateListener::SystemUpdateListener(ParticleSystemCoreRefPtr TheCore) : _Core(TheCore)
-{
-}
-
 OSG_END_NAMESPACE

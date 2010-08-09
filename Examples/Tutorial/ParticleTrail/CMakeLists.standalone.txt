@@ -1,5 +1,5 @@
 
-PROJECT(OpenSGParticleSystemTutorials)
+PROJECT(OpenSGParticleTrailTutorials)
 
 MESSAGE(STATUS "Building particle system tutorials standalone")
 

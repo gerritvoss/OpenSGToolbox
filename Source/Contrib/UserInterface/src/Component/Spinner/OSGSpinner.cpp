@@ -85,12 +85,6 @@ void Spinner::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-EventConnection Spinner::addChangeListener(ChangeListenerPtr l)
-{
-    return _Model->addChangeListener(l);
-}
-
 void Spinner::updateLayout(void)
 {
     if(getOrientation() == Spinner::VERTICAL_ORIENTATION)
@@ -214,20 +208,24 @@ void Spinner::onDestroy()
 {
 }
 
+void Spinner::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _NextButtonActionConnection.disconnect();
+    _PreviousButtonActionConnection.disconnect();
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 Spinner::Spinner(void) :
-    Inherited(),
-    _NextButtonActionListener(this),
-    _PreviousButtonActionListener(this)
+    Inherited()
 {
 }
 
 Spinner::Spinner(const Spinner &source) :
     Inherited(source),
-    _Model(source._Model),
-    _NextButtonActionListener(this),
-    _PreviousButtonActionListener(this)
+    _Model(source._Model)
 {
 }
 
@@ -263,14 +261,22 @@ void Spinner::changed(ConstFieldMaskArg whichField,
 
     }
 
-    if(whichField & NextButtonFieldMask && getNextButton() != NULL)
+    if(whichField & NextButtonFieldMask)
     {
-        getNextButton()->addMousePressedActionListener(&_NextButtonActionListener);
+        _NextButtonActionConnection.disconnect();
+        if(getNextButton() != NULL)
+        {
+            _NextButtonActionConnection = getNextButton()->connectMousePressedActionPerformed(boost::bind(&Spinner::handleNextButtonAction, this, _1));
+        }
     }
 
-    if(whichField & PreviousButtonFieldMask && getPreviousButton() != NULL)
+    if(whichField & PreviousButtonFieldMask)
     {
-        getPreviousButton()->addMousePressedActionListener(&_PreviousButtonActionListener);
+        _PreviousButtonActionConnection.disconnect();
+        if(getPreviousButton() != NULL)
+        {
+            _PreviousButtonActionConnection = getPreviousButton()->connectMousePressedActionPerformed(boost::bind(&Spinner::handlePreviousButtonAction, this, _1));
+        }
     }
 }
 
@@ -280,21 +286,21 @@ void Spinner::dump(      UInt32    ,
     SLOG << "Dump Spinner NI" << std::endl;
 }
 
-void Spinner::NextButtonActionListener::actionPerformed(const ActionEventUnrecPtr e)
+void Spinner::handleNextButtonAction(ActionEventDetails* const e)
 {
-    boost::any NewValue(_Spinner->getNextValue());
+    boost::any NewValue(getNextValue());
     if(!NewValue.empty())
     {
-        _Spinner->setValue(NewValue);
+        setValue(NewValue);
     }
 }
 
-void Spinner::PreviousButtonActionListener::actionPerformed(const ActionEventUnrecPtr e)
+void Spinner::handlePreviousButtonAction(ActionEventDetails* const e)
 {
-    const boost::any& NewValue(_Spinner->getPreviousValue());
+    const boost::any& NewValue(getPreviousValue());
     if(!NewValue.empty())
     {
-        _Spinner->setValue(NewValue);
+        setValue(NewValue);
     }
 }
 

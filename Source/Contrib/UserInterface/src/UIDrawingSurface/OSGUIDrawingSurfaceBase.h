@@ -70,6 +70,7 @@
 #include "OSGGraphicsFields.h"          // Graphics type
 #include "OSGUIDrawingSurfaceMouseTransformFunctorFields.h" // MouseTransformFunctor type
 #include "OSGVecFields.h"               // Size type
+#include "OSGSysFields.h"               // Active type
 
 #include "OSGUIDrawingSurfaceFields.h"
 
@@ -90,6 +91,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldCon
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(UIDrawingSurface);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -103,7 +106,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldCon
         GraphicsFieldId = EventProducerFieldId + 1,
         MouseTransformFunctorFieldId = GraphicsFieldId + 1,
         SizeFieldId = MouseTransformFunctorFieldId + 1,
-        NextFieldId = SizeFieldId + 1
+        ActiveFieldId = SizeFieldId + 1,
+        NextFieldId = ActiveFieldId + 1
     };
 
     static const OSG::BitVector InternalWindowsFieldMask =
@@ -118,6 +122,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldCon
         (TypeTraits<BitVector>::One << MouseTransformFunctorFieldId);
     static const OSG::BitVector SizeFieldMask =
         (TypeTraits<BitVector>::One << SizeFieldId);
+    static const OSG::BitVector ActiveFieldMask =
+        (TypeTraits<BitVector>::One << ActiveFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -127,6 +133,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldCon
     typedef SFUnrecGraphicsPtr SFGraphicsType;
     typedef SFUnrecUIDrawingSurfaceMouseTransformFunctorPtr SFMouseTransformFunctorType;
     typedef SFVec2f           SFSizeType;
+    typedef SFBool            SFActiveType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -164,6 +171,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldCon
                   SFVec2f             *editSFSize           (void);
             const SFVec2f             *getSFSize            (void) const;
 
+                  SFBool              *editSFActive         (void);
+            const SFBool              *getSFActive          (void) const;
+
 
                   InternalWindow * getInternalWindows(const UInt32 index) const;
 
@@ -178,6 +188,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldCon
                   Vec2f               &editSize           (void);
             const Vec2f               &getSize            (void) const;
 
+                  bool                &editActive         (void);
+                  bool                 getActive          (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -188,6 +201,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldCon
             void setGraphics       (Graphics * const value);
             void setMouseTransformFunctor(UIDrawingSurfaceMouseTransformFunctor * const value);
             void setSize           (const Vec2f &value);
+            void setActive         (const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -270,6 +284,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldCon
     SFUnrecGraphicsPtr _sfGraphics;
     SFUnrecUIDrawingSurfaceMouseTransformFunctorPtr _sfMouseTransformFunctor;
     SFVec2f           _sfSize;
+    SFBool            _sfActive;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -318,6 +333,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldCon
     EditFieldHandlePtr editHandleMouseTransformFunctor(void);
     GetFieldHandlePtr  getHandleSize            (void) const;
     EditFieldHandlePtr editHandleSize           (void);
+    GetFieldHandlePtr  getHandleActive          (void) const;
+    EditFieldHandlePtr editHandleActive         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

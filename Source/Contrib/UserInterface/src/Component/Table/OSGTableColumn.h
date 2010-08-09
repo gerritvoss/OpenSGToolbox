@@ -46,11 +46,6 @@
 #include "OSGTableCellRenderer.h"
 #include "OSGField.h"
 
-#include "OSGFieldChangeListener.h"
-#include "OSGFieldChangeEvent.h"
-
-#include "OSGEventConnection.h"
-
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TableColumn class. See \ref
@@ -85,11 +80,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumn : public TableColumnBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
-    EventConnection addFieldChangeListener(FieldChangeListenerPtr Listener);
-	bool isFieldChangeListenerAttached(FieldChangeListenerPtr Listener) const;
-    
-    void removeFieldChangeListener(FieldChangeListenerPtr Listener);
     
     //Returns the TableCellRenderer used by the JTable to draw values for this column.
     TableCellRendererPtr getCellRenderer(void) const;
@@ -141,12 +131,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableColumn : public TableColumnBase
     TableCellRendererPtr _HeaderCellRenderer;
 
     boost::any _HeaderValue;
-    
-	typedef std::set<FieldChangeListenerPtr> FieldChangeListenerSet;
-    typedef FieldChangeListenerSet::iterator FieldChangeListenerSetItor;
-    typedef FieldChangeListenerSet::const_iterator FieldChangeListenerSetConstItor;
-	
-    FieldChangeListenerSet       _FieldChangeListeners;
     
     virtual void produceFieldChanged(FieldContainer* TheFieldContainer, FieldDescriptionBase* TheDescription);
     /*==========================  PRIVATE  ================================*/

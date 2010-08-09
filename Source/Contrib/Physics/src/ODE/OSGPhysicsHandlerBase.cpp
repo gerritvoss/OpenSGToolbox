@@ -58,6 +58,7 @@
 
 
 
+
 #include "OSGPhysicsWorld.h"            // World Class
 #include "OSGPhysicsSpace.h"            // Spaces Class
 #include "OSGNode.h"                    // UpdateNode Class
@@ -133,32 +134,32 @@ void PhysicsHandlerBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecPhysicsWorldPtr::Description(
-        SFUnrecPhysicsWorldPtr::getClassType(),
+    pDesc = new SFUnrecChildPhysicsWorldPtr::Description(
+        SFUnrecChildPhysicsWorldPtr::getClassType(),
         "world",
         "",
         WorldFieldId, WorldFieldMask,
         false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
+        (Field::SFDefaultFlags | Field::FNullCheckAccess),
         static_cast<FieldEditMethodSig>(&PhysicsHandler::editHandleWorld),
         static_cast<FieldGetMethodSig >(&PhysicsHandler::getHandleWorld));
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new MFUnrecPhysicsSpacePtr::Description(
-        MFUnrecPhysicsSpacePtr::getClassType(),
+    pDesc = new MFUnrecChildPhysicsSpacePtr::Description(
+        MFUnrecChildPhysicsSpacePtr::getClassType(),
         "spaces",
         "",
         SpacesFieldId, SpacesFieldMask,
         false,
-        (Field::MFDefaultFlags | Field::FStdAccess),
+        (Field::MFDefaultFlags | Field::FNullCheckAccess),
         static_cast<FieldEditMethodSig>(&PhysicsHandler::editHandleSpaces),
         static_cast<FieldGetMethodSig >(&PhysicsHandler::getHandleSpaces));
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecNodePtr::Description(
-        SFUnrecNodePtr::getClassType(),
+    pDesc = new SFWeakNodePtr::Description(
+        SFWeakNodePtr::getClassType(),
         "UpdateNode",
         "",
         UpdateNodeFieldId, UpdateNodeFieldMask,
@@ -224,26 +225,32 @@ PhysicsHandlerBase::TypeObject PhysicsHandlerBase::_type(
     "\t<Field\n"
     "\t\tname=\"world\"\n"
     "\t\ttype=\"PhysicsWorld\"\n"
-    "        category=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
+    "        category=\"childpointer\"\n"
+    "        childParentType=\"FieldContainer\"\n"
     "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
     "\t\taccess=\"public\"\n"
+    "        ptrFieldAccess = \"nullCheck\"\n"
+    "        linkParentField=\"ParentHandler\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"spaces\"\n"
     "\t\ttype=\"PhysicsSpace\"\n"
-    "        category=\"pointer\"\n"
     "\t\tcardinality=\"multi\"\n"
+    "        category=\"childpointer\"\n"
+    "        childParentType=\"FieldContainer\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
+    "        ptrFieldAccess = \"nullCheck\"\n"
+    "        linkParentField=\"ParentHandler\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"UpdateNode\"\n"
     "\t\ttype=\"Node\"\n"
-    "        category=\"pointer\"\n"
+    "        category=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -295,12 +302,12 @@ UInt32 PhysicsHandlerBase::getContainerSize(void) const
 
 
 //! Get the PhysicsHandler::_sfWorld field.
-const SFUnrecPhysicsWorldPtr *PhysicsHandlerBase::getSFWorld(void) const
+const SFUnrecChildPhysicsWorldPtr *PhysicsHandlerBase::getSFWorld(void) const
 {
     return &_sfWorld;
 }
 
-SFUnrecPhysicsWorldPtr *PhysicsHandlerBase::editSFWorld          (void)
+SFUnrecChildPhysicsWorldPtr *PhysicsHandlerBase::editSFWorld          (void)
 {
     editSField(WorldFieldMask);
 
@@ -308,25 +315,18 @@ SFUnrecPhysicsWorldPtr *PhysicsHandlerBase::editSFWorld          (void)
 }
 
 //! Get the PhysicsHandler::_mfSpaces field.
-const MFUnrecPhysicsSpacePtr *PhysicsHandlerBase::getMFSpaces(void) const
+const MFUnrecChildPhysicsSpacePtr *PhysicsHandlerBase::getMFSpaces(void) const
 {
-    return &_mfSpaces;
-}
-
-MFUnrecPhysicsSpacePtr *PhysicsHandlerBase::editMFSpaces         (void)
-{
-    editMField(SpacesFieldMask, _mfSpaces);
-
     return &_mfSpaces;
 }
 
 //! Get the PhysicsHandler::_sfUpdateNode field.
-const SFUnrecNodePtr *PhysicsHandlerBase::getSFUpdateNode(void) const
+const SFWeakNodePtr *PhysicsHandlerBase::getSFUpdateNode(void) const
 {
     return &_sfUpdateNode;
 }
 
-SFUnrecNodePtr      *PhysicsHandlerBase::editSFUpdateNode     (void)
+SFWeakNodePtr       *PhysicsHandlerBase::editSFUpdateNode     (void)
 {
     editSField(UpdateNodeFieldMask);
 
@@ -363,16 +363,19 @@ const SFUInt32 *PhysicsHandlerBase::getSFMaxStepsPerUpdate(void) const
 
 void PhysicsHandlerBase::pushToSpaces(PhysicsSpace * const value)
 {
+    if(value == NULL)
+        return;
+
     editMField(SpacesFieldMask, _mfSpaces);
 
     _mfSpaces.push_back(value);
 }
 
-void PhysicsHandlerBase::assignSpaces   (const MFUnrecPhysicsSpacePtr &value)
+void PhysicsHandlerBase::assignSpaces   (const MFUnrecChildPhysicsSpacePtr &value)
 {
-    MFUnrecPhysicsSpacePtr::const_iterator elemIt  =
+    MFUnrecChildPhysicsSpacePtr::const_iterator elemIt  =
         value.begin();
-    MFUnrecPhysicsSpacePtr::const_iterator elemEnd =
+    MFUnrecChildPhysicsSpacePtr::const_iterator elemEnd =
         value.end  ();
 
     static_cast<PhysicsHandler *>(this)->clearSpaces();
@@ -382,6 +385,51 @@ void PhysicsHandlerBase::assignSpaces   (const MFUnrecPhysicsSpacePtr &value)
         this->pushToSpaces(*elemIt);
 
         ++elemIt;
+    }
+}
+
+void PhysicsHandlerBase::insertIntoSpaces(UInt32               uiIndex,
+                                                   PhysicsSpace * const value   )
+{
+    if(value == NULL)
+        return;
+
+    editMField(SpacesFieldMask, _mfSpaces);
+
+    MFUnrecChildPhysicsSpacePtr::iterator fieldIt = _mfSpaces.begin_nc();
+
+    fieldIt += uiIndex;
+
+    _mfSpaces.insert(fieldIt, value);
+}
+
+void PhysicsHandlerBase::replaceInSpaces(UInt32               uiIndex,
+                                                       PhysicsSpace * const value   )
+{
+    if(value == NULL)
+        return;
+
+    if(uiIndex >= _mfSpaces.size())
+        return;
+
+    editMField(SpacesFieldMask, _mfSpaces);
+
+    _mfSpaces.replace(uiIndex, value);
+}
+
+void PhysicsHandlerBase::replaceObjInSpaces(PhysicsSpace * const pOldElem,
+                                                        PhysicsSpace * const pNewElem)
+{
+    if(pNewElem == NULL)
+        return;
+
+    Int32  elemIdx = _mfSpaces.findIndex(pOldElem);
+
+    if(elemIdx != -1)
+    {
+        editMField(SpacesFieldMask, _mfSpaces);
+
+        _mfSpaces.replace(elemIdx, pNewElem);
     }
 }
 
@@ -618,13 +666,16 @@ FieldContainerTransitPtr PhysicsHandlerBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 PhysicsHandlerBase::PhysicsHandlerBase(void) :
     Inherited(),
-    _sfWorld                  (NULL),
-    _mfSpaces                 (),
+    _sfWorld                  (this,
+                          WorldFieldId,
+                          PhysicsWorld::ParentHandlerFieldId),
+    _mfSpaces                 (this,
+                          SpacesFieldId,
+                          PhysicsSpace::ParentHandlerFieldId),
     _sfUpdateNode             (NULL),
     _sfStepSize               (Real32(0.001)),
     _sfMaxStepsPerUpdate      (UInt32(75))
@@ -633,8 +684,12 @@ PhysicsHandlerBase::PhysicsHandlerBase(void) :
 
 PhysicsHandlerBase::PhysicsHandlerBase(const PhysicsHandlerBase &source) :
     Inherited(source),
-    _sfWorld                  (NULL),
-    _mfSpaces                 (),
+    _sfWorld                  (this,
+                          WorldFieldId,
+                          PhysicsWorld::ParentHandlerFieldId),
+    _mfSpaces                 (this,
+                          SpacesFieldId,
+                          PhysicsSpace::ParentHandlerFieldId),
     _sfUpdateNode             (NULL),
     _sfStepSize               (source._sfStepSize               ),
     _sfMaxStepsPerUpdate      (source._sfMaxStepsPerUpdate      )
@@ -648,6 +703,69 @@ PhysicsHandlerBase::~PhysicsHandlerBase(void)
 {
 }
 
+/*-------------------------------------------------------------------------*/
+/* Child linking                                                           */
+
+bool PhysicsHandlerBase::unlinkChild(
+    FieldContainer * const pChild,
+    UInt16           const childFieldId)
+{
+    if(childFieldId == WorldFieldId)
+    {
+        PhysicsWorld * pTypedChild =
+            dynamic_cast<PhysicsWorld *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            if(pTypedChild == _sfWorld.getValue())
+            {
+                editSField(WorldFieldMask);
+
+                _sfWorld.setValue(NULL);
+
+                return true;
+            }
+
+            FWARNING(("PhysicsHandlerBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    if(childFieldId == SpacesFieldId)
+    {
+        PhysicsSpace * pTypedChild =
+            dynamic_cast<PhysicsSpace *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            Int32 iChildIdx = _mfSpaces.findIndex(pTypedChild);
+
+            if(iChildIdx != -1)
+            {
+                editMField(SpacesFieldMask, _mfSpaces);
+
+                _mfSpaces.erase(iChildIdx);
+
+                return true;
+            }
+
+            FWARNING(("PhysicsHandlerBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+
+    return Inherited::unlinkChild(pChild, childFieldId);
+}
+
 void PhysicsHandlerBase::onCreate(const PhysicsHandler *source)
 {
     Inherited::onCreate(source);
@@ -658,9 +776,9 @@ void PhysicsHandlerBase::onCreate(const PhysicsHandler *source)
 
         pThis->setWorld(source->getWorld());
 
-        MFUnrecPhysicsSpacePtr::const_iterator SpacesIt  =
+        MFUnrecChildPhysicsSpacePtr::const_iterator SpacesIt  =
             source->_mfSpaces.begin();
-        MFUnrecPhysicsSpacePtr::const_iterator SpacesEnd =
+        MFUnrecChildPhysicsSpacePtr::const_iterator SpacesEnd =
             source->_mfSpaces.end  ();
 
         while(SpacesIt != SpacesEnd)
@@ -676,8 +794,8 @@ void PhysicsHandlerBase::onCreate(const PhysicsHandler *source)
 
 GetFieldHandlePtr PhysicsHandlerBase::getHandleWorld           (void) const
 {
-    SFUnrecPhysicsWorldPtr::GetHandlePtr returnValue(
-        new  SFUnrecPhysicsWorldPtr::GetHandle(
+    SFUnrecChildPhysicsWorldPtr::GetHandlePtr returnValue(
+        new  SFUnrecChildPhysicsWorldPtr::GetHandle(
              &_sfWorld,
              this->getType().getFieldDesc(WorldFieldId),
              const_cast<PhysicsHandlerBase *>(this)));
@@ -687,8 +805,8 @@ GetFieldHandlePtr PhysicsHandlerBase::getHandleWorld           (void) const
 
 EditFieldHandlePtr PhysicsHandlerBase::editHandleWorld          (void)
 {
-    SFUnrecPhysicsWorldPtr::EditHandlePtr returnValue(
-        new  SFUnrecPhysicsWorldPtr::EditHandle(
+    SFUnrecChildPhysicsWorldPtr::EditHandlePtr returnValue(
+        new  SFUnrecChildPhysicsWorldPtr::EditHandle(
              &_sfWorld,
              this->getType().getFieldDesc(WorldFieldId),
              this));
@@ -704,8 +822,8 @@ EditFieldHandlePtr PhysicsHandlerBase::editHandleWorld          (void)
 
 GetFieldHandlePtr PhysicsHandlerBase::getHandleSpaces          (void) const
 {
-    MFUnrecPhysicsSpacePtr::GetHandlePtr returnValue(
-        new  MFUnrecPhysicsSpacePtr::GetHandle(
+    MFUnrecChildPhysicsSpacePtr::GetHandlePtr returnValue(
+        new  MFUnrecChildPhysicsSpacePtr::GetHandle(
              &_mfSpaces,
              this->getType().getFieldDesc(SpacesFieldId),
              const_cast<PhysicsHandlerBase *>(this)));
@@ -715,8 +833,8 @@ GetFieldHandlePtr PhysicsHandlerBase::getHandleSpaces          (void) const
 
 EditFieldHandlePtr PhysicsHandlerBase::editHandleSpaces         (void)
 {
-    MFUnrecPhysicsSpacePtr::EditHandlePtr returnValue(
-        new  MFUnrecPhysicsSpacePtr::EditHandle(
+    MFUnrecChildPhysicsSpacePtr::EditHandlePtr returnValue(
+        new  MFUnrecChildPhysicsSpacePtr::EditHandle(
              &_mfSpaces,
              this->getType().getFieldDesc(SpacesFieldId),
              this));
@@ -724,6 +842,15 @@ EditFieldHandlePtr PhysicsHandlerBase::editHandleSpaces         (void)
     returnValue->setAddMethod(
         boost::bind(&PhysicsHandler::pushToSpaces,
                     static_cast<PhysicsHandler *>(this), _1));
+    returnValue->setInsertMethod(
+        boost::bind(&PhysicsHandler::insertIntoSpaces,
+                    static_cast<PhysicsHandler *>(this), _1, _2));
+    returnValue->setReplaceMethod(
+        boost::bind(&PhysicsHandler::replaceInSpaces,
+                    static_cast<PhysicsHandler *>(this), _1, _2));
+    returnValue->setReplaceObjMethod(
+        boost::bind(&PhysicsHandler::replaceObjInSpaces,
+                    static_cast<PhysicsHandler *>(this), _1, _2));
     returnValue->setRemoveMethod(
         boost::bind(&PhysicsHandler::removeFromSpaces,
                     static_cast<PhysicsHandler *>(this), _1));
@@ -741,8 +868,8 @@ EditFieldHandlePtr PhysicsHandlerBase::editHandleSpaces         (void)
 
 GetFieldHandlePtr PhysicsHandlerBase::getHandleUpdateNode      (void) const
 {
-    SFUnrecNodePtr::GetHandlePtr returnValue(
-        new  SFUnrecNodePtr::GetHandle(
+    SFWeakNodePtr::GetHandlePtr returnValue(
+        new  SFWeakNodePtr::GetHandle(
              &_sfUpdateNode,
              this->getType().getFieldDesc(UpdateNodeFieldId),
              const_cast<PhysicsHandlerBase *>(this)));
@@ -752,8 +879,8 @@ GetFieldHandlePtr PhysicsHandlerBase::getHandleUpdateNode      (void) const
 
 EditFieldHandlePtr PhysicsHandlerBase::editHandleUpdateNode     (void)
 {
-    SFUnrecNodePtr::EditHandlePtr returnValue(
-        new  SFUnrecNodePtr::EditHandle(
+    SFWeakNodePtr::EditHandlePtr returnValue(
+        new  SFWeakNodePtr::EditHandle(
              &_sfUpdateNode,
              this->getType().getFieldDesc(UpdateNodeFieldId),
              this));
@@ -816,6 +943,7 @@ EditFieldHandlePtr PhysicsHandlerBase::editHandleMaxStepsPerUpdate(void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

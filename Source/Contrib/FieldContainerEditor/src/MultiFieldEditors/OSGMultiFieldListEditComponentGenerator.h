@@ -44,6 +44,8 @@
 
 #include "OSGMultiFieldListEditComponentGeneratorBase.h"
 #include "OSGCommandManager.h"
+#include "OSGUIDrawingSurfaceFields.h"
+#include "OSGDialogWindowEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -114,6 +116,16 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldListEditComponentGene
 
     /*! \}                                                                 */
     CommandManagerPtr _CmdManager;
+
+    void handleRemoveButtonAction(EventDetails* const details,
+                     FieldContainer* const fc,
+                     UInt32 fieldID,
+                     UInt32 index);
+
+    void handleInsertButtonAction(EventDetails* const details,
+                       FieldContainer* const fc,
+                       UInt32 fieldID,
+                       UInt32 index);
     /*==========================  PRIVATE  ================================*/
 
   private:

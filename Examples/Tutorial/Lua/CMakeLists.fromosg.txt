@@ -13,7 +13,7 @@ LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/04LuaDebugWithParticleSystem.cp
 #############################################################################
 # get dependencies
 
-SET(OSG_COMPONENTS OSGBase OSGCluster OSGDrawable OSGFileIO OSGGroup OSGState
+SET(OSG_COMPONENTS OSGBase OSGDrawable OSGFileIO OSGGroup OSGState
                    OSGSystem OSGUtil OSGText OSGWindow OSGTBFileIO
                    OSGContribUserInterface OSGContribParticleSystem
                    OSGContribLua OSGContribLuaToolbox )

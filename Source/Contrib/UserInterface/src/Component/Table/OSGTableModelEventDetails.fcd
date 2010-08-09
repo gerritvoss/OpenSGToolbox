@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TableModelEventDetails"
+	parent="EventDetails"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+    structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+	supportUnregisteredCreate="true"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+	<Field
+		name="FirstColumn"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="LastColumn"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="FirstRow"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="LastRow"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

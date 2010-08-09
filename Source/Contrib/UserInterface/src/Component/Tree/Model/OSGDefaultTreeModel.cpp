@@ -46,7 +46,6 @@
 #include <OSGConfig.h>
 
 #include "OSGDefaultTreeModel.h"
-#include "OSGTreeModelListener.h"
 #include "OSGDefaultMutableTreeNode.h"
 
 OSG_BEGIN_NAMESPACE

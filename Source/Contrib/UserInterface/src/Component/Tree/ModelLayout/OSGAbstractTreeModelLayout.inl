@@ -40,21 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool AbstractTreeModelLayout::isTreeModelLayoutListenerAttached(TreeModelLayoutListenerPtr Listener) const
-{
-    return _TreeModelLayoutListeners.find(Listener) != _TreeModelLayoutListeners.end();
-}
-
-inline
-bool AbstractTreeModelLayout::isTreeModelListenerAttached(TreeModelListenerPtr l) const
-{
-    return _ModelListeners.find(l) != _ModelListeners.end();
-}
-
-inline
-AbstractTreeModelLayout::ModelListener::ModelListener(AbstractTreeModelLayout* const TheAbstractTreeModelLayout) : _AbstractTreeModelLayout(TheAbstractTreeModelLayout)
-{
-}
-
 OSG_END_NAMESPACE

@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGActionEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -209,6 +211,50 @@ const Char8 *TextFieldBase::getClassname(void)
 {
     return "TextField";
 }
+inline
+boost::signals2::connection  TextFieldBase::connectActionPerformed(const ActionPerformedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ActionPerformedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TextFieldBase::connectActionPerformed(const ActionPerformedEventType::group_type &group,
+                                                    const ActionPerformedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ActionPerformedEvent.connect(group, listener, at);
+}
+
+inline
+void  TextFieldBase::disconnectActionPerformed(const ActionPerformedEventType::group_type &group)
+{
+    _ActionPerformedEvent.disconnect(group);
+}
+
+inline
+void  TextFieldBase::disconnectAllSlotsActionPerformed(void)
+{
+    _ActionPerformedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TextFieldBase::isEmptyActionPerformed(void) const
+{
+    return _ActionPerformedEvent.empty();
+}
+
+inline
+UInt32  TextFieldBase::numSlotsActionPerformed(void) const
+{
+    return _ActionPerformedEvent.num_slots();
+}
+
+inline
+void TextFieldBase::produceActionPerformed(ActionPerformedEventDetailsType* const e)
+{
+    produceEvent(ActionPerformedEventId, e);
+}
+
 OSG_GEN_CONTAINERPTR(TextField);
 
 OSG_END_NAMESPACE

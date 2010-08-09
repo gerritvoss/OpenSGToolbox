@@ -43,19 +43,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void SoundManager::attachUpdateProducer(WindowEventProducerUnrecPtr TheProducer)
-{
-    TheProducer->addUpdateListener(this);
-}
-
-inline
-void SoundManager::detachUpdateProducer(WindowEventProducerUnrecPtr TheProducer)
-{
-    TheProducer->removeUpdateListener(this);
-}
-
-inline
-void SoundManager::setCamera(CameraUnrecPtr TheCamera)
+void SoundManager::setCamera(Camera* const TheCamera)
 {
     //if(_Camera != NULL)
     //{
@@ -69,9 +57,15 @@ void SoundManager::setCamera(CameraUnrecPtr TheCamera)
 }
 
 inline
-CameraUnrecPtr SoundManager::getCamera(void) const
+Camera* SoundManager::getCamera(void) const
 {
     return _Camera;
+}
+
+inline
+void SoundManager::detachUpdateProducer(void)
+{
+    _UpdateEventConnection.disconnect();
 }
 
 OSG_END_NAMESPACE

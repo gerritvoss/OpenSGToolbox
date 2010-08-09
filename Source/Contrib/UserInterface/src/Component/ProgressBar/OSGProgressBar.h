@@ -43,11 +43,6 @@
 #endif
 
 #include "OSGProgressBarBase.h"
-#include "OSGChangeListener.h"
-#include <set>
-#include "OSGUpdateListener.h"
-
-#include "OSGEventConnection.h"
 #include "OSGBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE
@@ -89,13 +84,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProgressBar : public ProgressBarBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	//Adds the specified ChangeListener to the progress bar.
-	EventConnection addChangeListener(ChangeListenerPtr Listener);
-	bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
-
-	//Removes a ChangeListener from the progress bar.
-	void removeChangeListener(ChangeListenerPtr Listener);
 
 	//Returns the progress bar's maximum value, which is stored in the progress bar's BoundedRangeModel.
 	Int32 getMaximum(void) const;
@@ -158,33 +146,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ProgressBar : public ProgressBarBase
     void setupProgressBar();
     void setupIndeterminateProgressBar(const Time& Elps);
 
-    //Listener for getting change updates of the UIViewport
-    class ModelChangeListener : public ChangeListener
-    {
-      public:
-        ModelChangeListener(ProgressBar* const TheProgressBar);
-        virtual void stateChanged(const ChangeEventUnrecPtr e);
-      private:
-        ProgressBar* _ProgressBar;
-    };
+    void handleProgressStateChanged(ChangeEventDetails* const e);
+    boost::signals2::connection _ProgressStateChangedConnection;
 
-    friend class ModelChangeListener;
+    void handleProgressUpdate(UpdateEventDetails* const e);
+    boost::signals2::connection _ProgressUpdateConnection;
 
-    ModelChangeListener _ModelChangeListener;
-    EventConnection _RangeModelConnection;
-
-    class IndeterminateUpdateListener : public UpdateListener
-    {
-      public:
-        IndeterminateUpdateListener(ProgressBar* const TheProgressBar);
-        virtual void update(const UpdateEventUnrecPtr e);
-      private:
-        ProgressBar* _ProgressBar;
-    };
-
-    friend class IndeterminateUpdateListener;
-
-    IndeterminateUpdateListener _IndeterminateUpdateListener;
     Real32 _IndeterminateBarPosition;
 
     Pnt2f _ProgressBarPosition;

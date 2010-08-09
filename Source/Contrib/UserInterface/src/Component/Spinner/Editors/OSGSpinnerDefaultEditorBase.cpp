@@ -132,8 +132,8 @@ void SpinnerDefaultEditorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecSpinnerPtr::Description(
-        SFUnrecSpinnerPtr::getClassType(),
+    pDesc = new SFWeakSpinnerPtr::Description(
+        SFWeakSpinnerPtr::getClassType(),
         "Spinner",
         "",
         SpinnerFieldId, SpinnerFieldMask,
@@ -186,7 +186,7 @@ SpinnerDefaultEditorBase::TypeObject SpinnerDefaultEditorBase::_type(
     "\t<Field\n"
     "\t\tname=\"Spinner\"\n"
     "\t\ttype=\"Spinner\"\n"
-    "\t\tcategory=\"pointer\"\n"
+    "\t\tcategory=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
@@ -231,12 +231,12 @@ SFUnrecTextFieldPtr *SpinnerDefaultEditorBase::editSFTextField      (void)
 }
 
 //! Get the SpinnerDefaultEditor::_sfSpinner field.
-const SFUnrecSpinnerPtr *SpinnerDefaultEditorBase::getSFSpinner(void) const
+const SFWeakSpinnerPtr *SpinnerDefaultEditorBase::getSFSpinner(void) const
 {
     return &_sfSpinner;
 }
 
-SFUnrecSpinnerPtr   *SpinnerDefaultEditorBase::editSFSpinner        (void)
+SFWeakSpinnerPtr    *SpinnerDefaultEditorBase::editSFSpinner        (void)
 {
     editSField(SpinnerFieldMask);
 
@@ -413,7 +413,6 @@ FieldContainerTransitPtr SpinnerDefaultEditorBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 SpinnerDefaultEditorBase::SpinnerDefaultEditorBase(void) :
@@ -481,8 +480,8 @@ EditFieldHandlePtr SpinnerDefaultEditorBase::editHandleTextField      (void)
 
 GetFieldHandlePtr SpinnerDefaultEditorBase::getHandleSpinner         (void) const
 {
-    SFUnrecSpinnerPtr::GetHandlePtr returnValue(
-        new  SFUnrecSpinnerPtr::GetHandle(
+    SFWeakSpinnerPtr::GetHandlePtr returnValue(
+        new  SFWeakSpinnerPtr::GetHandle(
              &_sfSpinner,
              this->getType().getFieldDesc(SpinnerFieldId),
              const_cast<SpinnerDefaultEditorBase *>(this)));
@@ -492,8 +491,8 @@ GetFieldHandlePtr SpinnerDefaultEditorBase::getHandleSpinner         (void) cons
 
 EditFieldHandlePtr SpinnerDefaultEditorBase::editHandleSpinner        (void)
 {
-    SFUnrecSpinnerPtr::EditHandlePtr returnValue(
-        new  SFUnrecSpinnerPtr::EditHandle(
+    SFWeakSpinnerPtr::EditHandlePtr returnValue(
+        new  SFWeakSpinnerPtr::EditHandle(
              &_sfSpinner,
              this->getType().getFieldDesc(SpinnerFieldId),
              this));
@@ -506,6 +505,7 @@ EditFieldHandlePtr SpinnerDefaultEditorBase::editHandleSpinner        (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

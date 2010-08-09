@@ -94,9 +94,9 @@ void FMOD_ERRCHECK(FMOD_RESULT result, std::string Location)
  *                           Instance methods                              *
 \***************************************************************************/
 
-SoundUnrecPtr FModSoundManager::createSound(void) const
+SoundTransitPtr FModSoundManager::createSound(void) const
 {
-    return FModSound::create();
+    return SoundTransitPtr(FModSound::create());
 }
 
 bool FModSoundManager::init(void)
@@ -183,7 +183,7 @@ bool FModSoundManager::uninit(void)
     return true;
 }
 
-void FModSoundManager::update(const UpdateEventUnrecPtr e)
+void FModSoundManager::update(const Time& ElapsedTime)
 {
     FMOD_RESULT result;
 

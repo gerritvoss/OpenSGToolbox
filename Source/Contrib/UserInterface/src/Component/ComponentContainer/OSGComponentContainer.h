@@ -101,18 +101,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainer : public ComponentC
 	virtual Vec2f getBorderingLength(void) const;
 	
 	//Mouse Events
-    virtual void mouseClicked ( const MouseEventUnrecPtr e);
-    virtual void mouseEntered ( const MouseEventUnrecPtr e);
-    virtual void mouseExited  ( const MouseEventUnrecPtr e);
-    virtual void mousePressed ( const MouseEventUnrecPtr e);
-    virtual void mouseReleased( const MouseEventUnrecPtr e);
+    virtual void mouseClicked ( MouseEventDetails* const e);
+    virtual void mouseEntered ( MouseEventDetails* const e);
+    virtual void mouseExited  ( MouseEventDetails* const e);
+    virtual void mousePressed ( MouseEventDetails* const e);
+    virtual void mouseReleased( MouseEventDetails* const e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventUnrecPtr e);
-    virtual void mouseDragged(const MouseEventUnrecPtr e);
+    virtual void mouseMoved(MouseEventDetails* const e);
+    virtual void mouseDragged(MouseEventDetails* const e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
+    virtual void mouseWheelMoved(MouseWheelEventDetails* const e);
 
     virtual void detachFromEventProducer(void);
 
@@ -147,9 +147,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainer : public ComponentC
     /*! \}                                                                 */
 	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
-	void checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, Component* const Comp, bool isMouseContained, Viewport* const TheViewport);
-	virtual void produceMouseExitOnComponent(const MouseEventUnrecPtr e, Component* const Comp);
-	virtual void produceMouseEnterOnComponent(const MouseEventUnrecPtr e, Component* const Comp);
+	void checkMouseEnterExit(InputEventDetails* const e, const Pnt2f& MouseLocation, Component* const Comp, bool isMouseContained, Viewport* const TheViewport);
+	virtual void produceMouseExitOnComponent(MouseEventDetails* const e, Component* const Comp);
+	virtual void produceMouseEnterOnComponent(MouseEventDetails* const e, Component* const Comp);
     void removeMousePresenceOnComponents(void);
     /*==========================  PRIVATE  ================================*/
 

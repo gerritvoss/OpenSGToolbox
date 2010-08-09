@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-DefaultTableCellEditor::DefaultStringEditorListener::DefaultStringEditorListener(DefaultTableCellEditor* const TheDefaultTableCellEditor) :
-_DefaultTableCellEditor(TheDefaultTableCellEditor)
-{
-}
-
 OSG_END_NAMESPACE

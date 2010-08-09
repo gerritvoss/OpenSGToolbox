@@ -16,7 +16,7 @@
 	<Field
 		name="Root"
 		type="Node"
-        category="pointer"
+        category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		access="public"

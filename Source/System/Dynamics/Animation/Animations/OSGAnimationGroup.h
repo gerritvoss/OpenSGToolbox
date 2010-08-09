@@ -43,8 +43,6 @@
 #endif
 
 #include "OSGAnimationGroupBase.h"
-#include "OSGEventConnection.h"
-#include "OSGEventListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -52,7 +50,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsAnimationGroup for a description.
 */
 
-class OSG_TBANIMATION_DLLMAPPING AnimationGroup : public AnimationGroupBase, public EventListener
+class OSG_TBANIMATION_DLLMAPPING AnimationGroup : public AnimationGroupBase
 {
   protected:
 
@@ -92,8 +90,7 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroup : public AnimationGroupBase, pub
 
     virtual Real32 getLength(void) const;
 
-    void attachUpdateProducer(EventProducerPtr TheProducer);
-    virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId);
+    void attachUpdateProducer(ReflexiveContainer* const producer);
     void detachUpdateProducer(void);
     /*=========================  PROTECTED  ===============================*/
 
@@ -130,10 +127,12 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroup : public AnimationGroupBase, pub
     void produceAnimationsEnded(void);
     void produceAnimationsCycled(void);
 
+    void attachedUpdate(EventDetails* const details);
+
     Time _CurrentTime,_PrevTime;
     bool _IsPlaying,_IsPaused;
 
-    EventConnection _UpdateEventConnection;
+    boost::signals2::connection _UpdateEventConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:

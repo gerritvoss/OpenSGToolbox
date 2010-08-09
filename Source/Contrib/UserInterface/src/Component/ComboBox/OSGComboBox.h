@@ -48,16 +48,8 @@
 #include "OSGComboBoxEditor.h"
 #include "OSGComponentGenerator.h"
 #include "OSGListGeneratedPopupMenu.h"
-#include "OSGMouseAdapter.h"
-#include "OSGListDataListener.h"
-#include "OSGPopupMenuListener.h"
-#include "OSGActionListener.h"
-#include "OSGButtonSelectedListener.h"
-#include "OSGComboBoxSelectionListener.h"
-#include "OSGKeyEvent.h"
+#include "OSGKeyEventDetails.h"
 #include <boost/any.hpp>
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -65,7 +57,7 @@ OSG_BEGIN_NAMESPACE
            PageContribUserInterfaceComboBox for a description.
 */
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public ActionListener, public ListDataListener, public ComboBoxSelectionListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase
 
 {
   protected:
@@ -96,42 +88,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public
     /*! \}                                                                 */
 	
     virtual void updateLayout(void);
-
-	//This method is public as an implementation side effect.
-	virtual void actionPerformed(const ActionEventUnrecPtr e);
-
-	//This method is public as an implementation side effect.
-	virtual void contentsChanged(const ListDataEventUnrecPtr e);
-
-	//This method is public as an implementation side effect.
-	virtual void intervalAdded(const ListDataEventUnrecPtr e);
-
-	//This method is public as an implementation side effect.
-	virtual void intervalRemoved(const ListDataEventUnrecPtr e);
-
-	//This protected method is implementation specific.
-    virtual void selectionChanged(const ComboBoxSelectionEventUnrecPtr e);
-
-	//Adds an ItemListener.
-	//EventConnection addItemListener(ItemListenerPtr aListener);
-	//bool isItemListenerAttached(ItemListenerPtr aListener) const;
-
-	//Adds a PopupMenu listener which will listen to notification messages from the popup portion of the combo box.
-	EventConnection addPopupMenuListener(PopupMenuListenerPtr Listener);
-	bool isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const;
-
-	//Adds an ActionListener.
-	EventConnection addActionListener(ActionListenerPtr Listener);
-	bool isActionListenerAttached(ActionListenerPtr Listener) const;
-
-	//Removes an ActionListener.
-	void removeActionListener(ActionListenerPtr Listener);
-
-	//Removes an ItemListener.
-	//void removeItemListener(ItemListenerPtr aListener);
-
-	//Removes a PopupMenuListener.
-	void removePopupMenuListener(PopupMenuListenerPtr Listener);
 
 	//Adds an item to the item list.
 	void addItem(const boost::any& anObject);
@@ -170,7 +126,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public
 	bool isPopupVisible(void) const;
 
 	//Handles KeyEvents, looking for the Tab key.
-	void processKeyEvent(KeyEvent e);
+	void processKeyEvent(KeyEventDetails e);
 
 	//Removes all items from the item list.
 	void removeAllItems(void);
@@ -182,7 +138,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public
 	void removeItemAt(const UInt32& anIndex);
 
 	//Selects the list item that corresponds to the specified keyboard character and returns true, if there is an item corresponding to that character.
-	bool selectWithKey(KeyEvent::Key TheKey);
+	bool selectWithKey(KeyEventDetails::Key TheKey);
 
 	//Sets the action command that should be included in the event sent to action listeners.
 	void setActionCommand(std::string aCommand);
@@ -204,8 +160,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public
 	//Causes the combo box to display its popup window.
 	void showPopup(void);
 	
-	virtual void keyTyped(const KeyEventUnrecPtr e);
-    virtual void mouseClicked(const MouseEventUnrecPtr e);
+	virtual void keyTyped(KeyEventDetails* const e);
+    virtual void mouseClicked(MouseEventDetails* const e);
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -246,58 +202,44 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase, public
 	//Factory method which sets the ActionEvent source's properties according to values from the Action instance.
 	void configurePropertiesFromAction(Action a);
 
-	//Factory method which creates the PropertyChangeListener used to update the ActionEvent source as properties change on its Action instance.
-	//PropertyChangeListener createActionPropertyChangeListener(Action a);
-
-	//Returns an instance of the default key-selection manager.
-	//JComboBox.KeySelectionManager createDefaultKeySelectionManager();
-
 	//Notifies all listeners that have registered interest for notification on this event type.
-    void produceActionPerformed(const ActionEventUnrecPtr e);
+    void produceActionPerformed(void);
 
 	//Notifies all listeners that have registered interest for notification on this event type.
 	//void produceItemStateChanged(ItemEvent e);
-    
-	typedef std::set<ActionListenerPtr> ActionListenerSet;
-    typedef ActionListenerSet::iterator ActionListenerSetItor;
-    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
-	
-    ActionListenerSet       _ActionListeners;
 
-    //Expand Button Action Listener
-    class ExpandButtonSelectedListener : public ButtonSelectedListener, public PopupMenuListener
-    {
-      public:
-        ExpandButtonSelectedListener(ComboBox* const TheComboBox);
-        virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e);
-        virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e);
+	//This method is public as an implementation side effect.
+	void handleMenuItemActionPerformed(ActionEventDetails* const e);
+    std::vector<boost::signals2::connection> _MenuItemActionConnections;
 
-        virtual void popupMenuCanceled(const PopupMenuEventUnrecPtr e);
-        virtual void popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e);
-        virtual void popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e);
-        virtual void popupMenuContentsChanged(const PopupMenuEventUnrecPtr e);
-      private:
-        ComboBox* _ComboBox;
-    };
+	void handleContentsChanged(ListDataEventDetails* const e);
+	void handleContentsIntervalAdded(ListDataEventDetails* const e);
+	void handleContentsIntervalRemoved(ListDataEventDetails* const e);
+    void handleSelectionChanged(ComboBoxSelectionEventDetails* const e);
+    boost::signals2::connection _ContentsChangedConnection,
+                                _ContentsIntervalAddedConnection,
+                                _ContentsIntervalRemovedConnection,
+                                _SelectionChangedConnection;
 
-	friend class ExpandButtonSelectedListener;
+    //Expand Button Action
+    void handleExpandButtonSelected(ButtonSelectedEventDetails* const e);
+    void handleExpandButtonDeselected(ButtonSelectedEventDetails* const e);
+    void handleExpandPopupMenuCanceled(PopupMenuEventDetails* const e);
+    void handleExpandPopupMenuWillBecomeInvisible(PopupMenuEventDetails* const e);
+    void handleExpandPopupMenuWillBecomeVisible(PopupMenuEventDetails* const e);
+    void handleExpandPopupMenuContentsChanged(PopupMenuEventDetails* const e);
 
-    ExpandButtonSelectedListener _ExpandButtonSelectedListener;
+    boost::signals2::connection _ExpandButtonSelectedConnection,
+                                _ExpandButtonDeselectedConnection,
+                                _ExpandPopupMenuCanceledConnection,
+                                _ExpandPopupMenuWillBecomeInvisibleConnection,
+                                _ExpandPopupMenuWillBecomeVisibleConnection,
+                                _ExpandPopupMenuContentsChangedConnection;
 
-    //Editor Listener
-    class EditorListener : public ActionListener
-    {
-      public:
-        EditorListener(ComboBox* const TheComboBox);
+    //Editor
+    void handleEditorAction(ActionEventDetails* const e);
 
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-      private:
-        ComboBox* _ComboBox;
-    };
-
-	friend class EditorListener;
-
-	EditorListener _EditorListener;
+    boost::signals2::connection _EditorActionConnection;
 
 	void updateListFromModel(void);
 	void updateSelectedItemComponent(void);

@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void GeometryCollisionParticleSystemAffector::addParticleGeometryCollisionListener(ParticleGeometryCollisionListenerPtr Listener)
-{
-   _ParticleGeometryCollisionListeners.insert(Listener);
-}
-
 OSG_END_NAMESPACE

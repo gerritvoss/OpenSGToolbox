@@ -116,12 +116,10 @@ void CollisionParticleSystemAffector::affect(ParticleSystemRefPtr System, const 
                     //Check if the points are close enough
                     if(MinDistSqr >= PrimaryPos.dist2(SecondaryPos))
                     {
-                        produceCollision(ParticleCollisionEvent::create(CollisionParticleSystemAffectorRefPtr(this),
-                                    getTimeStamp(),
-                                    System,
-                                    PrimaryIndex,
-                                    getSecondaryCollisionSystems(i),
-                                    SecondaryIndex));
+                        produceParticleCollision(System,
+                                                 PrimaryIndex,
+                                                 getSecondaryCollisionSystems(i),
+                                                 SecondaryIndex);
                     }
                 }
             }
@@ -131,36 +129,18 @@ void CollisionParticleSystemAffector::affect(ParticleSystemRefPtr System, const 
     }
 }
 
-EventConnection CollisionParticleSystemAffector::addParticleCollisionListener(ParticleCollisionListenerPtr Listener)
+void CollisionParticleSystemAffector::produceParticleCollision(ParticleSystem* const System,
+                                                               UInt32 PrimaryIndex,
+                                                               ParticleSystem* const SecondarySystem,
+                                                               UInt32 SecondaryIndex)
 {
-   _ParticleCollisionListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&CollisionParticleSystemAffector::isParticleCollisionListenerAttached, this, Listener),
-       boost::bind(&CollisionParticleSystemAffector::removeParticleCollisionListener, this, Listener));
-}
-    
-bool CollisionParticleSystemAffector::isParticleCollisionListenerAttached(ParticleCollisionListenerPtr Listener) const
-{
-    return _ParticleCollisionListeners.find(Listener) != _ParticleCollisionListeners.end();
-}
-
-void CollisionParticleSystemAffector::removeParticleCollisionListener(ParticleCollisionListenerPtr Listener)
-{
-   ParticleCollisionListenerSetItor EraseIter(_ParticleCollisionListeners.find(Listener));
-   if(EraseIter != _ParticleCollisionListeners.end())
-   {
-      _ParticleCollisionListeners.erase(EraseIter);
-   }
-}
-
-void CollisionParticleSystemAffector::produceCollision(const
-                                                       ParticleCollisionEventUnrecPtr Event)
-{
-    for(ParticleCollisionListenerSetItor SetItor(_ParticleCollisionListeners.begin()) ; SetItor != _ParticleCollisionListeners.end() ; ++SetItor)
-    {
-        (*SetItor)->particleCollision(Event);
-    }
-    _Producer.produceEvent(ParticleCollisionMethodId,Event);
+    ParticleCollisionEventDetailsUnrecPtr Details = ParticleCollisionEventDetails::create(this,
+                                                                            getSystemTime(),
+                                                                            System,
+                                                                            PrimaryIndex,
+                                                                            SecondarySystem,
+                                                                            SecondaryIndex);
+    Inherited::produceParticleCollision(Details);
 }
 
 /*-------------------------------------------------------------------------*\

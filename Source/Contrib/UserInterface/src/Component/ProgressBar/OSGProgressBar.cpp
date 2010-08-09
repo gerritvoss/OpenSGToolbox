@@ -180,12 +180,9 @@ void ProgressBar::drawInternal(Graphics* const Graphics, Real32 Opacity) const
 void ProgressBar::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-	if(getParentWindow() != NULL &&
-		getParentWindow()->getParentDrawingSurface() != NULL &&
-		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
-	{
-        getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
-	}
+    _ProgressStateChangedConnection.disconnect();
+    _ProgressUpdateConnection.disconnect();
+
 }
 
 
@@ -251,25 +248,21 @@ void ProgressBar::setupIndeterminateProgressBar(const Time& Elps)
 
 void ProgressBar::startIndeterminate(void)
 {
-        setIndeterminate(true);
+    _ProgressUpdateConnection.disconnect();
+    setIndeterminate(true);
     _IndeterminateBarPosition = 0;
 	if(getParentWindow() != NULL &&
 		getParentWindow()->getParentDrawingSurface() != NULL &&
 		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 	{
-        getParentWindow()->getParentDrawingSurface()->getEventProducer()->addUpdateListener(&_IndeterminateUpdateListener);
+        _ProgressUpdateConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectUpdate(boost::bind(&ProgressBar::handleProgressUpdate, this, _1));
 	}
 }
 
 void ProgressBar::endIndeterminate(void)
 {
-        setIndeterminate(false);
-	if(getParentWindow() != NULL &&
-		getParentWindow()->getParentDrawingSurface() != NULL &&
-		getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
-	{
-        getParentWindow()->getParentDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
-	}
+    setIndeterminate(false);
+    _ProgressUpdateConnection.disconnect();
     setupProgressBar();
 }
 
@@ -282,16 +275,12 @@ void ProgressBar::endIndeterminate(void)
 
 ProgressBar::ProgressBar(void) :
     Inherited(),
-	_ModelChangeListener(this),
-	_IndeterminateUpdateListener(this),
     _IndeterminateBarPosition(0)
 {
 }
 
 ProgressBar::ProgressBar(const ProgressBar &source) :
     Inherited(source),
-	_ModelChangeListener(this),
-	_IndeterminateUpdateListener(this),
     _IndeterminateBarPosition(0),
     _ProgressBarPosition(source._ProgressBarPosition),
     _ProgressBarSize(source._ProgressBarSize)
@@ -316,10 +305,10 @@ void ProgressBar::changed(ConstFieldMaskArg whichField,
     }
     if(whichField & RangeModelFieldMask)
     {
-        _RangeModelConnection.disconnect();
+        _ProgressStateChangedConnection.disconnect();
         if(getRangeModel() != NULL)
         {
-            _RangeModelConnection = getRangeModel()->addChangeListener(&_ModelChangeListener);
+            _ProgressStateChangedConnection = getRangeModel()->connectStateChanged(boost::bind(&ProgressBar::handleProgressStateChanged, this, _1));
         }
     }
 }
@@ -330,14 +319,14 @@ void ProgressBar::dump(      UInt32    ,
     SLOG << "Dump ProgressBar NI" << std::endl;
 }
 
-void ProgressBar::ModelChangeListener::stateChanged(const ChangeEventUnrecPtr e)
+void ProgressBar::handleProgressStateChanged(ChangeEventDetails* const e)
 {
-	_ProgressBar->setupProgressBar();
+	setupProgressBar();
 }
 
-void ProgressBar::IndeterminateUpdateListener::update(const UpdateEventUnrecPtr e)
+void ProgressBar::handleProgressUpdate(UpdateEventDetails* const e)
 {
-	_ProgressBar->setupIndeterminateProgressBar(e->getElapsedTime());
+	setupIndeterminateProgressBar(e->getElapsedTime());
 }
 
 OSG_END_NAMESPACE

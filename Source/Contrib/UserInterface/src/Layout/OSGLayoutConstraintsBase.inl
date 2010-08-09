@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -74,22 +75,6 @@ OSG::UInt16 LayoutConstraintsBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
-//! Get the value of the LayoutConstraints::_sfParentComponent field.
-inline
-Component * LayoutConstraintsBase::getParentComponent(void) const
-{
-    return _sfParentComponent.getValue();
-}
-
-//! Set the value of the LayoutConstraints::_sfParentComponent field.
-inline
-void LayoutConstraintsBase::setParentComponent(Component * const value)
-{
-    editSField(ParentComponentFieldMask);
-
-    _sfParentComponent.setValue(value);
-}
-
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -102,7 +87,10 @@ void LayoutConstraintsBase::execSync (      LayoutConstraintsBase *pFrom,
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
     if(FieldBits::NoField != (ParentComponentFieldMask & whichField))
-        _sfParentComponent.syncWith(pFrom->_sfParentComponent);
+        _mfParentComponent.syncWith(pFrom->_mfParentComponent,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
 #endif
 

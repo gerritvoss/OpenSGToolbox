@@ -17,7 +17,7 @@ A UI UIDrawingSurfaceMouseTransformFunctor.
 	<Field
 		name="Parent"
 		type="UIForeground"
-		category="pointer"
+		category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"

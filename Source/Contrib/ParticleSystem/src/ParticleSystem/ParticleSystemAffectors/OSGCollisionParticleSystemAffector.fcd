@@ -32,9 +32,10 @@
 		access="public"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="ParticleCollision"
-		type="ParticleCollisionEvent"
+		detailsType="ParticleCollisionEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

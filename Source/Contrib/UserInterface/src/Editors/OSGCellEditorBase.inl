@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGChangeEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -108,70 +110,115 @@ const Char8 *CellEditorBase::getClassname(void)
 }
 
 inline
-EventConnection CellEditorBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool CellEditorBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 CellEditorBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr CellEditorBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void CellEditorBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 CellEditorBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *CellEditorBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *CellEditorBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *CellEditorBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *CellEditorBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 CellEditorBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *CellEditorBase::editSFEventProducer(void)
+boost::signals2::connection  CellEditorBase::connectEditingCanceled(const EditingCanceledEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _EditingCanceledEvent.connect(listener, at);
 }
 
-//! Get the value of the CellEditor::_sfEventProducer field.
 inline
-EventProducerPtr &CellEditorBase::editEventProducer(void)
+boost::signals2::connection  CellEditorBase::connectEditingCanceled(const EditingCanceledEventType::group_type &group,
+                                                    const EditingCanceledEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _EditingCanceledEvent.connect(group, listener, at);
+}
+
+inline
+void  CellEditorBase::disconnectEditingCanceled(const EditingCanceledEventType::group_type &group)
+{
+    _EditingCanceledEvent.disconnect(group);
+}
+
+inline
+void  CellEditorBase::disconnectAllSlotsEditingCanceled(void)
+{
+    _EditingCanceledEvent.disconnect_all_slots();
+}
+
+inline
+bool  CellEditorBase::isEmptyEditingCanceled(void) const
+{
+    return _EditingCanceledEvent.empty();
+}
+
+inline
+UInt32  CellEditorBase::numSlotsEditingCanceled(void) const
+{
+    return _EditingCanceledEvent.num_slots();
+}
+
+inline
+void CellEditorBase::produceEditingCanceled(EditingCanceledEventDetailsType* const e)
+{
+    produceEvent(EditingCanceledEventId, e);
+}
+
+inline
+boost::signals2::connection  CellEditorBase::connectEditingStopped(const EditingStoppedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _EditingStoppedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  CellEditorBase::connectEditingStopped(const EditingStoppedEventType::group_type &group,
+                                                    const EditingStoppedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _EditingStoppedEvent.connect(group, listener, at);
+}
+
+inline
+void  CellEditorBase::disconnectEditingStopped(const EditingStoppedEventType::group_type &group)
+{
+    _EditingStoppedEvent.disconnect(group);
+}
+
+inline
+void  CellEditorBase::disconnectAllSlotsEditingStopped(void)
+{
+    _EditingStoppedEvent.disconnect_all_slots();
+}
+
+inline
+bool  CellEditorBase::isEmptyEditingStopped(void) const
+{
+    return _EditingStoppedEvent.empty();
+}
+
+inline
+UInt32  CellEditorBase::numSlotsEditingStopped(void) const
+{
+    return _EditingStoppedEvent.num_slots();
+}
+
+inline
+void CellEditorBase::produceEditingStopped(EditingStoppedEventDetailsType* const e)
+{
+    produceEvent(EditingStoppedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(CellEditor);

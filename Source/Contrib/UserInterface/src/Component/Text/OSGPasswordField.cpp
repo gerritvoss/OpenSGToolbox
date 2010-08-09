@@ -89,9 +89,9 @@ std::string PasswordField::getDrawnText(void) const
 	return getEcho();
 }
 
-void PasswordField::mouseClicked(const MouseEventUnrecPtr e)
+void PasswordField::mouseClicked(MouseEventDetails* const e)
 {	
-	if(e->getButton() == e->BUTTON1)
+	if(e->getButton() == MouseEventDetails::BUTTON1)
 	{
 
 		if(e->getClickCount() == 2)

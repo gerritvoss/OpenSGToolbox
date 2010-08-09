@@ -45,10 +45,7 @@
 #include "OSGTableModelBase.h"
 #include <boost/any.hpp>
 
-#include "OSGTableModelListener.h"
 #include <typeinfo>
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,13 +81,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TableModel : public TableModelBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    //Adds a listener to the list that is notified each time a change to the data model occurs.
-    virtual EventConnection addTableModelListener(TableModelListenerPtr l) = 0;
-	virtual bool isTableModelListenerAttached(TableModelListenerPtr l) const = 0;
-    
-    //Removes a listener from the list that is notified each time a change to the data model occurs.
-    virtual void removeTableModelListener(TableModelListenerPtr l) = 0;
     
     //Returns the number of columns in the model.
     virtual UInt32 getColumnCount(void) const = 0;

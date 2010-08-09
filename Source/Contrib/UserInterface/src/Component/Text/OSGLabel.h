@@ -80,9 +80,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Label : public LabelBase
     /*! \}                                                                 */
 
 	Vec2f getContentRequestedSize(void) const;
-	virtual void mouseClicked(const MouseEventUnrecPtr e);
-	virtual void mousePressed(const MouseEventUnrecPtr e);
-	virtual void mouseDragged(const MouseEventUnrecPtr e);
+	virtual void mouseClicked(MouseEventDetails* const e);
+	virtual void mousePressed(MouseEventDetails* const e);
+	virtual void mouseDragged(MouseEventDetails* const e);
 
     /*=========================  PROTECTED  ===============================*/
 

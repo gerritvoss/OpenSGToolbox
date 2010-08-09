@@ -46,7 +46,7 @@
 #include "OSGComponentFields.h"
 #include "OSGTransferableFields.h"
 #include "OSGDataFlavorFields.h"
-#include "OSGInputEvent.h"
+#include "OSGInputEventDetails.h"
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
@@ -98,7 +98,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TransferHandler : public TransferHandl
 	virtual TransferableRefPtr createTransferable(Component* c) const = 0;
 
 	//Causes the Swing drag support to be initiated.
-	virtual void exportAsDrag(ComponentRefPtr comp, const InputEventUnrecPtr e, UInt32 action) const = 0;
+	virtual void exportAsDrag(ComponentRefPtr comp, InputEventDetails* const e, UInt32 action) const = 0;
 
 	//Invoked after data has been exported.
 	virtual void exportDone(ComponentRefPtr source, TransferableRefPtr data, UInt32 action) const = 0;

@@ -45,8 +45,6 @@
 #include "OSGTreeModelBase.h"
 #include <boost/any.hpp>
 #include "OSGBaseTypes.h"
-#include "OSGEventConnection.h"
-#include "OSGTreeModelListener.h"
 #include "OSGTreePath.h"
 
 OSG_BEGIN_NAMESPACE
@@ -83,13 +81,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModel : public TreeModelBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual EventConnection addTreeModelListener(TreeModelListenerPtr l) = 0;
-	virtual bool isTreeModelListenerAttached(TreeModelListenerPtr l) const = 0;
-
-	//Removes a listener previously added with addTreeModelListener.
-	virtual void removeTreeModelListener(TreeModelListenerPtr l) = 0;
 
 	//Returns the child of parent at index index in the parent's child array.
 	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const = 0;

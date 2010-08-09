@@ -66,16 +66,16 @@
 #include "OSGPhysicsGeom.h" // Parent
 
 #include "OSGSysFields.h"               // Cleanup type
-#include "OSGPhysicsHandlerFields.h"    // InternalParentHandler type
+#include "OSGFieldContainerFields.h"    // ParentHandler type
 #include "OSGCollisionContactParametersFields.h" // DefaultCollisionParameters type
 
 #include "OSGPhysicsSpaceFields.h"
 
 //Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+#include "OSGActivity.h"
+#include "OSGConsumableEventCombiner.h"
+
+#include "OSGCollisionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,6 +94,12 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsSpace);
+    
+    
+    typedef CollisionEventDetails CollisionEventDetailsType;
+
+    typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
+    typedef boost::signals2::signal<void (CollisionEventDetails* const, UInt32), ConsumableEventCombiner> CollisionEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -103,21 +109,20 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
     {
         CleanupFieldId = Inherited::NextFieldId,
         SublevelFieldId = CleanupFieldId + 1,
-        InternalParentHandlerFieldId = SublevelFieldId + 1,
-        DefaultCollisionParametersFieldId = InternalParentHandlerFieldId + 1,
+        ParentHandlerFieldId = SublevelFieldId + 1,
+        DefaultCollisionParametersFieldId = ParentHandlerFieldId + 1,
         Category1FieldId = DefaultCollisionParametersFieldId + 1,
         Category2FieldId = Category1FieldId + 1,
         CategoryCollisionParametersFieldId = Category2FieldId + 1,
-        EventProducerFieldId = CategoryCollisionParametersFieldId + 1,
-        NextFieldId = EventProducerFieldId + 1
+        NextFieldId = CategoryCollisionParametersFieldId + 1
     };
 
     static const OSG::BitVector CleanupFieldMask =
         (TypeTraits<BitVector>::One << CleanupFieldId);
     static const OSG::BitVector SublevelFieldMask =
         (TypeTraits<BitVector>::One << SublevelFieldId);
-    static const OSG::BitVector InternalParentHandlerFieldMask =
-        (TypeTraits<BitVector>::One << InternalParentHandlerFieldId);
+    static const OSG::BitVector ParentHandlerFieldMask =
+        (TypeTraits<BitVector>::One << ParentHandlerFieldId);
     static const OSG::BitVector DefaultCollisionParametersFieldMask =
         (TypeTraits<BitVector>::One << DefaultCollisionParametersFieldId);
     static const OSG::BitVector Category1FieldMask =
@@ -126,24 +131,21 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
         (TypeTraits<BitVector>::One << Category2FieldId);
     static const OSG::BitVector CategoryCollisionParametersFieldMask =
         (TypeTraits<BitVector>::One << CategoryCollisionParametersFieldId);
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFBool            SFCleanupType;
     typedef SFInt32           SFSublevelType;
-    typedef SFUnrecPhysicsHandlerPtr SFInternalParentHandlerType;
+    typedef SFParentFieldContainerPtr SFParentHandlerType;
     typedef SFUnrecCollisionContactParametersPtr SFDefaultCollisionParametersType;
     typedef MFUInt64          MFCategory1Type;
     typedef MFUInt64          MFCategory2Type;
     typedef MFUnrecCollisionContactParametersPtr MFCategoryCollisionParametersType;
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        CollisionMethodId = 1,
-        NextProducedMethodId = CollisionMethodId + 1
+        CollisionEventId = 1,
+        NextProducedEventId = CollisionEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -222,28 +224,46 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+                                                         
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
-
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //Collision
+    boost::signals2::connection connectCollision      (const CollisionEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectCollision      (const CollisionEventType::group_type &group,
+                                                       const CollisionEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectCollision              (const CollisionEventType::group_type &group);
+    void   disconnectAllSlotsCollision      (void);
+    bool   isEmptyCollision                 (void) const;
+    UInt32 numSlotsCollision                (void) const;
+    
+    
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
@@ -276,13 +296,11 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Event Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
-    
-    GetFieldHandlePtr  getHandleEventProducer        (void) const;
-    EditFieldHandlePtr editHandleEventProducer       (void);
 
+    //Event Event producers
+    CollisionEventType _CollisionEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -296,12 +314,11 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
 
     SFBool            _sfCleanup;
     SFInt32           _sfSublevel;
-    SFUnrecPhysicsHandlerPtr _sfInternalParentHandler;
+    SFParentFieldContainerPtr _sfParentHandler;
     SFUnrecCollisionContactParametersPtr _sfDefaultCollisionParameters;
     MFUInt64          _mfCategory1;
     MFUInt64          _mfCategory2;
     MFUnrecCollisionContactParametersPtr _mfCategoryCollisionParameters;
-    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -327,6 +344,17 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
@@ -334,8 +362,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
     EditFieldHandlePtr editHandleCleanup        (void);
     GetFieldHandlePtr  getHandleSublevel        (void) const;
     EditFieldHandlePtr editHandleSublevel       (void);
-    GetFieldHandlePtr  getHandleInternalParentHandler (void) const;
-    EditFieldHandlePtr editHandleInternalParentHandler(void);
+    GetFieldHandlePtr  getHandleParentHandler   (void) const;
+    EditFieldHandlePtr editHandleParentHandler  (void);
     GetFieldHandlePtr  getHandleDefaultCollisionParameters (void) const;
     EditFieldHandlePtr editHandleDefaultCollisionParameters(void);
     GetFieldHandlePtr  getHandleCategory1       (void) const;
@@ -347,11 +375,15 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleCollisionSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecPhysicsHandlerPtr *getSFInternalParentHandler (void) const;
-                  SFUnrecPhysicsHandlerPtr *editSFInternalParentHandler(void);
 
                   MFUInt64            *editMFCategory1      (void);
             const MFUInt64            *getMFCategory1       (void) const;
@@ -361,8 +393,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
             const MFUnrecCollisionContactParametersPtr *getMFCategoryCollisionParameters (void) const;
                   MFUnrecCollisionContactParametersPtr *editMFCategoryCollisionParameters(void);
 
-
-                  PhysicsHandler * getInternalParentHandler(void) const;
 
                   UInt64              &editCategory1      (const UInt32 index);
                   UInt64               getCategory1       (const UInt32 index) const;
@@ -377,7 +407,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setInternalParentHandler(PhysicsHandler * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -390,6 +419,14 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
     void removeObjFromCategoryCollisionParameters(CollisionContactParameters * const value   );
     void clearCategoryCollisionParameters            (void                          );
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceCollision           (CollisionEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -440,7 +477,7 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

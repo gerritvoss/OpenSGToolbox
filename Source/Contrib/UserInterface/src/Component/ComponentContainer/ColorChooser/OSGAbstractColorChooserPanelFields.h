@@ -146,6 +146,77 @@ const Char8 *FieldTraits<AbstractColorChooserPanel *, 0>::getMName<NoRefCountPol
 }
 
 
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+ */
+template <>
+struct FieldTraits<AbstractColorChooserPanel *, 1> :
+    public FieldTraitsFCPtrBase<AbstractColorChooserPanel *, 1>
+{
+  private:
+
+  public:
+    typedef FieldTraits<AbstractColorChooserPanel *, 1>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+};
+
+template<> inline
+const Char8 *FieldTraits<AbstractColorChooserPanel *, 1>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecChildAbstractColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractColorChooserPanel *, 1>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecChildAbstractColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractColorChooserPanel *, 1>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakChildAbstractColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractColorChooserPanel *, 1>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdChildAbstractColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractColorChooserPanel *, 1>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecChildAbstractColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractColorChooserPanel *, 1>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecChildAbstractColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractColorChooserPanel *, 1>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakChildAbstractColorChooserPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractColorChooserPanel *, 1>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdChildAbstractColorChooserPanelPtr"; 
+}
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribUserInterfaceFieldSFields */
 typedef PointerSField<AbstractColorChooserPanel *,
@@ -174,6 +245,13 @@ typedef PointerMField<AbstractColorChooserPanel *,
 typedef PointerMField<AbstractColorChooserPanel *,
                       NoRefCountPolicy        > MFUncountedAbstractColorChooserPanelPtr;
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef ChildPointerMField<
+          AbstractColorChooserPanel *, 
+          UnrecordedRefCountPolicy,
+          1             > MFUnrecChildAbstractColorChooserPanelPtr;
 
 
 
@@ -214,6 +292,14 @@ struct MFUncountedAbstractColorChooserPanelPtr :
     public PointerMField<AbstractColorChooserPanel *,
                          NoRefCountPolicy        > {};
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecChildAbstractColorChooserPanelPtr :
+    public ChildPointerMField<
+        AbstractColorChooserPanel *, 
+        UnrecordedRefCountPolicy,
+        1             > {};
 
 
 #endif // these are the doxygen hacks

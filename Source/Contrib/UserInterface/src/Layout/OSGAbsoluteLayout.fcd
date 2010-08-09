@@ -14,4 +14,24 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI AbsoluteLayout.
+	<Field
+		name="Scaling"
+		type="bool"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="OriginalDimensions"
+		type="Vec2f"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1,1"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

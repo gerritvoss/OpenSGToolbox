@@ -41,26 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-FCPtrFieldEditor::TextFieldListener::TextFieldListener(FCPtrFieldEditor * ptr) : _FCPtrFieldEditor(ptr)
-{
-}
-
-inline
-FCPtrFieldEditor::MenuButtonFieldListener::MenuButtonFieldListener(FCPtrFieldEditor * ptr) : _FCPtrFieldEditor(ptr)
-{
-}
-
-inline
-FCPtrFieldEditor::CreateContainerDialogListener::CreateContainerDialogListener(FCPtrFieldEditor * ptr) : _FCPtrFieldEditor(ptr)
-{
-}
-
-inline
-FCPtrFieldEditor::FindContainerDialogListener::FindContainerDialogListener(FCPtrFieldEditor * ptr) : _FCPtrFieldEditor(ptr)
-{
-}
-
-inline
 FCPtrEditorStorePtr FCPtrFieldEditor::getFCStore(void) const
 {
     return _FindFCStore;

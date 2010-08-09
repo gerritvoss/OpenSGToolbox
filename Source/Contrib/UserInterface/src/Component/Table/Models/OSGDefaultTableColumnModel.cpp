@@ -46,7 +46,6 @@
 #include <OSGConfig.h>
 
 #include "OSGDefaultTableColumnModel.h"
-#include "OSGListSelectionModel.h"
 #include "OSGDefaultListSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
@@ -82,7 +81,6 @@ void DefaultTableColumnModel::addColumn(TableColumn* const aColumn)
 {
     pushToInternalColumns(aColumn);
     recalcWidthCache();
-    //aColumn->addFieldChangeListener(&_TableFieldChangeListener);
     produceColumnAdded(getMFInternalColumns()->size());
 }
 
@@ -135,12 +133,12 @@ bool DefaultTableColumnModel::getColumnSelectionAllowed(void) const
 
 UInt32 DefaultTableColumnModel::getSelectedColumnCount(void) const
 {
-    if(_ColumnSelectionAllowed && _SelectionModel != NULL)
+    if(_ColumnSelectionAllowed && getSelectionModel() != NULL)
     {
         UInt32 SelectedCount(0);
         for(UInt32 i(0) ; i<getMFInternalColumns()->size() ; ++i)
         {
-            if(_SelectionModel->isSelectedIndex(i))
+            if(getSelectionModel()->isSelectedIndex(i))
             {
                 ++SelectedCount;
             }
@@ -160,7 +158,7 @@ std::vector<UInt32> DefaultTableColumnModel::getSelectedColumns(void) const
         std::vector<UInt32> SelectedVector;
         for(UInt32 i(0) ; i<getMFInternalColumns()->size() ; ++i)
         {
-            if(_SelectionModel->isSelectedIndex(i))
+            if(getSelectionModel()->isSelectedIndex(i))
             {
                 SelectedVector.push_back(i);
             }
@@ -171,11 +169,6 @@ std::vector<UInt32> DefaultTableColumnModel::getSelectedColumns(void) const
     {
         return std::vector<UInt32>();
     }
-}
-
-ListSelectionModelPtr DefaultTableColumnModel::getSelectionModel(void) const
-{
-    return _SelectionModel;
 }
 
 UInt32 DefaultTableColumnModel::getTotalColumnWidth(void) const
@@ -249,19 +242,6 @@ void DefaultTableColumnModel::setColumnSelectionAllowed(const bool& flag)
     _ColumnSelectionAllowed = flag;
 }
 
-void DefaultTableColumnModel::setSelectionModel(ListSelectionModelPtr newModel)
-{
-    if(_SelectionModel != NULL)
-    {
-        _SelectionModel->removeListSelectionListener(&_TableSelectionListener);
-    }
-    _SelectionModel = newModel;
-    if(_SelectionModel != NULL)
-    {
-        _SelectionModel->addListSelectionListener(&_TableSelectionListener);
-    }
-}
-
 void DefaultTableColumnModel::recalcWidthCache(void)
 {
     _TotalColumnWidth = 0;
@@ -275,10 +255,14 @@ void DefaultTableColumnModel::recalcWidthCache(void)
         }
     }
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void DefaultTableColumnModel::handleSelectionChanged(ListSelectionEventDetails* const e)
+{
+    produceColumnSelectionChanged(e);
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -286,9 +270,7 @@ DefaultTableColumnModel::DefaultTableColumnModel(void) :
     Inherited(),
     _ColumnMargin(1),
     _ColumnSelectionAllowed(true),
-    _SelectionModel(),
-    _TotalColumnWidth(0),
-    _TableSelectionListener(this)
+    _TotalColumnWidth(0)
 {
 }
 
@@ -296,8 +278,7 @@ DefaultTableColumnModel::DefaultTableColumnModel(const DefaultTableColumnModel &
     Inherited(source),
     _ColumnMargin(source._ColumnMargin),
     _ColumnSelectionAllowed(source._ColumnSelectionAllowed),
-    _SelectionModel(source._SelectionModel),
-    _TableSelectionListener(this)
+    _TotalColumnWidth(source._TotalColumnWidth)
 {
 }
 
@@ -312,6 +293,15 @@ void DefaultTableColumnModel::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if(whichField & SelectionModelFieldMask)
+    {
+        _SelectionChangedConnection.disconnect();
+        if(getSelectionModel() != NULL)
+        {
+            _SelectionChangedConnection = getSelectionModel()->connectSelectionChanged(boost::bind(&DefaultTableColumnModel::handleSelectionChanged, this, _1));
+        }
+    }
 }
 
 void DefaultTableColumnModel::dump(      UInt32    ,
@@ -319,19 +309,5 @@ void DefaultTableColumnModel::dump(      UInt32    ,
 {
     SLOG << "Dump DefaultTableColumnModel NI" << std::endl;
 }
-
-void DefaultTableColumnModel::TableSelectionListener::selectionChanged(const ListSelectionEventUnrecPtr e)
-{
-    _DefaultTableColumnModel->produceColumnSelectionChanged(e);
-}
-
-/*void DefaultTableColumnModel::TableFieldChangeListener::fieldChanged(const FieldChangeEventUnrecPtr e)
-{
-    if(e->getFieldDescription()->getFieldId() == TableColumn::PreferredWidthFieldId ||
-        e->getFieldDescription()->getFieldId() == TableColumn::WidthFieldId)
-    {
-        _DefaultTableColumnModel->recalcWidthCache();
-    }
-}*/
 
 OSG_END_NAMESPACE

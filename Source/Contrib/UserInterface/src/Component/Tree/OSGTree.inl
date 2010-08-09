@@ -41,33 +41,15 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-EventConnection Tree::addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener)
-{
-	return getModelLayout()->addTreeModelLayoutListener(Listener);
-}
-
-inline
-bool Tree::isTreeModelLayoutListenerAttached(TreeModelLayoutListenerPtr Listener) const
-{
-    return getModelLayout()->isTreeModelLayoutListenerAttached(Listener);
-}
-
-inline
-void Tree::removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener)
-{
-	getModelLayout()->removeTreeModelLayoutListener(Listener);
-}
-
-inline
 void Tree::addSelectionPath(const TreePath& path)
 {
-    _SelectionModel->addSelectionPath(path);
+    getSelectionModel()->addSelectionPath(path);
 }
 
 inline
 void Tree::addSelectionPaths(const std::vector<TreePath>& paths)
 {
-    _SelectionModel->addSelectionPaths(paths);
+    getSelectionModel()->addSelectionPaths(paths);
 }
 
 inline
@@ -79,7 +61,7 @@ void Tree::addSelectionRow(const UInt32& row)
 inline
 void Tree::clearSelection(void)
 {
-    _SelectionModel->clearSelection();
+    getSelectionModel()->clearSelection();
 }
 
 inline
@@ -103,31 +85,31 @@ void Tree::expandRow(const UInt32& row)
 inline
 boost::any Tree::getLastSelectedPathComponent(void) const
 {
-    return getModelLayout()->getPathForRow(_SelectionModel->getMaxSelectionRow()).getLastPathComponent();
+    return getModelLayout()->getPathForRow(getSelectionModel()->getMaxSelectionRow()).getLastPathComponent();
 }
 
 inline
 TreePath Tree::getLeadSelectionPath(void) const
 {
-    return _SelectionModel->getLeadSelectionPath();
+    return getSelectionModel()->getLeadSelectionPath();
 }
 
 inline
 Int32 Tree::getLeadSelectionRow(void) const
 {
-    return _SelectionModel->getLeadSelectionRow();
+    return getSelectionModel()->getLeadSelectionRow();
 }
 
 inline
 Int32 Tree::getMaxSelectionRow(void) const
 {
-    return _SelectionModel->getMaxSelectionRow();
+    return getSelectionModel()->getMaxSelectionRow();
 }
 
 inline
 Int32 Tree::getMinSelectionRow(void) const
 {
-    return _SelectionModel->getMinSelectionRow();
+    return getSelectionModel()->getMinSelectionRow();
 }
 
 inline
@@ -151,31 +133,25 @@ Int32 Tree::getRowForPath(const TreePath& path) const
 inline
 UInt32 Tree::getSelectionCount(void) const
 {
-    return _SelectionModel->getSelectionCount();
-}
-
-inline
-TreeSelectionModelPtr Tree::getSelectionModel(void) const
-{
-    return _SelectionModel;
+    return getSelectionModel()->getSelectionCount();
 }
 
 inline
 TreePath Tree::getSelectionPath(void) const
 {
-    return _SelectionModel->getSelectionPath();
+    return getSelectionModel()->getSelectionPath();
 }
 
 inline
 std::vector<TreePath> Tree::getSelectionPaths(void) const
 {
-    return _SelectionModel->getSelectionPaths();
+    return getSelectionModel()->getSelectionPaths();
 }
 
 inline
 std::vector<Int32> Tree::getSelectionRows(void) const
 {
-    return _SelectionModel->getSelectionRows();
+    return getSelectionModel()->getSelectionRows();
 }
 
 inline
@@ -217,19 +193,19 @@ bool Tree::isFixedRowHeight(void) const
 inline
 bool Tree::isPathSelected(const TreePath& path) const
 {
-    return _SelectionModel->isPathSelected(path);
+    return getSelectionModel()->isPathSelected(path);
 }
 
 inline
 bool Tree::isRowSelected(const UInt32& row) const
 {
-    return _SelectionModel->isRowSelected(row);
+    return getSelectionModel()->isRowSelected(row);
 }
 
 inline
 bool Tree::isSelectionEmpty(void) const
 {
-    return _SelectionModel->isSelectionEmpty();
+    return getSelectionModel()->isSelectionEmpty();
 }
 
 inline
@@ -247,19 +223,19 @@ void Tree::makeVisible(const TreePath& path)
 inline
 void Tree::removeSelectionPath(const TreePath& path)
 {
-    _SelectionModel->removeSelectionPath(path);
+    getSelectionModel()->removeSelectionPath(path);
 }
 
 inline
 void Tree::removeSelectionPaths(const std::vector<TreePath>& paths)
 {
-    _SelectionModel->removeSelectionPaths(paths);
+    getSelectionModel()->removeSelectionPaths(paths);
 }
 
 inline
 void Tree::removeSelectionRow(const UInt32& row)
 {
-    _SelectionModel->removeSelectionPath(getModelLayout()->getPathForRow(row));
+    getSelectionModel()->removeSelectionPath(getModelLayout()->getPathForRow(row));
 }
 
 inline
@@ -271,19 +247,19 @@ void Tree::scrollPathToVisible(const TreePath& path)
 inline
 void Tree::setSelectionPath(const TreePath& path)
 {
-    _SelectionModel->setSelectionPath(path);
+    getSelectionModel()->setSelectionPath(path);
 }
 
 inline
 void Tree::setSelectionPaths(const std::vector<TreePath>& paths)
 {
-    _SelectionModel->setSelectionPaths(paths);
+    getSelectionModel()->setSelectionPaths(paths);
 }
 
 inline
 void Tree::setSelectionRow(const UInt32& row)
 {
-    _SelectionModel->setSelectionPath(getModelLayout()->getPathForRow(row));
+    getSelectionModel()->setSelectionPath(getModelLayout()->getPathForRow(row));
 }
 
 inline
@@ -296,24 +272,6 @@ inline
 void Tree::setRootVisible(bool Visible)
 {
     getModelLayout()->setRootVisible(Visible);
-}
-
-inline
-Tree::ModelListener::ModelListener(Tree* const TheTree) :
-_Tree(TheTree)
-{
-}
-
-inline
-Tree::SelectionListener::SelectionListener(Tree* const TheTree) :
-_Tree(TheTree)
-{
-}
-
-inline
-Tree::ModelLayoutListener::ModelLayoutListener(Tree* const TheTree) :
-_Tree(TheTree)
-{
 }
 
 OSG_END_NAMESPACE

@@ -45,12 +45,8 @@
 #include "OSGTreeModelLayoutBase.h"
 #include "OSGTreePath.h"
 #include "OSGTreeModel.h"
-#include "OSGTreeModelListener.h"
 #include "OSGTreeSelectionModel.h"
-#include "OSGTreeModelLayoutListener.h"
 #include "OSGVector.h"
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -86,19 +82,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelLayout : public TreeModelLayo
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    virtual EventConnection addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener) = 0;
-	virtual bool isTreeModelLayoutListenerAttached(TreeModelLayoutListenerPtr Listener) const = 0;
-
-    virtual void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener) = 0;
-
-	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual EventConnection addTreeModelListener(TreeModelListenerPtr l) = 0;
-	virtual bool isTreeModelListenerAttached(TreeModelListenerPtr l) const = 0;
-
-	//Removes a listener previously added with addTreeModelListener.
-	virtual void removeTreeModelListener(TreeModelListenerPtr l) = 0;
-
 	//Returns a rectangle giving the bounds needed to draw path.
 	virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, TreePath path, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn) const = 0;
 

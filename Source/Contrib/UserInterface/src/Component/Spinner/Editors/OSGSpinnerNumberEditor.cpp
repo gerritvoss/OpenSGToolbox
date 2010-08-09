@@ -102,7 +102,7 @@ void SpinnerNumberEditor::commitEdit(void)
     }
 }
 
-void SpinnerNumberEditor::stateChanged(const ChangeEventUnrecPtr e)
+void SpinnerNumberEditor::handleModelStateChanged(ChangeEventDetails* const e)
 {
     if(getSpinner()->getModel()->getValue().type() == typeid(Real32))
     {
@@ -118,7 +118,7 @@ void SpinnerNumberEditor::stateChanged(const ChangeEventUnrecPtr e)
     }
     else
     {
-        Inherited::stateChanged(e);
+        Inherited::handleModelStateChanged(e);
     }
 }
 

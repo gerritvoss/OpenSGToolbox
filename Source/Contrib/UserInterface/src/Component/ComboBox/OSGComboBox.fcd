@@ -95,9 +95,10 @@
         defaultValue="NULL"
         >
     </Field>
-    <ProducedMethod
+    <ProducedEvent
         name="ActionPerformed"
-        type="ActionEvent"
+        detailsType="ActionEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
+    </ProducedEvent>
 </FieldContainer>

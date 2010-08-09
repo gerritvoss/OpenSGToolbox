@@ -76,6 +76,11 @@ void AbstractColorChooserPanel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+ColorChooser* AbstractColorChooserPanel::getParentChooser(void) const
+{
+    return getInternalParentChooser();
+}
+
 Color4f AbstractColorChooserPanel::getColorFromModel(void) const
 {
     if(getParentChooser() != NULL && getParentChooser()->getSelectionModel() != NULL)
@@ -102,14 +107,11 @@ ColorSelectionModelPtr AbstractColorChooserPanel::getColorSelectionModel(void)
 
 void AbstractColorChooserPanel::installChooserPanel(ColorChooser* const enclosingChooser)
 {
-    setParentChooser(enclosingChooser);
-
     buildChooser();
 }
 
 void AbstractColorChooserPanel::uninstallChooserPanel(ColorChooser* const enclosingChooser)
 {
-    setParentChooser(NULL);
 }
 
 /*-------------------------------------------------------------------------*\

@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -109,19 +109,6 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void SingleSelectionModelBase::classDescInserter(TypeObject &oType)
 {
-    FieldDescriptionBase *pDesc = NULL;
-
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&SingleSelectionModel::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&SingleSelectionModel::invalidGetField));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -152,24 +139,27 @@ SingleSelectionModelBase::TypeObject SingleSelectionModelBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI SingleSelectionModel.\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SelectionChanged\"\n"
-    "\t\ttype=\"SelectionEventPtr\"\n"
+    "\t\tdetailsType=\"SelectionEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI SingleSelectionModel.\n"
     );
 
-//! SingleSelectionModel Produced Methods
+//! SingleSelectionModel Produced Events
 
-MethodDescription *SingleSelectionModelBase::_methodDesc[] =
+EventDescription *SingleSelectionModelBase::_eventDesc[] =
 {
-    new MethodDescription("SelectionChanged", 
-                    "",
-                     SelectionChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("SelectionChanged", 
+                          "",
+                          SelectionChangedEventId, 
+                          FieldTraits<SelectionEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SingleSelectionModelBase::getHandleSelectionChangedSignal))
+
 };
 
 EventProducerType SingleSelectionModelBase::_producerType(
@@ -177,8 +167,8 @@ EventProducerType SingleSelectionModelBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -215,10 +205,6 @@ UInt32 SingleSelectionModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -228,10 +214,6 @@ void SingleSelectionModelBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void SingleSelectionModelBase::copyFromBin(BinaryDataHandler &pMem,
@@ -239,28 +221,128 @@ void SingleSelectionModelBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 }
 
 
+
+/*------------------------- event producers ----------------------------------*/
+void SingleSelectionModelBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case SelectionChangedEventId:
+        OSG_ASSERT(dynamic_cast<SelectionChangedEventDetailsType* const>(e));
+
+        _SelectionChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SelectionChangedEvent(dynamic_cast<SelectionChangedEventDetailsType* const>(e), SelectionChangedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection SingleSelectionModelBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case SelectionChangedEventId:
+        return _SelectionChangedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  SingleSelectionModelBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case SelectionChangedEventId:
+        return _SelectionChangedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  SingleSelectionModelBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case SelectionChangedEventId:
+        _SelectionChangedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  SingleSelectionModelBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case SelectionChangedEventId:
+        _SelectionChangedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  SingleSelectionModelBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case SelectionChangedEventId:
+        return _SelectionChangedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  SingleSelectionModelBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case SelectionChangedEventId:
+        return _SelectionChangedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
 
 
 /*------------------------- constructors ----------------------------------*/
 
 SingleSelectionModelBase::SingleSelectionModelBase(void) :
-    _Producer(&getProducerType()),
-    Inherited(),
-    _sfEventProducer(&_Producer)
+    Inherited()
 {
 }
 
 SingleSelectionModelBase::SingleSelectionModelBase(const SingleSelectionModelBase &source) :
-    _Producer(&source.getProducerType()),
-    Inherited(source),
-    _sfEventProducer(&_Producer)
+    Inherited(source)
 {
 }
 
@@ -271,6 +353,18 @@ SingleSelectionModelBase::~SingleSelectionModelBase(void)
 {
 }
 
+
+
+GetEventHandlePtr SingleSelectionModelBase::getHandleSelectionChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SelectionChangedEventType>(
+             const_cast<SelectionChangedEventType *>(&_SelectionChangedEvent),
+             _producerType.getEventDescription(SelectionChangedEventId),
+             const_cast<SingleSelectionModelBase *>(this)));
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

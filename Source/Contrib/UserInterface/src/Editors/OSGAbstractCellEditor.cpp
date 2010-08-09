@@ -82,12 +82,12 @@ void AbstractCellEditor::cancelCellEditing(void)
     produceEditingCanceled();
 }
 
-bool AbstractCellEditor::isCellEditable(const EventUnrecPtr anEvent) const
+bool AbstractCellEditor::isCellEditable(EventDetails* const anEvent) const
 {
     return true;
 }
 
-bool AbstractCellEditor::shouldSelectCell(const EventUnrecPtr anEvent) const
+bool AbstractCellEditor::shouldSelectCell(EventDetails* const anEvent) const
 {
     return true;
 }
@@ -98,43 +98,18 @@ bool AbstractCellEditor::stopCellEditing(void)
     return true;
 }
 
-EventConnection AbstractCellEditor::addCellEditorListener(CellEditorListenerPtr l)
-{
-    _CellEditorListeners.insert(l);
-    return EventConnection(
-                           boost::bind(&AbstractCellEditor::isCellEditorListenerAttached, this, l),
-                           boost::bind(&AbstractCellEditor::removeCellEditorListener, this, l));
-}
-
-void AbstractCellEditor::removeCellEditorListener(CellEditorListenerPtr l)
-{
-    CellEditorListenerSetItor EraseIter(_CellEditorListeners.find(l));
-    if(EraseIter != _CellEditorListeners.end())
-    {
-        _CellEditorListeners.erase(EraseIter);
-    }
-}
-
 void AbstractCellEditor::produceEditingCanceled(void)
 {
-    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(NULL, getSystemTime());
-    CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
-    for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->editingCanceled(TheEvent);
-    }
-    _Producer.produceEvent(EditingCanceledMethodId,TheEvent);
+    ChangeEventDetailsUnrecPtr Details = ChangeEventDetails::create(NULL, getSystemTime());
+
+    Inherited::produceEditingCanceled(Details);
 }
 
 void AbstractCellEditor::produceEditingStopped(void)
 {
-    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(NULL, getSystemTime());
-    CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
-    for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->editingStopped(TheEvent);
-    }
-    _Producer.produceEvent(EditingStoppedMethodId,TheEvent);
+    ChangeEventDetailsUnrecPtr Details = ChangeEventDetails::create(NULL, getSystemTime());
+
+    Inherited::produceEditingStopped(Details);
 }
 
 /*-------------------------------------------------------------------------*\

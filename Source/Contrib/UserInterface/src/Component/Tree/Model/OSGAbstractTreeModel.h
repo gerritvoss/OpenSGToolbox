@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGAbstractTreeModelBase.h"
-#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,12 +78,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModel : public AbstractTre
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual EventConnection addTreeModelListener(TreeModelListenerPtr l);
-	virtual bool isTreeModelListenerAttached(TreeModelListenerPtr l) const;
-
-	//Removes a listener previously added with addTreeModelListener.
-	virtual void removeTreeModelListener(TreeModelListenerPtr l);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -113,11 +106,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModel : public AbstractTre
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-
-	typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
-	typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
-	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
-	TreeModelListenerSet _ModelListeners;
 
 	void produceTreeNodesChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
 	void produceTreeNodesInserted(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);

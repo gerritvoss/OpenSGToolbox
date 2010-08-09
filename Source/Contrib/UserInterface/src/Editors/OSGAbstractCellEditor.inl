@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool AbstractCellEditor::isCellEditorListenerAttached(CellEditorListenerPtr l) const
-{
-    return _CellEditorListeners.find(l) != _CellEditorListeners.end();
-}
-
 OSG_END_NAMESPACE

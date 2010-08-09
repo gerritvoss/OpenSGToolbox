@@ -43,9 +43,10 @@
 #endif
 
 #include "OSGColorFieldEditorBase.h"
-#include "OSGButton.h"
-#include "OSGColorSelectionModel.h"
-#include "OSGDialogWindowListener.h"
+#include "OSGButtonFields.h"
+#include "OSGColorSelectionModelFields.h"
+#include "OSGActionEventDetailsFields.h"
+#include "OSGDialogWindowEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -117,6 +118,13 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ColorFieldEditor : public Color
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     virtual void internalFieldChanged (void);
     virtual void internalStartEditing (void);
     virtual void internalStopEditing  (void);
@@ -126,36 +134,13 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING ColorFieldEditor : public Color
 
     static std::vector<const DataType*> _EditableTypes;
     ButtonRefPtr _EditingButton;
-    ColorSelectionModelPtr _ColorModel;
+    ColorSelectionModelRecPtr _ColorModel;
     
-    class ButtonListener : public ActionListener
-    {
-      public :
-           ButtonListener(ColorFieldEditor * const ptr);
-           virtual void actionPerformed(const ActionEventUnrecPtr e);
+    void handleButtonAction(ActionEventDetails* const details);
+    boost::signals2::connection _ButtonActionConnection;
 
-      protected :
-        ColorFieldEditor* _ColorFieldEditor ;
-    };
-
-    friend class ButtonListener;
-
-    ButtonListener _ButtonListener;
-    
-    class DialogListener : public DialogWindowListener
-    {
-      public :
-          DialogListener(ColorFieldEditor * const ptr);
-          virtual void dialogClosing(const DialogWindowEventUnrecPtr e);
-          virtual void dialogClosed(const DialogWindowEventUnrecPtr e);
-
-      protected :
-        ColorFieldEditor* _ColorFieldEditor ;
-    };
-
-    friend class DialogListener;
-
-    DialogListener _DialogListener;
+    void handleColorDialogClosed(DialogWindowEventDetails* const details);
+    boost::signals2::connection _ColorDialogClosedConnection;
 
     Color4f getValueAsColor4f(void) const;
     /*==========================  PRIVATE  ================================*/

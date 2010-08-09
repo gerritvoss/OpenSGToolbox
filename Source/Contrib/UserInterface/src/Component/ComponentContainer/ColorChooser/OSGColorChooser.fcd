@@ -14,18 +14,28 @@
     authors="David Kabala (djkabala@gmail.com)                             "
     >
     A UI ColorChooser.
-    <Field
-        name="InternalChooserPanels"
-        type="AbstractColorChooserPanel"
-        category="pointer"
-        cardinality="multi"
-        visibility="external"
-        access="protected"
-        >
-    </Field>
+	<Field
+		name="ChooserPanelTypeIds"
+		type="UInt32"
+		cardinality="multi"
+        category="data"
+		visibility="external"
+		access="public"
+	>
+	</Field>
     <Field
         name="PreviewPanel"
         type="Component"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        access="public"
+        defaultValue="NULL"
+        >
+    </Field>
+    <Field
+        name="SelectionModel"
+        type="ColorSelectionModel"
         category="pointer"
         cardinality="single"
         visibility="external"

@@ -72,7 +72,7 @@ void ComponentHeightLayoutSpring::initMethod(InitPhase ePhase)
     }
 }
 
-ComponentHeightLayoutSpringTransitPtr ComponentHeightLayoutSpring::create (ComponentRefPtr TheComponent, UInt32 SizeField)
+ComponentHeightLayoutSpringTransitPtr ComponentHeightLayoutSpring::create (Component* const TheComponent, UInt32 SizeField)
 {
     ComponentHeightLayoutSpring* NewSpring = createEmpty();
 

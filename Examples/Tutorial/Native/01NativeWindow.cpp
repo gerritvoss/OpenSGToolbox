@@ -60,7 +60,7 @@ OSG_USING_NAMESPACE
 void display(SimpleSceneManager *mgr);
 void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-void mouseWheelMoved(const MouseWheelEventUnrecPtr e, SimpleSceneManager *mgr )
+void mouseWheelMoved(MouseWheelEventDetails* const e, SimpleSceneManager *mgr )
 {
     std::cout << "Mouse Wheel Moved " << e->getScrollAmount() << std::endl;
     Pnt3f Min,Max;
@@ -69,218 +69,202 @@ void mouseWheelMoved(const MouseWheelEventUnrecPtr e, SimpleSceneManager *mgr )
     mgr->getNavigator()->setDistance(mgr->getNavigator()->getDistance()+(Dist*e->getUnitsToScroll()*0.05));
 }
 
-class TutorialMouseMotionListener : public MouseMotionListener
+void mouseMoved(MouseEventDetails* const e, SimpleSceneManager *mgr)
 {
-    virtual void mouseMoved(const MouseEventUnrecPtr e)
-    {
-        //std::cout << "Mouse Move: " << e->getLocation().x() << ", " << e->getLocation().y() << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;
-        //mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
+    std::cout << "Mouse Move: " << e->getLocation().x() << ", " << e->getLocation().y() << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;
+    mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
+}
 
-    virtual void mouseDragged(const MouseEventUnrecPtr e)
-    {
-        //std::cout << "Mouse Drag Button " << e->getButton() << ": " << e->getLocation().x() << ", " << e->getLocation().y()  << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;    
-        //mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-};
-
-class TutorialMouseListener : public MouseListener
+void mouseDragged(MouseEventDetails* const e, SimpleSceneManager *mgr)
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void mouseClicked(const MouseEventUnrecPtr e)
-    {
-        std::cout << "Button " << e->getButton() << " Clicked" << std::endl;
-    }
-    virtual void mouseEntered(const MouseEventUnrecPtr e)
-    {
-        std::cout << "Mouse Entered" << std::endl;
-    }
-    virtual void mouseExited(const MouseEventUnrecPtr e)
-    {
-        std::cout << "Mouse Exited" << std::endl;
-    }
-    virtual void mousePressed(const MouseEventUnrecPtr e)
-    {
-        std::cout << "Button " << e->getButton() << " Pressed" << std::endl;
-        //mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-    virtual void mouseReleased(const MouseEventUnrecPtr e)
-    {
-        std::cout << "Button " << e->getButton() << " Released" << std::endl;
-        //mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-};
+    std::cout << "Mouse Drag Button " << e->getButton() << ": " << e->getLocation().x() << ", " << e->getLocation().y()  << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;    
+    mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
+}
 
-class TutorialKeyListener : public KeyListener
+void mouseClicked(MouseEventDetails* const e)
 {
-   /*=========================  PUBLIC  ===============================*/
-public:
+    std::cout << "Button " << e->getButton() << " Clicked" << std::endl;
+}
 
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-    {
-        WindowEventProducer* TheWindow(dynamic_cast<WindowEventProducer*>(e->getSource()));
-        std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar()<< " Pressed. Modifiers: " << e->getModifiers() << std::endl;
-        switch(e->getKey()){
-            case KeyEvent::KEY_ESCAPE:
-                TheWindow->closeWindow();
-                break;
-            case KeyEvent::KEY_P:
-                //Center
-                TheWindow->setPosition((TheWindow->getDesktopSize() - TheWindow->getSize()) *0.5);
-                break;
-            case KeyEvent::KEY_R:
-                TheWindow->setSize(Vec2us(TheWindow->getDesktopSize() * 0.85f));
-                break;
-            case KeyEvent::KEY_F:
-                TheWindow->setFullscreen(!TheWindow->getFullscreen());
-                break;
-            case KeyEvent::KEY_G:
-                TheWindow->setFullscreen(false);
-                break;
-            case KeyEvent::KEY_S:
-                TheWindow->setVisible(true);
-                break;
-            case KeyEvent::KEY_H:
-                TheWindow->setVisible(false);
-                break;
-            case KeyEvent::KEY_I:
-                TheWindow->setIconify(true);
-                break;
-            case KeyEvent::KEY_D:
-                TheWindow->setIconify(false);
-                break;
-                 
-            case KeyEvent::KEY_K:
-                TheWindow->setFocused(true);
-                break;
-            case KeyEvent::KEY_J:
-                TheWindow->setFocused(false);
-                break;
-            case KeyEvent::KEY_C:
-                TheWindow->setShowCursor(!TheWindow->getShowCursor());
-                break;
-            case KeyEvent::KEY_1:
-                TheWindow->putClipboard(std::string("From OpenSGToolbox"));
-                break;
-            case KeyEvent::KEY_2:
-                std::cout << TheWindow->getClipboard() << std::endl;
-                break;
-            case KeyEvent::KEY_M:
-                std::cout << TheWindow->getMousePosition() << std::endl;
-                break;
-            default:
-                break;
+void mouseEntered(MouseEventDetails* const e)
+{
+    std::cout << "Mouse Entered" << std::endl;
+}
+
+void mouseExited(MouseEventDetails* const e)
+{
+    std::cout << "Mouse Exited" << std::endl;
+}
+
+void mousePressed(MouseEventDetails* const e, SimpleSceneManager *mgr)
+{
+    std::cout << "Button " << e->getButton() << " Pressed" << std::endl;
+    mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
+}
+
+void mouseReleased(MouseEventDetails* const e, SimpleSceneManager *mgr)
+{
+    std::cout << "Button " << e->getButton() << " Released" << std::endl;
+    mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
+}
+
+void keyPressed( KeyEventDetails* const e)
+{
+    WindowEventProducer* TheWindow(dynamic_cast<WindowEventProducer*>(e->getSource()));
+    std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar()<< " Pressed. Modifiers: " << e->getModifiers() << std::endl;
+    switch(e->getKey()){
+        case KeyEventDetails::KEY_ESCAPE:
+            TheWindow->closeWindow();
+            break;
+        case KeyEventDetails::KEY_P:
+            //Center
+            TheWindow->setPosition((TheWindow->getDesktopSize() - TheWindow->getSize()) *0.5);
+            break;
+        case KeyEventDetails::KEY_R:
+            TheWindow->setSize(Vec2us(TheWindow->getDesktopSize() * 0.85f));
+            break;
+        case KeyEventDetails::KEY_F:
+            TheWindow->setFullscreen(!TheWindow->getFullscreen());
+            break;
+        case KeyEventDetails::KEY_G:
+            TheWindow->setFullscreen(false);
+            break;
+        case KeyEventDetails::KEY_S:
+            TheWindow->setVisible(true);
+            break;
+        case KeyEventDetails::KEY_H:
+            TheWindow->setVisible(false);
+            break;
+        case KeyEventDetails::KEY_I:
+            TheWindow->setIconify(true);
+            break;
+        case KeyEventDetails::KEY_D:
+            TheWindow->setIconify(false);
+            break;
+             
+        case KeyEventDetails::KEY_K:
+            TheWindow->setFocused(true);
+            break;
+        case KeyEventDetails::KEY_J:
+            TheWindow->setFocused(false);
+            break;
+        case KeyEventDetails::KEY_C:
+            TheWindow->setShowCursor(!TheWindow->getShowCursor());
+            break;
+        case KeyEventDetails::KEY_1:
+            TheWindow->putClipboard(std::string("From OpenSGToolbox"));
+            break;
+        case KeyEventDetails::KEY_2:
+            std::cout << TheWindow->getClipboard() << std::endl;
+            break;
+        case KeyEventDetails::KEY_M:
+            std::cout << TheWindow->getMousePosition() << std::endl;
+            break;
+        default:
+            break;
+    }
+	if(e->getKey() == KeyEventDetails::KEY_L &&
+		e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+	{
+        TheWindow->setShowCursor(false);
+        TheWindow->setAttachMouseToCursor(false);
+    }
+	if(e->getKey() == KeyEventDetails::KEY_U &&
+		e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+	{
+        TheWindow->setShowCursor(true);
+        TheWindow->setAttachMouseToCursor(true);
+    }
+	if(e->getKey() == KeyEventDetails::KEY_O &&
+		e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+	{
+        std::vector<WindowEventProducer::FileDialogFilter> Filters;
+        Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
+        Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
+
+		std::vector<BoostPath> FilesToOpen;
+        FilesToOpen = dynamic_cast<WindowEventProducer*>(e->getSource())->openFileDialog("Open A File, Yo?",
+            Filters,
+            BoostPath(".."),
+            true);
+
+        std::cout << "Files to Open: "<< std::endl;
+        for(std::vector<BoostPath>::iterator Itor(FilesToOpen.begin()) ; Itor != FilesToOpen.end(); ++Itor)
+        {
+            std::cout << Itor->string() << std::endl;
         }
-		if(e->getKey() == KeyEvent::KEY_L &&
-			e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-		{
-            TheWindow->setShowCursor(false);
-            TheWindow->setAttachMouseToCursor(false);
-        }
-		if(e->getKey() == KeyEvent::KEY_U &&
-			e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-		{
-            TheWindow->setShowCursor(true);
-            TheWindow->setAttachMouseToCursor(true);
-        }
-		if(e->getKey() == KeyEvent::KEY_O &&
-			e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-		{
-            std::vector<WindowEventProducer::FileDialogFilter> Filters;
-            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
-            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
+	}
+	if(e->getKey() == KeyEventDetails::KEY_S &&
+		e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+	{
+		std::vector<WindowEventProducer::FileDialogFilter> Filters;
+        Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
+        Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-			std::vector<BoostPath> FilesToOpen;
-            FilesToOpen = dynamic_cast<WindowEventProducer*>(e->getSource())->openFileDialog("Open A File, Yo?",
-                Filters,
-                BoostPath(".."),
-                true);
+        BoostPath SavePath= dynamic_cast<WindowEventProducer*>(e->getSource())->saveFileDialog("Save A File, Yo?",
+            Filters,
+            std::string("NewCodeFile.cpp"),
+            BoostPath(".."),
+            true);
+        
+        std::cout << "File to Save: " << SavePath.string() << std::endl;
+	}
+}
 
-            std::cout << "Files to Open: "<< std::endl;
-            for(std::vector<BoostPath>::iterator Itor(FilesToOpen.begin()) ; Itor != FilesToOpen.end(); ++Itor)
-            {
-                std::cout << Itor->string() << std::endl;
-            }
-		}
-		if(e->getKey() == KeyEvent::KEY_S &&
-			e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-		{
-			std::vector<WindowEventProducer::FileDialogFilter> Filters;
-            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
-            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
-
-            BoostPath SavePath= dynamic_cast<WindowEventProducer*>(e->getSource())->saveFileDialog("Save A File, Yo?",
-                Filters,
-                std::string("NewCodeFile.cpp"),
-                BoostPath(".."),
-                true);
-            
-            std::cout << "File to Save: " << SavePath.string() << std::endl;
-		}
-    }
-    virtual void keyReleased(const KeyEventUnrecPtr e)
-    {
-        std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar() << " Released. Modifiers: " << e->getModifiers()  << std::endl;
-    }
-    virtual void keyTyped(const KeyEventUnrecPtr e)
-    {
-        std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar() << " Typed. Modifiers: " << e->getModifiers() << std::endl;
-    }
-};
-
-class TutorialWindowListener : public WindowListener
+void keyReleased( KeyEventDetails* const e)
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void windowOpened(const WindowEventUnrecPtr e)
-    {
-       std::cout << "Window Opened" << std::endl;
-    }
+    std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar() << " Released. Modifiers: " << e->getModifiers()  << std::endl;
+}
 
-    virtual void windowClosing(const WindowEventUnrecPtr e)
-    {
-       std::cout << "Window Closing" << std::endl;
-    }
+void keyTyped( KeyEventDetails* const e)
+{
+    std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar() << " Typed. Modifiers: " << e->getModifiers() << std::endl;
+}
 
-    virtual void windowClosed(const WindowEventUnrecPtr e)
-    {
-       std::cout << "Window Closed" << std::endl;
-    }
+void windowOpened( WindowEventDetails* const e)
+{
+   std::cout << "Window Opened" << std::endl;
+}
 
-    virtual void windowIconified(const WindowEventUnrecPtr e)
-    {
-       std::cout << "Window Iconified" << std::endl;
-    }
+void windowClosing( WindowEventDetails* const e)
+{
+   std::cout << "Window Closing" << std::endl;
+}
 
-    virtual void windowDeiconified(const WindowEventUnrecPtr e)
-    {
-       std::cout << "Window Deiconified" << std::endl;
-    }
+void windowClosed( WindowEventDetails* const e)
+{
+   std::cout << "Window Closed" << std::endl;
+}
 
-    virtual void windowActivated(const WindowEventUnrecPtr e)
-    {
-       std::cout << "Window Activated" << std::endl;
-    }
+void windowIconified( WindowEventDetails* const e)
+{
+   std::cout << "Window Iconified" << std::endl;
+}
 
-    virtual void windowDeactivated(const WindowEventUnrecPtr e)
-    {
-       std::cout << "Window Deactivated" << std::endl;
-    }
+void windowDeiconified( WindowEventDetails* const e)
+{
+   std::cout << "Window Deiconified" << std::endl;
+}
 
-    virtual void windowEntered(const WindowEventUnrecPtr e)
-    {
-       std::cout << "Window Entered" << std::endl;
-    }
+void windowActivated( WindowEventDetails* const e)
+{
+   std::cout << "Window Activated" << std::endl;
+}
 
-    virtual void windowExited(const WindowEventUnrecPtr e)
-    {
-       std::cout << "Window Exited" << std::endl;
-    }
+void windowDeactivated( WindowEventDetails* const e)
+{
+   std::cout << "Window Deactivated" << std::endl;
+}
 
-};
+void windowEntered( WindowEventDetails* const e)
+{
+   std::cout << "Window Entered" << std::endl;
+}
+
+void windowExited( WindowEventDetails* const e)
+{
+   std::cout << "Window Exited" << std::endl;
+}
 
 // Initialize WIN32 & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -301,20 +285,6 @@ int main(int argc, char **argv)
         //TheWindow->setFullscreen(true);
         
         
-        //Attach Mouse Listener
-        TutorialMouseListener TheTutorialMouseListener;
-        TheWindow->addMouseListener(&TheTutorialMouseListener);
-        //Attach Mouse Wheel Listener
-        //TheWindow->addMouseWheelListener(&TheTutorialMouseWheelListener);
-        //Attach Key Listener
-        TutorialKeyListener TheTutorialKeyListener;
-        TheWindow->addKeyListener(&TheTutorialKeyListener);
-        //Attach Window Listener
-        TutorialWindowListener TheTutorialWindowListener;
-        TheWindow->addWindowListener(&TheTutorialWindowListener);
-        //Attach MouseMotion Listener
-        TutorialMouseMotionListener TheTutorialMouseMotionListener;
-        TheWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
         
         //Initialize Window
         TheWindow->initWindow();
@@ -330,8 +300,38 @@ int main(int argc, char **argv)
         sceneManager.setWindow(TheWindow);
         sceneManager.setRoot  (scene);
 
+        //Attach to the Mouse Events
+        TheWindow->connectMouseClicked(boost::bind(mouseClicked, _1));
+        TheWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
+        TheWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
+        TheWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
+        TheWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TheWindow->connectMouseEntered(boost::bind(mouseEntered, _1));
+        TheWindow->connectMouseExited(boost::bind(mouseExited, _1));
+        
+        TheWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
+
+        //Attach to the Key Events
+        TheWindow->connectKeyPressed(boost::bind(keyPressed, _1));
+        TheWindow->connectKeyReleased(boost::bind(keyReleased, _1));
+        TheWindow->connectKeyTyped(boost::bind(keyTyped, _1));
+
+        //Attach to the Window Events
+        TheWindow->connectWindowOpened(boost::bind(windowOpened, _1));
+        TheWindow->connectWindowClosing(boost::bind(windowClosing, _1));
+        TheWindow->connectWindowClosed(boost::bind(windowClosed, _1));
+        TheWindow->connectWindowIconified(boost::bind(windowIconified, _1));
+        TheWindow->connectWindowDeiconified(boost::bind(windowDeiconified, _1));
+        TheWindow->connectWindowActivated(boost::bind(windowActivated, _1));
+        TheWindow->connectWindowDeactivated(boost::bind(windowDeactivated, _1));
+        TheWindow->connectWindowEntered(boost::bind(windowEntered, _1));
+        TheWindow->connectWindowExited(boost::bind(windowExited, _1));
+
         // show the whole scene
         sceneManager.showAll();
+
+        // show statistics
+        sceneManager.setStatistics(true);
 
 
         //Open Window

@@ -50,12 +50,13 @@
 #include "OSGThread.h"
 #include "OSGRenderAction.h"
 #include "OSGPathType.h"
-#include "OSGKeyEvent.h"
-#include "OSGMouseEvent.h"
-#include "OSGMouseWheelEvent.h"
-#include "OSGWindowEvent.h"
-#include "OSGUpdateEvent.h"
 #include <boost/function.hpp>
+
+#include "OSGWindowEventDetails.h"
+#include "OSGKeyEventDetails.h"
+#include "OSGMouseEventDetails.h"
+#include "OSGMouseWheelEventDetails.h"
+#include "OSGUpdateEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -235,7 +236,7 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
     virtual bool attachWindow(void) = 0;
 
 	virtual UInt32 getKeyModifiers(void) const = 0;
-	virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const = 0;
+	virtual KeyEventDetails::KeyState getKeyState(KeyEventDetails::Key TheKey) const = 0;
     
 	virtual Pnt2f getMousePosition(void) const = 0;
 
@@ -300,8 +301,8 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
     typedef ClickVector::iterator ClickVectorIter;
     typedef ClickVector::const_iterator ClickVectorConstIter;
 
-    typedef std::map<MouseEvent::MouseButton, ClickVector> ButtonClickCountMap;
-    typedef std::map<MouseEvent::MouseButton, Pnt2f> ButtonClickMap;
+    typedef std::map<MouseEventDetails::MouseButton, ClickVector> ButtonClickCountMap;
+    typedef std::map<MouseEventDetails::MouseButton, Pnt2f> ButtonClickMap;
 
     ButtonClickCountMap _ButtonClickCountMap;
     ButtonClickMap _ButtonClickMap;
@@ -315,23 +316,23 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
     void internalDraw(void);
     void internalReshape(Vec2f size);
 
-    void updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
-    void validateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
+    void updateClickCount(const MouseEventDetails::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
+    void validateClickCount(const MouseEventDetails::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
 
-    void produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
+    void produceMouseClicked(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location);
     void produceMouseEntered(const Pnt2f& Location);
     void produceMouseExited(const Pnt2f& Location);
-    void produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
-    void produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
+    void produceMousePressed(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location);
+    void produceMouseReleased(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location);
 
-    void produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEvent::ScrollType& TheScrollType = MouseWheelEvent::UNIT_SCROLL);
+    void produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEventDetails::ScrollType& TheScrollType = MouseWheelEventDetails::UNIT_SCROLL);
 
     void produceMouseMoved(const Pnt2f& Location, const Vec2f& Delta);
-    void produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location, const Vec2f& Delta);
+    void produceMouseDragged(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location, const Vec2f& Delta);
 
-    void produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
-    void produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
-    void produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
+    void produceKeyPressed(const KeyEventDetails::Key& TheKey, const UInt32& Modifiers);
+    void produceKeyReleased(const KeyEventDetails::Key& TheKey, const UInt32& Modifiers);
+    void produceKeyTyped(const KeyEventDetails::Key& TheKey, const UInt32& Modifiers);
 	
     void produceUpdate(const Time& ElapsedTime);
 	

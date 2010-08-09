@@ -48,6 +48,7 @@
 #include "OSGConfig.h"
 
 #include "OSGUndoManager.h"
+#include "OSGUndoableEditEventDetails.h"
 
 #include <boost/bind.hpp>
 
@@ -65,39 +66,42 @@ A UndoManager.
  *                           Class variables                               *
 \***************************************************************************/
 
+
+EventDescription *UndoManager::_eventDesc[] =
+{
+    new EventDescription("StateChanged", 
+                          "StateChanged",
+                          StateChangedEventId, 
+                          FieldTraits<StateChangedEventDetailsType *>::getType(),
+                          true,
+                          NULL),
+};
+
+EventProducerType UndoManager::_producerType(
+                                            "UndoManagerProducerType",
+                                            "EventProducerType",
+                                            "",
+                                            InitEventProducerFunctor(),
+                                            _eventDesc,
+                                            sizeof(_eventDesc));
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+
+const EventProducerType &UndoManager::getProducerType(void) const
+{
+    return _producerType;
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection UndoManager::addChangeListener(ChangeListenerPtr l)
-{
-   _ChangeListeners.insert(l);
-   return EventConnection(
-       boost::bind(&UndoManager::isChangeListenerAttached, this, l),
-       boost::bind(&UndoManager::removeChangeListener, this, l));
-}
-
-void UndoManager::removeChangeListener(ChangeListenerPtr l)
-{
-   ChangeListenerSet::iterator EraseIter(_ChangeListeners.find(l));
-   if(EraseIter != _ChangeListeners.end())
-   {
-      _ChangeListeners.erase(EraseIter);
-   }
-}
-
 void UndoManager::produceStateChanged(void)
 {
-   const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(NULL, getSystemTime());
-   ChangeListenerSet ModelListenerSet(_ChangeListeners);
-   for(ChangeListenerSet::iterator SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->stateChanged(TheEvent);
-   }
+    ChangeEventDetailsUnrecPtr Details = ChangeEventDetails::create(NULL, getSystemTime());
+
+    produceStateChanged(Details);
 }
 
 bool UndoManager::addEdit(const UndoableEditPtr anEdit)
@@ -257,7 +261,7 @@ void UndoManager::undo(void)
 	}
 }
 
-void UndoManager::undoableEditHappened(UndoableEditEventUnrecPtr e)
+void UndoManager::handleUndoableEditHappened(UndoableEditEventDetails* const e)
 {
 	addEdit(e->getUndoableEdit());
 }

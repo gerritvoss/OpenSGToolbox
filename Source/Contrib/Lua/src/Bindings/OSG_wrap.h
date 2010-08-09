@@ -7,10 +7,6 @@
 
 #include "lua.hpp"
 
-<<<<<<< HEAD
-void push_FieldContainer_on_lua(lua_State* L, OSG::FieldContainerRefPtr value);
-=======
 void OSG_CONTRIBLUA_DLLMAPPING push_FieldContainer_on_lua(lua_State* L, OSG::FieldContainerRefPtr value);
->>>>>>> master
 
 #endif

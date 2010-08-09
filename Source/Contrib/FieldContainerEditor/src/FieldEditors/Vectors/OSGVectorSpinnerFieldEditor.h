@@ -43,8 +43,9 @@
 #endif
 
 #include "OSGVectorSpinnerFieldEditorBase.h"
-#include "OSGSpinner.h"
-#include "OSGLabel.h"
+#include "OSGSpinnerFields.h"
+#include "OSGLabelFields.h"
+#include "OSGChangeEventDetailsFields.h"
 #include "OSGNumberSpinnerModel.h"
 
 OSG_BEGIN_NAMESPACE
@@ -119,6 +120,13 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING VectorSpinnerFieldEditor : publ
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     virtual void internalFieldChanged (void);
     virtual void internalStartEditing (void);
     virtual void internalStopEditing  (void);
@@ -132,19 +140,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING VectorSpinnerFieldEditor : publ
     std::vector<LabelRefPtr>   _EditingLabels;
     std::vector<SpinnerModelPtr> _EditingSpinnerModels;
     
-    class SpinnerListener : public ChangeListener
-    {
-      public :
-           SpinnerListener(VectorSpinnerFieldEditor * const ptr);
-           virtual void stateChanged(const ChangeEventUnrecPtr e);
-
-      protected :
-        VectorSpinnerFieldEditor* _VectorSpinnerFieldEditor ;
-    };
-
-    friend class SpinnerListener;
-
-    SpinnerListener _SpinnerListener;
+    void handleSpinnerStateChanged(ChangeEventDetails* const details);
+    std::vector<boost::signals2::connection> _SpinnerStateChangedConnections;
     /*==========================  PRIVATE  ================================*/
 
   private:

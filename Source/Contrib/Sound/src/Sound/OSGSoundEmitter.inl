@@ -41,8 +41,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-SoundEmitter::SystemUpdateListener::SystemUpdateListener(SoundEmitterUnrecPtr TheSystem) : _System(TheSystem)
+void SoundEmitter::detachUpdateProducer(void)
 {
+    _UpdateEventConnection.disconnect();
 }
 
 OSG_END_NAMESPACE

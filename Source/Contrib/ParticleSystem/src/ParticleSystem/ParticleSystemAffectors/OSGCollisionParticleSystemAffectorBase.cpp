@@ -57,6 +57,8 @@
 #include "OSGConfig.h"
 
 
+#include "OSGParticleCollisionEventDetails.h"
+
 
 #include "OSGParticleSystem.h"          // SecondaryCollisionSystems Class
 
@@ -65,7 +67,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -144,17 +146,6 @@ void CollisionParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&CollisionParticleSystemAffector::getHandleSecondaryCollisionSystems));
 
     oType.addInitialDesc(pDesc);
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&CollisionParticleSystemAffector::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&CollisionParticleSystemAffector::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -203,24 +194,27 @@ CollisionParticleSystemAffectorBase::TypeObject CollisionParticleSystemAffectorB
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ParticleCollision\"\n"
-    "\t\ttype=\"ParticleCollisionEvent\"\n"
+    "\t\tdetailsType=\"ParticleCollisionEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     ""
     );
 
-//! CollisionParticleSystemAffector Produced Methods
+//! CollisionParticleSystemAffector Produced Events
 
-MethodDescription *CollisionParticleSystemAffectorBase::_methodDesc[] =
+EventDescription *CollisionParticleSystemAffectorBase::_eventDesc[] =
 {
-    new MethodDescription("ParticleCollision", 
-                    "",
-                     ParticleCollisionMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("ParticleCollision", 
+                          "",
+                          ParticleCollisionEventId, 
+                          FieldTraits<ParticleCollisionEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&CollisionParticleSystemAffectorBase::getHandleParticleCollisionSignal))
+
 };
 
 EventProducerType CollisionParticleSystemAffectorBase::_producerType(
@@ -228,8 +222,8 @@ EventProducerType CollisionParticleSystemAffectorBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -353,10 +347,6 @@ UInt32 CollisionParticleSystemAffectorBase::getBinSize(ConstFieldMaskArg whichFi
     {
         returnValue += _mfSecondaryCollisionSystems.getBinSize();
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -374,10 +364,6 @@ void CollisionParticleSystemAffectorBase::copyToBin(BinaryDataHandler &pMem,
     {
         _mfSecondaryCollisionSystems.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void CollisionParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -392,10 +378,6 @@ void CollisionParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SecondaryCollisionSystemsFieldMask & whichField))
     {
         _mfSecondaryCollisionSystems.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
     }
 }
 
@@ -517,24 +499,128 @@ FieldContainerTransitPtr CollisionParticleSystemAffectorBase::shallowCopy(void) 
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void CollisionParticleSystemAffectorBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        OSG_ASSERT(dynamic_cast<ParticleCollisionEventDetailsType* const>(e));
+
+        _ParticleCollisionEvent.set_combiner(ConsumableEventCombiner(e));
+        _ParticleCollisionEvent(dynamic_cast<ParticleCollisionEventDetailsType* const>(e), ParticleCollisionEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection CollisionParticleSystemAffectorBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        return _ParticleCollisionEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  CollisionParticleSystemAffectorBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        return _ParticleCollisionEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  CollisionParticleSystemAffectorBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        _ParticleCollisionEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  CollisionParticleSystemAffectorBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        _ParticleCollisionEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  CollisionParticleSystemAffectorBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        return _ParticleCollisionEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  CollisionParticleSystemAffectorBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        return _ParticleCollisionEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
 CollisionParticleSystemAffectorBase::CollisionParticleSystemAffectorBase(void) :
-    _Producer(&getProducerType()),
     Inherited(),
     _sfCollisionDistance      (Real32(0.0f)),
     _mfSecondaryCollisionSystems()
-    ,_sfEventProducer(&_Producer)
 {
 }
 
 CollisionParticleSystemAffectorBase::CollisionParticleSystemAffectorBase(const CollisionParticleSystemAffectorBase &source) :
-    _Producer(&source.getProducerType()),
     Inherited(source),
     _sfCollisionDistance      (source._sfCollisionDistance      ),
     _mfSecondaryCollisionSystems()
-    ,_sfEventProducer(&_Producer)
 {
 }
 
@@ -630,27 +716,13 @@ EditFieldHandlePtr CollisionParticleSystemAffectorBase::editHandleSecondaryColli
 }
 
 
-GetFieldHandlePtr CollisionParticleSystemAffectorBase::getHandleEventProducer        (void) const
+GetEventHandlePtr CollisionParticleSystemAffectorBase::getHandleParticleCollisionSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ParticleCollisionEventType>(
+             const_cast<ParticleCollisionEventType *>(&_ParticleCollisionEvent),
+             _producerType.getEventDescription(ParticleCollisionEventId),
              const_cast<CollisionParticleSystemAffectorBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr CollisionParticleSystemAffectorBase::editHandleEventProducer       (void)
-{
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
-
-
-    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

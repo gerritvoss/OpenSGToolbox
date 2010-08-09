@@ -40,6 +40,29 @@
 
 OSG_BEGIN_NAMESPACE
 
+EventDescription *SpinnerModel::_eventDesc[] =
+{
+    new EventDescription("StateChanged", 
+                          "StateChanged",
+                          StateChangedEventId, 
+                          FieldTraits<StateChangedEventDetailsType *>::getType(),
+                          true,
+                          NULL),
+};
+
+EventProducerType SpinnerModel::_producerType(
+                                            "SpinnerModelProducerType",
+                                            "EventProducerType",
+                                            "",
+                                            InitEventProducerFunctor(),
+                                            _eventDesc,
+                                            sizeof(_eventDesc));
+
+const EventProducerType &SpinnerModel::getProducerType(void) const
+{
+    return _producerType;
+}
+
 SpinnerModelPtr createDefaultNumberSpinnerModel(const DataType& TheType)
 {
     if(TheType == FieldTraits< Int8 >::getType())
@@ -211,6 +234,8 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
     }
     return SpinnerModelPtr();
 }
+
+
 
 OSG_END_NAMESPACE
 

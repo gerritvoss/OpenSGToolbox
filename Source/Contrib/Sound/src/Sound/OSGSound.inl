@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool Sound::isSoundListenerAttached(SoundListenerPtr Listener) const
-{
-    return _SoundListeners.find(Listener) != _SoundListeners.end();
-}
-
 OSG_END_NAMESPACE

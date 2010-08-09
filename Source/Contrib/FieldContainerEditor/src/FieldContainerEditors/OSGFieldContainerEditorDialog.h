@@ -84,6 +84,12 @@ DialogWindowUnrecPtr OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING openFCTreeEditor
 DialogWindowUnrecPtr OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING openDefaultFCTreeEditorDialog(FieldContainer* fc, 
                                                                                    CommandManagerPtr CmdManager,
                                                                                    UIDrawingSurfaceUnrecPtr DrawingSurface);
+
+FieldContainer OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING * getFCEditedContainer(DialogWindow* const dialog);
+
+void OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING setFCEditedContainer(DialogWindow* const dialog,
+                                                                     FieldContainer* const fc);
+
 OSG_END_NAMESPACE
 
 #include "OSGFieldContainerEditorDialog.inl"

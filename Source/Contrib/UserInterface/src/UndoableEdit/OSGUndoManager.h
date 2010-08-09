@@ -45,12 +45,14 @@
 #include "OSGConfig.h"
 #include "OSGContribUserInterfaceDef.h"
 
-#include "OSGBaseTypes.h"
 #include "OSGCompoundUndoableEdit.h"
-#include "OSGUndoableEditListener.h"
-#include "OSGChangeListener.h"
-#include <set>
-#include "OSGEventConnection.h"
+#include "OSGChangeEventDetailsFields.h"
+#include "OSGUndoableEditEventDetailsFields.h"
+#include <boost/function.hpp>
+#include "OSGEventDescription.h"
+#include "OSGConsumableEventCombiner.h"
+#include "OSGEventProducerType.h"
+#include "OSGActivity.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -61,20 +63,13 @@ OSG_BEGIN_NAMESPACE
 class UndoManager;
 typedef boost::shared_ptr<UndoManager> UndoManagerPtr;
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UndoManager : public CompoundUndoableEdit, public UndoableEditListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UndoManager : public CompoundUndoableEdit
 {
     /*==========================  PUBLIC  =================================*/
   public:
     typedef CompoundUndoableEdit Inherited;
     typedef UndoManagerPtr  Ptr;
     typedef UndoManager  Self;
-
-    //Adds a ChangeListener to the model's listener list.
-    virtual EventConnection addChangeListener(ChangeListenerPtr l);
-    virtual bool isChangeListenerAttached(ChangeListenerPtr l) const;
-
-    //Removes a ChangeListener from the model's listener list.
-    virtual void removeChangeListener(ChangeListenerPtr l);
 
     //If inProgress, inserts anEdit at indexOfNextAdd, and removes any old edits that were at indexOfNextAdd or later.
     virtual bool addEdit(const UndoableEditPtr anEdit);
@@ -127,9 +122,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UndoManager : public CompoundUndoableE
     //If this UndoManager is inProgress, undo the last significant UndoableEdit before indexOfNextAdd, and all insignificant edits back to it.
     virtual void undo(void);
 
-    //Called by the UndoabledEdit sources this UndoManager listens to.
-    void undoableEditHappened(UndoableEditEventUnrecPtr e);
-
     //Undo or redo as appropriate.
     void undoOrRedo(void);
 
@@ -145,9 +137,41 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UndoManager : public CompoundUndoableE
     virtual ~UndoManager(void);
 
     static UndoManagerPtr create(void);
+    typedef ChangeEventDetails StateChangedEventDetailsType;
+    typedef boost::signals2::signal<void (StateChangedEventDetailsType* const, UInt32), ConsumableEventCombiner> StateChangedEventType;
+
+    enum
+    {
+        StateChangedEventId = 1,
+        NextEventId     = StateChangedEventId            + 1
+    };
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
+    virtual const EventProducerType &getProducerType(void) const; 
+
+    boost::signals2::connection          attachActivity(UInt32 eventId,
+                                                       Activity* TheActivity);
+    UInt32                   getNumProducedEvents(void)          const;
+    const EventDescription *getProducedEventDescription(const   Char8 *ProducedEventName) const;
+    const EventDescription *getProducedEventDescription(UInt32  ProducedEventId) const;
+    UInt32                   getProducedEventId(const            Char8 *ProducedEventName) const;
+
+    boost::signals2::connection connectStateChanged(const StateChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectStateChanged(const StateChangedEventType::group_type &group,
+                                                       const StateChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectStateChanged       (const StateChangedEventType::group_type &group);
+    void   disconnectAllSlotsStateChanged(void);
+    bool   isEmptyStateChanged          (void) const;
+    UInt32 numSlotsStateChanged         (void) const;
   protected:
     Int32 _IndexOfNextAdd;
     Int32 _Limit;
+
+    static EventDescription   *_eventDesc[];
+    static EventProducerType _producerType;
+    StateChangedEventType _StateChangedEvent;
 
     UndoManager(void);
 
@@ -167,19 +191,19 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UndoManager : public CompoundUndoableE
     //Reduce the number of queued edits to a range of size limit, centered on indexOfNextAdd.
     void trimForLimit(void);
 
-    typedef std::set<ChangeListenerPtr> ChangeListenerSet;
-
-    ChangeListenerSet _ChangeListeners;
-
+    //Called by the UndoabledEdit sources this UndoManager listens to.
+    void handleUndoableEditHappened(UndoableEditEventDetails* const e);
+    
+    
+    void produceStateChanged(StateChangedEventDetailsType* const e);
     void produceStateChanged(void);
     /*==========================  PRIVATE  ================================*/
   private:
+    friend class CommandManager;
 };
 
 OSG_END_NAMESPACE
 
 #include "OSGUndoManager.inl"
-
-#define OSGUNDOMANAGER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGUNDOMANAGER_H_ */

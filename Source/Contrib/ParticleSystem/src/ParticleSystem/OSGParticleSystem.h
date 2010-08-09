@@ -46,12 +46,6 @@
 
 #include "OSGParticleSystemBase.h"
 #include "OSGStatElemTypes.h"
-#include "OSGUpdateListener.h"
-#include "OSGWindowEventProducerFields.h"
-
-#include <set>
-#include "OSGParticleSystemListener.h"
-#include "OSGEventConnection.h"
 
 #include "OSGLine.h"
 
@@ -61,7 +55,7 @@ OSG_BEGIN_NAMESPACE
   PageContribParticleSystemParticleSystem for a description.
   */
 
-class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSystemBase, public EventListener
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSystemBase
 {
   protected:
 	friend class CollisionParticleSystemAffector;
@@ -148,10 +142,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     UInt32 getNumAccelerations(void) const;
     UInt32 getNumAttributes(void) const;
 
-    EventConnection addParticleSystemListener(ParticleSystemListenerPtr Listener);
-    bool isParticleSystemListenerAttached(ParticleSystemListenerPtr Listener) const;
-    void removeParticleSystemListener(ParticleSystemListenerPtr Listener);
-
     bool addParticle(const Pnt3f& Position,
                      const Pnt3f& SecPosition,
                      const Vec3f& Normal,
@@ -199,12 +189,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
 
     void updateVolume(void);
 
-    bool attachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
-    void dettachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
-
-    void attachUpdateProducer(EventProducerPtr TheProducer);
+    void attachUpdateProducer(ReflexiveContainer* const producer);
     void detachUpdateProducer(void);
-    virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId);
 
     static StatElemDesc<StatIntElem    > statNParticles;
     static StatElemDesc<StatTimeElem    > statParticleSystemUpdate;
@@ -257,11 +243,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
 
     /*! \}                                                                 */
 
-    typedef std::set<ParticleSystemListenerPtr> ParticleSystemListenerSet;
-    typedef ParticleSystemListenerSet::iterator ParticleSystemListenerSetItor;
-
-    ParticleSystemListenerSet       _ParticleSystemListeners;
-
     void produceSystemUpdated(void);
     void produceVolumeChanged(void);
     void produceParticleGenerated(Int32 Index);
@@ -295,18 +276,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
                                const StringToUInt32Map& Attributes,
                                UInt32& ID);
 
-    class SystemUpdateListener : public UpdateListener
-    {
-      public:
-        SystemUpdateListener(ParticleSystem* TheSystem);
-        virtual void update(const UpdateEventUnrecPtr e);
-      private:
-        ParticleSystem* _System;
-    };
-
-    friend class SystemUpdateListener;
-
-    SystemUpdateListener _SystemUpdateListener;
+    void attachedUpdate(EventDetails* const details);
 
     virtual void update(const Time& elps);
 
@@ -339,7 +309,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
 
     bool _isUpdating;
     std::set<UInt32, GreaterThanUInt32> _ParticlesToKill;
-    EventConnection _UpdateEventConnection;
+    boost::signals2::connection _UpdateEventConnection;
 
 	UInt32 _curID;
 
@@ -362,6 +332,8 @@ OSG_END_NAMESPACE
 #include "OSGParticleGenerator.h"
 #include "OSGParticleAffector.h"
 #include "OSGParticleSystemAffector.h"
+#include "OSGParticleEventDetails.h"
+#include "OSGParticleSystemEventDetails.h"
 
 #include "OSGParticleSystemBase.inl"
 #include "OSGParticleSystem.inl"

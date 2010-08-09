@@ -226,18 +226,10 @@ void UIDrawingSurface::moveWindowToTop(InternalWindow* const TheWindow)
         _mfInternalWindows.erase(RemovalItor);
 
         MFInternalWindowsType::iterator InsertItor(_mfInternalWindows.begin());
-        if(TheWindow->getAllwaysOnTop() || TheWindow->getModal())
+        while(InsertItor != _mfInternalWindows.end() &&
+              !(*TheWindow < *(*InsertItor)))
         {
-            InsertItor = _mfInternalWindows.end();
-        }
-        else
-        {
-            while(InsertItor != _mfInternalWindows.end() &&
-                  !(*InsertItor)->getAllwaysOnTop() &&
-                  !(*InsertItor)->getModal())
-            {
-                ++InsertItor;
-            }
+            ++InsertItor;
         }
 
         MFInternalWindowsType::iterator NewPosition = _mfInternalWindows.insert(InsertItor,SwapWindow);
@@ -281,14 +273,14 @@ Pnt2f UIDrawingSurface::getMousePosition(void) const
     return Result;
 }
 
-void UIDrawingSurface::mouseClicked(const MouseEventUnrecPtr e)
+void UIDrawingSurface::handleMouseClicked(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
     Pnt2f ResultMouseLoc;
     if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
     {
-        const MouseEventUnrecPtr TransformedMouseEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
+        MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
                                                                             ResultMouseLoc,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
@@ -314,14 +306,14 @@ void UIDrawingSurface::mouseClicked(const MouseEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::mouseEntered(const MouseEventUnrecPtr e)
+void UIDrawingSurface::handleMouseEntered(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
     Pnt2f ResultMouseLoc;
     if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
     {
-        const MouseEventUnrecPtr TransformedMouseEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
+        MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
                                                                             ResultMouseLoc,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
@@ -331,14 +323,14 @@ void UIDrawingSurface::mouseEntered(const MouseEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::mouseExited(const MouseEventUnrecPtr e)
+void UIDrawingSurface::handleMouseExited(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
     Pnt2f ResultMouseLoc;
     if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
     {
-        const MouseEventUnrecPtr TransformedMouseEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
+        MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
                                                                             ResultMouseLoc,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
@@ -348,14 +340,14 @@ void UIDrawingSurface::mouseExited(const MouseEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::mousePressed(const MouseEventUnrecPtr e)
+void UIDrawingSurface::handleMousePressed(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
     Pnt2f ResultMouseLoc;
     if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
     {
-        const MouseEventUnrecPtr TransformedMouseEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
+        MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
                                                                             ResultMouseLoc,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
@@ -385,14 +377,14 @@ void UIDrawingSurface::mousePressed(const MouseEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::mouseReleased(const MouseEventUnrecPtr e)
+void UIDrawingSurface::handleMouseReleased(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
     Pnt2f ResultMouseLoc;
     if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
     {
-        const MouseEventUnrecPtr TransformedMouseEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
+        MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
                                                                             ResultMouseLoc,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
@@ -419,14 +411,14 @@ void UIDrawingSurface::mouseReleased(const MouseEventUnrecPtr e)
 }
 
 
-void UIDrawingSurface::mouseMoved(const MouseEventUnrecPtr e)
+void UIDrawingSurface::handleMouseMoved(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
     Pnt2f ResultMouseLoc;
     if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
     {
-        const MouseEventUnrecPtr TransformedMouseEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
+        MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
                                                                             ResultMouseLoc,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
@@ -452,14 +444,14 @@ void UIDrawingSurface::mouseMoved(const MouseEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::mouseDragged(const MouseEventUnrecPtr e)
+void UIDrawingSurface::handleMouseDragged(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
     Pnt2f ResultMouseLoc;
     if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
     {
-        const MouseEventUnrecPtr TransformedMouseEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
+        MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
                                                                             ResultMouseLoc,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
@@ -485,14 +477,14 @@ void UIDrawingSurface::mouseDragged(const MouseEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
+void UIDrawingSurface::handleMouseWheelMoved(MouseWheelEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
     Pnt2f ResultMouseLoc;
     if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
     {
-        const MouseWheelEventUnrecPtr TransformedMouseEvent = MouseWheelEvent::create(e->getSource(), e->getTimeStamp(), e->getWheelRotation(), e->getScrollType(),e->getScrollOrientation(),
+        MouseWheelEventDetailsUnrecPtr TransformedMouseEvent = MouseWheelEventDetails::create(e->getSource(), e->getTimeStamp(), e->getWheelRotation(), e->getScrollType(),e->getScrollOrientation(),
                                                                                       ResultMouseLoc,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
@@ -518,7 +510,7 @@ void UIDrawingSurface::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::keyPressed(const KeyEventUnrecPtr e)
+void UIDrawingSurface::handleKeyPressed(KeyEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
@@ -531,7 +523,7 @@ void UIDrawingSurface::keyPressed(const KeyEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::keyReleased(const KeyEventUnrecPtr e)
+void UIDrawingSurface::handleKeyReleased(KeyEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
@@ -544,7 +536,7 @@ void UIDrawingSurface::keyReleased(const KeyEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::keyTyped(const KeyEventUnrecPtr e)
+void UIDrawingSurface::handleKeyTyped(KeyEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
@@ -557,7 +549,7 @@ void UIDrawingSurface::keyTyped(const KeyEventUnrecPtr e)
     closeWindows();
 }
 
-void UIDrawingSurface::checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, Viewport* const TheViewport)
+void UIDrawingSurface::checkMouseEnterExit(InputEventDetails* const e, const Pnt2f& MouseLocation, Viewport* const TheViewport)
 {
     for(UInt32 i(0) ; i<_mfInternalWindows.size() ; ++i)
     {
@@ -568,7 +560,7 @@ void UIDrawingSurface::checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt
             {
                 //Mouse has exited the frame
                 getInternalWindows(i)->setMouseContained(false);
-                const MouseEventUnrecPtr ExitedEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
+                MouseEventDetailsUnrecPtr ExitedEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), MouseEventDetails::NO_BUTTON,0,MouseLocation,TheViewport);
                 getInternalWindows(i)->mouseExited(ExitedEvent);
             }
         }
@@ -579,7 +571,7 @@ void UIDrawingSurface::checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt
             {
                 //Mouse has entered the frame
                 getInternalWindows(i)->setMouseContained(true);
-                const MouseEventUnrecPtr EnteredEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation, TheViewport);
+                MouseEventDetailsUnrecPtr EnteredEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), MouseEventDetails::NO_BUTTON,0,MouseLocation, TheViewport);
                 getInternalWindows(i)->mouseEntered(EnteredEvent);
             }
         }
@@ -610,6 +602,71 @@ void UIDrawingSurface::closeWindows(void)
         {
             closeWindow(*Itor);
         }
+         _WindowsToClose.clear();
+    }
+}
+
+void UIDrawingSurface::updateWindowLayout(InternalWindow* const TheWindow)
+{
+    Vec2f Size;
+    Pnt2f Position;
+    bool isSizeDifferent(false);
+    bool isPositionDifferent(false);
+
+    isSizeDifferent = false;
+    isPositionDifferent = false;
+
+    if(TheWindow->isScalableInDrawingSurface())
+    {
+        //Update Scaling
+        Size.setValues(TheWindow->getScalingInDrawingSurface().x() * static_cast<Real32>(getSize().x()),
+                       TheWindow->getScalingInDrawingSurface().y() * static_cast<Real32>(getSize().y()));
+    }
+    else
+    {
+        Size = TheWindow->getPreferredSize();
+    }
+
+    Size.setValues(osgMax(osgMin(Size.x(), TheWindow->getMaxSize().x()), TheWindow->getMinSize().x()),
+                   osgMax(osgMin(Size.y(), TheWindow->getMaxSize().y()), TheWindow->getMinSize().y()));
+
+    isSizeDifferent = (TheWindow->getSize().x() != Size.x() ||
+                       TheWindow->getSize().y() != Size.y());
+
+    if(TheWindow->isAlignableInDrawingSurface())
+    {
+        //Update Alignment
+        Position = calculateAlignment(Pnt2f(0.0f,0.0f),
+                                      getSize(),
+                                      Size,
+                                      TheWindow->getAlignmentInDrawingSurface().y(),
+                                      TheWindow->getAlignmentInDrawingSurface().x());
+
+        isPositionDifferent = (TheWindow->getPosition().x() != Position.x() ||
+                               TheWindow->getPosition().y() != Position.y());
+    }
+
+
+    if(isSizeDifferent)
+    {
+        TheWindow->setSize(Size);
+    }
+    if(isPositionDifferent)
+    {
+        TheWindow->setPosition(Position);
+    }
+
+    if(!isPositionDifferent && !isSizeDifferent)
+    {
+        TheWindow->updateClipBounds();
+    }
+}
+
+void UIDrawingSurface::updateWindowLayouts(void)
+{
+    for(UInt32 i(0) ; i<_mfInternalWindows.size() ; ++i)
+    {
+        updateWindowLayout(_mfInternalWindows[i]);
     }
 }
 
@@ -643,79 +700,47 @@ void UIDrawingSurface::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-    if( (whichField & EventProducerFieldMask) )
+    if( (whichField & EventProducerFieldMask) ||
+        (whichField & ActiveFieldMask))
     {
-        _MouseEventConnection.disconnect();
-        _MouseMotionEventConnection.disconnect();
-        _MouseWheelEventConnection.disconnect();
-        _KeyEventConnection.disconnect();
+        _MouseClickedConnection.disconnect();
+        _MouseEnteredConnection.disconnect();
+        _MouseExitedConnection.disconnect();
+        _MousePressedConnection.disconnect();
+        _MouseReleasedConnection.disconnect();
 
-        if(getEventProducer() != NULL)
-        {
-            _MouseEventConnection = getEventProducer()->addMouseListener(this);
-            _MouseMotionEventConnection = getEventProducer()->addMouseMotionListener(this);
-            _MouseWheelEventConnection = getEventProducer()->addMouseWheelListener(this);
-            _KeyEventConnection = getEventProducer()->addKeyListener(this);
+        _MouseMovedConnection.disconnect();
+        _MouseDraggedConnection.disconnect();
+
+        _MouseWheelMovedConnection.disconnect();
+
+        _KeyPressedConnection.disconnect();
+        _KeyReleasedConnection.disconnect();
+        _KeyTypedConnection.disconnect();
+
+        if(getEventProducer() != NULL &&
+           getActive())
+        {           
+            _MouseClickedConnection = getEventProducer()->connectMouseClicked(boost::bind(&UIDrawingSurface::handleMouseClicked, this, _1));
+            _MouseEnteredConnection = getEventProducer()->connectMouseEntered(boost::bind(&UIDrawingSurface::handleMouseEntered, this, _1));
+            _MouseExitedConnection = getEventProducer()->connectMouseExited(boost::bind(&UIDrawingSurface::handleMouseExited, this, _1));
+            _MousePressedConnection = getEventProducer()->connectMousePressed(boost::bind(&UIDrawingSurface::handleMousePressed, this, _1));
+            _MouseReleasedConnection = getEventProducer()->connectMouseReleased(boost::bind(&UIDrawingSurface::handleMouseReleased, this, _1));
+
+            _MouseMovedConnection = getEventProducer()->connectMouseMoved(boost::bind(&UIDrawingSurface::handleMouseMoved, this, _1));
+            _MouseDraggedConnection = getEventProducer()->connectMouseDragged(boost::bind(&UIDrawingSurface::handleMouseDragged, this, _1));
+
+            _MouseWheelMovedConnection = getEventProducer()->connectMouseWheelMoved(boost::bind(&UIDrawingSurface::handleMouseWheelMoved, this, _1));
+
+            _KeyPressedConnection = getEventProducer()->connectKeyPressed(boost::bind(&UIDrawingSurface::handleKeyPressed, this, _1));
+            _KeyReleasedConnection = getEventProducer()->connectKeyReleased(boost::bind(&UIDrawingSurface::handleKeyReleased, this, _1));
+            _KeyTypedConnection = getEventProducer()->connectKeyTyped(boost::bind(&UIDrawingSurface::handleKeyTyped, this, _1));
         }
     }
 
     if(whichField & SizeFieldMask)
     {
-        Vec2f Size;
-        Pnt2f Position;
-        bool isSizeDifferent(false);
-        bool isPositionDifferent(false);
-        for(UInt32 i(0) ; i<_mfInternalWindows.size() ; ++i)
-        {
-
-            isSizeDifferent = false;
-            isPositionDifferent = false;
-
-            if(getInternalWindows(i)->isScalableInDrawingSurface())
-            {
-                //Update Scaling
-                Size.setValues(getInternalWindows(i)->getScalingInDrawingSurface().x() * static_cast<Real32>(getSize().x()),
-                               getInternalWindows(i)->getScalingInDrawingSurface().y() * static_cast<Real32>(getSize().y()));
-            }
-            else
-            {
-                Size = getInternalWindows(i)->getPreferredSize();
-            }
-
-            Size.setValues(osgMax(osgMin(Size.x(), getInternalWindows(i)->getMaxSize().x()), getInternalWindows(i)->getMinSize().x()),
-                           osgMax(osgMin(Size.y(), getInternalWindows(i)->getMaxSize().y()), getInternalWindows(i)->getMinSize().y()));
-
-            isSizeDifferent = (getInternalWindows(i)->getSize().x() != Size.x() ||
-                               getInternalWindows(i)->getSize().y() != Size.y());
-
-            if(getInternalWindows(i)->isAlignableInDrawingSurface())
-            {
-                //Update Alignment
-                Position = calculateAlignment(Pnt2f(0.0f,0.0f),
-                                              getSize(),
-                                              Size,
-                                              getInternalWindows(i)->getAlignmentInDrawingSurface().y(),
-                                              getInternalWindows(i)->getAlignmentInDrawingSurface().x());
-
-                isPositionDifferent = (getInternalWindows(i)->getPosition().x() != Position.x() ||
-                                       getInternalWindows(i)->getPosition().y() != Position.y());
-            }
-
-
-            if(isSizeDifferent)
-            {
-                getInternalWindows(i)->setSize(Size);
-            }
-            if(isPositionDifferent)
-            {
-                getInternalWindows(i)->setPosition(Position);
-            }
-
-            if(!isPositionDifferent && !isSizeDifferent)
-            {
-                getInternalWindows(i)->updateClipBounds();
-            }
-        }
+        updateWindowLayouts();
     }
 }
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,41 +36,98 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_COLOR_SELECTION_MODEL_H_
-#define _OSG_UI_COLOR_SELECTION_MODEL_H_
-
+#ifndef _OSGCOLORSELECTIONMODEL_H_
+#define _OSGCOLORSELECTIONMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
-#include "OSGConfig.h"
-#include "OSGContribUserInterfaceDef.h"
 
+#include "OSGColorSelectionModelBase.h"
 #include "OSGColor.h"
-#include "OSGChangeListener.h"
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorSelectionModel
-{
-private:
-protected:
-public:
-	virtual EventConnection addChangeListener(ChangeListenerPtr Listener) = 0;
-	virtual bool isChangeListenerAttached(ChangeListenerPtr Listener) const = 0;
 
-	virtual void removeChangeListener(ChangeListenerPtr Listener) = 0;
+/*! \brief ColorSelectionModel class. See \ref
+           PageContribUserInterfaceColorSelectionModel for a description.
+*/
+
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorSelectionModel : public ColorSelectionModelBase
+{
+  protected:
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
+
+    typedef ColorSelectionModelBase Inherited;
+    typedef ColorSelectionModel     Self;
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0,
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 
 	virtual Color4f getSelectedColor(void) const = 0;
 
 	virtual void setSelectedColor(const Color4f& Value, bool isValueAdjusting) = 0;
+    /*=========================  PROTECTED  ===============================*/
+
+  protected:
+
+    // Variables should all be in ColorSelectionModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    ColorSelectionModel(void);
+    ColorSelectionModel(const ColorSelectionModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~ColorSelectionModel(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+    void produceStateChanged(void);
+    /*==========================  PRIVATE  ================================*/
+
+  private:
+
+    friend class FieldContainer;
+    friend class ColorSelectionModelBase;
+
+    // prohibit default functions (move to 'public' if you need one)
+    void operator =(const ColorSelectionModel &source);
 };
 
-typedef boost::shared_ptr<ColorSelectionModel> ColorSelectionModelPtr;
+typedef ColorSelectionModel *ColorSelectionModelP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_COLOR_SELECTION_MODEL_H_ */
+#include "OSGColorSelectionModelBase.inl"
+#include "OSGColorSelectionModel.inl"
 
+#endif /* _OSGCOLORSELECTIONMODEL_H_ */

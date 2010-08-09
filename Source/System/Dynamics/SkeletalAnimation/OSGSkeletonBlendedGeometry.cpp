@@ -167,7 +167,7 @@ void SkeletonBlendedGeometry::drawPrimitives(DrawEnv *pEnv)
 
 void SkeletonBlendedGeometry::skeletonUpdated(void)
 {
-	produceChangedEvent();
+	produceSkeletonChanged();
     if(getBaseGeometry())
     {
         calculatePositions();
@@ -363,34 +363,11 @@ void SkeletonBlendedGeometry::calculatePositions(void)
     _NeedRecalc = false;
 }
 
-EventConnection SkeletonBlendedGeometry::addSkeletonListener(SkeletonListenerPtr Listener)
+void SkeletonBlendedGeometry::produceSkeletonChanged(void)
 {
-   _SkeletonListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&SkeletonBlendedGeometry::isSkeletonListenerAttached, this, Listener),
-       boost::bind(&SkeletonBlendedGeometry::removeSkeletonListener, this, Listener));
-}
-
-
-void SkeletonBlendedGeometry::removeSkeletonListener(SkeletonListenerPtr Listener)
-{
-   SkeletonListenerSetItor EraseIter(_SkeletonListeners.find(Listener));
-   if(EraseIter != _SkeletonListeners.end())
-   {
-      _SkeletonListeners.erase(EraseIter);
-   }
-}
-
-void SkeletonBlendedGeometry::produceChangedEvent(void)
-{
-	const SkeletonEventUnrecPtr TheEvent = SkeletonEvent::create( this, getTimeStamp());
-
-	SkeletonListenerSet ListenerSet(_SkeletonListeners);
-	for(SkeletonListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-	{
-	   (*SetItor)->skeletonChanged(TheEvent);
-	}
-    _Producer.produceEvent(SkeletonChangedMethodId,TheEvent);
+    SkeletonEventDetailsUnrecPtr Details = SkeletonEventDetails::create(this,getTimeStamp());
+   
+    Inherited::produceSkeletonChanged(Details);
 }
 
 /*-------------------------------------------------------------------------*\

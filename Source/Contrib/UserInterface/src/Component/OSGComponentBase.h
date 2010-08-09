@@ -78,10 +78,14 @@
 #include "OSGComponentFields.h"
 
 //Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+#include "OSGActivity.h"
+#include "OSGConsumableEventCombiner.h"
+
+#include "OSGMouseEventDetailsFields.h"
+#include "OSGMouseWheelEventDetailsFields.h"
+#include "OSGKeyEventDetailsFields.h"
+#include "OSGFocusEventDetailsFields.h"
+#include "OSGComponentEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -100,6 +104,48 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(Component);
+    
+    
+    typedef MouseEventDetails  MouseMovedEventDetailsType;
+    typedef MouseEventDetails  MouseDraggedEventDetailsType;
+    typedef MouseEventDetails  MouseClickedEventDetailsType;
+    typedef MouseEventDetails  MouseEnteredEventDetailsType;
+    typedef MouseEventDetails  MouseExitedEventDetailsType;
+    typedef MouseEventDetails  MousePressedEventDetailsType;
+    typedef MouseEventDetails  MouseReleasedEventDetailsType;
+    typedef MouseWheelEventDetails MouseWheelMovedEventDetailsType;
+    typedef KeyEventDetails    KeyPressedEventDetailsType;
+    typedef KeyEventDetails    KeyReleasedEventDetailsType;
+    typedef KeyEventDetails    KeyTypedEventDetailsType;
+    typedef FocusEventDetails  FocusGainedEventDetailsType;
+    typedef FocusEventDetails  FocusLostEventDetailsType;
+    typedef ComponentEventDetails ComponentHiddenEventDetailsType;
+    typedef ComponentEventDetails ComponentVisibleEventDetailsType;
+    typedef ComponentEventDetails ComponentMovedEventDetailsType;
+    typedef ComponentEventDetails ComponentResizedEventDetailsType;
+    typedef ComponentEventDetails ComponentEnabledEventDetailsType;
+    typedef ComponentEventDetails ComponentDisabledEventDetailsType;
+
+    typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
+    typedef boost::signals2::signal<void (MouseEventDetails* const, UInt32), ConsumableEventCombiner> MouseMovedEventType;
+    typedef boost::signals2::signal<void (MouseEventDetails* const, UInt32), ConsumableEventCombiner> MouseDraggedEventType;
+    typedef boost::signals2::signal<void (MouseEventDetails* const, UInt32), ConsumableEventCombiner> MouseClickedEventType;
+    typedef boost::signals2::signal<void (MouseEventDetails* const, UInt32), ConsumableEventCombiner> MouseEnteredEventType;
+    typedef boost::signals2::signal<void (MouseEventDetails* const, UInt32), ConsumableEventCombiner> MouseExitedEventType;
+    typedef boost::signals2::signal<void (MouseEventDetails* const, UInt32), ConsumableEventCombiner> MousePressedEventType;
+    typedef boost::signals2::signal<void (MouseEventDetails* const, UInt32), ConsumableEventCombiner> MouseReleasedEventType;
+    typedef boost::signals2::signal<void (MouseWheelEventDetails* const, UInt32), ConsumableEventCombiner> MouseWheelMovedEventType;
+    typedef boost::signals2::signal<void (KeyEventDetails* const  , UInt32), ConsumableEventCombiner> KeyPressedEventType;
+    typedef boost::signals2::signal<void (KeyEventDetails* const  , UInt32), ConsumableEventCombiner> KeyReleasedEventType;
+    typedef boost::signals2::signal<void (KeyEventDetails* const  , UInt32), ConsumableEventCombiner> KeyTypedEventType;
+    typedef boost::signals2::signal<void (FocusEventDetails* const, UInt32), ConsumableEventCombiner> FocusGainedEventType;
+    typedef boost::signals2::signal<void (FocusEventDetails* const, UInt32), ConsumableEventCombiner> FocusLostEventType;
+    typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ComponentHiddenEventType;
+    typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ComponentVisibleEventType;
+    typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ComponentMovedEventType;
+    typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ComponentResizedEventType;
+    typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ComponentEnabledEventType;
+    typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ComponentDisabledEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -137,8 +183,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         DisabledForegroundFieldId = RolloverForegroundFieldId + 1,
         ForegroundFieldId = DisabledForegroundFieldId + 1,
         CursorFieldId = ForegroundFieldId + 1,
-        EventProducerFieldId = CursorFieldId + 1,
-        NextFieldId = EventProducerFieldId + 1
+        NextFieldId = CursorFieldId + 1
     };
 
     static const OSG::BitVector PositionFieldMask =
@@ -201,8 +246,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         (TypeTraits<BitVector>::One << ForegroundFieldId);
     static const OSG::BitVector CursorFieldMask =
         (TypeTraits<BitVector>::One << CursorFieldId);
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -215,7 +258,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     typedef SFBool            SFVisibleType;
     typedef SFBool            SFEnabledType;
     typedef SFBool            SFFocusedType;
-    typedef SFUnrecLayoutConstraintsPtr SFConstraintsType;
+    typedef SFUnrecChildLayoutConstraintsPtr SFConstraintsType;
     typedef SFUnrecBorderPtr  SFBorderType;
     typedef SFUnrecLayerPtr   SFBackgroundType;
     typedef SFUnrecBorderPtr  SFDisabledBorderType;
@@ -236,30 +279,29 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     typedef SFUnrecLayerPtr   SFDisabledForegroundType;
     typedef SFUnrecLayerPtr   SFForegroundType;
     typedef SFUInt32          SFCursorType;
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        MouseMovedMethodId = 1,
-        MouseDraggedMethodId = MouseMovedMethodId + 1,
-        MouseClickedMethodId = MouseDraggedMethodId + 1,
-        MouseEnteredMethodId = MouseClickedMethodId + 1,
-        MouseExitedMethodId = MouseEnteredMethodId + 1,
-        MousePressedMethodId = MouseExitedMethodId + 1,
-        MouseReleasedMethodId = MousePressedMethodId + 1,
-        MouseWheelMovedMethodId = MouseReleasedMethodId + 1,
-        KeyPressedMethodId = MouseWheelMovedMethodId + 1,
-        KeyReleasedMethodId = KeyPressedMethodId + 1,
-        KeyTypedMethodId = KeyReleasedMethodId + 1,
-        FocusGainedMethodId = KeyTypedMethodId + 1,
-        FocusLostMethodId = FocusGainedMethodId + 1,
-        ComponentHiddenMethodId = FocusLostMethodId + 1,
-        ComponentVisibleMethodId = ComponentHiddenMethodId + 1,
-        ComponentMovedMethodId = ComponentVisibleMethodId + 1,
-        ComponentResizedMethodId = ComponentMovedMethodId + 1,
-        ComponentEnabledMethodId = ComponentResizedMethodId + 1,
-        ComponentDisabledMethodId = ComponentEnabledMethodId + 1,
-        NextProducedMethodId = ComponentDisabledMethodId + 1
+        MouseMovedEventId = 1,
+        MouseDraggedEventId = MouseMovedEventId + 1,
+        MouseClickedEventId = MouseDraggedEventId + 1,
+        MouseEnteredEventId = MouseClickedEventId + 1,
+        MouseExitedEventId = MouseEnteredEventId + 1,
+        MousePressedEventId = MouseExitedEventId + 1,
+        MouseReleasedEventId = MousePressedEventId + 1,
+        MouseWheelMovedEventId = MouseReleasedEventId + 1,
+        KeyPressedEventId = MouseWheelMovedEventId + 1,
+        KeyReleasedEventId = KeyPressedEventId + 1,
+        KeyTypedEventId = KeyReleasedEventId + 1,
+        FocusGainedEventId = KeyTypedEventId + 1,
+        FocusLostEventId = FocusGainedEventId + 1,
+        ComponentHiddenEventId = FocusLostEventId + 1,
+        ComponentVisibleEventId = ComponentHiddenEventId + 1,
+        ComponentMovedEventId = ComponentVisibleEventId + 1,
+        ComponentResizedEventId = ComponentMovedEventId + 1,
+        ComponentEnabledEventId = ComponentResizedEventId + 1,
+        ComponentDisabledEventId = ComponentEnabledEventId + 1,
+        NextProducedEventId = ComponentDisabledEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -311,8 +353,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
 
     virtual       SFBool              *editSFFocused        (void);
     virtual const SFBool              *getSFFocused         (void) const;
-    virtual const SFUnrecLayoutConstraintsPtr *getSFConstraints    (void) const;
-    virtual       SFUnrecLayoutConstraintsPtr *editSFConstraints    (void);
+    virtual const SFUnrecChildLayoutConstraintsPtr *getSFConstraints    (void) const;
+    virtual       SFUnrecChildLayoutConstraintsPtr *editSFConstraints    (void);
     virtual const SFUnrecBorderPtr    *getSFBorder         (void) const;
     virtual       SFUnrecBorderPtr    *editSFBorder         (void);
     virtual const SFUnrecLayerPtr     *getSFBackground     (void) const;
@@ -485,40 +527,272 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //MouseMoved
+    boost::signals2::connection connectMouseMoved     (const MouseMovedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseMoved     (const MouseMovedEventType::group_type &group,
+                                                       const MouseMovedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseMoved             (const MouseMovedEventType::group_type &group);
+    void   disconnectAllSlotsMouseMoved     (void);
+    bool   isEmptyMouseMoved                (void) const;
+    UInt32 numSlotsMouseMoved               (void) const;
+    
+    //MouseDragged
+    boost::signals2::connection connectMouseDragged   (const MouseDraggedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseDragged   (const MouseDraggedEventType::group_type &group,
+                                                       const MouseDraggedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseDragged           (const MouseDraggedEventType::group_type &group);
+    void   disconnectAllSlotsMouseDragged   (void);
+    bool   isEmptyMouseDragged              (void) const;
+    UInt32 numSlotsMouseDragged             (void) const;
+    
+    //MouseClicked
+    boost::signals2::connection connectMouseClicked   (const MouseClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseClicked   (const MouseClickedEventType::group_type &group,
+                                                       const MouseClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseClicked           (const MouseClickedEventType::group_type &group);
+    void   disconnectAllSlotsMouseClicked   (void);
+    bool   isEmptyMouseClicked              (void) const;
+    UInt32 numSlotsMouseClicked             (void) const;
+    
+    //MouseEntered
+    boost::signals2::connection connectMouseEntered   (const MouseEnteredEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseEntered   (const MouseEnteredEventType::group_type &group,
+                                                       const MouseEnteredEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseEntered           (const MouseEnteredEventType::group_type &group);
+    void   disconnectAllSlotsMouseEntered   (void);
+    bool   isEmptyMouseEntered              (void) const;
+    UInt32 numSlotsMouseEntered             (void) const;
+    
+    //MouseExited
+    boost::signals2::connection connectMouseExited    (const MouseExitedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseExited    (const MouseExitedEventType::group_type &group,
+                                                       const MouseExitedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseExited            (const MouseExitedEventType::group_type &group);
+    void   disconnectAllSlotsMouseExited    (void);
+    bool   isEmptyMouseExited               (void) const;
+    UInt32 numSlotsMouseExited              (void) const;
+    
+    //MousePressed
+    boost::signals2::connection connectMousePressed   (const MousePressedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMousePressed   (const MousePressedEventType::group_type &group,
+                                                       const MousePressedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMousePressed           (const MousePressedEventType::group_type &group);
+    void   disconnectAllSlotsMousePressed   (void);
+    bool   isEmptyMousePressed              (void) const;
+    UInt32 numSlotsMousePressed             (void) const;
+    
+    //MouseReleased
+    boost::signals2::connection connectMouseReleased  (const MouseReleasedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseReleased  (const MouseReleasedEventType::group_type &group,
+                                                       const MouseReleasedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseReleased          (const MouseReleasedEventType::group_type &group);
+    void   disconnectAllSlotsMouseReleased  (void);
+    bool   isEmptyMouseReleased             (void) const;
+    UInt32 numSlotsMouseReleased            (void) const;
+    
+    //MouseWheelMoved
+    boost::signals2::connection connectMouseWheelMoved(const MouseWheelMovedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMouseWheelMoved(const MouseWheelMovedEventType::group_type &group,
+                                                       const MouseWheelMovedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMouseWheelMoved        (const MouseWheelMovedEventType::group_type &group);
+    void   disconnectAllSlotsMouseWheelMoved(void);
+    bool   isEmptyMouseWheelMoved           (void) const;
+    UInt32 numSlotsMouseWheelMoved          (void) const;
+    
+    //KeyPressed
+    boost::signals2::connection connectKeyPressed     (const KeyPressedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectKeyPressed     (const KeyPressedEventType::group_type &group,
+                                                       const KeyPressedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectKeyPressed             (const KeyPressedEventType::group_type &group);
+    void   disconnectAllSlotsKeyPressed     (void);
+    bool   isEmptyKeyPressed                (void) const;
+    UInt32 numSlotsKeyPressed               (void) const;
+    
+    //KeyReleased
+    boost::signals2::connection connectKeyReleased    (const KeyReleasedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectKeyReleased    (const KeyReleasedEventType::group_type &group,
+                                                       const KeyReleasedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectKeyReleased            (const KeyReleasedEventType::group_type &group);
+    void   disconnectAllSlotsKeyReleased    (void);
+    bool   isEmptyKeyReleased               (void) const;
+    UInt32 numSlotsKeyReleased              (void) const;
+    
+    //KeyTyped
+    boost::signals2::connection connectKeyTyped       (const KeyTypedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectKeyTyped       (const KeyTypedEventType::group_type &group,
+                                                       const KeyTypedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectKeyTyped               (const KeyTypedEventType::group_type &group);
+    void   disconnectAllSlotsKeyTyped       (void);
+    bool   isEmptyKeyTyped                  (void) const;
+    UInt32 numSlotsKeyTyped                 (void) const;
+    
+    //FocusGained
+    boost::signals2::connection connectFocusGained    (const FocusGainedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectFocusGained    (const FocusGainedEventType::group_type &group,
+                                                       const FocusGainedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectFocusGained            (const FocusGainedEventType::group_type &group);
+    void   disconnectAllSlotsFocusGained    (void);
+    bool   isEmptyFocusGained               (void) const;
+    UInt32 numSlotsFocusGained              (void) const;
+    
+    //FocusLost
+    boost::signals2::connection connectFocusLost      (const FocusLostEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectFocusLost      (const FocusLostEventType::group_type &group,
+                                                       const FocusLostEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectFocusLost              (const FocusLostEventType::group_type &group);
+    void   disconnectAllSlotsFocusLost      (void);
+    bool   isEmptyFocusLost                 (void) const;
+    UInt32 numSlotsFocusLost                (void) const;
+    
+    //ComponentHidden
+    boost::signals2::connection connectComponentHidden(const ComponentHiddenEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectComponentHidden(const ComponentHiddenEventType::group_type &group,
+                                                       const ComponentHiddenEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectComponentHidden        (const ComponentHiddenEventType::group_type &group);
+    void   disconnectAllSlotsComponentHidden(void);
+    bool   isEmptyComponentHidden           (void) const;
+    UInt32 numSlotsComponentHidden          (void) const;
+    
+    //ComponentVisible
+    boost::signals2::connection connectComponentVisible(const ComponentVisibleEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectComponentVisible(const ComponentVisibleEventType::group_type &group,
+                                                       const ComponentVisibleEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectComponentVisible       (const ComponentVisibleEventType::group_type &group);
+    void   disconnectAllSlotsComponentVisible(void);
+    bool   isEmptyComponentVisible          (void) const;
+    UInt32 numSlotsComponentVisible         (void) const;
+    
+    //ComponentMoved
+    boost::signals2::connection connectComponentMoved (const ComponentMovedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectComponentMoved (const ComponentMovedEventType::group_type &group,
+                                                       const ComponentMovedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectComponentMoved         (const ComponentMovedEventType::group_type &group);
+    void   disconnectAllSlotsComponentMoved (void);
+    bool   isEmptyComponentMoved            (void) const;
+    UInt32 numSlotsComponentMoved           (void) const;
+    
+    //ComponentResized
+    boost::signals2::connection connectComponentResized(const ComponentResizedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectComponentResized(const ComponentResizedEventType::group_type &group,
+                                                       const ComponentResizedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectComponentResized       (const ComponentResizedEventType::group_type &group);
+    void   disconnectAllSlotsComponentResized(void);
+    bool   isEmptyComponentResized          (void) const;
+    UInt32 numSlotsComponentResized         (void) const;
+    
+    //ComponentEnabled
+    boost::signals2::connection connectComponentEnabled(const ComponentEnabledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectComponentEnabled(const ComponentEnabledEventType::group_type &group,
+                                                       const ComponentEnabledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectComponentEnabled       (const ComponentEnabledEventType::group_type &group);
+    void   disconnectAllSlotsComponentEnabled(void);
+    bool   isEmptyComponentEnabled          (void) const;
+    UInt32 numSlotsComponentEnabled         (void) const;
+    
+    //ComponentDisabled
+    boost::signals2::connection connectComponentDisabled(const ComponentDisabledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectComponentDisabled(const ComponentDisabledEventType::group_type &group,
+                                                       const ComponentDisabledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectComponentDisabled      (const ComponentDisabledEventType::group_type &group);
+    void   disconnectAllSlotsComponentDisabled(void);
+    bool   isEmptyComponentDisabled         (void) const;
+    UInt32 numSlotsComponentDisabled        (void) const;
+    
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Event Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
-    
-    GetFieldHandlePtr  getHandleEventProducer        (void) const;
-    EditFieldHandlePtr editHandleEventProducer       (void);
 
+    //Event Event producers
+    MouseMovedEventType _MouseMovedEvent;
+    MouseDraggedEventType _MouseDraggedEvent;
+    MouseClickedEventType _MouseClickedEvent;
+    MouseEnteredEventType _MouseEnteredEvent;
+    MouseExitedEventType _MouseExitedEvent;
+    MousePressedEventType _MousePressedEvent;
+    MouseReleasedEventType _MouseReleasedEvent;
+    MouseWheelMovedEventType _MouseWheelMovedEvent;
+    KeyPressedEventType _KeyPressedEvent;
+    KeyReleasedEventType _KeyReleasedEvent;
+    KeyTypedEventType _KeyTypedEvent;
+    FocusGainedEventType _FocusGainedEvent;
+    FocusLostEventType _FocusLostEvent;
+    ComponentHiddenEventType _ComponentHiddenEvent;
+    ComponentVisibleEventType _ComponentVisibleEvent;
+    ComponentMovedEventType _ComponentMovedEvent;
+    ComponentResizedEventType _ComponentResizedEvent;
+    ComponentEnabledEventType _ComponentEnabledEvent;
+    ComponentDisabledEventType _ComponentDisabledEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -539,7 +813,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     SFBool            _sfVisible;
     SFBool            _sfEnabled;
     SFBool            _sfFocused;
-    SFUnrecLayoutConstraintsPtr _sfConstraints;
+    SFUnrecChildLayoutConstraintsPtr _sfConstraints;
     SFUnrecBorderPtr  _sfBorder;
     SFUnrecLayerPtr   _sfBackground;
     SFUnrecBorderPtr  _sfDisabledBorder;
@@ -560,7 +834,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     SFUnrecLayerPtr   _sfDisabledForeground;
     SFUnrecLayerPtr   _sfForeground;
     SFUInt32          _sfCursor;
-    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -594,6 +867,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
                               UInt16           const parentFieldId);
     virtual bool unlinkParent(FieldContainer * const pParent,
                               UInt16           const parentFieldId);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Child linking                                                */
+    /*! \{                                                                 */
+
+    virtual bool unlinkChild(FieldContainer * const pChild,
+                             UInt16           const childFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -663,6 +944,30 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleMouseMovedSignal(void) const;
+    GetEventHandlePtr getHandleMouseDraggedSignal(void) const;
+    GetEventHandlePtr getHandleMouseClickedSignal(void) const;
+    GetEventHandlePtr getHandleMouseEnteredSignal(void) const;
+    GetEventHandlePtr getHandleMouseExitedSignal(void) const;
+    GetEventHandlePtr getHandleMousePressedSignal(void) const;
+    GetEventHandlePtr getHandleMouseReleasedSignal(void) const;
+    GetEventHandlePtr getHandleMouseWheelMovedSignal(void) const;
+    GetEventHandlePtr getHandleKeyPressedSignal(void) const;
+    GetEventHandlePtr getHandleKeyReleasedSignal(void) const;
+    GetEventHandlePtr getHandleKeyTypedSignal(void) const;
+    GetEventHandlePtr getHandleFocusGainedSignal(void) const;
+    GetEventHandlePtr getHandleFocusLostSignal(void) const;
+    GetEventHandlePtr getHandleComponentHiddenSignal(void) const;
+    GetEventHandlePtr getHandleComponentVisibleSignal(void) const;
+    GetEventHandlePtr getHandleComponentMovedSignal(void) const;
+    GetEventHandlePtr getHandleComponentResizedSignal(void) const;
+    GetEventHandlePtr getHandleComponentEnabledSignal(void) const;
+    GetEventHandlePtr getHandleComponentDisabledSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
@@ -686,6 +991,32 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceMouseMoved          (MouseMovedEventDetailsType* const e);
+    void produceMouseDragged        (MouseDraggedEventDetailsType* const e);
+    void produceMouseClicked        (MouseClickedEventDetailsType* const e);
+    void produceMouseEntered        (MouseEnteredEventDetailsType* const e);
+    void produceMouseExited         (MouseExitedEventDetailsType* const e);
+    void produceMousePressed        (MousePressedEventDetailsType* const e);
+    void produceMouseReleased       (MouseReleasedEventDetailsType* const e);
+    void produceMouseWheelMoved     (MouseWheelMovedEventDetailsType* const e);
+    void produceKeyPressed          (KeyPressedEventDetailsType* const e);
+    void produceKeyReleased         (KeyReleasedEventDetailsType* const e);
+    void produceKeyTyped            (KeyTypedEventDetailsType* const e);
+    void produceFocusGained         (FocusGainedEventDetailsType* const e);
+    void produceFocusLost           (FocusLostEventDetailsType* const e);
+    void produceComponentHidden     (ComponentHiddenEventDetailsType* const e);
+    void produceComponentVisible    (ComponentVisibleEventDetailsType* const e);
+    void produceComponentMoved      (ComponentMovedEventDetailsType* const e);
+    void produceComponentResized    (ComponentResizedEventDetailsType* const e);
+    void produceComponentEnabled    (ComponentEnabledEventDetailsType* const e);
+    void produceComponentDisabled   (ComponentDisabledEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -731,7 +1062,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

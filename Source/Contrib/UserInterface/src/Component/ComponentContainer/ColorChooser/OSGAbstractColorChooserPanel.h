@@ -104,6 +104,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractColorChooserPanel : public Abs
 	//Invoked automatically when the model's state changes.
 	virtual void updateChooser(void) = 0;
 
+    ColorChooser* getParentChooser(void) const;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

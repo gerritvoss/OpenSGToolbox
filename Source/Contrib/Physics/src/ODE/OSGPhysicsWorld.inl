@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-PhysicsHandlerUnrecPtr PhysicsWorld::getParentHandler(void) const
-{
-    return getInternalParentHandler();
-}
-
 OSG_END_NAMESPACE

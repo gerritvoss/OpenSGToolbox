@@ -76,10 +76,10 @@ class OSG_CONTRIBSOUND_DLLMAPPING FModSoundManager : public SoundManager
 	/**
 	* update the sound system with current elapsed time
 	*/
-    virtual void update(const UpdateEventUnrecPtr e);	
+    virtual void update(const Time& ElapsedTime);	
 
 	//create a new sound object by its integer id
-	virtual SoundUnrecPtr createSound(void) const;
+	virtual SoundTransitPtr createSound(void) const;
     virtual void setCamera(CameraUnrecPtr TheCamera);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

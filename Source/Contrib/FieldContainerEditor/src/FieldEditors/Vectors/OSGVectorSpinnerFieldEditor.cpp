@@ -51,6 +51,8 @@
 #include "OSGSysFieldTraits.h"
 #include "OSGVecFieldTraits.h"
 #include "OSGStringUtils.h"
+#include "OSGSpinner.h"
+#include "OSGLabel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -159,11 +161,12 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
     Inherited::internalAttachField(fc, fieldId, index);
     const DataType& type(fc->getFieldDescription(fieldId)->getFieldType().getContentType());
 
-    for(UInt32 i(0) ; i<_EditingSpinnerModels.size() ; ++i)
+    for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
     {
-        _EditingSpinners[i]->removeChangeListener(&_SpinnerListener);
+        _SpinnerStateChangedConnections[i].disconnect();
     }
 
+    _SpinnerStateChangedConnections.clear();
     _EditingSpinnerModels.clear();
     _EditingSpinners.clear();
     _EditingLabels.clear();
@@ -184,7 +187,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec3f>::getType() ||
@@ -201,7 +204,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec4f>::getType() ||
@@ -218,7 +221,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
 
@@ -237,7 +240,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec3ub>::getType() ||
@@ -254,7 +257,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec4ub>::getType() ||
@@ -271,7 +274,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
 
@@ -290,7 +293,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec3b>::getType() ||
@@ -307,7 +310,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec4b>::getType() ||
@@ -324,7 +327,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
 
@@ -343,7 +346,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec3us>::getType() ||
@@ -360,7 +363,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec4us>::getType() ||
@@ -377,7 +380,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
 
@@ -396,7 +399,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec3s>::getType() ||
@@ -413,7 +416,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec4s>::getType() ||
@@ -430,7 +433,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
 
@@ -449,7 +452,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec3fx>::getType() ||
@@ -466,7 +469,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec4fx>::getType() ||
@@ -483,7 +486,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
 
@@ -502,7 +505,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec3d>::getType() ||
@@ -519,7 +522,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec4d>::getType() ||
@@ -536,7 +539,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
 
@@ -554,7 +557,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec3ld>::getType() ||
@@ -570,7 +573,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     else if(type == FieldTraits<Vec4ld>::getType() ||
@@ -586,7 +589,7 @@ bool VectorSpinnerFieldEditor::internalAttachField (FieldContainer* fc, UInt32 f
 
             _EditingSpinners.push_back(Spinner::create());
             _EditingSpinners.back()->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners.back()->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels.back()->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
 
@@ -631,10 +634,12 @@ void VectorSpinnerFieldEditor::internalFieldChanged (void)
     const DataType& type(getEditingFC()->getFieldDescription(getEditingFieldId())->getFieldType().getContentType());
     GetFieldHandlePtr TheFieldHandle = getEditingFC()->getField(getEditingFieldId());
 
-    for(UInt32 i(0) ; i<_EditingSpinnerModels.size() ; ++i)
+    for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
     {
-        _EditingSpinners[i]->removeChangeListener(&_SpinnerListener);
+        _SpinnerStateChangedConnections[i].disconnect();
     }
+
+    _SpinnerStateChangedConnections.clear();
 
     //f
     if(type == FieldTraits<Vec2f>::getType())
@@ -1424,9 +1429,9 @@ void VectorSpinnerFieldEditor::internalFieldChanged (void)
     {
         assert(false && "Should not reach this.");
     }
-    for(UInt32 i(0) ; i<_EditingSpinnerModels.size() ; ++i)
+    for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
     {
-        _EditingSpinners[i]->addChangeListener(&_SpinnerListener);
+        _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels[i]->connectStateChanged(boost::bind(&VectorSpinnerFieldEditor::handleSpinnerStateChanged, this, _1)));
     }
 }
 
@@ -1492,14 +1497,12 @@ void VectorSpinnerFieldEditor::updateLayout(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 VectorSpinnerFieldEditor::VectorSpinnerFieldEditor(void) :
-    Inherited(),
-    _SpinnerListener(this)
+    Inherited()
 {
 }
 
 VectorSpinnerFieldEditor::VectorSpinnerFieldEditor(const VectorSpinnerFieldEditor &source) :
-    Inherited(source),
-    _SpinnerListener(this)
+    Inherited(source)
 {
 }
 
@@ -1520,6 +1523,21 @@ void VectorSpinnerFieldEditor::onDestroy()
 {
 }
 
+void VectorSpinnerFieldEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _EditingSpinners.clear();
+    _EditingLabels.clear();
+    _EditingSpinnerModels.clear();
+
+    for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
+    {
+        _SpinnerStateChangedConnections[i].disconnect();
+    }
+    _SpinnerStateChangedConnections.clear();
+}
+
 void VectorSpinnerFieldEditor::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
@@ -1533,9 +1551,9 @@ void VectorSpinnerFieldEditor::dump(      UInt32    ,
     SLOG << "Dump VectorSpinnerFieldEditor NI" << std::endl;
 }
 
-void VectorSpinnerFieldEditor::SpinnerListener::stateChanged(const ChangeEventUnrecPtr e)
+void VectorSpinnerFieldEditor::handleSpinnerStateChanged(ChangeEventDetails* const details)
 {
-    _VectorSpinnerFieldEditor->runCommand();
+    runCommand();
 }
 
 OSG_END_NAMESPACE

@@ -43,10 +43,7 @@
 #endif
 
 #include "OSGDefaultComboBoxEditorBase.h"
-#include "OSGFocusListener.h"
 #include "OSGTextField.h"
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,13 +79,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultComboBoxEditor : public Default
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	//Add an ActionListener.
-	virtual EventConnection addActionListener(ActionListenerPtr Listener);
-	virtual bool isActionListenerAttached(ActionListenerPtr Listener) const;
-
-	//Remove an ActionListener
-	virtual void removeActionListener(ActionListenerPtr Listener);
+    virtual boost::signals2::connection connectActionPerformed(const Button::ActionPerformedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    virtual boost::signals2::connection connectActionPerformed(const Button::ActionPerformedEventType::group_type &group,
+                                                       const Button::ActionPerformedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
 
 	//Return the component that should be added to the tree hierarchy for this editor
 	virtual Component* getEditorComponent(void);
@@ -138,21 +133,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultComboBoxEditor : public Default
 	
 	/*! \}                                                                 */
 
-    //Expand Button Action Listener
-    class TextFieldListener :public FocusListener
-    {
-      public:
-        TextFieldListener(DefaultComboBoxEditor* const TheDefaultComboBoxEditor);
-        virtual void focusGained(const FocusEventUnrecPtr e);
-        virtual void focusLost(const FocusEventUnrecPtr e);
+    //Expand Button Action
+    void handleTextFieldFocusGained(FocusEventDetails* const e);
+    void handleTextFieldFocusLost(FocusEventDetails* const e);
 
-      private:
-        DefaultComboBoxEditor* _DefaultComboBoxEditor;
-    };
-
-    friend class TextFieldListener;
-
-    TextFieldListener _TextFieldListener;
+    boost::signals2::connection _TextFieldFocusGainedConnection,
+                                _TextFieldFocusLostConnection;
     
     /*==========================  PRIVATE  ================================*/
 

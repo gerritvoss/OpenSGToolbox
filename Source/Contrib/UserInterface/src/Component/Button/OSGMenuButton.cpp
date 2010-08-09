@@ -83,14 +83,6 @@ void MenuButton::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection MenuButton::addMenuActionListener(ActionListenerPtr Listener)
-{
-    _MenuActionListeners.insert(Listener);
-    return EventConnection(
-                           boost::bind(&MenuButton::isMenuActionListenerAttached, this, Listener),
-                           boost::bind(&MenuButton::removeMenuActionListener, this, Listener));
-}
-
 void MenuButton::hidePopup(void)
 {
     if(getMenuButtonPopupMenu() &&
@@ -113,16 +105,6 @@ void MenuButton::showPopup(void)
         getMenuButtonPopupMenu()->setSelection(-1);
 
         getParentWindow()->pushToActivePopupMenus(getMenuButtonPopupMenu());
-    }
-}
-
-
-void MenuButton::removeMenuActionListener(ActionListenerPtr Listener)
-{
-    MenuActionListenerSetItor EraseIter(_MenuActionListeners.find(Listener));
-    if(EraseIter != _MenuActionListeners.end())
-    {
-        _MenuActionListeners.erase(EraseIter);
     }
 }
 
@@ -159,24 +141,25 @@ boost::any MenuButton::getSelectionValue(void) const
 
 void MenuButton::updatePopupMenuConnections(void)
 {
+    for(UInt32 i(0) ; i<_PopupMenuActionConnections.size() ; ++i)
+    {
+        _PopupMenuActionConnections[i].disconnect();
+    }
+    _PopupMenuActionConnections.clear();
     if(getMenuButtonPopupMenu() != NULL)
     {
         for(UInt32 i(0) ; i<getMenuButtonPopupMenu()->getNumItems() ; ++i)
         {
-            getMenuButtonPopupMenu()->getItem(i)->addActionListener(&_MenuButtonEventsListener);
+            _PopupMenuActionConnections.push_back(getMenuButtonPopupMenu()->getItem(i)->connectActionPerformed(boost::bind(&MenuButton::handlePopupMenuActionPerformed, this, _1)));
         }
     }
 }
 
 void MenuButton::produceMenuActionPerformed(void)
 {
-    const ActionEventUnrecPtr e = ActionEvent::create(this, getTimeStamp());
-	MenuActionListenerSet Listeners(_MenuActionListeners);
-    for(MenuActionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
-    {
-	    (*SetItor)->actionPerformed(e);
-    }
-   _Producer.produceEvent(MenuActionPerformedMethodId,e);
+    ActionEventDetailsUnrecPtr Details = ActionEventDetails::create(this, getTimeStamp());
+
+    Inherited::produceMenuActionPerformed(Details);
 }
 
 void MenuButton::onCreate(const MenuButton *Id)
@@ -194,14 +177,12 @@ void MenuButton::onDestroy()
 /*----------------------- constructors & destructors ----------------------*/
 
 MenuButton::MenuButton(void) :
-    Inherited(),
-    _MenuButtonEventsListener(this)
+    Inherited()
 {
 }
 
 MenuButton::MenuButton(const MenuButton &source) :
-    Inherited(source),
-    _MenuButtonEventsListener(this)
+    Inherited(source)
 {
 }
 
@@ -217,12 +198,20 @@ void MenuButton::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-	if((whichField & MenuButtonPopupMenuFieldMask) &&
-		getMenuButtonPopupMenu() != NULL)
-	{
-		getMenuButtonPopupMenu()->addPopupMenuListener(&_MenuButtonEventsListener);
-        updatePopupMenuConnections();
-	}
+	if(whichField & MenuButtonPopupMenuFieldMask)
+    {
+        _PopupMenuCanceledConnection.disconnect();
+        _PopupMenuWillBecomeInvisibleConnection.disconnect();
+        _PopupMenuContentsChangedConnection.disconnect();
+        if(getMenuButtonPopupMenu() != NULL)
+	    {
+            _PopupMenuCanceledConnection = getMenuButtonPopupMenu()->connectPopupMenuCanceled(boost::bind(&MenuButton::handlePopupMenuCanceled, this, _1));
+            _PopupMenuWillBecomeInvisibleConnection = getMenuButtonPopupMenu()->connectPopupMenuWillBecomeInvisible(boost::bind(&MenuButton::handlePopupMenuWillBecomeInvisible, this, _1));
+            _PopupMenuContentsChangedConnection = getMenuButtonPopupMenu()->connectPopupMenuContentsChanged(boost::bind(&MenuButton::handlePopupMenuContentsChanged, this, _1));
+
+            updatePopupMenuConnections();
+	    }
+    }
 
     if(whichField & ModelFieldMask)
     {
@@ -260,28 +249,24 @@ void MenuButton::dump(      UInt32    ,
     SLOG << "Dump MenuButton NI" << std::endl;
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuCanceled(const PopupMenuEventUnrecPtr e)
+void MenuButton::handlePopupMenuCanceled(PopupMenuEventDetails* const e)
 {
-        _MenuButton->setSelected(false);
+     setSelected(false);
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e)
+void MenuButton::handlePopupMenuWillBecomeInvisible(PopupMenuEventDetails* const e)
 {
-        _MenuButton->setSelected(false);
+    setSelected(false);
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e)
+void MenuButton::handlePopupMenuContentsChanged(PopupMenuEventDetails* const e)
 {
+    updatePopupMenuConnections();
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuContentsChanged(const PopupMenuEventUnrecPtr e)
+void MenuButton::handlePopupMenuActionPerformed(ActionEventDetails* const e)
 {
-    _MenuButton->updatePopupMenuConnections();
-}
-
-void MenuButton::MenuButtonEventsListener::actionPerformed(const ActionEventUnrecPtr e)
-{
-    _MenuButton->produceMenuActionPerformed();
+    produceMenuActionPerformed();
 }
 
 OSG_END_NAMESPACE

@@ -40,12 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-ParticleTrailGenerator::TrailParticleSystemListener::TrailParticleSystemListener(ParticleTrailGenerator* trailGenerator) :
-    _mTrailGenerator(trailGenerator),
-    _mLastAdded(0.0f),
-    _mInitialized(false)
-{
-}
-
 OSG_END_NAMESPACE

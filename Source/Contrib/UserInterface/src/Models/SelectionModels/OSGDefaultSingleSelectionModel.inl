@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool DefaultSingleSelectionModel::isSelectionListenerAttached(SelectionListenerPtr listener) const
-{
-    return _SelectionListeners.find(listener) != _SelectionListeners.end();
-}
-
 OSG_END_NAMESPACE

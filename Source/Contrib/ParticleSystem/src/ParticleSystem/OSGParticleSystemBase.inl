@@ -598,70 +598,247 @@ const Char8 *ParticleSystemBase::getClassname(void)
 }
 
 inline
-EventConnection ParticleSystemBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool ParticleSystemBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 ParticleSystemBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr ParticleSystemBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void ParticleSystemBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 ParticleSystemBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *ParticleSystemBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *ParticleSystemBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *ParticleSystemBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *ParticleSystemBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 ParticleSystemBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *ParticleSystemBase::editSFEventProducer(void)
+boost::signals2::connection  ParticleSystemBase::connectSystemUpdated(const SystemUpdatedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _SystemUpdatedEvent.connect(listener, at);
 }
 
-//! Get the value of the ParticleSystem::_sfEventProducer field.
 inline
-EventProducerPtr &ParticleSystemBase::editEventProducer(void)
+boost::signals2::connection  ParticleSystemBase::connectSystemUpdated(const SystemUpdatedEventType::group_type &group,
+                                                    const SystemUpdatedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _SystemUpdatedEvent.connect(group, listener, at);
+}
+
+inline
+void  ParticleSystemBase::disconnectSystemUpdated(const SystemUpdatedEventType::group_type &group)
+{
+    _SystemUpdatedEvent.disconnect(group);
+}
+
+inline
+void  ParticleSystemBase::disconnectAllSlotsSystemUpdated(void)
+{
+    _SystemUpdatedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ParticleSystemBase::isEmptySystemUpdated(void) const
+{
+    return _SystemUpdatedEvent.empty();
+}
+
+inline
+UInt32  ParticleSystemBase::numSlotsSystemUpdated(void) const
+{
+    return _SystemUpdatedEvent.num_slots();
+}
+
+inline
+void ParticleSystemBase::produceSystemUpdated(SystemUpdatedEventDetailsType* const e)
+{
+    produceEvent(SystemUpdatedEventId, e);
+}
+
+inline
+boost::signals2::connection  ParticleSystemBase::connectVolumeChanged(const VolumeChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _VolumeChangedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ParticleSystemBase::connectVolumeChanged(const VolumeChangedEventType::group_type &group,
+                                                    const VolumeChangedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _VolumeChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  ParticleSystemBase::disconnectVolumeChanged(const VolumeChangedEventType::group_type &group)
+{
+    _VolumeChangedEvent.disconnect(group);
+}
+
+inline
+void  ParticleSystemBase::disconnectAllSlotsVolumeChanged(void)
+{
+    _VolumeChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ParticleSystemBase::isEmptyVolumeChanged(void) const
+{
+    return _VolumeChangedEvent.empty();
+}
+
+inline
+UInt32  ParticleSystemBase::numSlotsVolumeChanged(void) const
+{
+    return _VolumeChangedEvent.num_slots();
+}
+
+inline
+void ParticleSystemBase::produceVolumeChanged(VolumeChangedEventDetailsType* const e)
+{
+    produceEvent(VolumeChangedEventId, e);
+}
+
+inline
+boost::signals2::connection  ParticleSystemBase::connectParticleGenerated(const ParticleGeneratedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ParticleGeneratedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ParticleSystemBase::connectParticleGenerated(const ParticleGeneratedEventType::group_type &group,
+                                                    const ParticleGeneratedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ParticleGeneratedEvent.connect(group, listener, at);
+}
+
+inline
+void  ParticleSystemBase::disconnectParticleGenerated(const ParticleGeneratedEventType::group_type &group)
+{
+    _ParticleGeneratedEvent.disconnect(group);
+}
+
+inline
+void  ParticleSystemBase::disconnectAllSlotsParticleGenerated(void)
+{
+    _ParticleGeneratedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ParticleSystemBase::isEmptyParticleGenerated(void) const
+{
+    return _ParticleGeneratedEvent.empty();
+}
+
+inline
+UInt32  ParticleSystemBase::numSlotsParticleGenerated(void) const
+{
+    return _ParticleGeneratedEvent.num_slots();
+}
+
+inline
+void ParticleSystemBase::produceParticleGenerated(ParticleGeneratedEventDetailsType* const e)
+{
+    produceEvent(ParticleGeneratedEventId, e);
+}
+
+inline
+boost::signals2::connection  ParticleSystemBase::connectParticleKilled(const ParticleKilledEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ParticleKilledEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ParticleSystemBase::connectParticleKilled(const ParticleKilledEventType::group_type &group,
+                                                    const ParticleKilledEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ParticleKilledEvent.connect(group, listener, at);
+}
+
+inline
+void  ParticleSystemBase::disconnectParticleKilled(const ParticleKilledEventType::group_type &group)
+{
+    _ParticleKilledEvent.disconnect(group);
+}
+
+inline
+void  ParticleSystemBase::disconnectAllSlotsParticleKilled(void)
+{
+    _ParticleKilledEvent.disconnect_all_slots();
+}
+
+inline
+bool  ParticleSystemBase::isEmptyParticleKilled(void) const
+{
+    return _ParticleKilledEvent.empty();
+}
+
+inline
+UInt32  ParticleSystemBase::numSlotsParticleKilled(void) const
+{
+    return _ParticleKilledEvent.num_slots();
+}
+
+inline
+void ParticleSystemBase::produceParticleKilled(ParticleKilledEventDetailsType* const e)
+{
+    produceEvent(ParticleKilledEventId, e);
+}
+
+inline
+boost::signals2::connection  ParticleSystemBase::connectParticleStolen(const ParticleStolenEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ParticleStolenEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ParticleSystemBase::connectParticleStolen(const ParticleStolenEventType::group_type &group,
+                                                    const ParticleStolenEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ParticleStolenEvent.connect(group, listener, at);
+}
+
+inline
+void  ParticleSystemBase::disconnectParticleStolen(const ParticleStolenEventType::group_type &group)
+{
+    _ParticleStolenEvent.disconnect(group);
+}
+
+inline
+void  ParticleSystemBase::disconnectAllSlotsParticleStolen(void)
+{
+    _ParticleStolenEvent.disconnect_all_slots();
+}
+
+inline
+bool  ParticleSystemBase::isEmptyParticleStolen(void) const
+{
+    return _ParticleStolenEvent.empty();
+}
+
+inline
+UInt32  ParticleSystemBase::numSlotsParticleStolen(void) const
+{
+    return _ParticleStolenEvent.num_slots();
+}
+
+inline
+void ParticleSystemBase::produceParticleStolen(ParticleStolenEventDetailsType* const e)
+{
+    produceEvent(ParticleStolenEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(ParticleSystem);

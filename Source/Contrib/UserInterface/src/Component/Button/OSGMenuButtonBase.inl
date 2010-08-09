@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGActionEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -163,6 +165,50 @@ const Char8 *MenuButtonBase::getClassname(void)
 {
     return "MenuButton";
 }
+inline
+boost::signals2::connection  MenuButtonBase::connectMenuActionPerformed(const MenuActionPerformedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MenuActionPerformedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  MenuButtonBase::connectMenuActionPerformed(const MenuActionPerformedEventType::group_type &group,
+                                                    const MenuActionPerformedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MenuActionPerformedEvent.connect(group, listener, at);
+}
+
+inline
+void  MenuButtonBase::disconnectMenuActionPerformed(const MenuActionPerformedEventType::group_type &group)
+{
+    _MenuActionPerformedEvent.disconnect(group);
+}
+
+inline
+void  MenuButtonBase::disconnectAllSlotsMenuActionPerformed(void)
+{
+    _MenuActionPerformedEvent.disconnect_all_slots();
+}
+
+inline
+bool  MenuButtonBase::isEmptyMenuActionPerformed(void) const
+{
+    return _MenuActionPerformedEvent.empty();
+}
+
+inline
+UInt32  MenuButtonBase::numSlotsMenuActionPerformed(void) const
+{
+    return _MenuActionPerformedEvent.num_slots();
+}
+
+inline
+void MenuButtonBase::produceMenuActionPerformed(MenuActionPerformedEventDetailsType* const e)
+{
+    produceEvent(MenuActionPerformedEventId, e);
+}
+
 OSG_GEN_CONTAINERPTR(MenuButton);
 
 OSG_END_NAMESPACE

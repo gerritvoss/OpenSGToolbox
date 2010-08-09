@@ -41,18 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-EventConnection ProgressBar::addChangeListener(ChangeListenerPtr Listener)
-{
-	return getRangeModel()->addChangeListener(Listener);
-}
-
-inline
-bool ProgressBar::isChangeListenerAttached(ChangeListenerPtr Listener) const
-{
-	return getRangeModel()->isChangeListenerAttached(Listener);
-}
-
-inline
 Int32 ProgressBar::getMaximum(void) const
 {
 	return getRangeModel()->getMaximum();
@@ -92,24 +80,6 @@ inline
 void ProgressBar::setValue(const Int32& n)
 {
 	getRangeModel()->setValue(n);
-}
-
-inline
-void ProgressBar::removeChangeListener(ChangeListenerPtr Listener)
-{
-	getRangeModel()->removeChangeListener(Listener);
-}
-
-inline
-ProgressBar::ModelChangeListener::ModelChangeListener(ProgressBar* const TheProgressBar) :
-   _ProgressBar(TheProgressBar)
-{
-}
-   
-inline
-ProgressBar::IndeterminateUpdateListener::IndeterminateUpdateListener(ProgressBar* const TheProgressBar) :
-   _ProgressBar(TheProgressBar)
-{
 }
 
 OSG_END_NAMESPACE

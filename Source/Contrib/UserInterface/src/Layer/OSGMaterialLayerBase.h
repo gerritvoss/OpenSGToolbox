@@ -66,6 +66,9 @@
 #include "OSGLayer.h" // Parent
 
 #include "OSGMaterialFields.h"          // Material type
+#include "OSGBaseFields.h"              // Color type
+#include "OSGSysFields.h"               // Scale type
+#include "OSGVecFields.h"               // ScaleAbsoluteSize type
 
 #include "OSGMaterialLayerFields.h"
 
@@ -86,6 +89,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MaterialLayerBase : public Layer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(MaterialLayer);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -94,15 +99,35 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MaterialLayerBase : public Layer
     enum
     {
         MaterialFieldId = Inherited::NextFieldId,
-        NextFieldId = MaterialFieldId + 1
+        ColorFieldId = MaterialFieldId + 1,
+        ScaleFieldId = ColorFieldId + 1,
+        ScaleAbsoluteSizeFieldId = ScaleFieldId + 1,
+        VerticalAlignmentFieldId = ScaleAbsoluteSizeFieldId + 1,
+        HorizontalAlignmentFieldId = VerticalAlignmentFieldId + 1,
+        NextFieldId = HorizontalAlignmentFieldId + 1
     };
 
     static const OSG::BitVector MaterialFieldMask =
         (TypeTraits<BitVector>::One << MaterialFieldId);
+    static const OSG::BitVector ColorFieldMask =
+        (TypeTraits<BitVector>::One << ColorFieldId);
+    static const OSG::BitVector ScaleFieldMask =
+        (TypeTraits<BitVector>::One << ScaleFieldId);
+    static const OSG::BitVector ScaleAbsoluteSizeFieldMask =
+        (TypeTraits<BitVector>::One << ScaleAbsoluteSizeFieldId);
+    static const OSG::BitVector VerticalAlignmentFieldMask =
+        (TypeTraits<BitVector>::One << VerticalAlignmentFieldId);
+    static const OSG::BitVector HorizontalAlignmentFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalAlignmentFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecMaterialPtr SFMaterialType;
+    typedef SFColor4f         SFColorType;
+    typedef SFUInt32          SFScaleType;
+    typedef SFVec2s           SFScaleAbsoluteSizeType;
+    typedef SFReal32          SFVerticalAlignmentType;
+    typedef SFReal32          SFHorizontalAlignmentType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -130,8 +155,38 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MaterialLayerBase : public Layer
             const SFUnrecMaterialPtr  *getSFMaterial       (void) const;
                   SFUnrecMaterialPtr  *editSFMaterial       (void);
 
+                  SFColor4f           *editSFColor          (void);
+            const SFColor4f           *getSFColor           (void) const;
+
+                  SFUInt32            *editSFScale          (void);
+            const SFUInt32            *getSFScale           (void) const;
+
+                  SFVec2s             *editSFScaleAbsoluteSize(void);
+            const SFVec2s             *getSFScaleAbsoluteSize (void) const;
+
+                  SFReal32            *editSFVerticalAlignment(void);
+            const SFReal32            *getSFVerticalAlignment (void) const;
+
+                  SFReal32            *editSFHorizontalAlignment(void);
+            const SFReal32            *getSFHorizontalAlignment (void) const;
+
 
                   Material * getMaterial       (void) const;
+
+                  Color4f             &editColor          (void);
+            const Color4f             &getColor           (void) const;
+
+                  UInt32              &editScale          (void);
+                  UInt32               getScale           (void) const;
+
+                  Vec2s               &editScaleAbsoluteSize(void);
+            const Vec2s               &getScaleAbsoluteSize (void) const;
+
+                  Real32              &editVerticalAlignment(void);
+                  Real32               getVerticalAlignment (void) const;
+
+                  Real32              &editHorizontalAlignment(void);
+                  Real32               getHorizontalAlignment (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -139,6 +194,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MaterialLayerBase : public Layer
     /*! \{                                                                 */
 
             void setMaterial       (Material * const value);
+            void setColor          (const Color4f &value);
+            void setScale          (const UInt32 value);
+            void setScaleAbsoluteSize(const Vec2s &value);
+            void setVerticalAlignment(const Real32 value);
+            void setHorizontalAlignment(const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -204,6 +264,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MaterialLayerBase : public Layer
     /*! \{                                                                 */
 
     SFUnrecMaterialPtr _sfMaterial;
+    SFColor4f         _sfColor;
+    SFUInt32          _sfScale;
+    SFVec2s           _sfScaleAbsoluteSize;
+    SFReal32          _sfVerticalAlignment;
+    SFReal32          _sfHorizontalAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -234,6 +299,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MaterialLayerBase : public Layer
 
     GetFieldHandlePtr  getHandleMaterial        (void) const;
     EditFieldHandlePtr editHandleMaterial       (void);
+    GetFieldHandlePtr  getHandleColor           (void) const;
+    EditFieldHandlePtr editHandleColor          (void);
+    GetFieldHandlePtr  getHandleScale           (void) const;
+    EditFieldHandlePtr editHandleScale          (void);
+    GetFieldHandlePtr  getHandleScaleAbsoluteSize (void) const;
+    EditFieldHandlePtr editHandleScaleAbsoluteSize(void);
+    GetFieldHandlePtr  getHandleVerticalAlignment (void) const;
+    EditFieldHandlePtr editHandleVerticalAlignment(void);
+    GetFieldHandlePtr  getHandleHorizontalAlignment (void) const;
+    EditFieldHandlePtr editHandleHorizontalAlignment(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

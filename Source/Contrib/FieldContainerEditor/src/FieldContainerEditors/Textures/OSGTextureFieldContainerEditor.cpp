@@ -188,6 +188,13 @@ void TextureFieldContainerEditor::onDestroy()
 {
 }
 
+void TextureFieldContainerEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _ImageDisplayComponent = NULL;
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 TextureFieldContainerEditor::TextureFieldContainerEditor(void) :

@@ -52,6 +52,8 @@
 #include "OSGMathFieldTraits.h"
 #include "OSGMathFields.h"
 #include "OSGStringUtils.h"
+#include "OSGSpinner.h"
+#include "OSGLabel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -100,8 +102,10 @@ bool QuaternionEulerFieldEditor::internalAttachField (FieldContainer* fc, UInt32
 
     for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
     {
-        _EditingSpinners[i]->removeChangeListener(&_SpinnerListener);
+        _SpinnerStateChangedConnections[i].disconnect();
     }
+
+    _SpinnerStateChangedConnections.clear();
 
     _EditingSpinnerModels.clear();
     
@@ -116,7 +120,7 @@ bool QuaternionEulerFieldEditor::internalAttachField (FieldContainer* fc, UInt32
             _EditingSpinnerModels.push_back(SpinnerModelPtr(model));
 
             _EditingSpinners[i]->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners[i]->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels[i]->connectStateChanged(boost::bind(&QuaternionEulerFieldEditor::handleSpinnerStateChanged, this, _1)));
         }
     }
     /*else if(type == FieldTraits<Quaternionfx>::getType())
@@ -130,7 +134,7 @@ bool QuaternionEulerFieldEditor::internalAttachField (FieldContainer* fc, UInt32
             _EditingSpinnerModels.push_back(SpinnerModelPtr(model));
 
             _EditingSpinners[i]->setModel(_EditingSpinnerModels.back());
-            _EditingSpinners[i]->addChangeListener(&_SpinnerListener);
+            _SpinnerStateChangedConnections.push_back(_EditingSpinners[i]->connectStateChanged(boost::bind(&QuaternionEulerFieldEditor::handleSpinnerStateChanged, this, _1));
         }
     }*/
     else
@@ -148,8 +152,10 @@ void QuaternionEulerFieldEditor::internalFieldChanged (void)
 
     for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
     {
-        _EditingSpinners[i]->removeChangeListener(&_SpinnerListener);
+        _SpinnerStateChangedConnections[i].disconnect();
     }
+
+    _SpinnerStateChangedConnections.clear();
 
     if(type == FieldTraits<Quaternion>::getType())
     {
@@ -195,7 +201,7 @@ void QuaternionEulerFieldEditor::internalFieldChanged (void)
     }
     for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
     {
-        _EditingSpinners[i]->addChangeListener(&_SpinnerListener);
+        _SpinnerStateChangedConnections.push_back(_EditingSpinnerModels[i]->connectStateChanged(boost::bind(&QuaternionEulerFieldEditor::handleSpinnerStateChanged, this, _1)));
     }
 }
 
@@ -265,14 +271,12 @@ void QuaternionEulerFieldEditor::updateLayout(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 QuaternionEulerFieldEditor::QuaternionEulerFieldEditor(void) :
-    Inherited(),
-    _SpinnerListener(this)
+    Inherited()
 {
 }
 
 QuaternionEulerFieldEditor::QuaternionEulerFieldEditor(const QuaternionEulerFieldEditor &source) :
-    Inherited(source),
-    _SpinnerListener(this)
+    Inherited(source)
 {
 }
 
@@ -314,6 +318,21 @@ void QuaternionEulerFieldEditor::onDestroy()
 {
 }
 
+void QuaternionEulerFieldEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _EditingSpinners.clear();
+    _EditingLabels.clear();
+    _EditingSpinnerModels.clear();
+
+    for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
+    {
+        _SpinnerStateChangedConnections[i].disconnect();
+    }
+    _SpinnerStateChangedConnections.clear();
+}
+
 
 void QuaternionEulerFieldEditor::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
@@ -328,9 +347,9 @@ void QuaternionEulerFieldEditor::dump(      UInt32    ,
     SLOG << "Dump QuaternionEulerFieldEditor NI" << std::endl;
 }
 
-void QuaternionEulerFieldEditor::SpinnerListener::stateChanged(const ChangeEventUnrecPtr e)
+void QuaternionEulerFieldEditor::handleSpinnerStateChanged(ChangeEventDetails* const details)
 {
-    _QuaternionEulerFieldEditor->runCommand();
+    runCommand();
 }
 
 OSG_END_NAMESPACE

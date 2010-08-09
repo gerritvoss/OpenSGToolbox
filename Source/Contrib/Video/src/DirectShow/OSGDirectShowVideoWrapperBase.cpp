@@ -140,7 +140,6 @@ DirectShowVideoWrapperBase::TypeObject DirectShowVideoWrapperBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &DirectShowVideoWrapperBase::getType(void)
@@ -261,7 +260,6 @@ DirectShowVideoWrapper *DirectShowVideoWrapperBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr DirectShowVideoWrapperBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -307,7 +305,6 @@ FieldContainerTransitPtr DirectShowVideoWrapperBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 DirectShowVideoWrapperBase::DirectShowVideoWrapperBase(void) :
@@ -326,6 +323,7 @@ DirectShowVideoWrapperBase::DirectShowVideoWrapperBase(const DirectShowVideoWrap
 DirectShowVideoWrapperBase::~DirectShowVideoWrapperBase(void)
 {
 }
+
 
 
 

@@ -53,8 +53,6 @@
 #include "OSGFieldContainerMFieldHandle.h"
 #include "OSGAttachmentMapFieldTraits.h"
 #include "OSGChangedFunctorFieldTraits.h"
-#include "OSGEventProducerPtrType.h"
-#include "OSGEventProducer.h"
 
 #include "OSGAttachmentMapSFields.h"
 
@@ -211,7 +209,7 @@ bool FieldContainerTreeModel::isFieldAllowed(const FieldDescriptionBase* fieldDe
                                  fieldClass == FieldType::ChildPtrField  ||
                                  fieldClass == FieldType::PtrField         )    ) ||
                         
-        (!getShowEventProducers()  && contentType == FieldTraits<EventProducerPtr>::getType())      ||
+        //(!getShowEventProducers()  && contentType == FieldTraits<EventProducerPtr>::getType())      ||
                                  
         (!getShowCallbackFunctors()  && contentType == FieldTraits<ChangedFunctorCallback>::getType())
       )

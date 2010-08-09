@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool AbstractTableColumnModel::isColumnModelListenerAttached(TableColumnModelListenerPtr l) const
-{
-    return _ModelListeners.find(l) != _ModelListeners.end();
-}
-
 OSG_END_NAMESPACE

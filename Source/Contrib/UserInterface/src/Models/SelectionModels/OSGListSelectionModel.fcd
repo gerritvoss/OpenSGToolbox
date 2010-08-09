@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ListSelectionModel"
+	parent="FieldContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="abstract"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+A UI SingleSelectionModel.
+	<Field
+		name="SelectionMode"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="ListSelectionModel::SINGLE_SELECTION"
+		access="public"
+	>
+	</Field>
+	<ProducedEvent
+		name="SelectionChanged"
+		detailsType="ListSelectionEventDetails"
+		consumable="true"
+	>
+	</ProducedEvent>
+</FieldContainer>

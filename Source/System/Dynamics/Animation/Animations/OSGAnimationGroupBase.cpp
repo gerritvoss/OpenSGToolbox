@@ -57,6 +57,8 @@
 #include "OSGConfig.h"
 
 
+#include "OSGAnimationEventDetails.h"
+
 
 #include "OSGAnimation.h"               // Animations Class
 
@@ -65,7 +67,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -176,17 +178,6 @@ void AnimationGroupBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AnimationGroup::getHandleSpan));
 
     oType.addInitialDesc(pDesc);
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&AnimationGroup::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&AnimationGroup::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -254,74 +245,92 @@ AnimationGroupBase::TypeObject AnimationGroupBase::_type(
     "        defaultValue=\"-1.0\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"AnimationsStarted\"\n"
-    "\t\ttype=\"AnimationEvent\"\n"
+    "\t\tdetailsType=\"AnimationEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"AnimationsStopped\"\n"
-    "\t\ttype=\"AnimationEvent\"\n"
+    "\t\tdetailsType=\"AnimationEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"AnimationsPaused\"\n"
-    "\t\ttype=\"AnimationEvent\"\n"
+    "\t\tdetailsType=\"AnimationEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"AnimationsUnpaused\"\n"
-    "\t\ttype=\"AnimationEvent\"\n"
+    "\t\tdetailsType=\"AnimationEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"AnimationsEnded\"\n"
-    "\t\ttype=\"AnimationEvent\"\n"
+    "\t\tdetailsType=\"AnimationEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"AnimationsCycled\"\n"
-    "\t\ttype=\"AnimationEvent\"\n"
+    "\t\tdetailsType=\"AnimationEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     ""
     );
 
-//! AnimationGroup Produced Methods
+//! AnimationGroup Produced Events
 
-MethodDescription *AnimationGroupBase::_methodDesc[] =
+EventDescription *AnimationGroupBase::_eventDesc[] =
 {
-    new MethodDescription("AnimationsStarted", 
-                    "",
-                     AnimationsStartedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("AnimationsStopped", 
-                    "",
-                     AnimationsStoppedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("AnimationsPaused", 
-                    "",
-                     AnimationsPausedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("AnimationsUnpaused", 
-                    "",
-                     AnimationsUnpausedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("AnimationsEnded", 
-                    "",
-                     AnimationsEndedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("AnimationsCycled", 
-                    "",
-                     AnimationsCycledMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("AnimationsStarted", 
+                          "",
+                          AnimationsStartedEventId, 
+                          FieldTraits<AnimationEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsStartedSignal)),
+
+    new EventDescription("AnimationsStopped", 
+                          "",
+                          AnimationsStoppedEventId, 
+                          FieldTraits<AnimationEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsStoppedSignal)),
+
+    new EventDescription("AnimationsPaused", 
+                          "",
+                          AnimationsPausedEventId, 
+                          FieldTraits<AnimationEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsPausedSignal)),
+
+    new EventDescription("AnimationsUnpaused", 
+                          "",
+                          AnimationsUnpausedEventId, 
+                          FieldTraits<AnimationEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsUnpausedSignal)),
+
+    new EventDescription("AnimationsEnded", 
+                          "",
+                          AnimationsEndedEventId, 
+                          FieldTraits<AnimationEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsEndedSignal)),
+
+    new EventDescription("AnimationsCycled", 
+                          "",
+                          AnimationsCycledEventId, 
+                          FieldTraits<AnimationEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsCycledSignal))
+
 };
 
 EventProducerType AnimationGroupBase::_producerType(
@@ -329,8 +338,8 @@ EventProducerType AnimationGroupBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -488,10 +497,6 @@ UInt32 AnimationGroupBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfSpan.getBinSize();
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -517,10 +522,6 @@ void AnimationGroupBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfSpan.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void AnimationGroupBase::copyFromBin(BinaryDataHandler &pMem,
@@ -543,10 +544,6 @@ void AnimationGroupBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SpanFieldMask & whichField))
     {
         _sfSpan.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
     }
 }
 
@@ -668,28 +665,252 @@ FieldContainerTransitPtr AnimationGroupBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void AnimationGroupBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case AnimationsStartedEventId:
+        OSG_ASSERT(dynamic_cast<AnimationsStartedEventDetailsType* const>(e));
+
+        _AnimationsStartedEvent.set_combiner(ConsumableEventCombiner(e));
+        _AnimationsStartedEvent(dynamic_cast<AnimationsStartedEventDetailsType* const>(e), AnimationsStartedEventId);
+        break;
+    case AnimationsStoppedEventId:
+        OSG_ASSERT(dynamic_cast<AnimationsStoppedEventDetailsType* const>(e));
+
+        _AnimationsStoppedEvent.set_combiner(ConsumableEventCombiner(e));
+        _AnimationsStoppedEvent(dynamic_cast<AnimationsStoppedEventDetailsType* const>(e), AnimationsStoppedEventId);
+        break;
+    case AnimationsPausedEventId:
+        OSG_ASSERT(dynamic_cast<AnimationsPausedEventDetailsType* const>(e));
+
+        _AnimationsPausedEvent.set_combiner(ConsumableEventCombiner(e));
+        _AnimationsPausedEvent(dynamic_cast<AnimationsPausedEventDetailsType* const>(e), AnimationsPausedEventId);
+        break;
+    case AnimationsUnpausedEventId:
+        OSG_ASSERT(dynamic_cast<AnimationsUnpausedEventDetailsType* const>(e));
+
+        _AnimationsUnpausedEvent.set_combiner(ConsumableEventCombiner(e));
+        _AnimationsUnpausedEvent(dynamic_cast<AnimationsUnpausedEventDetailsType* const>(e), AnimationsUnpausedEventId);
+        break;
+    case AnimationsEndedEventId:
+        OSG_ASSERT(dynamic_cast<AnimationsEndedEventDetailsType* const>(e));
+
+        _AnimationsEndedEvent.set_combiner(ConsumableEventCombiner(e));
+        _AnimationsEndedEvent(dynamic_cast<AnimationsEndedEventDetailsType* const>(e), AnimationsEndedEventId);
+        break;
+    case AnimationsCycledEventId:
+        OSG_ASSERT(dynamic_cast<AnimationsCycledEventDetailsType* const>(e));
+
+        _AnimationsCycledEvent.set_combiner(ConsumableEventCombiner(e));
+        _AnimationsCycledEvent(dynamic_cast<AnimationsCycledEventDetailsType* const>(e), AnimationsCycledEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection AnimationGroupBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case AnimationsStartedEventId:
+        return _AnimationsStartedEvent.connect(listener, at);
+        break;
+    case AnimationsStoppedEventId:
+        return _AnimationsStoppedEvent.connect(listener, at);
+        break;
+    case AnimationsPausedEventId:
+        return _AnimationsPausedEvent.connect(listener, at);
+        break;
+    case AnimationsUnpausedEventId:
+        return _AnimationsUnpausedEvent.connect(listener, at);
+        break;
+    case AnimationsEndedEventId:
+        return _AnimationsEndedEvent.connect(listener, at);
+        break;
+    case AnimationsCycledEventId:
+        return _AnimationsCycledEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  AnimationGroupBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case AnimationsStartedEventId:
+        return _AnimationsStartedEvent.connect(group, listener, at);
+        break;
+    case AnimationsStoppedEventId:
+        return _AnimationsStoppedEvent.connect(group, listener, at);
+        break;
+    case AnimationsPausedEventId:
+        return _AnimationsPausedEvent.connect(group, listener, at);
+        break;
+    case AnimationsUnpausedEventId:
+        return _AnimationsUnpausedEvent.connect(group, listener, at);
+        break;
+    case AnimationsEndedEventId:
+        return _AnimationsEndedEvent.connect(group, listener, at);
+        break;
+    case AnimationsCycledEventId:
+        return _AnimationsCycledEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  AnimationGroupBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case AnimationsStartedEventId:
+        _AnimationsStartedEvent.disconnect(group);
+        break;
+    case AnimationsStoppedEventId:
+        _AnimationsStoppedEvent.disconnect(group);
+        break;
+    case AnimationsPausedEventId:
+        _AnimationsPausedEvent.disconnect(group);
+        break;
+    case AnimationsUnpausedEventId:
+        _AnimationsUnpausedEvent.disconnect(group);
+        break;
+    case AnimationsEndedEventId:
+        _AnimationsEndedEvent.disconnect(group);
+        break;
+    case AnimationsCycledEventId:
+        _AnimationsCycledEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  AnimationGroupBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case AnimationsStartedEventId:
+        _AnimationsStartedEvent.disconnect_all_slots();
+        break;
+    case AnimationsStoppedEventId:
+        _AnimationsStoppedEvent.disconnect_all_slots();
+        break;
+    case AnimationsPausedEventId:
+        _AnimationsPausedEvent.disconnect_all_slots();
+        break;
+    case AnimationsUnpausedEventId:
+        _AnimationsUnpausedEvent.disconnect_all_slots();
+        break;
+    case AnimationsEndedEventId:
+        _AnimationsEndedEvent.disconnect_all_slots();
+        break;
+    case AnimationsCycledEventId:
+        _AnimationsCycledEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  AnimationGroupBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case AnimationsStartedEventId:
+        return _AnimationsStartedEvent.empty();
+        break;
+    case AnimationsStoppedEventId:
+        return _AnimationsStoppedEvent.empty();
+        break;
+    case AnimationsPausedEventId:
+        return _AnimationsPausedEvent.empty();
+        break;
+    case AnimationsUnpausedEventId:
+        return _AnimationsUnpausedEvent.empty();
+        break;
+    case AnimationsEndedEventId:
+        return _AnimationsEndedEvent.empty();
+        break;
+    case AnimationsCycledEventId:
+        return _AnimationsCycledEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  AnimationGroupBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case AnimationsStartedEventId:
+        return _AnimationsStartedEvent.num_slots();
+        break;
+    case AnimationsStoppedEventId:
+        return _AnimationsStoppedEvent.num_slots();
+        break;
+    case AnimationsPausedEventId:
+        return _AnimationsPausedEvent.num_slots();
+        break;
+    case AnimationsUnpausedEventId:
+        return _AnimationsUnpausedEvent.num_slots();
+        break;
+    case AnimationsEndedEventId:
+        return _AnimationsEndedEvent.num_slots();
+        break;
+    case AnimationsCycledEventId:
+        return _AnimationsCycledEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
 AnimationGroupBase::AnimationGroupBase(void) :
-    _Producer(&getProducerType()),
     Inherited(),
     _mfAnimations             (),
     _sfScale                  (Real32(1.0)),
     _sfOffset                 (Real32(0.0)),
     _sfSpan                   (Real32(-1.0))
-    ,_sfEventProducer(&_Producer)
 {
 }
 
 AnimationGroupBase::AnimationGroupBase(const AnimationGroupBase &source) :
-    _Producer(&source.getProducerType()),
     Inherited(source),
     _mfAnimations             (),
     _sfScale                  (source._sfScale                  ),
     _sfOffset                 (source._sfOffset                 ),
     _sfSpan                   (source._sfSpan                   )
-    ,_sfEventProducer(&_Producer)
 {
 }
 
@@ -835,27 +1056,68 @@ EditFieldHandlePtr AnimationGroupBase::editHandleSpan           (void)
 }
 
 
-GetFieldHandlePtr AnimationGroupBase::getHandleEventProducer        (void) const
+GetEventHandlePtr AnimationGroupBase::getHandleAnimationsStartedSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<AnimationsStartedEventType>(
+             const_cast<AnimationsStartedEventType *>(&_AnimationsStartedEvent),
+             _producerType.getEventDescription(AnimationsStartedEventId),
              const_cast<AnimationGroupBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr AnimationGroupBase::editHandleEventProducer       (void)
+GetEventHandlePtr AnimationGroupBase::getHandleAnimationsStoppedSignal(void) const
 {
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<AnimationsStoppedEventType>(
+             const_cast<AnimationsStoppedEventType *>(&_AnimationsStoppedEvent),
+             _producerType.getEventDescription(AnimationsStoppedEventId),
+             const_cast<AnimationGroupBase *>(this)));
 
+    return returnValue;
+}
 
-    editSField(EventProducerFieldMask);
+GetEventHandlePtr AnimationGroupBase::getHandleAnimationsPausedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<AnimationsPausedEventType>(
+             const_cast<AnimationsPausedEventType *>(&_AnimationsPausedEvent),
+             _producerType.getEventDescription(AnimationsPausedEventId),
+             const_cast<AnimationGroupBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AnimationGroupBase::getHandleAnimationsUnpausedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<AnimationsUnpausedEventType>(
+             const_cast<AnimationsUnpausedEventType *>(&_AnimationsUnpausedEvent),
+             _producerType.getEventDescription(AnimationsUnpausedEventId),
+             const_cast<AnimationGroupBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AnimationGroupBase::getHandleAnimationsEndedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<AnimationsEndedEventType>(
+             const_cast<AnimationsEndedEventType *>(&_AnimationsEndedEvent),
+             _producerType.getEventDescription(AnimationsEndedEventId),
+             const_cast<AnimationGroupBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr AnimationGroupBase::getHandleAnimationsCycledSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<AnimationsCycledEventType>(
+             const_cast<AnimationsCycledEventType *>(&_AnimationsCycledEvent),
+             _producerType.getEventDescription(AnimationsCycledEventId),
+             const_cast<AnimationGroupBase *>(this)));
 
     return returnValue;
 }

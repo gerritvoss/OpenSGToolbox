@@ -48,7 +48,7 @@
 #include "OSGComponentContainer.h"
 #include "OSGUIDrawUtils.h"
 
-#include "OSGMouseEvent.h"
+#include "OSGMouseEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -201,7 +201,7 @@ void ComponentContainer::drawInternal(Graphics* const TheGraphics, Real32 Opacit
         getChildren(i)->draw(TheGraphics, Opacity*getOpacity());
     }
 }
-void ComponentContainer::mouseClicked(const MouseEventUnrecPtr e)
+void ComponentContainer::mouseClicked(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
@@ -220,7 +220,7 @@ void ComponentContainer::mouseClicked(const MouseEventUnrecPtr e)
     Component::mouseClicked(e);
 }
 
-void ComponentContainer::mouseEntered(const MouseEventUnrecPtr e)
+void ComponentContainer::mouseEntered(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -234,7 +234,7 @@ void ComponentContainer::mouseEntered(const MouseEventUnrecPtr e)
     Component::mouseEntered(e);
 }
 
-void ComponentContainer::mouseExited(const MouseEventUnrecPtr e)
+void ComponentContainer::mouseExited(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -248,7 +248,7 @@ void ComponentContainer::mouseExited(const MouseEventUnrecPtr e)
     Component::mouseExited(e);
 }
 
-void ComponentContainer::mousePressed(const MouseEventUnrecPtr e)
+void ComponentContainer::mousePressed(MouseEventDetails* const e)
 {
     bool isContained(false);
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
@@ -283,7 +283,7 @@ void ComponentContainer::mousePressed(const MouseEventUnrecPtr e)
     Component::mousePressed(e);
 }
 
-void ComponentContainer::mouseReleased(const MouseEventUnrecPtr e)
+void ComponentContainer::mouseReleased(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
@@ -303,7 +303,7 @@ void ComponentContainer::mouseReleased(const MouseEventUnrecPtr e)
 }
 
 
-void ComponentContainer::mouseMoved(const MouseEventUnrecPtr e)
+void ComponentContainer::mouseMoved(MouseEventDetails* const e)
 {
     Component::mouseMoved(e);
 
@@ -324,7 +324,7 @@ void ComponentContainer::mouseMoved(const MouseEventUnrecPtr e)
     }
 }
 
-void ComponentContainer::mouseDragged(const MouseEventUnrecPtr e)
+void ComponentContainer::mouseDragged(MouseEventDetails* const e)
 {
     bool isContained;
     bool isContainedAbove(false);
@@ -344,7 +344,7 @@ void ComponentContainer::mouseDragged(const MouseEventUnrecPtr e)
     Component::mouseDragged(e);
 }
 
-void ComponentContainer::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
+void ComponentContainer::mouseWheelMoved(MouseWheelEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -362,17 +362,17 @@ void ComponentContainer::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
     Component::mouseWheelMoved(e);
 }
 
-void ComponentContainer::produceMouseExitOnComponent(const MouseEventUnrecPtr e, Component* const Comp)
+void ComponentContainer::produceMouseExitOnComponent(MouseEventDetails* const e, Component* const Comp)
 {
     Comp->mouseExited(e);
 }
 
-void ComponentContainer::produceMouseEnterOnComponent(const MouseEventUnrecPtr e, Component* const Comp)
+void ComponentContainer::produceMouseEnterOnComponent(MouseEventDetails* const e, Component* const Comp)
 {
     Comp->mouseEntered(e);
 }
 
-void ComponentContainer::checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, Component* const Comp, bool isMouseContained, Viewport* const TheViewport)
+void ComponentContainer::checkMouseEnterExit(InputEventDetails* const e, const Pnt2f& MouseLocation, Component* const Comp, bool isMouseContained, Viewport* const TheViewport)
 {
     //Check if mouse is inside of this component
     if(!isMouseContained)
@@ -380,8 +380,8 @@ void ComponentContainer::checkMouseEnterExit(const InputEventUnrecPtr e, const P
         if(Comp->getMouseContained())
         {
             //Mouse has exited the component
-            const MouseEventUnrecPtr ExitedEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
-            produceMouseExitOnComponent(ExitedEvent, Comp);
+            MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), MouseEventDetails::NO_BUTTON,0,MouseLocation,TheViewport);
+            produceMouseExitOnComponent(Details, Comp);
         }
         Comp->setMouseContained(false);
     }
@@ -390,8 +390,8 @@ void ComponentContainer::checkMouseEnterExit(const InputEventUnrecPtr e, const P
         if(!Comp->getMouseContained())
         {
             //Mouse has exited the frame
-            const MouseEventUnrecPtr EnteredEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
-            produceMouseEnterOnComponent(EnteredEvent, Comp);
+            MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), MouseEventDetails::NO_BUTTON,0,MouseLocation,TheViewport);
+            produceMouseEnterOnComponent(Details, Comp);
         }
         Comp->setMouseContained(true);
     }

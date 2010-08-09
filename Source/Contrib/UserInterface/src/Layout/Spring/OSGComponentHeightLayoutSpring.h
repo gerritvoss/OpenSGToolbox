@@ -88,7 +88,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentHeightLayoutSpring : public C
 
     /*! \}                                                                 */
 
-    static  ComponentHeightLayoutSpringTransitPtr      create          (ComponentRefPtr TheComponent, UInt32 SizeField = PREFERRED_SIZE); 
+    static  ComponentHeightLayoutSpringTransitPtr      create          (Component* const TheComponent, UInt32 SizeField = PREFERRED_SIZE); 
 
     //Returns the maximum value of this LayoutSpringRefPtr.
     virtual Real32 getMinimumValue(void) const;

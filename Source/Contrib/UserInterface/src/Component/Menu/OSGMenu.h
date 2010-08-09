@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGMenuBase.h"
-#include "OSGUpdateListener.h"
 #include "OSGSeparatorFields.h"
 
 OSG_BEGIN_NAMESPACE
@@ -98,9 +97,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Menu : public MenuBase
     void removeAllSeparators(void);
     UInt32 getNumSeparators(void) const;
 
-    //virtual void mouseEntered(const MouseEventUnrecPtr e);
-    //virtual void mouseExited(const MouseEventUnrecPtr e);
-    virtual void mouseReleased(const MouseEventUnrecPtr e);
+    //virtual void mouseEntered(MouseEventDetails* const e);
+    //virtual void mouseExited(MouseEventDetails* const e);
+    virtual void mouseReleased(MouseEventDetails* const e);
 
     virtual void activate(void);
 
@@ -150,22 +149,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Menu : public MenuBase
     
     bool getPopupVisible(void) const;
     
-	class PopupUpdateListener : public UpdateListener
-	{
-	public:
-		PopupUpdateListener(Menu* const TheMenu);
-        virtual void update(const UpdateEventUnrecPtr e);
-        void reset(void);
-	private:
-		Menu* _Menu;
-	    Time _PopupElps;
-	};
+    void popupUpdate(UpdateEventDetails* const e);
+    Time _PopupElps;
 
-	friend class PopupUpdateListener;
-
-	PopupUpdateListener _PopupUpdateListener;
-
-    EventConnection _PopupUpdateEventConnection;
+    boost::signals2::connection _PopupUpdateEventConnection;
 
     /*==========================  PRIVATE  ================================*/
 
