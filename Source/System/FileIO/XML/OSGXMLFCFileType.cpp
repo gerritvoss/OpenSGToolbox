@@ -328,6 +328,58 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                     }
                 }
             }
+		}
+	}
+    for(rapidxml::node_iterator<char> NodeListItor(doc.first_node(RootFCXMLToken.c_str())) ; NodeListItor!=rapidxml::node_iterator<char>() ; ++NodeListItor)
+    {
+        //Find the FieldContainerId Token
+        rapidxml::xml_attribute<char> *IdAttrib(NodeListItor->first_attribute(FieldContainerIDXMLToken.c_str()));
+        if(IdAttrib == NULL)
+        {
+            printXMLSemanticError( "Couldn't find "+FieldContainerIDXMLToken+" attribute for '" + std::string(NodeListItor->name(), NodeListItor->name_size()) + "'!",
+                                   StreamText,
+                                   IdAttrib->value() - StreamText.c_str(),
+                                   FileNameOrExtension);
+            continue;
+        }
+        //Get the FieldContainer with that ID
+        CurrentFieldContainerOldId = TypeTraits<UInt32>::getFromCString(std::string(IdAttrib->value(), IdAttrib->value_size()).c_str());
+        FCInfoIter = TheIDLookupMap.find(CurrentFieldContainerOldId);
+        if(FCInfoIter == TheIDLookupMap.end())
+        {
+            printXMLSemanticError("No matching container found for ID " +
+                                   std::string(IdAttrib->value(), IdAttrib->value_size()) + "." ,
+                                   StreamText,
+                                   IdAttrib->value() - StreamText.c_str(),
+                                   FileNameOrExtension);
+
+            continue;
+        }
+
+        if(FCInfoIter->second._Read)
+        {
+            printXMLSemanticError("A FieldContainer by this Id has already been written to.  Subsequent definitions will overwrite the previous ones. Original ID: " +
+                                   boost::lexical_cast<std::string>(CurrentFieldContainerOldId) +
+                                   ", new ID: " +
+                                   boost::lexical_cast<std::string>(FCInfoIter->second._NewId),
+                                   StreamText,
+                                   IdAttrib->value() - StreamText.c_str(),
+                                   FileNameOrExtension);
+        }
+        NewFieldContainer = FCInfoIter->second._Ptr;
+        //if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+        //{
+        //	//Search for File attachment
+        //	SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
+        //	if(SearchItor != (*NodeListItor)->get_attrmap().end())
+        //	{
+//                    Result.insert(NewFieldContainer);
+//                    continue;
+        //	}
+        //}
+
+        if(NewFieldContainer != NULL)
+        {
 
             //Apply all of the Ptr fields second
             for(AttributeIterator = rapidxml::attribute_iterator<char>(&(*NodeListItor)); AttributeIterator != rapidxml::attribute_iterator<char>(); ++AttributeIterator)
@@ -599,15 +651,6 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                                                FileNameOrExtension);
         }
     }
-
-    //Send the changed event to each FieldContainer
-    //for the fields that were changed
-
-    //for(ChangedFieldsVectorItor Itor(ChangedFieldsVec.begin()) ; Itor != ChangedFieldsVec.end() ; ++Itor)
-    //{
-        //changedCP(Itor->first, Itor->second);
-    //}
-    //commitChanges();
     
 
     FieldContainerFactory::the()->setMapper(NULL);
@@ -759,6 +802,8 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
     {
         child = doc.allocate_node(rapidxml::node_element, (*FCItor)->getType().getCName());
         root->append_node(child);
+
+		FieldContainer* FCAddr = (*FCItor);
 
         alloc_str = doc.allocate_string(boost::lexical_cast<std::string>((*FCItor)->getId()).c_str());
         attr = doc.allocate_attribute(FieldContainerIDXMLToken.c_str(),

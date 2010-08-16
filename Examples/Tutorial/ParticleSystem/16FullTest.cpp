@@ -78,6 +78,9 @@ RateParticleGeneratorRefPtr ExampleGenerator;
 // ParticleAffectors
 ConditionalParticleAffectorRefPtr ExampleConditionalAffector;
 
+//Example system
+ParticleSystemRefPtr ExampleParticleSystem;
+
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
@@ -132,6 +135,13 @@ class TutorialKeyListener : public KeyListener
             ExampleConditionalAffector->setConditionalOperator(2); // not equal
 
         }
+		if(e->getKey() == KeyEvent::KEY_H) 
+        {
+		    for(unsigned int i(0); i < ExampleParticleSystem->getNumParticles(); ++i)
+			{
+				ExampleParticleSystem->setAttribute("active",1,i);
+			}
+		}
     }
 };
 
@@ -236,7 +246,7 @@ int main(int argc, char **argv)
     TestMaterial->addChunk(TheDepthChunk);
 
     //Particle System
-    ParticleSystemRefPtr ExampleParticleSystem = OSG::ParticleSystem::create();
+    ExampleParticleSystem = OSG::ParticleSystem::create();
 
 
     ExampleParticleSystem->attachUpdateListener(TutorialWindow);
@@ -256,11 +266,6 @@ int main(int argc, char **argv)
                                        -1,
                                        Vec3f(0.0,0.0,0.0),
                                        Vec3f(0.0,0.0,0.0));
-
-    for(unsigned int i(0); i < ExampleParticleSystem->getNumParticles(); ++i)
-    {
-        ExampleParticleSystem->setAttribute("active",0,i);
-    }
 
     ExamplePointParticleSystemDrawer = OSG::PointParticleSystemDrawer::create();
     ExamplePointParticleSystemDrawer->setForcePerParticleSizing(false);
@@ -299,7 +304,7 @@ int main(int argc, char **argv)
     ExampleParticleSystem->setBeacon(ExampleNode);
     //ExampleParticleSystem->pushToGenerators(ExampleGenerator);
     ExampleParticleSystem->pushToAffectors(ExampleConditionalAffector);
-    ExampleParticleSystem->pushToAffectors(ExampleAttractRepelAffector);
+   // ExampleParticleSystem->pushToAffectors(ExampleAttractRepelAffector);
     ExampleParticleSystem->setMaxParticles(1000);
     ExampleParticleSystem->setDynamic(true);
 
@@ -330,7 +335,7 @@ int main(int argc, char **argv)
 
     FCFileType::FCTypeVector IgnoreTypes;
     //Save the Field Containers to a xml file
-    FCFileHandler::the()->write(Containers,BoostPath("./Data/TestFieldContainers.xml"),IgnoreTypes);
+    //FCFileHandler::the()->write(Containers,BoostPath("./Data/TestFieldContainers.xml"),IgnoreTypes);
 
     //Open Window
     Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);

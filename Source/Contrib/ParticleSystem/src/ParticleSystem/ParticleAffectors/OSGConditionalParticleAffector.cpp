@@ -81,36 +81,37 @@ bool ConditionalParticleAffector::affect(ParticleSystemRefPtr System, Int32 Part
 {
     bool returnStatus(false), runAffectors(false);
 
-    UInt8 Operator(getConditionalOperator());
+	UInt32 condVal = System->getAttribute(ParticleIndex,getConditionalAttribute());
+
     switch(getConditionalOperator())
     {
         case 1: // equals
-            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) == getConditionalValue()) 
+            if(condVal == getConditionalValue()) 
                 runAffectors = true;
             break;
 
         case 2: // not equal
-            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) != getConditionalValue()) 
+            if(condVal != getConditionalValue()) 
                 runAffectors = true;
             break;
 
         case 3: // less than
-            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) < getConditionalValue()) 
+            if(condVal < getConditionalValue()) 
                 runAffectors = true;
             break;
 
         case 4: // greater than
-            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) > getConditionalValue()) 
+            if(condVal > getConditionalValue()) 
                 runAffectors = true;
             break;
 
         case 5: // less than or equal
-            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) <= getConditionalValue()) 
+            if(condVal <= getConditionalValue()) 
                 runAffectors = true;
             break;
 
         case 6: // greater than or equal
-            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) >= getConditionalValue()) 
+            if(condVal >= getConditionalValue()) 
                 runAffectors = true;
             break;
 
