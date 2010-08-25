@@ -135,6 +135,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     void setAcceleration(const Vec3f& Acceleration, const UInt32& Index);
     void setAttribute(const std::string& AttributeKey, UInt32 AttributeValue, const UInt32& Index);
     void setAttributes(const StringToUInt32Map& Attributes, const UInt32& Index);
+	bool removeAttribute(const UInt32& Index, const std::string& AttributeKey);
 
 
     UInt32 getNumSecPositions(void) const;

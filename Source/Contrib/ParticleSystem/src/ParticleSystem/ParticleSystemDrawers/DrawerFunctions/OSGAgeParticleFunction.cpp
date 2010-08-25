@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
+ *   contact:  David Kabala, Dan Guilliams (djkabala/dan.guilliams@gmail.com)*
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,14 +45,13 @@
 
 #include <OSGConfig.h>
 
-#include "OSGConditionalParticleAffector.h"
-#include "OSGParticleSystem.h"
+#include "OSGAgeParticleFunction.h"
 
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
-// OSGConditionalParticleAffectorBase.cpp file.
-// To modify it, please change the .fcd file (OSGConditionalParticleAffector.fcd) and
+// OSGAgeParticleFunctionBase.cpp file.
+// To modify it, please change the .fcd file (OSGAgeParticleFunction.fcd) and
 // regenerate the base file.
 
 /***************************************************************************\
@@ -63,7 +62,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ConditionalParticleAffector::initMethod(InitPhase ePhase)
+void AgeParticleFunction::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
@@ -77,95 +76,72 @@ void ConditionalParticleAffector::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool ConditionalParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
-{
-    bool returnStatus(false), runAffectors(false);
-
-	UInt32 condVal = System->getAttribute(ParticleIndex,getConditionalAttribute());
-
-    switch(getConditionalOperator())
-    {
-        case 1: // equals
-            if(condVal == getConditionalValue()) 
-                runAffectors = true;
-            break;
-
-        case 2: // not equal
-            if(condVal != getConditionalValue()) 
-                runAffectors = true;
-            break;
-
-        case 3: // less than
-            if(condVal < getConditionalValue()) 
-                runAffectors = true;
-            break;
-
-        case 4: // greater than
-            if(condVal > getConditionalValue()) 
-                runAffectors = true;
-            break;
-
-        case 5: // less than or equal
-            if(condVal <= getConditionalValue()) 
-                runAffectors = true;
-            break;
-
-        case 6: // greater than or equal
-            if(condVal >= getConditionalValue()) 
-                runAffectors = true;
-            break;
-
-        default: // error
-            returnStatus = false;
-            runAffectors = false;
-            break;
-    }
-
-    if(runAffectors)
-    {
-        for(unsigned int i(0); i < getMFAffectors()->size();i++)
-        {
-            if(getAffectors(i)->affect(System,ParticleIndex,elps))
-                returnStatus = true;
-        }
-    }
-
-    return returnStatus;
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-ConditionalParticleAffector::ConditionalParticleAffector(void) :
+AgeParticleFunction::AgeParticleFunction(void) :
     Inherited()
 {
 }
 
-ConditionalParticleAffector::ConditionalParticleAffector(const ConditionalParticleAffector &source) :
+AgeParticleFunction::AgeParticleFunction(const AgeParticleFunction &source) :
     Inherited(source)
 {
 }
 
-ConditionalParticleAffector::~ConditionalParticleAffector(void)
+AgeParticleFunction::~AgeParticleFunction(void)
 {
+}
+
+UInt32 AgeParticleFunction::evaluate(ParticleSystemUnrecPtr System, UInt32 ParticleIndex, UInt32 SequenceLength)
+{
+	Real32 age = System->getAge(ParticleIndex);
+	UInt32 index(0);
+	switch(getSequenceOrder())
+	{
+
+	case REVERSE_CYCLE:
+		{
+			index = SequenceLength - ((UInt32)(osgFloor(age/getSequenceTime() + 0.5f)) % SequenceLength);
+			index--;
+			break;
+		}
+
+	case CUSTOM:
+		{
+			index = (UInt32)(osgFloor(age/getSequenceTime() + 0.5f));
+			index = index % getMFCustomSequence()->size();
+			index = getCustomSequence(index) % SequenceLength;
+			break;
+		}
+
+	case CYCLE:
+	default:
+		{
+			index = (UInt32)(osgFloor(age/getSequenceTime() + 0.5f)) % SequenceLength;
+			break;
+		}
+
+	} 
+	return index;
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void ConditionalParticleAffector::changed(ConstFieldMaskArg whichField, 
+void AgeParticleFunction::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
 }
 
-void ConditionalParticleAffector::dump(      UInt32    ,
+void AgeParticleFunction::dump(      UInt32    ,
                          const BitVector ) const
 {
-    SLOG << "Dump ConditionalParticleAffector NI" << std::endl;
+    SLOG << "Dump AgeParticleFunction NI" << std::endl;
 }
 
 OSG_END_NAMESPACE

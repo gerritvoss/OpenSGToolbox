@@ -1826,6 +1826,7 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
 #include "OSGMathFields.h"
 #include "OSGSysFields.h"
 #include "OSGBaseFields.h"
+#include "OSGBaseFieldTraits.h"
 #include "OSGVecFields.h"
 #include "OSGFieldContainerFields.h"
 #include "OSGContainerUtils.h"
@@ -1965,7 +1966,9 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //GLenum
           else if(FieldContentType == OSG::FieldTraits<GLenum,1>::getType() )
           {
-              lua_pushnumber(L,static_cast<const OSG::SFGLenum*>(TheFieldHandle->getField())->getValue()); SWIG_arg++;
+              std::string value = std::string("GL_") + OSG::GLDefineMapper::the()->toString(static_cast<const OSG::SFGLenum*>(TheFieldHandle->getField())->getValue());
+
+              lua_pushstring(L,value.c_str()); SWIG_arg++;
           }
           //Int8
           else if(FieldContentType == OSG::FieldTraits<OSG::Int8>::getType() )
@@ -2194,7 +2197,9 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //GLenum
           else if(FieldContentType == OSG::FieldTraits<GLenum, 1>::getType() )
           {
-              lua_pushnumber(L,static_cast<const OSG::MFGLenum*>(TheFieldHandle->getField())->operator[](arg3)); SWIG_arg++;
+              std::string value = std::string("GL_") + OSG::GLDefineMapper::the()->toString(static_cast<const OSG::MFGLenum*>(TheFieldHandle->getField())->operator[](arg3));
+
+              lua_pushstring(L,value.c_str()); SWIG_arg++;
           }
           //Int8
           else if(FieldContentType == OSG::FieldTraits<OSG::Int8>::getType() )
@@ -2480,12 +2485,19 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //GLenum
           else if(FieldContentType == OSG::FieldTraits<GLenum, 1>::getType() )
           {
-              if(!lua_isnumber(L,3))
+              if(lua_isnumber(L,3))
+              {
+                  static_cast<OSG::SFGLenum*>(TheFieldHandle->getField())->setValue(static_cast<GLenum>(lua_tonumber(L, 3)));
+              }
+              else if(lua_isstring(L,3))
+              {
+                  static_cast<OSG::SFGLenum*>(TheFieldHandle->getField())->setValue(OSG::GLDefineMapper::the()->fromString(lua_tostring(L, 3)));
+              }
+              else
               {
                   LUA_BINDING_fail_arg(L,"setFieldValue",3,"GLenum'");
                   return SWIG_arg;
               }
-                  static_cast<OSG::SFGLenum*>(TheFieldHandle->getField())->setValue(static_cast<GLenum>(lua_tonumber(L, 3)));
           }
           //Int8
           else if(FieldContentType == OSG::FieldTraits<OSG::Int8>::getType() )
@@ -2495,7 +2507,7 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
                   LUA_BINDING_fail_arg(L,"setFieldValue",3,"Int8'");
                   return SWIG_arg;
               }
-                  static_cast<OSG::SFInt8*>(TheFieldHandle->getField())->setValue(static_cast<OSG::Int8>(lua_tonumber(L, 3)));
+              static_cast<OSG::SFInt8*>(TheFieldHandle->getField())->setValue(static_cast<OSG::Int8>(lua_tonumber(L, 3)));
           }
           //Int16
           else if(FieldContentType == OSG::FieldTraits<OSG::Int16>::getType() )
@@ -2877,12 +2889,19 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //GLenum
           else if(FieldContentType == OSG::FieldTraits<GLenum, 1>::getType() )
           {
-              if(!lua_isnumber(L,3))
+              if(lua_isnumber(L,3))
+              {
+                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->operator[](arg4) = (static_cast<GLenum>(lua_tonumber(L, 3)));
+              }
+              else if(lua_isstring(L,3))
+              {
+                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->operator[](arg4) = OSG::GLDefineMapper::the()->fromString(lua_tostring(L, 3));
+              }
+              else
               {
                   LUA_BINDING_fail_arg(L,"setFieldValue",3,"GLenum'");
                   return SWIG_arg;
               }
-                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->operator[](arg4) = (static_cast<GLenum>(lua_tonumber(L, 3)));
           }
           //Int8
           else if(FieldContentType == OSG::FieldTraits<OSG::Int8>::getType() )
@@ -3134,7 +3153,7 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //Otherwise
           else
           {
-              lua_pushfstring(L,"Error in setFieldValue field of name '%s' on type '%s', could not set the indexed value of the multi-field because that type is not supported in this biding.",arg2,(*arg1)->getTypeName());
+              lua_pushfstring(L,"Error in setFieldValue field of name '%s' on type '%s', could not set the indexed value of the multi-field because that type is not supported in this binding.",arg2,(*arg1)->getTypeName());
               lua_error(L);
           }
         }
@@ -3258,12 +3277,19 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //GLenum
           else if(FieldContentType == OSG::FieldTraits<GLenum, 1>::getType() )
           {
-              if(!lua_isnumber(L,3))
+              if(lua_isnumber(L,3))
               {
-                  LUA_BINDING_fail_arg(L,"pushFieldValue",3,"GLenum'");
+                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->push_back(static_cast<GLenum>(lua_tonumber(L, 3)));
+              }
+              else if(lua_isstring(L,3))
+              {
+                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->push_back(OSG::GLDefineMapper::the()->fromString(lua_tostring(L, 3)));
+              }
+              else
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"GLenum'");
                   return SWIG_arg;
               }
-                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->push_back(static_cast<GLenum>(lua_tonumber(L, 3)));
           }
           //Int8
           else if(FieldContentType == OSG::FieldTraits<OSG::Int8>::getType() )
@@ -3673,14 +3699,23 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //GLenum
           else if(FieldContentType == OSG::FieldTraits<GLenum, 1>::getType() )
           {
-              if(!lua_isnumber(L,3))
+              if(lua_isnumber(L,3))
               {
-                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"GLenum'");
+                  OSG::MFGLenum::iterator InsertItor(static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->begin());
+                  InsertItor += arg4;
+                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->insert(InsertItor, static_cast<GLenum>(lua_tonumber(L, 3)));
+              }
+              else if(lua_isstring(L,3))
+              {
+                  OSG::MFGLenum::iterator InsertItor(static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->begin());
+                  InsertItor += arg4;
+                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->insert(InsertItor, OSG::GLDefineMapper::the()->fromString(lua_tostring(L, 3)));
+              }
+              else
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"GLenum'");
                   return SWIG_arg;
               }
-              OSG::MFGLenum::iterator InsertItor(static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->begin());
-              InsertItor += arg4;
-                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->insert(InsertItor, static_cast<GLenum>(lua_tonumber(L, 3)));
           }
           //Int8
           else if(FieldContentType == OSG::FieldTraits<OSG::Int8>::getType() )
@@ -3973,7 +4008,7 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //Otherwise
           else
           {
-              lua_pushfstring(L,"Error in insertFieldValue field of name '%s' on type '%s', could not insert the value of the multi-field because that type is not supported in this biding.",arg2,(*arg1)->getTypeName());
+              lua_pushfstring(L,"Error in insertFieldValue field of name '%s' on type '%s', could not insert the value of the multi-field because that type is not supported in this binding.",arg2,(*arg1)->getTypeName());
               lua_error(L);
           }
 
@@ -4139,7 +4174,7 @@ SWIGINTERN void OSG_FieldContainerRefPtr_clearField(OSG::FieldContainerRefPtr *s
               //GLenum
               else if(FieldContentType == OSG::FieldTraits<GLenum,1>::getType() )
               {
-                      static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->clear();
+                  static_cast<OSG::MFGLenum*>(TheFieldHandle->getField())->clear();
               }
               //Int8
               else if(FieldContentType == OSG::FieldTraits<OSG::Int8>::getType() )

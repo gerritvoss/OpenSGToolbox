@@ -55,6 +55,7 @@
 #include "OSGLayoutSpring.h"
 #include "OSGSpringLayout.h"
 #include "OSGSpringLayoutConstraints.h"
+#include "OSGList.h"
 
 OSG_BEGIN_NAMESPACE
 

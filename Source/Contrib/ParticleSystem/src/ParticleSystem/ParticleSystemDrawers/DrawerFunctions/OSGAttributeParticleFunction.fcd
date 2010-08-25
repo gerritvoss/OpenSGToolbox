@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+    name="AttributeParticleFunction"
+    parent="ParticleFunction"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
+    structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala, Dan Guilliams (djkabala/dan.guilliams@gmail.com)"
+>
+	<Field
+		name="Attribute"
+		type="std::string"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue=""
+		access="public"
+	>
+	The attribute that the function will use to determine the index.
+	</Field>
+	<Field
+		name="SequenceOrder"
+		type="Int32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="AttributeParticleFunction::DIRECT"
+		access="public"
+	>
+	The order in which to use images.
+	DIRECT: The value of the mapped attribute is used as the index of the sequence.
+	CUSTOM: The value of the mapped attribute is used to as the index of the custom sequence.
+		(e.g., if the mapped value is 4, the 4th value in the custom sequence will be
+		used for the sequence index).
+	</Field>
+	<Field
+		name="CustomSequence"
+		type="UInt32"
+		category="data"
+		cardinality="multi"
+		visibility="external"
+		defaultValue=""
+		access="public"
+	>
+	Used to specify the sequence in which the individual sprites should be 
+	drawn in. Any value greater than the number of available sprites will be
+	"wrapped around".  For example, if there are 4 sprites in the sequence, 
+	and a value in CustomSequence is 6, then the 2nd sprite will be used.
+	</Field>
+</FieldContainer>

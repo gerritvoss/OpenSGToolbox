@@ -872,6 +872,19 @@ void ParticleSystem::removeAttributes(UInt32 Index)
     }
 }
 
+bool ParticleSystem::removeAttribute(const UInt32& Index, const std::string& AttributeKey)
+{
+	UInt32 removed(0);
+	if(getNumAttributes() > Index)
+	{
+		removed = editInternalAttributes(Index).erase(AttributeKey);
+	} else if(getNumAttributes() == 1)
+	{
+		removed = editInternalAttributes(0).erase(AttributeKey);
+	}
+
+	return (removed == 0)?(false):(true);
+}
 
 bool ParticleSystem::addParticle(const Pnt3f& Position,
                                  const Pnt3f& SecPosition,
@@ -1215,14 +1228,23 @@ const StringToUInt32Map& ParticleSystem::getAttributes(const UInt32& Index) cons
 
 UInt32 ParticleSystem::getAttribute(const UInt32& Index, const std::string& AttributeKey) const
 {
+	StringToUInt32Map::const_iterator itor, itorEnd;
+
     if(Index < getMFInternalAttributes()->size())
     {
-        return getInternalAttributes(Index).find(AttributeKey)->second;
+		itor = getInternalAttributes(Index).find(AttributeKey);
+		itorEnd = getInternalAttributes(Index).end();
     }
     else
-    {
-        return getInternalAttributes(0).find(AttributeKey)->second;
+    {	
+		itor = getInternalAttributes(0).find(AttributeKey);
+		itorEnd = getInternalAttributes(0).end();
     }
+
+	if(itor != itorEnd) 
+		return itor->second;
+	else 
+		return 0;
 }
 
 void ParticleSystem::setSecPosition(const Pnt3f& SecPosition, const UInt32& Index)
