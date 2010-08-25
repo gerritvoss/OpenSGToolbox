@@ -35,13 +35,9 @@
 #include "OSGContribUserInterfaceDef.h"
 
 #include "OSGCommand.h"
-#include "OSGCommandListener.h"
-#include "OSGEventConnection.h"
-#include <set>
 #include "OSGCommandManagerFields.h"
 #include "OSGUndoManager.h"
-
-#include "OSGEventConnection.h"
+#include "OSGCommandEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -50,12 +46,36 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CommandManager
     /*==========================  PUBLIC  =================================*/
 
   public :
-	void executeCommand(CommandPtr TheCommand);
-    
-	EventConnection addCommandListener(CommandListenerPtr Listener);
-	bool isCommandListenerAttached(CommandListenerPtr Listener) const;
+    typedef CommandEventDetails CommandExecutedEventDetailsType;
+    typedef boost::signals2::signal<void (CommandExecutedEventDetailsType* const, UInt32), ConsumableEventCombiner> CommandExecutedEventType;
 
-    void removeCommandListener(CommandListenerPtr Listener);
+    enum
+    {
+        CommandExecutedEventId = 1,
+        NextEventId     = CommandExecutedEventId            + 1
+    };
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
+    virtual const EventProducerType &getProducerType(void) const; 
+
+    boost::signals2::connection          attachActivity(UInt32 eventId,
+                                                       Activity* TheActivity);
+    UInt32                   getNumProducedEvents(void)          const;
+    const EventDescription *getProducedEventDescription(const   Char8 *ProducedEventName) const;
+    const EventDescription *getProducedEventDescription(UInt32  ProducedEventId) const;
+    UInt32                   getProducedEventId(const            Char8 *ProducedEventName) const;
+
+    boost::signals2::connection connectCommandExecuted(const CommandExecutedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectCommandExecuted(const CommandExecutedEventType::group_type &group,
+                                                       const CommandExecutedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectCommandExecuted       (const CommandExecutedEventType::group_type &group);
+    void   disconnectAllSlotsCommandExecuted(void);
+    bool   isEmptyCommandExecuted          (void) const;
+    UInt32 numSlotsCommandExecuted         (void) const;
+
+	void executeCommand(CommandPtr TheCommand);
 	
 	static CommandManagerPtr create(UndoManagerPtr UndoManager);
     /*=========================  PROTECTED  ===============================*/
@@ -72,14 +92,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CommandManager
     void operator =(const CommandManager& source);
     
     /*---------------------------------------------------------------------*/
-	typedef std::set<CommandListenerPtr> CommandListenerSet;
-	
-    CommandListenerSet       _CommandListeners;
 	UndoManagerPtr           _UndoManager;
 
-    void produceCommandExecuted(CommandPtr TheCommand);
+    static EventDescription   *_eventDesc[];
+    static EventProducerType _producerType;
+    CommandExecutedEventType _CommandExecutedEvent;
+    
+    void produceCommandExecuted(CommandExecutedEventDetailsType* const e);
 };
 
 OSG_END_NAMESPACE
+
+#include "OSGCommandManager.inl"
 
 #endif /* _OSGCOMMANDMANAGER_H_ */

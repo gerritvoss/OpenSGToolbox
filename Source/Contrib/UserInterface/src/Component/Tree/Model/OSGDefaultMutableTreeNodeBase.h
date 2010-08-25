@@ -87,6 +87,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNodeBase : public Mu
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(DefaultMutableTreeNode);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -111,7 +113,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNodeBase : public Mu
         
     typedef SFBool            SFAllowsChildrenInternalType;
     typedef MFUnrecMutableTreeNodePtr MFChildrenInternalType;
-    typedef SFUnrecMutableTreeNodePtr SFParentInternalType;
+    typedef SFWeakMutableTreeNodePtr SFParentInternalType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -186,7 +188,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNodeBase : public Mu
 
     SFBool            _sfAllowsChildrenInternal;
     MFUnrecMutableTreeNodePtr _mfChildrenInternal;
-    SFUnrecMutableTreeNodePtr _sfParentInternal;
+    SFWeakMutableTreeNodePtr _sfParentInternal;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -232,8 +234,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultMutableTreeNodeBase : public Mu
             const SFBool              *getSFAllowsChildrenInternal (void) const;
             const MFUnrecMutableTreeNodePtr *getMFChildrenInternal (void) const;
                   MFUnrecMutableTreeNodePtr *editMFChildrenInternal(void);
-            const SFUnrecMutableTreeNodePtr *getSFParentInternal  (void) const;
-                  SFUnrecMutableTreeNodePtr *editSFParentInternal (void);
+            const SFWeakMutableTreeNodePtr *getSFParentInternal  (void) const;
+                  SFWeakMutableTreeNodePtr *editSFParentInternal (void);
 
 
                   bool                &editAllowsChildrenInternal(void);

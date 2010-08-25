@@ -97,15 +97,15 @@ void ToggleButton::setSelected(const bool value)
 	{
 		if(value)
 		{
-			ButtonSelectedEventUnrecPtr
-				TheEvent(ButtonSelectedEvent::create(this,getSystemTime()));
-			produceButtonSelected(TheEvent);    
+			ButtonSelectedEventDetailsUnrecPtr
+				Details(ButtonSelectedEventDetails::create(this,getSystemTime()));
+			produceButtonSelected(Details);    
 		}
 		else
 		{
-			ButtonSelectedEventUnrecPtr
-				TheEvent(ButtonSelectedEvent::create(this,getSystemTime()));
-			produceButtonDeselected(TheEvent);    
+			ButtonSelectedEventDetailsUnrecPtr
+				Details(ButtonSelectedEventDetails::create(this,getSystemTime()));
+			produceButtonDeselected(Details);    
 		}
 		
 		Inherited::setSelected(value);
@@ -113,15 +113,7 @@ void ToggleButton::setSelected(const bool value)
 
 }
 
-EventConnection ToggleButton::addButtonSelectedListener(ButtonSelectedListenerPtr Listener)
-{
-    _ButtonSelectedListeners.insert(Listener);
-    return EventConnection(
-                           boost::bind(&ToggleButton::isButtonSelectedListenerAttached, this, Listener),
-                           boost::bind(&ToggleButton::removeButtonSelectedListener, this, Listener));
-}
-
-void ToggleButton::actionPreformed(const ActionEventUnrecPtr e)
+void ToggleButton::actionPreformed(ActionEventDetails* const e)
 {
     setSelected(!getSelected());
 }
@@ -184,22 +176,15 @@ Color4f ToggleButton::getDrawnTextColor(void) const
         return Inherited::getDrawnTextColor();
     }
 }
-void  ToggleButton::produceButtonSelected(const ButtonSelectedEventUnrecPtr e)
+
+void  ToggleButton::produceButtonSelected(ButtonSelectedEventDetails* const Details)
 {
-    for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
-    {
-        (*SetItor)->buttonSelected(e);
-    }
-    _Producer.produceEvent(ButtonSelectedMethodId,e);
+    Inherited::produceButtonSelected(Details);
 }
 
-void  ToggleButton::produceButtonDeselected(const ButtonSelectedEventUnrecPtr e)
+void  ToggleButton::produceButtonDeselected(ButtonSelectedEventDetails* const Details)
 {
-    for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
-    {
-        (*SetItor)->buttonDeselected(e);
-    }
-    _Producer.produceEvent(ButtonDeselectedMethodId,e);
+    Inherited::produceButtonDeselected(Details);
 }
 
 /*-------------------------------------------------------------------------*\

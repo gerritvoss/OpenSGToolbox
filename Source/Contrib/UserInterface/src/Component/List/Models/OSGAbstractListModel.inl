@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool AbstractListModel::isListDataListenerAttached(ListDataListenerPtr l) const
-{
-    return _DataListeners.find(l) != _DataListeners.end();
-}
-
 OSG_END_NAMESPACE

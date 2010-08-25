@@ -43,8 +43,6 @@
 #endif
 
 #include "OSGBoundedRangeModelBase.h"
-#include "OSGEventConnection.h"
-#include "OSGChangeListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -112,10 +110,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING BoundedRangeModel : public BoundedRang
     
     //This attribute indicates that any upcoming changes to the value of the model should be considered a single event
     virtual void setValueIsAdjusting(bool b) = 0;
-    
-	virtual EventConnection addChangeListener(ChangeListenerPtr l) = 0;
-	virtual bool isChangeListenerAttached(ChangeListenerPtr l) const = 0;
-	virtual void removeChangeListener(ChangeListenerPtr l) = 0;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

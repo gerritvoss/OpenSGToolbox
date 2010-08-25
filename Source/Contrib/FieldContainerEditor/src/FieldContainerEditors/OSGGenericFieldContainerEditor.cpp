@@ -381,6 +381,15 @@ void GenericFieldContainerEditor::onDestroy()
 {
 }
 
+void GenericFieldContainerEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _ContainerTypeLabel = NULL;
+    _ContainerIdLabel = NULL;
+    _GenericNameAttachmentEditor = NULL;
+}
+
 
 void GenericFieldContainerEditor::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,

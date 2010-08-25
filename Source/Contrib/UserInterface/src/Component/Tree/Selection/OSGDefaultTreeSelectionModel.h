@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Aaron Cronk                                      *
+ *   contact:  David Kabala (djkabala@gmail.com), Aaron Cronk                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,24 +42,43 @@
 #pragma once
 #endif
 
-#include "OSGConfig.h"
-#include "OSGContribUserInterfaceDef.h"
-
-#include "OSGAbstractTreeSelectionModel.h"
-#include "OSGTreeRowMapper.h"
+#include "OSGDefaultTreeSelectionModelBase.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultTreeSelectionModel class. See \ref 
-           PageUserInterfaceDefaultTreeSelectionModel for a description.
+/*! \brief DefaultTreeSelectionModel class. See \ref
+           PageContribUserInterfaceDefaultTreeSelectionModel for a description.
 */
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeSelectionModel : public AbstractTreeSelectionModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeSelectionModel : public DefaultTreeSelectionModelBase
 {
+  protected:
+
     /*==========================  PUBLIC  =================================*/
+
   public:
-    DefaultTreeSelectionModel(void);
+
+    typedef DefaultTreeSelectionModelBase Inherited;
+    typedef DefaultTreeSelectionModel     Self;
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0,
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 
 	//Adds path to the current selection.
 	virtual void addSelectionPath(TreePath path);
@@ -159,8 +178,34 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeSelectionModel : public Abs
     //Sets the selection to the Interval from StartRow to EndRow
     virtual void setSelectionInterval(const Int32& index0, const Int32& index1);
 
+    /*=========================  PROTECTED  ===============================*/
 
   protected:
+
+    // Variables should all be in DefaultTreeSelectionModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    DefaultTreeSelectionModel(void);
+    DefaultTreeSelectionModel(const DefaultTreeSelectionModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DefaultTreeSelectionModel(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     typedef std::set<TreePath, TreePath::BreadthFirstFunctional> TreePathSet;
     void toRowNumberSet(NumberSet& Result, const TreePathSet& PathSet) const;
     
@@ -181,13 +226,22 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeSelectionModel : public Abs
 
     TreeRowMapperRefPtr _TreeRowMapper;
     TreePathPtr _TreePath;
-
     /*==========================  PRIVATE  ================================*/
+
   private:
+
+    friend class FieldContainer;
+    friend class DefaultTreeSelectionModelBase;
+
+    // prohibit default functions (move to 'public' if you need one)
+    void operator =(const DefaultTreeSelectionModel &source);
 };
 
-typedef DefaultTreeSelectionModel *DefaultTreeSelectionModelPtr;
+typedef DefaultTreeSelectionModel *DefaultTreeSelectionModelP;
 
 OSG_END_NAMESPACE
+
+#include "OSGDefaultTreeSelectionModelBase.inl"
+#include "OSGDefaultTreeSelectionModel.inl"
 
 #endif /* _OSGDEFAULTTREESELECTIONMODEL_H_ */

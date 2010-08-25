@@ -80,8 +80,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerNumberEditor : public SpinnerNu
     /*! \}                                                                 */
     //Pushes the currently edited value to the SpinnerModel.
     virtual void commitEdit(void);
-
-    virtual void stateChanged(const ChangeEventUnrecPtr e);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -110,6 +108,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerNumberEditor : public SpinnerNu
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+
+    virtual void handleModelStateChanged(ChangeEventDetails* const e);
     /*==========================  PRIVATE  ================================*/
 
   private:

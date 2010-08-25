@@ -76,7 +76,7 @@ DialogWindowTransitPtr createFCEditorDialog(FieldContainer* fc,
     //Ok button
     ButtonRefPtr ConfirmButton = Button::create();
     ConfirmButton->setText("Ok");
-    ConfirmButton->addActionListener(TheDialog->getConfirmButtonListener());
+    ConfirmButton->connectActionPerformed(boost::bind(&DialogWindow::handleConfirmButtonAction, TheDialog.get(), _1));
 
     SpringLayoutRefPtr DialogLayout = OSG::SpringLayout::create();
     
@@ -98,6 +98,58 @@ DialogWindowTransitPtr createFCEditorDialog(FieldContainer* fc,
     return DialogWindowTransitPtr(TheDialog);
 }
 
+void setFCEditedContainer(DialogWindow* const dialog,
+                         FieldContainer* const fc)
+{
+    if(dialog != NULL &&
+       dialog->getMFChildren() > 0)
+    {
+        if(dialog->getChildren(0)->getType() == ScrollPanel::getClassType() &&
+           dynamic_cast<ScrollPanel*>(dialog->getChildren(0))->getViewComponent() != NULL &&
+           dynamic_cast<ScrollPanel*>(dialog->getChildren(0))->getViewComponent()->getType().isDerivedFrom(FieldContainerEditorComponent::getClassType()))
+        {
+            dynamic_cast<FieldContainerEditorComponent*>(dynamic_cast<ScrollPanel*>(dialog->getChildren(0))->getViewComponent())->attachFieldContainer(fc);
+        }
+        else if(dialog->getChildren(0)->getType() == SplitPanel::getClassType() &&
+           dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent() != NULL &&
+           dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent()->getType() == ScrollPanel::getClassType() &&
+           dynamic_cast<ScrollPanel*>(dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent())->getViewComponent() != NULL &&
+           dynamic_cast<ScrollPanel*>(dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent())->getViewComponent()->getType().isDerivedFrom(FieldContainerEditorComponent::getClassType())
+           )
+        {
+            dynamic_cast<FieldContainerEditorComponent*>(dynamic_cast<ScrollPanel*>(dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent())->getViewComponent())->attachFieldContainer(fc);
+            dynamic_cast<FieldContainerTreeModel*>(
+                dynamic_cast<Tree*>(
+                    dynamic_cast<ScrollPanel*>(
+                           dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMinComponent())->getViewComponent())->getModel())->setRoot(fc);
+        }
+    }
+}
+
+FieldContainer* getFCEditedContainer(DialogWindow* const dialog)
+{
+    if(dialog != NULL &&
+       dialog->getMFChildren() > 0)
+    {
+        if(dialog->getChildren(0)->getType() == ScrollPanel::getClassType() &&
+           dynamic_cast<ScrollPanel*>(dialog->getChildren(0))->getViewComponent() != NULL &&
+           dynamic_cast<ScrollPanel*>(dialog->getChildren(0))->getViewComponent()->getType().isDerivedFrom(FieldContainerEditorComponent::getClassType()))
+        {
+            return dynamic_cast<FieldContainerEditorComponent*>(dynamic_cast<ScrollPanel*>(dialog->getChildren(0))->getViewComponent())->getAttachedFieldContainer();
+        }
+        else if(dialog->getChildren(0)->getType() == SplitPanel::getClassType() &&
+           dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent() != NULL &&
+           dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent()->getType() == ScrollPanel::getClassType() &&
+           dynamic_cast<ScrollPanel*>(dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent())->getViewComponent() != NULL &&
+           dynamic_cast<ScrollPanel*>(dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent())->getViewComponent()->getType().isDerivedFrom(FieldContainerEditorComponent::getClassType())
+           )
+        {
+            return dynamic_cast<FieldContainerEditorComponent*>(dynamic_cast<ScrollPanel*>(dynamic_cast<SplitPanel*>(dialog->getChildren(0))->getMaxComponent())->getViewComponent())->getAttachedFieldContainer();
+        }
+    }
+    return NULL;
+}
+
 DialogWindowUnrecPtr openFCEditorDialog(FieldContainer* fc, 
                                         CommandManagerPtr CmdManager,
                                         const std::string& editorName,
@@ -116,75 +168,54 @@ DialogWindowUnrecPtr openFCEditorDialog(FieldContainer* fc,
     return TheDialog;
 }
 
-class TreeEditorSelectionListener : public TreeSelectionListener
+void handleFCSelectionAdded(TreeSelectionEventDetails* const details,
+                                Tree* const editorTree,
+                                ScrollPanel* const editorScroll)
 {
-    /*=========================  PUBLIC  ===============================*/
-  protected:
-    TreeRefPtr _EditorTree;
-    FieldContainerEditorComponentRefPtr _Editor;
-    ScrollPanelRefPtr _EditorScroll;
-    
-  public:
-    TreeEditorSelectionListener(Tree* const tree,
-                                FieldContainerEditorComponent* const editor,
-                                ScrollPanel* const editorScroll) :
-      _EditorTree(tree),
-      _Editor(editor),
-      _EditorScroll(editorScroll)
+    boost::any SelectedComp(editorTree->getLastSelectedPathComponent());
+    if(!SelectedComp.empty())
     {
-    }
-    ~TreeEditorSelectionListener(void)
-    {
-    }
-
-    //Called whenever elements are added to the selection
-	virtual void selectionAdded(const TreeSelectionEventUnrecPtr e)
-    {
-        boost::any SelectedComp(_EditorTree->getLastSelectedPathComponent());
-        if(!SelectedComp.empty())
+        //Get the component
+        try
         {
-            //Get the component
-            try
-            {
-                FieldContainerTreeModel::ContainerFieldIdPair ThePair(boost::any_cast<FieldContainerTreeModel::ContainerFieldIdPair>(SelectedComp));
+            FieldContainerTreeModel::ContainerFieldIdPair ThePair(boost::any_cast<FieldContainerTreeModel::ContainerFieldIdPair>(SelectedComp));
 
-                if(ThePair._FieldID == 0)
+            if(ThePair._FieldID == 0)
+            {
+                FieldContainerEditorComponent* const editor = dynamic_cast<FieldContainerEditorComponent* const>(editorScroll->getViewComponent());
+                //Check if the container is NULL
+                if(ThePair._Container == NULL)
                 {
-                    //Check if the container is NULL
-                    if(ThePair._Container == NULL)
+                    editor->dettachFieldContainer();
+                }
+                else
+                {
+                    //Check if this editor is already the default editor for
+                    //this type
+                    if(*FieldContainerEditorFactory::the()->getDefaultEditorType(&ThePair._Container->getType()) != editor->getType())
                     {
-                        _Editor->dettachFieldContainer();
+                        //If not then create a default editor for this type
+                        FieldContainerEditorComponentRecPtr NewEditor =
+                            FieldContainerEditorFactory::the()->createDefaultEditor(ThePair._Container,
+                                                                                    editor->getCommandManager());
+                        editorScroll->setViewComponent(NewEditor);
+                        //Attach the container to the editor
+                        NewEditor->attachFieldContainer(ThePair._Container);
                     }
                     else
                     {
-                        //Check if this editor is already the default editor for
-                        //this type
-                        if(*FieldContainerEditorFactory::the()->getDefaultEditorType(&ThePair._Container->getType()) != _Editor->getType())
-                        {
-                            //If not then create a default editor for this type
-                            _Editor =
-                                FieldContainerEditorFactory::the()->createDefaultEditor(ThePair._Container,
-                                                                                        _Editor->getCommandManager());
-                            _EditorScroll->setViewComponent(_Editor);
-                        }
                         //Attach the container to the editor
-                        _Editor->attachFieldContainer(ThePair._Container);
+                        editor->attachFieldContainer(ThePair._Container);
                     }
                 }
             }
-            catch(boost::bad_any_cast &ex)
-            {
-                SWARNING << ex.what() << std::endl;
-            }
+        }
+        catch(boost::bad_any_cast &ex)
+        {
+            SWARNING << ex.what() << std::endl;
         }
     }
-
-    //Called whenever elements are removed to the selection
-	virtual void selectionRemoved(const TreeSelectionEventUnrecPtr e)
-    {
-        //Do nothing
-    }
-};
+}
 
 DialogWindowTransitPtr createFCTreeEditorDialog       (FieldContainer* fc, 
                                                                                        CommandManagerPtr CmdManager,
@@ -220,12 +251,11 @@ DialogWindowTransitPtr createFCTreeEditorDialog       (FieldContainer* fc,
     TheTree->setRootVisible(true);
     TheTree->setModel(TheTreeModel);
     TheTree->setCellGenerator(TheTreeComponentGenerator);
-    
-    TreeSelectionListenerRefPtr TheTreeEditorSelectionListener(new TreeEditorSelectionListener(TheTree,
-                                                                                           TheEditor,
-                                                                                           EditorScrollPanel));
-    TheTree->getSelectionModel()->addTreeSelectionListener(TheTreeEditorSelectionListener.get());
-    TheDialog->addTransientObject(boost::any(TheTreeEditorSelectionListener));
+
+    TheTree->getSelectionModel()->connectSelectionAdded(boost::bind(&handleFCSelectionAdded, _1,
+        TheTree.get(),
+        EditorScrollPanel.get()));
+    //TheDialog->addTransientObject(boost::any(TheTreeEditorSelectionListener));
 
     ScrollPanelRefPtr TreeScrollPanel = ScrollPanel::create();
     TreeScrollPanel->setViewComponent(TheTree);
@@ -233,7 +263,7 @@ DialogWindowTransitPtr createFCTreeEditorDialog       (FieldContainer* fc,
     //Ok button
     ButtonRefPtr ConfirmButton = Button::create();
     ConfirmButton->setText("Ok");
-    ConfirmButton->addActionListener(TheDialog->getConfirmButtonListener());
+    ConfirmButton->connectActionPerformed(boost::bind(&DialogWindow::handleConfirmButtonAction, TheDialog.get(), _1));
 
     SpringLayoutRefPtr DialogLayout = OSG::SpringLayout::create();
 

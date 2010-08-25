@@ -445,7 +445,7 @@ void SpringLayoutBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
 
-
+    _sfConstraints.getValue().clear();
 }
 
 

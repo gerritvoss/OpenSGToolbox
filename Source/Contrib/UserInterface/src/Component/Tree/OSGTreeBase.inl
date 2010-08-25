@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -338,6 +339,22 @@ void TreeBase::setModelLayout(TreeModelLayout * const value)
     _sfModelLayout.setValue(value);
 }
 
+//! Get the value of the Tree::_sfSelectionModel field.
+inline
+TreeSelectionModel * TreeBase::getSelectionModel(void) const
+{
+    return _sfSelectionModel.getValue();
+}
+
+//! Set the value of the Tree::_sfSelectionModel field.
+inline
+void TreeBase::setSelectionModel(TreeSelectionModel * const value)
+{
+    editSField(SelectionModelFieldMask);
+
+    _sfSelectionModel.setValue(value);
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -384,6 +401,9 @@ void TreeBase::execSync (      TreeBase *pFrom,
 
     if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
         _sfModelLayout.syncWith(pFrom->_sfModelLayout);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pFrom->_sfSelectionModel);
 }
 #endif
 

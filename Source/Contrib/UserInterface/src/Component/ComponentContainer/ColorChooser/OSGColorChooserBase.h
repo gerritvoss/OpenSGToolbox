@@ -65,8 +65,9 @@
 
 #include "OSGPanel.h" // Parent
 
-#include "OSGAbstractColorChooserPanelFields.h" // InternalChooserPanels type
+#include "OSGSysFields.h"               // ChooserPanelTypeIds type
 #include "OSGComponentFields.h"         // PreviewPanel type
+#include "OSGColorSelectionModelFields.h" // SelectionModel type
 
 #include "OSGColorChooserFields.h"
 
@@ -87,6 +88,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooserBase : public Panel
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ColorChooser);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -94,20 +97,24 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooserBase : public Panel
 
     enum
     {
-        InternalChooserPanelsFieldId = Inherited::NextFieldId,
-        PreviewPanelFieldId = InternalChooserPanelsFieldId + 1,
-        NextFieldId = PreviewPanelFieldId + 1
+        ChooserPanelTypeIdsFieldId = Inherited::NextFieldId,
+        PreviewPanelFieldId = ChooserPanelTypeIdsFieldId + 1,
+        SelectionModelFieldId = PreviewPanelFieldId + 1,
+        NextFieldId = SelectionModelFieldId + 1
     };
 
-    static const OSG::BitVector InternalChooserPanelsFieldMask =
-        (TypeTraits<BitVector>::One << InternalChooserPanelsFieldId);
+    static const OSG::BitVector ChooserPanelTypeIdsFieldMask =
+        (TypeTraits<BitVector>::One << ChooserPanelTypeIdsFieldId);
     static const OSG::BitVector PreviewPanelFieldMask =
         (TypeTraits<BitVector>::One << PreviewPanelFieldId);
+    static const OSG::BitVector SelectionModelFieldMask =
+        (TypeTraits<BitVector>::One << SelectionModelFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef MFUnrecAbstractColorChooserPanelPtr MFInternalChooserPanelsType;
+    typedef MFUInt32          MFChooserPanelTypeIdsType;
     typedef SFUnrecComponentPtr SFPreviewPanelType;
+    typedef SFUnrecColorSelectionModelPtr SFSelectionModelType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -132,11 +139,21 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooserBase : public Panel
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+
+                  MFUInt32            *editMFChooserPanelTypeIds(void);
+            const MFUInt32            *getMFChooserPanelTypeIds (void) const;
             const SFUnrecComponentPtr *getSFPreviewPanel   (void) const;
                   SFUnrecComponentPtr *editSFPreviewPanel   (void);
+            const SFUnrecColorSelectionModelPtr *getSFSelectionModel (void) const;
+                  SFUnrecColorSelectionModelPtr *editSFSelectionModel (void);
 
+
+                  UInt32              &editChooserPanelTypeIds(const UInt32 index);
+                  UInt32               getChooserPanelTypeIds (const UInt32 index) const;
 
                   Component * getPreviewPanel   (void) const;
+
+                  ColorSelectionModel * getSelectionModel (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -144,6 +161,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooserBase : public Panel
     /*! \{                                                                 */
 
             void setPreviewPanel   (Component * const value);
+            void setSelectionModel (ColorSelectionModel * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -208,8 +226,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooserBase : public Panel
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFUnrecAbstractColorChooserPanelPtr _mfInternalChooserPanels;
+    MFUInt32          _mfChooserPanelTypeIds;
     SFUnrecComponentPtr _sfPreviewPanel;
+    SFUnrecColorSelectionModelPtr _sfSelectionModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -238,38 +257,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ColorChooserBase : public Panel
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleInternalChooserPanels (void) const;
-    EditFieldHandlePtr editHandleInternalChooserPanels(void);
+    GetFieldHandlePtr  getHandleChooserPanelTypeIds (void) const;
+    EditFieldHandlePtr editHandleChooserPanelTypeIds(void);
     GetFieldHandlePtr  getHandlePreviewPanel    (void) const;
     EditFieldHandlePtr editHandlePreviewPanel   (void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-            const MFUnrecAbstractColorChooserPanelPtr *getMFInternalChooserPanels (void) const;
-                  MFUnrecAbstractColorChooserPanelPtr *editMFInternalChooserPanels(void);
-
-
-                  AbstractColorChooserPanel * getInternalChooserPanels(const UInt32 index) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr MField Set                                */
-    /*! \{                                                                 */
-
-    void pushToInternalChooserPanels           (AbstractColorChooserPanel * const value   );
-    void assignInternalChooserPanels           (const MFUnrecAbstractColorChooserPanelPtr &value);
-    void removeFromInternalChooserPanels (UInt32                uiIndex );
-    void removeObjFromInternalChooserPanels(AbstractColorChooserPanel * const value   );
-    void clearInternalChooserPanels            (void                          );
+    GetFieldHandlePtr  getHandleSelectionModel  (void) const;
+    EditFieldHandlePtr editHandleSelectionModel (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

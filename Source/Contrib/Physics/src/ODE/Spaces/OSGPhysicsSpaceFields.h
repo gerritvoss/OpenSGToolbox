@@ -146,6 +146,77 @@ const Char8 *FieldTraits<PhysicsSpace *, 0>::getMName<NoRefCountPolicy>(void)
 }
 
 
+/*! \ingroup GrpContribPhysicsFieldTraits
+ */
+template <>
+struct FieldTraits<PhysicsSpace *, 1> :
+    public FieldTraitsFCPtrBase<PhysicsSpace *, 1>
+{
+  private:
+
+  public:
+    typedef FieldTraits<PhysicsSpace *, 1>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPHYSICS_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+};
+
+template<> inline
+const Char8 *FieldTraits<PhysicsSpace *, 1>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecChildPhysicsSpacePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PhysicsSpace *, 1>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecChildPhysicsSpacePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PhysicsSpace *, 1>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakChildPhysicsSpacePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PhysicsSpace *, 1>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdChildPhysicsSpacePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PhysicsSpace *, 1>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecChildPhysicsSpacePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PhysicsSpace *, 1>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecChildPhysicsSpacePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PhysicsSpace *, 1>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakChildPhysicsSpacePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PhysicsSpace *, 1>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdChildPhysicsSpacePtr"; 
+}
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribPhysicsFieldSFields */
 typedef PointerSField<PhysicsSpace *,
@@ -174,6 +245,13 @@ typedef PointerMField<PhysicsSpace *,
 typedef PointerMField<PhysicsSpace *,
                       NoRefCountPolicy        > MFUncountedPhysicsSpacePtr;
 
+
+
+/*! \ingroup GrpContribPhysicsFieldMFields */
+typedef ChildPointerMField<
+          PhysicsSpace *, 
+          UnrecordedRefCountPolicy,
+          1             > MFUnrecChildPhysicsSpacePtr;
 
 
 
@@ -214,6 +292,14 @@ struct MFUncountedPhysicsSpacePtr :
     public PointerMField<PhysicsSpace *,
                          NoRefCountPolicy        > {};
 
+
+
+/*! \ingroup GrpContribPhysicsFieldMFields \ingroup GrpLibOSGContribPhysics */
+struct MFUnrecChildPhysicsSpacePtr :
+    public ChildPointerMField<
+        PhysicsSpace *, 
+        UnrecordedRefCountPolicy,
+        1             > {};
 
 
 #endif // these are the doxygen hacks

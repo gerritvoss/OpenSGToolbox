@@ -124,13 +124,10 @@ void SpinnerDefaultEditor::cancelEdit(void)
 
 void SpinnerDefaultEditor::dismiss(Spinner* const spinner)
 {
-    if(getSpinner() != NULL)
-    {
-        getSpinner()->removeChangeListener(this);
-    }
+    _ModelStateChangedConnection.disconnect();
 }
 
-void SpinnerDefaultEditor::stateChanged(const ChangeEventUnrecPtr e)
+void SpinnerDefaultEditor::handleModelStateChanged(ChangeEventDetails* const e)
 {
     //Update the Value of the TextField
     std::string NewValue;
@@ -174,17 +171,25 @@ void SpinnerDefaultEditor::onDestroy()
 {
 }
 
+void SpinnerDefaultEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _ModelStateChangedConnection.disconnect();
+    _EditorTextFieldActionConnection.disconnect();
+    _EditorTextFieldFocusLostConnection.disconnect();
+    _EditorTextFieldKeyPressedConnection.disconnect();
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 SpinnerDefaultEditor::SpinnerDefaultEditor(void) :
-    Inherited(),
-		_EditorTextFieldListener(this)
+    Inherited()
 {
 }
 
 SpinnerDefaultEditor::SpinnerDefaultEditor(const SpinnerDefaultEditor &source) :
-    Inherited(source),
-		_EditorTextFieldListener(this)
+    Inherited(source)
 {
 }
 
@@ -200,32 +205,42 @@ void SpinnerDefaultEditor::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-    if(whichField & SpinnerFieldMask && getSpinner() != NULL)
+    if(whichField & SpinnerFieldMask)
     {
-        getSpinner()->addChangeListener(this);
-        
-        //Update the Value of the TextField
-		    std::string NewValue;
-            try
+        _EditorTextFieldActionConnection.disconnect();
+        if(getSpinner() != NULL)
+        {
+            _ModelStateChangedConnection = getSpinner()->getModel()->connectStateChanged(boost::bind(&SpinnerDefaultEditor::handleModelStateChanged, this, _1));
+            
+            if(getTextField() != NULL)
             {
-                getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+                //Update the Value of the TextField
+	            std::string NewValue;
+                try
+                {
+                    getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+                }
+                catch(boost::bad_any_cast &)
+                {
+		            getTextField()->setText("");
+                }
             }
-            catch(boost::bad_any_cast &)
-            {
-			    getTextField()->setText("");
-            }
+        }
     }
 
     if(whichField & TextFieldFieldMask)
     {
-            clearChildren();
-            if(getTextField() != NULL)
-            {
-                pushToChildren(getTextField());
-				getTextField()->addActionListener(&_EditorTextFieldListener);
-				getTextField()->addFocusListener(&_EditorTextFieldListener);
-				getTextField()->addKeyListener(&_EditorTextFieldListener);
-            }
+        clearChildren();
+        _EditorTextFieldActionConnection.disconnect();
+        _EditorTextFieldFocusLostConnection.disconnect();
+        _EditorTextFieldKeyPressedConnection.disconnect();
+        if(getTextField() != NULL)
+        {
+            pushToChildren(getTextField());
+            _EditorTextFieldActionConnection = getTextField()->connectActionPerformed(boost::bind(&SpinnerDefaultEditor::handleEditorTextFieldActionPerformed, this, _1));
+            _EditorTextFieldFocusLostConnection = getTextField()->connectFocusLost(boost::bind(&SpinnerDefaultEditor::handleEditorTextFieldFocusLost, this, _1));
+            _EditorTextFieldKeyPressedConnection = getTextField()->connectKeyPressed(boost::bind(&SpinnerDefaultEditor::handleEditorTextFieldKeyPressed, this, _1));
+        }
     }
 }
 
@@ -235,26 +250,21 @@ void SpinnerDefaultEditor::dump(      UInt32    ,
     SLOG << "Dump SpinnerDefaultEditor NI" << std::endl;
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::actionPerformed(const ActionEventUnrecPtr e)
+void SpinnerDefaultEditor::handleEditorTextFieldActionPerformed(ActionEventDetails* const e)
 {
-	_SpinnerDefaultEditor->commitEdit();
+	commitEdit();
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::focusGained(const FocusEventUnrecPtr e)
+void SpinnerDefaultEditor::handleEditorTextFieldFocusLost(FocusEventDetails* const e)
 {
-	//Do Nothing
+	commitEdit();
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::focusLost(const FocusEventUnrecPtr e)
+void SpinnerDefaultEditor::handleEditorTextFieldKeyPressed(KeyEventDetails* const e)
 {
-	_SpinnerDefaultEditor->commitEdit();
-}
-
-void SpinnerDefaultEditor::EditorTextFieldListener::keyPressed(const KeyEventUnrecPtr e)
-{
-	if(e->getKey() == KeyEvent::KEY_ESCAPE)
+	if(e->getKey() == KeyEventDetails::KEY_ESCAPE)
 	{
-		_SpinnerDefaultEditor->cancelEdit();
+		cancelEdit();
 	}
 }
 

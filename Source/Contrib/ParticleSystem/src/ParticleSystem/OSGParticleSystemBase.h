@@ -77,10 +77,11 @@
 #include "OSGParticleSystemFields.h"
 
 //Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+#include "OSGActivity.h"
+#include "OSGConsumableEventCombiner.h"
+
+#include "OSGParticleSystemEventDetailsFields.h"
+#include "OSGParticleEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -99,6 +100,20 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ParticleSystem);
+    
+    
+    typedef ParticleSystemEventDetails SystemUpdatedEventDetailsType;
+    typedef ParticleSystemEventDetails VolumeChangedEventDetailsType;
+    typedef ParticleEventDetails ParticleGeneratedEventDetailsType;
+    typedef ParticleEventDetails ParticleKilledEventDetailsType;
+    typedef ParticleEventDetails ParticleStolenEventDetailsType;
+
+    typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
+    typedef boost::signals2::signal<void (ParticleSystemEventDetails* const, UInt32), ConsumableEventCombiner> SystemUpdatedEventType;
+    typedef boost::signals2::signal<void (ParticleSystemEventDetails* const, UInt32), ConsumableEventCombiner> VolumeChangedEventType;
+    typedef boost::signals2::signal<void (ParticleEventDetails* const, UInt32), ConsumableEventCombiner> ParticleGeneratedEventType;
+    typedef boost::signals2::signal<void (ParticleEventDetails* const, UInt32), ConsumableEventCombiner> ParticleKilledEventType;
+    typedef boost::signals2::signal<void (ParticleEventDetails* const, UInt32), ConsumableEventCombiner> ParticleStolenEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -128,8 +143,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
         SystemAffectorsFieldId = AffectorsFieldId + 1,
         VolumeFieldId = SystemAffectorsFieldId + 1,
         MaxParticleSizeFieldId = VolumeFieldId + 1,
-        EventProducerFieldId = MaxParticleSizeFieldId + 1,
-        NextFieldId = EventProducerFieldId + 1
+        NextFieldId = MaxParticleSizeFieldId + 1
     };
 
     static const OSG::BitVector BeaconFieldMask =
@@ -176,12 +190,10 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
         (TypeTraits<BitVector>::One << VolumeFieldId);
     static const OSG::BitVector MaxParticleSizeFieldMask =
         (TypeTraits<BitVector>::One << MaxParticleSizeFieldId);
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecNodePtr    SFBeaconType;
+    typedef SFWeakNodePtr     SFBeaconType;
     typedef MFPnt3f           MFInternalPositionsType;
     typedef MFPnt3f           MFInternalSecPositionsType;
     typedef MFVec3f           MFInternalNormalsType;
@@ -203,16 +215,15 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     typedef MFUnrecParticleSystemAffectorPtr MFSystemAffectorsType;
     typedef SFBoxVolume       SFVolumeType;
     typedef SFVec3f           SFMaxParticleSizeType;
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        SystemUpdatedMethodId = 1,
-        VolumeChangedMethodId = SystemUpdatedMethodId + 1,
-        ParticleGeneratedMethodId = VolumeChangedMethodId + 1,
-        ParticleKilledMethodId = ParticleGeneratedMethodId + 1,
-        ParticleStolenMethodId = ParticleKilledMethodId + 1,
-        NextProducedMethodId = ParticleStolenMethodId + 1
+        SystemUpdatedEventId = 1,
+        VolumeChangedEventId = SystemUpdatedEventId + 1,
+        ParticleGeneratedEventId = VolumeChangedEventId + 1,
+        ParticleKilledEventId = ParticleGeneratedEventId + 1,
+        ParticleStolenEventId = ParticleKilledEventId + 1,
+        NextProducedEventId = ParticleStolenEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -240,8 +251,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecNodePtr      *getSFBeacon         (void) const;
-                  SFUnrecNodePtr      *editSFBeacon         (void);
+            const SFWeakNodePtr       *getSFBeacon         (void) const;
+                  SFWeakNodePtr       *editSFBeacon         (void);
 
                   SFUInt32            *editSFMaxParticles   (void);
             const SFUInt32            *getSFMaxParticles    (void) const;
@@ -343,28 +354,90 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+                                                         
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
-
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //SystemUpdated
+    boost::signals2::connection connectSystemUpdated  (const SystemUpdatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSystemUpdated  (const SystemUpdatedEventType::group_type &group,
+                                                       const SystemUpdatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSystemUpdated          (const SystemUpdatedEventType::group_type &group);
+    void   disconnectAllSlotsSystemUpdated  (void);
+    bool   isEmptySystemUpdated             (void) const;
+    UInt32 numSlotsSystemUpdated            (void) const;
+    
+    //VolumeChanged
+    boost::signals2::connection connectVolumeChanged  (const VolumeChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectVolumeChanged  (const VolumeChangedEventType::group_type &group,
+                                                       const VolumeChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectVolumeChanged          (const VolumeChangedEventType::group_type &group);
+    void   disconnectAllSlotsVolumeChanged  (void);
+    bool   isEmptyVolumeChanged             (void) const;
+    UInt32 numSlotsVolumeChanged            (void) const;
+    
+    //ParticleGenerated
+    boost::signals2::connection connectParticleGenerated(const ParticleGeneratedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectParticleGenerated(const ParticleGeneratedEventType::group_type &group,
+                                                       const ParticleGeneratedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectParticleGenerated      (const ParticleGeneratedEventType::group_type &group);
+    void   disconnectAllSlotsParticleGenerated(void);
+    bool   isEmptyParticleGenerated         (void) const;
+    UInt32 numSlotsParticleGenerated        (void) const;
+    
+    //ParticleKilled
+    boost::signals2::connection connectParticleKilled (const ParticleKilledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectParticleKilled (const ParticleKilledEventType::group_type &group,
+                                                       const ParticleKilledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectParticleKilled         (const ParticleKilledEventType::group_type &group);
+    void   disconnectAllSlotsParticleKilled (void);
+    bool   isEmptyParticleKilled            (void) const;
+    UInt32 numSlotsParticleKilled           (void) const;
+    
+    //ParticleStolen
+    boost::signals2::connection connectParticleStolen (const ParticleStolenEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectParticleStolen (const ParticleStolenEventType::group_type &group,
+                                                       const ParticleStolenEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectParticleStolen         (const ParticleStolenEventType::group_type &group);
+    void   disconnectAllSlotsParticleStolen (void);
+    bool   isEmptyParticleStolen            (void) const;
+    UInt32 numSlotsParticleStolen           (void) const;
+    
+    
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
@@ -397,13 +470,15 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Event Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
-    
-    GetFieldHandlePtr  getHandleEventProducer        (void) const;
-    EditFieldHandlePtr editHandleEventProducer       (void);
 
+    //Event Event producers
+    SystemUpdatedEventType _SystemUpdatedEvent;
+    VolumeChangedEventType _VolumeChangedEvent;
+    ParticleGeneratedEventType _ParticleGeneratedEvent;
+    ParticleKilledEventType _ParticleKilledEvent;
+    ParticleStolenEventType _ParticleStolenEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -415,7 +490,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecNodePtr    _sfBeacon;
+    SFWeakNodePtr     _sfBeacon;
     MFPnt3f           _mfInternalPositions;
     MFPnt3f           _mfInternalSecPositions;
     MFVec3f           _mfInternalNormals;
@@ -437,7 +512,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     MFUnrecParticleSystemAffectorPtr _mfSystemAffectors;
     SFBoxVolume       _sfVolume;
     SFVec3f           _sfMaxParticleSize;
-    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -511,6 +585,16 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     GetFieldHandlePtr  getHandleMaxParticleSize (void) const;
     EditFieldHandlePtr editHandleMaxParticleSize(void);
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleSystemUpdatedSignal(void) const;
+    GetEventHandlePtr getHandleVolumeChangedSignal(void) const;
+    GetEventHandlePtr getHandleParticleGeneratedSignal(void) const;
+    GetEventHandlePtr getHandleParticleKilledSignal(void) const;
+    GetEventHandlePtr getHandleParticleStolenSignal(void) const;
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
@@ -613,6 +697,18 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceSystemUpdated       (SystemUpdatedEventDetailsType* const e);
+    void produceVolumeChanged       (VolumeChangedEventDetailsType* const e);
+    void produceParticleGenerated   (ParticleGeneratedEventDetailsType* const e);
+    void produceParticleKilled      (ParticleKilledEventDetailsType* const e);
+    void produceParticleStolen      (ParticleStolenEventDetailsType* const e);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -661,7 +757,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DialogWindowEventDetails"
+	parent="EventDetails"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+	supportUnregisteredCreate="true"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+	<Field
+		name="Option"
+		type="UInt8"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="DialogWindowEventDetails::DIALOG_OPTION_OK"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="Input"
+		type="std::string"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue=""
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="InputIndex"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

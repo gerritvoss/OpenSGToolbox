@@ -41,21 +41,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool PopupMenu::isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const
-{
-    return _PopupMenuListeners.find(Listener) != _PopupMenuListeners.end();
-}
-
-inline
 Int32 PopupMenu::getSelectionIndex(void) const
 {
     return getSelectionModel()->getSelectedIndex();
-}
-
-inline
-PopupMenu::MenuSelectionListener::MenuSelectionListener(PopupMenu* const ThePopupMenu) :
-									_PopupMenu(ThePopupMenu)
-{
 }
 
 OSG_END_NAMESPACE

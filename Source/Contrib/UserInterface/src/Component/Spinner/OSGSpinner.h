@@ -44,9 +44,7 @@
 
 #include "OSGSpinnerBase.h"
 #include "OSGSpinnerModel.h"
-#include "OSGActionListener.h"
 
-#include "OSGEventConnection.h"
 #include "OSGTextField.h"
 #include "OSGButton.h"
 
@@ -91,13 +89,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Spinner : public SpinnerBase
     /*! \}                                                                 */
 
     virtual void updateLayout(void);
-
-    //Adds a listener to the list that is notified each time a change to the model occurs.
-    EventConnection addChangeListener(ChangeListenerPtr l);
-	bool isChangeListenerAttached(ChangeListenerPtr l) const;
-
-    //Removes a ChangeListener from this spinner.
-    void removeChangeListener(ChangeListenerPtr l);
     
     //Commits the currently edited value to the SpinnerModel.
     void commitEdit(void);
@@ -163,39 +154,26 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Spinner : public SpinnerBase
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
 
     SpinnerModelPtr _Model;
     
     //This method is called by the constructors to create the JComponent that displays the current value of the sequence.
     ComponentTransitPtr createEditor(SpinnerModelPtr model);
 
-    //Next Button Action Listener
-	class NextButtonActionListener : public ActionListener
-	{
-	public:
-		NextButtonActionListener(Spinner* const TheSpinner);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-	private:
-		Spinner* _Spinner;
-	};
+    //Next Button Action
+    void handleNextButtonAction(ActionEventDetails* const e);
+    boost::signals2::connection _NextButtonActionConnection;
 
-	friend class NextButtonActionListener;
-
-	NextButtonActionListener _NextButtonActionListener;
-
-    //Previous Button Action Listener
-	class PreviousButtonActionListener : public ActionListener
-	{
-	public:
-		PreviousButtonActionListener(Spinner* const TheSpinner);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-	private:
-		Spinner* _Spinner;
-	};
-
-	friend class PreviousButtonActionListener;
-
-	PreviousButtonActionListener _PreviousButtonActionListener;
+    //Previous Button Action
+    void handlePreviousButtonAction(ActionEventDetails* const e);
+    boost::signals2::connection _PreviousButtonActionConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -106,6 +106,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutConstraints : public LayoutConst
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+    void updateParentLayouts(void);
     /*==========================  PRIVATE  ================================*/
 
   private:

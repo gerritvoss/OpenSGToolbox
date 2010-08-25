@@ -149,70 +149,71 @@ const Char8 *CollisionParticleSystemAffectorBase::getClassname(void)
 }
 
 inline
-EventConnection CollisionParticleSystemAffectorBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool CollisionParticleSystemAffectorBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 CollisionParticleSystemAffectorBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr CollisionParticleSystemAffectorBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void CollisionParticleSystemAffectorBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 CollisionParticleSystemAffectorBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *CollisionParticleSystemAffectorBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *CollisionParticleSystemAffectorBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *CollisionParticleSystemAffectorBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *CollisionParticleSystemAffectorBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 CollisionParticleSystemAffectorBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *CollisionParticleSystemAffectorBase::editSFEventProducer(void)
+boost::signals2::connection  CollisionParticleSystemAffectorBase::connectParticleCollision(const ParticleCollisionEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _ParticleCollisionEvent.connect(listener, at);
 }
 
-//! Get the value of the CollisionParticleSystemAffector::_sfEventProducer field.
 inline
-EventProducerPtr &CollisionParticleSystemAffectorBase::editEventProducer(void)
+boost::signals2::connection  CollisionParticleSystemAffectorBase::connectParticleCollision(const ParticleCollisionEventType::group_type &group,
+                                                    const ParticleCollisionEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _ParticleCollisionEvent.connect(group, listener, at);
+}
+
+inline
+void  CollisionParticleSystemAffectorBase::disconnectParticleCollision(const ParticleCollisionEventType::group_type &group)
+{
+    _ParticleCollisionEvent.disconnect(group);
+}
+
+inline
+void  CollisionParticleSystemAffectorBase::disconnectAllSlotsParticleCollision(void)
+{
+    _ParticleCollisionEvent.disconnect_all_slots();
+}
+
+inline
+bool  CollisionParticleSystemAffectorBase::isEmptyParticleCollision(void) const
+{
+    return _ParticleCollisionEvent.empty();
+}
+
+inline
+UInt32  CollisionParticleSystemAffectorBase::numSlotsParticleCollision(void) const
+{
+    return _ParticleCollisionEvent.num_slots();
+}
+
+inline
+void CollisionParticleSystemAffectorBase::produceParticleCollision(ParticleCollisionEventDetailsType* const e)
+{
+    produceEvent(ParticleCollisionEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(CollisionParticleSystemAffector);

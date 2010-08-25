@@ -43,8 +43,7 @@
 #endif
 
 #include "OSGCollisionParticleSystemAffectorBase.h"
-#include <set>
-#include "OSGParticleCollisionListener.h"
+#include "OSGParticleCollisionEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,10 +80,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollisionParticleSystemAffector : pub
 
     /*! \}                                                                 */
     virtual void affect(ParticleSystemRefPtr System, const Time& elps);
-
-    EventConnection addParticleCollisionListener(ParticleCollisionListenerPtr Listener);
-    bool isParticleCollisionListenerAttached(ParticleCollisionListenerPtr Listener) const;
-    void removeParticleCollisionListener(ParticleCollisionListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -113,12 +108,10 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollisionParticleSystemAffector : pub
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-	typedef std::set<ParticleCollisionListenerPtr> ParticleCollisionListenerSet;
-    typedef ParticleCollisionListenerSet::iterator ParticleCollisionListenerSetItor;
-
-    ParticleCollisionListenerSet       _ParticleCollisionListeners;
-
-    void produceCollision(const ParticleCollisionEventUnrecPtr Event);
+    void produceParticleCollision(ParticleSystem* const System,
+                                  UInt32 PrimaryIndex,
+                                  ParticleSystem* const SecondarySystem,
+                                  UInt32 SecondaryIndex);
     /*==========================  PRIVATE  ================================*/
 
   private:

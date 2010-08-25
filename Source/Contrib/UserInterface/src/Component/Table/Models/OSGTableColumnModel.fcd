@@ -14,29 +14,44 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI TableColumnModel.
-	<ProducedMethod
+	<Field
+		name="SelectionModel"
+		type="ListSelectionModel"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NULL"
+		access="public"
+	>
+	</Field>
+	<ProducedEvent
 		name="ColumnAdded"
-		type="TableColumnModelEventPtr"
+		detailsType="TableColumnModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ColumnMoved"
-		type="TableColumnModelEventPtr"
+		detailsType="TableColumnModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ColumnRemoved"
-		type="TableColumnModelEventPtr"
+		detailsType="TableColumnModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ColumnMarginChanged"
-		type="TableColumnModelEventPtr"
+		detailsType="ChangeEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ColumnSelectionChanged"
-		type="ListSelectionEventPtr"
+		detailsType="ListSelectionEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

@@ -146,6 +146,77 @@ const Char8 *FieldTraits<MenuItem *, 0>::getMName<NoRefCountPolicy>(void)
 }
 
 
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+ */
+template <>
+struct FieldTraits<MenuItem *, 1> :
+    public FieldTraitsFCPtrBase<MenuItem *, 1>
+{
+  private:
+
+  public:
+    typedef FieldTraits<MenuItem *, 1>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+};
+
+template<> inline
+const Char8 *FieldTraits<MenuItem *, 1>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecChildMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuItem *, 1>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecChildMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuItem *, 1>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakChildMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuItem *, 1>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdChildMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuItem *, 1>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecChildMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuItem *, 1>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecChildMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuItem *, 1>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakChildMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuItem *, 1>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdChildMenuItemPtr"; 
+}
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribUserInterfaceFieldSFields */
 typedef PointerSField<MenuItem *,
@@ -174,6 +245,13 @@ typedef PointerMField<MenuItem *,
 typedef PointerMField<MenuItem *,
                       NoRefCountPolicy        > MFUncountedMenuItemPtr;
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef ChildPointerMField<
+          MenuItem *, 
+          UnrecordedRefCountPolicy,
+          1             > MFUnrecChildMenuItemPtr;
 
 
 
@@ -214,6 +292,14 @@ struct MFUncountedMenuItemPtr :
     public PointerMField<MenuItem *,
                          NoRefCountPolicy        > {};
 
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecChildMenuItemPtr :
+    public ChildPointerMField<
+        MenuItem *, 
+        UnrecordedRefCountPolicy,
+        1             > {};
 
 
 #endif // these are the doxygen hacks

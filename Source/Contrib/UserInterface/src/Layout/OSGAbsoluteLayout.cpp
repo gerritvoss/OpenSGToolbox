@@ -83,21 +83,54 @@ void AbsoluteLayout::updateLayout(const MFUnrecChildComponentPtr* Components,
 {
     Pnt2f ParentInsetsTopLeft, ParentInsetBottomRight;
     dynamic_cast<const ComponentContainer*>(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetBottomRight);
+	Vec2f borderSize(ParentInsetBottomRight-ParentInsetsTopLeft);
+
+    Vec2f ComponentSize;
+    Pnt2f ComponentPosition;
     for(UInt32 i = 0 ; i<Components->size(); ++i)
     {
         //Calculate the Components Size
-        (*Components)[i]->setSize((*Components)[i]->getPreferredSize());
         if((*Components)[i]->getConstraints() != NULL)
         {
-            //Get the Components Position
-            Pnt2f pos = dynamic_cast<AbsoluteLayoutConstraints*>((*Components)[i]->getConstraints())->getPosition();
-
-            (*Components)[i]->setPosition(ParentInsetsTopLeft + pos.subZero());
+            ComponentPosition = dynamic_cast<AbsoluteLayoutConstraints*>((*Components)[i]->getConstraints())->getPosition();
         }
         else
         {
-            (*Components)[i]->setPosition(ParentInsetsTopLeft);
+            ComponentPosition.setValues(0.0f,0.0f);
         }
+        ComponentSize = (*Components)[i]->getPreferredSize();
+
+        
+        if(getScaling())
+        {
+            Vec2f DifferenceRatio(borderSize.x() / getOriginalDimensions().x(), borderSize.y() / getOriginalDimensions().y());
+
+            ComponentPosition.setValues(ComponentPosition.x() * DifferenceRatio.x(), ComponentPosition.y() * DifferenceRatio.y());
+            ComponentSize.setValues(ComponentSize.x() * DifferenceRatio.x(), ComponentSize.y() * DifferenceRatio.y());
+        }
+        else
+        {
+            if(ComponentPosition.x() <= 1.0f)
+            {
+                ComponentPosition[0] = ComponentPosition.x() * borderSize.x();
+            }
+            if(ComponentPosition.y() <= 1.0f)
+            {
+                ComponentPosition[1] = ComponentPosition.y() * borderSize.y();
+            }
+
+            if(ComponentSize.x() <= 1.0f)
+            {
+                ComponentSize[0] = ComponentSize.x() * borderSize.x();
+            }
+            if(ComponentSize.y() <= 1.0f)
+            {
+                ComponentSize[1] = ComponentSize.y() * borderSize.y();
+            }
+        }
+
+        (*Components)[i]->setPosition(ParentInsetsTopLeft + ComponentPosition.subZero());
+        (*Components)[i]->setSize(ComponentSize);
     }
 }
 
@@ -107,6 +140,10 @@ Vec2f AbsoluteLayout::layoutSize(const MFUnrecChildComponentPtr* Components,
                                  SizeType TheSizeType) const
 {
     Vec2f Result(0.0,0.0);
+
+	Pnt2f borderTopLeft, borderBottomRight;
+	dynamic_cast<const ComponentContainer*>(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	Vec2f borderSize(borderBottomRight-borderTopLeft);
 
     Vec2f ComponentSize;
     Pnt2f ComponentPosition;

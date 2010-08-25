@@ -48,9 +48,8 @@
 #include "OSGTextureObjChunk.h"
 #include <set>
 
-#include "OSGVideoListener.h"
 #include "OSGVideoWrapperBase.h"
-#include <boost/filesystem/operations.hpp>
+#include "OSGVideoEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -86,8 +85,8 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapper : public VideoWrapperBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool open(const BoostPath& ThePath, WindowUnrecPtr TheWindow);
-    virtual bool open(const std::string& ThePath, WindowUnrecPtr TheWindow) = 0;
+    virtual bool open(const BoostPath& ThePath, Window* const TheWindow);
+    virtual bool open(const std::string& ThePath, Window* const TheWindow) = 0;
 
     virtual bool seek(Int64 SeekPos) = 0;
     virtual bool jump(Int64 Amount) = 0;
@@ -108,15 +107,12 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapper : public VideoWrapperBase
 	virtual Int64 getPosition(void) const = 0;
 	virtual Int64 getDuration(void) const = 0;
 
-    virtual ImageRefPtr getCurrentFrame(void) = 0;
+    virtual Image* getCurrentFrame(void) = 0;
     virtual bool updateImage(void) = 0;
-    virtual bool updateTexture(TextureObjChunkRefPtr TheTexture);
+    virtual bool updateTexture(TextureObjChunk* const TheTexture);
 
-	ImageRefPtr getImage(void) const;
+	Image* getImage(void) const;
 
-	//Events
-    void addVideoListener(VideoListenerPtr Listener);
-    void removeVideoListener(VideoListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -148,12 +144,6 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapper : public VideoWrapperBase
     
 	ImageRefPtr _VideoImage;
 	
-	typedef std::set<VideoListenerPtr> VideoListenerSet;
-    typedef VideoListenerSet::iterator VideoListenerSetItor;
-    typedef VideoListenerSet::const_iterator VideoListenerSetConstItor;
-	
-    VideoListenerSet       _VideoListeners;
-
 	void producePaused(void);
 	void produceUnpaused(void);
 	void produceStarted(void);

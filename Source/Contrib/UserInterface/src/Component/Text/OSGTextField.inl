@@ -40,32 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool TextField::isActionListenerAttached(ActionListenerPtr Listener) const
-{
-    return _ActionListeners.find(Listener) != _ActionListeners.end();
-}
-
-inline
-void TextField::removeActionListener(ActionListenerPtr Listener)
-{
-   ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
-   if(EraseIter != _ActionListeners.end())
-   {
-      _ActionListeners.erase(EraseIter);
-   }
-}
-
-inline
-TextField::CaretUpdateListener::CaretUpdateListener(TextField* const TheTextField) :
-									_TextField(TheTextField)
-{
-}
-
-inline
-TextField::MouseDownListener::MouseDownListener(TextField* const TheTextField) :
-_TextField(TheTextField)
-{
-}
-
 OSG_END_NAMESPACE

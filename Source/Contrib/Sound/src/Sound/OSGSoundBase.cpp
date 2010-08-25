@@ -57,6 +57,8 @@
 #include "OSGConfig.h"
 
 
+#include "OSGSoundEventDetails.h"
+
 
 
 #include "OSGSoundBase.h"
@@ -64,7 +66,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -255,17 +257,6 @@ void SoundBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Sound::getHandleEnable3D));
 
     oType.addInitialDesc(pDesc);
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&Sound::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&Sound::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -393,74 +384,92 @@ SoundBase::TypeObject SoundBase::_type(
     "        defaultValue=\"false\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SoundPlayed\"\n"
-    "\t\ttype=\"SoundEvent\"\n"
+    "\t\tdetailsType=\"SoundEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SoundStopped\"\n"
-    "\t\ttype=\"SoundEvent\"\n"
+    "\t\tdetailsType=\"SoundEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SoundPaused\"\n"
-    "\t\ttype=\"SoundEvent\"\n"
+    "\t\tdetailsType=\"SoundEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SoundUnpaused\"\n"
-    "\t\ttype=\"SoundEvent\"\n"
+    "\t\tdetailsType=\"SoundEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SoundLooped\"\n"
-    "\t\ttype=\"SoundEvent\"\n"
+    "\t\tdetailsType=\"SoundEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SoundEnded\"\n"
-    "\t\ttype=\"SoundEvent\"\n"
+    "\t\tdetailsType=\"SoundEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A Sound Interface.\n"
     );
 
-//! Sound Produced Methods
+//! Sound Produced Events
 
-MethodDescription *SoundBase::_methodDesc[] =
+EventDescription *SoundBase::_eventDesc[] =
 {
-    new MethodDescription("SoundPlayed", 
-                    "",
-                     SoundPlayedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("SoundStopped", 
-                    "",
-                     SoundStoppedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("SoundPaused", 
-                    "",
-                     SoundPausedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("SoundUnpaused", 
-                    "",
-                     SoundUnpausedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("SoundLooped", 
-                    "",
-                     SoundLoopedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("SoundEnded", 
-                    "",
-                     SoundEndedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("SoundPlayed", 
+                          "",
+                          SoundPlayedEventId, 
+                          FieldTraits<SoundEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SoundBase::getHandleSoundPlayedSignal)),
+
+    new EventDescription("SoundStopped", 
+                          "",
+                          SoundStoppedEventId, 
+                          FieldTraits<SoundEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SoundBase::getHandleSoundStoppedSignal)),
+
+    new EventDescription("SoundPaused", 
+                          "",
+                          SoundPausedEventId, 
+                          FieldTraits<SoundEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SoundBase::getHandleSoundPausedSignal)),
+
+    new EventDescription("SoundUnpaused", 
+                          "",
+                          SoundUnpausedEventId, 
+                          FieldTraits<SoundEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SoundBase::getHandleSoundUnpausedSignal)),
+
+    new EventDescription("SoundLooped", 
+                          "",
+                          SoundLoopedEventId, 
+                          FieldTraits<SoundEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SoundBase::getHandleSoundLoopedSignal)),
+
+    new EventDescription("SoundEnded", 
+                          "",
+                          SoundEndedEventId, 
+                          FieldTraits<SoundEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SoundBase::getHandleSoundEndedSignal))
+
 };
 
 EventProducerType SoundBase::_producerType(
@@ -468,8 +477,8 @@ EventProducerType SoundBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -659,10 +668,6 @@ UInt32 SoundBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfEnable3D.getBinSize();
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -708,10 +713,6 @@ void SoundBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfEnable3D.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void SoundBase::copyFromBin(BinaryDataHandler &pMem,
@@ -755,19 +756,242 @@ void SoundBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfEnable3D.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 }
 
 
+
+/*------------------------- event producers ----------------------------------*/
+void SoundBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case SoundPlayedEventId:
+        OSG_ASSERT(dynamic_cast<SoundPlayedEventDetailsType* const>(e));
+
+        _SoundPlayedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SoundPlayedEvent(dynamic_cast<SoundPlayedEventDetailsType* const>(e), SoundPlayedEventId);
+        break;
+    case SoundStoppedEventId:
+        OSG_ASSERT(dynamic_cast<SoundStoppedEventDetailsType* const>(e));
+
+        _SoundStoppedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SoundStoppedEvent(dynamic_cast<SoundStoppedEventDetailsType* const>(e), SoundStoppedEventId);
+        break;
+    case SoundPausedEventId:
+        OSG_ASSERT(dynamic_cast<SoundPausedEventDetailsType* const>(e));
+
+        _SoundPausedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SoundPausedEvent(dynamic_cast<SoundPausedEventDetailsType* const>(e), SoundPausedEventId);
+        break;
+    case SoundUnpausedEventId:
+        OSG_ASSERT(dynamic_cast<SoundUnpausedEventDetailsType* const>(e));
+
+        _SoundUnpausedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SoundUnpausedEvent(dynamic_cast<SoundUnpausedEventDetailsType* const>(e), SoundUnpausedEventId);
+        break;
+    case SoundLoopedEventId:
+        OSG_ASSERT(dynamic_cast<SoundLoopedEventDetailsType* const>(e));
+
+        _SoundLoopedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SoundLoopedEvent(dynamic_cast<SoundLoopedEventDetailsType* const>(e), SoundLoopedEventId);
+        break;
+    case SoundEndedEventId:
+        OSG_ASSERT(dynamic_cast<SoundEndedEventDetailsType* const>(e));
+
+        _SoundEndedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SoundEndedEvent(dynamic_cast<SoundEndedEventDetailsType* const>(e), SoundEndedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection SoundBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case SoundPlayedEventId:
+        return _SoundPlayedEvent.connect(listener, at);
+        break;
+    case SoundStoppedEventId:
+        return _SoundStoppedEvent.connect(listener, at);
+        break;
+    case SoundPausedEventId:
+        return _SoundPausedEvent.connect(listener, at);
+        break;
+    case SoundUnpausedEventId:
+        return _SoundUnpausedEvent.connect(listener, at);
+        break;
+    case SoundLoopedEventId:
+        return _SoundLoopedEvent.connect(listener, at);
+        break;
+    case SoundEndedEventId:
+        return _SoundEndedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  SoundBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case SoundPlayedEventId:
+        return _SoundPlayedEvent.connect(group, listener, at);
+        break;
+    case SoundStoppedEventId:
+        return _SoundStoppedEvent.connect(group, listener, at);
+        break;
+    case SoundPausedEventId:
+        return _SoundPausedEvent.connect(group, listener, at);
+        break;
+    case SoundUnpausedEventId:
+        return _SoundUnpausedEvent.connect(group, listener, at);
+        break;
+    case SoundLoopedEventId:
+        return _SoundLoopedEvent.connect(group, listener, at);
+        break;
+    case SoundEndedEventId:
+        return _SoundEndedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  SoundBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case SoundPlayedEventId:
+        _SoundPlayedEvent.disconnect(group);
+        break;
+    case SoundStoppedEventId:
+        _SoundStoppedEvent.disconnect(group);
+        break;
+    case SoundPausedEventId:
+        _SoundPausedEvent.disconnect(group);
+        break;
+    case SoundUnpausedEventId:
+        _SoundUnpausedEvent.disconnect(group);
+        break;
+    case SoundLoopedEventId:
+        _SoundLoopedEvent.disconnect(group);
+        break;
+    case SoundEndedEventId:
+        _SoundEndedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  SoundBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case SoundPlayedEventId:
+        _SoundPlayedEvent.disconnect_all_slots();
+        break;
+    case SoundStoppedEventId:
+        _SoundStoppedEvent.disconnect_all_slots();
+        break;
+    case SoundPausedEventId:
+        _SoundPausedEvent.disconnect_all_slots();
+        break;
+    case SoundUnpausedEventId:
+        _SoundUnpausedEvent.disconnect_all_slots();
+        break;
+    case SoundLoopedEventId:
+        _SoundLoopedEvent.disconnect_all_slots();
+        break;
+    case SoundEndedEventId:
+        _SoundEndedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  SoundBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case SoundPlayedEventId:
+        return _SoundPlayedEvent.empty();
+        break;
+    case SoundStoppedEventId:
+        return _SoundStoppedEvent.empty();
+        break;
+    case SoundPausedEventId:
+        return _SoundPausedEvent.empty();
+        break;
+    case SoundUnpausedEventId:
+        return _SoundUnpausedEvent.empty();
+        break;
+    case SoundLoopedEventId:
+        return _SoundLoopedEvent.empty();
+        break;
+    case SoundEndedEventId:
+        return _SoundEndedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  SoundBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case SoundPlayedEventId:
+        return _SoundPlayedEvent.num_slots();
+        break;
+    case SoundStoppedEventId:
+        return _SoundStoppedEvent.num_slots();
+        break;
+    case SoundPausedEventId:
+        return _SoundPausedEvent.num_slots();
+        break;
+    case SoundUnpausedEventId:
+        return _SoundUnpausedEvent.num_slots();
+        break;
+    case SoundLoopedEventId:
+        return _SoundLoopedEvent.num_slots();
+        break;
+    case SoundEndedEventId:
+        return _SoundEndedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
 
 
 /*------------------------- constructors ----------------------------------*/
 
 SoundBase::SoundBase(void) :
-    _Producer(&getProducerType()),
     Inherited(),
     _sfPosition               (Pnt3f(0.0,0.0,0.0)),
     _sfVelocity               (Vec3f(0.0,0.0,0.0)),
@@ -778,12 +1002,10 @@ SoundBase::SoundBase(void) :
     _sfStreaming              (bool(false)),
     _sfFile                   (),
     _sfEnable3D               (bool(false))
-    ,_sfEventProducer(&_Producer)
 {
 }
 
 SoundBase::SoundBase(const SoundBase &source) :
-    _Producer(&source.getProducerType()),
     Inherited(source),
     _sfPosition               (source._sfPosition               ),
     _sfVelocity               (source._sfVelocity               ),
@@ -794,7 +1016,6 @@ SoundBase::SoundBase(const SoundBase &source) :
     _sfStreaming              (source._sfStreaming              ),
     _sfFile                   (source._sfFile                   ),
     _sfEnable3D               (source._sfEnable3D               )
-    ,_sfEventProducer(&_Producer)
 {
 }
 
@@ -1032,27 +1253,68 @@ EditFieldHandlePtr SoundBase::editHandleEnable3D       (void)
 }
 
 
-GetFieldHandlePtr SoundBase::getHandleEventProducer        (void) const
+GetEventHandlePtr SoundBase::getHandleSoundPlayedSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SoundPlayedEventType>(
+             const_cast<SoundPlayedEventType *>(&_SoundPlayedEvent),
+             _producerType.getEventDescription(SoundPlayedEventId),
              const_cast<SoundBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr SoundBase::editHandleEventProducer       (void)
+GetEventHandlePtr SoundBase::getHandleSoundStoppedSignal(void) const
 {
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SoundStoppedEventType>(
+             const_cast<SoundStoppedEventType *>(&_SoundStoppedEvent),
+             _producerType.getEventDescription(SoundStoppedEventId),
+             const_cast<SoundBase *>(this)));
 
+    return returnValue;
+}
 
-    editSField(EventProducerFieldMask);
+GetEventHandlePtr SoundBase::getHandleSoundPausedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SoundPausedEventType>(
+             const_cast<SoundPausedEventType *>(&_SoundPausedEvent),
+             _producerType.getEventDescription(SoundPausedEventId),
+             const_cast<SoundBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr SoundBase::getHandleSoundUnpausedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SoundUnpausedEventType>(
+             const_cast<SoundUnpausedEventType *>(&_SoundUnpausedEvent),
+             _producerType.getEventDescription(SoundUnpausedEventId),
+             const_cast<SoundBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr SoundBase::getHandleSoundLoopedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SoundLoopedEventType>(
+             const_cast<SoundLoopedEventType *>(&_SoundLoopedEvent),
+             _producerType.getEventDescription(SoundLoopedEventId),
+             const_cast<SoundBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr SoundBase::getHandleSoundEndedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SoundEndedEventType>(
+             const_cast<SoundEndedEventType *>(&_SoundEndedEvent),
+             _producerType.getEventDescription(SoundEndedEventId),
+             const_cast<SoundBase *>(this)));
 
     return returnValue;
 }

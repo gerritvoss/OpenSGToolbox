@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Aaron Cronk                                      *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include "OSGConfig.h"
+#include <OSGConfig.h>
 
 #include "OSGDefaultTreeSelectionModel.h"
-#include "OSGTreeSelectionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class OSG::DefaultTreeSelectionModel
-A DefaultTreeSelectionModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultTreeSelectionModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultTreeSelectionModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,6 +61,16 @@ A DefaultTreeSelectionModel.
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+
+void DefaultTreeSelectionModel::initMethod(InitPhase ePhase)
+{
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
+}
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -651,15 +655,37 @@ void DefaultTreeSelectionModel::toRowNumberSet(NumberSet& Result, const TreePath
         Result.addRange(NumberRange(Row,Row));
     }
 }
-
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultTreeSelectionModel::DefaultTreeSelectionModel(void) : _SelectionMode(SINGLE_TREE_SELECTION),_AnchorSelectionIndex(-1),_LeadSelectionIndex(-1),_MaxSelectionIndex(-1),_MinSelectionIndex(-1),_TreeRowMapper(NULL)
+DefaultTreeSelectionModel::DefaultTreeSelectionModel(void) :
+    Inherited(),
+        _SelectionMode(DefaultTreeSelectionModel::SINGLE_TREE_SELECTION)
+{
+}
+
+DefaultTreeSelectionModel::DefaultTreeSelectionModel(const DefaultTreeSelectionModel &source) :
+    Inherited(source),
+        _SelectionMode(source._SelectionMode)
+{
+}
+
+DefaultTreeSelectionModel::~DefaultTreeSelectionModel(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
+void DefaultTreeSelectionModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
+{
+    Inherited::changed(whichField, origin, details);
+}
+
+void DefaultTreeSelectionModel::dump(      UInt32    ,
+                         const BitVector ) const
+{
+    SLOG << "Dump DefaultTreeSelectionModel NI" << std::endl;
+}
 
 OSG_END_NAMESPACE
-

@@ -46,7 +46,7 @@
 #include <OSGConfig.h>
 
 #include "OSGAnimation.h"
-#include "OSGUpdateEvent.h"
+#include "OSGUpdateEventDetails.h"
 #include "OSGAnimationGroup.h"
 
 OSG_BEGIN_NAMESPACE
@@ -165,22 +165,23 @@ bool AnimationGroup::update(const Time& ElapsedTime)
 	return Result;
 }
 
-//bool AnimationGroup::update(const AnimationAdvancerPtr& advancer)
-//{
-    //if(!_IsPlaying || _IsPaused)
-    //{
-        //return false;
-    //}
-
-    //bool Result(true);
-
-    //for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
-    //{
-        //Result = Result && getAnimations(i)->update(advancer);
-    //}
-
-	//return Result;
-//}
+void AnimationGroup::attachUpdateProducer(ReflexiveContainer* const producer)
+{
+    if(_UpdateEventConnection.connected())
+    {
+        _UpdateEventConnection.disconnect();
+    }
+    //Get the Id of the UpdateEvent
+    const EventDescription* Desc(producer->getProducerType().findEventDescription("Update"));
+    if(Desc == NULL)
+    {
+        SWARNING << "There is no Update event defined on " << producer->getType().getName() << " types." << std::endl;
+    }
+    else
+    {
+        _UpdateEventConnection = producer->connectEvent(Desc->getEventId(), boost::bind(&AnimationGroup::attachedUpdate, this, _1));
+    }
+}
 
 Real32 AnimationGroup::getLength(void) const
 {
@@ -192,45 +193,51 @@ Real32 AnimationGroup::getLength(void) const
     return MaxLength;
 }
 
-void AnimationGroup::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
+void AnimationGroup::attachedUpdate(EventDetails* const details)
 {
-    update(dynamic_pointer_cast<UpdateEvent>(EventDetails)->getElapsedTime());
+    update(dynamic_cast<UpdateEventDetails* const>(details)->getElapsedTime());
 }
 
 void AnimationGroup::produceAnimationsStarted(void)
 {
-    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
-    _Producer.produceEvent(AnimationsStartedMethodId,e);
+    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
+   
+    Inherited::produceAnimationsStarted(Details);
 }
 
 void AnimationGroup::produceAnimationsStopped(void)
 {
-    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
-    _Producer.produceEvent(AnimationsStoppedMethodId,e);
+    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
+   
+    Inherited::produceAnimationsStopped(Details);
 }
 
 void AnimationGroup::produceAnimationsPaused(void)
 {
-    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
-    _Producer.produceEvent(AnimationsPausedMethodId,e);
+    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
+   
+    Inherited::produceAnimationsPaused(Details);
 }
 
 void AnimationGroup::produceAnimationsUnpaused(void)
 {
-    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
-    _Producer.produceEvent(AnimationsUnpausedMethodId,e);
+    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
+   
+    Inherited::produceAnimationsUnpaused(Details);
 }
 
 void AnimationGroup::produceAnimationsEnded(void)
 {
-    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
-    _Producer.produceEvent(AnimationsEndedMethodId,e);
+    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
+   
+    Inherited::produceAnimationsEnded(Details);
 }
 
 void AnimationGroup::produceAnimationsCycled(void)
 {
-    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
-    _Producer.produceEvent(AnimationsCycledMethodId,e);
+    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
+   
+    Inherited::produceAnimationsCycled(Details);
 }
 
 

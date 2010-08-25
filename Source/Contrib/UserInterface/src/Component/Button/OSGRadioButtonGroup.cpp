@@ -92,7 +92,6 @@ void RadioButtonGroup::addButton(RadioButton* const Button)
             Button->setSelected(false);
         }
     }
-    Button->addButtonSelectedListener(this);
 }
 
 void RadioButtonGroup::removeButton(RadioButton* const Button)
@@ -102,7 +101,6 @@ void RadioButtonGroup::removeButton(RadioButton* const Button)
     if(ButtonIter != (*curButtons).end())
     {
         (*curButtons).erase(ButtonIter);		
-        Button->removeButtonSelectedListener(this);
     }
 }
 
@@ -117,7 +115,6 @@ void RadioButtonGroup::removeButton(UInt32 Index)
     if(ButtonIter != (*curButtons).end())
     {
         (*curButtons).erase(ButtonIter);
-        (*ButtonIter)->removeButtonSelectedListener(this);
     }
 }
 UInt32 RadioButtonGroup::getButtonCount(void) const
@@ -138,7 +135,7 @@ bool RadioButtonGroup::isSelected(const RadioButton* const Button) const
     }
 }
 
-void RadioButtonGroup::buttonSelected(const ButtonSelectedEventUnrecPtr e)
+void RadioButtonGroup::handleButtonSelected(ButtonSelectedEventDetails* const e)
 {
     RadioButtonRefPtr TheButton = dynamic_cast<RadioButton*>(e->getSource());
     RadioButtonRefPtr PreviousSelected(getSelectedButton());
@@ -152,7 +149,7 @@ void RadioButtonGroup::buttonSelected(const ButtonSelectedEventUnrecPtr e)
     }
 }
 
-void RadioButtonGroup::buttonDeselected(const ButtonSelectedEventUnrecPtr e)
+void RadioButtonGroup::handleButtonDeselected(ButtonSelectedEventDetails* const e)
 {
     if(getSelectedButton() == e->getSource())
     {
@@ -190,9 +187,15 @@ void RadioButtonGroup::changed(ConstFieldMaskArg whichField,
 
 	if(whichField & GroupButtonsFieldMask)
     {
+        for(UInt32 i(0) ; i<_ButtonConnections.size() ; ++i)
+        {
+            _ButtonConnections[i].disconnect();
+        }
+        _ButtonConnections.clear();
         for(UInt32 i(0) ; i<getMFGroupButtons()->size() ; ++i)
         {
-			getGroupButtons(i)->addButtonSelectedListener(this);
+            _ButtonConnections.push_back(getGroupButtons(i)->connectButtonSelected(boost::bind(&RadioButtonGroup::handleButtonSelected, this, _1)));
+            _ButtonConnections.push_back(getGroupButtons(i)->connectButtonDeselected(boost::bind(&RadioButtonGroup::handleButtonDeselected, this, _1)));
         }
     }
 

@@ -349,22 +349,6 @@ void PhysicsWorldBase::setWorldContactSurfaceLayer(const Real32 value)
     _sfWorldContactSurfaceLayer.setValue(value);
 }
 
-//! Get the value of the PhysicsWorld::_sfInternalParentHandler field.
-inline
-PhysicsHandler * PhysicsWorldBase::getInternalParentHandler(void) const
-{
-    return _sfInternalParentHandler.getValue();
-}
-
-//! Set the value of the PhysicsWorld::_sfInternalParentHandler field.
-inline
-void PhysicsWorldBase::setInternalParentHandler(PhysicsHandler * const value)
-{
-    editSField(InternalParentHandlerFieldMask);
-
-    _sfInternalParentHandler.setValue(value);
-}
-
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -409,8 +393,8 @@ void PhysicsWorldBase::execSync (      PhysicsWorldBase *pFrom,
     if(FieldBits::NoField != (WorldContactSurfaceLayerFieldMask & whichField))
         _sfWorldContactSurfaceLayer.syncWith(pFrom->_sfWorldContactSurfaceLayer);
 
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
-        _sfInternalParentHandler.syncWith(pFrom->_sfInternalParentHandler);
+    if(FieldBits::NoField != (ParentHandlerFieldMask & whichField))
+        _sfParentHandler.syncWith(pFrom->_sfParentHandler);
 }
 #endif
 

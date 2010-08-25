@@ -69,10 +69,10 @@
 #include "OSGSingleSelectionModelFields.h"
 
 //Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+#include "OSGActivity.h"
+#include "OSGConsumableEventCombiner.h"
+
+#include "OSGSelectionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -91,28 +91,22 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SingleSelectionModelBase : public Fiel
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(SingleSelectionModel);
+    
+    
+    typedef SelectionEventDetails SelectionChangedEventDetailsType;
+
+    typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
+    typedef boost::signals2::signal<void (SelectionEventDetails* const, UInt32), ConsumableEventCombiner> SelectionChangedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
   public:
 
-    enum
-    {
-        EventProducerFieldId = Inherited::NextFieldId,
-        NextFieldId = EventProducerFieldId + 1
-    };
-
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
-    static const OSG::BitVector NextFieldMask =
-        (TypeTraits<BitVector>::One << NextFieldId);
-        
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        SelectionChangedMethodId = 1,
-        NextProducedMethodId = SelectionChangedMethodId + 1
+        SelectionChangedEventId = 1,
+        NextProducedEventId = SelectionChangedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -149,37 +143,56 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SingleSelectionModelBase : public Fiel
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //SelectionChanged
+    boost::signals2::connection connectSelectionChanged(const SelectionChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSelectionChanged(const SelectionChangedEventType::group_type &group,
+                                                       const SelectionChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSelectionChanged       (const SelectionChangedEventType::group_type &group);
+    void   disconnectAllSlotsSelectionChanged(void);
+    bool   isEmptySelectionChanged          (void) const;
+    UInt32 numSlotsSelectionChanged         (void) const;
+    
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Event Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
 
+    //Event Event producers
+    SelectionChangedEventType _SelectionChangedEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -187,13 +200,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SingleSelectionModelBase : public Fiel
     static       void   classDescInserter(TypeObject &oType);
     static const Char8 *getClassname     (void             );
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFEventProducerPtr _sfEventProducer;
-
-    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -220,6 +226,20 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SingleSelectionModelBase : public Fiel
     /*! \{                                                                 */
 
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleSelectionChangedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceSelectionChanged    (SelectionChangedEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -265,7 +285,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SingleSelectionModelBase : public Fiel
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

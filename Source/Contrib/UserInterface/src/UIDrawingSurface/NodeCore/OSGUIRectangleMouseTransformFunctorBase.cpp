@@ -115,8 +115,8 @@ void UIRectangleMouseTransformFunctorBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecUIRectanglePtr::Description(
-        SFUnrecUIRectanglePtr::getClassType(),
+    pDesc = new SFWeakUIRectanglePtr::Description(
+        SFWeakUIRectanglePtr::getClassType(),
         "Parent",
         "",
         ParentFieldId, ParentFieldMask,
@@ -159,7 +159,7 @@ UIRectangleMouseTransformFunctorBase::TypeObject UIRectangleMouseTransformFuncto
     "\t<Field\n"
     "\t\tname=\"Parent\"\n"
     "\t\ttype=\"UIRectangle\"\n"
-    "\t\tcategory=\"pointer\"\n"
+    "\t\tcategory=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -191,12 +191,12 @@ UInt32 UIRectangleMouseTransformFunctorBase::getContainerSize(void) const
 
 
 //! Get the UIRectangleMouseTransformFunctor::_sfParent field.
-const SFUnrecUIRectanglePtr *UIRectangleMouseTransformFunctorBase::getSFParent(void) const
+const SFWeakUIRectanglePtr *UIRectangleMouseTransformFunctorBase::getSFParent(void) const
 {
     return &_sfParent;
 }
 
-SFUnrecUIRectanglePtr *UIRectangleMouseTransformFunctorBase::editSFParent         (void)
+SFWeakUIRectanglePtr *UIRectangleMouseTransformFunctorBase::editSFParent         (void)
 {
     editSField(ParentFieldMask);
 
@@ -361,7 +361,6 @@ FieldContainerTransitPtr UIRectangleMouseTransformFunctorBase::shallowCopy(void)
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 UIRectangleMouseTransformFunctorBase::UIRectangleMouseTransformFunctorBase(void) :
@@ -397,8 +396,8 @@ void UIRectangleMouseTransformFunctorBase::onCreate(const UIRectangleMouseTransf
 
 GetFieldHandlePtr UIRectangleMouseTransformFunctorBase::getHandleParent          (void) const
 {
-    SFUnrecUIRectanglePtr::GetHandlePtr returnValue(
-        new  SFUnrecUIRectanglePtr::GetHandle(
+    SFWeakUIRectanglePtr::GetHandlePtr returnValue(
+        new  SFWeakUIRectanglePtr::GetHandle(
              &_sfParent,
              this->getType().getFieldDesc(ParentFieldId),
              const_cast<UIRectangleMouseTransformFunctorBase *>(this)));
@@ -408,8 +407,8 @@ GetFieldHandlePtr UIRectangleMouseTransformFunctorBase::getHandleParent         
 
 EditFieldHandlePtr UIRectangleMouseTransformFunctorBase::editHandleParent         (void)
 {
-    SFUnrecUIRectanglePtr::EditHandlePtr returnValue(
-        new  SFUnrecUIRectanglePtr::EditHandle(
+    SFWeakUIRectanglePtr::EditHandlePtr returnValue(
+        new  SFWeakUIRectanglePtr::EditHandle(
              &_sfParent,
              this->getType().getFieldDesc(ParentFieldId),
              this));
@@ -422,6 +421,7 @@ EditFieldHandlePtr UIRectangleMouseTransformFunctorBase::editHandleParent       
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

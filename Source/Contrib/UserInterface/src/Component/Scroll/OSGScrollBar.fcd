@@ -145,9 +145,10 @@ A UI ScrollBar.
 		defaultValue="NULL"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="AdjustmentValueChanged"
-		type="AdjustmentEventPtr"
+		detailsType="AdjustmentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

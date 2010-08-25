@@ -103,6 +103,11 @@ void BorderLayoutConstraints::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if((whichField & RegionFieldMask))
+    {
+        updateParentLayouts();
+    }
 }
 
 void BorderLayoutConstraints::dump(      UInt32    ,

@@ -40,7 +40,7 @@
 #define _OSGACTIVITY_H_
 
 #include "OSGActivityBase.h"
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,7 +77,8 @@ class OSG_BASE_DLLMAPPING Activity : public ActivityBase
 
     /*! \}                                                                 */
 
-    virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId) = 0;
+    virtual void eventProduced(EventDetails* const details,
+                               UInt32 producedEventId) = 0;
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -107,6 +108,10 @@ class OSG_BASE_DLLMAPPING Activity : public ActivityBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+
+    //Connected Signals
+    //* to the container, EventId
+    std::list< std::pair< ReflexiveContainer const *, UInt32> > _EventsConnectedTo;
     /*==========================  PRIVATE  ================================*/
 
   private:

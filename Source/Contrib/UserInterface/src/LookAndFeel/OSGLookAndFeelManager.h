@@ -26,6 +26,8 @@ private:
    LookAndFeelRefPtr _LookAndFeel;
 
    LookAndFeelManager(void);
+
+   bool uninitialize(void);
 	
 };
 

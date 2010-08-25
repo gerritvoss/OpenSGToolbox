@@ -158,6 +158,13 @@ void AbstractFieldContainerEditor::onDestroy()
 {
 }
 
+void AbstractFieldContainerEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _GenericEditor = NULL;
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 AbstractFieldContainerEditor::AbstractFieldContainerEditor(void) :

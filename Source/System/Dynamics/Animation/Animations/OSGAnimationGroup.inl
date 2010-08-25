@@ -53,16 +53,6 @@ bool AnimationGroup::isPaused(void) const
 }
 
 inline
-void AnimationGroup::attachUpdateProducer(EventProducerPtr TheProducer)
-{
-    if(_UpdateEventConnection.isConnected())
-    {
-        _UpdateEventConnection.disconnect();
-    }
-    _UpdateEventConnection = TheProducer->attachEventListener(this, std::string("Update"));
-}
-
-inline
 void AnimationGroup::detachUpdateProducer(void)
 {
     _UpdateEventConnection.disconnect();

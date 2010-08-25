@@ -11,6 +11,7 @@
     decoratable="true"
     useLocalIncludes="false"
     isNodeCore="false"
+    fieldsUnmarkedOnCreate="EnabledFieldMask"
     authors="David Kabala (djkabala@gmail.com)                             "
     childFields="multi"
 >
@@ -107,11 +108,13 @@ A UI Component Interface.
 	<Field
 		name="Constraints"
 		type="LayoutConstraints"
-		category="pointer"
 		cardinality="single"
+        category="childpointer"
+        childParentType="FieldContainer"
 		visibility="external"
 		access="public"
-		defaultValue="NULL"
+        ptrFieldAccess = "nullCheck"
+        linkParentField="ParentComponent"
 	>
 	</Field>
 	<Field
@@ -316,99 +319,118 @@ A UI Component Interface.
 		access="public"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="MouseMoved"
-		type="MouseEventPtr"
+		detailsType="MouseEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseDragged"
-		type="MouseEventPtr"
+		detailsType="MouseEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseClicked"
-		type="MouseEventPtr"
+		detailsType="MouseEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseEntered"
-		type="MouseEventPtr"
+		detailsType="MouseEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseExited"
-		type="MouseEventPtr"
+		detailsType="MouseEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MousePressed"
-		type="MouseEventPtr"
+		detailsType="MouseEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseReleased"
-		type="MouseEventPtr"
+		detailsType="MouseEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MouseWheelMoved"
-		type="MouseWheelEventPtr"
+		detailsType="MouseWheelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="KeyPressed"
-		type="KeyEventPtr"
+		detailsType="KeyEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="KeyReleased"
-		type="KeyEventPtr"
+		detailsType="KeyEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="KeyTyped"
-		type="KeyEventPtr"
+		detailsType="KeyEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="FocusGained"
-		type="FocusEventPtr"
+		detailsType="FocusEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="FocusLost"
-		type="FocusEventPtr"
+		detailsType="FocusEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ComponentHidden"
-		type="ComponentEventPtr"
+		detailsType="ComponentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ComponentVisible"
-		type="ComponentEventPtr"
+		detailsType="ComponentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ComponentMoved"
-		type="ComponentEventPtr"
+		detailsType="ComponentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ComponentResized"
-		type="ComponentEventPtr"
+		detailsType="ComponentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ComponentEnabled"
-		type="ComponentEventPtr"
+		detailsType="ComponentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ComponentDisabled"
-		type="ComponentEventPtr"
+		detailsType="ComponentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

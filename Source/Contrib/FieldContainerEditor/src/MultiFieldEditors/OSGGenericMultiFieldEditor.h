@@ -49,7 +49,8 @@
 #include "OSGListFields.h"
 #include "OSGLabelFields.h"
 #include "OSGMultiFieldListEditComponentGeneratorFields.h"
-#include "OSGActionListener.h"
+#include "OSGUIDrawingSurfaceFields.h"
+#include "OSGDialogWindowEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -86,6 +87,24 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericMultiFieldEditor : publi
 
     /*! \}                                                                 */
     virtual const std::vector<const DataType*>& getEditableTypes(void) const;
+
+    static void removeIndex(FieldContainer* const fc,
+                            UInt32 fieldID,
+                            UInt32 index,
+                            UIDrawingSurface* const drawingSurface,
+                            CommandManager* cmdMgr);
+
+    static void insertAtIndex(FieldContainer* const fc,
+                              UInt32 fieldID,
+                              UInt32 index,
+                              UIDrawingSurface* const drawingSurface,
+                              CommandManager* cmdMgr);
+
+    static void insertAtIndex(FieldContainer* const fc,
+                              UInt32 fieldID,
+                              UInt32 index,
+                              const FieldContainerType* type,
+                              CommandManager* cmdMgr);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -121,6 +140,13 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericMultiFieldEditor : publi
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     virtual void internalFieldChanged (void);
     virtual void internalStartEditing (void);
     virtual void internalStopEditing  (void);
@@ -139,6 +165,15 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericMultiFieldEditor : publi
     std::vector<FieldEditorComponentRefPtr> _FieldEditors;
 
     void pushIndexEditor(FieldContainer* fc, UInt32 fieldId, UInt32 index);
+
+    void handleListMouseClicked(MouseEventDetails* const details);
+    boost::signals2::connection _ListMouseClickedConnection;
+
+    static void handleInsertFCPtrDialogClosed(DialogWindowEventDetails* const details,
+                                              FieldContainer* const fc,
+                                              UInt32 fieldID,
+                                              UInt32 index,
+                                              CommandManager* cmdMgr);
     /*==========================  PRIVATE  ================================*/
 
   private:

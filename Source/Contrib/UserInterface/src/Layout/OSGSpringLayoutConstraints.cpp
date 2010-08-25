@@ -96,7 +96,7 @@ SpringLayoutConstraintsTransitPtr SpringLayoutConstraints::create(LayoutSpringRe
     return SpringLayoutConstraintsTransitPtr(NewConstraints);
 }
 
-SpringLayoutConstraintsTransitPtr SpringLayoutConstraints::create(ComponentRefPtr TheComponent)
+SpringLayoutConstraintsTransitPtr SpringLayoutConstraints::create(Component* const TheComponent)
 {
     SpringLayoutConstraints* NewConstraints = createEmpty();
 

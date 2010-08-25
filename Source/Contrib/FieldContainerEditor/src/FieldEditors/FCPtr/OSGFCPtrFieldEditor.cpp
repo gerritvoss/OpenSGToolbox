@@ -77,6 +77,8 @@
 
 #include "OSGFCPtrEditorAllStore.h"
 #include "OSGNameAttachment.h"
+#include "OSGTextField.h"
+#include "OSGMenuButton.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -236,9 +238,10 @@ void FCPtrFieldEditor::onCreate(const FCPtrFieldEditor *Id)
     {
         _EditingTextField = TextField::create();
         pushToChildren(_EditingTextField);
-        _EditingTextField->addFocusListener(&_TextFieldListener);
-        _EditingTextField->addActionListener(&_TextFieldListener);
-        _EditingTextField->addKeyListener(&_TextFieldListener);
+        _TextFieldFocusGainedConnection = _EditingTextField->connectFocusGained(boost::bind(&FCPtrFieldEditor::handleTextFieldFocusGained, this, _1));
+        _TextFieldFocusLostConnection = _EditingTextField->connectFocusLost(boost::bind(&FCPtrFieldEditor::handleTextFieldFocusLost, this, _1));
+        _TextFieldActionPerformedConnection = _EditingTextField->connectActionPerformed(boost::bind(&FCPtrFieldEditor::handleTextFieldActionPerformed, this, _1));
+        _TextFieldKeyTypedConnection = _EditingTextField->connectKeyTyped(boost::bind(&FCPtrFieldEditor::handleTextFieldKeyTyped, this, _1));
 
         DefaultListModelRefPtr FCCommandsListModel = DefaultListModel::create();
         FCCommandsListModel->pushBack(boost::any(std::string("Create ...")));
@@ -248,7 +251,7 @@ void FCPtrFieldEditor::onCreate(const FCPtrFieldEditor *Id)
         //_EditingMenuButton =
             //dynamic_pointer_cast<Button>(dynamic_cast<ComboBox*>(ComboBox::getClassType().getPrototype())->getExpandButton()->shallowCopy());
         _EditingMenuButton->setModel(FCCommandsListModel);
-        _EditingMenuButton->addMenuActionListener(&_MenuButtonFieldListener);
+        _MenuButtonActionConnection = _EditingMenuButton->connectMenuActionPerformed(boost::bind(&FCPtrFieldEditor::handleMenuButtonAction, this, _1));
         pushToChildren(_EditingMenuButton);
     }
 }
@@ -257,12 +260,35 @@ void FCPtrFieldEditor::onDestroy()
 {
 }
 
+void FCPtrFieldEditor::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _EditingTextField = NULL;
+    _EditingMenuButton = NULL;
+
+    _TextFieldFocusGainedConnection.disconnect();
+    _TextFieldFocusLostConnection.disconnect();
+    _TextFieldActionPerformedConnection.disconnect();
+    _TextFieldKeyTypedConnection.disconnect();
+    _MenuButtonActionConnection.disconnect();
+    _CreateContainerDialogClosedConnection.disconnect();
+    _FindContainerDialogClosedConnection.disconnect();
+}
+
 void FCPtrFieldEditor::openCreateHandler(void)
 {
     const FieldContainerType* ThePtrType(getFieldContainerTypeFromPtrType(getEditingFC()->getFieldDescription(getEditingFieldId())->getFieldType().getContentType()));
     if(ThePtrType == NULL)
     {
         return;
+    }
+
+    //If the type is a node, then create a NodeCore instead
+    //and then insert it as the core of a newly created node
+    if(*ThePtrType == Node::getClassType())
+    {
+        ThePtrType = &NodeCore::getClassType();
     }
 
     std::vector<std::string> inputValues;
@@ -286,11 +312,12 @@ void FCPtrFieldEditor::openCreateHandler(void)
                                                                    DialogWindow::INPUT_COMBO,
                                                                    true,
                                                                    inputValues);
-    TheDialog->addDialogWindowListener(&_CreateContainerDialogListener);
+    _CreateContainerDialogClosedConnection = TheDialog->connectDialogWindowClosed(boost::bind(&FCPtrFieldEditor::handleCreateContainerDialogClosed, this, _1));
 
     Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getParentDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
     TheDialog->setPosition(CenteredPosition);
     TheDialog->setAllwaysOnTop(true);
+    TheDialog->setModal(true);
     TheDialog->setResizable(true);
 
     getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
@@ -326,7 +353,7 @@ void FCPtrFieldEditor::openFindContainerHandler(void)
                                                                    DialogWindow::INPUT_LIST,
                                                                    true,
                                                                    inputValues);
-    TheDialog->addDialogWindowListener(&_FindContainerDialogListener);
+    _FindContainerDialogClosedConnection = TheDialog->connectDialogWindowClosed(boost::bind(&FCPtrFieldEditor::handleFindContainerDialogClosed, this, _1));
 
     Pnt2f CenteredPosition = calculateAlignment(Pnt2f(0.0f,0.0f), getParentWindow()->getParentDrawingSurface()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
     TheDialog->setPosition(CenteredPosition);
@@ -336,7 +363,7 @@ void FCPtrFieldEditor::openFindContainerHandler(void)
     getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
 }
 
-void FCPtrFieldEditor::handleMenuSelected(const ActionEventUnrecPtr e)
+void FCPtrFieldEditor::handleMenuButtonAction(ActionEventDetails* const details)
 {
     switch(_EditingMenuButton->getSelectionIndex())
     {
@@ -352,17 +379,36 @@ void FCPtrFieldEditor::handleMenuSelected(const ActionEventUnrecPtr e)
     }
 }
 
-void FCPtrFieldEditor::handleCreateContainerClosed(const DialogWindowEventUnrecPtr e)
+void FCPtrFieldEditor::handleCreateContainerDialogClosed(DialogWindowEventDetails* const details)
 {
-    if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        const FieldContainerType* TheType(FieldContainerFactory::the()->findType(e->getInput().c_str()));
+        const FieldContainerType* ThePtrType(getFieldContainerTypeFromPtrType(getEditingFC()->getFieldDescription(getEditingFieldId())->getFieldType().getContentType()));
+
+        const FieldContainerType* TheType(FieldContainerFactory::the()->findType(details->getInput().c_str()));
 
         if(TheType != NULL)
         {
             //Create the Container
-            CreateFieldContainerCommandPtr CreateCommand = CreateFieldContainerCommand::create(TheType);
-            getCommandManager()->executeCommand(CreateCommand);
+            CreateFieldContainerCommandPtr CreateCommand;
+            
+            //If the type is a node, then create a NodeCore instead
+            //and then insert it as the core of a newly created node
+            if(*ThePtrType == Node::getClassType())
+            {
+                CreateFieldContainerCommandPtr CreateCoreCommand = CreateFieldContainerCommand::create(TheType);
+                getCommandManager()->executeCommand(CreateCoreCommand);
+                
+                CreateCommand = CreateFieldContainerCommand::create(&Node::getClassType());
+                getCommandManager()->executeCommand(CreateCommand);
+
+                dynamic_cast<Node*>(CreateCommand->getContainer())->setCore(dynamic_cast<NodeCore*>(CreateCoreCommand->getContainer()));
+            }
+            else
+            {
+                CreateCommand = CreateFieldContainerCommand::create(TheType);
+                getCommandManager()->executeCommand(CreateCommand);
+            }
 
             //Set the value of the field
             SetFieldValueCommandPtr SetCommand =
@@ -374,42 +420,36 @@ void FCPtrFieldEditor::handleCreateContainerClosed(const DialogWindowEventUnrecP
             getCommandManager()->executeCommand(SetCommand);
         }
     }
+    _CreateContainerDialogClosedConnection.disconnect();
 }
 
-void FCPtrFieldEditor::handleFindContainerClosed(const DialogWindowEventUnrecPtr e)
+void FCPtrFieldEditor::handleFindContainerDialogClosed(DialogWindowEventDetails* const details)
 {
-    if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
         std::vector<FieldContainer*> fcStore(_FindFCStore->getList());
         //Set the value of the field
         SetFieldValueCommandPtr SetCommand =
             SetFieldValueCommand::create(getEditingFC(),
                                          getEditingFieldId(),
-                                         boost::lexical_cast<std::string>(fcStore[e->getInputIndex()]->getId()),
+                                         boost::lexical_cast<std::string>(fcStore[details->getInputIndex()]->getId()),
                                          getEditingFieldIndex());
 
         getCommandManager()->executeCommand(SetCommand);
     }
+    _FindContainerDialogClosedConnection.disconnect();
 }
 
 /*----------------------- constructors & destructors ----------------------*/
 
 FCPtrFieldEditor::FCPtrFieldEditor(void) :
     Inherited(),
-    _TextFieldListener(this),
-    _MenuButtonFieldListener(this),
-    _CreateContainerDialogListener(this),
-    _FindContainerDialogListener(this),
     _FindFCStore()
 {
 }
 
 FCPtrFieldEditor::FCPtrFieldEditor(const FCPtrFieldEditor &source) :
     Inherited(source),
-    _TextFieldListener(this),
-    _MenuButtonFieldListener(this),
-    _CreateContainerDialogListener(this),
-    _FindContainerDialogListener(this),
     _FindFCStore()
 
 {
@@ -434,52 +474,29 @@ void FCPtrFieldEditor::dump(      UInt32    ,
     SLOG << "Dump FCPtrFieldEditor NI" << std::endl;
 }
 
-void FCPtrFieldEditor::TextFieldListener::focusGained    (const FocusEventUnrecPtr  e)
+void FCPtrFieldEditor::handleTextFieldFocusGained    (FocusEventDetails* const details)
 {
-    _FCPtrFieldEditor->startEditing();
+    startEditing();
 }
 
-void FCPtrFieldEditor::TextFieldListener::focusLost      (const FocusEventUnrecPtr  e)
+void FCPtrFieldEditor::handleTextFieldFocusLost      (FocusEventDetails* const details)
 {
-    _FCPtrFieldEditor->stopEditing();
+    stopEditing();
 }
 
-void FCPtrFieldEditor::TextFieldListener::actionPerformed(const ActionEventUnrecPtr e)
+void FCPtrFieldEditor::handleTextFieldActionPerformed(ActionEventDetails* const details)
 {
-    _FCPtrFieldEditor->stopEditing();
-    _FCPtrFieldEditor->startEditing();
+    stopEditing();
+    startEditing();
 }
 
-void FCPtrFieldEditor::TextFieldListener::keyTyped       (const KeyEventUnrecPtr    e)
+void FCPtrFieldEditor::handleTextFieldKeyTyped       (KeyEventDetails* const details)
 {
-    if(e->getKey() == KeyEvent::KEY_ESCAPE)
+    if(details->getKey() == KeyEventDetails::KEY_ESCAPE)
     {
-        _FCPtrFieldEditor->cancelEditing();
-        _FCPtrFieldEditor->startEditing();
+        cancelEditing();
+        startEditing();
     }
-}
-
-void FCPtrFieldEditor::MenuButtonFieldListener::actionPerformed(const ActionEventUnrecPtr e)
-{
-    _FCPtrFieldEditor->handleMenuSelected(e);
-}
-
-void FCPtrFieldEditor::CreateContainerDialogListener::dialogClosing(const DialogWindowEventUnrecPtr e)
-{
-}
-
-void FCPtrFieldEditor::CreateContainerDialogListener::dialogClosed(const DialogWindowEventUnrecPtr e)
-{
-    _FCPtrFieldEditor->handleCreateContainerClosed(e);
-}
-
-void FCPtrFieldEditor::FindContainerDialogListener::dialogClosing(const DialogWindowEventUnrecPtr e)
-{
-}
-
-void FCPtrFieldEditor::FindContainerDialogListener::dialogClosed(const DialogWindowEventUnrecPtr e)
-{
-    _FCPtrFieldEditor->handleFindContainerClosed(e);
 }
 
 OSG_END_NAMESPACE

@@ -92,9 +92,9 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleSystemParticleTrailGenerator :
     /*! \}                                                                 */
 
 	// virt. functions from parent class
-	virtual void internalUpdate(const ParticleSystemEventUnrecPtr e);
-	virtual void internalKill(const ParticleEventUnrecPtr e);
-	virtual void internalGenerated(const ParticleEventUnrecPtr e);
+	virtual void internalUpdate(ParticleSystemEventDetails* const details);
+	virtual void internalKill(ParticleEventDetails* const details);
+	virtual void internalGenerated(ParticleEventDetails* const details);
 	virtual void internalTrailSectGenerated(const TrailSection& ts,const Vec3f& ppVel);
 	virtual void internalTrailSectKilled(const TrailSection& ts);
 
@@ -104,7 +104,7 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleSystemParticleTrailGenerator :
 	Material* getTrailMaterial(void) const;
 	void setTrailMaterial(Material* const newMaterial);
 
-    void attachUpdateProducer(EventProducerPtr TheProducer);
+    void attachUpdateProducer(ReflexiveContainer* const producer);
     void detachUpdateProducer(void);
     /*=========================  PROTECTED  ===============================*/
 

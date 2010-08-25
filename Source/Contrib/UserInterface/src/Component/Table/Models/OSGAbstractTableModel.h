@@ -43,8 +43,6 @@
 #endif
 
 #include "OSGAbstractTableModelBase.h"
-#include <set>
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,12 +78,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTableModel : public AbstractTa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    //Adds a listener to the list that is notified each time a change to the data model occurs.
-    virtual EventConnection addTableModelListener(TableModelListenerPtr l);
-	virtual bool isTableModelListenerAttached(TableModelListenerPtr l) const;
-    
-    //Removes a listener from the list that is notified each time a change to the data model occurs.
-    virtual void removeTableModelListener(TableModelListenerPtr l);
 
     //Returns true if the cell at rowIndex and columnIndex is editable.
     virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const;
@@ -120,11 +112,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTableModel : public AbstractTa
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-
-	typedef std::set<TableModelListenerPtr> TableModelListenerSet;
-    typedef TableModelListenerSet::iterator TableModelListenerSetItor;
-    typedef TableModelListenerSet::const_iterator TableModelListenerSetConstItor;
-	TableModelListenerSet _ModelListeners;
 
 	void produceContentsHeaderRowChanged(UInt32 FirstColumn, UInt32 LastColumn);
 	void produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);

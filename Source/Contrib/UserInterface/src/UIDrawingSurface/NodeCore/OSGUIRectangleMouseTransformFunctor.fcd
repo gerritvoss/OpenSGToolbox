@@ -17,7 +17,7 @@ A UI UIRectangleMouseTransformFunctor.
 	<Field
 		name="Parent"
 		type="UIRectangle"
-		category="pointer"
+		category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"

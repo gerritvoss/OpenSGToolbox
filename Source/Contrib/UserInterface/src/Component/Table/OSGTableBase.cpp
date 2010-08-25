@@ -63,6 +63,7 @@
 #include "OSGTableColumnModel.h"        // ColumnModel Class
 #include "OSGComponent.h"               // Table Class
 #include "OSGCellEditor.h"              // GlobalCellEditor Class
+#include "OSGListSelectionModel.h"      // RowSelectionModel Class
 
 #include "OSGTableBase.h"
 #include "OSGTable.h"
@@ -139,6 +140,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var ListSelectionModel * TableBase::_sfRowSelectionModel
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -167,13 +172,13 @@ void TableBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecTableHeaderPtr::Description(
-        SFUnrecTableHeaderPtr::getClassType(),
+    pDesc = new SFUnrecChildTableHeaderPtr::Description(
+        SFUnrecChildTableHeaderPtr::getClassType(),
         "Header",
         "",
         HeaderFieldId, HeaderFieldMask,
         false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
+        (Field::SFDefaultFlags | Field::FNullCheckAccess),
         static_cast<FieldEditMethodSig>(&Table::editHandleHeader),
         static_cast<FieldGetMethodSig >(&Table::getHandleHeader));
 
@@ -322,6 +327,18 @@ void TableBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Table::getHandleGlobalCellEditor));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecListSelectionModelPtr::Description(
+        SFUnrecListSelectionModelPtr::getClassType(),
+        "RowSelectionModel",
+        "",
+        RowSelectionModelFieldId, RowSelectionModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Table::editHandleRowSelectionModel),
+        static_cast<FieldGetMethodSig >(&Table::getHandleRowSelectionModel));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -352,16 +369,18 @@ TableBase::TypeObject TableBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     "    >\n"
     "    A UI Table.\n"
-    "    <Field\n"
-    "        name=\"Header\"\n"
-    "        type=\"TableHeader\"\n"
-    "        category=\"pointer\"\n"
-    "        cardinality=\"single\"\n"
-    "        visibility=\"external\"\n"
-    "        defaultValue=\"NULL\"\n"
-    "        access=\"public\"\n"
-    "        >\n"
-    "    </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Header\"\n"
+    "\t\ttype=\"TableHeader\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "        category=\"childpointer\"\n"
+    "        childParentType=\"FieldContainer\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        ptrFieldAccess = \"nullCheck\"\n"
+    "        linkParentField=\"Table\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "    <Field\n"
     "        name=\"Model\"\n"
     "        type=\"TableModel\"\n"
@@ -481,6 +500,16 @@ TableBase::TypeObject TableBase::_type(
     "        access=\"public\"\n"
     "        >\n"
     "    </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RowSelectionModel\"\n"
+    "\t\ttype=\"ListSelectionModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     "A UI Table.\n"
     );
@@ -506,12 +535,12 @@ UInt32 TableBase::getContainerSize(void) const
 
 
 //! Get the Table::_sfHeader field.
-const SFUnrecTableHeaderPtr *TableBase::getSFHeader(void) const
+const SFUnrecChildTableHeaderPtr *TableBase::getSFHeader(void) const
 {
     return &_sfHeader;
 }
 
-SFUnrecTableHeaderPtr *TableBase::editSFHeader         (void)
+SFUnrecChildTableHeaderPtr *TableBase::editSFHeader         (void)
 {
     editSField(HeaderFieldMask);
 
@@ -674,6 +703,19 @@ SFUnrecCellEditorPtr *TableBase::editSFGlobalCellEditor(void)
     return &_sfGlobalCellEditor;
 }
 
+//! Get the Table::_sfRowSelectionModel field.
+const SFUnrecListSelectionModelPtr *TableBase::getSFRowSelectionModel(void) const
+{
+    return &_sfRowSelectionModel;
+}
+
+SFUnrecListSelectionModelPtr *TableBase::editSFRowSelectionModel(void)
+{
+    editSField(RowSelectionModelFieldMask);
+
+    return &_sfRowSelectionModel;
+}
+
 
 
 void TableBase::pushToTable(Component * const value)
@@ -789,6 +831,10 @@ UInt32 TableBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfGlobalCellEditor.getBinSize();
     }
+    if(FieldBits::NoField != (RowSelectionModelFieldMask & whichField))
+    {
+        returnValue += _sfRowSelectionModel.getBinSize();
+    }
 
     return returnValue;
 }
@@ -850,6 +896,10 @@ void TableBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfGlobalCellEditor.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (RowSelectionModelFieldMask & whichField))
+    {
+        _sfRowSelectionModel.copyToBin(pMem);
+    }
 }
 
 void TableBase::copyFromBin(BinaryDataHandler &pMem,
@@ -908,6 +958,10 @@ void TableBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (GlobalCellEditorFieldMask & whichField))
     {
         _sfGlobalCellEditor.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (RowSelectionModelFieldMask & whichField))
+    {
+        _sfRowSelectionModel.copyFromBin(pMem);
     }
 }
 
@@ -1029,12 +1083,13 @@ FieldContainerTransitPtr TableBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 TableBase::TableBase(void) :
     Inherited(),
-    _sfHeader                 (NULL),
+    _sfHeader                 (this,
+                          HeaderFieldId,
+                          TableHeader::TableFieldId),
     _sfModel                  (NULL),
     _sfColumnModel            (NULL),
     _mfTable                  (),
@@ -1046,13 +1101,16 @@ TableBase::TableBase(void) :
     _sfShowHorizontalLines    (bool(true)),
     _sfShowVerticalLines      (bool(true)),
     _sfGridColor              (Color4f(0.0, 0.0, 0.0, 1.0)),
-    _sfGlobalCellEditor       (NULL)
+    _sfGlobalCellEditor       (NULL),
+    _sfRowSelectionModel      (NULL)
 {
 }
 
 TableBase::TableBase(const TableBase &source) :
     Inherited(source),
-    _sfHeader                 (NULL),
+    _sfHeader                 (this,
+                          HeaderFieldId,
+                          TableHeader::TableFieldId),
     _sfModel                  (NULL),
     _sfColumnModel            (NULL),
     _mfTable                  (),
@@ -1064,7 +1122,8 @@ TableBase::TableBase(const TableBase &source) :
     _sfShowHorizontalLines    (source._sfShowHorizontalLines    ),
     _sfShowVerticalLines      (source._sfShowVerticalLines      ),
     _sfGridColor              (source._sfGridColor              ),
-    _sfGlobalCellEditor       (NULL)
+    _sfGlobalCellEditor       (NULL),
+    _sfRowSelectionModel      (NULL)
 {
 }
 
@@ -1073,6 +1132,42 @@ TableBase::TableBase(const TableBase &source) :
 
 TableBase::~TableBase(void)
 {
+}
+
+/*-------------------------------------------------------------------------*/
+/* Child linking                                                           */
+
+bool TableBase::unlinkChild(
+    FieldContainer * const pChild,
+    UInt16           const childFieldId)
+{
+    if(childFieldId == HeaderFieldId)
+    {
+        TableHeader * pTypedChild =
+            dynamic_cast<TableHeader *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            if(pTypedChild == _sfHeader.getValue())
+            {
+                editSField(HeaderFieldMask);
+
+                _sfHeader.setValue(NULL);
+
+                return true;
+            }
+
+            FWARNING(("TableBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+
+    return Inherited::unlinkChild(pChild, childFieldId);
 }
 
 void TableBase::onCreate(const Table *source)
@@ -1102,13 +1197,15 @@ void TableBase::onCreate(const Table *source)
         }
 
         pThis->setGlobalCellEditor(source->getGlobalCellEditor());
+
+        pThis->setRowSelectionModel(source->getRowSelectionModel());
     }
 }
 
 GetFieldHandlePtr TableBase::getHandleHeader          (void) const
 {
-    SFUnrecTableHeaderPtr::GetHandlePtr returnValue(
-        new  SFUnrecTableHeaderPtr::GetHandle(
+    SFUnrecChildTableHeaderPtr::GetHandlePtr returnValue(
+        new  SFUnrecChildTableHeaderPtr::GetHandle(
              &_sfHeader,
              this->getType().getFieldDesc(HeaderFieldId),
              const_cast<TableBase *>(this)));
@@ -1118,8 +1215,8 @@ GetFieldHandlePtr TableBase::getHandleHeader          (void) const
 
 EditFieldHandlePtr TableBase::editHandleHeader         (void)
 {
-    SFUnrecTableHeaderPtr::EditHandlePtr returnValue(
-        new  SFUnrecTableHeaderPtr::EditHandle(
+    SFUnrecChildTableHeaderPtr::EditHandlePtr returnValue(
+        new  SFUnrecChildTableHeaderPtr::EditHandle(
              &_sfHeader,
              this->getType().getFieldDesc(HeaderFieldId),
              this));
@@ -1454,6 +1551,35 @@ EditFieldHandlePtr TableBase::editHandleGlobalCellEditor(void)
     return returnValue;
 }
 
+GetFieldHandlePtr TableBase::getHandleRowSelectionModel (void) const
+{
+    SFUnrecListSelectionModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecListSelectionModelPtr::GetHandle(
+             &_sfRowSelectionModel,
+             this->getType().getFieldDesc(RowSelectionModelFieldId),
+             const_cast<TableBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TableBase::editHandleRowSelectionModel(void)
+{
+    SFUnrecListSelectionModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecListSelectionModelPtr::EditHandle(
+             &_sfRowSelectionModel,
+             this->getType().getFieldDesc(RowSelectionModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Table::setRowSelectionModel,
+                    static_cast<Table *>(this), _1));
+
+    editSField(RowSelectionModelFieldMask);
+
+    return returnValue;
+}
+
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void TableBase::execSyncV(      FieldContainer    &oFrom,
@@ -1500,6 +1626,8 @@ void TableBase::resolveLinks(void)
     static_cast<Table *>(this)->clearTable();
 
     static_cast<Table *>(this)->setGlobalCellEditor(NULL);
+
+    static_cast<Table *>(this)->setRowSelectionModel(NULL);
 
 
 }

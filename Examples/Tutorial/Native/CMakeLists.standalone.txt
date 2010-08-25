@@ -17,17 +17,17 @@ FILE(GLOB SRCFILES "*.cpp")
 # get dependencies
 
 SET(OSG_COMPONENTS OSGBase 
-                   OSGCluster 
-                   OSGDrawable 
-                   OSGFileIO 
-                   OSGTBFileIO 
-                   OSGDynamics 
+                   OSGDrawable
                    OSGGroup 
-                   OSGImageFileIO
                    OSGState 
                    OSGSystem 
                    OSGUtil 
                    OSGWindow 
+                   OSGFileIO
+                   OSGTBFileIO
+                   OSGDynamics
+                   OSGTBAnimation
+                   OSGContribCgFX
                    )
 
 IF(UNIX)

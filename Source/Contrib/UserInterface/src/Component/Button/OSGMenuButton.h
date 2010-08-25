@@ -46,9 +46,6 @@
 #include "OSGListModel.h"
 #include "OSGComponentGenerator.h"
 #include "OSGListGeneratedPopupMenu.h"
-#include "OSGListDataListener.h"
-#include "OSGPopupMenuListener.h"
-#include "OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,18 +81,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuButton : public MenuButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	//Adds a PopupMenu listener which will listen to notification messages from the popup portion of the combo box.
-	EventConnection addPopupMenuListener(PopupMenuListenerPtr Listener);
-	bool isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const;
-    
-
-	//Removes a PopupMenuListener.
-	void removePopupMenuListener(PopupMenuListenerPtr Listener);
-
-    EventConnection addMenuActionListener(ActionListenerPtr Listener);
-	bool isMenuActionListenerAttached(ActionListenerPtr Listener) const;
-    void removeMenuActionListener(ActionListenerPtr Listener);
     
 	//Determines the visibility of the popup.
 	bool isPopupVisible(void) const;
@@ -144,32 +129,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuButton : public MenuButtonBase
 	void showPopup(void);
     void updatePopupMenuConnections(void);
     
-    //Expand Button Action Listener
-	class MenuButtonEventsListener : public PopupMenuListener, public ActionListener
-	{
-	public:
-		MenuButtonEventsListener(MenuButton* const TheMenuButton);
+    //Expand Button Events
+    void handlePopupMenuCanceled(PopupMenuEventDetails* const e);
+	void handlePopupMenuWillBecomeInvisible(PopupMenuEventDetails* const e);
+	void handlePopupMenuContentsChanged(PopupMenuEventDetails* const e);
+    void handlePopupMenuActionPerformed(ActionEventDetails* const e);
 
-		virtual void popupMenuCanceled(const PopupMenuEventUnrecPtr e);
-		virtual void popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e);
-		virtual void popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e);
-		virtual void popupMenuContentsChanged(const PopupMenuEventUnrecPtr e);
-        
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-	private:
-		MenuButton* _MenuButton;
-	};
+    boost::signals2::connection   _PopupMenuCanceledConnection,
+                                  _PopupMenuWillBecomeInvisibleConnection,
+                                  _PopupMenuContentsChangedConnection;
+    std::vector<boost::signals2::connection> _PopupMenuActionConnections;
 
-	friend class MenuButtonEventsListener;
-
-	MenuButtonEventsListener _MenuButtonEventsListener;
-	
-	
-	typedef std::set<ActionListenerPtr> MenuActionListenerSet;
-    typedef MenuActionListenerSet::iterator MenuActionListenerSetItor;
-    typedef MenuActionListenerSet::const_iterator MenuActionListenerSetConstItor;
-	
-    MenuActionListenerSet       _MenuActionListeners;
 	
     virtual void produceMenuActionPerformed(void);
     

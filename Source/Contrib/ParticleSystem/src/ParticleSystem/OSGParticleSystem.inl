@@ -40,6 +40,12 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+void ParticleSystem::detachUpdateProducer(void)
+{
+    _UpdateEventConnection.disconnect();
+}
+
 inline 
 bool ParticleSystem::GreaterThanUInt32::operator()(const UInt32 s1, const UInt32 s2) const
 {
@@ -128,28 +134,6 @@ inline
 UInt32 ParticleSystem::getNumAttributes(void) const
 {
 	return getMFInternalAttributes()->size();
-}
-
-inline
-ParticleSystem::SystemUpdateListener::SystemUpdateListener(ParticleSystem* TheSystem) : _System(TheSystem)
-{
-}
-
-
-inline
-void ParticleSystem::attachUpdateProducer(EventProducerPtr TheProducer)
-{
-    if(_UpdateEventConnection.isConnected())
-    {
-        _UpdateEventConnection.disconnect();
-    }
-    _UpdateEventConnection = TheProducer->attachEventListener(this, "Update");
-}
-
-inline
-void ParticleSystem::detachUpdateProducer(void)
-{
-    _UpdateEventConnection.disconnect();
 }
 
 inline

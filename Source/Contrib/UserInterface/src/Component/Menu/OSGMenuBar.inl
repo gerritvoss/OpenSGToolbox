@@ -52,10 +52,4 @@ UInt32 MenuBar::getNumMenus(void) const
     return getMFChildren()->size();
 }
 
-inline
-MenuBar::MenuSelectionListener::MenuSelectionListener(MenuBar* const TheMenuBar) :
-									_MenuBar(TheMenuBar)
-{
-}
-
 OSG_END_NAMESPACE

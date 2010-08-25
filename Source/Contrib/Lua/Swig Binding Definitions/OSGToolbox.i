@@ -7,7 +7,7 @@
 %include <lua/std_vector.i>
 %{
 #include "OSGWindowEventProducer.h"
-#include "OSGKeyEvent.h"
+#include "OSGKeyEventDetails.h"
 
 #include "OSGSound.h"
 #include "OSGSoundGroup.h"
@@ -55,11 +55,10 @@
 #include "OSGContainerUtils.h"
 #include "OSGActivity.h"
 #include "OSGEventProducerType.h"
-#include "OSGEventProducer.h"
 #include "OSGActivity.h"
 #include "OSGWindow.h"
 #include "OSGLuaActivity.h"
-#include "OSGGenericEvent.h"
+#include "OSGGenericEventDetails.h"
 #include "OSGCgFXMaterial.h"
         
 %}
@@ -107,7 +106,7 @@ namespace OSG {
     /******************************************************/
     /*                       WindowEventProducer                       */
     /******************************************************/ 
-    class WindowEventProducer : public AttachmentContainerRefPtr
+    class WindowEventProducer : public AttachmentContainer
     {
       public:
 
@@ -296,14 +295,20 @@ namespace OSG {
     class PhysicsHandler : public FieldContainer
     {
       public:
-        //void attachUpdateProducer(EventProducerPtr TheProducer);
-        //void detachUpdateProducer(EventProducerPtr TheProducer);
+        void detachUpdateProducer(void);
 
       protected:
         PhysicsHandler(void);
         PhysicsHandler(const PhysicsHandler &source);
 
         virtual ~PhysicsHandler(void);
+    };
+    %extend PhysicsHandler
+    {
+        void attachUpdateProducer(FieldContainerRefPtr producer)
+        {
+            ($self)->attachUpdateProducer(producer);
+        }
     };
 
     /******************************************************/
@@ -486,7 +491,7 @@ namespace OSG {
     /******************************************************/
     /*                 Key Bindings                       */
     /******************************************************/
-    class KeyEvent
+    class KeyEventDetails
     {
       public:
 
@@ -683,10 +688,10 @@ namespace OSG {
               KEY_STATE_TOGGLED = 3 
           };
       protected:
-        KeyEvent(void);
-        KeyEvent(const PhysicsHandler &source);
+        KeyEventDetails(void);
+        KeyEventDetails(const PhysicsHandler &source);
 
-        virtual ~KeyEvent(void);
+        virtual ~KeyEventDetails(void);
     };
 
     /******************************************************/
@@ -796,9 +801,6 @@ namespace OSG {
         bool killParticle(UInt32 Index, bool KillNextUpdate = false);
         bool killParticleByID(UInt32 ID, bool KillNextUpdate = false);
     
-        bool attachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
-        void dettachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
-        void attachUpdateProducer(EventProducerPtr TheProducer);
         void detachUpdateProducer(void);
         
         std::vector<UInt32> intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort = false, NodeRefPtr Beacon = NullFC) const;
@@ -811,6 +813,13 @@ namespace OSG {
             ParticleSystem(const ParticleSystem &source);
     
             virtual ~ParticleSystem(void);
+    };
+    %extend ParticleSystem
+    {
+        void attachUpdateProducer(FieldContainerRefPtr producer)
+        {
+            ($self)->attachUpdateProducer(producer);
+        }
     };
 
     /******************************************************/
@@ -852,29 +861,6 @@ namespace OSG {
         virtual Vec2f getRequestedSize(void) const;
         virtual Vec2f getContentRequestedSize(void) const;
         virtual Vec2f getBorderingLength(void) const;
-        
-        //Mouse Events
-        //virtual void mouseClicked(const MouseEventRefPtr e);
-        //virtual void mouseEntered(const MouseEventRefPtr e);
-        ///virtual void mouseExited(const MouseEventRefPtr e);
-        //virtual void mousePressed(const MouseEventRefPtr e);
-        //virtual void mouseReleased(const MouseEventRefPtr e);
-    
-        //Mouse Motion Events
-        //virtual void mouseMoved(const MouseEventRefPtr e);
-        //virtual void mouseDragged(const MouseEventRefPtr e);
-    
-        //Mouse Wheel Events
-        //virtual void mouseWheelMoved(const MouseWheelEventRefPtr e);
-    
-        //Key Events
-        //virtual void keyPressed(const KeyEventRefPtr e);
-        //virtual void keyReleased(const KeyEventRefPtr e);
-        //virtual void keyTyped(const KeyEventRefPtr e);
-    
-        //Focus Events
-        //virtual void focusGained(const FocusEventRefPtr e);
-        //virtual void focusLost(const FocusEventRefPtr e);
     
         void setMouseContained(bool Value);
         bool getMouseContained(void);
@@ -1007,13 +993,19 @@ namespace OSG {
         virtual void setCamera(CameraRefPtr TheCamera);
         virtual CameraRefPtr getCamera(void) const;
     
-        void attachUpdateProducer(WindowEventProducerRefPtr TheProducer);
-        void detachUpdateProducer(WindowEventProducerRefPtr TheProducer);
+        void detachUpdateProducer(void);
     
       protected:
         SoundManager(void);
         SoundManager(const SoundManager &source);
         virtual ~SoundManager(void); 
+    };
+    %extend SoundManager
+    {
+        void attachUpdateProducer(FieldContainerRefPtr producer)
+        {
+            ($self)->attachUpdateProducer(producer);
+        }
     };
     
     /******************************************************/
@@ -1101,12 +1093,18 @@ namespace OSG {
         virtual bool isPlaying(void) const;
         virtual void stop(bool DisconnectFromEventProducer = true);
         
-        void attachUpdateProducer(EventProducerPtr TheProducer);
         void detachUpdateProducer(void);
       protected:
         Animation(void);
         Animation(const Animation &source);
         virtual ~Animation(void); 
+    };
+    %extend Animation
+    {
+        void attachUpdateProducer(FieldContainerRefPtr producer)
+        {
+            ($self)->attachUpdateProducer(producer);
+        }
     };
 
     

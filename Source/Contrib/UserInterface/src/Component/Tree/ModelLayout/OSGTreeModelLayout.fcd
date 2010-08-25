@@ -14,49 +14,58 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Tree Model Layout.
-	<ProducedMethod
+	<ProducedEvent
 		name="TreeCollapsed"
-		type="TreeModelLayoutEventPtr"
+		detailsType="TreeModelLayoutEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="TreeExpanded"
-		type="TreeModelLayoutEventPtr"
+		detailsType="TreeModelLayoutEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="TreeWillCollapse"
-		type="TreeModelLayoutEventPtr"
+		detailsType="TreeModelLayoutEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="TreeWillExpand"
-		type="TreeModelLayoutEventPtr"
+		detailsType="TreeModelLayoutEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="TreeNodesChanged"
-		type="TreeModelEventPtr"
+		detailsType="TreeModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="TreeNodesInserted"
-		type="TreeModelEventPtr"
+		detailsType="TreeModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="TreeNodesRemoved"
-		type="TreeModelEventPtr"
+		detailsType="TreeModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="TreeNodesWillBeRemoved"
-		type="TreeModelEventPtr"
+		detailsType="TreeModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="TreeStructureChanged"
-		type="TreeModelEventPtr"
+		detailsType="TreeModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

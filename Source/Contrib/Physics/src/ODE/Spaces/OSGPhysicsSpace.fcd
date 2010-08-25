@@ -11,6 +11,7 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
+    childFields="multi"
     authors="David Kabala (djkabala@gmail.com),  Behboud Kalantary         "
 >
 	<Field
@@ -32,13 +33,13 @@
 	>
 	</Field>
 	<Field
-		name="InternalParentHandler"
-		type="PhysicsHandler"
-        category="pointer"
+		name="ParentHandler"
+		type="FieldContainer"
 		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="protected"
+	    access="none"
+        doRefCount="false"
+        passFieldMask="true"
+        category="parentpointer"
 	>
 	</Field>
 	<Field
@@ -78,9 +79,10 @@
 		access="protected"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="Collision"
-		type="CollisionEvent"
+		detailsType="CollisionEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

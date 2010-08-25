@@ -108,18 +108,18 @@ FieldContainerTransitPtr LuaActivity::createLuaActivity( const BoostPath& FilePa
 
 }
 
-LuaActivityRefPtr LuaActivity::addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, UInt32 producedMethodId)
+boost::signals2::connection LuaActivity::addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, UInt32 producedMethodId)
 {
-    if(isEventProducer(producerObject))
+    if(producerObject->isEventProducer())
     {
         if(funcName.empty())
         {
             SWARNING << "LuaActivity::addLuaCallback(): Attempt to attach an empty function name." << std::endl;
-            return NULL;
+            return boost::signals2::connection();
         }
 
         //Check if a LuaActivity with this funcName is already attached
-        ActivityUnrecPtr CheckActiviy;
+        /*ActivityUnrecPtr CheckActiviy;
         for(UInt32 i(0) ; i<getEventProducer(producerObject)->getNumAttachedActivities() ; ++i)
         {
             CheckActiviy = getEventProducer(producerObject)->getAttachedActivity(producedMethodId, i);
@@ -132,29 +132,16 @@ LuaActivityRefPtr LuaActivity::addLuaCallback(FieldContainerRefPtr producerObjec
                     return dynamic_pointer_cast<LuaActivity>(CheckActiviy);
                 }
             }
-        }
+        }*/
 
         LuaActivityUnrecPtr TheLuaActivity = LuaActivity::create();
         TheLuaActivity->setEntryFunction(funcName);
-        getEventProducer(producerObject)->attachActivity(TheLuaActivity,producedMethodId);
-        return TheLuaActivity;
+        return producerObject->attachActivity(producedMethodId, TheLuaActivity);
     }
     else
     {
         SWARNING << "LuaActivity::addLuaCallback(): Producer object is not an event producer." << std::endl;
-        return NULL;
-    }
-}
-
-void LuaActivity::removeLuaCallback(FieldContainerRefPtr producerObject,LuaActivityRefPtr toRemove, UInt32 producedMethodId)
-{
-    if(isEventProducer(producerObject))
-    {
-        getEventProducer(producerObject)->detachActivity(toRemove,producedMethodId);
-    }
-    else
-    {
-        SWARNING << "LuaActivity::removeLuaCallback(): Producer object is not an envent producer." << std::endl;
+        return boost::signals2::connection();
     }
 }
 
@@ -162,7 +149,7 @@ void LuaActivity::removeLuaCallback(FieldContainerRefPtr producerObject,LuaActiv
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LuaActivity::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
+void LuaActivity::eventProduced(EventDetails* const details, UInt32 producedEventId)
 {
     if(!getCode().empty())
     {
@@ -228,9 +215,9 @@ void LuaActivity::eventProduced(const EventUnrecPtr EventDetails, UInt32 Produce
         }
 
         //Push on the arguments
-        push_FieldContainer_on_lua(LuaState, EventDetails);   //Argument 1: the EventUnrecPtr
+        push_FieldContainer_on_lua(LuaState, details);   //Argument 1: the EventUnrecPtr
 
-        lua_pushnumber(LuaState,ProducedEventId);             //Argument 2: the ProducedEvent ID
+        lua_pushnumber(LuaState,producedEventId);             //Argument 2: the ProducedEvent ID
 
         //Execute the Function
         //                                                 |------2 arguments to function

@@ -14,9 +14,10 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI BoundedRangeModel.
-	<ProducedMethod
+	<ProducedEvent
 		name="StateChanged"
-		type="ChangeEventPtr"
+		detailsType="ChangeEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

@@ -44,12 +44,9 @@
 
 #include "OSGSkeletonBlendedGeometryBase.h"
 #include "OSGNode.h"
-#include "OSGSkeletonListener.h"
-#include "OSGEventConnection.h"
+#include "OSGSkeletonEventDetails.h"
 #include "OSGGeoIntegralProperty.h"
 #include "OSGGeoVectorProperty.h"
-#include <set>
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -111,37 +108,6 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
 
    void setWeights      (GeoVectorProperty*   const weights);
    void setWeightIndexes(GeoIntegralProperty* const indexes);
-
-    /**************************************************************************//**
-     * @fn	EventConnection addSkeletonListener(SkeletonListenerPtr Listener)
-     * 
-     * @brief	Adds a skeleton listener to this instance. 
-     * 
-     * @param	Listener	The listener to add. 
-     * 
-     * @return	EventConnection
-    *****************************************************************************/
-    EventConnection addSkeletonListener(SkeletonListenerPtr Listener);
-
-    /**************************************************************************//**
-     * @fn	bool isSkeletonListenerAttached(SkeletonListenerPtr Listener) const
-     * 
-     * @brief	Query if skeleton listener 'Listener' is attached to this instance. 
-     * 
-     * @param	Listener	The listener. 
-     * 
-     * @return	true if skeleton listener attached, false if not. 
-    *****************************************************************************/
-    bool isSkeletonListenerAttached(SkeletonListenerPtr Listener) const;
-
-    /**************************************************************************//**
-     * @fn	void removeSkeletonListener(SkeletonListenerPtr Listener)
-     * 
-     * @brief	Removes the skeleton listener 'Listener'. 
-     * 
-     * @param	Listener	 The listener to remove. 
-    *****************************************************************************/
-    void removeSkeletonListener(SkeletonListenerPtr Listener);
 
     /**************************************************************************//**
      * @fn	void skeletonUpdated(void)
@@ -221,11 +187,6 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
 
 	void calculateJointTransform(void);
 
-	typedef std::set<SkeletonListenerPtr> SkeletonListenerSet;
-    typedef SkeletonListenerSet::iterator SkeletonListenerSetItor;
-    typedef SkeletonListenerSet::const_iterator SkeletonListenerSetConstItor;
-	
-    SkeletonListenerSet       _SkeletonListeners;
     std::vector<Matrix>       _JointPoseTransforms;
     bool                      _NeedRecalc;
 
@@ -234,7 +195,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
      * 
      * @brief	Tells all of the skeleton's listeners that an event has occurred. 
     *****************************************************************************/
-	void produceChangedEvent(void);
+	void produceSkeletonChanged(void);
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -115,8 +115,8 @@ void UIForegroundMouseTransformFunctorBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecUIForegroundPtr::Description(
-        SFUnrecUIForegroundPtr::getClassType(),
+    pDesc = new SFWeakUIForegroundPtr::Description(
+        SFWeakUIForegroundPtr::getClassType(),
         "Parent",
         "",
         ParentFieldId, ParentFieldMask,
@@ -159,7 +159,7 @@ UIForegroundMouseTransformFunctorBase::TypeObject UIForegroundMouseTransformFunc
     "\t<Field\n"
     "\t\tname=\"Parent\"\n"
     "\t\ttype=\"UIForeground\"\n"
-    "\t\tcategory=\"pointer\"\n"
+    "\t\tcategory=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -191,12 +191,12 @@ UInt32 UIForegroundMouseTransformFunctorBase::getContainerSize(void) const
 
 
 //! Get the UIForegroundMouseTransformFunctor::_sfParent field.
-const SFUnrecUIForegroundPtr *UIForegroundMouseTransformFunctorBase::getSFParent(void) const
+const SFWeakUIForegroundPtr *UIForegroundMouseTransformFunctorBase::getSFParent(void) const
 {
     return &_sfParent;
 }
 
-SFUnrecUIForegroundPtr *UIForegroundMouseTransformFunctorBase::editSFParent         (void)
+SFWeakUIForegroundPtr *UIForegroundMouseTransformFunctorBase::editSFParent         (void)
 {
     editSField(ParentFieldMask);
 
@@ -361,7 +361,6 @@ FieldContainerTransitPtr UIForegroundMouseTransformFunctorBase::shallowCopy(void
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 UIForegroundMouseTransformFunctorBase::UIForegroundMouseTransformFunctorBase(void) :
@@ -397,8 +396,8 @@ void UIForegroundMouseTransformFunctorBase::onCreate(const UIForegroundMouseTran
 
 GetFieldHandlePtr UIForegroundMouseTransformFunctorBase::getHandleParent          (void) const
 {
-    SFUnrecUIForegroundPtr::GetHandlePtr returnValue(
-        new  SFUnrecUIForegroundPtr::GetHandle(
+    SFWeakUIForegroundPtr::GetHandlePtr returnValue(
+        new  SFWeakUIForegroundPtr::GetHandle(
              &_sfParent,
              this->getType().getFieldDesc(ParentFieldId),
              const_cast<UIForegroundMouseTransformFunctorBase *>(this)));
@@ -408,8 +407,8 @@ GetFieldHandlePtr UIForegroundMouseTransformFunctorBase::getHandleParent        
 
 EditFieldHandlePtr UIForegroundMouseTransformFunctorBase::editHandleParent         (void)
 {
-    SFUnrecUIForegroundPtr::EditHandlePtr returnValue(
-        new  SFUnrecUIForegroundPtr::EditHandle(
+    SFWeakUIForegroundPtr::EditHandlePtr returnValue(
+        new  SFWeakUIForegroundPtr::EditHandle(
              &_sfParent,
              this->getType().getFieldDesc(ParentFieldId),
              this));
@@ -422,6 +421,7 @@ EditFieldHandlePtr UIForegroundMouseTransformFunctorBase::editHandleParent      
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

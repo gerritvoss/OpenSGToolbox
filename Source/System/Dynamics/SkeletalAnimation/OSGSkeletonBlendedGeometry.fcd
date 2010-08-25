@@ -70,9 +70,10 @@
 		access="public"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="SkeletonChanged"
-		type="SkeletonEvent"
+		detailsType="SkeletonEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

@@ -73,10 +73,7 @@
 
 #include "OSGAbstractWindowFields.h"
 
-//Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
+#include "OSGWindowEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -95,6 +92,27 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(AbstractWindow);
+    
+    
+    typedef WindowEventDetails WindowOpenedEventDetailsType;
+    typedef WindowEventDetails WindowClosingEventDetailsType;
+    typedef WindowEventDetails WindowClosedEventDetailsType;
+    typedef WindowEventDetails WindowIconifiedEventDetailsType;
+    typedef WindowEventDetails WindowDeiconifiedEventDetailsType;
+    typedef WindowEventDetails WindowActivatedEventDetailsType;
+    typedef WindowEventDetails WindowDeactivatedEventDetailsType;
+    typedef WindowEventDetails WindowEnteredEventDetailsType;
+    typedef WindowEventDetails WindowExitedEventDetailsType;
+
+    typedef boost::signals2::signal<void (WindowEventDetails* const, UInt32), ConsumableEventCombiner> WindowOpenedEventType;
+    typedef boost::signals2::signal<void (WindowEventDetails* const, UInt32), ConsumableEventCombiner> WindowClosingEventType;
+    typedef boost::signals2::signal<void (WindowEventDetails* const, UInt32), ConsumableEventCombiner> WindowClosedEventType;
+    typedef boost::signals2::signal<void (WindowEventDetails* const, UInt32), ConsumableEventCombiner> WindowIconifiedEventType;
+    typedef boost::signals2::signal<void (WindowEventDetails* const, UInt32), ConsumableEventCombiner> WindowDeiconifiedEventType;
+    typedef boost::signals2::signal<void (WindowEventDetails* const, UInt32), ConsumableEventCombiner> WindowActivatedEventType;
+    typedef boost::signals2::signal<void (WindowEventDetails* const, UInt32), ConsumableEventCombiner> WindowDeactivatedEventType;
+    typedef boost::signals2::signal<void (WindowEventDetails* const, UInt32), ConsumableEventCombiner> WindowEnteredEventType;
+    typedef boost::signals2::signal<void (WindowEventDetails* const, UInt32), ConsumableEventCombiner> WindowExitedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -187,16 +205,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
 
     enum
     {
-        WindowOpenedMethodId = Inherited::NextProducedMethodId,
-        WindowClosingMethodId = WindowOpenedMethodId + 1,
-        WindowClosedMethodId = WindowClosingMethodId + 1,
-        WindowIconifiedMethodId = WindowClosedMethodId + 1,
-        WindowDeiconifiedMethodId = WindowIconifiedMethodId + 1,
-        WindowActivatedMethodId = WindowDeiconifiedMethodId + 1,
-        WindowDeactivatedMethodId = WindowActivatedMethodId + 1,
-        WindowEnteredMethodId = WindowDeactivatedMethodId + 1,
-        WindowExitedMethodId = WindowEnteredMethodId + 1,
-        NextProducedMethodId = WindowExitedMethodId + 1
+        WindowOpenedEventId = Inherited::NextProducedEventId,
+        WindowClosingEventId = WindowOpenedEventId + 1,
+        WindowClosedEventId = WindowClosingEventId + 1,
+        WindowIconifiedEventId = WindowClosedEventId + 1,
+        WindowDeiconifiedEventId = WindowIconifiedEventId + 1,
+        WindowActivatedEventId = WindowDeiconifiedEventId + 1,
+        WindowDeactivatedEventId = WindowActivatedEventId + 1,
+        WindowEnteredEventId = WindowDeactivatedEventId + 1,
+        WindowExitedEventId = WindowEnteredEventId + 1,
+        NextProducedEventId = WindowExitedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -380,16 +398,149 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //WindowOpened
+    boost::signals2::connection connectWindowOpened   (const WindowOpenedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowOpened   (const WindowOpenedEventType::group_type &group,
+                                                       const WindowOpenedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowOpened           (const WindowOpenedEventType::group_type &group);
+    void   disconnectAllSlotsWindowOpened   (void);
+    bool   isEmptyWindowOpened              (void) const;
+    UInt32 numSlotsWindowOpened             (void) const;
+    
+    //WindowClosing
+    boost::signals2::connection connectWindowClosing  (const WindowClosingEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowClosing  (const WindowClosingEventType::group_type &group,
+                                                       const WindowClosingEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowClosing          (const WindowClosingEventType::group_type &group);
+    void   disconnectAllSlotsWindowClosing  (void);
+    bool   isEmptyWindowClosing             (void) const;
+    UInt32 numSlotsWindowClosing            (void) const;
+    
+    //WindowClosed
+    boost::signals2::connection connectWindowClosed   (const WindowClosedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowClosed   (const WindowClosedEventType::group_type &group,
+                                                       const WindowClosedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowClosed           (const WindowClosedEventType::group_type &group);
+    void   disconnectAllSlotsWindowClosed   (void);
+    bool   isEmptyWindowClosed              (void) const;
+    UInt32 numSlotsWindowClosed             (void) const;
+    
+    //WindowIconified
+    boost::signals2::connection connectWindowIconified(const WindowIconifiedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowIconified(const WindowIconifiedEventType::group_type &group,
+                                                       const WindowIconifiedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowIconified        (const WindowIconifiedEventType::group_type &group);
+    void   disconnectAllSlotsWindowIconified(void);
+    bool   isEmptyWindowIconified           (void) const;
+    UInt32 numSlotsWindowIconified          (void) const;
+    
+    //WindowDeiconified
+    boost::signals2::connection connectWindowDeiconified(const WindowDeiconifiedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowDeiconified(const WindowDeiconifiedEventType::group_type &group,
+                                                       const WindowDeiconifiedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowDeiconified      (const WindowDeiconifiedEventType::group_type &group);
+    void   disconnectAllSlotsWindowDeiconified(void);
+    bool   isEmptyWindowDeiconified         (void) const;
+    UInt32 numSlotsWindowDeiconified        (void) const;
+    
+    //WindowActivated
+    boost::signals2::connection connectWindowActivated(const WindowActivatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowActivated(const WindowActivatedEventType::group_type &group,
+                                                       const WindowActivatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowActivated        (const WindowActivatedEventType::group_type &group);
+    void   disconnectAllSlotsWindowActivated(void);
+    bool   isEmptyWindowActivated           (void) const;
+    UInt32 numSlotsWindowActivated          (void) const;
+    
+    //WindowDeactivated
+    boost::signals2::connection connectWindowDeactivated(const WindowDeactivatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowDeactivated(const WindowDeactivatedEventType::group_type &group,
+                                                       const WindowDeactivatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowDeactivated      (const WindowDeactivatedEventType::group_type &group);
+    void   disconnectAllSlotsWindowDeactivated(void);
+    bool   isEmptyWindowDeactivated         (void) const;
+    UInt32 numSlotsWindowDeactivated        (void) const;
+    
+    //WindowEntered
+    boost::signals2::connection connectWindowEntered  (const WindowEnteredEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowEntered  (const WindowEnteredEventType::group_type &group,
+                                                       const WindowEnteredEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowEntered          (const WindowEnteredEventType::group_type &group);
+    void   disconnectAllSlotsWindowEntered  (void);
+    bool   isEmptyWindowEntered             (void) const;
+    UInt32 numSlotsWindowEntered            (void) const;
+    
+    //WindowExited
+    boost::signals2::connection connectWindowExited   (const WindowExitedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectWindowExited   (const WindowExitedEventType::group_type &group,
+                                                       const WindowExitedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectWindowExited           (const WindowExitedEventType::group_type &group);
+    void   disconnectAllSlotsWindowExited   (void);
+    bool   isEmptyWindowExited              (void) const;
+    UInt32 numSlotsWindowExited             (void) const;
+    
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Produced Event Signals                   */
+    /*! \{                                                                 */
+
+    //Event Event producers
+    WindowOpenedEventType _WindowOpenedEvent;
+    WindowClosingEventType _WindowClosingEvent;
+    WindowClosedEventType _WindowClosedEvent;
+    WindowIconifiedEventType _WindowIconifiedEvent;
+    WindowDeiconifiedEventType _WindowDeiconifiedEvent;
+    WindowActivatedEventType _WindowActivatedEvent;
+    WindowDeactivatedEventType _WindowDeactivatedEvent;
+    WindowEnteredEventType _WindowEnteredEvent;
+    WindowExitedEventType _WindowExitedEvent;
+    /*! \}                                                                 */
 
     static TypeObject _type;
 
@@ -499,6 +650,36 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleWindowOpenedSignal(void) const;
+    GetEventHandlePtr getHandleWindowClosingSignal(void) const;
+    GetEventHandlePtr getHandleWindowClosedSignal(void) const;
+    GetEventHandlePtr getHandleWindowIconifiedSignal(void) const;
+    GetEventHandlePtr getHandleWindowDeiconifiedSignal(void) const;
+    GetEventHandlePtr getHandleWindowActivatedSignal(void) const;
+    GetEventHandlePtr getHandleWindowDeactivatedSignal(void) const;
+    GetEventHandlePtr getHandleWindowEnteredSignal(void) const;
+    GetEventHandlePtr getHandleWindowExitedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceWindowOpened        (WindowOpenedEventDetailsType* const e);
+    void produceWindowClosing       (WindowClosingEventDetailsType* const e);
+    void produceWindowClosed        (WindowClosedEventDetailsType* const e);
+    void produceWindowIconified     (WindowIconifiedEventDetailsType* const e);
+    void produceWindowDeiconified   (WindowDeiconifiedEventDetailsType* const e);
+    void produceWindowActivated     (WindowActivatedEventDetailsType* const e);
+    void produceWindowDeactivated   (WindowDeactivatedEventDetailsType* const e);
+    void produceWindowEntered       (WindowEnteredEventDetailsType* const e);
+    void produceWindowExited        (WindowExitedEventDetailsType* const e);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -542,7 +723,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentC
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

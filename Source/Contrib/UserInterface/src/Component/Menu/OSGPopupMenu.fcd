@@ -28,7 +28,7 @@ A UI PopupMenu.
 	<Field
 		name="Invoker"
 		type="Component"
-		category="pointer"
+		category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"
@@ -55,24 +55,28 @@ A UI PopupMenu.
 		access="public"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="PopupMenuWillBecomeVisible"
-		type="PopupMenuEventPtr"
+		detailsType="PopupMenuEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="PopupMenuWillBecomeInvisible"
-		type="PopupMenuEventPtr"
+		detailsType="PopupMenuEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="PopupMenuCanceled"
-		type="PopupMenuEventPtr"
+		detailsType="PopupMenuEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="PopupMenuContentsChanged"
-		type="PopupMenuEventPtr"
+		detailsType="PopupMenuEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

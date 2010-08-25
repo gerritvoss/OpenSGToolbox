@@ -41,12 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool ScrollBar::isAdjustmentListenerAttached(AdjustmentListenerPtr Listener) const
-{
-    return _AdjustmentListeners.find(Listener) != _AdjustmentListeners.end();
-}
-
-inline
 void ScrollBar::setValue(Int32 newValue)
 {
     getRangeModel()->setValue(newValue);
@@ -110,64 +104,6 @@ inline
 void ScrollBar::setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting)
 {
     getRangeModel()->setRangeProperties(value, extent, min, max, adjusting);
-}
-
-inline
-void ScrollBar::removeAdjustmentListener(AdjustmentListenerPtr Listener)
-{
-   AdjustmentListenerSetItor EraseIter(_AdjustmentListeners.find(Listener));
-   if(EraseIter != _AdjustmentListeners.end())
-   {
-      _AdjustmentListeners.erase(EraseIter);
-   }
-}
-
-inline
-ScrollBar::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(ScrollBar* const TheScrollBar) :
-   _ScrollBar(TheScrollBar)
-{
-}
-
-inline
-ScrollBar::MinButtonActionListener::MinButtonActionListener(ScrollBar* const TheScrollBar) :
-   _ScrollBar(TheScrollBar)
-{
-}
-
-inline
-ScrollBar::MaxButtonActionListener::MaxButtonActionListener(ScrollBar* const TheScrollBar) :
-   _ScrollBar(TheScrollBar)
-{
-}
-
-inline
-ScrollBar::ScrollBarListener::ScrollBarListener(ScrollBar* const TheScrollBar) :
-   _ScrollBar(TheScrollBar)
-{
-}
-
-inline
-ScrollBar::ScrollBarDraggedListener::ScrollBarDraggedListener(ScrollBar* const TheScrollBar) :
-   _ScrollBar(TheScrollBar)
-{
-}
-
-inline
-ScrollBar::ScrollFieldListener::ScrollFieldListener(ScrollBar* const TheScrollBar) :
-   _ScrollBar(TheScrollBar)
-{
-}
-
-inline
-void ScrollBar::ScrollBarDraggedListener::setInitialMousePosition(const Pnt2f& Pos)
-{
-    _InitialMousePosition = Pos;
-}
-
-inline
-void ScrollBar::ScrollBarDraggedListener::setInitialScrollBarPosition(const Pnt2f& Pos)
-{
-    _InitialScrollBarPosition = Pos;
 }
 
 OSG_END_NAMESPACE

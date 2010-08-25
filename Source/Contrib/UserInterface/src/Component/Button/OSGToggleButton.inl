@@ -40,12 +40,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool ToggleButton::isButtonSelectedListenerAttached(ButtonSelectedListenerPtr Listener) const
-{
-    return _ButtonSelectedListeners.find(Listener) != _ButtonSelectedListeners.end();
-}
-
     inline
 void ToggleButton::setSelectedBorder   ( Border* const value )
 {
@@ -122,16 +116,6 @@ inline
 const Color4f &ToggleButton::getSelectedTextColor(void) const
 {
     return getActiveTextColor();
-}
-
-    inline
-void ToggleButton::removeButtonSelectedListener(ButtonSelectedListenerPtr Listener)
-{
-    ButtonSelectedListenerSetItor EraseIter(_ButtonSelectedListeners.find(Listener));
-    if(EraseIter != _ButtonSelectedListeners.end())
-    {
-        _ButtonSelectedListeners.erase(EraseIter);
-    }
 }
 
 OSG_END_NAMESPACE

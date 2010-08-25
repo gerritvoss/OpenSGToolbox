@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -109,19 +109,6 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void CellEditorBase::classDescInserter(TypeObject &oType)
 {
-    FieldDescriptionBase *pDesc = NULL;
-
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&CellEditor::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&CellEditor::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -152,34 +139,40 @@ CellEditorBase::TypeObject CellEditorBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI Cell Editor.\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"EditingCanceled\"\n"
-    "\t\ttype=\"ChangeEventPtr\"\n"
+    "\t\tdetailsType=\"ChangeEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"EditingStopped\"\n"
-    "\t\ttype=\"ChangeEventPtr\"\n"
+    "\t\tdetailsType=\"ChangeEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Cell Editor.\n"
     );
 
-//! CellEditor Produced Methods
+//! CellEditor Produced Events
 
-MethodDescription *CellEditorBase::_methodDesc[] =
+EventDescription *CellEditorBase::_eventDesc[] =
 {
-    new MethodDescription("EditingCanceled", 
-                    "",
-                     EditingCanceledMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("EditingStopped", 
-                    "",
-                     EditingStoppedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("EditingCanceled", 
+                          "",
+                          EditingCanceledEventId, 
+                          FieldTraits<ChangeEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&CellEditorBase::getHandleEditingCanceledSignal)),
+
+    new EventDescription("EditingStopped", 
+                          "",
+                          EditingStoppedEventId, 
+                          FieldTraits<ChangeEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&CellEditorBase::getHandleEditingStoppedSignal))
+
 };
 
 EventProducerType CellEditorBase::_producerType(
@@ -187,8 +180,8 @@ EventProducerType CellEditorBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -225,10 +218,6 @@ UInt32 CellEditorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -238,10 +227,6 @@ void CellEditorBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void CellEditorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -249,28 +234,152 @@ void CellEditorBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 }
 
 
+
+/*------------------------- event producers ----------------------------------*/
+void CellEditorBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case EditingCanceledEventId:
+        OSG_ASSERT(dynamic_cast<EditingCanceledEventDetailsType* const>(e));
+
+        _EditingCanceledEvent.set_combiner(ConsumableEventCombiner(e));
+        _EditingCanceledEvent(dynamic_cast<EditingCanceledEventDetailsType* const>(e), EditingCanceledEventId);
+        break;
+    case EditingStoppedEventId:
+        OSG_ASSERT(dynamic_cast<EditingStoppedEventDetailsType* const>(e));
+
+        _EditingStoppedEvent.set_combiner(ConsumableEventCombiner(e));
+        _EditingStoppedEvent(dynamic_cast<EditingStoppedEventDetailsType* const>(e), EditingStoppedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection CellEditorBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case EditingCanceledEventId:
+        return _EditingCanceledEvent.connect(listener, at);
+        break;
+    case EditingStoppedEventId:
+        return _EditingStoppedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  CellEditorBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case EditingCanceledEventId:
+        return _EditingCanceledEvent.connect(group, listener, at);
+        break;
+    case EditingStoppedEventId:
+        return _EditingStoppedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  CellEditorBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case EditingCanceledEventId:
+        _EditingCanceledEvent.disconnect(group);
+        break;
+    case EditingStoppedEventId:
+        _EditingStoppedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  CellEditorBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case EditingCanceledEventId:
+        _EditingCanceledEvent.disconnect_all_slots();
+        break;
+    case EditingStoppedEventId:
+        _EditingStoppedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  CellEditorBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case EditingCanceledEventId:
+        return _EditingCanceledEvent.empty();
+        break;
+    case EditingStoppedEventId:
+        return _EditingStoppedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  CellEditorBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case EditingCanceledEventId:
+        return _EditingCanceledEvent.num_slots();
+        break;
+    case EditingStoppedEventId:
+        return _EditingStoppedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
 
 
 /*------------------------- constructors ----------------------------------*/
 
 CellEditorBase::CellEditorBase(void) :
-    _Producer(&getProducerType()),
-    Inherited(),
-    _sfEventProducer(&_Producer)
+    Inherited()
 {
 }
 
 CellEditorBase::CellEditorBase(const CellEditorBase &source) :
-    _Producer(&source.getProducerType()),
-    Inherited(source),
-    _sfEventProducer(&_Producer)
+    Inherited(source)
 {
 }
 
@@ -283,27 +392,24 @@ CellEditorBase::~CellEditorBase(void)
 
 
 
-GetFieldHandlePtr CellEditorBase::getHandleEventProducer        (void) const
+GetEventHandlePtr CellEditorBase::getHandleEditingCanceledSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<EditingCanceledEventType>(
+             const_cast<EditingCanceledEventType *>(&_EditingCanceledEvent),
+             _producerType.getEventDescription(EditingCanceledEventId),
              const_cast<CellEditorBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr CellEditorBase::editHandleEventProducer       (void)
+GetEventHandlePtr CellEditorBase::getHandleEditingStoppedSignal(void) const
 {
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
-
-
-    editSField(EventProducerFieldMask);
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<EditingStoppedEventType>(
+             const_cast<EditingStoppedEventType *>(&_EditingStoppedEvent),
+             _producerType.getEventDescription(EditingStoppedEventId),
+             const_cast<CellEditorBase *>(this)));
 
     return returnValue;
 }

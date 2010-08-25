@@ -193,39 +193,13 @@ void DefaultBoundedRangeModel::setValueIsAdjusting(bool b)
     }
 }
 
-EventConnection DefaultBoundedRangeModel::addChangeListener(ChangeListenerPtr Listener)
-{
-    _ChangeListeners.insert(Listener);
-    return EventConnection(
-                           boost::bind(&DefaultBoundedRangeModel::isChangeListenerAttached, this, Listener),
-                           boost::bind(&DefaultBoundedRangeModel::removeChangeListener, this, Listener));
-}
-
-bool DefaultBoundedRangeModel::isChangeListenerAttached(ChangeListenerPtr Listener) const
-{
-    return _ChangeListeners.find(Listener) != _ChangeListeners.end();
-}
-
-void DefaultBoundedRangeModel::removeChangeListener(ChangeListenerPtr Listener)
-{
-    ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
-    if(EraseIter != _ChangeListeners.end())
-    {
-        _ChangeListeners.erase(EraseIter);
-    }
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void DefaultBoundedRangeModel::produceStateChanged(const ChangeEventUnrecPtr e)
+void DefaultBoundedRangeModel::produceStateChanged(ChangeEventDetails* const Details)
 {
-   ChangeListenerSet ModelListenerSet(_ChangeListeners);
-   for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-   {
-	   (*SetItor)->stateChanged(e);
-   }
-   _Producer.produceEvent(StateChangedMethodId,e);
+   Inherited::produceStateChanged(Details);
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -258,7 +232,8 @@ void DefaultBoundedRangeModel::changed(ConstFieldMaskArg whichField,
        (whichField & InternalMinimumFieldMask) ||
        (whichField & InternalExtentFieldMask))
     {
-        produceStateChanged(ChangeEvent::create(NULL, getSystemTime()));
+        ChangeEventDetailsUnrecPtr Details(ChangeEventDetails::create(NULL, getSystemTime()));
+        produceStateChanged(Details);
     }
 }
 

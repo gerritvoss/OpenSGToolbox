@@ -109,14 +109,16 @@ A UI Button.
 		access="public"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="TextValueChanged"
-		type="TextEventPtr"
+		detailsType="TextEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="CaretChanged"
-		type="CaretEventPtr"
+		detailsType="CaretEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

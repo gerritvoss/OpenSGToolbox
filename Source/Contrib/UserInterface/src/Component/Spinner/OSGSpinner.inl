@@ -41,21 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool Spinner::isChangeListenerAttached(ChangeListenerPtr l) const
-{
-    return _Model->isChangeListenerAttached(l);
-}
-
-inline
-void Spinner::removeChangeListener(ChangeListenerPtr l)
-{
-    if(_Model)
-    {
-        _Model->removeChangeListener(l);
-    }
-}
-
-inline
 void Spinner::commitEdit(void)
 {
     //TODO: Implement
@@ -89,18 +74,6 @@ inline
 void Spinner::setValue(const boost::any& value)
 {
     _Model->setValue(value);
-}
-
-inline
-Spinner::NextButtonActionListener::NextButtonActionListener(Spinner* const TheSpinner) :
-   _Spinner(TheSpinner)
-{
-}
-
-inline
-Spinner::PreviousButtonActionListener::PreviousButtonActionListener(Spinner* const TheSpinner) :
-   _Spinner(TheSpinner)
-{
 }
 
 OSG_END_NAMESPACE

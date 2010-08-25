@@ -41,22 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool TableColumn::isFieldChangeListenerAttached(FieldChangeListenerPtr Listener) const
-{
-    return _FieldChangeListeners.find(Listener) != _FieldChangeListeners.end();
-}
-
-inline
-void TableColumn::removeFieldChangeListener(FieldChangeListenerPtr Listener)
-{
-   FieldChangeListenerSetItor EraseIter(_FieldChangeListeners.find(Listener));
-   if(EraseIter != _FieldChangeListeners.end())
-   {
-      _FieldChangeListeners.erase(EraseIter);
-   }
-}
-
-inline
 TableCellRendererPtr TableColumn::getCellRenderer(void) const
 {
     return _TableCellRenderer;

@@ -41,21 +41,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool Slider::isChangeListenerAttached(ChangeListenerPtr l) const
-{
-    return getRangeModel()->isChangeListenerAttached(l);
-}
-
-inline
 FieldContainerMap Slider::createStandardLabels(UInt32 increment)
 {
 	return createStandardLabels(increment, getMinimum());
-}
-
-inline
-void Slider::removeChangeListener(ChangeListenerPtr l)
-{
-	getRangeModel()->removeChangeListener(l);
 }
 
 inline
@@ -110,18 +98,6 @@ inline
 void Slider::setValueIsAdjusting(bool b)
 {
 	getRangeModel()->setValueIsAdjusting(b);
-}
-
-inline
-Slider::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(Slider* const TheSlider) :
-   _Slider(TheSlider)
-{
-}
-
-inline
-Slider::KnobDraggedListener::KnobDraggedListener(Slider* const TheSlider) :
-   _Slider(TheSlider)
-{
 }
 
 OSG_END_NAMESPACE

@@ -52,9 +52,4 @@ CommandManagerPtr GenericNameAttachmentEditor::getCommandManager(void) const
     return _CmdManager;
 }
 
-inline
-GenericNameAttachmentEditor::TextFieldListener::TextFieldListener(GenericNameAttachmentEditor * ptr) : _GenericNameAttachmentEditor(ptr)
-{
-}
-
 OSG_END_NAMESPACE

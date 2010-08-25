@@ -53,10 +53,71 @@
 
 #include "OSGLuaUtils.h"
 #include "OSGLuaManager.h"
+#include <boost/lexical_cast.hpp>
 
 #ifdef OSG_WITH_LUA_DEBUGGER
 
 OSG_BEGIN_NAMESPACE
+
+bool lua_details::Value::push(lua_State* L) const
+{
+	switch (type)
+	{
+	case Nil:
+        lua_pushnil(L);
+        return true;
+		break;
+	case Bool:
+        lua_pushboolean(L, boost::lexical_cast<bool>(value));
+        return true;
+		break;
+	case LightUserData:
+        lua_pushlightuserdata(L, boost::lexical_cast<void*>(value));
+        return true;
+		break;
+	case Number:
+        lua_pushnumber(L, boost::lexical_cast<lua_Number>(value));
+        return true;
+		break;
+	case String:
+        lua_pushstring(L, value.c_str());
+        return true;
+		break;
+	case Table:
+        //lua_pushboolean(L, boost::lexical_cast<bool>(v.value));
+        return false;
+		break;
+	case Function:
+        //lua_pushcfunction(L, boost::lexical_cast<void*>(value));
+        return false;
+		break;
+	case UserData:
+        //lua_pushuserdata(L, boost::lexical_cast<void*>(value));
+        return false;
+		break;
+	case Thread:
+        //lua_pushthread(L, boost::lexical_cast<void*>(value));
+        return false;
+		break;
+
+	case None:
+	default:
+        assert(false && "Can't push UNKNOWN type");
+        return false;
+		break;
+	}
+    return true;
+}
+
+bool lua_details::Value::operator==(const Value& Right) const
+{
+    return (type == Right.type && value.compare(Right.value) == 0);
+}
+
+bool lua_details::LuaField::operator==(const LuaField& Right) const
+{
+    return (key == Right.key && val == Right.val);
+}
 
 lua_details::State::State(void) //: step_event_(false, true), start_event_(false, true)
 {
@@ -320,6 +381,27 @@ char* lua_details::to_pointer(char* buffer, const void* ptr)
 std::string lua_details::to_table(lua_State* L, int index)
 {
 //	lua_gettable
+        return "";
+}
+
+UInt32 lua_details::get_num_fields(lua_State* L, int idx)
+{
+    UInt32 count(0);
+    if(lua_istable(L, idx))
+    {
+        /* table is in the stack at index 'idx' */
+        lua_pushnil(L);  /* first key */
+	    int table= lua_gettop(L) - 1;
+        while (lua_next(L, table) != 0)
+        {
+            /* uses 'key' (at index -2) and 'value' (at index -1) */
+            ++count;
+            /* removes 'value'; keeps 'key' for next iteration */
+            lua_pop(L, 1);
+        }
+    }
+    
+    return count;
 }
 
 bool lua_details::list_table(lua_State* L, int idx, TableInfo& out, int recursive)
@@ -329,7 +411,7 @@ bool lua_details::list_table(lua_State* L, int idx, TableInfo& out, int recursiv
 	if (lua_type(L, idx) != LUA_TTABLE)
 		return false;
 
-	int size= lua_objlen(L, idx);
+	UInt32 size= get_num_fields(L, idx);
 
 	out.reserve(size);
 
@@ -398,7 +480,6 @@ std::string lua_details::table_as_string(const TableInfo& table, size_t limit)
 void lua_details::capture_value(lua_State* L, Value& v, int index, int recursive, size_t table_size_limit)
 {
 	int i= index;
-	char buf[100];	// temp output for fast number/pointer formatting
 
 	int t= lua_type(L, i);
 
@@ -416,18 +497,17 @@ void lua_details::capture_value(lua_State* L, Value& v, int index, int recursive
 
 	case LUA_TNUMBER:
 		v.type = Number;
-		sprintf(buf, "%g", static_cast<double>(lua_tonumber(L, i)));
-		v.value = buf;
+        v.value = boost::lexical_cast<std::string>(lua_tonumber(L, i));
 		break;
 
 	case LUA_TLIGHTUSERDATA:
 		v.type = LightUserData;
-		v.value = to_pointer(buf, lua_topointer(L, i));
+        v.value = "0x" + boost::lexical_cast<std::string>(lua_topointer(L, i));
 		break;
 
 	case LUA_TUSERDATA:
 		v.type = UserData;
-		v.value = to_pointer(buf, lua_topointer(L, i));
+		v.value = "0x" + boost::lexical_cast<std::string>(lua_topointer(L, i));
 		break;
 
 	case LUA_TTABLE:
@@ -439,17 +519,17 @@ void lua_details::capture_value(lua_State* L, Value& v, int index, int recursive
 			v.value = table_as_string(t, table_size_limit);
 		}
 		else
-			v.value = to_pointer(buf, lua_topointer(L, i));
+			v.value = "0x" + boost::lexical_cast<std::string>(lua_topointer(L, i));
 		break;
 
 	case LUA_TFUNCTION:
 		v.type = Function;
-		v.value = to_pointer(buf, lua_topointer(L, i));
+		v.value = "0x" + boost::lexical_cast<std::string>(lua_topointer(L, i));
 		break;
 
 	case LUA_TTHREAD:
 		v.type = Thread;
-		v.value = to_pointer(buf, lua_topointer(L, i));
+		v.value = "0x" + boost::lexical_cast<std::string>(lua_topointer(L, i));
 		break;
 
 	case LUA_TNIL:
@@ -533,6 +613,53 @@ const Char8* lua_details::StackFrame::sourcePath(void) const
         return source.c_str() + 1;
 
     return 0;
+}
+
+bool lua_details::pushFieldOntoStack(lua_State* L, const FieldStack& theFieldStack)
+{
+
+    if(theFieldStack.size() == 0)
+    {
+        lua_pushstring(L,"_G");
+        lua_gettable(L, LUA_GLOBALSINDEX);  //Push The global table onto the stack
+    }
+    else
+    {
+        //Get the Lua value
+        for(UInt32 i(0) ; i<theFieldStack.size() ; ++i)
+        {
+            if(i == 0)
+            {
+                if(!theFieldStack[i].key.push(L))//push the key of the table on the stack
+                {
+                    return false;
+                }
+                lua_gettable(L, LUA_GLOBALSINDEX);  //Push The table onto the stack
+            }
+            else
+            {
+                //Check if the the value given is a table
+                if(!lua_istable(L, -1))
+                {
+                    //Pop the value, and the original table from the stack
+                    lua_pop(L, 2);
+
+                    return false;
+                }
+            
+                
+                if(!theFieldStack[i].key.push(L))//push the key of the table on the stack
+                {
+                    return false;
+                }
+                lua_gettable(L, -2);  //Push The table onto the stack
+
+                //Remove the original table from the stack
+                lua_remove(L, -2);
+            }
+        }
+    }
+    return true;
 }
 
 

@@ -84,9 +84,10 @@
         access="public"
         >
     </Field>
-    <ProducedMethod
+    <ProducedEvent
         name="FieldChanged"
-        type="FieldChangedEventPtr"
+        detailsType="ChangeEventDetails"
+		consumable="true"
         >
-    </ProducedMethod>
+    </ProducedEvent>
 </FieldContainer>

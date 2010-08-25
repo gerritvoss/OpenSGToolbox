@@ -43,15 +43,8 @@
 #endif
 
 #include "OSGScrollBarBase.h"
-#include "OSGAdjustmentListener.h"
-
-#include "OSGChangeListener.h"
-#include "OSGActionListener.h"
-#include "OSGMouseMotionAdapter.h"
-#include "OSGMouseAdapter.h"
 #include "OSGBoundedRangeModel.h"
-
-#include "OSGEventConnection.h"
+#include "OSGActionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,10 +87,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
     /*! \}                                                                 */
 
     virtual void updateLayout(void);
-    
-    EventConnection addAdjustmentListener(AdjustmentListenerPtr Listener);
-	bool isAdjustmentListenerAttached(AdjustmentListenerPtr Listener) const;
-    void removeAdjustmentListener(AdjustmentListenerPtr Listener);
 
     UInt32 getExtent(void) const;
     
@@ -125,7 +114,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
     void scrollBlock(const Int32 Blocks);
     
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
+    virtual void mouseWheelMoved(MouseWheelEventDetails* const e);
 
     Button* editMinButton(void) const;
     Button* editMaxButton(void) const;
@@ -176,110 +165,41 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
 
     Int32 calculateValueFromPosition(const Pnt2f Position) const;
 
-	typedef std::set<AdjustmentListenerPtr> AdjustmentListenerSet;
-    typedef AdjustmentListenerSet::iterator AdjustmentListenerSetItor;
-    typedef AdjustmentListenerSet::const_iterator AdjustmentListenerSetConstItor;
-	
-    AdjustmentListenerSet       _AdjustmentListeners;
-    void produceAdjustmentValueChanged(const AdjustmentEventUnrecPtr e);
+    void produceAdjustmentValueChanged(AdjustmentEventDetails* const e);
 
     void updateScrollBarLayout(void);
     
 
-    //Listener for getting change updates of the BoundedRangeModel
-	class BoundedRangeModelChangeListener : public ChangeListener
-	{
-	public:
-		BoundedRangeModelChangeListener(ScrollBar* const TheScrollBar);
-        virtual void stateChanged(const ChangeEventUnrecPtr e);
-	private:
-		ScrollBar* _ScrollBar;
-	};
-
-	friend class BoundedRangeModelChangeListener;
-
-	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
-    EventConnection _RangeModelConnection;
+    void handleRangeModelStateChanged(ChangeEventDetails* const e);
+    boost::signals2::connection _RangeModelConnection;
 
 
-    //Min Button Action Listener
-	class MinButtonActionListener : public ActionListener
-	{
-	public:
-		MinButtonActionListener(ScrollBar* const TheScrollBar);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-	private:
-		ScrollBar* _ScrollBar;
-	};
+    //Min Button Action
+    void handleMinButtonAction(ActionEventDetails* const e);
+    boost::signals2::connection _MinActionConnection;
 
-	friend class MinButtonActionListener;
-
-	MinButtonActionListener _MinButtonActionListener;
-
-    //Max Button Action Listener
-	class MaxButtonActionListener : public ActionListener
-	{
-	public:
-		MaxButtonActionListener(ScrollBar* const TheScrollBar);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-	private:
-		ScrollBar* _ScrollBar;
-	};
-
-	friend class MaxButtonActionListener;
-
-	MaxButtonActionListener _MaxButtonActionListener;
+    //Max Button Action
+    void handleMaxButtonAction(ActionEventDetails* const e);
+    boost::signals2::connection _MaxActionConnection;
     
-    //ScrollBar mouse pressed Listener
-	class ScrollBarListener : public MouseAdapter
-	{
-	public :
-		ScrollBarListener(ScrollBar* const TheScrollBar);
-		virtual void mousePressed(const MouseEventUnrecPtr e);
-	protected :
-		ScrollBar* _ScrollBar;
-	};
+    //ScrollBar mouse pressed
+	void handleScrollBarMousePressed(MouseEventDetails* const e);
+    boost::signals2::connection _ScrollBarMousePressedConnection;
 
-	friend class ScrollBarListener;
-
-	ScrollBarListener _ScrollBarListener;
-
-    //ScrollBar Dragging Listener
-	class ScrollBarDraggedListener : public MouseAdapter, public MouseMotionAdapter
-	{
-	public :
-		ScrollBarDraggedListener(ScrollBar* const TheScrollBar);
-		virtual void mouseReleased(const MouseEventUnrecPtr e);
-        
-		virtual void mouseDragged(const MouseEventUnrecPtr e);
-
-        void setInitialMousePosition(const Pnt2f& Pos);
-        void setInitialScrollBarPosition(const Pnt2f& Pos);
-        
-        void disconnect(void);
-	protected :
-		ScrollBar* _ScrollBar;
-        Pnt2f _InitialMousePosition;
-        Pnt2f _InitialScrollBarPosition;
-	};
-
-	friend class ScrollBarDraggedListener;
-
-	ScrollBarDraggedListener _ScrollBarDraggedListener;
+    //ScrollBar Dragging
+	void handleScrollBarDragMouseReleased(MouseEventDetails* const e);
     
-    //ScrollField Mouse Listener
-	class ScrollFieldListener : public ActionListener
-	{
-	public :
-		ScrollFieldListener(ScrollBar* const TheScrollBar);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-	protected :
-		ScrollBar* _ScrollBar;
-	};
+	void handleScrollBarDragMouseDragged(MouseEventDetails* const e);
 
-	friend class ScrollFieldListener;
+    boost::signals2::connection _ScrollBarDragMouseReleasedConnection,
+                                _ScrollBarDragMouseDraggedConnection;
 
-	ScrollFieldListener _ScrollFieldListener;
+    Pnt2f _ScrollBarInitialMousePosition;
+    Pnt2f _ScrollBarInitialScrollBarPosition;
+    
+    //ScrollField Mouse
+    void handleScrollFieldAction(ActionEventDetails* const e);
+    boost::signals2::connection _ScrollFieldActionConnection;
 
     void setMajorAxisScrollBarPosition(const Pnt2f& Pos);
     
@@ -298,6 +218,7 @@ typedef ScrollBar *ScrollBarP;
 
 OSG_END_NAMESPACE
 
+#include "OSGButton.h"
 #include "OSGScrollBarBase.inl"
 #include "OSGScrollBar.inl"
 

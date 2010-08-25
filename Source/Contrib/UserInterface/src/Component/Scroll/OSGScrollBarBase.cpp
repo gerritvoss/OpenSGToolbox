@@ -66,7 +66,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -482,24 +482,27 @@ ScrollBarBase::TypeObject ScrollBarBase::_type(
     "\t\tdefaultValue=\"NULL\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"AdjustmentValueChanged\"\n"
-    "\t\ttype=\"AdjustmentEventPtr\"\n"
+    "\t\tdetailsType=\"AdjustmentEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI ScrollBar.\n"
     );
 
-//! ScrollBar Produced Methods
+//! ScrollBar Produced Events
 
-MethodDescription *ScrollBarBase::_methodDesc[] =
+EventDescription *ScrollBarBase::_eventDesc[] =
 {
-    new MethodDescription("AdjustmentValueChanged", 
-                    "",
-                     AdjustmentValueChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("AdjustmentValueChanged", 
+                          "",
+                          AdjustmentValueChangedEventId, 
+                          FieldTraits<AdjustmentEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ScrollBarBase::getHandleAdjustmentValueChangedSignal))
+
 };
 
 EventProducerType ScrollBarBase::_producerType(
@@ -507,8 +510,8 @@ EventProducerType ScrollBarBase::_producerType(
     "ComponentProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -1006,6 +1009,110 @@ FieldContainerTransitPtr ScrollBarBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void ScrollBarBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case AdjustmentValueChangedEventId:
+        OSG_ASSERT(dynamic_cast<AdjustmentValueChangedEventDetailsType* const>(e));
+
+        _AdjustmentValueChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _AdjustmentValueChangedEvent(dynamic_cast<AdjustmentValueChangedEventDetailsType* const>(e), AdjustmentValueChangedEventId);
+        break;
+    default:
+        Inherited::produceEvent(eventId, e);
+        break;
+    }
+}
+
+boost::signals2::connection ScrollBarBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case AdjustmentValueChangedEventId:
+        return _AdjustmentValueChangedEvent.connect(listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  ScrollBarBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case AdjustmentValueChangedEventId:
+        return _AdjustmentValueChangedEvent.connect(group, listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, group, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  ScrollBarBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case AdjustmentValueChangedEventId:
+        _AdjustmentValueChangedEvent.disconnect(group);
+        break;
+    default:
+        return Inherited::disconnectEvent(eventId, group);
+        break;
+    }
+}
+
+void  ScrollBarBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case AdjustmentValueChangedEventId:
+        _AdjustmentValueChangedEvent.disconnect_all_slots();
+        break;
+    default:
+        Inherited::disconnectAllSlotsEvent(eventId);
+        break;
+    }
+}
+
+bool  ScrollBarBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case AdjustmentValueChangedEventId:
+        return _AdjustmentValueChangedEvent.empty();
+        break;
+    default:
+        return Inherited::isEmptyEvent(eventId);
+        break;
+    }
+}
+
+UInt32  ScrollBarBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case AdjustmentValueChangedEventId:
+        return _AdjustmentValueChangedEvent.num_slots();
+        break;
+    default:
+        return Inherited::numSlotsEvent(eventId);
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
@@ -1025,7 +1132,6 @@ ScrollBarBase::ScrollBarBase(void) :
     _sfScrollBarMinLength     (UInt32(20)),
     _sfRangeModel             (NULL)
 {
-    _Producer.setType(&_producerType);
 }
 
 ScrollBarBase::ScrollBarBase(const ScrollBarBase &source) :
@@ -1429,6 +1535,18 @@ EditFieldHandlePtr ScrollBarBase::editHandleRangeModel     (void)
                     static_cast<ScrollBar *>(this), _1));
 
     editSField(RangeModelFieldMask);
+
+    return returnValue;
+}
+
+
+GetEventHandlePtr ScrollBarBase::getHandleAdjustmentValueChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<AdjustmentValueChangedEventType>(
+             const_cast<AdjustmentValueChangedEventType *>(&_AdjustmentValueChangedEvent),
+             _producerType.getEventDescription(AdjustmentValueChangedEventId),
+             const_cast<ScrollBarBase *>(this)));
 
     return returnValue;
 }

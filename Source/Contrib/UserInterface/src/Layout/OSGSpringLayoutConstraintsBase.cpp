@@ -260,8 +260,8 @@ void SpringLayoutConstraintsBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecComponentPtr::Description(
-        SFUnrecComponentPtr::getClassType(),
+    pDesc = new SFWeakComponentPtr::Description(
+        SFWeakComponentPtr::getClassType(),
         "Component",
         "",
         ComponentFieldId, ComponentFieldMask,
@@ -394,7 +394,7 @@ SpringLayoutConstraintsBase::TypeObject SpringLayoutConstraintsBase::_type(
     "\t<Field\n"
     "\t\tname=\"Component\"\n"
     "\t\ttype=\"Component\"\n"
-    "        category=\"pointer\"\n"
+    "        category=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "      visibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -543,12 +543,12 @@ SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFBaselineSpring (void)
 }
 
 //! Get the SpringLayoutConstraints::_sfComponent field.
-const SFUnrecComponentPtr *SpringLayoutConstraintsBase::getSFComponent(void) const
+const SFWeakComponentPtr *SpringLayoutConstraintsBase::getSFComponent(void) const
 {
     return &_sfComponent;
 }
 
-SFUnrecComponentPtr *SpringLayoutConstraintsBase::editSFComponent      (void)
+SFWeakComponentPtr  *SpringLayoutConstraintsBase::editSFComponent      (void)
 {
     editSField(ComponentFieldMask);
 
@@ -818,7 +818,6 @@ FieldContainerTransitPtr SpringLayoutConstraintsBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -1145,8 +1144,8 @@ EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleBaselineSpring (void)
 
 GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleComponent       (void) const
 {
-    SFUnrecComponentPtr::GetHandlePtr returnValue(
-        new  SFUnrecComponentPtr::GetHandle(
+    SFWeakComponentPtr::GetHandlePtr returnValue(
+        new  SFWeakComponentPtr::GetHandle(
              &_sfComponent,
              this->getType().getFieldDesc(ComponentFieldId),
              const_cast<SpringLayoutConstraintsBase *>(this)));
@@ -1156,8 +1155,8 @@ GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleComponent       (void) c
 
 EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleComponent      (void)
 {
-    SFUnrecComponentPtr::EditHandlePtr returnValue(
-        new  SFUnrecComponentPtr::EditHandle(
+    SFWeakComponentPtr::EditHandlePtr returnValue(
+        new  SFWeakComponentPtr::EditHandle(
              &_sfComponent,
              this->getType().getFieldDesc(ComponentFieldId),
              this));
@@ -1170,6 +1169,7 @@ EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleComponent      (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

@@ -43,9 +43,6 @@
 #endif
 
 #include "OSGParticleTrailGeneratorBase.h"
-#include "OSGParticleSystemListener.h"
-#include "OSGParticleSystemEvent.h"
-#include "OSGParticleEvent.h"
 #include "OSGParticleSystem.h"
 #include "OSGVector.h"
 #include <deque>
@@ -96,9 +93,6 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGenerator : public Partic
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	
-	ParticleSystemListenerPtr getParticleSystemListener(void);
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -128,24 +122,14 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGenerator : public Partic
 
     /*! \}                                                                 */
 	// internal listener class for managing trail data
-    class TrailParticleSystemListener: public ParticleSystemListener
-    {
-      public:
-        TrailParticleSystemListener(ParticleTrailGenerator* trailGenerator);
-
-        virtual void systemUpdated(const ParticleSystemEventUnrecPtr e);
-        virtual void volumeChanged(const ParticleSystemEventUnrecPtr e);
-        virtual void particleGenerated(const ParticleEventUnrecPtr e);
-        virtual void particleKilled(const ParticleEventUnrecPtr e);
-        virtual void particleStolen(const ParticleEventUnrecPtr e);
-      private:
-        ParticleTrailGenerator* _mTrailGenerator;
-        Time _mLastAdded;
-        bool _mInitialized;
-    };
-
-    friend class TrailParticleSystemListener;
-    TrailParticleSystemListener _TrailParticleSystemListener;
+	void handleSystemUpdated(ParticleSystemEventDetails* const details);
+	void handleParticleGenerated(ParticleEventDetails* const details);
+	void handleParticleRemoved(ParticleEventDetails* const details);
+    
+    boost::signals2::connection _SystemUpdatedConnection;
+    boost::signals2::connection _ParticleGeneratedConnection;
+    boost::signals2::connection _ParticleKilledConnection;
+    boost::signals2::connection _ParticleStolenConnection;
 
     // holds data for one point of a trail
     struct TrailSection
@@ -165,14 +149,16 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGenerator : public Partic
     // hence the second vector of trials
     ParticleTrailMap _mKilledParticleTrails;
 
-    virtual void internalUpdate(const ParticleSystemEventUnrecPtr e) = 0;
-    virtual void internalKill(const ParticleEventUnrecPtr e) = 0;
-    virtual void internalGenerated(const ParticleEventUnrecPtr e) = 0;
+    virtual void internalUpdate(ParticleSystemEventDetails* const details) = 0;
+    virtual void internalKill(ParticleEventDetails* const details) = 0;
+    virtual void internalGenerated(ParticleEventDetails* const details) = 0;
     virtual void internalTrailSectGenerated(const TrailSection& ts, const Vec3f& ppVel) = 0;
     virtual void internalTrailSectKilled(const TrailSection& ts) = 0;
 
     UInt32 _mTrailSectIDCntr;
     UInt32 getNextTSID(void);
+    Time _mLastAdded;
+    bool _mInitialized;
     /*==========================  PRIVATE  ================================*/
 
   private:

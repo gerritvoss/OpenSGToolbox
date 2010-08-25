@@ -43,9 +43,6 @@
 #endif
 
 #include "OSGAbstractListModelBase.h"
-#include <set>
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,10 +79,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractListModel : public AbstractLis
 
     /*! \}                                                                 */
 
-	virtual EventConnection addListDataListener(ListDataListenerPtr l);
-	virtual bool isListDataListenerAttached(ListDataListenerPtr l) const;
-	virtual void removeListDataListener(ListDataListenerPtr l);
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -114,11 +107,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractListModel : public AbstractLis
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    
-	typedef std::set<ListDataListenerPtr> ListDataListenerSet;
-	typedef ListDataListenerSet::iterator ListDataListenerSetIter;
-	typedef ListDataListenerSet::const_iterator ListDataListenerSetConstIter;
-	ListDataListenerSet _DataListeners;
 
 	void produceListDataContentsChanged(FieldContainer* const Source, UInt32 index0, UInt32 index1);
 	void produceListDataIntervalAdded(FieldContainer* const Source, UInt32 index0, UInt32 index1);

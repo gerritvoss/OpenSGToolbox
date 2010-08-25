@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGAbstractMutableComboBoxModelBase.h"
-#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,13 +78,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractMutableComboBoxModel : public 
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual EventConnection addListDataListener(ListDataListenerPtr l);
-	virtual bool isListDataListenerAttached(ListDataListenerPtr l) const;
-	virtual void removeListDataListener(ListDataListenerPtr l);
-	
-	virtual EventConnection addSelectionListener(ComboBoxSelectionListenerPtr l);
-	virtual bool isSelectionListenerAttached(ComboBoxSelectionListenerPtr l) const;
-	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -114,20 +106,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractMutableComboBoxModel : public 
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    
-	typedef std::set<ListDataListenerPtr> ListDataListenerSet;
-	typedef ListDataListenerSet::iterator ListDataListenerSetIter;
-	typedef ListDataListenerSet::const_iterator ListDataListenerSetConstIter;
-	ListDataListenerSet _DataListeners;
 
 	void produceListDataContentsChanged(FieldContainer* const Source, UInt32 index0, UInt32 index1);
 	void produceListDataIntervalAdded(FieldContainer* const Source, UInt32 index0, UInt32 index1);
 	void produceListDataIntervalRemoved(FieldContainer* const Source, UInt32 index0, UInt32 index1);
-
-	typedef std::set<ComboBoxSelectionListenerPtr> ComboBoxSelectionListenerSet;
-	typedef ComboBoxSelectionListenerSet::iterator ComboBoxSelectionListenerSetIter;
-	typedef ComboBoxSelectionListenerSet::const_iterator ComboBoxSelectionListenerSetConstIter;
-	ComboBoxSelectionListenerSet _SelectionListeners;
 
 	void produceSelectionChanged(FieldContainer* const Source, const Int32& CurrentIndex, const Int32& PreviousIndex);
     

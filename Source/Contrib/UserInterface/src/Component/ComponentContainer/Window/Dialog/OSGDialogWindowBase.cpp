@@ -65,7 +65,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -272,34 +272,40 @@ DialogWindowBase::TypeObject DialogWindowBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"DialogWindowClosing\"\n"
-    "\t\ttype=\"DialogWindowEventPtr\"\n"
+    "\t\tdetailsType=\"DialogWindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"DialogWindowClosed\"\n"
-    "\t\ttype=\"DialogWindowEventPtr\"\n"
+    "\t\tdetailsType=\"DialogWindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Dialog Window.\n"
     );
 
-//! DialogWindow Produced Methods
+//! DialogWindow Produced Events
 
-MethodDescription *DialogWindowBase::_methodDesc[] =
+EventDescription *DialogWindowBase::_eventDesc[] =
 {
-    new MethodDescription("DialogWindowClosing", 
-                    "",
-                     DialogWindowClosingMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("DialogWindowClosed", 
-                    "",
-                     DialogWindowClosedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("DialogWindowClosing", 
+                          "",
+                          DialogWindowClosingEventId, 
+                          FieldTraits<DialogWindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&DialogWindowBase::getHandleDialogWindowClosingSignal)),
+
+    new EventDescription("DialogWindowClosed", 
+                          "",
+                          DialogWindowClosedEventId, 
+                          FieldTraits<DialogWindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&DialogWindowBase::getHandleDialogWindowClosedSignal))
+
 };
 
 EventProducerType DialogWindowBase::_producerType(
@@ -307,8 +313,8 @@ EventProducerType DialogWindowBase::_producerType(
     "AbstractWindowProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -606,6 +612,134 @@ FieldContainerTransitPtr DialogWindowBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void DialogWindowBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case DialogWindowClosingEventId:
+        OSG_ASSERT(dynamic_cast<DialogWindowClosingEventDetailsType* const>(e));
+
+        _DialogWindowClosingEvent.set_combiner(ConsumableEventCombiner(e));
+        _DialogWindowClosingEvent(dynamic_cast<DialogWindowClosingEventDetailsType* const>(e), DialogWindowClosingEventId);
+        break;
+    case DialogWindowClosedEventId:
+        OSG_ASSERT(dynamic_cast<DialogWindowClosedEventDetailsType* const>(e));
+
+        _DialogWindowClosedEvent.set_combiner(ConsumableEventCombiner(e));
+        _DialogWindowClosedEvent(dynamic_cast<DialogWindowClosedEventDetailsType* const>(e), DialogWindowClosedEventId);
+        break;
+    default:
+        Inherited::produceEvent(eventId, e);
+        break;
+    }
+}
+
+boost::signals2::connection DialogWindowBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case DialogWindowClosingEventId:
+        return _DialogWindowClosingEvent.connect(listener, at);
+        break;
+    case DialogWindowClosedEventId:
+        return _DialogWindowClosedEvent.connect(listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  DialogWindowBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case DialogWindowClosingEventId:
+        return _DialogWindowClosingEvent.connect(group, listener, at);
+        break;
+    case DialogWindowClosedEventId:
+        return _DialogWindowClosedEvent.connect(group, listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, group, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  DialogWindowBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case DialogWindowClosingEventId:
+        _DialogWindowClosingEvent.disconnect(group);
+        break;
+    case DialogWindowClosedEventId:
+        _DialogWindowClosedEvent.disconnect(group);
+        break;
+    default:
+        return Inherited::disconnectEvent(eventId, group);
+        break;
+    }
+}
+
+void  DialogWindowBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case DialogWindowClosingEventId:
+        _DialogWindowClosingEvent.disconnect_all_slots();
+        break;
+    case DialogWindowClosedEventId:
+        _DialogWindowClosedEvent.disconnect_all_slots();
+        break;
+    default:
+        Inherited::disconnectAllSlotsEvent(eventId);
+        break;
+    }
+}
+
+bool  DialogWindowBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case DialogWindowClosingEventId:
+        return _DialogWindowClosingEvent.empty();
+        break;
+    case DialogWindowClosedEventId:
+        return _DialogWindowClosedEvent.empty();
+        break;
+    default:
+        return Inherited::isEmptyEvent(eventId);
+        break;
+    }
+}
+
+UInt32  DialogWindowBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case DialogWindowClosingEventId:
+        return _DialogWindowClosingEvent.num_slots();
+        break;
+    case DialogWindowClosedEventId:
+        return _DialogWindowClosedEvent.num_slots();
+        break;
+    default:
+        return Inherited::numSlotsEvent(eventId);
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
@@ -617,7 +751,6 @@ DialogWindowBase::DialogWindowBase(void) :
     _sfShowCancel             (bool(true)),
     _sfInputValues            ()
 {
-    _Producer.setType(&_producerType);
 }
 
 DialogWindowBase::DialogWindowBase(const DialogWindowBase &source) :
@@ -783,6 +916,29 @@ EditFieldHandlePtr DialogWindowBase::editHandleInputValues    (void)
 
 
     editSField(InputValuesFieldMask);
+
+    return returnValue;
+}
+
+
+GetEventHandlePtr DialogWindowBase::getHandleDialogWindowClosingSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<DialogWindowClosingEventType>(
+             const_cast<DialogWindowClosingEventType *>(&_DialogWindowClosingEvent),
+             _producerType.getEventDescription(DialogWindowClosingEventId),
+             const_cast<DialogWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr DialogWindowBase::getHandleDialogWindowClosedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<DialogWindowClosedEventType>(
+             const_cast<DialogWindowClosedEventType *>(&_DialogWindowClosedEvent),
+             _producerType.getEventDescription(DialogWindowClosedEventId),
+             const_cast<DialogWindowBase *>(this)));
 
     return returnValue;
 }

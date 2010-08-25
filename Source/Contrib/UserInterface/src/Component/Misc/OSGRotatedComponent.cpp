@@ -144,7 +144,7 @@ void RotatedComponent::updateLayout(void)
     }
 }
 
-void RotatedComponent::mouseClicked(const MouseEventUnrecPtr e)
+void RotatedComponent::mouseClicked(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
@@ -160,7 +160,7 @@ void RotatedComponent::mouseClicked(const MouseEventUnrecPtr e)
     Component::mouseClicked(e);
 }
 
-void RotatedComponent::mouseEntered(const MouseEventUnrecPtr e)
+void RotatedComponent::mouseEntered(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -171,7 +171,7 @@ void RotatedComponent::mouseEntered(const MouseEventUnrecPtr e)
     Component::mouseEntered(e);
 }
 
-void RotatedComponent::mouseExited(const MouseEventUnrecPtr e)
+void RotatedComponent::mouseExited(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -182,7 +182,7 @@ void RotatedComponent::mouseExited(const MouseEventUnrecPtr e)
     Component::mouseExited(e);
 }
 
-void RotatedComponent::mousePressed(const MouseEventUnrecPtr e)
+void RotatedComponent::mousePressed(MouseEventDetails* const e)
 {
     bool isContained(false);
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
@@ -214,7 +214,7 @@ void RotatedComponent::mousePressed(const MouseEventUnrecPtr e)
     Component::mousePressed(e);
 }
 
-void RotatedComponent::mouseReleased(const MouseEventUnrecPtr e)
+void RotatedComponent::mouseReleased(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
@@ -231,7 +231,7 @@ void RotatedComponent::mouseReleased(const MouseEventUnrecPtr e)
 }
 
 
-void RotatedComponent::mouseMoved(const MouseEventUnrecPtr e)
+void RotatedComponent::mouseMoved(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -246,7 +246,7 @@ void RotatedComponent::mouseMoved(const MouseEventUnrecPtr e)
     Component::mouseMoved(e);
 }
 
-void RotatedComponent::mouseDragged(const MouseEventUnrecPtr e)
+void RotatedComponent::mouseDragged(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -261,7 +261,7 @@ void RotatedComponent::mouseDragged(const MouseEventUnrecPtr e)
     Component::mouseDragged(e);
 }
 
-void RotatedComponent::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
+void RotatedComponent::mouseWheelMoved(MouseWheelEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -378,7 +378,7 @@ void RotatedComponent::changed(ConstFieldMaskArg whichField,
 				getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
 			{
 				Pnt2f MouseLoc(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getMousePosition());
-				const MouseEventUnrecPtr e = MouseEvent::create(getParentWindow()->getParentDrawingSurface()->getEventProducer(),getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NULL);
+				MouseEventDetailsUnrecPtr e = MouseEventDetails::create(getParentWindow()->getParentDrawingSurface()->getEventProducer(),getSystemTime(),MouseEventDetails::NO_BUTTON,0,MouseLoc, NULL);
 				checkMouseEnterExit(e,e->getLocation(),getInternalComponent(),getInternalComponent()->isContained(MouseLoc, true),e->getViewport());
 			}
         }

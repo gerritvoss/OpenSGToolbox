@@ -14,14 +14,16 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Cell Editor.
-	<ProducedMethod
+	<ProducedEvent
 		name="EditingCanceled"
-		type="ChangeEventPtr"
+		detailsType="ChangeEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="EditingStopped"
-		type="ChangeEventPtr"
+		detailsType="ChangeEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

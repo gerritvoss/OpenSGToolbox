@@ -57,6 +57,8 @@
 #include "OSGConfig.h"
 
 
+#include "OSGSkeletonEventDetails.h"
+
 
 #include "OSGGeometry.h"                // BaseGeometry Class
 #include "OSGGeoIntegralProperty.h"     // InternalWeightIndexes Class
@@ -68,7 +70,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -211,17 +213,6 @@ void SkeletonBlendedGeometryBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleBindTransformation));
 
     oType.addInitialDesc(pDesc);
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&SkeletonBlendedGeometry::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -308,24 +299,27 @@ SkeletonBlendedGeometryBase::TypeObject SkeletonBlendedGeometryBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SkeletonChanged\"\n"
-    "\t\ttype=\"SkeletonEvent\"\n"
+    "\t\tdetailsType=\"SkeletonEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     ""
     );
 
-//! SkeletonBlendedGeometry Produced Methods
+//! SkeletonBlendedGeometry Produced Events
 
-MethodDescription *SkeletonBlendedGeometryBase::_methodDesc[] =
+EventDescription *SkeletonBlendedGeometryBase::_eventDesc[] =
 {
-    new MethodDescription("SkeletonChanged", 
-                    "",
-                     SkeletonChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("SkeletonChanged", 
+                          "",
+                          SkeletonChangedEventId, 
+                          FieldTraits<SkeletonEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SkeletonBlendedGeometryBase::getHandleSkeletonChangedSignal))
+
 };
 
 EventProducerType SkeletonBlendedGeometryBase::_producerType(
@@ -333,8 +327,8 @@ EventProducerType SkeletonBlendedGeometryBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -526,10 +520,6 @@ UInt32 SkeletonBlendedGeometryBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfBindTransformation.getBinSize();
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -563,10 +553,6 @@ void SkeletonBlendedGeometryBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfBindTransformation.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void SkeletonBlendedGeometryBase::copyFromBin(BinaryDataHandler &pMem,
@@ -597,10 +583,6 @@ void SkeletonBlendedGeometryBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
     {
         _sfBindTransformation.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
     }
 }
 
@@ -722,11 +704,118 @@ FieldContainerTransitPtr SkeletonBlendedGeometryBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void SkeletonBlendedGeometryBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case SkeletonChangedEventId:
+        OSG_ASSERT(dynamic_cast<SkeletonChangedEventDetailsType* const>(e));
+
+        _SkeletonChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SkeletonChangedEvent(dynamic_cast<SkeletonChangedEventDetailsType* const>(e), SkeletonChangedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection SkeletonBlendedGeometryBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case SkeletonChangedEventId:
+        return _SkeletonChangedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  SkeletonBlendedGeometryBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case SkeletonChangedEventId:
+        return _SkeletonChangedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  SkeletonBlendedGeometryBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case SkeletonChangedEventId:
+        _SkeletonChangedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  SkeletonBlendedGeometryBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case SkeletonChangedEventId:
+        _SkeletonChangedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  SkeletonBlendedGeometryBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case SkeletonChangedEventId:
+        return _SkeletonChangedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  SkeletonBlendedGeometryBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case SkeletonChangedEventId:
+        return _SkeletonChangedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
 SkeletonBlendedGeometryBase::SkeletonBlendedGeometryBase(void) :
-    _Producer(&getProducerType()),
     Inherited(),
     _sfBaseGeometry           (NULL),
     _sfInternalWeightIndexes  (this,
@@ -738,12 +827,10 @@ SkeletonBlendedGeometryBase::SkeletonBlendedGeometryBase(void) :
     _mfInternalJoints         (),
     _mfInternalJointInvBindTransformations(),
     _sfBindTransformation     ()
-    ,_sfEventProducer(&_Producer)
 {
 }
 
 SkeletonBlendedGeometryBase::SkeletonBlendedGeometryBase(const SkeletonBlendedGeometryBase &source) :
-    _Producer(&source.getProducerType()),
     Inherited(source),
     _sfBaseGeometry           (NULL),
     _sfInternalWeightIndexes  (this,
@@ -755,7 +842,6 @@ SkeletonBlendedGeometryBase::SkeletonBlendedGeometryBase(const SkeletonBlendedGe
     _mfInternalJoints         (),
     _mfInternalJointInvBindTransformations(source._mfInternalJointInvBindTransformations),
     _sfBindTransformation     (source._sfBindTransformation     )
-    ,_sfEventProducer(&_Producer)
 {
 }
 
@@ -1027,27 +1113,13 @@ EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleBindTransformation(voi
 }
 
 
-GetFieldHandlePtr SkeletonBlendedGeometryBase::getHandleEventProducer        (void) const
+GetEventHandlePtr SkeletonBlendedGeometryBase::getHandleSkeletonChangedSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SkeletonChangedEventType>(
+             const_cast<SkeletonChangedEventType *>(&_SkeletonChangedEvent),
+             _producerType.getEventDescription(SkeletonChangedEventId),
              const_cast<SkeletonBlendedGeometryBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr SkeletonBlendedGeometryBase::editHandleEventProducer       (void)
-{
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
-
-
-    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

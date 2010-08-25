@@ -47,6 +47,8 @@
 
 #include "OSGNodeParticleSystemCore.h"
 #include "OSGTransform.h"
+#include "OSGParticleSystemEventDetails.h"
+#include "OSGParticleEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -273,17 +275,34 @@ Vec3f NodeParticleSystemCore::getNodeUpDir(ParticleSystemRefPtr System, UInt32 I
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void NodeParticleSystemCore::handleVolumeChanged(ParticleSystemEventDetails* const details)
+{
+    updateNodes();
+}
+
+void NodeParticleSystemCore::handleParticleGenerated(ParticleEventDetails* const details)
+{
+    updateNodes();
+}
+
+void NodeParticleSystemCore::handleParticleKilled(ParticleEventDetails* const details)
+{
+    updateNodes();
+}
+
+void NodeParticleSystemCore::handleParticleStolen(ParticleEventDetails* const details)
+{
+    updateNodes();
+}
 /*----------------------- constructors & destructors ----------------------*/
 
 NodeParticleSystemCore::NodeParticleSystemCore(void) :
-    Inherited(),
-    _SystemUpdateListener(NodeParticleSystemCoreRefPtr(this))
+    Inherited()
 {
 }
 
 NodeParticleSystemCore::NodeParticleSystemCore(const NodeParticleSystemCore &source) :
-    Inherited(source),
-    _SystemUpdateListener(NodeParticleSystemCoreRefPtr(this))
+    Inherited(source)
 {
 }
 
@@ -301,9 +320,17 @@ void NodeParticleSystemCore::changed(ConstFieldMaskArg whichField,
 
     if(whichField & SystemFieldMask)
     {
+        _VolumeChangedConnection.disconnect();
+        _ParticleGeneratedConnection.disconnect();
+        _ParticleKilledConnection.disconnect();
+        _ParticleStolenConnection.disconnect();
+
         if(getSystem() != NULL)
         {
-            getSystem()->addParticleSystemListener(&_SystemUpdateListener);
+            _VolumeChangedConnection = getSystem()->connectVolumeChanged(boost::bind(&NodeParticleSystemCore::handleVolumeChanged, this, _1));
+            _ParticleGeneratedConnection = getSystem()->connectParticleGenerated(boost::bind(&NodeParticleSystemCore::handleParticleGenerated, this, _1));
+            _ParticleKilledConnection = getSystem()->connectParticleKilled(boost::bind(&NodeParticleSystemCore::handleParticleKilled, this, _1));
+            _ParticleStolenConnection = getSystem()->connectParticleStolen(boost::bind(&NodeParticleSystemCore::handleParticleStolen, this, _1));
         }
     }
     if((whichField & SystemFieldMask) ||
@@ -317,28 +344,6 @@ void NodeParticleSystemCore::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump NodeParticleSystemCore NI" << std::endl;
-}
-
-void NodeParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEventUnrecPtr e)
-{
-    //Do nothing
-}
-
-void NodeParticleSystemCore::SystemUpdateListener::volumeChanged(const ParticleSystemEventUnrecPtr e)
-{
-    _Core->updateNodes();
-}
-
-void NodeParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEventUnrecPtr e)
-{
-}
-
-void NodeParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEventUnrecPtr e)
-{
-}
-
-void NodeParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEventUnrecPtr e)
-{
 }
 
 OSG_END_NAMESPACE

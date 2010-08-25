@@ -68,6 +68,7 @@
 #include "OSGSysFields.h"               // Orientation type
 #include "OSGListModelFields.h"         // Model type
 #include "OSGComponentGeneratorFields.h" // CellGenerator type
+#include "OSGListSelectionModelFields.h" // SelectionModel type
 
 #include "OSGListFields.h"
 
@@ -88,6 +89,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(List);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -101,7 +104,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
         ModelFieldId = CellMajorAxisLengthFieldId + 1,
         CellGeneratorFieldId = ModelFieldId + 1,
         AutoScrollToFocusedFieldId = CellGeneratorFieldId + 1,
-        NextFieldId = AutoScrollToFocusedFieldId + 1
+        SelectionModelFieldId = AutoScrollToFocusedFieldId + 1,
+        NextFieldId = SelectionModelFieldId + 1
     };
 
     static const OSG::BitVector OrientationFieldMask =
@@ -116,6 +120,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
         (TypeTraits<BitVector>::One << CellGeneratorFieldId);
     static const OSG::BitVector AutoScrollToFocusedFieldMask =
         (TypeTraits<BitVector>::One << AutoScrollToFocusedFieldId);
+    static const OSG::BitVector SelectionModelFieldMask =
+        (TypeTraits<BitVector>::One << SelectionModelFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -125,6 +131,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
     typedef SFUnrecListModelPtr SFModelType;
     typedef SFUnrecComponentGeneratorPtr SFCellGeneratorType;
     typedef SFBool            SFAutoScrollToFocusedType;
+    typedef SFUnrecListSelectionModelPtr SFSelectionModelType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -165,6 +172,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
 
                   SFBool              *editSFAutoScrollToFocused(void);
             const SFBool              *getSFAutoScrollToFocused (void) const;
+            const SFUnrecListSelectionModelPtr *getSFSelectionModel (void) const;
+                  SFUnrecListSelectionModelPtr *editSFSelectionModel (void);
 
 
                   UInt32              &editOrientation    (void);
@@ -183,6 +192,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
                   bool                &editAutoScrollToFocused(void);
                   bool                 getAutoScrollToFocused (void) const;
 
+                  ListSelectionModel * getSelectionModel (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -194,6 +205,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
             void setModel          (ListModel * const value);
             void setCellGenerator  (ComponentGenerator * const value);
             void setAutoScrollToFocused(const bool value);
+            void setSelectionModel (ListSelectionModel * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -264,6 +276,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
     SFUnrecListModelPtr _sfModel;
     SFUnrecComponentGeneratorPtr _sfCellGenerator;
     SFBool            _sfAutoScrollToFocused;
+    SFUnrecListSelectionModelPtr _sfSelectionModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -304,6 +317,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListBase : public ComponentContainer
     EditFieldHandlePtr editHandleCellGenerator  (void);
     GetFieldHandlePtr  getHandleAutoScrollToFocused (void) const;
     EditFieldHandlePtr editHandleAutoScrollToFocused(void);
+    GetFieldHandlePtr  getHandleSelectionModel  (void) const;
+    EditFieldHandlePtr editHandleSelectionModel (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

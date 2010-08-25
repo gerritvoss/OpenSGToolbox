@@ -43,14 +43,8 @@
 #endif
 
 #include "OSGInternalWindowBase.h"
-#include "OSGMouseAdapter.h"
-#include "OSGMouseMotionAdapter.h"
-#include "OSGKeyAdapter.h"
-#include "OSGKeyEvent.h"
-#include "OSGKeyAcceleratorListener.h"
-#include "OSGActionListener.h"
-
-#include "OSGEventConnection.h"
+#include "OSGKeyEventDetails.h"
+#include "OSGActionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -87,23 +81,23 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 
     /*! \}                                                                 */
 	//Key Events
-	virtual void keyPressed(const KeyEventUnrecPtr e);
-	virtual void keyReleased(const KeyEventUnrecPtr e);
-	virtual void keyTyped(const KeyEventUnrecPtr e);
+	virtual void keyPressed(KeyEventDetails* const e);
+	virtual void keyReleased(KeyEventDetails* const e);
+	virtual void keyTyped(KeyEventDetails* const e);
 
 	//Mouse Events
-    virtual void mouseClicked(const MouseEventUnrecPtr e);
-    virtual void mouseEntered(const MouseEventUnrecPtr e);
-    virtual void mouseExited(const MouseEventUnrecPtr e);
-    virtual void mousePressed(const MouseEventUnrecPtr e);
-    virtual void mouseReleased(const MouseEventUnrecPtr e);
+    virtual void mouseClicked(MouseEventDetails* const e);
+    virtual void mouseEntered(MouseEventDetails* const e);
+    virtual void mouseExited(MouseEventDetails* const e);
+    virtual void mousePressed(MouseEventDetails* const e);
+    virtual void mouseReleased(MouseEventDetails* const e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventUnrecPtr e);
-    virtual void mouseDragged(const MouseEventUnrecPtr e);
+    virtual void mouseMoved(MouseEventDetails* const e);
+    virtual void mouseDragged(MouseEventDetails* const e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
+    virtual void mouseWheelMoved(MouseWheelEventDetails* const e);
     void destroyPopupMenu(void);
     
     virtual void updateLayout(void);
@@ -115,11 +109,32 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	bool giveFocus(Component* const NewFocusedComponent, bool Temporary = false);
 	bool takeFocus(bool Temporary = false);
 
-    EventConnection addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener);
-    bool isKeyAcceleratorAttached(KeyEvent::Key TheKey, UInt32 Modifiers) const;
-    void removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers);
+    boost::signals2::connection connectKeyAccelerator(KeyEventDetails::Key TheKey, 
+                                                      UInt32 Modifiersconst,
+                                                      KeyPressedEventType::slot_type &listener,
+                                                      boost::signals2::connect_position at= boost::signals2::at_back);
 
-	enum WindowArea{WINDOW_OUTSIDE=0, WINDOW_LEFT_BORDER, WINDOW_RIGHT_BORDER, WINDOW_TOP_BORDER, WINDOW_BOTTOM_BORDER, WINDOW_TOP_LEFT_BORDER, WINDOW_TOP_RIGHT_BORDER, WINDOW_BOTTOM_LEFT_BORDER, WINDOW_BOTTOM_RIGHT_BORDER, WINDOW_TITLE_BAR, WINDOW_MAIN_PANEL};
+    boost::signals2::connection connectKeyAccelerator(KeyEventDetails::Key TheKey, 
+                                                      UInt32 Modifiersconst,
+                                                      const KeyPressedEventType::group_type &group,
+                                                      KeyPressedEventType::slot_type &listener,
+                                                      boost::signals2::connect_position at= boost::signals2::at_back);
+
+	enum WindowArea
+    {
+        WINDOW_OUTSIDE=0,
+        WINDOW_LEFT_BORDER=1,
+        WINDOW_RIGHT_BORDER=2,
+        WINDOW_TOP_BORDER=3,
+        WINDOW_BOTTOM_BORDER=4,
+        WINDOW_TOP_LEFT_BORDER=5,
+        WINDOW_TOP_RIGHT_BORDER=6,
+        WINDOW_BOTTOM_LEFT_BORDER=7,
+        WINDOW_BOTTOM_RIGHT_BORDER=8,
+        WINDOW_TITLE_BAR=9,
+        WINDOW_MAIN_PANEL=10
+    };
+
 	virtual WindowArea getCursurArea(const Pnt2f& DrawingSurfaceLocation) const;
 	
     //Set the Window Iconify
@@ -141,6 +156,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
     virtual InternalWindow* getParentWindow(void) const;
 
     virtual void setParentWindow(InternalWindow* const parent);
+
+    virtual void updateContainerLayout(void);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -180,148 +197,62 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	virtual void drawInternal(Graphics* const TheGraphics, Real32 Opacity = 1.0f) const;
 	virtual void drawUnclipped(Graphics* const TheGraphics, Real32 Opacity = 1.0f) const;
 	
-	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
-	{
-	public :
-		PopupMenuInteractionListener(InternalWindow* const TheInternalWindow);
-		
-        virtual void mouseClicked(const MouseEventUnrecPtr e);
-		virtual void mousePressed(const MouseEventUnrecPtr e);
-        virtual void mouseReleased(const MouseEventUnrecPtr e);
-		virtual void keyPressed(const KeyEventUnrecPtr e);
-		virtual void mouseMoved(const MouseEventUnrecPtr e);
-        virtual void mouseDragged(const MouseEventUnrecPtr e);
+    void popupMenuMouseClicked(MouseEventDetails* const e);
+	void popupMenuMousePressed(MouseEventDetails* const e);
+    void popupMenuMouseReleased(MouseEventDetails* const e);
+	void popupMenuKeyPressed(KeyEventDetails* const e);
+	void popupMenuMouseMoved(MouseEventDetails* const e);
+    void popupMenuMouseDragged(MouseEventDetails* const e);
 
-        void disconnect(void);
+    boost::signals2::connection _PopupMenuMouseClickedConnection,
+                                _PopupMenuMousePressedConnection,
+                                _PopupMenuMouseReleasedConnection,
+                                _PopupMenuKeyPressedConnection,
+                                _PopupMenuMouseMovedConnection,
+                                _PopupMenuMouseDraggedConnection;
 
-	protected :
-		InternalWindow* _InternalWindow;
-	};
-
-	friend class PopupMenuInteractionListener;
-
-	PopupMenuInteractionListener _PopupMenuInteractionListener;
-
-    typedef std::map<UInt64, KeyAcceleratorListenerPtr> KeyAcceleratorMap;
-    typedef KeyAcceleratorMap::iterator KeyAcceleratorMapItor;
-    KeyAcceleratorMap _KeyAcceleratorMap;
+    //typedef std::map<UInt64, KeyAcceleratorListenerPtr> KeyAcceleratorMap;
+    //typedef KeyAcceleratorMap::iterator KeyAcceleratorMapItor;
+    //KeyAcceleratorMap _KeyAcceleratorMap;
 	
-	class TitlebarStartDragListener : public MouseAdapter
-	{
-	public :
-		TitlebarStartDragListener(InternalWindow* const TheInternalWindow);
-		
-		virtual void mousePressed(const MouseEventUnrecPtr e);
-	protected :
-		InternalWindow* _InternalWindow;
-	};
+    void titlebarMousePressed(MouseEventDetails* const e);
+    boost::signals2::connection _TitleBarMousePressedConnection;
 
-	friend class TitlebarStartDragListener;
+	virtual void titlebarDragMouseDragged(MouseEventDetails* const e);
+	virtual void titlebarDragMouseReleased(MouseEventDetails* const e);
+	virtual void titlebarDragKeyPressed(KeyEventDetails* const e);
 
-	TitlebarStartDragListener _TitlebarStartDragListener;
+    boost::signals2::connection _TitlebarDragMouseDraggedConnection,
+                                _TitlebarDragMouseReleasedConnection,
+                                _TitlebarDragKeyPressedConnection;
 
-	class TitlebarDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
-	{
-	public :
-		TitlebarDraggedListener(InternalWindow* const TheInternalWindow);
-		virtual void mouseDragged(const MouseEventUnrecPtr e);
-		
-		virtual void mouseReleased(const MouseEventUnrecPtr e);
+	Pnt2f _WindowStartPosition;
+	Pnt2f _MouseStartPosition;
 
-		virtual void keyPressed(const KeyEventUnrecPtr e);
+	void borderDragMouseDragged(MouseEventDetails* const e);
+	void borderDragMouseReleased(MouseEventDetails* const e);
+	void borderDragKeyPressed(KeyEventDetails* const e);
 
-		void setWindowStartPosition(const Pnt2f& Pos);
-		void setMouseStartPosition(const Pnt2f& Pos);
+    boost::signals2::connection _BorderDragMouseDraggedConnection,
+                                _BorderDragMouseReleasedConnection,
+                                _BorderDragKeyPressedConnection;
 
-        void disconnect(void);
-	protected :
-		InternalWindow* _InternalWindow;
-
-		Pnt2f _WindowStartPosition;
-		Pnt2f _MouseStartPosition;
-	};
-
-	friend class TitlebarDraggedListener;
-
-	TitlebarDraggedListener _TitlebarDraggedListener;
+	Vec2f _WindowStartSize;
+	WindowArea _BorderDragged;
 	
-	class BorderDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
-	{
-	public :
-		BorderDraggedListener(InternalWindow* const TheInternalWindow);
-		virtual void mouseDragged(const MouseEventUnrecPtr e);
-		
-		virtual void mouseReleased(const MouseEventUnrecPtr e);
-		
-		virtual void keyPressed(const KeyEventUnrecPtr e);
-
-		void setWindowStartPosition(const Pnt2f& Pos);
-		void setWindowStartSize(const Vec2f& Size);
-		void setMouseStartPosition(const Pnt2f& Pos);
-		void setBorderDragged(const WindowArea Value);
-
-        void disconnect(void);
-
-	protected :
-		InternalWindow* _InternalWindow;
-
-		Pnt2f _WindowStartPosition;
-		Vec2f _WindowStartSize;
-		Pnt2f _MouseStartPosition;
-
-		WindowArea _BorderDragged;
-	};
-
-	friend class BorderDraggedListener;
-
-	BorderDraggedListener _BorderDraggedListener;
-	
-	//Titlebar Action Listeners
 	//CloseButton
-	class CloseButtonListener : public ActionListener
-	{
-	public :
-		CloseButtonListener(InternalWindow* const TheInternalWindow);
-		
-		virtual void actionPerformed(const ActionEventUnrecPtr e);
-	protected :
-		InternalWindow* _InternalWindow;
-	};
-
-	friend class CloseButtonListener;
-
-	CloseButtonListener _CloseButtonListener;
+	void closeButtonAction(ActionEventDetails* const e);
+    boost::signals2::connection _CloseButtonActionConnection;
 	
 	//MaximizeButton
-	class MaximizeButtonListener : public ActionListener
-	{
-	public :
-		MaximizeButtonListener(InternalWindow* const TheInternalWindow);
-		
-		virtual void actionPerformed(const ActionEventUnrecPtr e);
-	protected :
-		InternalWindow* _InternalWindow;
-	};
+	void maximizeButtonAction(ActionEventDetails* const e);
+    boost::signals2::connection _MaximizeButtonActionConnection;
 
-	friend class MaximizeButtonListener;
-
-	MaximizeButtonListener _MaximizeButtonListener;
-	
 	//IconifyButton
-	class IconifyButtonListener : public ActionListener
-	{
-	public :
-		IconifyButtonListener(InternalWindow* const TheInternalWindow);
-		
-		virtual void actionPerformed(const ActionEventUnrecPtr e);
-	protected :
-		InternalWindow* _InternalWindow;
-	};
-
-	friend class IconifyButtonListener;
-
-	IconifyButtonListener _IconifyButtonListener;
-	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
+	void iconifyButtonAction(ActionEventDetails* const e);
+    boost::signals2::connection _IconifyButtonActionConnection;
+	
+    virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
 
     /*==========================  PRIVATE  ================================*/
 

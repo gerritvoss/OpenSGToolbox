@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AnimationEventDetails"
+	parent="EventDetails"
+    library="TBAnimation"
+	pointerfieldtypes="single"
+    structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+	supportUnregisteredCreate="true"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+</FieldContainer>

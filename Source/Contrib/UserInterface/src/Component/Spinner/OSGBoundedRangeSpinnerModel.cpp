@@ -50,8 +50,6 @@
 #include "OSGBoundedRangeSpinnerModel.h"
 #include "OSGDefaultBoundedRangeModel.h"
 
-#include <boost/bind.hpp>
-
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -66,9 +64,32 @@ A DefaultChangeModel.
  *                           Class variables                               *
 \***************************************************************************/
 
+
+EventDescription *BoundedRangeSpinnerModel::_eventDesc[] =
+{
+    new EventDescription("StateChanged", 
+                          "StateChanged",
+                          StateChangedEventId, 
+                          FieldTraits<StateChangedEventDetailsType *>::getType(),
+                          true,
+                          NULL),
+};
+
+EventProducerType BoundedRangeSpinnerModel::_producerType(
+                                            "BoundedRangeSpinnerModelProducerType",
+                                            "EventProducerType",
+                                            "",
+                                            InitEventProducerFunctor(),
+                                            _eventDesc,
+                                            sizeof(_eventDesc));
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+const EventProducerType &BoundedRangeSpinnerModel::getProducerType(void) const
+{
+    return _producerType;
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -122,43 +143,16 @@ void BoundedRangeSpinnerModel::setValue(Int32 newValue)
     produceStateChanged();
 }
 
-EventConnection BoundedRangeSpinnerModel::addChangeListener(ChangeListenerPtr l)
-{
-    _ChangeListeners.insert(l);
-    return EventConnection(
-                           boost::bind(&BoundedRangeSpinnerModel::isChangeListenerAttached, this, l),
-                           boost::bind(&BoundedRangeSpinnerModel::removeChangeListener, this, l));
-}
-
-void BoundedRangeSpinnerModel::removeChangeListener(ChangeListenerPtr l)
-{
-    ChangeListenerSetItor EraseIter(_ChangeListeners.find(l));
-    if(EraseIter != _ChangeListeners.end())
-    {
-        _ChangeListeners.erase(EraseIter);
-    }
-}
-
-void BoundedRangeSpinnerModel::produceStateChanged(void)
-{
-    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(NULL, getSystemTime());
-    ChangeListenerSet ModelListenerSet(_ChangeListeners);
-    for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->stateChanged(TheEvent);
-    }
-}
-
 void BoundedRangeSpinnerModel::attachListenersToModels(void)
 {
-    _TheBoundedRangeModel->addChangeListener(&_BoundedRangeModelChangeListener);
-    _TheSpinnerModel->addChangeListener(&_SpinnerModelChangeListener);
+    _RangeModelStateChangedConnection = _TheBoundedRangeModel->connectStateChanged(boost::bind(&BoundedRangeSpinnerModel::handleRangeModelStateChanged, this, _1));
+    _SpinnerModelStateChangedConnection = _TheSpinnerModel->connectStateChanged(boost::bind(&BoundedRangeSpinnerModel::handleSpinnerModelStateChanged, this, _1));
 }
 
 void BoundedRangeSpinnerModel::dettachListenersFromModels(void)
 {
-    _TheBoundedRangeModel->removeChangeListener(&_BoundedRangeModelChangeListener);
-    _TheSpinnerModel->removeChangeListener(&_SpinnerModelChangeListener);
+    _RangeModelStateChangedConnection.disconnect();
+    _SpinnerModelStateChangedConnection.disconnect();
 }
 
 /*-------------------------------------------------------------------------*\
@@ -167,9 +161,7 @@ void BoundedRangeSpinnerModel::dettachListenersFromModels(void)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-BoundedRangeSpinnerModel::BoundedRangeSpinnerModel(void) :
-    _BoundedRangeModelChangeListener(this),
-    _SpinnerModelChangeListener(this)
+BoundedRangeSpinnerModel::BoundedRangeSpinnerModel(void)
 {
     _TheBoundedRangeModel = DefaultBoundedRangeModel::create();
     _TheBoundedRangeModel->setExtent(0);
@@ -180,9 +172,7 @@ BoundedRangeSpinnerModel::BoundedRangeSpinnerModel(void) :
     attachListenersToModels();
 }
 
-BoundedRangeSpinnerModel::BoundedRangeSpinnerModel(const BoundedRangeSpinnerModel &source) :
-    _BoundedRangeModelChangeListener(this),
-    _SpinnerModelChangeListener(this)
+BoundedRangeSpinnerModel::BoundedRangeSpinnerModel(const BoundedRangeSpinnerModel &source)
 {
     _TheBoundedRangeModel = DefaultBoundedRangeModel::create();
     _TheBoundedRangeModel->setExtent(source._TheBoundedRangeModel->getExtent());
@@ -203,28 +193,28 @@ BoundedRangeSpinnerModel::~BoundedRangeSpinnerModel(void)
 }
 
 
-void BoundedRangeSpinnerModel::BoundedRangeModelChangeListener::stateChanged(const ChangeEventUnrecPtr e)
+void BoundedRangeSpinnerModel::handleRangeModelStateChanged(ChangeEventDetails* const e)
 {
-    _BoundedRangeSpinnerModel->dettachListenersFromModels();
+    dettachListenersFromModels();
 
-    _BoundedRangeSpinnerModel->_TheSpinnerModel->setMinimum(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getMinimum());
-    _BoundedRangeSpinnerModel->_TheSpinnerModel->setMaximum(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getMaximum());
-    _BoundedRangeSpinnerModel->_TheSpinnerModel->setValue(boost::any(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getValue()));
+    _TheSpinnerModel->setMinimum(_TheBoundedRangeModel->getMinimum());
+    _TheSpinnerModel->setMaximum(_TheBoundedRangeModel->getMaximum());
+    _TheSpinnerModel->setValue(boost::any(_TheBoundedRangeModel->getValue()));
 
-    _BoundedRangeSpinnerModel->attachListenersToModels();
-    _BoundedRangeSpinnerModel->produceStateChanged();
+    attachListenersToModels();
+    produceStateChanged();
 }
 
-void BoundedRangeSpinnerModel::SpinnerModelChangeListener::stateChanged(const ChangeEventUnrecPtr e)
+void BoundedRangeSpinnerModel::handleSpinnerModelStateChanged(ChangeEventDetails* const e)
 {
-    _BoundedRangeSpinnerModel->dettachListenersFromModels();
+    dettachListenersFromModels();
 
-    _BoundedRangeSpinnerModel->_TheBoundedRangeModel->setMinimum(_BoundedRangeSpinnerModel->_TheSpinnerModel->getMinimum());
-    _BoundedRangeSpinnerModel->_TheBoundedRangeModel->setMaximum(_BoundedRangeSpinnerModel->_TheSpinnerModel->getMaximum());
-    _BoundedRangeSpinnerModel->_TheBoundedRangeModel->setValue(_BoundedRangeSpinnerModel->_TheSpinnerModel->getNumber());
+    _TheBoundedRangeModel->setMinimum(_TheSpinnerModel->getMinimum());
+    _TheBoundedRangeModel->setMaximum(_TheSpinnerModel->getMaximum());
+    _TheBoundedRangeModel->setValue(_TheSpinnerModel->getNumber());
 
-    _BoundedRangeSpinnerModel->attachListenersToModels();
-    _BoundedRangeSpinnerModel->produceStateChanged();
+    attachListenersToModels();
+    produceStateChanged();
 }
 
 OSG_END_NAMESPACE

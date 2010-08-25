@@ -80,6 +80,14 @@ void LayoutConstraints::initMethod(InitPhase ePhase)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void LayoutConstraints::updateParentLayouts(void)
+{
+    for(UInt32 i(0) ; i<_mfParentComponent.size() ; ++i)
+    {
+        dynamic_cast<Component*>(_mfParentComponent[i])->updateContainerLayout();
+    }
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 LayoutConstraints::LayoutConstraints(void) :

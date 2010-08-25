@@ -45,9 +45,10 @@ A UI MenuButton
 		defaultValue="NULL"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="MenuActionPerformed"
-		type="ActionEventPtr"
+		detailsType="ActionEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

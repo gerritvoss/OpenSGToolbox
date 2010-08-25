@@ -52,6 +52,7 @@ OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}")
 
 IF(OSG_WITH_LUA)
     OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Bindings")
+    OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/LuaIntrospection")
 ENDIF(OSG_WITH_LUA)
 
 ##############################################################################

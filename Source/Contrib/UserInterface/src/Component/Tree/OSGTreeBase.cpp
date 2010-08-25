@@ -62,6 +62,7 @@
 #include "OSGCellEditor.h"              // CellEditor Class
 #include "OSGComponentGenerator.h"      // CellGenerator Class
 #include "OSGTreeModelLayout.h"         // ModelLayout Class
+#include "OSGTreeSelectionModel.h"      // SelectionModel Class
 
 #include "OSGTreeBase.h"
 #include "OSGTree.h"
@@ -131,6 +132,10 @@ OSG_BEGIN_NAMESPACE
 */
 
 /*! \var TreeModelLayout * TreeBase::_sfModelLayout
+    
+*/
+
+/*! \var TreeSelectionModel * TreeBase::_sfSelectionModel
     
 */
 
@@ -305,6 +310,18 @@ void TreeBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Tree::getHandleModelLayout));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTreeSelectionModelPtr::Description(
+        SFUnrecTreeSelectionModelPtr::getClassType(),
+        "SelectionModel",
+        "",
+        SelectionModelFieldId, SelectionModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Tree::editHandleSelectionModel),
+        static_cast<FieldGetMethodSig >(&Tree::getHandleSelectionModel));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -455,6 +472,16 @@ TreeBase::TypeObject TreeBase::_type(
     "    <Field\n"
     "        name=\"ModelLayout\"\n"
     "        type=\"TreeModelLayout\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"SelectionModel\"\n"
+    "        type=\"TreeSelectionModel\"\n"
     "        category=\"pointer\"\n"
     "        cardinality=\"single\"\n"
     "        visibility=\"external\"\n"
@@ -642,6 +669,19 @@ SFUnrecTreeModelLayoutPtr *TreeBase::editSFModelLayout    (void)
     return &_sfModelLayout;
 }
 
+//! Get the Tree::_sfSelectionModel field.
+const SFUnrecTreeSelectionModelPtr *TreeBase::getSFSelectionModel(void) const
+{
+    return &_sfSelectionModel;
+}
+
+SFUnrecTreeSelectionModelPtr *TreeBase::editSFSelectionModel (void)
+{
+    editSField(SelectionModelFieldMask);
+
+    return &_sfSelectionModel;
+}
+
 
 
 
@@ -700,6 +740,10 @@ UInt32 TreeBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfModelLayout.getBinSize();
     }
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        returnValue += _sfSelectionModel.getBinSize();
+    }
 
     return returnValue;
 }
@@ -757,6 +801,10 @@ void TreeBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfModelLayout.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        _sfSelectionModel.copyToBin(pMem);
+    }
 }
 
 void TreeBase::copyFromBin(BinaryDataHandler &pMem,
@@ -811,6 +859,10 @@ void TreeBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
     {
         _sfModelLayout.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        _sfSelectionModel.copyFromBin(pMem);
     }
 }
 
@@ -932,7 +984,6 @@ FieldContainerTransitPtr TreeBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 TreeBase::TreeBase(void) :
@@ -948,7 +999,8 @@ TreeBase::TreeBase(void) :
     _sfVisibleRowCount        (UInt32(10)),
     _sfCellEditor             (NULL),
     _sfCellGenerator          (NULL),
-    _sfModelLayout            (NULL)
+    _sfModelLayout            (NULL),
+    _sfSelectionModel         (NULL)
 {
 }
 
@@ -965,7 +1017,8 @@ TreeBase::TreeBase(const TreeBase &source) :
     _sfVisibleRowCount        (source._sfVisibleRowCount        ),
     _sfCellEditor             (NULL),
     _sfCellGenerator          (NULL),
-    _sfModelLayout            (NULL)
+    _sfModelLayout            (NULL),
+    _sfSelectionModel         (NULL)
 {
 }
 
@@ -991,6 +1044,8 @@ void TreeBase::onCreate(const Tree *source)
         pThis->setCellGenerator(source->getCellGenerator());
 
         pThis->setModelLayout(source->getModelLayout());
+
+        pThis->setSelectionModel(source->getSelectionModel());
     }
 }
 
@@ -1306,6 +1361,35 @@ EditFieldHandlePtr TreeBase::editHandleModelLayout    (void)
     return returnValue;
 }
 
+GetFieldHandlePtr TreeBase::getHandleSelectionModel  (void) const
+{
+    SFUnrecTreeSelectionModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecTreeSelectionModelPtr::GetHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
+             const_cast<TreeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TreeBase::editHandleSelectionModel (void)
+{
+    SFUnrecTreeSelectionModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecTreeSelectionModelPtr::EditHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Tree::setSelectionModel,
+                    static_cast<Tree *>(this), _1));
+
+    editSField(SelectionModelFieldMask);
+
+    return returnValue;
+}
+
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void TreeBase::execSyncV(      FieldContainer    &oFrom,
@@ -1350,6 +1434,8 @@ void TreeBase::resolveLinks(void)
     static_cast<Tree *>(this)->setCellGenerator(NULL);
 
     static_cast<Tree *>(this)->setModelLayout(NULL);
+
+    static_cast<Tree *>(this)->setSelectionModel(NULL);
 
 
 }

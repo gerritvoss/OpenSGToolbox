@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,22 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include "OSGConfig.h"
+#include <OSGConfig.h>
 
 #include "OSGDefaultColorSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class OSG::DefaultColorSelectionModel
-A DefaultColorSelectionModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultColorSelectionModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultColorSelectionModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -65,32 +62,70 @@ A DefaultColorSelectionModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void DefaultColorSelectionModel::initMethod(InitPhase ePhase)
+{
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
 Color4f DefaultColorSelectionModel::getSelectedColor(void) const
 {
-	return _SelectedColor;
+	return getColor();
 }
 
 void DefaultColorSelectionModel::setSelectedColor(const Color4f& Value, bool isValueAdjusting)
 {
-	if(_SelectedColor != Value)
+	if(getColor() != Value)
 	{
-		_SelectedColor = Value;
-        ChangeEventUnrecPtr TheEvent(ChangeEvent::create(NULL, getSystemTime()));
-		produceStateChanged(TheEvent);
+		setColor(Value);
 	}
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
+DefaultColorSelectionModel::DefaultColorSelectionModel(void) :
+    Inherited()
+{
+}
+
+DefaultColorSelectionModel::DefaultColorSelectionModel(const DefaultColorSelectionModel &source) :
+    Inherited(source)
+{
+}
+
+DefaultColorSelectionModel::~DefaultColorSelectionModel(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
 
-OSG_END_NAMESPACE
+void DefaultColorSelectionModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
+{
+    Inherited::changed(whichField, origin, details);
 
+    if(whichField & ColorFieldMask)
+    {
+        produceStateChanged();
+    }
+}
+
+void DefaultColorSelectionModel::dump(      UInt32    ,
+                         const BitVector ) const
+{
+    SLOG << "Dump DefaultColorSelectionModel NI" << std::endl;
+}
+
+OSG_END_NAMESPACE

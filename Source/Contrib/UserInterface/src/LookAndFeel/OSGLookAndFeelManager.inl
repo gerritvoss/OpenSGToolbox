@@ -16,6 +16,7 @@ inline
 LookAndFeelManager::LookAndFeelManager(void)
 {
 	_LookAndFeel = WindowsLookAndFeel::create();
+    addPreFactoryExitFunction(boost::bind(&LookAndFeelManager::uninitialize, this));
 }
 
 inline

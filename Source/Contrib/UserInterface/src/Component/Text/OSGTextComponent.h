@@ -44,10 +44,6 @@
 
 #include "OSGTextComponentBase.h"
 #include "OSGUIFont.h"
-#include "OSGTextListener.h"
-#include "OSGCaretListener.h"
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,16 +79,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextComponent : public TextComponentBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    EventConnection addTextListener(TextListenerPtr Listener);
-	bool isTextListenerAttached(TextListenerPtr Listener) const;
-    void removeTextListener(TextListenerPtr Listener);
-
-    EventConnection addCaretListener(CaretListenerPtr Listener);
-	bool isCaretListenerAttached(CaretListenerPtr Listener) const;
-    void removeCaretListener(CaretListenerPtr Listener);
 	
-	virtual void keyTyped(const KeyEventUnrecPtr e);
+	virtual void keyTyped(KeyEventDetails* const e);
 
     bool hasSelection(void) const;
 	virtual void select(const UInt32& Start,
@@ -147,20 +135,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextComponent : public TextComponentBa
     /*! \}                                                                 */
 	UInt32 _TextSelectionStart;
 	UInt32 _TextSelectionEnd;
-    
-	typedef std::set<TextListenerPtr> TextListenerSet;
-    typedef TextListenerSet::iterator TextListenerSetItor;
-    typedef TextListenerSet::const_iterator TextListenerSetConstItor;
-	
-    TextListenerSet       _TextListeners;
-    void produceTextValueChanged(const TextEventUnrecPtr e);
 
-	typedef std::set<CaretListenerPtr> CaretListenerSet;
-    typedef CaretListenerSet::iterator CaretListenerSetItor;
-    typedef CaretListenerSet::const_iterator CaretListenerSetConstItor;
-	
-    CaretListenerSet       _CaretListeners;
-    void produceCaretChanged(const CaretEventUnrecPtr e);
+    void produceTextValueChanged(void);
+
+    void produceCaretChanged(void);
 
     virtual Color4f getDrawnTextColor(void) const;
     

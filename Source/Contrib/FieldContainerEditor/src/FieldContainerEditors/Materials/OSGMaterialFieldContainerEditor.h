@@ -131,6 +131,12 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialFieldContainerEditor : 
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     void updateMaterialViewport(void);
     void createGLViewport(void);
     void createGeometry(void);

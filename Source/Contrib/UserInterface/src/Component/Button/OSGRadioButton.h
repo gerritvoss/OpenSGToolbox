@@ -107,7 +107,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RadioButton : public RadioButtonBase
 
     /*! \}                                                                 */
 
-    virtual void actionPreformed(const ActionEventUnrecPtr e);
+    virtual void actionPreformed(ActionEventDetails* const e);
     virtual UIDrawObjectCanvas* getDrawnDrawObject(void) const;
     virtual UIDrawObjectCanvas* getBaseDrawObject(void) const;
 

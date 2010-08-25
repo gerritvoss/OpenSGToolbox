@@ -57,10 +57,10 @@
 #include "OSGConfig.h"
 
 
-#include "OSGKeyEvent.h"                  // AcceleratorKey default header
-#include "OSGKeyEvent.h"                  // MnemonicKey default header
+#include "OSGKeyEventDetails.h"           // AcceleratorKey default header
+#include "OSGKeyEventDetails.h"           // MnemonicKey default header
 
-#include "OSGMenu.h"                    // ParentMenu Class
+#include "OSGFieldContainer.h"          // ParentMenu Class
 
 #include "OSGMenuItemBase.h"
 #include "OSGMenuItem.h"
@@ -85,7 +85,7 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var Menu *          MenuItemBase::_sfParentMenu
+/*! \var FieldContainer * MenuItemBase::_sfParentMenu
     
 */
 
@@ -120,6 +120,18 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            MenuItem *,
                            0);
 
+DataType &FieldTraits< MenuItem *, 1 >::getType(void)
+{
+    return FieldTraits<MenuItem *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_MFIELD(ChildPointerMField,
+                      MenuItem *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
+
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
@@ -129,15 +141,15 @@ void MenuItemBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecMenuPtr::Description(
-        SFUnrecMenuPtr::getClassType(),
+    pDesc = new SFParentFieldContainerPtr::Description(
+        SFParentFieldContainerPtr::getClassType(),
         "ParentMenu",
         "",
         ParentMenuFieldId, ParentMenuFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&MenuItem::editHandleParentMenu),
-        static_cast<FieldGetMethodSig >(&MenuItem::getHandleParentMenu));
+        static_cast     <FieldEditMethodSig>(&MenuItem::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&MenuItem::invalidGetField));
 
     oType.addInitialDesc(pDesc);
 
@@ -203,18 +215,20 @@ MenuItemBase::TypeObject MenuItemBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    childFields=\"multi\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     "\t>\n"
     "\tA UI MenuItem.\n"
     "\t<Field\n"
-    "\t\tname=\"ParentMenu\"\n"
-    "\t\ttype=\"Menu\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t\t>\n"
+    "\t   name=\"ParentMenu\"\n"
+    "\t   type=\"FieldContainer\"\n"
+    "\t   cardinality=\"single\"\n"
+    "\t   visibility=\"external\"\n"
+    "\t   access=\"none\"\n"
+    "       doRefCount=\"false\"\n"
+    "       passFieldMask=\"true\"\n"
+    "       category=\"parentpointer\"\n"
+    "\t   >\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"AcceleratorModifiers\"\n"
@@ -232,8 +246,8 @@ MenuItemBase::TypeObject MenuItemBase::_type(
     "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"KeyEvent::KEY_NONE\"\n"
-    "\t\tdefaultHeader=\"OSGKeyEvent.h\"\n"
+    "\t\tdefaultValue=\"KeyEventDetails::KEY_NONE\"\n"
+    "\t\tdefaultHeader=\"OSGKeyEventDetails.h\"\n"
     "\t\taccess=\"public\"\n"
     "\t\t>\n"
     "\t</Field>\n"
@@ -243,8 +257,8 @@ MenuItemBase::TypeObject MenuItemBase::_type(
     "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"KeyEvent::KEY_NONE\"\n"
-    "\t\tdefaultHeader=\"OSGKeyEvent.h\"\n"
+    "\t\tdefaultValue=\"KeyEventDetails::KEY_NONE\"\n"
+    "\t\tdefaultHeader=\"OSGKeyEventDetails.h\"\n"
     "\t\taccess=\"public\"\n"
     "\t\t>\n"
     "\t</Field>\n"
@@ -272,18 +286,6 @@ UInt32 MenuItemBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-//! Get the MenuItem::_sfParentMenu field.
-const SFUnrecMenuPtr *MenuItemBase::getSFParentMenu(void) const
-{
-    return &_sfParentMenu;
-}
-
-SFUnrecMenuPtr      *MenuItemBase::editSFParentMenu     (void)
-{
-    editSField(ParentMenuFieldMask);
-
-    return &_sfParentMenu;
-}
 
 SFUInt32 *MenuItemBase::editSFAcceleratorModifiers(void)
 {
@@ -518,15 +520,14 @@ FieldContainerTransitPtr MenuItemBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 MenuItemBase::MenuItemBase(void) :
     Inherited(),
     _sfParentMenu             (NULL),
     _sfAcceleratorModifiers   (UInt32(0)),
-    _sfAcceleratorKey         (UInt32(KeyEvent::KEY_NONE)),
-    _sfMnemonicKey            (UInt32(KeyEvent::KEY_NONE))
+    _sfAcceleratorKey         (UInt32(KeyEventDetails::KEY_NONE)),
+    _sfMnemonicKey            (UInt32(KeyEventDetails::KEY_NONE))
 {
 }
 
@@ -545,43 +546,89 @@ MenuItemBase::MenuItemBase(const MenuItemBase &source) :
 MenuItemBase::~MenuItemBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
 
-void MenuItemBase::onCreate(const MenuItem *source)
+bool MenuItemBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
 {
-    Inherited::onCreate(source);
-
-    if(source != NULL)
+    if(parentFieldId == ParentMenuFieldId)
     {
-        MenuItem *pThis = static_cast<MenuItem *>(this);
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
 
-        pThis->setParentMenu(source->getParentMenu());
+        if(pTypedParent != NULL)
+        {
+            FieldContainer *pOldParent =
+                _sfParentMenu.getValue         ();
+
+            UInt16 oldChildFieldId =
+                _sfParentMenu.getParentFieldPos();
+
+            if(pOldParent != NULL)
+            {
+                pOldParent->unlinkChild(this, oldChildFieldId);
+            }
+
+            editSField(ParentMenuFieldMask);
+
+            _sfParentMenu.setValue(static_cast<FieldContainer *>(pParent), childFieldId);
+
+            return true;
+        }
+
+        return false;
     }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
 }
+
+bool MenuItemBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
+{
+    if(parentFieldId == ParentMenuFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            if(_sfParentMenu.getValue() == pParent)
+            {
+                editSField(ParentMenuFieldMask);
+
+                _sfParentMenu.setValue(NULL, 0xFFFF);
+
+                return true;
+            }
+
+            FWARNING(("MenuItemBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
+
 
 GetFieldHandlePtr MenuItemBase::getHandleParentMenu      (void) const
 {
-    SFUnrecMenuPtr::GetHandlePtr returnValue(
-        new  SFUnrecMenuPtr::GetHandle(
-             &_sfParentMenu,
-             this->getType().getFieldDesc(ParentMenuFieldId),
-             const_cast<MenuItemBase *>(this)));
+    SFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
 EditFieldHandlePtr MenuItemBase::editHandleParentMenu     (void)
 {
-    SFUnrecMenuPtr::EditHandlePtr returnValue(
-        new  SFUnrecMenuPtr::EditHandle(
-             &_sfParentMenu,
-             this->getType().getFieldDesc(ParentMenuFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&MenuItem::setParentMenu,
-                    static_cast<MenuItem *>(this), _1));
-
-    editSField(ParentMenuFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
@@ -662,6 +709,7 @@ EditFieldHandlePtr MenuItemBase::editHandleMnemonicKey    (void)
 }
 
 
+
 #ifdef OSG_MT_CPTR_ASPECT
 void MenuItemBase::execSyncV(      FieldContainer    &oFrom,
                                         ConstFieldMaskArg  whichField,
@@ -697,8 +745,6 @@ FieldContainer *MenuItemBase::createAspectCopy(
 void MenuItemBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
-
-    static_cast<MenuItem *>(this)->setParentMenu(NULL);
 
 
 }

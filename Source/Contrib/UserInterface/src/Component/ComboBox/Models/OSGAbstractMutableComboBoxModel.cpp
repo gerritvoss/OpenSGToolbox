@@ -46,7 +46,6 @@
 #include <OSGConfig.h>
 
 #include "OSGAbstractMutableComboBoxModel.h"
-#include "OSGListDataListener.h"
 
 #include <boost/bind.hpp>
 
@@ -79,82 +78,32 @@ void AbstractMutableComboBoxModel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection AbstractMutableComboBoxModel::addListDataListener(ListDataListenerPtr l)
-{
-    _DataListeners.insert(l);
-    return EventConnection(
-            boost::bind(&AbstractMutableComboBoxModel::isListDataListenerAttached, this, l),
-            boost::bind(&AbstractMutableComboBoxModel::removeListDataListener, this, l));
-}
-
-void AbstractMutableComboBoxModel::removeListDataListener(ListDataListenerPtr l)
-{
-    ListDataListenerSetIter EraseIter(_DataListeners.find(l));
-    if(EraseIter != _DataListeners.end())
-    {
-        _DataListeners.erase(EraseIter);
-    }
-}
-
 void AbstractMutableComboBoxModel::produceListDataContentsChanged(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
-    ListDataListenerSet DataListenerSet(_DataListeners);
-    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->contentsChanged(e);
-    }
-    _Producer.produceEvent(ListDataContentsChangedMethodId,e);
+    ListDataEventDetailsUnrecPtr Details = ListDataEventDetails::create(Source, getSystemTime(), index0, index1);
+
+    Inherited::produceListDataContentsChanged(Details);
 }
 
 void AbstractMutableComboBoxModel::produceListDataIntervalAdded(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
-    ListDataListenerSet DataListenerSet(_DataListeners);
-    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->intervalAdded(e);
-    }
-    _Producer.produceEvent(ListDataIntervalAddedMethodId,e);
+    ListDataEventDetailsUnrecPtr Details = ListDataEventDetails::create(Source, getSystemTime(), index0, index1);
+
+    Inherited::produceListDataIntervalAdded(Details);
 }
 
 void AbstractMutableComboBoxModel::produceListDataIntervalRemoved(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
-    ListDataListenerSet DataListenerSet(_DataListeners);
-    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->intervalRemoved(e);
-    }
-    _Producer.produceEvent(ListDataIntervalRemovedMethodId,e);
-}
+    ListDataEventDetailsUnrecPtr Details = ListDataEventDetails::create(Source, getSystemTime(), index0, index1);
 
-EventConnection AbstractMutableComboBoxModel::addSelectionListener(ComboBoxSelectionListenerPtr l)
-{
-    _SelectionListeners.insert(l);
-    return EventConnection(
-            boost::bind(&AbstractMutableComboBoxModel::isSelectionListenerAttached, this, l),
-            boost::bind(&AbstractMutableComboBoxModel::removeSelectionListener, this, l));
-}
-
-void AbstractMutableComboBoxModel::removeSelectionListener(ComboBoxSelectionListenerPtr l)
-{
-    ComboBoxSelectionListenerSetIter EraseIter(_SelectionListeners.find(l));
-    if(EraseIter != _SelectionListeners.end())
-    {
-        _SelectionListeners.erase(EraseIter);
-    }
+    Inherited::produceListDataIntervalRemoved(Details);
 }
 
 void AbstractMutableComboBoxModel::produceSelectionChanged(FieldContainer* const Source, const Int32& CurrentIndex, const Int32& PreviousIndex)
 {
-    const ComboBoxSelectionEventUnrecPtr e = ComboBoxSelectionEvent::create(Source, getSystemTime(), CurrentIndex, PreviousIndex);
-    ComboBoxSelectionListenerSet SelectionListenerSet(_SelectionListeners);
-    for(ComboBoxSelectionListenerSetConstIter SetItor(SelectionListenerSet.begin()) ; SetItor != SelectionListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->selectionChanged(e);
-    }
-    _Producer.produceEvent(SelectionChangedMethodId,e);
+    ComboBoxSelectionEventDetailsUnrecPtr Details = ComboBoxSelectionEventDetails::create(Source, getSystemTime(), CurrentIndex, PreviousIndex);
+
+    Inherited::produceSelectionChanged(Details);
 }
 
 /*-------------------------------------------------------------------------*\

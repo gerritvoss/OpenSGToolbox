@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-HSVColorChooserPanel::BoundedRangeSpinnerChangeListener::BoundedRangeSpinnerChangeListener(HSVColorChooserPanel* const TheHSVColorChooserPanel) :
-_HSVColorChooserPanel(TheHSVColorChooserPanel)
-{
-}
-
 OSG_END_NAMESPACE

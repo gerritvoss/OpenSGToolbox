@@ -46,7 +46,7 @@
 #include <OSGConfig.h>
 
 #include "OSGSoundEmitter.h"
-#include "OSGWindowEventProducer.h"
+#include "OSGUpdateEventDetails.h"
 #include "OSGNode.h"
 #include "OSGFieldContainer.h"
 
@@ -87,40 +87,13 @@ void SoundEmitter::emitSound(void)
     }
 }
 
-bool SoundEmitter::attachUpdateListener(WindowEventProducerUnrecPtr UpdateProducer)
-{
-    if(UpdateProducer == NULL)
-    {
-        return false;
-    }
-
-    UpdateProducer->addUpdateListener(&_SystemUpdateListener);
-    
-    if(getParents().size() > 0)
-    {
-        Matrix wm;
-        dynamic_cast<Node*>(_mfParents[0])->getToWorld(wm);
-        wm.mult(Pnt3f(0.0f,0.0f,0.0f),_PreviousPosition);
-    }
-
-    return true;
-}
-
-void SoundEmitter::dettachUpdateListener(WindowEventProducerUnrecPtr UpdateProducer)
-{
-    if(UpdateProducer != NULL)
-    {
-        UpdateProducer->removeUpdateListener(&_SystemUpdateListener);
-    }
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void SoundEmitter::update(const Time& elps)
+void SoundEmitter::update(EventDetails* const details)
 {
-	assert(getParents().size() == 1 && "A Sound Emitter NodeCore MUST have 1 and only 1 parent.");
+	OSG_ASSERT(getParents().size() == 1 && "A Sound Emitter NodeCore MUST have 1 and only 1 parent.");
 
     Matrix wm;
     dynamic_cast<Node*>(_mfParents[0])->getToWorld(wm);
@@ -141,7 +114,7 @@ void SoundEmitter::update(const Time& elps)
             else
             {
 
-                //getSound()->setChannelVelocity(_PreviousPosition - Position * (1.0f/elps), *Itor);
+                //getSound()->setChannelVelocity(_PreviousPosition - Position * (1.0f/dynamic_cast<UpdateEventDetails* const>(details)->getElapsedTime()), *Itor);
                 
 
                 getSound()->setChannelPosition(Position, *Itor);
@@ -153,17 +126,39 @@ void SoundEmitter::update(const Time& elps)
     _PreviousPosition = Position;
 }
 
+void SoundEmitter::attachUpdateProducer(ReflexiveContainer* const producer)
+{
+    if(_UpdateEventConnection.connected())
+    {
+        _UpdateEventConnection.disconnect();
+    }
+    //Get the Id of the UpdateEvent
+    const EventDescription* Desc(producer->getProducerType().findEventDescription("Update"));
+    if(Desc == NULL)
+    {
+        SWARNING << "There is no Update event defined on " << producer->getType().getName() << " types." << std::endl;
+    }
+    else
+    {
+        _UpdateEventConnection = producer->connectEvent(Desc->getEventId(), boost::bind(&SoundEmitter::update, this, _1));
+    }
+    if(getParents().size() > 0)
+    {
+        Matrix wm;
+        dynamic_cast<Node*>(_mfParents[0])->getToWorld(wm);
+        wm.mult(Pnt3f(0.0f,0.0f,0.0f),_PreviousPosition);
+    }
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 SoundEmitter::SoundEmitter(void) :
-    Inherited(),
-    _SystemUpdateListener(SoundEmitterUnrecPtr(this))
+    Inherited()
 {
 }
 
 SoundEmitter::SoundEmitter(const SoundEmitter &source) :
-    Inherited(source),
-    _SystemUpdateListener(SoundEmitterUnrecPtr(this))
+    Inherited(source)
 {
 }
 
@@ -191,11 +186,6 @@ void SoundEmitter::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SoundEmitter NI" << std::endl;
-}
-
-void SoundEmitter::SystemUpdateListener::update(const UpdateEventUnrecPtr e)
-{
-    _System->update(e->getElapsedTime());
 }
 
 OSG_END_NAMESPACE

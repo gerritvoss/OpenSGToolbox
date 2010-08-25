@@ -100,13 +100,6 @@ void GLViewport::setMaxOffset(const Vec3f& MaxOffset)
     _MaxOffset = MaxOffset;
 }
 
-
-inline
-GLViewport::MouseControlListener::MouseControlListener(GLViewport* const TheGLViewport) :
-_GLViewport(TheGLViewport)
-{
-}
-
 inline
 void GLViewport::setMode(Navigator::Mode TheMode)
 {

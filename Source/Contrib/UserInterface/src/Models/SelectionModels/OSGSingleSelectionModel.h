@@ -43,8 +43,6 @@
 #endif
 
 #include "OSGSingleSelectionModelBase.h"
-#include "OSGSelectionListener.h"
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,10 +79,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SingleSelectionModel : public SingleSe
 
     /*! \}                                                                 */
 
-    //Adds listener as a listener to changes in the model.
-    virtual EventConnection addSelectionListener(SelectionListenerPtr listener) = 0;
-	virtual bool isSelectionListenerAttached(SelectionListenerPtr listener) const = 0;
-
     //Clears the selection (to -1).
     virtual void clearSelection(void) = 0;
     
@@ -93,9 +87,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SingleSelectionModel : public SingleSe
     
     //Returns true if the selection model currently has a selected value.
     virtual bool isSelected(void) = 0;
-    
-    //Removes listener as a listener to changes in the model.
-    virtual void removeSelectionListener(SelectionListenerPtr listener) = 0;
     
     //Sets the model's selected index to index.
     virtual void setSelectedIndex(Int32 index) = 0;

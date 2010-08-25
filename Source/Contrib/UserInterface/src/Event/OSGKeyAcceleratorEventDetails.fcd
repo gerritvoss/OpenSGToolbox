@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyAcceleratorEventDetails"
+	parent="EventDetails"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+	supportUnregisteredCreate="true"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+	<Field
+		name="Key"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="KeyEventDetails::KEY_UNKNOWN"
+        defaultHeader="OSGKeyEventDetails.h"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="Modifiers"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="KeyEventDetails::KEY_MODIFIER_UNKNOWN"
+        defaultHeader="OSGKeyEventDetails.h"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

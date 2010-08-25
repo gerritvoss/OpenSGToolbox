@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -168,34 +168,40 @@ ToggleButtonBase::TypeObject ToggleButtonBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ButtonSelected\"\n"
-    "\t\ttype=\"ButtonSelectedEventPtr\"\n"
+    "\t\tdetailsType=\"ButtonSelectedEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ButtonDeselected\"\n"
-    "\t\ttype=\"ButtonSelectedEventPtr\"\n"
+    "\t\tdetailsType=\"ButtonSelectedEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Toggle Button.\n"
     );
 
-//! ToggleButton Produced Methods
+//! ToggleButton Produced Events
 
-MethodDescription *ToggleButtonBase::_methodDesc[] =
+EventDescription *ToggleButtonBase::_eventDesc[] =
 {
-    new MethodDescription("ButtonSelected", 
-                    "",
-                     ButtonSelectedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("ButtonDeselected", 
-                    "",
-                     ButtonDeselectedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("ButtonSelected", 
+                          "",
+                          ButtonSelectedEventId, 
+                          FieldTraits<ButtonSelectedEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ToggleButtonBase::getHandleButtonSelectedSignal)),
+
+    new EventDescription("ButtonDeselected", 
+                          "",
+                          ButtonDeselectedEventId, 
+                          FieldTraits<ButtonSelectedEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ToggleButtonBase::getHandleButtonDeselectedSignal))
+
 };
 
 EventProducerType ToggleButtonBase::_producerType(
@@ -203,8 +209,8 @@ EventProducerType ToggleButtonBase::_producerType(
     "ButtonProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -402,6 +408,134 @@ FieldContainerTransitPtr ToggleButtonBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void ToggleButtonBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case ButtonSelectedEventId:
+        OSG_ASSERT(dynamic_cast<ButtonSelectedEventDetailsType* const>(e));
+
+        _ButtonSelectedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ButtonSelectedEvent(dynamic_cast<ButtonSelectedEventDetailsType* const>(e), ButtonSelectedEventId);
+        break;
+    case ButtonDeselectedEventId:
+        OSG_ASSERT(dynamic_cast<ButtonDeselectedEventDetailsType* const>(e));
+
+        _ButtonDeselectedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ButtonDeselectedEvent(dynamic_cast<ButtonDeselectedEventDetailsType* const>(e), ButtonDeselectedEventId);
+        break;
+    default:
+        Inherited::produceEvent(eventId, e);
+        break;
+    }
+}
+
+boost::signals2::connection ToggleButtonBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ButtonSelectedEventId:
+        return _ButtonSelectedEvent.connect(listener, at);
+        break;
+    case ButtonDeselectedEventId:
+        return _ButtonDeselectedEvent.connect(listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  ToggleButtonBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ButtonSelectedEventId:
+        return _ButtonSelectedEvent.connect(group, listener, at);
+        break;
+    case ButtonDeselectedEventId:
+        return _ButtonDeselectedEvent.connect(group, listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, group, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  ToggleButtonBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case ButtonSelectedEventId:
+        _ButtonSelectedEvent.disconnect(group);
+        break;
+    case ButtonDeselectedEventId:
+        _ButtonDeselectedEvent.disconnect(group);
+        break;
+    default:
+        return Inherited::disconnectEvent(eventId, group);
+        break;
+    }
+}
+
+void  ToggleButtonBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case ButtonSelectedEventId:
+        _ButtonSelectedEvent.disconnect_all_slots();
+        break;
+    case ButtonDeselectedEventId:
+        _ButtonDeselectedEvent.disconnect_all_slots();
+        break;
+    default:
+        Inherited::disconnectAllSlotsEvent(eventId);
+        break;
+    }
+}
+
+bool  ToggleButtonBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ButtonSelectedEventId:
+        return _ButtonSelectedEvent.empty();
+        break;
+    case ButtonDeselectedEventId:
+        return _ButtonDeselectedEvent.empty();
+        break;
+    default:
+        return Inherited::isEmptyEvent(eventId);
+        break;
+    }
+}
+
+UInt32  ToggleButtonBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ButtonSelectedEventId:
+        return _ButtonSelectedEvent.num_slots();
+        break;
+    case ButtonDeselectedEventId:
+        return _ButtonDeselectedEvent.num_slots();
+        break;
+    default:
+        return Inherited::numSlotsEvent(eventId);
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
@@ -409,7 +543,6 @@ ToggleButtonBase::ToggleButtonBase(void) :
     Inherited(),
     _sfSelected               (bool(false))
 {
-    _Producer.setType(&_producerType);
 }
 
 ToggleButtonBase::ToggleButtonBase(const ToggleButtonBase &source) :
@@ -447,6 +580,29 @@ EditFieldHandlePtr ToggleButtonBase::editHandleSelected       (void)
 
 
     editSField(SelectedFieldMask);
+
+    return returnValue;
+}
+
+
+GetEventHandlePtr ToggleButtonBase::getHandleButtonSelectedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ButtonSelectedEventType>(
+             const_cast<ButtonSelectedEventType *>(&_ButtonSelectedEvent),
+             _producerType.getEventDescription(ButtonSelectedEventId),
+             const_cast<ToggleButtonBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr ToggleButtonBase::getHandleButtonDeselectedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ButtonDeselectedEventType>(
+             const_cast<ButtonDeselectedEventType *>(&_ButtonDeselectedEvent),
+             _producerType.getEventDescription(ButtonDeselectedEventId),
+             const_cast<ToggleButtonBase *>(this)));
 
     return returnValue;
 }

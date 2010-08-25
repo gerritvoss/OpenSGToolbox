@@ -28,7 +28,7 @@ A UI Proxy LayoutSpring.
 	<Field
 		name="Component"
 		type="Component"
-        category="pointer"
+        category="weakpointer"
 		cardinality="single"
       visibility="external"
 		defaultValue="NULL"
@@ -38,7 +38,7 @@ A UI Proxy LayoutSpring.
 	<Field
 		name="Layout"
 		type="SpringLayout"
-        category="pointer"
+        category="weakpointer"
 		cardinality="single"
       visibility="external"
 		defaultValue="NULL"

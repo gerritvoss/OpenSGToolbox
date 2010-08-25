@@ -46,7 +46,7 @@
 #include <OSGConfig.h>
 
 #include "OSGAbstractTableModel.h"
-#include "OSGTableModelEvent.h"
+#include "OSGTableModelEventDetails.h"
 
 #include <boost/bind.hpp>
 
@@ -91,65 +91,32 @@ void AbstractTableModel::setValueAt(const boost::any& aValue, UInt32 rowIndex, U
     //So do nothing
 }
 
-EventConnection AbstractTableModel::addTableModelListener(TableModelListenerPtr l)
-{
-    _ModelListeners.insert(l);
-    return EventConnection(
-                           boost::bind(&AbstractTableModel::isTableModelListenerAttached, this, l),
-                           boost::bind(&AbstractTableModel::removeTableModelListener, this, l));
-}
-
-void AbstractTableModel::removeTableModelListener(TableModelListenerPtr l)
-{
-    TableModelListenerSetItor EraseIter(_ModelListeners.find(l));
-    if(EraseIter != _ModelListeners.end())
-    {
-        _ModelListeners.erase(EraseIter);
-    }
-}
-
 void AbstractTableModel::produceContentsHeaderRowChanged(UInt32 FirstColumn, UInt32 LastColumn)
 {
-    const TableModelEventUnrecPtr TheEvent = TableModelEvent::create(this, getSystemTime(), FirstColumn, LastColumn, 0,0);
-    TableModelListenerSet ModelListenerSet(_ModelListeners);
-    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->contentsHeaderRowChanged(TheEvent);
-    }
-    _Producer.produceEvent(ContentsHeaderRowChangedMethodId,TheEvent);
+    TableModelEventDetailsUnrecPtr Details = TableModelEventDetails::create(this, getSystemTime(), FirstColumn, LastColumn, 0,0);
+
+    Inherited::produceContentsHeaderRowChanged(Details);
 }
 
 void AbstractTableModel::produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-    const TableModelEventUnrecPtr TheEvent = TableModelEvent::create(this, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
-    TableModelListenerSet ModelListenerSet(_ModelListeners);
-    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->contentsChanged(TheEvent);
-    }
-    _Producer.produceEvent(ContentsChangedMethodId,TheEvent);
+    TableModelEventDetailsUnrecPtr Details = TableModelEventDetails::create(this, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
+
+    Inherited::produceContentsChanged(Details);
 }
 
 void AbstractTableModel::produceIntervalAdded(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-    const TableModelEventUnrecPtr TheEvent = TableModelEvent::create(this, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
-    TableModelListenerSet ModelListenerSet(_ModelListeners);
-    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->intervalAdded(TheEvent);
-    }
-    _Producer.produceEvent(IntervalAddedMethodId,TheEvent);
+    TableModelEventDetailsUnrecPtr Details = TableModelEventDetails::create(this, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
+
+    Inherited::produceIntervalAdded(Details);
 }
 
 void AbstractTableModel::produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-    const TableModelEventUnrecPtr TheEvent = TableModelEvent::create(this, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
-    TableModelListenerSet ModelListenerSet(_ModelListeners);
-    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->intervalRemoved(TheEvent);
-    }
-    _Producer.produceEvent(IntervalRemovedMethodId,TheEvent);
+    TableModelEventDetailsUnrecPtr Details = TableModelEventDetails::create(this, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
+
+    Inherited::produceIntervalRemoved(Details);
 }
 
 /*-------------------------------------------------------------------------*\

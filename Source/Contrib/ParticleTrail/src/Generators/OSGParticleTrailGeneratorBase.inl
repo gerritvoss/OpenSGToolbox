@@ -73,6 +73,22 @@ OSG::UInt16 ParticleTrailGeneratorBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+
+//! Get the value of the ParticleTrailGenerator::_sfSystemToTrail field.
+inline
+ParticleSystem * ParticleTrailGeneratorBase::getSystemToTrail(void) const
+{
+    return _sfSystemToTrail.getValue();
+}
+
+//! Set the value of the ParticleTrailGenerator::_sfSystemToTrail field.
+inline
+void ParticleTrailGeneratorBase::setSystemToTrail(ParticleSystem * const value)
+{
+    editSField(SystemToTrailFieldMask);
+
+    _sfSystemToTrail.setValue(value);
+}
 //! Get the value of the ParticleTrailGenerator::_sfTrailLength field.
 
 inline
@@ -184,6 +200,9 @@ void ParticleTrailGeneratorBase::execSync (      ParticleTrailGeneratorBase *pFr
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SystemToTrailFieldMask & whichField))
+        _sfSystemToTrail.syncWith(pFrom->_sfSystemToTrail);
 
     if(FieldBits::NoField != (TrailLengthFieldMask & whichField))
         _sfTrailLength.syncWith(pFrom->_sfTrailLength);

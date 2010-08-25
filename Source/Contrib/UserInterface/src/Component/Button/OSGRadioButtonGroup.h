@@ -43,7 +43,7 @@
 #endif
 
 #include "OSGRadioButtonGroupBase.h"
-#include "OSGButtonSelectedListener.h"
+#include "OSGButtonSelectedEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -51,7 +51,7 @@ OSG_BEGIN_NAMESPACE
            PageContribUserInterfaceRadioButtonGroup for a description.
 */
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RadioButtonGroup : public RadioButtonGroupBase, public ButtonSelectedListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RadioButtonGroup : public RadioButtonGroupBase
 {
   protected:
 
@@ -86,8 +86,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RadioButtonGroup : public RadioButtonG
     UInt32 getButtonCount(void) const;
 
     bool isSelected(const RadioButton* const Button) const;
-	virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e);
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e);
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -117,6 +115,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RadioButtonGroup : public RadioButtonG
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	void handleButtonSelected(ButtonSelectedEventDetails* const e);
+    void handleButtonDeselected(ButtonSelectedEventDetails* const e);
+
+    std::vector<boost::signals2::connection> _ButtonConnections;
     /*==========================  PRIVATE  ================================*/
 
   private:

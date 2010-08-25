@@ -13,49 +13,58 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
-	<ProducedMethod
-		name="VideoStarted"
-		type="VideoEvent"
+	<ProducedEvent
+		name="Started"
+		detailsType="VideoEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="VideoStopped"
-		type="VideoEvent"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Stopped"
+		detailsType="VideoEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="VideoPaused"
-		type="VideoEvent"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Paused"
+		detailsType="VideoEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="VideoUnpaused"
-		type="VideoEvent"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Unpaused"
+		detailsType="VideoEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="VideoEnded"
-		type="VideoEvent"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Ended"
+		detailsType="VideoEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="VideoCycled"
-		type="VideoEvent"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Cycled"
+		detailsType="VideoEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="VideoOpened"
-		type="VideoEvent"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Opened"
+		detailsType="VideoEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="VideoClosed"
-		type="VideoEvent"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Closed"
+		detailsType="VideoEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="VideoSeeked"
-		type="VideoEvent"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Seeked"
+		detailsType="VideoEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

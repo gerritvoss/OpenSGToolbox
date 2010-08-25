@@ -57,6 +57,8 @@
 #include "OSGConfig.h"
 
 
+#include "OSGVideoEventDetails.h"
+
 
 
 #include "OSGVideoWrapperBase.h"
@@ -64,7 +66,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -109,19 +111,6 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void VideoWrapperBase::classDescInserter(TypeObject &oType)
 {
-    FieldDescriptionBase *pDesc = NULL;
-
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&VideoWrapper::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&VideoWrapper::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -151,104 +140,131 @@ VideoWrapperBase::TypeObject VideoWrapperBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"VideoStarted\"\n"
-    "\t\ttype=\"VideoEvent\"\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Started\"\n"
+    "\t\tdetailsType=\"VideoEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"VideoStopped\"\n"
-    "\t\ttype=\"VideoEvent\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Stopped\"\n"
+    "\t\tdetailsType=\"VideoEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"VideoPaused\"\n"
-    "\t\ttype=\"VideoEvent\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Paused\"\n"
+    "\t\tdetailsType=\"VideoEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"VideoUnpaused\"\n"
-    "\t\ttype=\"VideoEvent\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Unpaused\"\n"
+    "\t\tdetailsType=\"VideoEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"VideoEnded\"\n"
-    "\t\ttype=\"VideoEvent\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Ended\"\n"
+    "\t\tdetailsType=\"VideoEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"VideoCycled\"\n"
-    "\t\ttype=\"VideoEvent\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Cycled\"\n"
+    "\t\tdetailsType=\"VideoEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"VideoOpened\"\n"
-    "\t\ttype=\"VideoEvent\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Opened\"\n"
+    "\t\tdetailsType=\"VideoEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"VideoClosed\"\n"
-    "\t\ttype=\"VideoEvent\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Closed\"\n"
+    "\t\tdetailsType=\"VideoEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"VideoSeeked\"\n"
-    "\t\ttype=\"VideoEvent\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Seeked\"\n"
+    "\t\tdetailsType=\"VideoEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     ""
     );
 
-//! VideoWrapper Produced Methods
+//! VideoWrapper Produced Events
 
-MethodDescription *VideoWrapperBase::_methodDesc[] =
+EventDescription *VideoWrapperBase::_eventDesc[] =
 {
-    new MethodDescription("VideoStarted", 
-                    "",
-                     VideoStartedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoStopped", 
-                    "",
-                     VideoStoppedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoPaused", 
-                    "",
-                     VideoPausedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoUnpaused", 
-                    "",
-                     VideoUnpausedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoEnded", 
-                    "",
-                     VideoEndedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoCycled", 
-                    "",
-                     VideoCycledMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoOpened", 
-                    "",
-                     VideoOpenedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoClosed", 
-                    "",
-                     VideoClosedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoSeeked", 
-                    "",
-                     VideoSeekedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("Started", 
+                          "",
+                          StartedEventId, 
+                          FieldTraits<VideoEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&VideoWrapperBase::getHandleStartedSignal)),
+
+    new EventDescription("Stopped", 
+                          "",
+                          StoppedEventId, 
+                          FieldTraits<VideoEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&VideoWrapperBase::getHandleStoppedSignal)),
+
+    new EventDescription("Paused", 
+                          "",
+                          PausedEventId, 
+                          FieldTraits<VideoEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&VideoWrapperBase::getHandlePausedSignal)),
+
+    new EventDescription("Unpaused", 
+                          "",
+                          UnpausedEventId, 
+                          FieldTraits<VideoEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&VideoWrapperBase::getHandleUnpausedSignal)),
+
+    new EventDescription("Ended", 
+                          "",
+                          EndedEventId, 
+                          FieldTraits<VideoEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&VideoWrapperBase::getHandleEndedSignal)),
+
+    new EventDescription("Cycled", 
+                          "",
+                          CycledEventId, 
+                          FieldTraits<VideoEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&VideoWrapperBase::getHandleCycledSignal)),
+
+    new EventDescription("Opened", 
+                          "",
+                          OpenedEventId, 
+                          FieldTraits<VideoEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&VideoWrapperBase::getHandleOpenedSignal)),
+
+    new EventDescription("Closed", 
+                          "",
+                          ClosedEventId, 
+                          FieldTraits<VideoEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&VideoWrapperBase::getHandleClosedSignal)),
+
+    new EventDescription("Seeked", 
+                          "",
+                          SeekedEventId, 
+                          FieldTraits<VideoEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&VideoWrapperBase::getHandleSeekedSignal))
+
 };
 
 EventProducerType VideoWrapperBase::_producerType(
@@ -256,8 +272,8 @@ EventProducerType VideoWrapperBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -294,10 +310,6 @@ UInt32 VideoWrapperBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -307,10 +319,6 @@ void VideoWrapperBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void VideoWrapperBase::copyFromBin(BinaryDataHandler &pMem,
@@ -318,28 +326,320 @@ void VideoWrapperBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 }
 
 
+
+/*------------------------- event producers ----------------------------------*/
+void VideoWrapperBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case StartedEventId:
+        OSG_ASSERT(dynamic_cast<StartedEventDetailsType* const>(e));
+
+        _StartedEvent.set_combiner(ConsumableEventCombiner(e));
+        _StartedEvent(dynamic_cast<StartedEventDetailsType* const>(e), StartedEventId);
+        break;
+    case StoppedEventId:
+        OSG_ASSERT(dynamic_cast<StoppedEventDetailsType* const>(e));
+
+        _StoppedEvent.set_combiner(ConsumableEventCombiner(e));
+        _StoppedEvent(dynamic_cast<StoppedEventDetailsType* const>(e), StoppedEventId);
+        break;
+    case PausedEventId:
+        OSG_ASSERT(dynamic_cast<PausedEventDetailsType* const>(e));
+
+        _PausedEvent.set_combiner(ConsumableEventCombiner(e));
+        _PausedEvent(dynamic_cast<PausedEventDetailsType* const>(e), PausedEventId);
+        break;
+    case UnpausedEventId:
+        OSG_ASSERT(dynamic_cast<UnpausedEventDetailsType* const>(e));
+
+        _UnpausedEvent.set_combiner(ConsumableEventCombiner(e));
+        _UnpausedEvent(dynamic_cast<UnpausedEventDetailsType* const>(e), UnpausedEventId);
+        break;
+    case EndedEventId:
+        OSG_ASSERT(dynamic_cast<EndedEventDetailsType* const>(e));
+
+        _EndedEvent.set_combiner(ConsumableEventCombiner(e));
+        _EndedEvent(dynamic_cast<EndedEventDetailsType* const>(e), EndedEventId);
+        break;
+    case CycledEventId:
+        OSG_ASSERT(dynamic_cast<CycledEventDetailsType* const>(e));
+
+        _CycledEvent.set_combiner(ConsumableEventCombiner(e));
+        _CycledEvent(dynamic_cast<CycledEventDetailsType* const>(e), CycledEventId);
+        break;
+    case OpenedEventId:
+        OSG_ASSERT(dynamic_cast<OpenedEventDetailsType* const>(e));
+
+        _OpenedEvent.set_combiner(ConsumableEventCombiner(e));
+        _OpenedEvent(dynamic_cast<OpenedEventDetailsType* const>(e), OpenedEventId);
+        break;
+    case ClosedEventId:
+        OSG_ASSERT(dynamic_cast<ClosedEventDetailsType* const>(e));
+
+        _ClosedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ClosedEvent(dynamic_cast<ClosedEventDetailsType* const>(e), ClosedEventId);
+        break;
+    case SeekedEventId:
+        OSG_ASSERT(dynamic_cast<SeekedEventDetailsType* const>(e));
+
+        _SeekedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SeekedEvent(dynamic_cast<SeekedEventDetailsType* const>(e), SeekedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection VideoWrapperBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case StartedEventId:
+        return _StartedEvent.connect(listener, at);
+        break;
+    case StoppedEventId:
+        return _StoppedEvent.connect(listener, at);
+        break;
+    case PausedEventId:
+        return _PausedEvent.connect(listener, at);
+        break;
+    case UnpausedEventId:
+        return _UnpausedEvent.connect(listener, at);
+        break;
+    case EndedEventId:
+        return _EndedEvent.connect(listener, at);
+        break;
+    case CycledEventId:
+        return _CycledEvent.connect(listener, at);
+        break;
+    case OpenedEventId:
+        return _OpenedEvent.connect(listener, at);
+        break;
+    case ClosedEventId:
+        return _ClosedEvent.connect(listener, at);
+        break;
+    case SeekedEventId:
+        return _SeekedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  VideoWrapperBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case StartedEventId:
+        return _StartedEvent.connect(group, listener, at);
+        break;
+    case StoppedEventId:
+        return _StoppedEvent.connect(group, listener, at);
+        break;
+    case PausedEventId:
+        return _PausedEvent.connect(group, listener, at);
+        break;
+    case UnpausedEventId:
+        return _UnpausedEvent.connect(group, listener, at);
+        break;
+    case EndedEventId:
+        return _EndedEvent.connect(group, listener, at);
+        break;
+    case CycledEventId:
+        return _CycledEvent.connect(group, listener, at);
+        break;
+    case OpenedEventId:
+        return _OpenedEvent.connect(group, listener, at);
+        break;
+    case ClosedEventId:
+        return _ClosedEvent.connect(group, listener, at);
+        break;
+    case SeekedEventId:
+        return _SeekedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  VideoWrapperBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case StartedEventId:
+        _StartedEvent.disconnect(group);
+        break;
+    case StoppedEventId:
+        _StoppedEvent.disconnect(group);
+        break;
+    case PausedEventId:
+        _PausedEvent.disconnect(group);
+        break;
+    case UnpausedEventId:
+        _UnpausedEvent.disconnect(group);
+        break;
+    case EndedEventId:
+        _EndedEvent.disconnect(group);
+        break;
+    case CycledEventId:
+        _CycledEvent.disconnect(group);
+        break;
+    case OpenedEventId:
+        _OpenedEvent.disconnect(group);
+        break;
+    case ClosedEventId:
+        _ClosedEvent.disconnect(group);
+        break;
+    case SeekedEventId:
+        _SeekedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  VideoWrapperBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case StartedEventId:
+        _StartedEvent.disconnect_all_slots();
+        break;
+    case StoppedEventId:
+        _StoppedEvent.disconnect_all_slots();
+        break;
+    case PausedEventId:
+        _PausedEvent.disconnect_all_slots();
+        break;
+    case UnpausedEventId:
+        _UnpausedEvent.disconnect_all_slots();
+        break;
+    case EndedEventId:
+        _EndedEvent.disconnect_all_slots();
+        break;
+    case CycledEventId:
+        _CycledEvent.disconnect_all_slots();
+        break;
+    case OpenedEventId:
+        _OpenedEvent.disconnect_all_slots();
+        break;
+    case ClosedEventId:
+        _ClosedEvent.disconnect_all_slots();
+        break;
+    case SeekedEventId:
+        _SeekedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  VideoWrapperBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case StartedEventId:
+        return _StartedEvent.empty();
+        break;
+    case StoppedEventId:
+        return _StoppedEvent.empty();
+        break;
+    case PausedEventId:
+        return _PausedEvent.empty();
+        break;
+    case UnpausedEventId:
+        return _UnpausedEvent.empty();
+        break;
+    case EndedEventId:
+        return _EndedEvent.empty();
+        break;
+    case CycledEventId:
+        return _CycledEvent.empty();
+        break;
+    case OpenedEventId:
+        return _OpenedEvent.empty();
+        break;
+    case ClosedEventId:
+        return _ClosedEvent.empty();
+        break;
+    case SeekedEventId:
+        return _SeekedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  VideoWrapperBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case StartedEventId:
+        return _StartedEvent.num_slots();
+        break;
+    case StoppedEventId:
+        return _StoppedEvent.num_slots();
+        break;
+    case PausedEventId:
+        return _PausedEvent.num_slots();
+        break;
+    case UnpausedEventId:
+        return _UnpausedEvent.num_slots();
+        break;
+    case EndedEventId:
+        return _EndedEvent.num_slots();
+        break;
+    case CycledEventId:
+        return _CycledEvent.num_slots();
+        break;
+    case OpenedEventId:
+        return _OpenedEvent.num_slots();
+        break;
+    case ClosedEventId:
+        return _ClosedEvent.num_slots();
+        break;
+    case SeekedEventId:
+        return _SeekedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
 
 
 /*------------------------- constructors ----------------------------------*/
 
 VideoWrapperBase::VideoWrapperBase(void) :
-    _Producer(&getProducerType()),
-    Inherited(),
-    _sfEventProducer(&_Producer)
+    Inherited()
 {
 }
 
 VideoWrapperBase::VideoWrapperBase(const VideoWrapperBase &source) :
-    _Producer(&source.getProducerType()),
-    Inherited(source),
-    _sfEventProducer(&_Producer)
+    Inherited(source)
 {
 }
 
@@ -352,27 +652,101 @@ VideoWrapperBase::~VideoWrapperBase(void)
 
 
 
-GetFieldHandlePtr VideoWrapperBase::getHandleEventProducer        (void) const
+GetEventHandlePtr VideoWrapperBase::getHandleStartedSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<StartedEventType>(
+             const_cast<StartedEventType *>(&_StartedEvent),
+             _producerType.getEventDescription(StartedEventId),
              const_cast<VideoWrapperBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr VideoWrapperBase::editHandleEventProducer       (void)
+GetEventHandlePtr VideoWrapperBase::getHandleStoppedSignal(void) const
 {
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<StoppedEventType>(
+             const_cast<StoppedEventType *>(&_StoppedEvent),
+             _producerType.getEventDescription(StoppedEventId),
+             const_cast<VideoWrapperBase *>(this)));
 
+    return returnValue;
+}
 
-    editSField(EventProducerFieldMask);
+GetEventHandlePtr VideoWrapperBase::getHandlePausedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<PausedEventType>(
+             const_cast<PausedEventType *>(&_PausedEvent),
+             _producerType.getEventDescription(PausedEventId),
+             const_cast<VideoWrapperBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr VideoWrapperBase::getHandleUnpausedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<UnpausedEventType>(
+             const_cast<UnpausedEventType *>(&_UnpausedEvent),
+             _producerType.getEventDescription(UnpausedEventId),
+             const_cast<VideoWrapperBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr VideoWrapperBase::getHandleEndedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<EndedEventType>(
+             const_cast<EndedEventType *>(&_EndedEvent),
+             _producerType.getEventDescription(EndedEventId),
+             const_cast<VideoWrapperBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr VideoWrapperBase::getHandleCycledSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<CycledEventType>(
+             const_cast<CycledEventType *>(&_CycledEvent),
+             _producerType.getEventDescription(CycledEventId),
+             const_cast<VideoWrapperBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr VideoWrapperBase::getHandleOpenedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<OpenedEventType>(
+             const_cast<OpenedEventType *>(&_OpenedEvent),
+             _producerType.getEventDescription(OpenedEventId),
+             const_cast<VideoWrapperBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr VideoWrapperBase::getHandleClosedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ClosedEventType>(
+             const_cast<ClosedEventType *>(&_ClosedEvent),
+             _producerType.getEventDescription(ClosedEventId),
+             const_cast<VideoWrapperBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr VideoWrapperBase::getHandleSeekedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SeekedEventType>(
+             const_cast<SeekedEventType *>(&_SeekedEvent),
+             _producerType.getEventDescription(SeekedEventId),
+             const_cast<VideoWrapperBase *>(this)));
 
     return returnValue;
 }

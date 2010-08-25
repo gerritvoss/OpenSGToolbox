@@ -10,7 +10,7 @@
 #include "OSGContribPhysicsDef.h"
 
 
-#include "OSGAction.h"
+#include "OSGRenderAction.h"
 #include "OSGMaterial.h"
 #include "OSGColor.h"
 #include "OSGNode.h"

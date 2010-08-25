@@ -77,24 +77,6 @@ void DefaultSingleSelectionModel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection DefaultSingleSelectionModel::addSelectionListener(SelectionListenerPtr listener)
-{
-   _SelectionListeners.insert(listener);
-   return EventConnection(
-       boost::bind(&DefaultSingleSelectionModel::isSelectionListenerAttached, this, listener),
-       boost::bind(&DefaultSingleSelectionModel::removeSelectionListener, this, listener));
-}
-
-void DefaultSingleSelectionModel::removeSelectionListener(SelectionListenerPtr Listener)
-{
-   SelectionListenerSetItor EraseIter(_SelectionListeners.find(Listener));
-   if(EraseIter != _SelectionListeners.end())
-   {
-      _SelectionListeners.erase(EraseIter);
-   }
-}
-
-
 void DefaultSingleSelectionModel::clearSelection(void)
 {
     if(getInternalSelectedIndex() != -1)
@@ -137,14 +119,9 @@ void DefaultSingleSelectionModel::produceSelectionChanged(const Int32& SelectedI
         PreviouslySelected.push_back(PreviouslySelectedIndex);
     }
 
-    const SelectionEventUnrecPtr TheEvent = SelectionEvent::create(this, getTimeStamp(), Selected, PreviouslySelected, false);
-
-    SelectionListenerSet Listeners(_SelectionListeners);
-   for(SelectionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->selectionChanged(TheEvent);
-   }
-   _Producer.produceEvent(SelectionChangedMethodId,TheEvent);
+    SelectionEventDetailsUnrecPtr Details = SelectionEventDetails::create(this, getTimeStamp(), Selected, PreviouslySelected, false);
+   
+    Inherited::produceSelectionChanged(Details);
 }
 
 /*-------------------------------------------------------------------------*\

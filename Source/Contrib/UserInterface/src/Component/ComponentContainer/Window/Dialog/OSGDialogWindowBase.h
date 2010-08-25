@@ -71,10 +71,7 @@
 
 #include "OSGDialogWindowFields.h"
 
-//Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
+#include "OSGDialogWindowEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -93,6 +90,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowBase : public InternalWind
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(DialogWindow);
+    
+    
+    typedef DialogWindowEventDetails DialogWindowClosingEventDetailsType;
+    typedef DialogWindowEventDetails DialogWindowClosedEventDetailsType;
+
+    typedef boost::signals2::signal<void (DialogWindowEventDetails* const, UInt32), ConsumableEventCombiner> DialogWindowClosingEventType;
+    typedef boost::signals2::signal<void (DialogWindowEventDetails* const, UInt32), ConsumableEventCombiner> DialogWindowClosedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -129,9 +133,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowBase : public InternalWind
 
     enum
     {
-        DialogWindowClosingMethodId = Inherited::NextProducedMethodId,
-        DialogWindowClosedMethodId = DialogWindowClosingMethodId + 1,
-        NextProducedMethodId = DialogWindowClosedMethodId + 1
+        DialogWindowClosingEventId = Inherited::NextProducedEventId,
+        DialogWindowClosedEventId = DialogWindowClosingEventId + 1,
+        NextProducedEventId = DialogWindowClosedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -220,12 +224,53 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowBase : public InternalWind
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //DialogWindowClosing
+    boost::signals2::connection connectDialogWindowClosing(const DialogWindowClosingEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectDialogWindowClosing(const DialogWindowClosingEventType::group_type &group,
+                                                       const DialogWindowClosingEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectDialogWindowClosing    (const DialogWindowClosingEventType::group_type &group);
+    void   disconnectAllSlotsDialogWindowClosing(void);
+    bool   isEmptyDialogWindowClosing       (void) const;
+    UInt32 numSlotsDialogWindowClosing      (void) const;
+    
+    //DialogWindowClosed
+    boost::signals2::connection connectDialogWindowClosed(const DialogWindowClosedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectDialogWindowClosed(const DialogWindowClosedEventType::group_type &group,
+                                                       const DialogWindowClosedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectDialogWindowClosed     (const DialogWindowClosedEventType::group_type &group);
+    void   disconnectAllSlotsDialogWindowClosed(void);
+    bool   isEmptyDialogWindowClosed        (void) const;
+    UInt32 numSlotsDialogWindowClosed       (void) const;
+    
+    
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
@@ -257,6 +302,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowBase : public InternalWind
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Produced Event Signals                   */
+    /*! \{                                                                 */
+
+    //Event Event producers
+    DialogWindowClosingEventType _DialogWindowClosingEvent;
+    DialogWindowClosedEventType _DialogWindowClosedEvent;
+    /*! \}                                                                 */
 
     static TypeObject _type;
 
@@ -313,6 +366,22 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowBase : public InternalWind
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleDialogWindowClosingSignal(void) const;
+    GetEventHandlePtr getHandleDialogWindowClosedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceDialogWindowClosing  (DialogWindowClosingEventDetailsType* const e);
+    void produceDialogWindowClosed  (DialogWindowClosedEventDetailsType* const e);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -361,7 +430,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowBase : public InternalWind
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,33 +36,52 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_TREE_SELECTION_MODEL_H_
-#define _OSG_UI_TREE_SELECTION_MODEL_H_
-
+#ifndef _OSGTREESELECTIONMODEL_H_
+#define _OSGTREESELECTIONMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
-#include "OSGConfig.h"
-#include "OSGContribUserInterfaceDef.h"
 
-#include "OSGTreeSelectionListener.h"
+#include "OSGTreeSelectionModelBase.h"
 
 #include "OSGTreePath.h"
 #include "OSGTreeRowMapper.h"
-#include "OSGChangeListener.h"
-
-#include "OSGEventConnection.h"
+#include "OSGNumberRangeSet.h"
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeSelectionModel
-{
-  private:
 
+/*! \brief TreeSelectionModel class. See \ref
+           PageContribUserInterfaceTreeSelectionModel for a description.
+*/
+
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeSelectionModel : public TreeSelectionModelBase
+{
   protected:
-  
+
+    /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TreeSelectionModelBase Inherited;
+    typedef TreeSelectionModel     Self;
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0,
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */  public:
     enum TreeSelectionMode
     {
         CONTIGUOUS_TREE_SELECTION    = 0,
@@ -70,9 +89,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeSelectionModel
         SINGLE_TREE_SELECTION        = 2
     };
 
-    //Adds a ChangeListener to the listener list.
-    virtual EventConnection addChangeListener(ChangeListenerPtr listener) = 0;
-    virtual bool isChangeListenerAttached(ChangeListenerPtr listener) const = 0;
 
     //Adds path to the current selection.
     virtual void addSelectionPath(TreePath path) = 0;
@@ -81,10 +97,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeSelectionModel
     //Adds paths to the current selection.
     virtual void addSelectionPaths(std::vector<TreePath> paths) = 0;
     virtual void addSelectionRows(std::vector<Int32> Rows) = 0;
-
-    //Adds x to the list of listeners that are notified each time the set of selected TreePaths changes.
-    virtual EventConnection addTreeSelectionListener(TreeSelectionListenerPtr x) = 0;
-    virtual bool isTreeSelectionListenerAttached(TreeSelectionListenerPtr x) const = 0;
 
     //Empties the current selection.
     virtual void clearSelection(void) = 0;
@@ -147,9 +159,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeSelectionModel
     //Returns true if the selection is currently empty.
     virtual bool isSelectionEmpty(void) const = 0;
 
-    //Removes a ChangeListener from the listener list.
-    virtual void removeChangeListener(ChangeListenerPtr listener) = 0;
-
     //Removes path from the selection.
     virtual void removeSelectionPath(TreePath path) = 0;
     virtual void removeSelectionRow(Int32 Row) = 0;
@@ -157,9 +166,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeSelectionModel
     //Removes paths from the selection.
     virtual void removeSelectionPaths(std::vector<TreePath> paths) = 0;
     virtual void removeSelectionRows(std::vector<Int32> Rows) = 0;
-
-    //Removes x from the list of listeners that are notified each time the set of selected TreePaths changes.
-    virtual void removeTreeSelectionListener(TreeSelectionListenerPtr x) = 0;
 
     //Updates this object's mapping from TreePaths to rows.
     //virtual void resetRowSelection(void) = 0;
@@ -180,11 +186,55 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeSelectionModel
 
     //Sets the selection to the Interval from StartRow to EndRow
     virtual void setSelectionInterval(const Int32& index0, const Int32& index1) = 0;
+
+    /*=========================  PROTECTED  ===============================*/
+
+  protected:
+
+    // Variables should all be in TreeSelectionModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    TreeSelectionModel(void);
+    TreeSelectionModel(const TreeSelectionModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~TreeSelectionModel(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    void produceSelectionAdded(const std::vector<NumberRange>& ElementsAdded, Int32 NewLeadSelectionPath, Int32 OldLeadSelectionPath);
+	void produceSelectionRemoved(const std::vector<NumberRange>& ElementsRemoved, Int32 NewLeadSelectionPath, Int32 OldLeadSelectionPath);
+
+    /*==========================  PRIVATE  ================================*/
+
+  private:
+
+    friend class FieldContainer;
+    friend class TreeSelectionModelBase;
+
+    // prohibit default functions (move to 'public' if you need one)
+    void operator =(const TreeSelectionModel &source);
 };
 
-typedef TreeSelectionModel* TreeSelectionModelPtr;
+typedef TreeSelectionModel *TreeSelectionModelP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_TREE_SELECTION_MODEL_H_ */
+#include "OSGTreeSelectionModelBase.inl"
+#include "OSGTreeSelectionModel.inl"
 
+#endif /* _OSGTREESELECTIONMODEL_H_ */

@@ -76,4 +76,14 @@ A UI DrawingSurface.
 		defaultValue="0.0f,0.0f"
 	>
 	</Field>
+	<Field
+		name="Active"
+		type="bool"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
 </FieldContainer>

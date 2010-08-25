@@ -93,18 +93,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayout : public SpringLayoutBase
     bool isCyclic(const LayoutSpring* TheSpring) const;
 
     //Returns the constraints for the specified component.
-    SpringLayoutConstraintsRefPtr getConstraint(ComponentUnrecPtr TheComponent) const;
+    SpringLayoutConstraintsRefPtr getConstraint(Component* const TheComponent) const;
 
     //Returns the spring controlling the distance between the specified edge of the component and the top or left edge of its parent.
-    LayoutSpringRefPtr getConstraint(const UInt32 Edge, const ComponentUnrecPtr TheComponent) const;
+    LayoutSpringRefPtr getConstraint(const UInt32 Edge, Component* const TheComponent) const;
 
     //Links edge e1 of component c1 to edge e2 of component c2, with a fixed distance between the edges.
-    void putConstraint(const UInt32 e1, ComponentRefPtr c1, const Real32& pad, const UInt32 e2, ComponentRefPtr c2);
+    void putConstraint(const UInt32 e1, Component* const c1, const Real32& pad, const UInt32 e2, Component* const c2);
 
     //Links edge e1 of component c1 to edge e2 of component c2.
-    void putConstraint(const UInt32 e1, ComponentRefPtr c1, LayoutSpringRefPtr s, const UInt32 e2, ComponentRefPtr c2);
+    void putConstraint(const UInt32 e1, Component* const c1, LayoutSpringRefPtr s, const UInt32 e2, Component* const c2);
 
-    void putConstraint(const UInt32 e, ComponentRefPtr c, LayoutSpringRefPtr s);
+    void putConstraint(const UInt32 e, Component* const c, LayoutSpringRefPtr s);
 
     void clearConstraints(void);
 
@@ -159,7 +159,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayout : public SpringLayoutBase
 
     void setParent(ComponentContainerRefPtr p);
 
-    static SpringLayoutConstraintsRefPtr applyDefaults(ComponentUnrecPtr c, SpringLayoutConstraintsRefPtr constraints);
+    static SpringLayoutConstraintsRefPtr applyDefaults(Component* const c, SpringLayoutConstraintsRefPtr constraints);
 
     //void applyDefaults(SpringLayoutConstraintsRefPtr constraints, const UInt32 name1,
     //                       LayoutSpringRefPtr spring1, const UInt32 name2, LayoutSpringRefPtr spring2,

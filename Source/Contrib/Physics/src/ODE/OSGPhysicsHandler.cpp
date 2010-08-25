@@ -53,7 +53,8 @@
 #include "OSGAction.h"
 #include "OSGTransform.h"
 #include "OSGGroup.h"
-#include "OSGAction.h"
+#include "OSGStatCollector.h"
+#include "OSGUpdateEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -67,7 +68,7 @@ OSG_BEGIN_NAMESPACE
 //! this action traverses the graph to match the OpenSG representation 
 //! to ODE
 //////////////////////////////////////////////////////////////////////////
-Action::ResultE updateOsgOde(Node* node)
+Action::ResultE updateOsgOde(Node* const node)
 {   
     //SLOG << "entering " << node << endLog;
     TransformUnrecPtr t = dynamic_cast<Transform*>(node->getCore());
@@ -170,7 +171,25 @@ void PhysicsHandler::setStatistics(StatCollector *stat)
     _ownStat = false;
 }
 
-void PhysicsHandler::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
+void PhysicsHandler::attachUpdateProducer(ReflexiveContainer* const producer)
+{
+    if(_UpdateEventConnection.connected())
+    {
+        _UpdateEventConnection.disconnect();
+    }
+    //Get the Id of the UpdateEvent
+    const EventDescription* Desc(producer->getProducerType().findEventDescription("Update"));
+    if(Desc == NULL)
+    {
+        SWARNING << "There is no Update event defined on " << producer->getType().getName() << " types." << std::endl;
+    }
+    else
+    {
+        _UpdateEventConnection = producer->connectEvent(Desc->getEventId(), boost::bind(&PhysicsHandler::attachedUpdate, this, _1));
+    }
+}
+
+void PhysicsHandler::attachedUpdate(EventDetails* const details)
 {
     getStatistics()->reset();
     getStatistics()->getElem(statCollisionTime)->start();
@@ -179,7 +198,7 @@ void PhysicsHandler::eventProduced(const EventUnrecPtr EventDetails, UInt32 Prod
     getStatistics()->getElem(statSimulationTime)->stop();
 
     getStatistics()->getElem(statPhysicsTime)->start();
-    _TimeSinceLast += dynamic_pointer_cast<UpdateEvent>(EventDetails)->getElapsedTime();
+    _TimeSinceLast += dynamic_cast<UpdateEventDetails* const>(details)->getElapsedTime();
 
     if(osgFloor(_TimeSinceLast/getStepSize()) > getMaxStepsPerUpdate())
     {
@@ -218,7 +237,7 @@ void PhysicsHandler::eventProduced(const EventUnrecPtr EventDetails, UInt32 Prod
     getStatistics()->getElem(statPhysicsTime)->stop();
 }
 
-void PhysicsHandler::updateWorld(NodeUnrecPtr node)
+void PhysicsHandler::updateWorld(Node* const node)
 {
     //update matrices
     traverse(node, 
@@ -269,18 +288,6 @@ void PhysicsHandler::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
-
-    if(whichField & WorldFieldMask && getWorld() != NULL)
-    {
-        getWorld()->setInternalParentHandler(PhysicsHandlerUnrecPtr(this));
-    }
-    if(whichField & SpacesFieldMask)
-    {
-        for(UInt32 i(0) ; i<getMFSpaces()->size() ; ++i)
-        {
-            getSpaces(i)->setInternalParentHandler(PhysicsHandlerUnrecPtr(this));
-        }
-    }
 }
 
 void PhysicsHandler::dump(      UInt32    ,

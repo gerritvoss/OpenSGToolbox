@@ -68,10 +68,7 @@
 
 #include "OSGComboBoxModelFields.h"
 
-//Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
+#include "OSGComboBoxSelectionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -90,6 +87,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxModelBase : public ListModel
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ComboBoxModel);
+    
+    
+    typedef ComboBoxSelectionEventDetails SelectionChangedEventDetailsType;
+
+    typedef boost::signals2::signal<void (ComboBoxSelectionEventDetails* const, UInt32), ConsumableEventCombiner> SelectionChangedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -98,8 +100,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxModelBase : public ListModel
 
     enum
     {
-        SelectionChangedMethodId = Inherited::NextProducedMethodId,
-        NextProducedMethodId = SelectionChangedMethodId + 1
+        SelectionChangedEventId = Inherited::NextProducedEventId,
+        NextProducedEventId = SelectionChangedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -136,16 +138,53 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxModelBase : public ListModel
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //SelectionChanged
+    boost::signals2::connection connectSelectionChanged(const SelectionChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSelectionChanged(const SelectionChangedEventType::group_type &group,
+                                                       const SelectionChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSelectionChanged       (const SelectionChangedEventType::group_type &group);
+    void   disconnectAllSlotsSelectionChanged(void);
+    bool   isEmptySelectionChanged          (void) const;
+    UInt32 numSlotsSelectionChanged         (void) const;
+    
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Produced Event Signals                   */
+    /*! \{                                                                 */
+
+    //Event Event producers
+    SelectionChangedEventType _SelectionChangedEvent;
+    /*! \}                                                                 */
 
     static TypeObject _type;
 
@@ -178,6 +217,20 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxModelBase : public ListModel
     /*! \{                                                                 */
 
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleSelectionChangedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceSelectionChanged    (SelectionChangedEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -223,7 +276,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBoxModelBase : public ListModel
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

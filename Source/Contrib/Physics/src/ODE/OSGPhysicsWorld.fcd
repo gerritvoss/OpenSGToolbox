@@ -11,6 +11,7 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
+    childFields="single"
     authors="David Kabala (djkabala@gmail.com),  Behboud Kalantary         "
 >
 The PhysicsWorld contains all global dWorld attributes from ODE.
@@ -132,13 +133,13 @@ The PhysicsWorld contains all global dWorld attributes from ODE.
 	the depth of the surface layer around all geometry objects. Contacts are allowed to sink into the surface layer up to the given depth before coming to rest. The default value is zero. Increasing this to some small value (e.g. 0.001) can help prevent jittering problems due to contacts being repeatedly made and broken.
 	</Field>
 	<Field
-		name="InternalParentHandler"
-		type="PhysicsHandler"
-        category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="protected"
-	>
+	   name="ParentHandler"
+	   type="FieldContainer"
+	   cardinality="single"
+	   access="none"
+       doRefCount="false"
+       passFieldMask="true"
+       category="parentpointer"
+	   >
 	</Field>
 </FieldContainer>

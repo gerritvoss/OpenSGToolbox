@@ -58,7 +58,7 @@
 
 
 
-#include "OSGColorChooser.h"            // ParentChooser Class
+#include "OSGColorChooser.h"            // InternalParentChooser Class
 
 #include "OSGAbstractColorChooserPanelBase.h"
 #include "OSGAbstractColorChooserPanel.h"
@@ -83,7 +83,7 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var ColorChooser *  AbstractColorChooserPanelBase::_sfParentChooser
+/*! \var ColorChooser *  AbstractColorChooserPanelBase::_sfInternalParentChooser
     
 */
 
@@ -106,6 +106,18 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            AbstractColorChooserPanel *,
                            0);
 
+DataType &FieldTraits< AbstractColorChooserPanel *, 1 >::getType(void)
+{
+    return FieldTraits<AbstractColorChooserPanel *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_MFIELD(ChildPointerMField,
+                      AbstractColorChooserPanel *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
+
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
@@ -115,15 +127,15 @@ void AbstractColorChooserPanelBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecColorChooserPtr::Description(
-        SFUnrecColorChooserPtr::getClassType(),
-        "ParentChooser",
+    pDesc = new SFWeakColorChooserPtr::Description(
+        SFWeakColorChooserPtr::getClassType(),
+        "InternalParentChooser",
         "",
-        ParentChooserFieldId, ParentChooserFieldMask,
-        false,
+        InternalParentChooserFieldId, InternalParentChooserFieldMask,
+        true,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&AbstractColorChooserPanel::editHandleParentChooser),
-        static_cast<FieldGetMethodSig >(&AbstractColorChooserPanel::getHandleParentChooser));
+        static_cast<FieldEditMethodSig>(&AbstractColorChooserPanel::editHandleInternalParentChooser),
+        static_cast<FieldGetMethodSig >(&AbstractColorChooserPanel::getHandleInternalParentChooser));
 
     oType.addInitialDesc(pDesc);
 }
@@ -153,19 +165,19 @@ AbstractColorChooserPanelBase::TypeObject AbstractColorChooserPanelBase::_type(
     "\tdecoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    childFields=\"multi\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     "    >\n"
     "    A UI AbstractColorChooserPanel.\n"
-    "    <Field\n"
-    "        name=\"ParentChooser\"\n"
-    "        type=\"ColorChooser\"\n"
-    "        category=\"pointer\"\n"
-    "        cardinality=\"single\"\n"
-    "        visibility=\"external\"\n"
-    "        access=\"public\"\n"
-    "        defaultValue=\"NULL\"\n"
-    "        >\n"
-    "    </Field>\n"
+    "\t<Field\n"
+    "\t   name=\"InternalParentChooser\"\n"
+    "\t   type=\"ColorChooser\"\n"
+    "       category=\"weakpointer\"\n"
+    "\t   cardinality=\"single\"\n"
+    "\t   visibility=\"internal\"\n"
+    "\t   access=\"protected\"\n"
+    "\t   >\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     "A UI AbstractColorChooserPanel.\n"
     );
@@ -190,17 +202,17 @@ UInt32 AbstractColorChooserPanelBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-//! Get the AbstractColorChooserPanel::_sfParentChooser field.
-const SFUnrecColorChooserPtr *AbstractColorChooserPanelBase::getSFParentChooser(void) const
+//! Get the AbstractColorChooserPanel::_sfInternalParentChooser field.
+const SFWeakColorChooserPtr *AbstractColorChooserPanelBase::getSFInternalParentChooser(void) const
 {
-    return &_sfParentChooser;
+    return &_sfInternalParentChooser;
 }
 
-SFUnrecColorChooserPtr *AbstractColorChooserPanelBase::editSFParentChooser  (void)
+SFWeakColorChooserPtr *AbstractColorChooserPanelBase::editSFInternalParentChooser(void)
 {
-    editSField(ParentChooserFieldMask);
+    editSField(InternalParentChooserFieldMask);
 
-    return &_sfParentChooser;
+    return &_sfInternalParentChooser;
 }
 
 
@@ -213,9 +225,9 @@ UInt32 AbstractColorChooserPanelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ParentChooserFieldMask & whichField))
+    if(FieldBits::NoField != (InternalParentChooserFieldMask & whichField))
     {
-        returnValue += _sfParentChooser.getBinSize();
+        returnValue += _sfInternalParentChooser.getBinSize();
     }
 
     return returnValue;
@@ -226,9 +238,9 @@ void AbstractColorChooserPanelBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ParentChooserFieldMask & whichField))
+    if(FieldBits::NoField != (InternalParentChooserFieldMask & whichField))
     {
-        _sfParentChooser.copyToBin(pMem);
+        _sfInternalParentChooser.copyToBin(pMem);
     }
 }
 
@@ -237,12 +249,11 @@ void AbstractColorChooserPanelBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ParentChooserFieldMask & whichField))
+    if(FieldBits::NoField != (InternalParentChooserFieldMask & whichField))
     {
-        _sfParentChooser.copyFromBin(pMem);
+        _sfInternalParentChooser.copyFromBin(pMem);
     }
 }
-
 
 
 
@@ -250,13 +261,13 @@ void AbstractColorChooserPanelBase::copyFromBin(BinaryDataHandler &pMem,
 
 AbstractColorChooserPanelBase::AbstractColorChooserPanelBase(void) :
     Inherited(),
-    _sfParentChooser          (NULL)
+    _sfInternalParentChooser  (NULL)
 {
 }
 
 AbstractColorChooserPanelBase::AbstractColorChooserPanelBase(const AbstractColorChooserPanelBase &source) :
     Inherited(source),
-    _sfParentChooser          (NULL)
+    _sfInternalParentChooser  (NULL)
 {
 }
 
@@ -275,37 +286,38 @@ void AbstractColorChooserPanelBase::onCreate(const AbstractColorChooserPanel *so
     {
         AbstractColorChooserPanel *pThis = static_cast<AbstractColorChooserPanel *>(this);
 
-        pThis->setParentChooser(source->getParentChooser());
+        pThis->setInternalParentChooser(source->getInternalParentChooser());
     }
 }
 
-GetFieldHandlePtr AbstractColorChooserPanelBase::getHandleParentChooser   (void) const
+GetFieldHandlePtr AbstractColorChooserPanelBase::getHandleInternalParentChooser (void) const
 {
-    SFUnrecColorChooserPtr::GetHandlePtr returnValue(
-        new  SFUnrecColorChooserPtr::GetHandle(
-             &_sfParentChooser,
-             this->getType().getFieldDesc(ParentChooserFieldId),
+    SFWeakColorChooserPtr::GetHandlePtr returnValue(
+        new  SFWeakColorChooserPtr::GetHandle(
+             &_sfInternalParentChooser,
+             this->getType().getFieldDesc(InternalParentChooserFieldId),
              const_cast<AbstractColorChooserPanelBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr AbstractColorChooserPanelBase::editHandleParentChooser  (void)
+EditFieldHandlePtr AbstractColorChooserPanelBase::editHandleInternalParentChooser(void)
 {
-    SFUnrecColorChooserPtr::EditHandlePtr returnValue(
-        new  SFUnrecColorChooserPtr::EditHandle(
-             &_sfParentChooser,
-             this->getType().getFieldDesc(ParentChooserFieldId),
+    SFWeakColorChooserPtr::EditHandlePtr returnValue(
+        new  SFWeakColorChooserPtr::EditHandle(
+             &_sfInternalParentChooser,
+             this->getType().getFieldDesc(InternalParentChooserFieldId),
              this));
 
     returnValue->setSetMethod(
-        boost::bind(&AbstractColorChooserPanel::setParentChooser,
+        boost::bind(&AbstractColorChooserPanel::setInternalParentChooser,
                     static_cast<AbstractColorChooserPanel *>(this), _1));
 
-    editSField(ParentChooserFieldMask);
+    editSField(InternalParentChooserFieldMask);
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -331,7 +343,7 @@ void AbstractColorChooserPanelBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
 
-    static_cast<AbstractColorChooserPanel *>(this)->setParentChooser(NULL);
+    static_cast<AbstractColorChooserPanel *>(this)->setInternalParentChooser(NULL);
 
 
 }

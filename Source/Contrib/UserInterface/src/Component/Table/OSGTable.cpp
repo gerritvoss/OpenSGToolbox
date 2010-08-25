@@ -58,8 +58,8 @@
 #include "OSGDefaultTableCellRenderer.h"
 #include "OSGDefaultTableCellEditor.h"
 #include "OSGTableCellEditor.h"
-#include "OSGTableColumnModelEvent.h"
-#include "OSGTableModelEvent.h"
+#include "OSGTableColumnModelEventDetails.h"
+#include "OSGTableModelEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -126,8 +126,8 @@ void Table::startEditing(const UInt32& Row, const UInt32& Column)
     }
 
 
-
-    Inherited::getGlobalCellEditor()->addCellEditorListener(this);
+    _EditingCanceledConnection = Inherited::getGlobalCellEditor()->connectEditingCanceled(boost::bind(&Table::handleEditingCanceled, this, _1));
+    _EditingStoppedConnection = Inherited::getGlobalCellEditor()->connectEditingStopped(boost::bind(&Table::handleEditingStopped, this, _1));
 
     updateItem(Row*getModel()->getColumnCount() + Column);
     _EditingComponent->setFocused(false);
@@ -155,7 +155,7 @@ Vec2f Table::getContentRequestedSize(void) const
                  CumulativeHeight + (BottomRight.y() - TopLeft.y() - BorderBottomRight.y() + BorderTopLeft.y()));
 }
 
-void Table::checkCellEdit(const EventUnrecPtr e, const UInt32& Row, const UInt32& Column)
+void Table::checkCellEdit(EventDetails* const e, const UInt32& Row, const UInt32& Column)
 {
     //Check if this cell is editable
     if(getModel()->isCellEditable(Row, Column))
@@ -185,14 +185,14 @@ bool Table::getFocusedCell(UInt32& Row, UInt32& Column) const
     return false;
 }
 
-void Table::keyTyped(const KeyEventUnrecPtr e)
+void Table::keyTyped(KeyEventDetails* const e)
 {
     bool noFocus = true;
-    if (e->getKey() == KeyEvent::KEY_UP || 
-        e->getKey() == KeyEvent::KEY_DOWN || 
-        e->getKey() == KeyEvent::KEY_RIGHT || 
-        e->getKey() == KeyEvent::KEY_LEFT || 
-        e->getKey() == KeyEvent::KEY_ENTER)
+    if (e->getKey() == KeyEventDetails::KEY_UP || 
+        e->getKey() == KeyEventDetails::KEY_DOWN || 
+        e->getKey() == KeyEventDetails::KEY_RIGHT || 
+        e->getKey() == KeyEventDetails::KEY_LEFT || 
+        e->getKey() == KeyEventDetails::KEY_ENTER)
     {
         for(Int32 i(getMFChildren()->size()-2) ; i>=0 && noFocus; --i)
         {
@@ -202,40 +202,40 @@ void Table::keyTyped(const KeyEventUnrecPtr e)
                 Int32 index(0);
                 switch(e->getKey())
                 {
-                    case KeyEvent::KEY_UP:
+                    case KeyEventDetails::KEY_UP:
                         index = i-static_cast<Int32>(getModel()->getColumnCount());
                         if(index < 0)
                         {
                             index = i;
                         }
                         break;
-                    case KeyEvent::KEY_DOWN:
+                    case KeyEventDetails::KEY_DOWN:
                         index = i+static_cast<Int32>(getModel()->getColumnCount());
                         if(index > getModel()->getColumnCount() * getModel()->getRowCount() - 1)
                         {
                             index = i;
                         }
                         break;
-                    case KeyEvent::KEY_LEFT:
+                    case KeyEventDetails::KEY_LEFT:
                         index = i-1;
                         if((index/getModel()->getColumnCount()) != (i/getModel()->getColumnCount()))
                         {
                             index = i;
                         }
                         break;
-                    case KeyEvent::KEY_RIGHT:
+                    case KeyEventDetails::KEY_RIGHT:
                         index = i+1;
                         if((index/getModel()->getColumnCount()) != (i/getModel()->getColumnCount()))
                         {
                             index = i;
                         }
                         break;
-                    case KeyEvent::KEY_ENTER:
+                    case KeyEventDetails::KEY_ENTER:
                         {
                             index = i;
                             UInt32 Row(index/getColumnModel()->getColumnCount()),
                                    Column(index%getColumnModel()->getColumnCount());
-                            if (e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+                            if (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
                             {
                                 changeSelection(Row,Column,true,true);
                             }
@@ -251,7 +251,7 @@ void Table::keyTyped(const KeyEventUnrecPtr e)
                 getChildren(index)->takeFocus();
                 UInt32 Row(index/getColumnModel()->getColumnCount()),
                        Column(index%getColumnModel()->getColumnCount());
-                if (e->getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+                if (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT)
                 {
                     changeSelection(Row, Column, false, true);
                 }
@@ -267,7 +267,7 @@ void Table::keyTyped(const KeyEventUnrecPtr e)
     Component::keyTyped(e);
 }
 
-void Table::mouseClicked(const MouseEventUnrecPtr e)
+void Table::mouseClicked(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
@@ -287,7 +287,7 @@ void Table::mouseClicked(const MouseEventUnrecPtr e)
     Component::mouseClicked(e);
 }
 
-void Table::mouseReleased(const MouseEventUnrecPtr e)
+void Table::mouseReleased(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
@@ -307,7 +307,7 @@ void Table::mouseReleased(const MouseEventUnrecPtr e)
     Component::mouseReleased(e);
 }
 
-void Table::mouseMoved(const MouseEventUnrecPtr e)
+void Table::mouseMoved(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -326,7 +326,7 @@ void Table::mouseMoved(const MouseEventUnrecPtr e)
     Component::mouseMoved(e);
 }
 
-void Table::mouseDragged(const MouseEventUnrecPtr e)
+void Table::mouseDragged(MouseEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -345,7 +345,7 @@ void Table::mouseDragged(const MouseEventUnrecPtr e)
     Component::mouseDragged(e);
 }
 
-void Table::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
+void Table::mouseWheelMoved(MouseWheelEventDetails* const e)
 {
     bool isContained;
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
@@ -364,7 +364,7 @@ void Table::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
     Component::mouseWheelMoved(e);
 }
 
-void Table::produceMouseExitOnComponent(const MouseEventUnrecPtr e, Component* const Comp)
+void Table::produceMouseExitOnComponent(MouseEventDetails* const e, Component* const Comp)
 {
     UInt32 i(0);
     while(i<getMFChildren()->size()-1 && getChildren(i) != Comp)
@@ -378,7 +378,7 @@ void Table::produceMouseExitOnComponent(const MouseEventUnrecPtr e, Component* c
     Inherited::produceMouseExitOnComponent(e,Comp);
 }
 
-void Table::produceMouseEnterOnComponent(const MouseEventUnrecPtr e, Component* const Comp)
+void Table::produceMouseEnterOnComponent(MouseEventDetails* const e, Component* const Comp)
 {
     UInt32 i(0);
     while(i<getMFChildren()->size()-1 && getChildren(i) != Comp)
@@ -392,16 +392,7 @@ void Table::produceMouseEnterOnComponent(const MouseEventUnrecPtr e, Component* 
     Inherited::produceMouseEnterOnComponent(e,Comp);
 }
 
-void Table::keyReleased(const KeyEventUnrecPtr e)
-{
-}
-
-void Table::keyPressed(const KeyEventUnrecPtr e)
-{
-}
-
-
-void Table::mousePressed(const MouseEventUnrecPtr e)
+void Table::mousePressed(MouseEventDetails* const e)
 {
     bool isContained(false);
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
@@ -434,11 +425,11 @@ void Table::mousePressed(const MouseEventUnrecPtr e)
                    getParentWindow()->getParentDrawingSurface() != NULL &&
                    getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
                 {
-                    if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+                    if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT)
                     {
                         changeSelection(Row, Column, false, true);
                     }
-                    else if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+                    else if(getParentWindow()->getParentDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
                     {
                         changeSelection(Row, Column, true, true);
                     }
@@ -471,7 +462,7 @@ bool Table::isSelected(const UInt32& Row, const UInt32& Column) const
     if(getColumnModel()->getColumnSelectionAllowed() && getRowSelectionAllowed())
     {
         return getColumnModel()->getSelectionModel()->isSelectedIndex(Column) &&
-            _RowSelectionModel->isSelectedIndex(Row);
+            getRowSelectionModel()->isSelectedIndex(Row);
     }
     else
     {
@@ -479,7 +470,7 @@ bool Table::isSelected(const UInt32& Row, const UInt32& Column) const
                 getColumnModel()->getSelectionModel()->isSelectedIndex(Column))
             ||
             (getRowSelectionAllowed() &&
-             _RowSelectionModel->isSelectedIndex(Row));
+             getRowSelectionModel()->isSelectedIndex(Row));
     }
 }
 
@@ -488,9 +479,12 @@ void Table::updateItem(const UInt32& index)
     UInt32 Row(index/getColumnModel()->getColumnCount()),
            Column(index%getColumnModel()->getColumnCount());
 
-    //Transfer focus, enabled, Listeners
+    //Transfer focus, enabled
     ComponentRefPtr PrevComponent = getChildren(index);
-    getChildren(index)->removeFocusListener(this);
+    _ItemFocusGainedConnections[getChildren(index)].disconnect();
+    _ItemFocusGainedConnections.erase(_ItemFocusGainedConnections.find(getChildren(index)));
+    _ItemFocusLostConnections[getChildren(index)].disconnect();
+    _ItemFocusLostConnections.erase(_ItemFocusLostConnections.find(getChildren(index)));
 
     //Check if this cell is being Edited
     if(isEditing() && Row == _EditingRow && Column == _EditingColumn)
@@ -509,14 +503,16 @@ void Table::updateItem(const UInt32& index)
         //getChildren(index)->takeFocus();
         getParentWindow()->setFocusedComponent(getChildren(index));
     }
-    getChildren(index)->addFocusListener(this);
+    _ItemFocusGainedConnections[getChildren(index)] = getChildren(index)->connectFocusGained(boost::bind(&Table::handleItemFocusGained, this, _1));
+    _ItemFocusLostConnections[getChildren(index)] = getChildren(index)->connectFocusGained(boost::bind(&Table::handleItemFocusLost, this, _1));
+
     getChildren(index)->setFocused(PrevComponent->getFocused());
     getChildren(index)->setPosition(PrevComponent->getPosition());
     getChildren(index)->setSize(PrevComponent->getSize());
     getChildren(index)->setParentWindow(PrevComponent->getParentWindow());
     getChildren(index)->updateClipBounds();
 }
-void Table::focusGained(const FocusEventUnrecPtr e)
+void Table::handleItemFocusGained(FocusEventDetails* const e)
 {
     //Find this component
     Component* Child = dynamic_cast<Component*>(e->getSource());
@@ -531,7 +527,7 @@ void Table::focusGained(const FocusEventUnrecPtr e)
     }
 }
 
-void Table::focusLost(const FocusEventUnrecPtr e)
+void Table::handleItemFocusLost(FocusEventDetails* const e)
 {
     //Find this component
     Component* Child = dynamic_cast<Component*>(e->getSource());
@@ -658,10 +654,18 @@ void Table::updateTableComponents(void)
         }
     }
 
-    //Remove focus Listeners
-    for(UInt32 i(0) ; i+1< getMFChildren()->size() ; ++i)
+    //Remove focus binding
+    for(std::map<Component*, boost::signals2::connection>::iterator MapItor(_ItemFocusGainedConnections.begin());
+        MapItor != _ItemFocusGainedConnections.end();
+        ++MapItor)
     {
-        getChildren(i)->removeFocusListener(this);
+        MapItor->second.disconnect();
+    }
+    for(std::map<Component*, boost::signals2::connection>::iterator MapItor(_ItemFocusLostConnections.begin());
+        MapItor != _ItemFocusLostConnections.end();
+        ++MapItor)
+    {
+        MapItor->second.disconnect();
     }
 
     clearChildren();
@@ -670,14 +674,15 @@ void Table::updateTableComponents(void)
     for(UInt32 i(0); i<getMFTable()->size() ; ++i)
     {
         pushToChildren(getTable(i));
-        getChildren(i)->addFocusListener(this);
+        _ItemFocusGainedConnections[getChildren(i)] = getChildren(i)->connectFocusGained(boost::bind(&Table::handleItemFocusGained, this, _1));
+        _ItemFocusLostConnections[getChildren(i)] = getChildren(i)->connectFocusLost(boost::bind(&Table::handleItemFocusLost, this, _1));
     }
 
     pushToChildren(getHeader());
 
 }
 
-void Table::contentsHeaderRowChanged(const TableModelEventUnrecPtr e)
+void Table::handleContentsHeaderRowChanged(TableModelEventDetails* const e)
 {
     if(getAutoCreateColumnsFromModel() && getModel() != NULL)
     {
@@ -686,7 +691,7 @@ void Table::contentsHeaderRowChanged(const TableModelEventUnrecPtr e)
     updateTableComponents();
 }
 
-void Table::contentsChanged(const TableModelEventUnrecPtr e)
+void Table::handleContentsChanged(TableModelEventDetails* const e)
 {
     if(getAutoCreateColumnsFromModel() && getModel() != NULL)
     {
@@ -695,12 +700,12 @@ void Table::contentsChanged(const TableModelEventUnrecPtr e)
     updateTableComponents();
 }
 
-void Table::intervalAdded(const TableModelEventUnrecPtr e)
+void Table::handleIntervalAdded(TableModelEventDetails* const e)
 {
     updateTableComponents();
 }
 
-void Table::intervalRemoved(const TableModelEventUnrecPtr e)
+void Table::handleIntervalRemoved(TableModelEventDetails* const e)
 {
     updateTableComponents();
 }
@@ -715,15 +720,15 @@ void Table::changeSelection(const UInt32& rowIndex, const UInt32& columnIndex, b
                getRowSelectionAllowed())
             {
                 if(getColumnModel()->getSelectionModel()->isSelectedIndex(columnIndex) !=
-                   _RowSelectionModel->isSelectedIndex(rowIndex))
+                   getRowSelectionModel()->isSelectedIndex(rowIndex))
                 {
                     getColumnModel()->getSelectionModel()->setSelectionInterval(columnIndex, columnIndex);
-                    _RowSelectionModel->setSelectionInterval(rowIndex, rowIndex);
+                    getRowSelectionModel()->setSelectionInterval(rowIndex, rowIndex);
                 }
                 else
                 {
                     getColumnModel()->getSelectionModel()->removeSelectionInterval(columnIndex, columnIndex);
-                    _RowSelectionModel->removeSelectionInterval(rowIndex, rowIndex);
+                    getRowSelectionModel()->removeSelectionInterval(rowIndex, rowIndex);
                 }
             }
             else if(getColumnModel()->getColumnSelectionAllowed())
@@ -732,13 +737,13 @@ void Table::changeSelection(const UInt32& rowIndex, const UInt32& columnIndex, b
             }
             else if(getRowSelectionAllowed())
             {
-                _RowSelectionModel->removeSelectionInterval(rowIndex, rowIndex);
+                getRowSelectionModel()->removeSelectionInterval(rowIndex, rowIndex);
             }
         }
         else  //Extend False
         {
             if(getColumnModel()->getSelectionModel()->isSelectedIndex(columnIndex) &&
-               _RowSelectionModel->isSelectedIndex(rowIndex))
+               getRowSelectionModel()->isSelectedIndex(rowIndex))
             {
                 if(getColumnModel()->getColumnSelectionAllowed())
                 {
@@ -746,7 +751,7 @@ void Table::changeSelection(const UInt32& rowIndex, const UInt32& columnIndex, b
                 }
                 if(getRowSelectionAllowed())
                 {
-                    _RowSelectionModel->removeSelectionInterval(rowIndex, rowIndex);
+                    getRowSelectionModel()->removeSelectionInterval(rowIndex, rowIndex);
                 }
             }
             else
@@ -757,7 +762,7 @@ void Table::changeSelection(const UInt32& rowIndex, const UInt32& columnIndex, b
                 }
                 if(getRowSelectionAllowed())
                 {
-                    _RowSelectionModel->setSelectionInterval(rowIndex, rowIndex);
+                    getRowSelectionModel()->setSelectionInterval(rowIndex, rowIndex);
                 }
             }
         }
@@ -772,7 +777,7 @@ void Table::changeSelection(const UInt32& rowIndex, const UInt32& columnIndex, b
             }
             if(getRowSelectionAllowed())
             {
-                _RowSelectionModel->addSelectionInterval(_RowSelectionModel->getAnchorSelectionIndex(), rowIndex);
+                getRowSelectionModel()->addSelectionInterval(getRowSelectionModel()->getAnchorSelectionIndex(), rowIndex);
             }
         }
         else  //Extend False
@@ -784,7 +789,7 @@ void Table::changeSelection(const UInt32& rowIndex, const UInt32& columnIndex, b
             }
             if(getRowSelectionAllowed())
             {
-                _RowSelectionModel->clearSelection();
+                getRowSelectionModel()->clearSelection();
             }
 
             //Ensure new cell is selected
@@ -794,7 +799,7 @@ void Table::changeSelection(const UInt32& rowIndex, const UInt32& columnIndex, b
             }
             if(getRowSelectionAllowed())
             {
-                _RowSelectionModel->addSelectionInterval(rowIndex, rowIndex);
+                getRowSelectionModel()->addSelectionInterval(rowIndex, rowIndex);
             }
         }
     }
@@ -803,30 +808,30 @@ void Table::changeSelection(const UInt32& rowIndex, const UInt32& columnIndex, b
 void Table::clearSelection(void)
 {
     getColumnModel()->getSelectionModel()->clearSelection();
-    _RowSelectionModel->clearSelection();
+    getRowSelectionModel()->clearSelection();
 }
 
-void Table::columnAdded(const TableColumnModelEventUnrecPtr e)
+void Table::handleColumnAdded(TableColumnModelEventDetails* const e)
 {
     updateTableComponents();
 }
 
-void Table::columnMarginChanged(const ChangeEventUnrecPtr e)
+void Table::handleColumnMarginChanged(ChangeEventDetails* const e)
 {
     updateLayout();
 }
 
-void Table::columnMoved(const TableColumnModelEventUnrecPtr e)
+void Table::handleColumnMoved(TableColumnModelEventDetails* const e)
 {
     updateTableComponents();
 }
 
-void Table::columnRemoved(const TableColumnModelEventUnrecPtr e)
+void Table::handleColumnRemoved(TableColumnModelEventDetails* const e)
 {
     updateTableComponents();
 }
 
-void Table::columnSelectionChanged(const ListSelectionEventUnrecPtr e)
+void Table::handleColumnSelectionChanged(ListSelectionEventDetails* const e)
 {
     for(UInt32 i(0) ; i<getMFTable()->size() ; ++i)
     {
@@ -841,16 +846,17 @@ bool Table::editCellAt(const UInt32& row, const UInt32& column)
     return true;
 }
 
-bool Table::editCellAt(const UInt32& row, const UInt32& column, const EventUnrecPtr e)
+bool Table::editCellAt(const UInt32& row, const UInt32& column, EventDetails* const e)
 {
     //TODO:Implement
     checkCellEdit(e, row, column);
     return true;
 }
 
-void Table::editingCanceled(const ChangeEventUnrecPtr e)
+void Table::handleEditingCanceled(ChangeEventDetails* const e)
 {
-    Inherited::getGlobalCellEditor()->removeCellEditorListener(this);
+    _EditingCanceledConnection.disconnect();
+    _EditingStoppedConnection.disconnect();
     setGlobalCellEditor(NULL);
     _EditingComponent = NULL;
     updateItem(_EditingRow*getModel()->getColumnCount() + _EditingColumn);
@@ -858,12 +864,12 @@ void Table::editingCanceled(const ChangeEventUnrecPtr e)
     _EditingColumn = -1;
 }
 
-void Table::editingStopped(const ChangeEventUnrecPtr e)
+void Table::handleEditingStopped(ChangeEventDetails* const e)
 {
     getModel()->setValueAt(Inherited::getGlobalCellEditor()->getCellEditorValue(), _EditingRow, _EditingColumn);
 
-
-    Inherited::getGlobalCellEditor()->removeCellEditorListener(this);
+    _EditingCanceledConnection.disconnect();
+    _EditingStoppedConnection.disconnect();
     setGlobalCellEditor(NULL);
     _EditingComponent = NULL;
     updateItem(_EditingRow*getModel()->getColumnCount() + _EditingColumn);
@@ -917,7 +923,7 @@ std::vector<UInt32> Table::getSelectedRows(void) const
         std::vector<UInt32> SelectedVector;
         for(UInt32 i(0) ; i<getModel()->getRowCount() ; ++i)
         {
-            if(_RowSelectionModel->isSelectedIndex(i))
+            if(getRowSelectionModel()->isSelectedIndex(i))
             {
                 SelectedVector.push_back(i);
             }
@@ -955,7 +961,7 @@ Int32 Table::rowAtPoint(const Pnt2f& point)
 void Table::selectAll(void)
 {
     getColumnModel()->getSelectionModel()->setSelectionInterval(0, getModel()->getColumnCount());
-    _RowSelectionModel->setSelectionInterval(0, getModel()->getRowCount());
+    getRowSelectionModel()->setSelectionInterval(0, getModel()->getRowCount());
 }
 
 void Table::setCellSelectionEnabled(bool cellSelectionEnabled)
@@ -964,7 +970,7 @@ void Table::setCellSelectionEnabled(bool cellSelectionEnabled)
     setRowSelectionAllowed(cellSelectionEnabled);
 }
 
-void Table::selectionChanged(const ListSelectionEventUnrecPtr e)
+void Table::handleRowSelectionChanged(ListSelectionEventDetails* const e)
 {
     for(UInt32 i(0) ; i<getMFTable()->size() ; ++i)
     {
@@ -1031,23 +1037,13 @@ TableCellRendererPtr Table::getDefaultRenderer(const std::type_info& TheType) co
     }
 }
 
-
-void Table::setSelectionModel(ListSelectionModelPtr newModel)
-{
-    if(_RowSelectionModel.get() != NULL)
-    {
-        _RowSelectionModel->removeListSelectionListener(this);
-    }
-    _RowSelectionModel = newModel;
-    if(_RowSelectionModel.get() != NULL)
-    {
-        _RowSelectionModel->addListSelectionListener(this);
-    }
-}
-
 void Table::createColumnsFromModel(void)
 {
-    getColumnModel()->removeColumnModelListener(this);
+    _ColumnMarginChangedConnection.disconnect();
+    _ColumnMovedConnection.disconnect();
+    _ColumnRemovedConnection.disconnect();
+    _ColumnAddedConnection.disconnect();
+    _ColumnSelectionChangedConnection.disconnect();
 
 	if(getColumnModel()->getColumnCount() > getModel()->getColumnCount())
 	{
@@ -1074,7 +1070,11 @@ void Table::createColumnsFromModel(void)
     {
         getColumnModel()->getColumn(i)->setHeaderValue(getModel()->getColumnValue(i));
     }
-    getColumnModel()->addColumnModelListener(this);
+    _ColumnMarginChangedConnection = getColumnModel()->connectColumnMarginChanged(boost::bind(&Table::handleColumnMarginChanged, this, _1));
+    _ColumnMovedConnection = getColumnModel()->connectColumnMoved(boost::bind(&Table::handleColumnMoved, this, _1));
+    _ColumnRemovedConnection = getColumnModel()->connectColumnRemoved(boost::bind(&Table::handleColumnRemoved, this, _1));
+    _ColumnAddedConnection = getColumnModel()->connectColumnAdded(boost::bind(&Table::handleColumnAdded, this, _1));
+    _ColumnSelectionChangedConnection = getColumnModel()->connectColumnSelectionChanged(boost::bind(&Table::handleColumnSelectionChanged, this, _1));
 }
 
 void Table::setHeader(TableHeader * const value)
@@ -1083,48 +1083,41 @@ void Table::setHeader(TableHeader * const value)
 
     if(getHeader() != NULL)
     {
-        getHeader()->setTable(this);
         getHeader()->setColumnModel(getColumnModel());
     }
 }
 
 void Table::setModel(TableModel * const value)
 {
-    if(getModel() != NULL)
-    {
-        getModel()->removeTableModelListener(this);
-	}
+    _ContentsHeaderRowChangedConnection.disconnect();
+    _ContentsChangedConnection.disconnect();
+    _IntervalAddedConnection.disconnect();
+    _IntervalRemovedConnection.disconnect();
 
 	Inherited::setModel(value);
-    //if(_Model.get() != NULL)
-    //{
-    //    _Model->removeTableModelListener(this);
-    //}
-    //_Model = dataModel;
     if(getModel() != NULL)
     {
         if(getAutoCreateColumnsFromModel())
         {
             createColumnsFromModel();
         }
-        getModel()->addTableModelListener(this);
+        _ContentsHeaderRowChangedConnection = getModel()->connectContentsHeaderRowChanged(boost::bind(&Table::handleContentsChanged, this, _1));
+        _ContentsChangedConnection = getModel()->connectContentsChanged(boost::bind(&Table::handleContentsChanged, this, _1));
+        _IntervalAddedConnection = getModel()->connectIntervalAdded(boost::bind(&Table::handleIntervalAdded, this, _1));
+        _IntervalRemovedConnection = getModel()->connectIntervalRemoved(boost::bind(&Table::handleIntervalRemoved, this, _1));
     }
     updateTableComponents();
 }
 
 void Table::setColumnModel(TableColumnModel * const value)
 {
-    if(getColumnModel() != NULL)
-    {
-        getColumnModel()->removeColumnModelListener(this);
-	}
+    _ColumnMarginChangedConnection.disconnect();
+    _ColumnMovedConnection.disconnect();
+    _ColumnRemovedConnection.disconnect();
+    _ColumnAddedConnection.disconnect();
+    _ColumnSelectionChangedConnection.disconnect();
 	Inherited::setColumnModel(value);
 
-    //if(_ColumnModel.get() != NULL)
-    //{
-    //    _ColumnModel->removeColumnModelListener(this);
-    //}
-    //_ColumnModel = columnModel;
     if(getHeader() != NULL)
     {
         getHeader()->setColumnModel(getColumnModel());
@@ -1135,7 +1128,11 @@ void Table::setColumnModel(TableColumnModel * const value)
         {
             createColumnsFromModel();
         }
-        getColumnModel()->addColumnModelListener(this);
+        _ColumnMarginChangedConnection = getColumnModel()->connectColumnMarginChanged(boost::bind(&Table::handleColumnMarginChanged, this, _1));
+        _ColumnMovedConnection = getColumnModel()->connectColumnMoved(boost::bind(&Table::handleColumnMoved, this, _1));
+        _ColumnRemovedConnection = getColumnModel()->connectColumnRemoved(boost::bind(&Table::handleColumnRemoved, this, _1));
+        _ColumnAddedConnection = getColumnModel()->connectColumnAdded(boost::bind(&Table::handleColumnAdded, this, _1));
+        _ColumnSelectionChangedConnection = getColumnModel()->connectColumnSelectionChanged(boost::bind(&Table::handleColumnSelectionChanged, this, _1));
     }
     updateTableComponents();
 }
@@ -1156,7 +1153,10 @@ void Table::onCreate(const Table * Id)
 
     if(getModel() != NULL)
     {
-        getModel()->addTableModelListener(this);
+        _ContentsHeaderRowChangedConnection = getModel()->connectContentsHeaderRowChanged(boost::bind(&Table::handleContentsChanged, this, _1));
+        _ContentsChangedConnection = getModel()->connectContentsChanged(boost::bind(&Table::handleContentsChanged, this, _1));
+        _IntervalAddedConnection = getModel()->connectIntervalAdded(boost::bind(&Table::handleIntervalAdded, this, _1));
+        _IntervalRemovedConnection = getModel()->connectIntervalRemoved(boost::bind(&Table::handleIntervalRemoved, this, _1));
     }
     if(getColumnModel() != NULL)
     {
@@ -1164,12 +1164,18 @@ void Table::onCreate(const Table * Id)
         {
             createColumnsFromModel();
         }
-        getColumnModel()->setSelectionModel(ListSelectionModelPtr(new DefaultListSelectionModel()));
-        getColumnModel()->addColumnModelListener(this);
+        DefaultListSelectionModelUnrecPtr ColumnSelModel = DefaultListSelectionModel::create();
+        getColumnModel()->setSelectionModel(ColumnSelModel);
+
+        _ColumnMarginChangedConnection = getColumnModel()->connectColumnMarginChanged(boost::bind(&Table::handleColumnMarginChanged, this, _1));
+        _ColumnMovedConnection = getColumnModel()->connectColumnMoved(boost::bind(&Table::handleColumnMoved, this, _1));
+        _ColumnRemovedConnection = getColumnModel()->connectColumnRemoved(boost::bind(&Table::handleColumnRemoved, this, _1));
+        _ColumnAddedConnection = getColumnModel()->connectColumnAdded(boost::bind(&Table::handleColumnAdded, this, _1));
+        _ColumnSelectionChangedConnection = getColumnModel()->connectColumnSelectionChanged(boost::bind(&Table::handleColumnSelectionChanged, this, _1));
     }
 
-    _RowSelectionModel = ListSelectionModelPtr(new DefaultListSelectionModel()),
-                       _RowSelectionModel->addListSelectionListener(this);
+    DefaultListSelectionModelUnrecPtr RowSelModel = DefaultListSelectionModel::create();
+    setRowSelectionModel(RowSelModel);
 
     if(Id != NULL &&
        getHeader() != NULL)
@@ -1183,7 +1189,6 @@ void Table::onCreate(const Table * Id)
                                                 std::vector<const OSG::ReflexiveContainerType *>(),
                                                 std::vector<const OSG::ReflexiveContainerType *>(1, &Table::getClassType())));
         setHeader(dynamic_pointer_cast<TableHeader>(FCCopy));
-        getHeader()->setTable(this);
         getHeader()->setColumnModel(getColumnModel());
     }
     updateTableComponents();
@@ -1191,17 +1196,33 @@ void Table::onCreate(const Table * Id)
 
 void Table::onDestroy()
 {
-    if(_RowSelectionModel != NULL)
+    _RowSelectionChangedConnection.disconnect();
+
+    _EditingCanceledConnection.disconnect();
+    _EditingStoppedConnection.disconnect();
+    
+    _ColumnMarginChangedConnection.disconnect();
+    _ColumnMovedConnection.disconnect();
+    _ColumnRemovedConnection.disconnect();
+    _ColumnAddedConnection.disconnect();
+    _ColumnSelectionChangedConnection.disconnect();
+
+    _ContentsHeaderRowChangedConnection.disconnect();
+    _ContentsChangedConnection.disconnect();
+    _IntervalAddedConnection.disconnect();
+    _IntervalRemovedConnection.disconnect();
+
+    for(std::map<Component*, boost::signals2::connection>::iterator MapItor(_ItemFocusGainedConnections.begin());
+        MapItor != _ItemFocusGainedConnections.end();
+        ++MapItor)
     {
-        _RowSelectionModel->removeListSelectionListener(this);
+        MapItor->second.disconnect();
     }
-    if(getColumnModel() != NULL)
+    for(std::map<Component*, boost::signals2::connection>::iterator MapItor(_ItemFocusLostConnections.begin());
+        MapItor != _ItemFocusLostConnections.end();
+        ++MapItor)
     {
-        getColumnModel()->removeColumnModelListener(this);
-    }
-    if(getModel() != NULL)
-    {
-        getModel()->removeTableModelListener(this);
+        MapItor->second.disconnect();
     }
 }
 
@@ -1220,7 +1241,6 @@ Table::Table(const Table &source) :
     _EditingColumn(-1),
     _EditingRow(-1),
     _EditingComponent(NULL),
-    _RowSelectionModel(),
     _DefaultCellEditorByTypeMap(source._DefaultCellEditorByTypeMap),
     _DefaultCellRendererByTypeMap(source._DefaultCellRendererByTypeMap)
 {
@@ -1241,11 +1261,19 @@ void Table::changed(ConstFieldMaskArg whichField,
 
     if(whichField & RowSelectionAllowedFieldMask)
     {
-        _RowSelectionModel->clearSelection();
+        getRowSelectionModel()->clearSelection();
         if(getColumnModel() != NULL &&
-           getColumnModel()->getSelectionModel().get() != NULL)
+           getColumnModel()->getSelectionModel() != NULL)
         {
             //getColumnModel()->getSelectionModel()->clearSelection();
+        }
+    }
+    if(whichField & RowSelectionModelFieldMask)
+    {
+        _RowSelectionChangedConnection.disconnect();
+        if(getRowSelectionModel() != NULL)
+        {
+            _RowSelectionChangedConnection = getRowSelectionModel()->connectSelectionChanged(boost::bind(&Table::handleRowSelectionChanged, this, _1));
         }
     }
 }

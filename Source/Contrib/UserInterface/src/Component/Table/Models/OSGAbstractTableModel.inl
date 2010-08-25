@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool AbstractTableModel::isTableModelListenerAttached(TableModelListenerPtr l) const
-{
-    return _ModelListeners.find(l) != _ModelListeners.end();
-}
-
 OSG_END_NAMESPACE

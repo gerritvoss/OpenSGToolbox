@@ -119,11 +119,22 @@ void SwapFieldElementCommand::execute(void)
     if(TheFieldHandle->isPointerField())
     {
         EditMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
-        FieldContainer* ToFC = TheHandle->get(_ToIndex);
-        FieldContainer* FromFC = TheHandle->get(_FromIndex);
 
-        TheHandle->replace(_FromIndex, ToFC);
-        TheHandle->replace(_ToIndex, FromFC);
+        UInt32 MinIndex(osgMin(_FromIndex,_ToIndex)), MaxIndex(osgMax(_FromIndex,_ToIndex));
+        FieldContainerUnrecPtr MinIndexFC = TheHandle->get(MinIndex);
+        FieldContainerUnrecPtr MaxIndexFC = TheHandle->get(MaxIndex);
+
+        //Replace the MinIndex first
+        UInt32 InitialSize(TheHandle->size());
+        TheHandle->replace(MinIndex, MaxIndexFC);
+        if(InitialSize != TheHandle->size())
+        {
+            TheHandle->insert(MaxIndex, MinIndexFC);
+        }
+        else
+        {
+            TheHandle->replace(MaxIndex, MinIndexFC);
+        }
     }
     else
     {
@@ -176,11 +187,21 @@ void SwapFieldElementCommand::redo(void)
     if(TheFieldHandle->isPointerField())
     {
         EditMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
-        FieldContainer* ToFC = TheHandle->get(_ToIndex);
-        FieldContainer* FromFC = TheHandle->get(_FromIndex);
+        UInt32 MinIndex(osgMin(_FromIndex,_ToIndex)), MaxIndex(osgMax(_FromIndex,_ToIndex));
+        FieldContainerUnrecPtr MinIndexFC = TheHandle->get(MinIndex);
+        FieldContainerUnrecPtr MaxIndexFC = TheHandle->get(MaxIndex);
 
-        TheHandle->replace(_FromIndex, ToFC);
-        TheHandle->replace(_ToIndex, FromFC);
+        //Replace the MinIndex first
+        UInt32 InitialSize(TheHandle->size());
+        TheHandle->replace(MinIndex, MaxIndexFC);
+        if(InitialSize != TheHandle->size())
+        {
+            TheHandle->insert(MaxIndex, MinIndexFC);
+        }
+        else
+        {
+            TheHandle->replace(MaxIndex, MinIndexFC);
+        }
     }
     else
     {
@@ -211,11 +232,21 @@ void SwapFieldElementCommand::undo(void)
     if(TheFieldHandle->isPointerField())
     {
         EditMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
-        FieldContainer* ToFC = TheHandle->get(_ToIndex);
-        FieldContainer* FromFC = TheHandle->get(_FromIndex);
+        UInt32 MinIndex(osgMin(_FromIndex,_ToIndex)), MaxIndex(osgMax(_FromIndex,_ToIndex));
+        FieldContainerUnrecPtr MinIndexFC = TheHandle->get(MinIndex);
+        FieldContainerUnrecPtr MaxIndexFC = TheHandle->get(MaxIndex);
 
-        TheHandle->replace(_FromIndex, ToFC);
-        TheHandle->replace(_ToIndex, FromFC);
+        //Replace the MinIndex first
+        UInt32 InitialSize(TheHandle->size());
+        TheHandle->replace(MinIndex, MaxIndexFC);
+        if(InitialSize != TheHandle->size())
+        {
+            TheHandle->insert(MaxIndex, MinIndexFC);
+        }
+        else
+        {
+            TheHandle->replace(MaxIndex, MinIndexFC);
+        }
     }
     else
     {

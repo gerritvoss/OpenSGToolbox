@@ -40,16 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool TabPanel::isSelectionListenerAttached(SelectionListenerPtr Listener) const
-{
-    return getSelectionModel()->isSelectionListenerAttached(Listener);
-}
-
-inline
-TabPanel::TabSelectionListener::TabSelectionListener(TabPanel* const TheTabPanel) :
-									_TabPanel(TheTabPanel)
-{
-}
-
 OSG_END_NAMESPACE

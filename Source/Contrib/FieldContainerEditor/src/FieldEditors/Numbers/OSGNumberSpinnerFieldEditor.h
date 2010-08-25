@@ -43,7 +43,8 @@
 #endif
 
 #include "OSGNumberSpinnerFieldEditorBase.h"
-#include "OSGSpinner.h"
+#include "OSGSpinnerFields.h"
+#include "OSGChangeEventDetailsFields.h"
 #include "OSGNumberSpinnerModel.h"
 
 OSG_BEGIN_NAMESPACE
@@ -118,6 +119,13 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING NumberSpinnerFieldEditor : publ
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     virtual void internalFieldChanged (void);
     virtual void internalStartEditing (void);
     virtual void internalStopEditing  (void);
@@ -130,19 +138,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING NumberSpinnerFieldEditor : publ
     SpinnerRefPtr   _EditingSpinner;
     SpinnerModelPtr _EditingSpinnerModel;
     
-    class SpinnerListener : public ChangeListener
-    {
-      public :
-           SpinnerListener(NumberSpinnerFieldEditor * const ptr);
-           virtual void stateChanged(const ChangeEventUnrecPtr e);
-
-      protected :
-        NumberSpinnerFieldEditor* _NumberSpinnerFieldEditor ;
-    };
-
-    friend class SpinnerListener;
-
-    SpinnerListener _SpinnerListener;
+    void handleSpinnerStateChanged(ChangeEventDetails* const details);
+    boost::signals2::connection _SpinnerStateChangedConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:

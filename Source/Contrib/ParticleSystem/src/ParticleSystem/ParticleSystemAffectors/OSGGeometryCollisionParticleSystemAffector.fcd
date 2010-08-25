@@ -32,9 +32,10 @@
 		defaultValue="NULL"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="ParticleCollision"
-		type="ParticleEvent"
+		detailsType="ParticleGeometryCollisionEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

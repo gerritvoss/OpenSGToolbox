@@ -58,6 +58,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MaterialLayer : public MaterialLayerBa
     /*==========================  PUBLIC  =================================*/
 
   public:
+	enum Scale
+    {
+        SCALE_NONE     = 0,
+        SCALE_STRETCH  = 1,
+        SCALE_MIN_AXIS = 2,
+        SCALE_MAX_AXIS = 3,
+        SCALE_ABSOLUTE = 4
+    };
 
     typedef MaterialLayerBase Inherited;
     typedef MaterialLayer     Self;

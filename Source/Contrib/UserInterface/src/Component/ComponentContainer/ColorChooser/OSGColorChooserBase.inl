@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -90,12 +91,37 @@ void ColorChooserBase::setPreviewPanel(Component * const value)
     _sfPreviewPanel.setValue(value);
 }
 
-//! Get the value of the \a index element the ColorChooser::_mfInternalChooserPanels field.
+//! Get the value of the ColorChooser::_sfSelectionModel field.
 inline
-AbstractColorChooserPanel * ColorChooserBase::getInternalChooserPanels(const UInt32 index) const
+ColorSelectionModel * ColorChooserBase::getSelectionModel(void) const
 {
-    return _mfInternalChooserPanels[index];
+    return _sfSelectionModel.getValue();
 }
+
+//! Set the value of the ColorChooser::_sfSelectionModel field.
+inline
+void ColorChooserBase::setSelectionModel(ColorSelectionModel * const value)
+{
+    editSField(SelectionModelFieldMask);
+
+    _sfSelectionModel.setValue(value);
+}
+
+//! Get the value of the \a index element the ColorChooser::_mfChooserPanelTypeIds field.
+inline
+      UInt32  ColorChooserBase::getChooserPanelTypeIds(const UInt32 index) const
+{
+    return _mfChooserPanelTypeIds[index];
+}
+
+inline
+UInt32 &ColorChooserBase::editChooserPanelTypeIds(const UInt32 index)
+{
+    editMField(ChooserPanelTypeIdsFieldMask, _mfChooserPanelTypeIds);
+
+    return _mfChooserPanelTypeIds[index];
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -108,14 +134,17 @@ void ColorChooserBase::execSync (      ColorChooserBase *pFrom,
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-    if(FieldBits::NoField != (InternalChooserPanelsFieldMask & whichField))
-        _mfInternalChooserPanels.syncWith(pFrom->_mfInternalChooserPanels,
+    if(FieldBits::NoField != (ChooserPanelTypeIdsFieldMask & whichField))
+        _mfChooserPanelTypeIds.syncWith(pFrom->_mfChooserPanelTypeIds,
                                 syncMode,
                                 uiSyncInfo,
                                 oOffsets);
 
     if(FieldBits::NoField != (PreviewPanelFieldMask & whichField))
         _sfPreviewPanel.syncWith(pFrom->_sfPreviewPanel);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pFrom->_sfSelectionModel);
 }
 #endif
 

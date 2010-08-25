@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGSelectionEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -108,70 +110,71 @@ const Char8 *SingleSelectionModelBase::getClassname(void)
 }
 
 inline
-EventConnection SingleSelectionModelBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool SingleSelectionModelBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 SingleSelectionModelBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr SingleSelectionModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void SingleSelectionModelBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 SingleSelectionModelBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *SingleSelectionModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *SingleSelectionModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *SingleSelectionModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *SingleSelectionModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 SingleSelectionModelBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *SingleSelectionModelBase::editSFEventProducer(void)
+boost::signals2::connection  SingleSelectionModelBase::connectSelectionChanged(const SelectionChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _SelectionChangedEvent.connect(listener, at);
 }
 
-//! Get the value of the SingleSelectionModel::_sfEventProducer field.
 inline
-EventProducerPtr &SingleSelectionModelBase::editEventProducer(void)
+boost::signals2::connection  SingleSelectionModelBase::connectSelectionChanged(const SelectionChangedEventType::group_type &group,
+                                                    const SelectionChangedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _SelectionChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  SingleSelectionModelBase::disconnectSelectionChanged(const SelectionChangedEventType::group_type &group)
+{
+    _SelectionChangedEvent.disconnect(group);
+}
+
+inline
+void  SingleSelectionModelBase::disconnectAllSlotsSelectionChanged(void)
+{
+    _SelectionChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  SingleSelectionModelBase::isEmptySelectionChanged(void) const
+{
+    return _SelectionChangedEvent.empty();
+}
+
+inline
+UInt32  SingleSelectionModelBase::numSlotsSelectionChanged(void) const
+{
+    return _SelectionChangedEvent.num_slots();
+}
+
+inline
+void SingleSelectionModelBase::produceSelectionChanged(SelectionChangedEventDetailsType* const e)
+{
+    produceEvent(SelectionChangedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(SingleSelectionModel);

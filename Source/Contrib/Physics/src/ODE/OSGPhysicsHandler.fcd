@@ -16,26 +16,32 @@
 	<Field
 		name="world"
 		type="PhysicsWorld"
-        category="pointer"
 		cardinality="single"
+        category="childpointer"
+        childParentType="FieldContainer"
 		visibility="external"
-		defaultValue="NULL"
 		access="public"
+        ptrFieldAccess = "nullCheck"
+        linkParentField="ParentHandler"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="spaces"
 		type="PhysicsSpace"
-        category="pointer"
 		cardinality="multi"
+        category="childpointer"
+        childParentType="FieldContainer"
 		visibility="external"
 		access="public"
+        ptrFieldAccess = "nullCheck"
+        linkParentField="ParentHandler"
 	>
 	</Field>
 	<Field
 		name="UpdateNode"
 		type="Node"
-        category="pointer"
+        category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"

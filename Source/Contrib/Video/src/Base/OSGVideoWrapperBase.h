@@ -69,10 +69,10 @@
 #include "OSGVideoWrapperFields.h"
 
 //Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+#include "OSGActivity.h"
+#include "OSGConsumableEventCombiner.h"
+
+#include "OSGVideoEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -91,36 +91,46 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapperBase : public AttachmentContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(VideoWrapper);
+    
+    
+    typedef VideoEventDetails  StartedEventDetailsType;
+    typedef VideoEventDetails  StoppedEventDetailsType;
+    typedef VideoEventDetails  PausedEventDetailsType;
+    typedef VideoEventDetails  UnpausedEventDetailsType;
+    typedef VideoEventDetails  EndedEventDetailsType;
+    typedef VideoEventDetails  CycledEventDetailsType;
+    typedef VideoEventDetails  OpenedEventDetailsType;
+    typedef VideoEventDetails  ClosedEventDetailsType;
+    typedef VideoEventDetails  SeekedEventDetailsType;
+
+    typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
+    typedef boost::signals2::signal<void (VideoEventDetails* const, UInt32), ConsumableEventCombiner> StartedEventType;
+    typedef boost::signals2::signal<void (VideoEventDetails* const, UInt32), ConsumableEventCombiner> StoppedEventType;
+    typedef boost::signals2::signal<void (VideoEventDetails* const, UInt32), ConsumableEventCombiner> PausedEventType;
+    typedef boost::signals2::signal<void (VideoEventDetails* const, UInt32), ConsumableEventCombiner> UnpausedEventType;
+    typedef boost::signals2::signal<void (VideoEventDetails* const, UInt32), ConsumableEventCombiner> EndedEventType;
+    typedef boost::signals2::signal<void (VideoEventDetails* const, UInt32), ConsumableEventCombiner> CycledEventType;
+    typedef boost::signals2::signal<void (VideoEventDetails* const, UInt32), ConsumableEventCombiner> OpenedEventType;
+    typedef boost::signals2::signal<void (VideoEventDetails* const, UInt32), ConsumableEventCombiner> ClosedEventType;
+    typedef boost::signals2::signal<void (VideoEventDetails* const, UInt32), ConsumableEventCombiner> SeekedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
   public:
 
-    enum
-    {
-        EventProducerFieldId = Inherited::NextFieldId,
-        NextFieldId = EventProducerFieldId + 1
-    };
-
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
-    static const OSG::BitVector NextFieldMask =
-        (TypeTraits<BitVector>::One << NextFieldId);
-        
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        VideoStartedMethodId = 1,
-        VideoStoppedMethodId = VideoStartedMethodId + 1,
-        VideoPausedMethodId = VideoStoppedMethodId + 1,
-        VideoUnpausedMethodId = VideoPausedMethodId + 1,
-        VideoEndedMethodId = VideoUnpausedMethodId + 1,
-        VideoCycledMethodId = VideoEndedMethodId + 1,
-        VideoOpenedMethodId = VideoCycledMethodId + 1,
-        VideoClosedMethodId = VideoOpenedMethodId + 1,
-        VideoSeekedMethodId = VideoClosedMethodId + 1,
-        NextProducedMethodId = VideoSeekedMethodId + 1
+        StartedEventId = 1,
+        StoppedEventId = StartedEventId + 1,
+        PausedEventId = StoppedEventId + 1,
+        UnpausedEventId = PausedEventId + 1,
+        EndedEventId = UnpausedEventId + 1,
+        CycledEventId = EndedEventId + 1,
+        OpenedEventId = CycledEventId + 1,
+        ClosedEventId = OpenedEventId + 1,
+        SeekedEventId = ClosedEventId + 1,
+        NextProducedEventId = SeekedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -157,40 +167,152 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapperBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //Started
+    boost::signals2::connection connectStarted        (const StartedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectStarted        (const StartedEventType::group_type &group,
+                                                       const StartedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectStarted                (const StartedEventType::group_type &group);
+    void   disconnectAllSlotsStarted        (void);
+    bool   isEmptyStarted                   (void) const;
+    UInt32 numSlotsStarted                  (void) const;
+    
+    //Stopped
+    boost::signals2::connection connectStopped        (const StoppedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectStopped        (const StoppedEventType::group_type &group,
+                                                       const StoppedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectStopped                (const StoppedEventType::group_type &group);
+    void   disconnectAllSlotsStopped        (void);
+    bool   isEmptyStopped                   (void) const;
+    UInt32 numSlotsStopped                  (void) const;
+    
+    //Paused
+    boost::signals2::connection connectPaused         (const PausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectPaused         (const PausedEventType::group_type &group,
+                                                       const PausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectPaused                 (const PausedEventType::group_type &group);
+    void   disconnectAllSlotsPaused         (void);
+    bool   isEmptyPaused                    (void) const;
+    UInt32 numSlotsPaused                   (void) const;
+    
+    //Unpaused
+    boost::signals2::connection connectUnpaused       (const UnpausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectUnpaused       (const UnpausedEventType::group_type &group,
+                                                       const UnpausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectUnpaused               (const UnpausedEventType::group_type &group);
+    void   disconnectAllSlotsUnpaused       (void);
+    bool   isEmptyUnpaused                  (void) const;
+    UInt32 numSlotsUnpaused                 (void) const;
+    
+    //Ended
+    boost::signals2::connection connectEnded          (const EndedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectEnded          (const EndedEventType::group_type &group,
+                                                       const EndedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectEnded                  (const EndedEventType::group_type &group);
+    void   disconnectAllSlotsEnded          (void);
+    bool   isEmptyEnded                     (void) const;
+    UInt32 numSlotsEnded                    (void) const;
+    
+    //Cycled
+    boost::signals2::connection connectCycled         (const CycledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectCycled         (const CycledEventType::group_type &group,
+                                                       const CycledEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectCycled                 (const CycledEventType::group_type &group);
+    void   disconnectAllSlotsCycled         (void);
+    bool   isEmptyCycled                    (void) const;
+    UInt32 numSlotsCycled                   (void) const;
+    
+    //Opened
+    boost::signals2::connection connectOpened         (const OpenedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectOpened         (const OpenedEventType::group_type &group,
+                                                       const OpenedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectOpened                 (const OpenedEventType::group_type &group);
+    void   disconnectAllSlotsOpened         (void);
+    bool   isEmptyOpened                    (void) const;
+    UInt32 numSlotsOpened                   (void) const;
+    
+    //Closed
+    boost::signals2::connection connectClosed         (const ClosedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectClosed         (const ClosedEventType::group_type &group,
+                                                       const ClosedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectClosed                 (const ClosedEventType::group_type &group);
+    void   disconnectAllSlotsClosed         (void);
+    bool   isEmptyClosed                    (void) const;
+    UInt32 numSlotsClosed                   (void) const;
+    
+    //Seeked
+    boost::signals2::connection connectSeeked         (const SeekedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSeeked         (const SeekedEventType::group_type &group,
+                                                       const SeekedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSeeked                 (const SeekedEventType::group_type &group);
+    void   disconnectAllSlotsSeeked         (void);
+    bool   isEmptySeeked                    (void) const;
+    UInt32 numSlotsSeeked                   (void) const;
+    
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Event Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
-    
-    GetFieldHandlePtr  getHandleEventProducer        (void) const;
-    EditFieldHandlePtr editHandleEventProducer       (void);
 
+    //Event Event producers
+    StartedEventType _StartedEvent;
+    StoppedEventType _StoppedEvent;
+    PausedEventType _PausedEvent;
+    UnpausedEventType _UnpausedEvent;
+    EndedEventType _EndedEvent;
+    CycledEventType _CycledEvent;
+    OpenedEventType _OpenedEvent;
+    ClosedEventType _ClosedEvent;
+    SeekedEventType _SeekedEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -198,13 +320,6 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapperBase : public AttachmentContainer
     static       void   classDescInserter(TypeObject &oType);
     static const Char8 *getClassname     (void             );
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFEventProducerPtr _sfEventProducer;
-
-    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -231,6 +346,36 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapperBase : public AttachmentContainer
     /*! \{                                                                 */
 
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleStartedSignal(void) const;
+    GetEventHandlePtr getHandleStoppedSignal(void) const;
+    GetEventHandlePtr getHandlePausedSignal(void) const;
+    GetEventHandlePtr getHandleUnpausedSignal(void) const;
+    GetEventHandlePtr getHandleEndedSignal(void) const;
+    GetEventHandlePtr getHandleCycledSignal(void) const;
+    GetEventHandlePtr getHandleOpenedSignal(void) const;
+    GetEventHandlePtr getHandleClosedSignal(void) const;
+    GetEventHandlePtr getHandleSeekedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceStarted             (StartedEventDetailsType* const e);
+    void produceStopped             (StoppedEventDetailsType* const e);
+    void producePaused              (PausedEventDetailsType* const e);
+    void produceUnpaused            (UnpausedEventDetailsType* const e);
+    void produceEnded               (EndedEventDetailsType* const e);
+    void produceCycled              (CycledEventDetailsType* const e);
+    void produceOpened              (OpenedEventDetailsType* const e);
+    void produceClosed              (ClosedEventDetailsType* const e);
+    void produceSeeked              (SeekedEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -276,7 +421,7 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapperBase : public AttachmentContainer
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

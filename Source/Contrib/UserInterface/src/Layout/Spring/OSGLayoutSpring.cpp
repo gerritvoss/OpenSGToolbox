@@ -148,22 +148,22 @@ LayoutSpringRefPtr LayoutSpring::scale(LayoutSpringRefPtr s, const Real32& facto
     return ScaleLayoutSpring::create(s, factor);
 }
 
-LayoutSpringRefPtr LayoutSpring::width(ComponentRefPtr c)
+LayoutSpringRefPtr LayoutSpring::width(Component* const c)
 {
     return ComponentWidthLayoutSpring::create(c);
 }
 
-LayoutSpringRefPtr LayoutSpring::height(ComponentRefPtr c)
+LayoutSpringRefPtr LayoutSpring::height(Component* const c)
 {
     return ComponentHeightLayoutSpring::create(c);
 }
 
-LayoutSpringRefPtr LayoutSpring::requestedWidth(ComponentRefPtr c)
+LayoutSpringRefPtr LayoutSpring::requestedWidth(Component* const c)
 {
     return ComponentWidthLayoutSpring::create(c, ComponentWidthLayoutSpring::REQUESTED_SIZE);
 }
 
-LayoutSpringRefPtr LayoutSpring::requestedHeight(ComponentRefPtr c)
+LayoutSpringRefPtr LayoutSpring::requestedHeight(Component* const c)
 {
     return ComponentHeightLayoutSpring::create(c, ComponentWidthLayoutSpring::REQUESTED_SIZE);
 }

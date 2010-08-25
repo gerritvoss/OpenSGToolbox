@@ -56,13 +56,6 @@ UInt32 LuaManager::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-
-inline
-bool LuaManager::isLuaListenerAttached(LuaListenerRefPtr Listener) const
-{
-    return _LuaListeners.find(Listener) != _LuaListeners.end();
-}
-
 inline
 void LuaManager::setEnableStackTrace(bool Enable)
 {
@@ -77,63 +70,85 @@ bool LuaManager::getEnableStackTrace(void) const
 
 
 inline
-EventConnection LuaManager::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
+boost::signals2::connection LuaManager::attachActivity(UInt32 eventId,
+                                           Activity* TheActivity)
 {
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool LuaManager::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 LuaManager::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr LuaManager::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void LuaManager::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
+    return connectLuaError(boost::bind(&Activity::eventProduced, ActivityUnrecPtr(TheActivity), _1, _2) );
 }
 
 inline
 UInt32 LuaManager::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *LuaManager::getProducedEventDescription(const Char8 *ProducedEventName) const
+const EventDescription *LuaManager::getProducedEventDescription(const Char8 *ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *LuaManager::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *LuaManager::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 LuaManager::getProducedEventId(const Char8 *ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
 lua_State *LuaManager::getLuaState(void)
 {
     return _State;
+}
+
+inline
+boost::signals2::connection  LuaManager::connectLuaError(const LuaErrorEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _LuaErrorEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  LuaManager::connectLuaError(const LuaErrorEventType::group_type &group,
+                                                    const LuaErrorEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _LuaErrorEvent.connect(group, listener, at);
+}
+
+inline
+void  LuaManager::disconnectLuaError(const LuaErrorEventType::group_type &group)
+{
+    _LuaErrorEvent.disconnect(group);
+}
+
+inline
+void  LuaManager::disconnectAllSlotsLuaError(void)
+{
+    _LuaErrorEvent.disconnect_all_slots();
+}
+
+inline
+bool  LuaManager::isEmptyLuaError(void) const
+{
+    return _LuaErrorEvent.empty();
+}
+
+inline
+UInt32  LuaManager::numSlotsLuaError(void) const
+{
+    return _LuaErrorEvent.num_slots();
+}
+
+inline
+void LuaManager::produceLuaError(LuaErrorEventDetailsType* const e)
+{
+    _LuaErrorEvent.set_combiner(ConsumableEventCombiner(e));
+    _LuaErrorEvent(dynamic_cast<LuaErrorEventDetailsType* const>(e), LuaErrorEventId);
 }
 
 OSG_END_NAMESPACE

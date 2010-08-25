@@ -57,6 +57,8 @@
 #include "OSGConfig.h"
 
 
+#include "OSGParticleGeometryCollisionEventDetails.h"
+
 
 #include "OSGParticleAffector.h"        // CollisionAffectors Class
 #include "OSGNode.h"                    // CollisionNode Class
@@ -66,7 +68,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -145,17 +147,6 @@ void GeometryCollisionParticleSystemAffectorBase::classDescInserter(TypeObject &
         static_cast<FieldGetMethodSig >(&GeometryCollisionParticleSystemAffector::getHandleCollisionNode));
 
     oType.addInitialDesc(pDesc);
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&GeometryCollisionParticleSystemAffector::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&GeometryCollisionParticleSystemAffector::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -204,24 +195,27 @@ GeometryCollisionParticleSystemAffectorBase::TypeObject GeometryCollisionParticl
     "\t\tdefaultValue=\"NULL\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ParticleCollision\"\n"
-    "\t\ttype=\"ParticleEvent\"\n"
+    "\t\tdetailsType=\"ParticleGeometryCollisionEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     ""
     );
 
-//! GeometryCollisionParticleSystemAffector Produced Methods
+//! GeometryCollisionParticleSystemAffector Produced Events
 
-MethodDescription *GeometryCollisionParticleSystemAffectorBase::_methodDesc[] =
+EventDescription *GeometryCollisionParticleSystemAffectorBase::_eventDesc[] =
 {
-    new MethodDescription("ParticleCollision", 
-                    "",
-                     ParticleCollisionMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("ParticleCollision", 
+                          "",
+                          ParticleCollisionEventId, 
+                          FieldTraits<ParticleGeometryCollisionEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&GeometryCollisionParticleSystemAffectorBase::getHandleParticleCollisionSignal))
+
 };
 
 EventProducerType GeometryCollisionParticleSystemAffectorBase::_producerType(
@@ -229,8 +223,8 @@ EventProducerType GeometryCollisionParticleSystemAffectorBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -354,10 +348,6 @@ UInt32 GeometryCollisionParticleSystemAffectorBase::getBinSize(ConstFieldMaskArg
     {
         returnValue += _sfCollisionNode.getBinSize();
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -375,10 +365,6 @@ void GeometryCollisionParticleSystemAffectorBase::copyToBin(BinaryDataHandler &p
     {
         _sfCollisionNode.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void GeometryCollisionParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -393,10 +379,6 @@ void GeometryCollisionParticleSystemAffectorBase::copyFromBin(BinaryDataHandler 
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
     {
         _sfCollisionNode.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
     }
 }
 
@@ -518,24 +500,128 @@ FieldContainerTransitPtr GeometryCollisionParticleSystemAffectorBase::shallowCop
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void GeometryCollisionParticleSystemAffectorBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        OSG_ASSERT(dynamic_cast<ParticleCollisionEventDetailsType* const>(e));
+
+        _ParticleCollisionEvent.set_combiner(ConsumableEventCombiner(e));
+        _ParticleCollisionEvent(dynamic_cast<ParticleCollisionEventDetailsType* const>(e), ParticleCollisionEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection GeometryCollisionParticleSystemAffectorBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        return _ParticleCollisionEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  GeometryCollisionParticleSystemAffectorBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        return _ParticleCollisionEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  GeometryCollisionParticleSystemAffectorBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        _ParticleCollisionEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  GeometryCollisionParticleSystemAffectorBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        _ParticleCollisionEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  GeometryCollisionParticleSystemAffectorBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        return _ParticleCollisionEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  GeometryCollisionParticleSystemAffectorBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ParticleCollisionEventId:
+        return _ParticleCollisionEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
 GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(void) :
-    _Producer(&getProducerType()),
     Inherited(),
     _mfCollisionAffectors     (),
     _sfCollisionNode          (NULL)
-    ,_sfEventProducer(&_Producer)
 {
 }
 
 GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(const GeometryCollisionParticleSystemAffectorBase &source) :
-    _Producer(&source.getProducerType()),
     Inherited(source),
     _mfCollisionAffectors     (),
     _sfCollisionNode          (NULL)
-    ,_sfEventProducer(&_Producer)
 {
 }
 
@@ -636,27 +722,13 @@ EditFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::editHandleCollis
 }
 
 
-GetFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::getHandleEventProducer        (void) const
+GetEventHandlePtr GeometryCollisionParticleSystemAffectorBase::getHandleParticleCollisionSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ParticleCollisionEventType>(
+             const_cast<ParticleCollisionEventType *>(&_ParticleCollisionEvent),
+             _producerType.getEventDescription(ParticleCollisionEventId),
              const_cast<GeometryCollisionParticleSystemAffectorBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::editHandleEventProducer       (void)
-{
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
-
-
-    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

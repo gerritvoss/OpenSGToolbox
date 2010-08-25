@@ -15,9 +15,10 @@
     parentProducer="ListModel"
 >
 A UI ComboBoxModel.
-	<ProducedMethod
+	<ProducedEvent
 		name="SelectionChanged"
-		type="ComboBoxSelectionEventPtr"
+		detailsType="ComboBoxSelectionEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

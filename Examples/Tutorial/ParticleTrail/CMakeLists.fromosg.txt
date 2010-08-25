@@ -1,5 +1,5 @@
 
-PROJECT(OpenSGExamplesParticleSystem)
+PROJECT(OpenSGParticleTrailTutorials)
 
 MESSAGE(STATUS "Building particle system examples integrated")
 

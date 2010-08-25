@@ -65,7 +65,7 @@
 
 #include "OSGPanel.h" // Parent
 
-#include "OSGColorChooserFields.h"      // ParentChooser type
+#include "OSGColorChooserFields.h"      // InternalParentChooser type
 
 #include "OSGAbstractColorChooserPanelFields.h"
 
@@ -86,6 +86,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractColorChooserPanelBase : public
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(AbstractColorChooserPanel);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -93,16 +95,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractColorChooserPanelBase : public
 
     enum
     {
-        ParentChooserFieldId = Inherited::NextFieldId,
-        NextFieldId = ParentChooserFieldId + 1
+        InternalParentChooserFieldId = Inherited::NextFieldId,
+        NextFieldId = InternalParentChooserFieldId + 1
     };
 
-    static const OSG::BitVector ParentChooserFieldMask =
-        (TypeTraits<BitVector>::One << ParentChooserFieldId);
+    static const OSG::BitVector InternalParentChooserFieldMask =
+        (TypeTraits<BitVector>::One << InternalParentChooserFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecColorChooserPtr SFParentChooserType;
+    typedef SFWeakColorChooserPtr SFInternalParentChooserType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -121,34 +123,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractColorChooserPanelBase : public
     virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-            const SFUnrecColorChooserPtr *getSFParentChooser  (void) const;
-                  SFUnrecColorChooserPtr *editSFParentChooser  (void);
-
-
-                  ColorChooser * getParentChooser  (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-            void setParentChooser  (ColorChooser * const value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr Field Set                                 */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr MField Set                                */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,7 +150,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractColorChooserPanelBase : public
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecColorChooserPtr _sfParentChooser;
+    SFWeakColorChooserPtr _sfInternalParentChooser;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -205,8 +179,31 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractColorChooserPanelBase : public
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleParentChooser   (void) const;
-    EditFieldHandlePtr editHandleParentChooser  (void);
+    GetFieldHandlePtr  getHandleInternalParentChooser (void) const;
+    EditFieldHandlePtr editHandleInternalParentChooser(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+            const SFWeakColorChooserPtr *getSFInternalParentChooser (void) const;
+                  SFWeakColorChooserPtr *editSFInternalParentChooser(void);
+
+
+                  ColorChooser * getInternalParentChooser(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setInternalParentChooser(ColorChooser * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

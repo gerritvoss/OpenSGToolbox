@@ -41,11 +41,11 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void ParticleSystemParticleTrailGenerator::attachUpdateProducer(EventProducerPtr TheProducer)
+void ParticleSystemParticleTrailGenerator::attachUpdateProducer(ReflexiveContainer* const producer)
 {
 	if(getParticleSystem() != NULL)
 	{
-		getParticleSystem()->attachUpdateProducer(TheProducer);
+		getParticleSystem()->attachUpdateProducer(producer);
 	}
 }
 

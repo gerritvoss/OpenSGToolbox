@@ -56,6 +56,8 @@
 #include <stdio.h>
 #include <vector>
 #include <iterator>
+#include "OSGParticleSystemEventDetails.h"
+#include "OSGParticleEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -235,19 +237,62 @@ void ParticleSystemCore::sortParticles(DrawEnv *pEnv)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void ParticleSystemCore::handleVolumeChanged(ParticleSystemEventDetails* const details)
+{
+    for(UInt32 i = 0; i < getParents().size(); i++)
+    {
+        getParents()[i]->invalidateVolume();
+    }
+}
+
+void ParticleSystemCore::handleParticleGenerated(ParticleEventDetails* const details)
+{
+    //add particle to _mfSort
+    if(getSortingMode() != NONE)
+    {
+        editMFSort()->push_back(getMFSort()->size());
+		editMFDistances()->push_back(0.0f);
+    }
+}
+
+void ParticleSystemCore::handleParticleKilled(ParticleEventDetails* const details)
+{
+    // remove highest indexed particle from _mfSort
+    for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
+    {
+        if((*theItor) == _mfSort.size() - 1 ) 
+        {
+            _mfSort.erase(theItor);
+			_mfDistances.erase(--_mfDistances.end());
+            break;
+        }
+    }
+}
+
+void ParticleSystemCore::handleParticleStolen(ParticleEventDetails* const details)
+{
+    // remove particle from _mfSort
+    for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
+    {
+        if((int)*theItor == _mfSort.size() - 1 ) 
+        {
+            _mfSort.erase(theItor);
+			_mfDistances.erase(--_mfDistances.end());
+            break;
+        }
+    }
+}
 
 
 /*----------------------- constructors & destructors ----------------------*/
 
 ParticleSystemCore::ParticleSystemCore(void) :
-    Inherited(),
-    _SystemUpdateListener(this)
+    Inherited()
 {
 }
 
 ParticleSystemCore::ParticleSystemCore(const ParticleSystemCore &source) :
-    Inherited(source),
-    _SystemUpdateListener(this)
+    Inherited(source)
 {
 }
 
@@ -263,13 +308,24 @@ void ParticleSystemCore::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-    if(whichField & SystemFieldMask &&
-       getSystem() != NULL)
+    if(whichField & SystemFieldMask)
     {
-        getSystem()->addParticleSystemListener(&_SystemUpdateListener);
+        _VolumeChangedConnection.disconnect();
+        _ParticleGeneratedConnection.disconnect();
+        _ParticleKilledConnection.disconnect();
+        _ParticleStolenConnection.disconnect();
+
+        if(getSystem() != NULL)
+        {
+            _VolumeChangedConnection = getSystem()->connectVolumeChanged(boost::bind(&ParticleSystemCore::handleVolumeChanged, this, _1));
+            _ParticleGeneratedConnection = getSystem()->connectParticleGenerated(boost::bind(&ParticleSystemCore::handleParticleGenerated, this, _1));
+            _ParticleKilledConnection = getSystem()->connectParticleKilled(boost::bind(&ParticleSystemCore::handleParticleKilled, this, _1));
+            _ParticleStolenConnection = getSystem()->connectParticleStolen(boost::bind(&ParticleSystemCore::handleParticleStolen, this, _1));
+        }
     }
     if(((whichField & SystemFieldMask) || (whichField & ParentsFieldMask))
-       && _mfParents.size() > 0)
+       && _mfParents.size() > 0 &&
+       getSystem() != NULL)
     {
         getSystem()->setBeacon(dynamic_cast<Node*>(_mfParents.front()));
     }
@@ -323,71 +379,5 @@ void ParticleSystemCore::dump(      UInt32    ,
     SLOG << "Dump ParticleSystemCore NI" << std::endl;
 }
 
-void ParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEventUnrecPtr e)
-{
-    //Do nothing
-}
-
-void ParticleSystemCore::SystemUpdateListener::volumeChanged(const ParticleSystemEventUnrecPtr e)
-{
-    for(UInt32 i = 0; i < _Core->getParents().size(); i++)
-    {
-        _Core->getParents()[i]->invalidateVolume();
-    }
-}
-
-void ParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEventUnrecPtr e)
-{
-    _Core->handleParticleGenerated(e);
-}
-
-void ParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEventUnrecPtr e)
-{
-    _Core->handleParticleKilled(e);
-}
-
-void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEventUnrecPtr e)
-{
-    _Core->handleParticleStolen(e);
-}
-
-
-void ParticleSystemCore::handleParticleGenerated(const ParticleEventUnrecPtr e)
-{
-    //add particle to _mfSort
-    if(getSortingMode() != NONE)
-    {
-        editMFSort()->push_back(getMFSort()->size());
-		editMFDistances()->push_back(0.0f);
-    }
-}
-
-void ParticleSystemCore::handleParticleKilled(const ParticleEventUnrecPtr e)
-{
-    // remove highest indexed particle from _mfSort
-    for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
-    {
-        if((*theItor) == _mfSort.size() - 1 ) 
-        {
-            _mfSort.erase(theItor);
-			_mfDistances.erase(--_mfDistances.end());
-            break;
-        }
-    }
-}
-
-void ParticleSystemCore::handleParticleStolen(const ParticleEventUnrecPtr e)
-{
-    // remove particle from _mfSort
-    for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
-    {
-        if((int)*theItor == _mfSort.size() - 1 ) 
-        {
-            _mfSort.erase(theItor);
-			_mfDistances.erase(--_mfDistances.end());
-            break;
-        }
-    }
-}
 
 OSG_END_NAMESPACE

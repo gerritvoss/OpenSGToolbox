@@ -43,12 +43,9 @@
 #endif
 
 #include "OSGSpinnerDefaultEditorBase.h"
-#include "OSGChangeListener.h"
-#include "OSGActionListener.h"
-#include "OSGFocusListener.h"
-#include "OSGKeyAdapter.h"
 #include "OSGTextField.h"
 #include "OSGSpinner.h"
+#include "OSGChangeEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,9 +53,7 @@ OSG_BEGIN_NAMESPACE
            PageContribUserInterfaceSpinnerDefaultEditor for a description.
 */
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefaultEditorBase,
-    public ChangeListener
-
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefaultEditorBase
 {
   protected:
 
@@ -97,12 +92,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditor : public SpinnerD
 
     //Disconnect this editor from the specified JSpinner.
     virtual void dismiss(Spinner* const spinner);
-
-    //Called by the JTextField PropertyChangeListener.
-    //void propertyChange(PropertyChangeEvent e);
-
-    //This method is called when the spinner's model's state changes.
-    virtual void stateChanged(const ChangeEventUnrecPtr e);
 	
 	//Set whether or not this Editor is Editable
 	virtual void setEditable(bool Editable);
@@ -144,23 +133,25 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditor : public SpinnerD
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
 
-    //Min Button Action Listener
-    class EditorTextFieldListener : public ActionListener, public FocusListener, public KeyAdapter
-    {
-      public:
-        EditorTextFieldListener(SpinnerDefaultEditor* const TheSpinnerDefaultEditor);
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-        virtual void focusGained(const FocusEventUnrecPtr e);
-        virtual void focusLost(const FocusEventUnrecPtr e);
-        virtual void keyPressed(const KeyEventUnrecPtr e);
-      private:
-        SpinnerDefaultEditor* _SpinnerDefaultEditor;
-    };
+    virtual void resolveLinks(void);
 
-    friend class EditorTextFieldListener;
+    /*! \}                                                                 */
 
-    EditorTextFieldListener _EditorTextFieldListener;
+    //This method is called when the spinner's model's state changes.
+    virtual void handleModelStateChanged(ChangeEventDetails* const e);
+    boost::signals2::connection _ModelStateChangedConnection;
+
+    //Min Button Action
+    void handleEditorTextFieldActionPerformed(ActionEventDetails* const e);
+    void handleEditorTextFieldFocusLost(FocusEventDetails* const e);
+    void handleEditorTextFieldKeyPressed(KeyEventDetails* const e);
+    boost::signals2::connection _EditorTextFieldActionConnection,
+                                _EditorTextFieldFocusLostConnection,
+                                _EditorTextFieldKeyPressedConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:

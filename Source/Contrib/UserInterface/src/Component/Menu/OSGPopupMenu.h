@@ -46,10 +46,6 @@
 #include "OSGSeparator.h"
 #include "OSGSingleSelectionModel.h"
 #include "OSGMenuItemFields.h"
-#include "OSGSelectionListener.h"
-#include "OSGPopupMenuListener.h"
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -104,12 +100,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenu : public PopupMenuBase
 	virtual void updateClipBounds(void);
     
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventUnrecPtr e);
-    virtual void mouseDragged(const MouseEventUnrecPtr e);
-    
-    EventConnection addPopupMenuListener(PopupMenuListenerPtr Listener);
-	bool isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const;
-    void removePopupMenuListener(PopupMenuListenerPtr Listener);
+    virtual void mouseMoved(MouseEventDetails* const e);
+    virtual void mouseDragged(MouseEventDetails* const e);
 
     void cancel(void);
 
@@ -157,28 +149,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenu : public PopupMenuBase
     
     virtual void updateLayout(void);
     
-	class MenuSelectionListener : public SelectionListener
-	{
-	public:
-		MenuSelectionListener(PopupMenu* const ThePopupMenu);
-        virtual void selectionChanged(const SelectionEventUnrecPtr e);
-	private:
-		PopupMenu* _PopupMenu;
-	};
+    void selectionChanged(SelectionEventDetails* const e);
+    boost::signals2::connection _SelectionChangedConnection;
 
-	friend class MenuSelectionListener;
-
-	MenuSelectionListener _MenuSelectionListener;
-	
-	typedef std::set<PopupMenuListenerPtr> PopupMenuListenerSet;
-    typedef PopupMenuListenerSet::iterator PopupMenuListenerSetItor;
-    typedef PopupMenuListenerSet::const_iterator PopupMenuListenerSetConstItor;
-	
-    PopupMenuListenerSet       _PopupMenuListeners;
-    void producePopupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e);
-    void producePopupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e);
-    void producePopupMenuCanceled(const PopupMenuEventUnrecPtr e);
-    void producePopupMenuContentsChanged(const PopupMenuEventUnrecPtr e);
+    void producePopupMenuWillBecomeVisible(void);
+    void producePopupMenuWillBecomeInvisible(void);
+    void producePopupMenuCanceled(void);
+    void producePopupMenuContentsChanged(void);
     
     void updateSeparatorSizes(void);
 

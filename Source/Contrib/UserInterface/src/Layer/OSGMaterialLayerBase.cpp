@@ -87,6 +87,26 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var Color4f         MaterialLayerBase::_sfColor
+    
+*/
+
+/*! \var UInt32          MaterialLayerBase::_sfScale
+    
+*/
+
+/*! \var Vec2s           MaterialLayerBase::_sfScaleAbsoluteSize
+    
+*/
+
+/*! \var Real32          MaterialLayerBase::_sfVerticalAlignment
+    
+*/
+
+/*! \var Real32          MaterialLayerBase::_sfHorizontalAlignment
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -124,6 +144,66 @@ void MaterialLayerBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&MaterialLayer::editHandleMaterial),
         static_cast<FieldGetMethodSig >(&MaterialLayer::getHandleMaterial));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MaterialLayer::editHandleColor),
+        static_cast<FieldGetMethodSig >(&MaterialLayer::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Scale",
+        "",
+        ScaleFieldId, ScaleFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MaterialLayer::editHandleScale),
+        static_cast<FieldGetMethodSig >(&MaterialLayer::getHandleScale));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2s::Description(
+        SFVec2s::getClassType(),
+        "ScaleAbsoluteSize",
+        "",
+        ScaleAbsoluteSizeFieldId, ScaleAbsoluteSizeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MaterialLayer::editHandleScaleAbsoluteSize),
+        static_cast<FieldGetMethodSig >(&MaterialLayer::getHandleScaleAbsoluteSize));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "VerticalAlignment",
+        "",
+        VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MaterialLayer::editHandleVerticalAlignment),
+        static_cast<FieldGetMethodSig >(&MaterialLayer::getHandleVerticalAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "HorizontalAlignment",
+        "",
+        HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MaterialLayer::editHandleHorizontalAlignment),
+        static_cast<FieldGetMethodSig >(&MaterialLayer::getHandleHorizontalAlignment));
 
     oType.addInitialDesc(pDesc);
 }
@@ -166,6 +246,56 @@ MaterialLayerBase::TypeObject MaterialLayerBase::_type(
     "        defaultValue=\"NULL\"\n"
     "\t>\n"
     "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f,1.0f,1.0f,1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Scale\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"TextureLayer::SCALE_STRETCH\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ScaleAbsoluteSize\"\n"
+    "\t\ttype=\"Vec2s\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1,1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VerticalAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HorizontalAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     "UI Material Background.\n"
     );
@@ -203,6 +333,71 @@ SFUnrecMaterialPtr  *MaterialLayerBase::editSFMaterial       (void)
     return &_sfMaterial;
 }
 
+SFColor4f *MaterialLayerBase::editSFColor(void)
+{
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
+}
+
+const SFColor4f *MaterialLayerBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+
+SFUInt32 *MaterialLayerBase::editSFScale(void)
+{
+    editSField(ScaleFieldMask);
+
+    return &_sfScale;
+}
+
+const SFUInt32 *MaterialLayerBase::getSFScale(void) const
+{
+    return &_sfScale;
+}
+
+
+SFVec2s *MaterialLayerBase::editSFScaleAbsoluteSize(void)
+{
+    editSField(ScaleAbsoluteSizeFieldMask);
+
+    return &_sfScaleAbsoluteSize;
+}
+
+const SFVec2s *MaterialLayerBase::getSFScaleAbsoluteSize(void) const
+{
+    return &_sfScaleAbsoluteSize;
+}
+
+
+SFReal32 *MaterialLayerBase::editSFVerticalAlignment(void)
+{
+    editSField(VerticalAlignmentFieldMask);
+
+    return &_sfVerticalAlignment;
+}
+
+const SFReal32 *MaterialLayerBase::getSFVerticalAlignment(void) const
+{
+    return &_sfVerticalAlignment;
+}
+
+
+SFReal32 *MaterialLayerBase::editSFHorizontalAlignment(void)
+{
+    editSField(HorizontalAlignmentFieldMask);
+
+    return &_sfHorizontalAlignment;
+}
+
+const SFReal32 *MaterialLayerBase::getSFHorizontalAlignment(void) const
+{
+    return &_sfHorizontalAlignment;
+}
+
+
 
 
 
@@ -217,6 +412,26 @@ UInt32 MaterialLayerBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfMaterial.getBinSize();
     }
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        returnValue += _sfColor.getBinSize();
+    }
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+    {
+        returnValue += _sfScale.getBinSize();
+    }
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+    {
+        returnValue += _sfScaleAbsoluteSize.getBinSize();
+    }
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfVerticalAlignment.getBinSize();
+    }
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalAlignment.getBinSize();
+    }
 
     return returnValue;
 }
@@ -230,6 +445,26 @@ void MaterialLayerBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfMaterial.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+    {
+        _sfScale.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+    {
+        _sfScaleAbsoluteSize.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalAlignment.copyToBin(pMem);
+    }
 }
 
 void MaterialLayerBase::copyFromBin(BinaryDataHandler &pMem,
@@ -240,6 +475,26 @@ void MaterialLayerBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MaterialFieldMask & whichField))
     {
         _sfMaterial.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+    {
+        _sfScale.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+    {
+        _sfScaleAbsoluteSize.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalAlignment.copyFromBin(pMem);
     }
 }
 
@@ -361,18 +616,27 @@ FieldContainerTransitPtr MaterialLayerBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 MaterialLayerBase::MaterialLayerBase(void) :
     Inherited(),
-    _sfMaterial               (NULL)
+    _sfMaterial               (NULL),
+    _sfColor                  (Color4f(1.0f,1.0f,1.0f,1.0f)),
+    _sfScale                  (UInt32(MaterialLayer::SCALE_STRETCH)),
+    _sfScaleAbsoluteSize      (Vec2s(1,1)),
+    _sfVerticalAlignment      (Real32(0.5)),
+    _sfHorizontalAlignment    (Real32(0.5))
 {
 }
 
 MaterialLayerBase::MaterialLayerBase(const MaterialLayerBase &source) :
     Inherited(source),
-    _sfMaterial               (NULL)
+    _sfMaterial               (NULL),
+    _sfColor                  (source._sfColor                  ),
+    _sfScale                  (source._sfScale                  ),
+    _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ),
+    _sfVerticalAlignment      (source._sfVerticalAlignment      ),
+    _sfHorizontalAlignment    (source._sfHorizontalAlignment    )
 {
 }
 
@@ -422,6 +686,132 @@ EditFieldHandlePtr MaterialLayerBase::editHandleMaterial       (void)
 
     return returnValue;
 }
+
+GetFieldHandlePtr MaterialLayerBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<MaterialLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MaterialLayerBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MaterialLayerBase::getHandleScale           (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfScale,
+             this->getType().getFieldDesc(ScaleFieldId),
+             const_cast<MaterialLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MaterialLayerBase::editHandleScale          (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfScale,
+             this->getType().getFieldDesc(ScaleFieldId),
+             this));
+
+
+    editSField(ScaleFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MaterialLayerBase::getHandleScaleAbsoluteSize (void) const
+{
+    SFVec2s::GetHandlePtr returnValue(
+        new  SFVec2s::GetHandle(
+             &_sfScaleAbsoluteSize,
+             this->getType().getFieldDesc(ScaleAbsoluteSizeFieldId),
+             const_cast<MaterialLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MaterialLayerBase::editHandleScaleAbsoluteSize(void)
+{
+    SFVec2s::EditHandlePtr returnValue(
+        new  SFVec2s::EditHandle(
+             &_sfScaleAbsoluteSize,
+             this->getType().getFieldDesc(ScaleAbsoluteSizeFieldId),
+             this));
+
+
+    editSField(ScaleAbsoluteSizeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MaterialLayerBase::getHandleVerticalAlignment (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfVerticalAlignment,
+             this->getType().getFieldDesc(VerticalAlignmentFieldId),
+             const_cast<MaterialLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MaterialLayerBase::editHandleVerticalAlignment(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfVerticalAlignment,
+             this->getType().getFieldDesc(VerticalAlignmentFieldId),
+             this));
+
+
+    editSField(VerticalAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MaterialLayerBase::getHandleHorizontalAlignment (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfHorizontalAlignment,
+             this->getType().getFieldDesc(HorizontalAlignmentFieldId),
+             const_cast<MaterialLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MaterialLayerBase::editHandleHorizontalAlignment(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfHorizontalAlignment,
+             this->getType().getFieldDesc(HorizontalAlignmentFieldId),
+             this));
+
+
+    editSField(HorizontalAlignmentFieldMask);
+
+    return returnValue;
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

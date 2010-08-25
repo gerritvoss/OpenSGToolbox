@@ -43,13 +43,9 @@
 #endif
 
 #include "OSGDefaultTableCellEditorBase.h"
-#include "OSGActionListener.h"
-#include "OSGFocusListener.h"
-#include "OSGKeyAdapter.h"
-#include "OSGTextField.h"
-#include "OSGSpinner.h"
-#include "OSGComboBox.h"
-#include "OSGCheckboxButton.h"
+#include "OSGActionEventDetailsFields.h"
+#include "OSGFocusEventDetailsFields.h"
+#include "OSGKeyEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -97,10 +93,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableCellEditor : public Defaul
     virtual boost::any getCellEditorValue(void) const;
 
     //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const EventUnrecPtr anEvent) const;
+    virtual bool isCellEditable(EventDetails* const anEvent) const;
 
     //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const EventUnrecPtr anEvent) const;
+    virtual bool shouldSelectCell(EventDetails* const anEvent) const;
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void);
@@ -136,23 +132,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableCellEditor : public Defaul
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    
-    class DefaultStringEditorListener : public ActionListener,public FocusListener,public KeyAdapter
-    {
-      public :
-        DefaultStringEditorListener(DefaultTableCellEditor* const TheDefaultTableCellEditor);
+    void handleEditorAction(ActionEventDetails* const e);
+    void handleEditorFocusLost(FocusEventDetails* const e);
+    void handleEditorKeyPressed(KeyEventDetails* const e);
 
-        virtual void actionPerformed(const ActionEventUnrecPtr e);
-        virtual void focusGained(const FocusEventUnrecPtr e);
-        virtual void focusLost(const FocusEventUnrecPtr e);
-        virtual void keyPressed(const KeyEventUnrecPtr e);
-      protected :
-        DefaultTableCellEditor* _DefaultTableCellEditor;
-    };
-
-	friend class DefaultStringEditorListener;
-
-	DefaultStringEditorListener _DefaultStringEditorListener;
+    boost::signals2::connection _EditorActionConnection,
+                                _EditorFocusLostConnection,
+                                _EditorKeyPressedConnection;
     
     mutable std::string _Value;
     /*==========================  PRIVATE  ================================*/
@@ -169,6 +155,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableCellEditor : public Defaul
 typedef DefaultTableCellEditor *DefaultTableCellEditorP;
 
 OSG_END_NAMESPACE
+#include "OSGTextField.h"
+#include "OSGSpinner.h"
+#include "OSGComboBox.h"
+#include "OSGCheckboxButton.h"
 
 #include "OSGDefaultTableCellEditorBase.inl"
 #include "OSGDefaultTableCellEditor.inl"

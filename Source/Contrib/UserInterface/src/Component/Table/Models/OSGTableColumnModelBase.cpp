@@ -58,13 +58,14 @@
 
 
 
+#include "OSGListSelectionModel.h"      // SelectionModel Class
 
 #include "OSGTableColumnModelBase.h"
 #include "OSGTableColumnModel.h"
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -83,6 +84,10 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                        Field Documentation                              *
 \***************************************************************************/
+
+/*! \var ListSelectionModel * TableColumnModelBase::_sfSelectionModel
+    
+*/
 
 
 /***************************************************************************\
@@ -111,15 +116,16 @@ void TableColumnModelBase::classDescInserter(TypeObject &oType)
 {
     FieldDescriptionBase *pDesc = NULL;
 
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
+
+    pDesc = new SFUnrecListSelectionModelPtr::Description(
+        SFUnrecListSelectionModelPtr::getClassType(),
+        "SelectionModel",
+        "",
+        SelectionModelFieldId, SelectionModelFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&TableColumnModel::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&TableColumnModel::getHandleEventProducer));
+        static_cast<FieldEditMethodSig>(&TableColumnModel::editHandleSelectionModel),
+        static_cast<FieldGetMethodSig >(&TableColumnModel::getHandleSelectionModel));
 
     oType.addInitialDesc(pDesc);
 }
@@ -152,64 +158,89 @@ TableColumnModelBase::TypeObject TableColumnModelBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI TableColumnModel.\n"
-    "\t<ProducedMethod\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectionModel\"\n"
+    "\t\ttype=\"ListSelectionModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ColumnAdded\"\n"
-    "\t\ttype=\"TableColumnModelEventPtr\"\n"
+    "\t\tdetailsType=\"TableColumnModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ColumnMoved\"\n"
-    "\t\ttype=\"TableColumnModelEventPtr\"\n"
+    "\t\tdetailsType=\"TableColumnModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ColumnRemoved\"\n"
-    "\t\ttype=\"TableColumnModelEventPtr\"\n"
+    "\t\tdetailsType=\"TableColumnModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ColumnMarginChanged\"\n"
-    "\t\ttype=\"TableColumnModelEventPtr\"\n"
+    "\t\tdetailsType=\"ChangeEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ColumnSelectionChanged\"\n"
-    "\t\ttype=\"ListSelectionEventPtr\"\n"
+    "\t\tdetailsType=\"ListSelectionEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI TableColumnModel.\n"
     );
 
-//! TableColumnModel Produced Methods
+//! TableColumnModel Produced Events
 
-MethodDescription *TableColumnModelBase::_methodDesc[] =
+EventDescription *TableColumnModelBase::_eventDesc[] =
 {
-    new MethodDescription("ColumnAdded", 
-                    "",
-                     ColumnAddedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("ColumnMoved", 
-                    "",
-                     ColumnMovedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("ColumnRemoved", 
-                    "",
-                     ColumnRemovedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("ColumnMarginChanged", 
-                    "",
-                     ColumnMarginChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("ColumnSelectionChanged", 
-                    "",
-                     ColumnSelectionChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("ColumnAdded", 
+                          "",
+                          ColumnAddedEventId, 
+                          FieldTraits<TableColumnModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TableColumnModelBase::getHandleColumnAddedSignal)),
+
+    new EventDescription("ColumnMoved", 
+                          "",
+                          ColumnMovedEventId, 
+                          FieldTraits<TableColumnModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TableColumnModelBase::getHandleColumnMovedSignal)),
+
+    new EventDescription("ColumnRemoved", 
+                          "",
+                          ColumnRemovedEventId, 
+                          FieldTraits<TableColumnModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TableColumnModelBase::getHandleColumnRemovedSignal)),
+
+    new EventDescription("ColumnMarginChanged", 
+                          "",
+                          ColumnMarginChangedEventId, 
+                          FieldTraits<ChangeEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TableColumnModelBase::getHandleColumnMarginChangedSignal)),
+
+    new EventDescription("ColumnSelectionChanged", 
+                          "",
+                          ColumnSelectionChangedEventId, 
+                          FieldTraits<ListSelectionEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TableColumnModelBase::getHandleColumnSelectionChangedSignal))
+
 };
 
 EventProducerType TableColumnModelBase::_producerType(
@@ -217,8 +248,8 @@ EventProducerType TableColumnModelBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -245,6 +276,19 @@ UInt32 TableColumnModelBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
+//! Get the TableColumnModel::_sfSelectionModel field.
+const SFUnrecListSelectionModelPtr *TableColumnModelBase::getSFSelectionModel(void) const
+{
+    return &_sfSelectionModel;
+}
+
+SFUnrecListSelectionModelPtr *TableColumnModelBase::editSFSelectionModel (void)
+{
+    editSField(SelectionModelFieldMask);
+
+    return &_sfSelectionModel;
+}
+
 
 
 
@@ -255,9 +299,9 @@ UInt32 TableColumnModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
-        returnValue += _sfEventProducer.getBinSize();
+        returnValue += _sfSelectionModel.getBinSize();
     }
 
     return returnValue;
@@ -268,9 +312,9 @@ void TableColumnModelBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
-        _sfEventProducer.copyToBin(pMem);
+        _sfSelectionModel.copyToBin(pMem);
     }
 }
 
@@ -279,28 +323,230 @@ void TableColumnModelBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
-        _sfEventProducer.copyFromBin(pMem);
+        _sfSelectionModel.copyFromBin(pMem);
     }
 }
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void TableColumnModelBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case ColumnAddedEventId:
+        OSG_ASSERT(dynamic_cast<ColumnAddedEventDetailsType* const>(e));
+
+        _ColumnAddedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ColumnAddedEvent(dynamic_cast<ColumnAddedEventDetailsType* const>(e), ColumnAddedEventId);
+        break;
+    case ColumnMovedEventId:
+        OSG_ASSERT(dynamic_cast<ColumnMovedEventDetailsType* const>(e));
+
+        _ColumnMovedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ColumnMovedEvent(dynamic_cast<ColumnMovedEventDetailsType* const>(e), ColumnMovedEventId);
+        break;
+    case ColumnRemovedEventId:
+        OSG_ASSERT(dynamic_cast<ColumnRemovedEventDetailsType* const>(e));
+
+        _ColumnRemovedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ColumnRemovedEvent(dynamic_cast<ColumnRemovedEventDetailsType* const>(e), ColumnRemovedEventId);
+        break;
+    case ColumnMarginChangedEventId:
+        OSG_ASSERT(dynamic_cast<ColumnMarginChangedEventDetailsType* const>(e));
+
+        _ColumnMarginChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ColumnMarginChangedEvent(dynamic_cast<ColumnMarginChangedEventDetailsType* const>(e), ColumnMarginChangedEventId);
+        break;
+    case ColumnSelectionChangedEventId:
+        OSG_ASSERT(dynamic_cast<ColumnSelectionChangedEventDetailsType* const>(e));
+
+        _ColumnSelectionChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ColumnSelectionChangedEvent(dynamic_cast<ColumnSelectionChangedEventDetailsType* const>(e), ColumnSelectionChangedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection TableColumnModelBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ColumnAddedEventId:
+        return _ColumnAddedEvent.connect(listener, at);
+        break;
+    case ColumnMovedEventId:
+        return _ColumnMovedEvent.connect(listener, at);
+        break;
+    case ColumnRemovedEventId:
+        return _ColumnRemovedEvent.connect(listener, at);
+        break;
+    case ColumnMarginChangedEventId:
+        return _ColumnMarginChangedEvent.connect(listener, at);
+        break;
+    case ColumnSelectionChangedEventId:
+        return _ColumnSelectionChangedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  TableColumnModelBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ColumnAddedEventId:
+        return _ColumnAddedEvent.connect(group, listener, at);
+        break;
+    case ColumnMovedEventId:
+        return _ColumnMovedEvent.connect(group, listener, at);
+        break;
+    case ColumnRemovedEventId:
+        return _ColumnRemovedEvent.connect(group, listener, at);
+        break;
+    case ColumnMarginChangedEventId:
+        return _ColumnMarginChangedEvent.connect(group, listener, at);
+        break;
+    case ColumnSelectionChangedEventId:
+        return _ColumnSelectionChangedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  TableColumnModelBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case ColumnAddedEventId:
+        _ColumnAddedEvent.disconnect(group);
+        break;
+    case ColumnMovedEventId:
+        _ColumnMovedEvent.disconnect(group);
+        break;
+    case ColumnRemovedEventId:
+        _ColumnRemovedEvent.disconnect(group);
+        break;
+    case ColumnMarginChangedEventId:
+        _ColumnMarginChangedEvent.disconnect(group);
+        break;
+    case ColumnSelectionChangedEventId:
+        _ColumnSelectionChangedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  TableColumnModelBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case ColumnAddedEventId:
+        _ColumnAddedEvent.disconnect_all_slots();
+        break;
+    case ColumnMovedEventId:
+        _ColumnMovedEvent.disconnect_all_slots();
+        break;
+    case ColumnRemovedEventId:
+        _ColumnRemovedEvent.disconnect_all_slots();
+        break;
+    case ColumnMarginChangedEventId:
+        _ColumnMarginChangedEvent.disconnect_all_slots();
+        break;
+    case ColumnSelectionChangedEventId:
+        _ColumnSelectionChangedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  TableColumnModelBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ColumnAddedEventId:
+        return _ColumnAddedEvent.empty();
+        break;
+    case ColumnMovedEventId:
+        return _ColumnMovedEvent.empty();
+        break;
+    case ColumnRemovedEventId:
+        return _ColumnRemovedEvent.empty();
+        break;
+    case ColumnMarginChangedEventId:
+        return _ColumnMarginChangedEvent.empty();
+        break;
+    case ColumnSelectionChangedEventId:
+        return _ColumnSelectionChangedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  TableColumnModelBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ColumnAddedEventId:
+        return _ColumnAddedEvent.num_slots();
+        break;
+    case ColumnMovedEventId:
+        return _ColumnMovedEvent.num_slots();
+        break;
+    case ColumnRemovedEventId:
+        return _ColumnRemovedEvent.num_slots();
+        break;
+    case ColumnMarginChangedEventId:
+        return _ColumnMarginChangedEvent.num_slots();
+        break;
+    case ColumnSelectionChangedEventId:
+        return _ColumnSelectionChangedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
 TableColumnModelBase::TableColumnModelBase(void) :
-    _Producer(&getProducerType()),
     Inherited(),
-    _sfEventProducer(&_Producer)
+    _sfSelectionModel         (NULL)
 {
 }
 
 TableColumnModelBase::TableColumnModelBase(const TableColumnModelBase &source) :
-    _Producer(&source.getProducerType()),
     Inherited(source),
-    _sfEventProducer(&_Producer)
+    _sfSelectionModel         (NULL)
 {
 }
 
@@ -311,29 +557,98 @@ TableColumnModelBase::~TableColumnModelBase(void)
 {
 }
 
-
-
-GetFieldHandlePtr TableColumnModelBase::getHandleEventProducer        (void) const
+void TableColumnModelBase::onCreate(const TableColumnModel *source)
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        TableColumnModel *pThis = static_cast<TableColumnModel *>(this);
+
+        pThis->setSelectionModel(source->getSelectionModel());
+    }
+}
+
+GetFieldHandlePtr TableColumnModelBase::getHandleSelectionModel  (void) const
+{
+    SFUnrecListSelectionModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecListSelectionModelPtr::GetHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
              const_cast<TableColumnModelBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr TableColumnModelBase::editHandleEventProducer       (void)
+EditFieldHandlePtr TableColumnModelBase::editHandleSelectionModel (void)
 {
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    SFUnrecListSelectionModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecListSelectionModelPtr::EditHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
              this));
 
+    returnValue->setSetMethod(
+        boost::bind(&TableColumnModel::setSelectionModel,
+                    static_cast<TableColumnModel *>(this), _1));
 
-    editSField(EventProducerFieldMask);
+    editSField(SelectionModelFieldMask);
+
+    return returnValue;
+}
+
+
+GetEventHandlePtr TableColumnModelBase::getHandleColumnAddedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ColumnAddedEventType>(
+             const_cast<ColumnAddedEventType *>(&_ColumnAddedEvent),
+             _producerType.getEventDescription(ColumnAddedEventId),
+             const_cast<TableColumnModelBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TableColumnModelBase::getHandleColumnMovedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ColumnMovedEventType>(
+             const_cast<ColumnMovedEventType *>(&_ColumnMovedEvent),
+             _producerType.getEventDescription(ColumnMovedEventId),
+             const_cast<TableColumnModelBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TableColumnModelBase::getHandleColumnRemovedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ColumnRemovedEventType>(
+             const_cast<ColumnRemovedEventType *>(&_ColumnRemovedEvent),
+             _producerType.getEventDescription(ColumnRemovedEventId),
+             const_cast<TableColumnModelBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TableColumnModelBase::getHandleColumnMarginChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ColumnMarginChangedEventType>(
+             const_cast<ColumnMarginChangedEventType *>(&_ColumnMarginChangedEvent),
+             _producerType.getEventDescription(ColumnMarginChangedEventId),
+             const_cast<TableColumnModelBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TableColumnModelBase::getHandleColumnSelectionChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ColumnSelectionChangedEventType>(
+             const_cast<ColumnSelectionChangedEventType *>(&_ColumnSelectionChangedEvent),
+             _producerType.getEventDescription(ColumnSelectionChangedEventId),
+             const_cast<TableColumnModelBase *>(this)));
 
     return returnValue;
 }
@@ -361,6 +676,8 @@ void TableColumnModelBase::execSyncV(      FieldContainer    &oFrom,
 void TableColumnModelBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
+
+    static_cast<TableColumnModel *>(this)->setSelectionModel(NULL);
 
 
 }

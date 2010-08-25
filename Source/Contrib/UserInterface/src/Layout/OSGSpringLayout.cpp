@@ -88,7 +88,8 @@ bool SpringLayout::xmlReadHandler (rapidxml::xml_node<char>& SpringLayoutRoot, c
 {
 	rapidxml::xml_attribute<char> *curAttribute;
 
-	ComponentRefPtr Component1RefPtr, Component2RefPtr;
+	Component* Component1RefPtr;
+    Component* Component2RefPtr;
 	LayoutSpringRefPtr LayoutSpring1RefPtr;
 	XMLFCFileType::IDLookupMap::const_iterator IDItor;
 
@@ -292,7 +293,7 @@ bool SpringLayout::isCyclic(const LayoutSpring* TheSpring) const
     return Result;
 }
 
-SpringLayoutConstraintsRefPtr SpringLayout::getConstraint(ComponentUnrecPtr TheComponent) const
+SpringLayoutConstraintsRefPtr SpringLayout::getConstraint(Component* const TheComponent) const
 {
     FieldContainerMap::const_iterator
         SearchItor(getConstraints().find(static_cast<FieldContainerMap::key_type>(TheComponent->getId())));
@@ -313,7 +314,7 @@ SpringLayoutConstraintsRefPtr SpringLayout::getConstraint(ComponentUnrecPtr TheC
     }
 }
 
-LayoutSpringRefPtr SpringLayout::getConstraint(const UInt32 Edge, ComponentUnrecPtr TheComponent) const
+LayoutSpringRefPtr SpringLayout::getConstraint(const UInt32 Edge, Component* const TheComponent) const
 {
     ProxyLayoutSpringUnrecPtr ConstPtr(ProxyLayoutSpring::create(Edge,
                                                                  TheComponent,
@@ -321,12 +322,12 @@ LayoutSpringRefPtr SpringLayout::getConstraint(const UInt32 Edge, ComponentUnrec
     return ConstPtr;
 }
 
-void SpringLayout::putConstraint(const UInt32 e1, ComponentRefPtr c1, const Real32& pad, const UInt32 e2, ComponentRefPtr c2)
+void SpringLayout::putConstraint(const UInt32 e1, Component* const c1, const Real32& pad, const UInt32 e2, Component* const c2)
 {
     putConstraint(e1, c1, LayoutSpring::constant(pad), e2, c2);
 }
 
-void SpringLayout::putConstraint(const UInt32 e1, ComponentRefPtr c1, LayoutSpringRefPtr s, const UInt32 e2, ComponentRefPtr c2)
+void SpringLayout::putConstraint(const UInt32 e1, Component* const c1, LayoutSpringRefPtr s, const UInt32 e2, Component* const c2)
 {
     putConstraint(e1, c1, LayoutSpring::sum(s, getConstraint(e2, c2)));
 }
@@ -335,7 +336,7 @@ void SpringLayout::putConstraint(const UInt32 e1, ComponentRefPtr c1, LayoutSpri
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void SpringLayout::putConstraint(const UInt32 e, ComponentRefPtr c, LayoutSpringRefPtr s)
+void SpringLayout::putConstraint(const UInt32 e, Component* const c, LayoutSpringRefPtr s)
 {
     if(s != NULL)
     {
@@ -385,7 +386,7 @@ void SpringLayout::setParent(ComponentContainerRefPtr p)
     }
 }
 
-SpringLayoutConstraintsRefPtr SpringLayout::applyDefaults(ComponentUnrecPtr c, SpringLayoutConstraintsRefPtr constraints)
+SpringLayoutConstraintsRefPtr SpringLayout::applyDefaults(Component* const c, SpringLayoutConstraintsRefPtr constraints)
 {
     if(constraints == NULL)
     {

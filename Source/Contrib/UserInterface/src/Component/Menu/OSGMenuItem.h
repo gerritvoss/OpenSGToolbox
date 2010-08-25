@@ -43,11 +43,8 @@
 #endif
 
 #include "OSGMenuItemBase.h"
-#include "OSGActionListener.h"
-#include "OSGKeyAcceleratorListener.h"
 #include "OSGMenuFields.h"
-
-#include "OSGEventConnection.h"
+#include "OSGKeyAcceleratorEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -85,13 +82,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
     /*! \}                                                                 */
 
     virtual void activate(void);
-    EventConnection addActionListener(ActionListenerPtr Listener);
-	bool isActionListenerAttached(ActionListenerPtr Listener) const;
-    void removeActionListener(ActionListenerPtr Listener);
-
 	Vec2f getContentRequestedSize(void) const;
 
-    virtual void mouseReleased(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(MouseEventDetails* const e);
     
     void setDrawAsThoughSelected(bool Selected);
     bool getDrawAsThoughSelected(void) const;
@@ -99,6 +92,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
     virtual void detachFromEventProducer(void);
 
     void setParentWindow(InternalWindow* const parent);
+
+    Menu* getParentMenu(void) const;
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -131,38 +126,15 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
 
 	virtual void drawText(Graphics* const TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
     
-    virtual void actionPreformed(const ActionEventUnrecPtr e);
-	
-    virtual void produceActionPerformed(const ActionEventUnrecPtr e);
+    virtual void actionPreformed(ActionEventDetails* const e);
     
-	class MenuItemKeyAcceleratorListener : public KeyAcceleratorListener
-	{
-	public:
-		MenuItemKeyAcceleratorListener(MenuItem* const TheMenuItem);
-        virtual void acceleratorTyped(const KeyAcceleratorEventUnrecPtr e);
-	private:
-		MenuItem* _MenuItem;
-	};
+    void handleAcceleratorTyped(KeyAcceleratorEventDetails* const e);
+    boost::signals2::connection _AcceleratorTypedConnection;
 
-	friend class MenuItemKeyAcceleratorListener;
 
-	MenuItemKeyAcceleratorListener _MenuItemKeyAcceleratorListener;
-    
-	class KeyAcceleratorMenuFlashUpdateListener : public UpdateListener
-	{
-	public:
-		KeyAcceleratorMenuFlashUpdateListener(MenuItem* const TheMenuItem);
-        virtual void update(const UpdateEventUnrecPtr e);
-        void reset(void);
-        void disconnect(void);
-	private:
-		MenuItem* _MenuItem;
-	    Time _FlashElps;
-	};
-
-	friend class KeyAcceleratorMenuFlashUpdateListener;
-
-	KeyAcceleratorMenuFlashUpdateListener _KeyAcceleratorMenuFlashUpdateListener;
+    void handleFlashUpdate(UpdateEventDetails* const e);
+    boost::signals2::connection _FlashUpdateConnection;
+    Time _FlashElps;
 
     Menu* getTopLevelMenu(void) const;
     bool _DrawAsThoughSelected;

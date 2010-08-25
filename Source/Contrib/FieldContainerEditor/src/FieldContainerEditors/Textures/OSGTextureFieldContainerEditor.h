@@ -120,6 +120,12 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING TextureFieldContainerEditor : p
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     void updateImageComponent(void);
 
     static std::vector<const FieldContainerType*> _EditableTypes;

@@ -89,6 +89,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBase : public MenuItem
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(Menu);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -121,7 +123,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBase : public MenuItem
     typedef SFReal32          SFSubMenuDelayType;
     typedef SFBool            SFTopLevelMenuType;
     typedef SFUnrecUIDrawObjectCanvasPtr SFExpandDrawObjectType;
-    typedef MFUnrecMenuItemPtr MFMenuItemsType;
+    typedef MFUnrecChildMenuItemPtr MFMenuItemsType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -240,7 +242,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBase : public MenuItem
     SFReal32          _sfSubMenuDelay;
     SFBool            _sfTopLevelMenu;
     SFUnrecUIDrawObjectCanvasPtr _sfExpandDrawObject;
-    MFUnrecMenuItemPtr _mfMenuItems;
+    MFUnrecChildMenuItemPtr _mfMenuItems;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -266,6 +268,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBase : public MenuItem
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name Child linking                                                */
+    /*! \{                                                                 */
+
+    virtual bool unlinkChild(FieldContainer * const pChild,
+                             UInt16           const childFieldId);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
@@ -287,8 +297,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBase : public MenuItem
 
             const SFUnrecPopupMenuPtr *getSFInternalPopupMenu (void) const;
                   SFUnrecPopupMenuPtr *editSFInternalPopupMenu(void);
-            const MFUnrecMenuItemPtr  *getMFMenuItems       (void) const;
-                  MFUnrecMenuItemPtr  *editMFMenuItems      (void);
+            const MFUnrecChildMenuItemPtr *getMFMenuItems       (void) const;
 
 
                   PopupMenu * getInternalPopupMenu(void) const;
@@ -308,10 +317,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBase : public MenuItem
     /*! \{                                                                 */
 
     void pushToMenuItems           (MenuItem * const value   );
-    void assignMenuItems           (const MFUnrecMenuItemPtr &value);
+    void assignMenuItems          (const MFUnrecChildMenuItemPtr &value);
+    void clearMenuItems             (void                          );
+    void insertIntoMenuItems      (UInt32         uiIndex,
+                                             MenuItem * const value   );
+    void replaceInMenuItems  (UInt32         uiIndex,
+                                             MenuItem * const value   );
+    void replaceObjInMenuItems (MenuItem * const pOldElem,
+                                             MenuItem * const pNewElem);
     void removeFromMenuItems (UInt32                uiIndex );
     void removeObjFromMenuItems(MenuItem * const value   );
-    void clearMenuItems             (void                          );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

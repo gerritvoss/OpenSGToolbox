@@ -29,7 +29,6 @@
 // Input
 #include "OSGWindowUtils.h"
 #include "OSGWindowEventProducer.h"
-#include "OSGKeyListener.h"
 
 //Animation
 #include "OSGKeyframeSequences.h"
@@ -43,133 +42,84 @@ OSG_USING_NAMESPACE
 
 
 // forward declaration so we can have the interesting stuff upfront
-void setupAnimation(void);
-void display(void);
-void reshape(Vec2f Size);
+FieldAnimationTransitPtr setupAnimation(Transform* const transCore, WindowEventProducer* const win);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-class TutorialAnimationListener : public AnimationListener
+void animationStarted(AnimationEventDetails* const details)
 {
-public:
-   virtual void animationStarted(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Started"  << std::endl;
-   }
+   std::cout << "Animation Started"  << std::endl;
+}
 
-   virtual void animationStopped(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Stopped"  << std::endl;
-   }
-
-   virtual void animationPaused(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Paused"  << std::endl;
-   }
-
-   virtual void animationUnpaused(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Unpaused"  << std::endl;
-   }
-
-   virtual void animationEnded(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Ended"  << std::endl;
-   }
-
-   virtual void animationCycled(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Cycled.  Cycle Count: " << dynamic_cast<Animation*>(e->getSource())->getCycles() << std::endl;
-   }
-
-};
-
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerUnrecPtr TutorialWindow;
-
-Time TimeLastIdle;
-FieldAnimationUnrecPtr TheAnimation;
-TutorialAnimationListener TheAnimationListener;
-MaterialUnrecPtr TheTorusMaterial;
-ComponentTransformUnrecPtr Trans;
-TransformUnrecPtr TorusNodeTrans;
-
-// Create a class to allow for the use of the keyboard shortucts 
-class TutorialKeyListener : public KeyListener
+void animationStopped(AnimationEventDetails* const details)
 {
-public:
+   std::cout << "Animation Stopped"  << std::endl;
+}
 
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-           TutorialWindow->closeWindow();
-       }
-
-       switch(e->getKey())
-       {
-       case KeyEvent::KEY_SPACE:
-           TheAnimation->pause(!TheAnimation->isPaused());
-           break;
-       case KeyEvent::KEY_ENTER:
-           TheAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
-           TheAnimation->start();
-           break;
-       case KeyEvent::KEY_1:
-                dynamic_pointer_cast<FieldAnimation>(TheAnimation)->setInterpolationType(Animator::STEP_INTERPOLATION);
-           break;
-       case KeyEvent::KEY_2:
-                dynamic_pointer_cast<FieldAnimation>(TheAnimation)->setInterpolationType(Animator::LINEAR_INTERPOLATION);
-           break;
-       case KeyEvent::KEY_3:
-                dynamic_pointer_cast<FieldAnimation>(TheAnimation)->setInterpolationType(Animator::CUBIC_INTERPOLATION);
-           break;
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
-
-class TutorialMouseListener : public MouseListener
+void animationPaused(AnimationEventDetails* const details)
 {
-  public:
-    virtual void mouseClicked(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseEntered(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseExited(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mousePressed(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-    virtual void mouseReleased(const MouseEventUnrecPtr e)
-    {
-           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-};
+   std::cout << "Animation Paused"  << std::endl;
+}
 
-class TutorialMouseMotionListener : public MouseMotionListener
+void animationUnpaused(AnimationEventDetails* const details)
 {
-  public:
-    virtual void mouseMoved(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
+   std::cout << "Animation Unpaused"  << std::endl;
+}
 
-    virtual void mouseDragged(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-};
+void animationEnded(AnimationEventDetails* const details)
+{
+   std::cout << "Animation Ended"  << std::endl;
+}
+
+void animationCycled(AnimationEventDetails* const details)
+{
+   std::cout << "Animation Cycled.  Cycle Count: " << dynamic_cast<Animation*>(details->getSource())->getCycles() << std::endl;
+}
+
+void keyPressed(KeyEventDetails* const details, FieldAnimation* const anim, WindowEventProducer* const win)
+{
+   if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+   {
+       win->closeWindow();
+   }
+
+   switch(details->getKey())
+   {
+   case KeyEventDetails::KEY_SPACE:
+       anim->pause(!anim->isPaused());
+       break;
+   case KeyEventDetails::KEY_ENTER:
+       anim->attachUpdateProducer(win);
+       anim->start();
+       break;
+   case KeyEventDetails::KEY_1:
+       anim->setInterpolationType(Animator::STEP_INTERPOLATION);
+       break;
+   case KeyEventDetails::KEY_2:
+       anim->setInterpolationType(Animator::LINEAR_INTERPOLATION);
+       break;
+   case KeyEventDetails::KEY_3:
+       anim->setInterpolationType(Animator::CUBIC_INTERPOLATION);
+       break;
+   }
+}
+void mousePressed(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+        mgr->mouseButtonPress(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+void mouseReleased(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+       mgr->mouseButtonRelease(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+void mouseMoved(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+        mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+        mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -179,78 +129,82 @@ int main(int argc, char **argv)
 
     {
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    //Add Window Listener
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
-    TutorialMouseListener TheTutorialMouseListener;
-    TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TutorialWindow->addMouseListener(&TheTutorialMouseListener);
-    TutorialWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
+        //Initialize Window
+        TutorialWindow->initWindow();
 
-    //Initialize Window
-    TutorialWindow->initWindow();
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
+
+        //Attach to events
+        TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
+        TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
+        TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
+        TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
     
-    //Torus Material
-    TheTorusMaterial = SimpleMaterial::create();
-    dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setAmbient(Color3f(0.2,0.2,0.2));
-    dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setDiffuse(Color3f(0.7,0.7,0.7));
-    dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setSpecular(Color3f(0.7,0.7,0.7));
-    dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setShininess(100.0f);
+        //Torus Material
+        SimpleMaterialRecPtr TheTorusMaterial = SimpleMaterial::create();
+        dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setAmbient(Color3f(0.2,0.2,0.2));
+        dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setDiffuse(Color3f(0.7,0.7,0.7));
+        dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setSpecular(Color3f(0.7,0.7,0.7));
+        dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setShininess(100.0f);
 
-    //Torus Geometry
-    GeometryRefPtr TorusGeometry = makeTorusGeo(.5, 2, 32, 32);
-    TorusGeometry->setMaterial(TheTorusMaterial);
-    
-    NodeRefPtr TorusGeometryNode = Node::create();
-    TorusGeometryNode->setCore(TorusGeometry);
+        //Torus Geometry
+        GeometryRecPtr TorusGeometry = makeTorusGeo(.5, 2, 32, 32);
+        TorusGeometry->setMaterial(TheTorusMaterial);
+        
+        NodeRecPtr TorusGeometryNode = Node::create();
+        TorusGeometryNode->setCore(TorusGeometry);
 
-    //Make Torus Node
-    NodeRefPtr TorusNode = Node::create();
-    TorusNodeTrans = Transform::create();
-    setName(TorusNodeTrans, std::string("TorusNodeTransformationCore"));
+        //Make Torus Node
+        NodeRecPtr TorusNode = Node::create();
+        TransformRecPtr TorusNodeTrans = Transform::create();
+        setName(TorusNodeTrans, std::string("TorusNodeTransformationCore"));
 
-    TorusNode->setCore(TorusNodeTrans);
-    TorusNode->addChild(TorusGeometryNode);
+        TorusNode->setCore(TorusNodeTrans);
+        TorusNode->addChild(TorusGeometryNode);
 
-    //Make Main Scene Node
-    NodeRefPtr scene = Node::create();
-    Trans = ComponentTransform::create();
-    setName(Trans, std::string("MainTransformationCore"));
+        //Make Main Scene Node
+        NodeRecPtr scene = Node::create();
+        ComponentTransformRecPtr Trans = ComponentTransform::create();
+        setName(Trans, std::string("MainTransformationCore"));
 
-    scene->setCore(Trans);
-    scene->addChild(TorusNode);
+        scene->setCore(Trans);
+        scene->addChild(TorusNode);
 
-    setupAnimation();
+        FieldAnimationRecPtr TheAnimation = setupAnimation(TorusNodeTrans, TutorialWindow);
 
-    commitChanges();
+        TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1, TheAnimation.get(), TutorialWindow.get()));
+        
+        TheAnimation->connectAnimationStarted(boost::bind(animationStarted, _1));
+        TheAnimation->connectAnimationStopped(boost::bind(animationStopped, _1));
+        TheAnimation->connectAnimationPaused(boost::bind(animationPaused, _1));
+        TheAnimation->connectAnimationUnpaused(boost::bind(animationUnpaused, _1));
+        TheAnimation->connectAnimationEnded(boost::bind(animationEnded, _1));
+        TheAnimation->connectAnimationCycled(boost::bind(animationCycled, _1));
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        commitChanges();
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
+        // tell the manager what to manage
+        sceneManager.setRoot  (scene);
 
-    // tell the manager what to manage
-    mgr->setRoot  (scene);
+        // show the whole scene
+        sceneManager.showAll();
 
-    // show the whole scene
-    mgr->showAll();
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                WinSize,
+                "OpenSG 02TransformAnimation Window");
 
-    
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "OpenSG 02TransformAnimation Window");
-
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
 
     }
 
@@ -260,39 +214,39 @@ int main(int argc, char **argv)
 }
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }
 
-void setupAnimation(void)
+FieldAnimationTransitPtr setupAnimation(Transform* const transCore, WindowEventProducer* const win)
 {
     //Number Keyframe Sequence
-    KeyframeNumberSequenceReal32UnrecPtr XTransKeyframes = KeyframeNumberSequenceReal32::create();
+    KeyframeNumberSequenceReal32RecPtr XTransKeyframes = KeyframeNumberSequenceReal32::create();
     XTransKeyframes->addKeyframe(1.0,0.0f);
     XTransKeyframes->addKeyframe(5.0,2.0f);
     XTransKeyframes->addKeyframe(-5.0,4.0f);
     XTransKeyframes->addKeyframe(1.0,6.0f);
     
-    KeyframeNumberSequenceReal32UnrecPtr YRotKeyframes = KeyframeNumberSequenceReal32::create();
+    KeyframeNumberSequenceReal32RecPtr YRotKeyframes = KeyframeNumberSequenceReal32::create();
     YRotKeyframes->addKeyframe(0.0,0.0f);
     YRotKeyframes->addKeyframe(45.0,2.0f);
     YRotKeyframes->addKeyframe(0.0,4.0f);
 
-    KeyframeNumberSequenceReal32UnrecPtr ZScaleKeyframes = KeyframeNumberSequenceReal32::create();
+    KeyframeNumberSequenceReal32RecPtr ZScaleKeyframes = KeyframeNumberSequenceReal32::create();
     ZScaleKeyframes->addKeyframe(1.0,0.0f);
     ZScaleKeyframes->addKeyframe(2.0,2.0f);
     ZScaleKeyframes->addKeyframe(3.0,4.0f);
     ZScaleKeyframes->addKeyframe(1.0,6.0f);
 
     //Animator
-    TransformAnimatorUnrecPtr TheAnimator = TransformAnimator::create();
+    TransformAnimatorRecPtr TheAnimator = TransformAnimator::create();
     TheAnimator->setXTranslationSequence(XTransKeyframes);
     TheAnimator->setXRotationSequence(YRotKeyframes);
     TheAnimator->setYRotationSequence(YRotKeyframes);
@@ -300,16 +254,15 @@ void setupAnimation(void)
     TheAnimator->setZScaleSequence(ZScaleKeyframes);
     
     //Animation
-    TheAnimation = FieldAnimation::create();
+    FieldAnimationRecPtr TheAnimation = FieldAnimation::create();
     TheAnimation->setAnimator(TheAnimator);
     TheAnimation->setInterpolationType(Animator::LINEAR_INTERPOLATION);
     TheAnimation->setCycling(2);
-    TheAnimation->setAnimatedField(TorusNodeTrans, std::string("matrix"));
+    TheAnimation->setAnimatedField(transCore, std::string("matrix"));
 
-    //Animation Listener
-    TheAnimation->addAnimationListener(&TheAnimationListener);
-
-    TheAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
+    TheAnimation->attachUpdateProducer(win);
     TheAnimation->start();
+
+    return FieldAnimationTransitPtr(TheAnimation);
 }
 

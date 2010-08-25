@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -109,19 +109,6 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void ListModelBase::classDescInserter(TypeObject &oType)
 {
-    FieldDescriptionBase *pDesc = NULL;
-
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&ListModel::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&ListModel::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -152,44 +139,53 @@ ListModelBase::TypeObject ListModelBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI ListModel.\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ListDataContentsChanged\"\n"
-    "\t\ttype=\"ListDataEventPtr\"\n"
+    "\t\tdetailsType=\"ListDataEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ListDataIntervalAdded\"\n"
-    "\t\ttype=\"ListDataEventPtr\"\n"
+    "\t\tdetailsType=\"ListDataEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ListDataIntervalRemoved\"\n"
-    "\t\ttype=\"ListDataEventPtr\"\n"
+    "\t\tdetailsType=\"ListDataEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI ListModel.\n"
     );
 
-//! ListModel Produced Methods
+//! ListModel Produced Events
 
-MethodDescription *ListModelBase::_methodDesc[] =
+EventDescription *ListModelBase::_eventDesc[] =
 {
-    new MethodDescription("ListDataContentsChanged", 
-                    "",
-                     ListDataContentsChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("ListDataIntervalAdded", 
-                    "",
-                     ListDataIntervalAddedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("ListDataIntervalRemoved", 
-                    "",
-                     ListDataIntervalRemovedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("ListDataContentsChanged", 
+                          "",
+                          ListDataContentsChangedEventId, 
+                          FieldTraits<ListDataEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ListModelBase::getHandleListDataContentsChangedSignal)),
+
+    new EventDescription("ListDataIntervalAdded", 
+                          "",
+                          ListDataIntervalAddedEventId, 
+                          FieldTraits<ListDataEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ListModelBase::getHandleListDataIntervalAddedSignal)),
+
+    new EventDescription("ListDataIntervalRemoved", 
+                          "",
+                          ListDataIntervalRemovedEventId, 
+                          FieldTraits<ListDataEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ListModelBase::getHandleListDataIntervalRemovedSignal))
+
 };
 
 EventProducerType ListModelBase::_producerType(
@@ -197,8 +193,8 @@ EventProducerType ListModelBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -235,10 +231,6 @@ UInt32 ListModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -248,10 +240,6 @@ void ListModelBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void ListModelBase::copyFromBin(BinaryDataHandler &pMem,
@@ -259,28 +247,176 @@ void ListModelBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 }
 
 
+
+/*------------------------- event producers ----------------------------------*/
+void ListModelBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case ListDataContentsChangedEventId:
+        OSG_ASSERT(dynamic_cast<ListDataContentsChangedEventDetailsType* const>(e));
+
+        _ListDataContentsChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ListDataContentsChangedEvent(dynamic_cast<ListDataContentsChangedEventDetailsType* const>(e), ListDataContentsChangedEventId);
+        break;
+    case ListDataIntervalAddedEventId:
+        OSG_ASSERT(dynamic_cast<ListDataIntervalAddedEventDetailsType* const>(e));
+
+        _ListDataIntervalAddedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ListDataIntervalAddedEvent(dynamic_cast<ListDataIntervalAddedEventDetailsType* const>(e), ListDataIntervalAddedEventId);
+        break;
+    case ListDataIntervalRemovedEventId:
+        OSG_ASSERT(dynamic_cast<ListDataIntervalRemovedEventDetailsType* const>(e));
+
+        _ListDataIntervalRemovedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ListDataIntervalRemovedEvent(dynamic_cast<ListDataIntervalRemovedEventDetailsType* const>(e), ListDataIntervalRemovedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection ListModelBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ListDataContentsChangedEventId:
+        return _ListDataContentsChangedEvent.connect(listener, at);
+        break;
+    case ListDataIntervalAddedEventId:
+        return _ListDataIntervalAddedEvent.connect(listener, at);
+        break;
+    case ListDataIntervalRemovedEventId:
+        return _ListDataIntervalRemovedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  ListModelBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ListDataContentsChangedEventId:
+        return _ListDataContentsChangedEvent.connect(group, listener, at);
+        break;
+    case ListDataIntervalAddedEventId:
+        return _ListDataIntervalAddedEvent.connect(group, listener, at);
+        break;
+    case ListDataIntervalRemovedEventId:
+        return _ListDataIntervalRemovedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  ListModelBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case ListDataContentsChangedEventId:
+        _ListDataContentsChangedEvent.disconnect(group);
+        break;
+    case ListDataIntervalAddedEventId:
+        _ListDataIntervalAddedEvent.disconnect(group);
+        break;
+    case ListDataIntervalRemovedEventId:
+        _ListDataIntervalRemovedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  ListModelBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case ListDataContentsChangedEventId:
+        _ListDataContentsChangedEvent.disconnect_all_slots();
+        break;
+    case ListDataIntervalAddedEventId:
+        _ListDataIntervalAddedEvent.disconnect_all_slots();
+        break;
+    case ListDataIntervalRemovedEventId:
+        _ListDataIntervalRemovedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  ListModelBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ListDataContentsChangedEventId:
+        return _ListDataContentsChangedEvent.empty();
+        break;
+    case ListDataIntervalAddedEventId:
+        return _ListDataIntervalAddedEvent.empty();
+        break;
+    case ListDataIntervalRemovedEventId:
+        return _ListDataIntervalRemovedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  ListModelBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ListDataContentsChangedEventId:
+        return _ListDataContentsChangedEvent.num_slots();
+        break;
+    case ListDataIntervalAddedEventId:
+        return _ListDataIntervalAddedEvent.num_slots();
+        break;
+    case ListDataIntervalRemovedEventId:
+        return _ListDataIntervalRemovedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
 
 
 /*------------------------- constructors ----------------------------------*/
 
 ListModelBase::ListModelBase(void) :
-    _Producer(&getProducerType()),
-    Inherited(),
-    _sfEventProducer(&_Producer)
+    Inherited()
 {
 }
 
 ListModelBase::ListModelBase(const ListModelBase &source) :
-    _Producer(&source.getProducerType()),
-    Inherited(source),
-    _sfEventProducer(&_Producer)
+    Inherited(source)
 {
 }
 
@@ -293,27 +429,35 @@ ListModelBase::~ListModelBase(void)
 
 
 
-GetFieldHandlePtr ListModelBase::getHandleEventProducer        (void) const
+GetEventHandlePtr ListModelBase::getHandleListDataContentsChangedSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ListDataContentsChangedEventType>(
+             const_cast<ListDataContentsChangedEventType *>(&_ListDataContentsChangedEvent),
+             _producerType.getEventDescription(ListDataContentsChangedEventId),
              const_cast<ListModelBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr ListModelBase::editHandleEventProducer       (void)
+GetEventHandlePtr ListModelBase::getHandleListDataIntervalAddedSignal(void) const
 {
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ListDataIntervalAddedEventType>(
+             const_cast<ListDataIntervalAddedEventType *>(&_ListDataIntervalAddedEvent),
+             _producerType.getEventDescription(ListDataIntervalAddedEventId),
+             const_cast<ListModelBase *>(this)));
 
+    return returnValue;
+}
 
-    editSField(EventProducerFieldMask);
+GetEventHandlePtr ListModelBase::getHandleListDataIntervalRemovedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ListDataIntervalRemovedEventType>(
+             const_cast<ListDataIntervalRemovedEventType *>(&_ListDataIntervalRemovedEvent),
+             _producerType.getEventDescription(ListDataIntervalRemovedEventId),
+             const_cast<ListModelBase *>(this)));
 
     return returnValue;
 }

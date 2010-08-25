@@ -40,38 +40,10 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool MenuButton::isMenuActionListenerAttached(ActionListenerPtr Listener) const
-{
-    return _MenuActionListeners.find(Listener) != _MenuActionListeners.end();
-}
-
-inline
-bool MenuButton::isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const
-{
-    return getMenuButtonPopupMenu()->isPopupMenuListenerAttached(Listener);
-}
-
-inline
-EventConnection MenuButton::addPopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	return getMenuButtonPopupMenu()->addPopupMenuListener(Listener);
-}
-
-inline
-void MenuButton::removePopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	getMenuButtonPopupMenu()->removePopupMenuListener(Listener);
-}
 inline 
 bool MenuButton::isPopupVisible(void) const
 {
     return getMenuButtonPopupMenu()->getVisible();
-}
-
-inline
-MenuButton::MenuButtonEventsListener::MenuButtonEventsListener(MenuButton* const TheMenuButton) : _MenuButton(TheMenuButton)
-{
 }
 
 OSG_END_NAMESPACE

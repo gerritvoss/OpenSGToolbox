@@ -181,13 +181,13 @@ void MenuBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new MFUnrecMenuItemPtr::Description(
-        MFUnrecMenuItemPtr::getClassType(),
+    pDesc = new MFUnrecChildMenuItemPtr::Description(
+        MFUnrecChildMenuItemPtr::getClassType(),
         "MenuItems",
         "",
         MenuItemsFieldId, MenuItemsFieldMask,
         false,
-        (Field::MFDefaultFlags | Field::FStdAccess),
+        (Field::MFDefaultFlags | Field::FNullCheckAccess),
         static_cast<FieldEditMethodSig>(&Menu::editHandleMenuItems),
         static_cast<FieldGetMethodSig >(&Menu::getHandleMenuItems));
 
@@ -260,15 +260,18 @@ MenuBase::TypeObject MenuBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "    <Field\n"
-    "          name=\"MenuItems\"\n"
-    "          type=\"MenuItem\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "          cardinality=\"multi\"\n"
-    "          visibility=\"external\"\n"
-    "          access=\"protected\"\n"
-    "          >\n"
-    "    </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MenuItems\"\n"
+    "\t\ttype=\"MenuItem\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "        category=\"childpointer\"\n"
+    "        childParentType=\"FieldContainer\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        ptrFieldAccess = \"nullCheck\"\n"
+    "        linkParentField=\"ParentMenu\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     "A UI Menu.\n"
     );
@@ -346,15 +349,8 @@ SFUnrecUIDrawObjectCanvasPtr *MenuBase::editSFExpandDrawObject(void)
 }
 
 //! Get the Menu::_mfMenuItems field.
-const MFUnrecMenuItemPtr *MenuBase::getMFMenuItems(void) const
+const MFUnrecChildMenuItemPtr *MenuBase::getMFMenuItems(void) const
 {
-    return &_mfMenuItems;
-}
-
-MFUnrecMenuItemPtr  *MenuBase::editMFMenuItems      (void)
-{
-    editMField(MenuItemsFieldMask, _mfMenuItems);
-
     return &_mfMenuItems;
 }
 
@@ -362,16 +358,19 @@ MFUnrecMenuItemPtr  *MenuBase::editMFMenuItems      (void)
 
 void MenuBase::pushToMenuItems(MenuItem * const value)
 {
+    if(value == NULL)
+        return;
+
     editMField(MenuItemsFieldMask, _mfMenuItems);
 
     _mfMenuItems.push_back(value);
 }
 
-void MenuBase::assignMenuItems(const MFUnrecMenuItemPtr &value)
+void MenuBase::assignMenuItems(const MFUnrecChildMenuItemPtr &value)
 {
-    MFUnrecMenuItemPtr::const_iterator elemIt  =
+    MFUnrecChildMenuItemPtr::const_iterator elemIt  =
         value.begin();
-    MFUnrecMenuItemPtr::const_iterator elemEnd =
+    MFUnrecChildMenuItemPtr::const_iterator elemEnd =
         value.end  ();
 
     static_cast<Menu *>(this)->clearMenuItems();
@@ -381,6 +380,51 @@ void MenuBase::assignMenuItems(const MFUnrecMenuItemPtr &value)
         this->pushToMenuItems(*elemIt);
 
         ++elemIt;
+    }
+}
+
+void MenuBase::insertIntoMenuItems(UInt32               uiIndex,
+                                                   MenuItem * const value   )
+{
+    if(value == NULL)
+        return;
+
+    editMField(MenuItemsFieldMask, _mfMenuItems);
+
+    MFUnrecChildMenuItemPtr::iterator fieldIt = _mfMenuItems.begin_nc();
+
+    fieldIt += uiIndex;
+
+    _mfMenuItems.insert(fieldIt, value);
+}
+
+void MenuBase::replaceInMenuItems(UInt32               uiIndex,
+                                                       MenuItem * const value   )
+{
+    if(value == NULL)
+        return;
+
+    if(uiIndex >= _mfMenuItems.size())
+        return;
+
+    editMField(MenuItemsFieldMask, _mfMenuItems);
+
+    _mfMenuItems.replace(uiIndex, value);
+}
+
+void MenuBase::replaceObjInMenuItems(MenuItem * const pOldElem,
+                                                        MenuItem * const pNewElem)
+{
+    if(pNewElem == NULL)
+        return;
+
+    Int32  elemIdx = _mfMenuItems.findIndex(pOldElem);
+
+    if(elemIdx != -1)
+    {
+        editMField(MenuItemsFieldMask, _mfMenuItems);
+
+        _mfMenuItems.replace(elemIdx, pNewElem);
     }
 }
 
@@ -617,7 +661,6 @@ FieldContainerTransitPtr MenuBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 MenuBase::MenuBase(void) :
@@ -626,7 +669,9 @@ MenuBase::MenuBase(void) :
     _sfSubMenuDelay           (Real32(0.5)),
     _sfTopLevelMenu           (bool(false)),
     _sfExpandDrawObject       (NULL),
-    _mfMenuItems              ()
+    _mfMenuItems              (this,
+                          MenuItemsFieldId,
+                          MenuItem::ParentMenuFieldId)
 {
 }
 
@@ -636,7 +681,9 @@ MenuBase::MenuBase(const MenuBase &source) :
     _sfSubMenuDelay           (source._sfSubMenuDelay           ),
     _sfTopLevelMenu           (source._sfTopLevelMenu           ),
     _sfExpandDrawObject       (NULL),
-    _mfMenuItems              ()
+    _mfMenuItems              (this,
+                          MenuItemsFieldId,
+                          MenuItem::ParentMenuFieldId)
 {
 }
 
@@ -645,6 +692,44 @@ MenuBase::MenuBase(const MenuBase &source) :
 
 MenuBase::~MenuBase(void)
 {
+}
+
+/*-------------------------------------------------------------------------*/
+/* Child linking                                                           */
+
+bool MenuBase::unlinkChild(
+    FieldContainer * const pChild,
+    UInt16           const childFieldId)
+{
+    if(childFieldId == MenuItemsFieldId)
+    {
+        MenuItem * pTypedChild =
+            dynamic_cast<MenuItem *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            Int32 iChildIdx = _mfMenuItems.findIndex(pTypedChild);
+
+            if(iChildIdx != -1)
+            {
+                editMField(MenuItemsFieldMask, _mfMenuItems);
+
+                _mfMenuItems.erase(iChildIdx);
+
+                return true;
+            }
+
+            FWARNING(("MenuBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+
+    return Inherited::unlinkChild(pChild, childFieldId);
 }
 
 void MenuBase::onCreate(const Menu *source)
@@ -659,9 +744,9 @@ void MenuBase::onCreate(const Menu *source)
 
         pThis->setExpandDrawObject(source->getExpandDrawObject());
 
-        MFUnrecMenuItemPtr::const_iterator MenuItemsIt  =
+        MFUnrecChildMenuItemPtr::const_iterator MenuItemsIt  =
             source->_mfMenuItems.begin();
-        MFUnrecMenuItemPtr::const_iterator MenuItemsEnd =
+        MFUnrecChildMenuItemPtr::const_iterator MenuItemsEnd =
             source->_mfMenuItems.end  ();
 
         while(MenuItemsIt != MenuItemsEnd)
@@ -781,8 +866,8 @@ EditFieldHandlePtr MenuBase::editHandleExpandDrawObject(void)
 
 GetFieldHandlePtr MenuBase::getHandleMenuItems       (void) const
 {
-    MFUnrecMenuItemPtr::GetHandlePtr returnValue(
-        new  MFUnrecMenuItemPtr::GetHandle(
+    MFUnrecChildMenuItemPtr::GetHandlePtr returnValue(
+        new  MFUnrecChildMenuItemPtr::GetHandle(
              &_mfMenuItems,
              this->getType().getFieldDesc(MenuItemsFieldId),
              const_cast<MenuBase *>(this)));
@@ -792,8 +877,8 @@ GetFieldHandlePtr MenuBase::getHandleMenuItems       (void) const
 
 EditFieldHandlePtr MenuBase::editHandleMenuItems      (void)
 {
-    MFUnrecMenuItemPtr::EditHandlePtr returnValue(
-        new  MFUnrecMenuItemPtr::EditHandle(
+    MFUnrecChildMenuItemPtr::EditHandlePtr returnValue(
+        new  MFUnrecChildMenuItemPtr::EditHandle(
              &_mfMenuItems,
              this->getType().getFieldDesc(MenuItemsFieldId),
              this));
@@ -801,6 +886,15 @@ EditFieldHandlePtr MenuBase::editHandleMenuItems      (void)
     returnValue->setAddMethod(
         boost::bind(&Menu::pushToMenuItems,
                     static_cast<Menu *>(this), _1));
+    returnValue->setInsertMethod(
+        boost::bind(&Menu::insertIntoMenuItems,
+                    static_cast<Menu *>(this), _1, _2));
+    returnValue->setReplaceMethod(
+        boost::bind(&Menu::replaceInMenuItems,
+                    static_cast<Menu *>(this), _1, _2));
+    returnValue->setReplaceObjMethod(
+        boost::bind(&Menu::replaceObjInMenuItems,
+                    static_cast<Menu *>(this), _1, _2));
     returnValue->setRemoveMethod(
         boost::bind(&Menu::removeFromMenuItems,
                     static_cast<Menu *>(this), _1));
@@ -815,6 +909,7 @@ EditFieldHandlePtr MenuBase::editHandleMenuItems      (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

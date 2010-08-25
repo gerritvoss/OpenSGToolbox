@@ -43,3 +43,4 @@
 #include "OSGMaterialLayer.h"
 #include "OSGTextureLayer.h"
 #include "OSGPatternLayer.h"
+#include "OSGGlassLayer.h"

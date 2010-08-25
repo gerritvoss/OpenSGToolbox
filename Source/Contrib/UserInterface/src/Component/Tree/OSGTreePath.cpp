@@ -72,6 +72,52 @@ A TreePath.
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+bool TreePath::empty(void) const
+{
+    return (_Model == NULL || _Path.size() == 0);
+}
+
+TreePath::TreePath(const TreePath& p) :
+  _Path(p._Path), _Model(p._Model)
+{
+}
+
+TreePath::TreePath(const PathVectorType& path, TreeModel * const theModel) :
+  _Path(path), _Model(theModel)
+{
+}
+
+TreePath::TreePath(const TreePath& p, boost::any child) :
+    _Path(p._Path),
+    _Model(p._Model)
+{
+    _Path.push_back(child);
+}
+
+TreePath::TreePath(boost::any value, TreeModel * const theModel) :
+    _Path(1, value),
+    _Model(theModel)
+{
+}
+
+
+TreePath::TreePath(const std::deque<boost::any>& path, TreeModel * const theModel) :
+  _Path(path.begin(), path.end()), _Model(theModel)
+{
+}
+
+TreePath::TreePath(const TreePath& p, UInt32 len) : _Model(p._Model)
+{
+    if(len <= p._Path.size())
+    {
+        _Path.insert(_Path.begin(), p._Path.begin(), p._Path.begin() + len);
+    }
+}
+
+TreePath::TreePath(void) :
+  _Path(), _Model(NULL)
+{
+}
 
 bool TreePath::depthFirstLessThan(const TreePath& Right) const
 {

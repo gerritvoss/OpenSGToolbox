@@ -87,6 +87,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentHeightLayoutSpringBase : publ
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ComponentHeightLayoutSpring);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -106,7 +108,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentHeightLayoutSpringBase : publ
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecComponentPtr SFComponentType;
+    typedef SFWeakComponentPtr SFComponentType;
     typedef SFUInt32          SFSizeFieldType;
 
     /*---------------------------------------------------------------------*/
@@ -132,8 +134,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentHeightLayoutSpringBase : publ
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecComponentPtr *getSFComponent      (void) const;
-                  SFUnrecComponentPtr *editSFComponent      (void);
+            const SFWeakComponentPtr  *getSFComponent      (void) const;
+                  SFWeakComponentPtr  *editSFComponent      (void);
 
                   SFUInt32            *editSFSizeField      (void);
             const SFUInt32            *getSFSizeField       (void) const;
@@ -215,7 +217,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentHeightLayoutSpringBase : publ
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecComponentPtr _sfComponent;
+    SFWeakComponentPtr _sfComponent;
     SFUInt32          _sfSizeField;
 
     /*! \}                                                                 */

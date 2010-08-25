@@ -52,6 +52,7 @@
 #include "OSGSpringLayout.h"
 #include "OSGSpringLayoutConstraints.h"
 #include "OSGLayoutSpring.h"
+#include "OSGGradientLayer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -440,33 +441,36 @@ void HSVColorChooserPanel::buildChooser(void)
 
 void HSVColorChooserPanel::updateColorSelectedModel(void)
 {
-	Color4f TempColor;
-	TempColor.setValuesHSV(static_cast<Real32>(_HueModel->getValue()),
-		static_cast<Real32>(_SaturationModel->getValue())/static_cast<Real32>(_SaturationModel->getMaximum()),
-		static_cast<Real32>(_ValueModel->getValue())/static_cast<Real32>(_ValueModel->getMaximum()));
-	TempColor[3] = static_cast<Real32>(_AlphaModel->getValue())/static_cast<Real32>(_AlphaModel->getMaximum());
+    if(getColorSelectionModel())
+    {
+	    Color4f TempColor;
+	    TempColor.setValuesHSV(static_cast<Real32>(_HueModel->getValue()),
+		    static_cast<Real32>(_SaturationModel->getValue())/static_cast<Real32>(_SaturationModel->getMaximum()),
+		    static_cast<Real32>(_ValueModel->getValue())/static_cast<Real32>(_ValueModel->getMaximum()));
+	    TempColor[3] = static_cast<Real32>(_AlphaModel->getValue())/static_cast<Real32>(_AlphaModel->getMaximum());
 
-	bool isValueAdjusting = _HueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
-		                    _SaturationModel->getBoundedRangeModel()->getValueIsAdjusting() ||
-		                    _ValueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
-		                    _AlphaModel->getBoundedRangeModel()->getValueIsAdjusting();
-	getColorSelectionModel()->setSelectedColor(TempColor, isValueAdjusting);
+	    bool isValueAdjusting = _HueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+		                        _SaturationModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+		                        _ValueModel->getBoundedRangeModel()->getValueIsAdjusting() ||
+		                        _AlphaModel->getBoundedRangeModel()->getValueIsAdjusting();
+	    getColorSelectionModel()->setSelectedColor(TempColor, isValueAdjusting);
+    }
 }
 
 void HSVColorChooserPanel::attachModelListener(void)
 {
-	_HueModel->addChangeListener(&_BoundedRangeSpinnerChangeListener);
-	_SaturationModel->addChangeListener(&_BoundedRangeSpinnerChangeListener);
-	_ValueModel->addChangeListener(&_BoundedRangeSpinnerChangeListener);
-	_AlphaModel->addChangeListener(&_BoundedRangeSpinnerChangeListener);
+    _HueModelStateChangedConnection = _HueModel->getSpinnerModel()->connectStateChanged(boost::bind(&HSVColorChooserPanel::handleControlStateChanged, this, _1));
+    _SaturationModelStateChangedConnection = _SaturationModel->getSpinnerModel()->connectStateChanged(boost::bind(&HSVColorChooserPanel::handleControlStateChanged, this, _1));
+    _ValueModelStateChangedConnection = _ValueModel->getSpinnerModel()->connectStateChanged(boost::bind(&HSVColorChooserPanel::handleControlStateChanged, this, _1));
+    _AlphaModelStateChangedConnection = _AlphaModel->getSpinnerModel()->connectStateChanged(boost::bind(&HSVColorChooserPanel::handleControlStateChanged, this, _1));
 }
 
 void HSVColorChooserPanel::dettachModelListener(void)
 {
-    if(_HueModel){ _HueModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
-    if(_SaturationModel){ _SaturationModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
-    if(_ValueModel){ _ValueModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
-    if(_AlphaModel){ _AlphaModel->removeChangeListener(&_BoundedRangeSpinnerChangeListener);}
+    _HueModelStateChangedConnection.disconnect();
+    _SaturationModelStateChangedConnection.disconnect();
+    _ValueModelStateChangedConnection.disconnect();
+    _AlphaModelStateChangedConnection.disconnect();
 }
 
 void HSVColorChooserPanel::init(void)
@@ -486,14 +490,12 @@ void HSVColorChooserPanel::init(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 HSVColorChooserPanel::HSVColorChooserPanel(void) :
-    Inherited(),
-	_BoundedRangeSpinnerChangeListener(this)
+    Inherited()
 {
 }
 
 HSVColorChooserPanel::HSVColorChooserPanel(const HSVColorChooserPanel &source) :
-    Inherited(source),
-	_BoundedRangeSpinnerChangeListener(this)
+    Inherited(source)
 {
     init();
 }
@@ -518,10 +520,10 @@ void HSVColorChooserPanel::dump(      UInt32    ,
     SLOG << "Dump HSVColorChooserPanel NI" << std::endl;
 }
 
-void HSVColorChooserPanel::BoundedRangeSpinnerChangeListener::stateChanged(const ChangeEventUnrecPtr e)
+void HSVColorChooserPanel::handleControlStateChanged(ChangeEventDetails* const e)
 {
 	//Update the Color Selected Model
-	_HSVColorChooserPanel->updateColorSelectedModel();
+	updateColorSelectedModel();
 }
 
 OSG_END_NAMESPACE

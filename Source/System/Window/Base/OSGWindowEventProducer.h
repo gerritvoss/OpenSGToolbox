@@ -50,16 +50,13 @@
 #include "OSGThread.h"
 #include "OSGRenderAction.h"
 #include "OSGPathType.h"
-
-#include "OSGKeyListener.h"
-#include "OSGKeyEvent.h"
-#include "OSGEventConnection.h"
-#include "OSGMouseListener.h"
-#include "OSGMouseMotionListener.h"
-#include "OSGMouseWheelListener.h"
-#include "OSGWindowListener.h"
-#include "OSGUpdateListener.h"
 #include <boost/function.hpp>
+
+#include "OSGWindowEventDetails.h"
+#include "OSGKeyEventDetails.h"
+#include "OSGMouseEventDetails.h"
+#include "OSGMouseWheelEventDetails.h"
+#include "OSGUpdateEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -137,28 +134,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    EventConnection addMouseListener(MouseListenerPtr Listener);
-    EventConnection addMouseMotionListener(MouseMotionListenerPtr Listener);
-    EventConnection addMouseWheelListener(MouseWheelListenerPtr Listener);
-    EventConnection addKeyListener(KeyListenerPtr Listener);
-    EventConnection addWindowListener(WindowListenerPtr Listener);
-    EventConnection addUpdateListener(UpdateListenerPtr Listener);
-    
-    bool isMouseListenerAttached(MouseListenerPtr Listener) const;
-    bool isMouseMotionListenerAttached(MouseMotionListenerPtr Listener) const;
-    bool isMouseWheelListenerAttached(MouseWheelListenerPtr Listener) const;
-    bool isKeyListenerAttached(KeyListenerPtr Listener) const;
-    bool isWindowListenerAttached(WindowListenerPtr Listener) const;
-    bool isUpdateListenerAttached(UpdateListenerPtr Listener) const;
-
-    void removeMouseListener(MouseListenerPtr Listener);
-    void removeMouseMotionListener(MouseMotionListenerPtr Listener);
-    void removeMouseWheelListener(MouseWheelListenerPtr Listener);
-    void removeKeyListener(KeyListenerPtr Listener);
-    void removeWindowListener(WindowListenerPtr Listener);
-    void removeUpdateListener(UpdateListenerPtr Listener);
-
-    void detatchAllListeners(void);
 
     virtual Window* initWindow(void);
 
@@ -261,7 +236,7 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
     virtual bool attachWindow(void) = 0;
 
 	virtual UInt32 getKeyModifiers(void) const = 0;
-	virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const = 0;
+	virtual KeyEventDetails::KeyState getKeyState(KeyEventDetails::Key TheKey) const = 0;
     
 	virtual Pnt2f getMousePosition(void) const = 0;
 
@@ -314,35 +289,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
 	CursorRegionList _CursorRegions;
 	void updateCursor(Pnt2f MousePos);
 
-	typedef std::set<MouseListenerPtr> MouseListenerSet;
-    typedef MouseListenerSet::iterator MouseListenerSetItor;
-    typedef MouseListenerSet::const_iterator MouseListenerSetConstItor;
-    typedef std::set<MouseMotionListenerPtr> MouseMotionListenerSet;
-    typedef MouseMotionListenerSet::iterator MouseMotionListenerSetItor;
-    typedef MouseMotionListenerSet::const_iterator MouseMotionListenerSetConstItor;
-    typedef std::set<MouseWheelListenerPtr> MouseWheelListenerSet;
-    typedef MouseWheelListenerSet::iterator MouseWheelListenerSetItor;
-    typedef MouseWheelListenerSet::const_iterator MouseWheelListenerSetConstItor;
-    typedef std::set<KeyListenerPtr> KeyListenerSet;
-    typedef KeyListenerSet::iterator KeyListenerSetItor;
-    typedef KeyListenerSet::const_iterator KeyListenerSetConstItor;
-	
-	typedef std::set<WindowListenerPtr> WindowListenerSet;
-    typedef WindowListenerSet::iterator WindowListenerSetItor;
-    typedef WindowListenerSet::const_iterator WindowListenerSetConstItor;
-
-    MouseListenerSet       _MouseListeners;
-    MouseMotionListenerSet _MouseMotionListeners;
-    MouseWheelListenerSet  _MouseWheelListeners;
-    KeyListenerSet         _KeyListeners;
-    WindowListenerSet       _WindowListeners;
-
-	typedef std::set<UpdateListenerPtr> UpdateListenerSet;
-    typedef UpdateListenerSet::iterator UpdateListenerSetItor;
-    typedef UpdateListenerSet::const_iterator UpdateListenerSetConstItor;
-	
-    UpdateListenerSet       _UpdateListeners;
-
     struct Click
     {
        Time _TimeStamp;
@@ -355,8 +301,8 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
     typedef ClickVector::iterator ClickVectorIter;
     typedef ClickVector::const_iterator ClickVectorConstIter;
 
-    typedef std::map<MouseEvent::MouseButton, ClickVector> ButtonClickCountMap;
-    typedef std::map<MouseEvent::MouseButton, Pnt2f> ButtonClickMap;
+    typedef std::map<MouseEventDetails::MouseButton, ClickVector> ButtonClickCountMap;
+    typedef std::map<MouseEventDetails::MouseButton, Pnt2f> ButtonClickMap;
 
     ButtonClickCountMap _ButtonClickCountMap;
     ButtonClickMap _ButtonClickMap;
@@ -370,23 +316,23 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
     void internalDraw(void);
     void internalReshape(Vec2f size);
 
-    void updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
-    void validateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
+    void updateClickCount(const MouseEventDetails::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
+    void validateClickCount(const MouseEventDetails::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
 
-    void produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
+    void produceMouseClicked(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location);
     void produceMouseEntered(const Pnt2f& Location);
     void produceMouseExited(const Pnt2f& Location);
-    void produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
-    void produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
+    void produceMousePressed(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location);
+    void produceMouseReleased(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location);
 
-    void produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEvent::ScrollType& TheScrollType = MouseWheelEvent::UNIT_SCROLL);
+    void produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEventDetails::ScrollType& TheScrollType = MouseWheelEventDetails::UNIT_SCROLL);
 
     void produceMouseMoved(const Pnt2f& Location, const Vec2f& Delta);
-    void produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location, const Vec2f& Delta);
+    void produceMouseDragged(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location, const Vec2f& Delta);
 
-    void produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
-    void produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
-    void produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
+    void produceKeyPressed(const KeyEventDetails::Key& TheKey, const UInt32& Modifiers);
+    void produceKeyReleased(const KeyEventDetails::Key& TheKey, const UInt32& Modifiers);
+    void produceKeyTyped(const KeyEventDetails::Key& TheKey, const UInt32& Modifiers);
 	
     void produceUpdate(const Time& ElapsedTime);
 	

@@ -27,7 +27,7 @@ A UI SpinnerDefaultEditor.
 	<Field
 		name="Spinner"
 		type="Spinner"
-		category="pointer"
+		category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		access="public"

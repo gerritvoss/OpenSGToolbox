@@ -29,7 +29,7 @@
 #include "OSGDirectShowManager.h"
 #include "OSGDirectShowVideoWrapper.h"
 
-#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
+#ifdef OSG_WITH_DIRECT_SHOW
 
 #include <Dshow.h>
 
@@ -40,7 +40,9 @@ DirectShowManager *DirectShowManager::_the = NULL;
 VideoManager *DirectShowManager::the(void)
 {
     if(_the == NULL)
+    {
         _the = new DirectShowManager;
+    }
 
     return _the;
 }
@@ -53,16 +55,18 @@ VideoWrapperRefPtr DirectShowManager::createVideoWrapper(void) const
 void DirectShowManager::init(int   argc, char *argv[])
 {
     HRESULT hr;
+    SLOG << "Initializing COM library." << std::endl;
     hr = CoInitialize(NULL);
     if (FAILED(hr))
     {
-        printf("ERROR - Could not initialize COM library");
+        SWARNING << "Could not initialize COM library." << std::endl;
         return;
     }
 }
 
 void DirectShowManager::exit(void)
 {
+    SLOG << "Uninitializing COM library." << std::endl;
     CoUninitialize();
 }
 
@@ -82,5 +86,5 @@ DirectShowManager::~DirectShowManager(void)
 
 OSG_END_NAMESPACE
 
-#endif
+#endif  //OSG_WITH_DIRECT_SHOW
 

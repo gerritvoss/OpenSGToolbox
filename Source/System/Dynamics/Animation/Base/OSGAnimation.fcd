@@ -63,34 +63,40 @@ Animation is the base class of all Animation
         defaultValue="0"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="AnimationStarted"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationStopped"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationPaused"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationUnpaused"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationEnded"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="AnimationCycled"
-		type="AnimationEvent"
+		detailsType="AnimationEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

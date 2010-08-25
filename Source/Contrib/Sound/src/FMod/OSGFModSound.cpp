@@ -48,8 +48,6 @@
 #include "OSGFModSoundManager.h"
 #include "OSGFModSound.h"
 
-#include "OSGSoundListener.h"
-#include "OSGSoundEvent.h"
 #include "OSGBaseInitFunctions.h"
 
 #include <boost/filesystem.hpp>

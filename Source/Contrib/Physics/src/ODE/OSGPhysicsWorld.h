@@ -44,6 +44,7 @@
 
 #include "OSGPhysicsWorldBase.h"
 #include <ode/ode.h>
+#include "OSGPhysicsHandlerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -85,7 +86,7 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorld : public PhysicsWorldBase
 	void worldQuickStep(Real32 stepsize);
     void initWorld();
 
-    PhysicsHandlerUnrecPtr getParentHandler(void) const;
+    PhysicsHandler* getParentHandler(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

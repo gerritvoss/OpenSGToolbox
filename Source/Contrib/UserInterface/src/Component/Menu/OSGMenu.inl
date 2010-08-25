@@ -58,17 +58,4 @@ bool Menu::getPopupVisible(void) const
     return getInternalPopupMenu()->getVisible();
 }
 
-inline
-Menu::PopupUpdateListener::PopupUpdateListener(Menu* const TheMenu) :
-									_Menu(TheMenu),
-									_PopupElps(0.0)
-{
-}
-
-inline
-void Menu::PopupUpdateListener::reset(void)
-{
-    _PopupElps = 0.0;
-}
-
 OSG_END_NAMESPACE

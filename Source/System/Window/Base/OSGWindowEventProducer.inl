@@ -51,42 +51,6 @@ bool WindowEventProducer::isBlockInputConnections(void) const
 {
     return _BlockInput;
 }
-    
-inline
-bool WindowEventProducer::isMouseListenerAttached(MouseListenerPtr Listener) const
-{
-    return _MouseListeners.find(Listener) != _MouseListeners.end();
-}
-
-inline
-bool WindowEventProducer::isMouseMotionListenerAttached(MouseMotionListenerPtr Listener) const
-{
-    return _MouseMotionListeners.find(Listener) != _MouseMotionListeners.end();
-}
-
-inline
-bool WindowEventProducer::isMouseWheelListenerAttached(MouseWheelListenerPtr Listener) const
-{
-    return _MouseWheelListeners.find(Listener) != _MouseWheelListeners.end();
-}
-
-inline
-bool WindowEventProducer::isKeyListenerAttached(KeyListenerPtr Listener) const
-{
-    return _KeyListeners.find(Listener) != _KeyListeners.end();
-}
-
-inline
-bool WindowEventProducer::isWindowListenerAttached(WindowListenerPtr Listener) const
-{
-    return _WindowListeners.find(Listener) != _WindowListeners.end();
-}
-
-inline
-bool WindowEventProducer::isUpdateListenerAttached(UpdateListenerPtr Listener) const
-{
-    return _UpdateListeners.find(Listener) != _UpdateListeners.end();
-}
 
 inline
 WindowEventProducer::FileDialogFilter::FileDialogFilter(const std::string& Name, const std::string& Filter) : 

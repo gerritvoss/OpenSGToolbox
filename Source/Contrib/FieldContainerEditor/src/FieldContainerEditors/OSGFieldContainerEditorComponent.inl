@@ -52,4 +52,10 @@ CommandManagerPtr FieldContainerEditorComponent::getCommandManager(void) const
     return _CmdManager;
 }
 
+inline
+FieldContainer* FieldContainerEditorComponent::getAttachedFieldContainer(void) const
+{
+    return getEditingFC();
+}
+
 OSG_END_NAMESPACE

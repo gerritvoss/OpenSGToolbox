@@ -58,6 +58,7 @@
 
 
 
+
 #include "OSGNode.h"                    // Root Class
 
 #include "OSGPhysicsCharacteristicsDrawableBase.h"
@@ -155,8 +156,8 @@ void PhysicsCharacteristicsDrawableBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecNodePtr::Description(
-        SFUnrecNodePtr::getClassType(),
+    pDesc = new SFWeakNodePtr::Description(
+        SFWeakNodePtr::getClassType(),
         "Root",
         "",
         RootFieldId, RootFieldMask,
@@ -318,7 +319,7 @@ PhysicsCharacteristicsDrawableBase::TypeObject PhysicsCharacteristicsDrawableBas
     "\t<Field\n"
     "\t\tname=\"Root\"\n"
     "\t\ttype=\"Node\"\n"
-    "        category=\"pointer\"\n"
+    "        category=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
@@ -450,12 +451,12 @@ UInt32 PhysicsCharacteristicsDrawableBase::getContainerSize(void) const
 
 
 //! Get the PhysicsCharacteristicsDrawable::_sfRoot field.
-const SFUnrecNodePtr *PhysicsCharacteristicsDrawableBase::getSFRoot(void) const
+const SFWeakNodePtr *PhysicsCharacteristicsDrawableBase::getSFRoot(void) const
 {
     return &_sfRoot;
 }
 
-SFUnrecNodePtr      *PhysicsCharacteristicsDrawableBase::editSFRoot           (void)
+SFWeakNodePtr       *PhysicsCharacteristicsDrawableBase::editSFRoot           (void)
 {
     editSField(RootFieldMask);
 
@@ -870,7 +871,6 @@ FieldContainerTransitPtr PhysicsCharacteristicsDrawableBase::shallowCopy(void) c
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 PhysicsCharacteristicsDrawableBase::PhysicsCharacteristicsDrawableBase(void) :
@@ -926,8 +926,8 @@ void PhysicsCharacteristicsDrawableBase::onCreate(const PhysicsCharacteristicsDr
 
 GetFieldHandlePtr PhysicsCharacteristicsDrawableBase::getHandleRoot            (void) const
 {
-    SFUnrecNodePtr::GetHandlePtr returnValue(
-        new  SFUnrecNodePtr::GetHandle(
+    SFWeakNodePtr::GetHandlePtr returnValue(
+        new  SFWeakNodePtr::GetHandle(
              &_sfRoot,
              this->getType().getFieldDesc(RootFieldId),
              const_cast<PhysicsCharacteristicsDrawableBase *>(this)));
@@ -937,8 +937,8 @@ GetFieldHandlePtr PhysicsCharacteristicsDrawableBase::getHandleRoot            (
 
 EditFieldHandlePtr PhysicsCharacteristicsDrawableBase::editHandleRoot           (void)
 {
-    SFUnrecNodePtr::EditHandlePtr returnValue(
-        new  SFUnrecNodePtr::EditHandle(
+    SFWeakNodePtr::EditHandlePtr returnValue(
+        new  SFWeakNodePtr::EditHandle(
              &_sfRoot,
              this->getType().getFieldDesc(RootFieldId),
              this));
@@ -1201,6 +1201,7 @@ EditFieldHandlePtr PhysicsCharacteristicsDrawableBase::editHandleWorldColor     
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

@@ -52,13 +52,16 @@ A UI Menu.
 		access="public"
 	>
 	</Field>
-    <Field
-          name="MenuItems"
-          type="MenuItem"
-		category="pointer"
-          cardinality="multi"
-          visibility="external"
-          access="protected"
-          >
-    </Field>
+	<Field
+		name="MenuItems"
+		type="MenuItem"
+		cardinality="multi"
+        category="childpointer"
+        childParentType="FieldContainer"
+		visibility="external"
+		access="protected"
+        ptrFieldAccess = "nullCheck"
+        linkParentField="ParentMenu"
+	>
+	</Field>
 </FieldContainer>

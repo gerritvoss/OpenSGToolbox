@@ -65,7 +65,7 @@
 
 #include "OSGAttachmentContainer.h" // Parent
 
-#include "OSGComponentFields.h"         // ParentComponent type
+#include "OSGFieldContainerFields.h"    // ParentComponent type
 
 #include "OSGLayoutConstraintsFields.h"
 
@@ -86,6 +86,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutConstraintsBase : public Attachm
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(LayoutConstraints);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -102,7 +104,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutConstraintsBase : public Attachm
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecComponentPtr SFParentComponentType;
+    typedef MFParentFieldContainerPtr MFParentComponentType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -121,34 +123,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutConstraintsBase : public Attachm
     virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-            const SFUnrecComponentPtr *getSFParentComponent(void) const;
-                  SFUnrecComponentPtr *editSFParentComponent(void);
-
-
-                  Component * getParentComponent(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-            void setParentComponent(Component * const value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr Field Set                                 */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr MField Set                                */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,7 +150,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutConstraintsBase : public Attachm
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecComponentPtr _sfParentComponent;
+    MFParentFieldContainerPtr _mfParentComponent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,7 +172,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutConstraintsBase : public Attachm
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
-    void onCreate(const LayoutConstraints *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -41,21 +41,25 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-PhysicsHandlerUnrecPtr PhysicsSpace::getParentHandler(void) const
+PhysicsHandler* PhysicsSpace::getParentHandler(void) const
 {
-    return getInternalParentHandler();
-}
-
-inline
-bool PhysicsSpace::isCollisionListenerAttached(CollisionListenerPtr Listener) const
-{
-    return _CollisionListeners.find(Listener) != _CollisionListeners.end();
+    return dynamic_cast<PhysicsHandler* const>(_sfParentHandler.getValue());
 }
 
 inline
 void PhysicsSpace::discardLastCollision(void)
 {
     _DiscardCollision = true;
+}
+
+inline
+PhysicsSpace::CollisionListenParams::CollisionListenParams(UInt64 Category, 
+                                                           Real32 SpeedThreshold, 
+                                                           const CollisionEventType::slot_type* Listener) : 
+                         _Category(Category),
+                         _SpeedThreshold(SpeedThreshold),
+                         _Listener(Listener)
+{
 }
 
 OSG_END_NAMESPACE

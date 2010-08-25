@@ -43,10 +43,6 @@
 #endif
 
 #include "OSGUIViewportBase.h"
-#include "OSGChangeListener.h"
-#include <set>
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,10 +79,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewport : public UIViewportBase
 
     /*! \}                                                                 */
     virtual void updateLayout(void);
-
-	EventConnection addChangeListener(ChangeListenerPtr Listener);
-	bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
-	void removeChangeListener(ChangeListenerPtr Listener);
     
     Vec2f getCorrectedViewSize(void) const;
 	void updateViewComponentSize(void);
@@ -121,13 +113,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewport : public UIViewportBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    
-	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
-    typedef ChangeListenerSet::iterator ChangeListenerSetItor;
-    typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
-	
-    ChangeListenerSet       _ChangeListeners;
-    void produceStateChanged(const ChangeEventUnrecPtr e);
+
+    void produceStateChanged(void);
 
     /*==========================  PRIVATE  ================================*/
 

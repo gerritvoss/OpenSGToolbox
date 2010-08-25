@@ -43,9 +43,7 @@
 #endif
 
 #include "OSGSoundBase.h"
-#include "OSGSoundListener.h"
-#include "OSGEventConnection.h"
-#include <set>
+#include "OSGSoundEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -120,11 +118,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING Sound : public SoundBase
 	virtual void setAllChannelPaused(bool paused) = 0;
 	virtual void setAllChannelMute(bool shouldMute) = 0;
     
-    static  SoundUnrecPtr      create(void); 
-
-    EventConnection addSoundListener(SoundListenerPtr Listener);
-    bool isSoundListenerAttached(SoundListenerPtr Listener) const;
-    void removeSoundListener(SoundListenerPtr Listener);
+    static  SoundTransitPtr      create(void);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -153,11 +147,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING Sound : public SoundBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-	typedef std::set<SoundListenerPtr> SoundListenerSet;
-    typedef SoundListenerSet::iterator SoundListenerSetItor;
-    typedef SoundListenerSet::const_iterator SoundListenerSetConstItor;
-    
-    SoundListenerSet       _SoundListeners;
 
     void produceSoundPlayed(UInt32 TheChannel);
     void produceSoundStopped(UInt32 TheChannel);

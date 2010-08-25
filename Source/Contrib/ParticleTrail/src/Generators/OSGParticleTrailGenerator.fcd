@@ -14,6 +14,17 @@
     authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
 >
 	<Field
+		name="SystemToTrail"
+		type="ParticleSystem"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
+	>
+	ParticleSystem that will be used to generate the trail.
+	</Field>
+	<Field
 		name="TrailLength"
 		type="Real32"
         category="data"

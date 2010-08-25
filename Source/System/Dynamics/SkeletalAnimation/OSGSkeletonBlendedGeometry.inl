@@ -41,12 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool SkeletonBlendedGeometry::isSkeletonListenerAttached(SkeletonListenerPtr Listener) const
-{
-    return _SkeletonListeners.find(Listener) != _SkeletonListeners.end();
-}
-
-inline
 GeoVectorProperty* SkeletonBlendedGeometry::getWeights(void) const
 {
     return getInternalWeights();

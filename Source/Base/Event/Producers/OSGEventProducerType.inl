@@ -41,7 +41,7 @@
 
 #include "OSGConfig.h"
 #include "OSGBaseDef.h"
-#include "OSGMethodDescription.h"
+#include "OSGEventDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -61,17 +61,17 @@ EventProducerType *EventProducerType::getParent(void) const
 }
 
 inline
-MethodDescription *EventProducerType::getMethodDescription(UInt32 uiMethodId)
+EventDescription *EventProducerType::getEventDescription(UInt32 uiEventId)
 {
-    MethodDescription *foundDesc = NULL;
-    MethodDescription *testDesc;
+    EventDescription *foundDesc = NULL;
+    EventDescription *testDesc;
     DescVecIt it;
     for ( it=_vDescVec.begin() ; it < _vDescVec.end(); it++ )
     {
         testDesc = *it;
         if(testDesc != NULL)
         {
-            if(testDesc->getMethodId() == uiMethodId)
+            if(testDesc->getEventId() == uiEventId)
             {
                 foundDesc = testDesc;
             }
@@ -81,18 +81,18 @@ MethodDescription *EventProducerType::getMethodDescription(UInt32 uiMethodId)
 }
 
 inline
-const MethodDescription *EventProducerType::getMethodDescription(
-    UInt32 uiMethodId) const
+const EventDescription *EventProducerType::getEventDescription(
+    UInt32 uiEventId) const
 {
-    MethodDescription *foundDesc = NULL;
-    MethodDescription *testDesc;
+    EventDescription *foundDesc = NULL;
+    EventDescription *testDesc;
     DescVecConstIt it;
     for ( it=_vDescVec.begin() ; it < _vDescVec.end(); it++ )
     {
         testDesc = *it;
         if(testDesc != NULL)
         {
-            if(testDesc->getMethodId() == uiMethodId)
+            if(testDesc->getEventId() == uiEventId)
             {
                 foundDesc = testDesc;
             }
@@ -102,27 +102,41 @@ const MethodDescription *EventProducerType::getMethodDescription(
 }
 
 inline
-MethodDescription *EventProducerType::findMethodDescription(
-    const std::string &szMethodName)
+EventDescription *EventProducerType::findEventDescription(
+    const std::string &szEventName)
 {
-    DescMapIt descIt = _mDescMap.find(szMethodName);
+    DescMapIt descIt = _mDescMap.find(szEventName);
 
     return (descIt == _mDescMap.end()) ? NULL : (*descIt).second;
 }
 
 inline
-const MethodDescription *EventProducerType::findMethodDescription(
-    const std::string &szMethodName) const
+const EventDescription *EventProducerType::findEventDescription(
+    const std::string &szEventName) const
 {
-    DescMapConstIt descIt = _mDescMap.find(szMethodName);
+    DescMapConstIt descIt = _mDescMap.find(szEventName);
 
     return (descIt == _mDescMap.end()) ? NULL : (*descIt).second;
 }
 
 inline
-UInt32 EventProducerType::getNumMethodDescs(void) const
+UInt32 EventProducerType::getNumEventDescs(void) const
 {
     return _vDescVec.size();
+}
+
+inline
+UInt32 EventProducerType::getProducedEventId(const std::string &ProducedEventName) const
+{
+    const EventDescription * EventDesc = findEventDescription(ProducedEventName);
+    if(EventDesc == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        return EventDesc->getEventId();
+    }
 }
 
 
@@ -164,10 +178,10 @@ bool EventProducerType::isDerivedFrom(const EventProducerType &other) const
 }
 
 inline
-bool MethodDescriptionPLT::operator()(const MethodDescription *pElemDesc1, 
-                const MethodDescription *pElemDesc2) const
+bool EventDescriptionPLT::operator()(const EventDescription *pElemDesc1, 
+                const EventDescription *pElemDesc2) const
 {
-    return pElemDesc1->getMethodId() < pElemDesc2->getMethodId();
+    return pElemDesc1->getEventId() < pElemDesc2->getEventId();
 }
 
 OSG_END_NAMESPACE

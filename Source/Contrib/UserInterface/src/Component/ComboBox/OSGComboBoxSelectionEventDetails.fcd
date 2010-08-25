@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ComboBoxSelectionEventDetails"
+	parent="EventDetails"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+	supportUnregisteredCreate="true"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+	<Field
+		name="CurrentIndex"
+		type="Int32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="-1"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="PreviousIndex"
+		type="Int32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="-1"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

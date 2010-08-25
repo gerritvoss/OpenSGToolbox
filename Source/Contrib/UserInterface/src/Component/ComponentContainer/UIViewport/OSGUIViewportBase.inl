@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGChangeEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -181,6 +183,50 @@ const Char8 *UIViewportBase::getClassname(void)
 {
     return "UIViewport";
 }
+inline
+boost::signals2::connection  UIViewportBase::connectStateChanged(const StateChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _StateChangedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  UIViewportBase::connectStateChanged(const StateChangedEventType::group_type &group,
+                                                    const StateChangedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _StateChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  UIViewportBase::disconnectStateChanged(const StateChangedEventType::group_type &group)
+{
+    _StateChangedEvent.disconnect(group);
+}
+
+inline
+void  UIViewportBase::disconnectAllSlotsStateChanged(void)
+{
+    _StateChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  UIViewportBase::isEmptyStateChanged(void) const
+{
+    return _StateChangedEvent.empty();
+}
+
+inline
+UInt32  UIViewportBase::numSlotsStateChanged(void) const
+{
+    return _StateChangedEvent.num_slots();
+}
+
+inline
+void UIViewportBase::produceStateChanged(StateChangedEventDetailsType* const e)
+{
+    produceEvent(StateChangedEventId, e);
+}
+
 OSG_GEN_CONTAINERPTR(UIViewport);
 
 OSG_END_NAMESPACE

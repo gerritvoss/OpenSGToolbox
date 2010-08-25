@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultListSelectionModel"
+	parent="ListSelectionModel"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+A UI DefaultListSelectionModel.
+</FieldContainer>

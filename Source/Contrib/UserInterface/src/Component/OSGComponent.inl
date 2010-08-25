@@ -41,42 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool Component::isMouseListenerAttached(MouseListenerPtr Listener) const
-{
-    return _MouseListeners.find(Listener) != _MouseListeners.end();
-}
-
-inline
-bool Component::isMouseMotionListenerAttached(MouseMotionListenerPtr Listener) const
-{
-    return _MouseMotionListeners.find(Listener) != _MouseMotionListeners.end();
-}
-
-inline
-bool Component::isMouseWheelListenerAttached(MouseWheelListenerPtr Listener) const
-{
-    return _MouseWheelListeners.find(Listener) != _MouseWheelListeners.end();
-}
-
-inline
-bool Component::isKeyListenerAttached(KeyListenerPtr Listener) const
-{
-    return _KeyListeners.find(Listener) != _KeyListeners.end();
-}
-
-inline
-bool Component::isFocusListenerAttached(FocusListenerPtr Listener) const
-{
-    return _FocusListeners.find(Listener) != _FocusListeners.end();
-}
-
-inline
-bool Component::isComponentListenerAttached(ComponentListenerPtr Listener) const
-{
-    return _ComponentListeners.find(Listener) != _ComponentListeners.end();
-}
-
-inline
 void Component::getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	TopLeft = getClipTopLeft();
@@ -94,24 +58,6 @@ inline
 bool Component::getMouseContained(void)
 {
 	return _MouseInComponentLastMouse;
-}
-
-inline
-Component::ComponentUpdater::ComponentUpdater(Component* const TheComponent) :
-    _Component(TheComponent)
-{
-}
-
-inline
-Component::ActivateToolTipListener::ActivateToolTipListener(Component* const TheComponent) :
-    _Component(TheComponent)
-{
-}
-
-inline
-Component::DeactivateToolTipListener::DeactivateToolTipListener(Component* const TheComponent) :
-    _Component(TheComponent)
-{
 }
 
 OSG_END_NAMESPACE

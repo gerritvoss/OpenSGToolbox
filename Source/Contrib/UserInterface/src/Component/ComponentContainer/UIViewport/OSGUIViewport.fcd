@@ -45,9 +45,10 @@ A UI UIViewport
 		defaultValue="-1.0f,-1.0f"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="StateChanged"
-		type="ChangeEventPtr"
+		detailsType="ChangeEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

@@ -40,15 +40,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void PhysicsHandler::attachUpdateProducer(EventProducerPtr TheProducer)
-{
-    if(_UpdateEventConnection.isConnected())
-    {
-        _UpdateEventConnection.disconnect();
-    }
-    _UpdateEventConnection = TheProducer->attachEventListener(this, "Update");
-}
 
 inline
 void PhysicsHandler::detachUpdateProducer(void)

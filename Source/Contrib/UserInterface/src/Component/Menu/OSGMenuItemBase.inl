@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -73,22 +74,6 @@ OSG::UInt16 MenuItemBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
-
-//! Get the value of the MenuItem::_sfParentMenu field.
-inline
-Menu * MenuItemBase::getParentMenu(void) const
-{
-    return _sfParentMenu.getValue();
-}
-
-//! Set the value of the MenuItem::_sfParentMenu field.
-inline
-void MenuItemBase::setParentMenu(Menu * const value)
-{
-    editSField(ParentMenuFieldMask);
-
-    _sfParentMenu.setValue(value);
-}
 //! Get the value of the MenuItem::_sfAcceleratorModifiers field.
 
 inline

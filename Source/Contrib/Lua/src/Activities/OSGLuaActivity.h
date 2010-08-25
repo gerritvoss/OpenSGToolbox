@@ -80,17 +80,14 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaActivity : public LuaActivityBase
 
     /*! \}                                                                 */
 
-    virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId);
+    virtual void eventProduced(EventDetails* const details,
+                               UInt32 producedEventId);
 
     static FieldContainerTransitPtr createLuaActivity( const BoostPath& FilePath );
 
-    static LuaActivityRefPtr addLuaCallback(FieldContainerRefPtr producerObject,
+    static boost::signals2::connection addLuaCallback(FieldContainerRefPtr producerObject,
                                             std::string funcName,
                                             UInt32 producedMethodId);
-
-    static void removeLuaCallback(FieldContainerRefPtr producerObject,
-                                  LuaActivityRefPtr toRemove,
-                                  UInt32 producedMethodId);
 
     /*=========================  PROTECTED  ===============================*/
 

@@ -53,9 +53,9 @@
 #include "OSGViewport.h"
 
 #include "OSGWindow.h"
-#include "OSGEventFields.h"
 #include "OSGInputSettings.h"
 #include <boost/bind.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
@@ -152,108 +152,6 @@ void WindowEventProducer::setReshapeCallback(ReshapeCallbackFunc Callback)
    _ReshapeCallbackFunc = Callback;
 }
 
-EventConnection WindowEventProducer::addUpdateListener(UpdateListenerPtr Listener)
-{
-   _UpdateListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&WindowEventProducer::isUpdateListenerAttached, this, Listener),
-       boost::bind(&WindowEventProducer::removeUpdateListener, this, Listener));
-}
-
-EventConnection WindowEventProducer::addMouseListener(MouseListenerPtr Listener)
-{
-   _MouseListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&WindowEventProducer::isMouseListenerAttached, this, Listener),
-       boost::bind(&WindowEventProducer::removeMouseListener, this, Listener));
-}
-
-EventConnection WindowEventProducer::addMouseMotionListener(MouseMotionListenerPtr Listener)
-{
-   _MouseMotionListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&WindowEventProducer::isMouseMotionListenerAttached, this, Listener),
-       boost::bind(&WindowEventProducer::removeMouseMotionListener, this, Listener));
-}
-
-EventConnection WindowEventProducer::addMouseWheelListener(MouseWheelListenerPtr Listener)
-{
-   _MouseWheelListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&WindowEventProducer::isMouseWheelListenerAttached, this, Listener),
-       boost::bind(&WindowEventProducer::removeMouseWheelListener, this, Listener));
-}
-
-EventConnection WindowEventProducer::addKeyListener(KeyListenerPtr Listener)
-{
-   _KeyListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&WindowEventProducer::isKeyListenerAttached, this, Listener),
-       boost::bind(&WindowEventProducer::removeKeyListener, this, Listener));
-}
-
-EventConnection WindowEventProducer::addWindowListener(WindowListenerPtr Listener)
-{
-   _WindowListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&WindowEventProducer::isWindowListenerAttached, this, Listener),
-       boost::bind(&WindowEventProducer::removeWindowListener, this, Listener));
-}
-
-void WindowEventProducer::removeMouseListener(MouseListenerPtr Listener)
-{
-   MouseListenerSetItor EraseIter(_MouseListeners.find(Listener));
-   if(EraseIter != _MouseListeners.end())
-   {
-      _MouseListeners.erase(EraseIter);
-   }
-}
-
-void WindowEventProducer::removeUpdateListener(UpdateListenerPtr Listener)
-{
-   UpdateListenerSetItor EraseIter(_UpdateListeners.find(Listener));
-   if(EraseIter != _UpdateListeners.end())
-   {
-      _UpdateListeners.erase(EraseIter);
-   }
-}
-
-void WindowEventProducer::removeMouseMotionListener(MouseMotionListenerPtr Listener)
-{
-   MouseMotionListenerSetItor EraseIter(_MouseMotionListeners.find(Listener));
-   if(EraseIter != _MouseMotionListeners.end())
-   {
-      _MouseMotionListeners.erase(EraseIter);
-   }
-}
-
-void WindowEventProducer::removeMouseWheelListener(MouseWheelListenerPtr Listener)
-{
-   MouseWheelListenerSetItor EraseIter(_MouseWheelListeners.find(Listener));
-   if(EraseIter != _MouseWheelListeners.end())
-   {
-      _MouseWheelListeners.erase(EraseIter);
-   }
-}
-
-void WindowEventProducer::removeKeyListener(KeyListenerPtr Listener)
-{
-   KeyListenerSetItor EraseIter(_KeyListeners.find(Listener));
-   if(EraseIter != _KeyListeners.end())
-   {
-      _KeyListeners.erase(EraseIter);
-   }
-}
-
-void WindowEventProducer::removeWindowListener(WindowListenerPtr Listener)
-{
-   WindowListenerSetItor EraseIter(_WindowListeners.find(Listener));
-   if(EraseIter != _WindowListeners.end())
-   {
-      _WindowListeners.erase(EraseIter);
-   }
-}
-
 ViewportUnrecPtr WindowEventProducer::windowToViewport(const Pnt2f& WindowPoint, Pnt2f& ViewportPoint)
 {
 	ViewportUnrecPtr ThePort;
@@ -268,16 +166,7 @@ ViewportUnrecPtr WindowEventProducer::windowToViewport(const Pnt2f& WindowPoint,
 	return NULL;
 }
 
-void WindowEventProducer::detatchAllListeners(void)
-{
-    _MouseListeners.clear();
-    _MouseMotionListeners.clear();
-    _MouseWheelListeners.clear();
-    _KeyListeners.clear();
-    _WindowListeners.clear();
-}
-
-void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
+void WindowEventProducer::produceMouseClicked(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location)
 {
     //Check if Input is blocked
     if(_BlockInput) { return; }
@@ -289,17 +178,9 @@ void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+	   MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 	   
-       MouseListenerSet ListenerSet(_MouseListeners);
-       for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-       {
-           //If the event is consumed then stop sending the event
-           if(TheEvent->isConsumed()) break;
-
-		  (*SetItor)->mouseClicked(TheEvent);
-	   }
-       _Producer.produceEvent(MouseClickedMethodId,TheEvent);
+       WindowEventProducerBase::produceMouseClicked(Details);
    }
 }
 
@@ -313,16 +194,9 @@ void WindowEventProducer::produceMouseEntered(const Pnt2f& Location)
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
-       MouseListenerSet ListenerSet(_MouseListeners);
-       for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-       {
-            //If the event is consumed then stop sending the event
-            if(TheEvent->isConsumed()) break;
+	   MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, getSystemTime(), MouseEventDetails::NO_BUTTON, 0, ViewportLocation, ResultViewport );
 
-		   (*SetItor)->mouseEntered(TheEvent);
-	   }
-       _Producer.produceEvent(MouseEnteredMethodId,TheEvent);
+       WindowEventProducerBase::produceMouseEntered(Details);
    }
 }
 
@@ -336,20 +210,13 @@ void WindowEventProducer::produceMouseExited(const Pnt2f& Location)
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
-       MouseListenerSet ListenerSet(_MouseListeners);
-       for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-       {
-            //If the event is consumed then stop sending the event
-            if(TheEvent->isConsumed()) break;
+	   MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, getSystemTime(), MouseEventDetails::NO_BUTTON, 0, ViewportLocation, ResultViewport );
 
-			(*SetItor)->mouseExited(TheEvent);
-	   }
-       _Producer.produceEvent(MouseExitedMethodId,TheEvent);
+       WindowEventProducerBase::produceMouseExited(Details);
    }
 }
 
-void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
+void WindowEventProducer::produceMousePressed(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location)
 {
     //Check if Input is blocked
     if(_BlockInput) { return; }
@@ -362,20 +229,13 @@ void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
-	   MouseListenerSet ListenerSet(_MouseListeners);
-       for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-       {
-            //If the event is consumed then stop sending the event
-            if(TheEvent->isConsumed()) break;
+	   MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 
-		    (*SetItor)->mousePressed(TheEvent);
-	   }
-       _Producer.produceEvent(MousePressedMethodId,TheEvent);
+       WindowEventProducerBase::produceMousePressed(Details);
    }
 }
 
-void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
+void WindowEventProducer::produceMouseReleased(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location)
 {
     //Check if Input is blocked
     if(_BlockInput) { return; }
@@ -387,16 +247,9 @@ void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Bu
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
-	   MouseListenerSet ListenerSet(_MouseListeners);
-       for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-       {
-            //If the event is consumed then stop sending the event
-            if(TheEvent->isConsumed()) break;
+	   MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 
-		    (*SetItor)->mouseReleased(TheEvent);
-	   }
-       _Producer.produceEvent(MouseReleasedMethodId,TheEvent);
+       WindowEventProducerBase::produceMouseReleased(Details);
    }
    if(_ButtonClickMap[Button] == Location)
    {
@@ -405,7 +258,7 @@ void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Bu
 }
 
 
-void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEvent::ScrollType& TheScrollType)
+void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEventDetails::ScrollType& TheScrollType)
 {
     //Check if Input is blocked
     if(_BlockInput) { return; }
@@ -415,15 +268,9 @@ void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, con
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseWheelEventUnrecPtr TheEvent = MouseWheelEvent::create( this, getSystemTime(), WheelRotation, TheScrollType,MouseWheelEvent::SCROLL_ORIENTATION_VERTICAL, ViewportLocation, ResultViewport );
-	   for(MouseWheelListenerSetConstItor SetItor(_MouseWheelListeners.begin()) ; SetItor != _MouseWheelListeners.end() ; ++SetItor)
-	   {
-            //If the event is consumed then stop sending the event
-            if(TheEvent->isConsumed()) break;
+	   const MouseWheelEventDetailsUnrecPtr Details = MouseWheelEventDetails::create( this, getSystemTime(), WheelRotation, TheScrollType,MouseWheelEventDetails::SCROLL_ORIENTATION_VERTICAL, ViewportLocation, ResultViewport );
 
-		    (*SetItor)->mouseWheelMoved(TheEvent);
-	   }
-       _Producer.produceEvent(MouseWheelMovedMethodId,TheEvent);
+       WindowEventProducerBase::produceMouseWheelMoved(Details);
    }
 }
 
@@ -437,19 +284,13 @@ void WindowEventProducer::produceMouseMoved(const Pnt2f& Location, const Vec2f& 
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport,Delta );
-       for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
-	   {
-            //If the event is consumed then stop sending the event
-            if(TheEvent->isConsumed()) break;
+	   MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, getSystemTime(), MouseEventDetails::NO_BUTTON, 0, ViewportLocation, ResultViewport,Delta );
 
-			(*SetItor)->mouseMoved(TheEvent);
-	   }
-       _Producer.produceEvent(MouseMovedMethodId,TheEvent);
+       WindowEventProducerBase::produceMouseMoved(Details);
    }
 }
 
-void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location, const Vec2f& Delta)
+void WindowEventProducer::produceMouseDragged(const MouseEventDetails::MouseButton& Button, const Pnt2f& Location, const Vec2f& Delta)
 {
     //Check if Input is blocked
     if(_BlockInput) { return; }
@@ -459,175 +300,115 @@ void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NULL)
    {
-	   const MouseEventUnrecPtr TheEvent = MouseEvent::create(this, getSystemTime(), Button, 0, ViewportLocation, ResultViewport,Delta );
-       for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
-	   {
-            //If the event is consumed then stop sending the event
-            if(TheEvent->isConsumed()) break;
+	   MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, getSystemTime(), Button, 0, ViewportLocation, ResultViewport,Delta );
 
-			(*SetItor)->mouseDragged(TheEvent);
-	   }
-       _Producer.produceEvent(MouseDraggedMethodId,TheEvent);
+       WindowEventProducerBase::produceMouseDragged(Details);
    }
 }
 
-void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
+void WindowEventProducer::produceKeyPressed(const KeyEventDetails::Key& TheKey, const UInt32& Modifiers)
 {
     //Check if Input is blocked
     if(_BlockInput) { return; }
 
-   const KeyEventUnrecPtr TheEvent = KeyEvent::create( this, getSystemTime(), TheKey, Modifiers, this );
-   KeyListenerSet ListenerSet(_KeyListeners);
-   for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-   {
-        //If the event is consumed then stop sending the event
-        if(TheEvent->isConsumed()) break;
+   KeyEventDetailsUnrecPtr Details = KeyEventDetails::create( this, getSystemTime(), TheKey, Modifiers, this );
 
-		(*SetItor)->keyPressed(TheEvent);
-   }
-   _Producer.produceEvent(KeyPressedMethodId,TheEvent);
+   WindowEventProducerBase::produceKeyPressed(Details);
    produceKeyTyped(TheKey, Modifiers);
 }
 
-void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
+void WindowEventProducer::produceKeyReleased(const KeyEventDetails::Key& TheKey, const UInt32& Modifiers)
 {
     //Check if Input is blocked
     if(_BlockInput) { return; }
 
-   const KeyEventUnrecPtr TheEvent = KeyEvent::create( this, getSystemTime(), TheKey, Modifiers, this );
-   KeyListenerSet ListenerSet(_KeyListeners);
-   for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-   {
-        //If the event is consumed then stop sending the event
-        if(TheEvent->isConsumed()) break;
+   KeyEventDetailsUnrecPtr Details = KeyEventDetails::create( this, getSystemTime(), TheKey, Modifiers, this );
 
-		(*SetItor)->keyReleased(TheEvent);
-   }
-   _Producer.produceEvent(KeyReleasedMethodId,TheEvent);
+   WindowEventProducerBase::produceKeyReleased(Details);
 }
 
-void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
+void WindowEventProducer::produceKeyTyped(const KeyEventDetails::Key& TheKey, const UInt32& Modifiers)
 {
     //Check if Input is blocked
     if(_BlockInput) { return; }
 
-   const KeyEventUnrecPtr TheEvent = KeyEvent::create( this, getSystemTime(), TheKey, Modifiers, this );
-   KeyListenerSet ListenerSet(_KeyListeners);
-   for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-   {
-        //If the event is consumed then stop sending the event
-        if(TheEvent->isConsumed()) break;
+   KeyEventDetailsUnrecPtr Details = KeyEventDetails::create( this, getSystemTime(), TheKey, Modifiers, this );
 
-		(*SetItor)->keyTyped(TheEvent);
-   }
-   _Producer.produceEvent(KeyTypedMethodId,TheEvent);
+   WindowEventProducerBase::produceKeyTyped(Details);
 }
 
 void WindowEventProducer::produceWindowOpened(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowOpened(TheEvent);
-   }
-   _Producer.produceEvent(WindowOpenedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create(this, getSystemTime());
+
+   WindowEventProducerBase::produceWindowOpened(Details);
 }
 
 void WindowEventProducer::produceWindowClosing(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowClosing(TheEvent);
-   }
-   _Producer.produceEvent(WindowClosingMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create(this, getSystemTime());
+
+   WindowEventProducerBase::produceWindowClosing(Details);
 }
 
 void WindowEventProducer::produceWindowClosed(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(NULL, getSystemTime());
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowClosed(TheEvent);
-   }
-   _Producer.produceEvent(WindowClosedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create(NULL, getSystemTime());
+
+   WindowEventProducerBase::produceWindowClosed(Details);
 }
 
 void WindowEventProducer::produceWindowIconified(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowIconified(TheEvent);
-   }
-   _Producer.produceEvent(WindowIconifiedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create(this, getSystemTime());
+
+   WindowEventProducerBase::produceWindowIconified(Details);
 }
 
 void WindowEventProducer::produceWindowDeiconified(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowDeiconified(TheEvent);
-   }
-   _Producer.produceEvent(WindowDeiconifiedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create(this, getSystemTime());
+
+   WindowEventProducerBase::produceWindowDeiconified(Details);
 }
 
 void WindowEventProducer::produceWindowActivated(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowActivated(TheEvent);
-   }
-   _Producer.produceEvent(WindowActivatedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create(this, getSystemTime());
+
+   WindowEventProducerBase::produceWindowActivated(Details);
 }
 
 void WindowEventProducer::produceWindowDeactivated(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowDeactivated(TheEvent);
-   }
-   _Producer.produceEvent(WindowDeactivatedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create(this, getSystemTime());
+
+   WindowEventProducerBase::produceWindowDeactivated(Details);
 }
 
 void WindowEventProducer::produceWindowEntered(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowEntered(TheEvent);
-   }
-   _Producer.produceEvent(WindowEnteredMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create(this, getSystemTime());
+
+   WindowEventProducerBase::produceWindowEntered(Details);
 }
 
 void WindowEventProducer::produceWindowExited(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create(this, getSystemTime());
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowExited(TheEvent);
-   }
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create(this, getSystemTime());
 
-   _Producer.produceEvent(WindowExitedMethodId,TheEvent);
+   WindowEventProducerBase::produceWindowExited(Details);
 }
 
 void WindowEventProducer::produceUpdate(const Time& ElapsedTime)
 {
-   const UpdateEventUnrecPtr TheEvent = UpdateEvent::create( this, getSystemTime(),ElapsedTime);
-   UpdateListenerSet ListenerSet(_UpdateListeners);
-   for(UpdateListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->update(TheEvent);
-   }
+   UpdateEventDetailsUnrecPtr Details = UpdateEventDetails::create( this, getSystemTime(),ElapsedTime);
    
-   _Producer.produceEvent(UpdateMethodId,TheEvent);
+   WindowEventProducerBase::produceUpdate(Details);
 }
 
 
-void WindowEventProducer::validateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location)
+void WindowEventProducer::validateClickCount(const MouseEventDetails::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location)
 {
    //Get the vector of Clicks for this Button
    ClickVector& TheClickVector( _ButtonClickCountMap[Button] );
@@ -645,7 +426,7 @@ void WindowEventProducer::validateClickCount(const MouseEvent::MouseButton& Butt
    }
 }
 
-void WindowEventProducer::updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location)
+void WindowEventProducer::updateClickCount(const MouseEventDetails::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location)
 {
    validateClickCount(Button, TimeStamp, Location);
 
@@ -667,27 +448,27 @@ WindowEventProducer::WindowEventProducer(void) :
     _CursorType            (CURSOR_POINTER),
     _BlockInput            (false)
 {
-    _ButtonClickCountMap[MouseEvent::BUTTON1] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON2] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON3] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON4] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON5] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON6] = ClickVector();
-    //_ButtonClickCountMap[MouseEvent::BUTTON7] = ClickVector();
-    //_ButtonClickCountMap[MouseEvent::BUTTON8] = ClickVector();
-    //_ButtonClickCountMap[MouseEvent::BUTTON9] = ClickVector();
-    //_ButtonClickCountMap[MouseEvent::BUTTON10] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON1] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON2] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON3] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON4] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON5] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON6] = ClickVector();
+    //_ButtonClickCountMap[MouseEventDetails::BUTTON7] = ClickVector();
+    //_ButtonClickCountMap[MouseEventDetails::BUTTON8] = ClickVector();
+    //_ButtonClickCountMap[MouseEventDetails::BUTTON9] = ClickVector();
+    //_ButtonClickCountMap[MouseEventDetails::BUTTON10] = ClickVector();
 
-    _ButtonClickMap[MouseEvent::BUTTON1] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON2] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON3] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON4] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON5] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON6] = Pnt2f(0,0);
-    //_ButtonClickMap[MouseEvent::BUTTON7] = Pnt2f(0,0);
-    //_ButtonClickMap[MouseEvent::BUTTON8] = Pnt2f(0,0);
-    //_ButtonClickMap[MouseEvent::BUTTON9] = Pnt2f(0,0);
-    //_ButtonClickMap[MouseEvent::BUTTON10] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON1] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON2] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON3] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON4] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON5] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON6] = Pnt2f(0,0);
+    //_ButtonClickMap[MouseEventDetails::BUTTON7] = Pnt2f(0,0);
+    //_ButtonClickMap[MouseEventDetails::BUTTON8] = Pnt2f(0,0);
+    //_ButtonClickMap[MouseEventDetails::BUTTON9] = Pnt2f(0,0);
+    //_ButtonClickMap[MouseEventDetails::BUTTON10] = Pnt2f(0,0);
 }
 
 WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
@@ -698,27 +479,27 @@ WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
 	_CursorType            (source._CursorType            ),
     _BlockInput            (source._BlockInput            )
 {
-    _ButtonClickCountMap[MouseEvent::BUTTON1] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON2] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON3] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON4] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON5] = ClickVector();
-    _ButtonClickCountMap[MouseEvent::BUTTON6] = ClickVector();
-    //_ButtonClickCountMap[MouseEvent::BUTTON7] = ClickVector();
-    //_ButtonClickCountMap[MouseEvent::BUTTON8] = ClickVector();
-    //_ButtonClickCountMap[MouseEvent::BUTTON9] = ClickVector();
-    //_ButtonClickCountMap[MouseEvent::BUTTON10] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON1] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON2] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON3] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON4] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON5] = ClickVector();
+    _ButtonClickCountMap[MouseEventDetails::BUTTON6] = ClickVector();
+    //_ButtonClickCountMap[MouseEventDetails::BUTTON7] = ClickVector();
+    //_ButtonClickCountMap[MouseEventDetails::BUTTON8] = ClickVector();
+    //_ButtonClickCountMap[MouseEventDetails::BUTTON9] = ClickVector();
+    //_ButtonClickCountMap[MouseEventDetails::BUTTON10] = ClickVector();
 
-    _ButtonClickMap[MouseEvent::BUTTON1] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON2] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON3] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON4] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON5] = Pnt2f(0,0);
-    _ButtonClickMap[MouseEvent::BUTTON6] = Pnt2f(0,0);
-    //_ButtonClickMap[MouseEvent::BUTTON7] = Pnt2f(0,0);
-    //_ButtonClickMap[MouseEvent::BUTTON8] = Pnt2f(0,0);
-    //_ButtonClickMap[MouseEvent::BUTTON9] = Pnt2f(0,0);
-    //_ButtonClickMap[MouseEvent::BUTTON10] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON1] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON2] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON3] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON4] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON5] = Pnt2f(0,0);
+    _ButtonClickMap[MouseEventDetails::BUTTON6] = Pnt2f(0,0);
+    //_ButtonClickMap[MouseEventDetails::BUTTON7] = Pnt2f(0,0);
+    //_ButtonClickMap[MouseEventDetails::BUTTON8] = Pnt2f(0,0);
+    //_ButtonClickMap[MouseEventDetails::BUTTON9] = Pnt2f(0,0);
+    //_ButtonClickMap[MouseEventDetails::BUTTON10] = Pnt2f(0,0);
 }
 
 WindowEventProducer::~WindowEventProducer(void)

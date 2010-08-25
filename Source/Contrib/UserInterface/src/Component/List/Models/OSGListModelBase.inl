@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGListDataEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -108,70 +110,159 @@ const Char8 *ListModelBase::getClassname(void)
 }
 
 inline
-EventConnection ListModelBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool ListModelBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 ListModelBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr ListModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void ListModelBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 ListModelBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *ListModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *ListModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *ListModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *ListModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 ListModelBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *ListModelBase::editSFEventProducer(void)
+boost::signals2::connection  ListModelBase::connectListDataContentsChanged(const ListDataContentsChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _ListDataContentsChangedEvent.connect(listener, at);
 }
 
-//! Get the value of the ListModel::_sfEventProducer field.
 inline
-EventProducerPtr &ListModelBase::editEventProducer(void)
+boost::signals2::connection  ListModelBase::connectListDataContentsChanged(const ListDataContentsChangedEventType::group_type &group,
+                                                    const ListDataContentsChangedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _ListDataContentsChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  ListModelBase::disconnectListDataContentsChanged(const ListDataContentsChangedEventType::group_type &group)
+{
+    _ListDataContentsChangedEvent.disconnect(group);
+}
+
+inline
+void  ListModelBase::disconnectAllSlotsListDataContentsChanged(void)
+{
+    _ListDataContentsChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ListModelBase::isEmptyListDataContentsChanged(void) const
+{
+    return _ListDataContentsChangedEvent.empty();
+}
+
+inline
+UInt32  ListModelBase::numSlotsListDataContentsChanged(void) const
+{
+    return _ListDataContentsChangedEvent.num_slots();
+}
+
+inline
+void ListModelBase::produceListDataContentsChanged(ListDataContentsChangedEventDetailsType* const e)
+{
+    produceEvent(ListDataContentsChangedEventId, e);
+}
+
+inline
+boost::signals2::connection  ListModelBase::connectListDataIntervalAdded(const ListDataIntervalAddedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ListDataIntervalAddedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ListModelBase::connectListDataIntervalAdded(const ListDataIntervalAddedEventType::group_type &group,
+                                                    const ListDataIntervalAddedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ListDataIntervalAddedEvent.connect(group, listener, at);
+}
+
+inline
+void  ListModelBase::disconnectListDataIntervalAdded(const ListDataIntervalAddedEventType::group_type &group)
+{
+    _ListDataIntervalAddedEvent.disconnect(group);
+}
+
+inline
+void  ListModelBase::disconnectAllSlotsListDataIntervalAdded(void)
+{
+    _ListDataIntervalAddedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ListModelBase::isEmptyListDataIntervalAdded(void) const
+{
+    return _ListDataIntervalAddedEvent.empty();
+}
+
+inline
+UInt32  ListModelBase::numSlotsListDataIntervalAdded(void) const
+{
+    return _ListDataIntervalAddedEvent.num_slots();
+}
+
+inline
+void ListModelBase::produceListDataIntervalAdded(ListDataIntervalAddedEventDetailsType* const e)
+{
+    produceEvent(ListDataIntervalAddedEventId, e);
+}
+
+inline
+boost::signals2::connection  ListModelBase::connectListDataIntervalRemoved(const ListDataIntervalRemovedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ListDataIntervalRemovedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ListModelBase::connectListDataIntervalRemoved(const ListDataIntervalRemovedEventType::group_type &group,
+                                                    const ListDataIntervalRemovedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ListDataIntervalRemovedEvent.connect(group, listener, at);
+}
+
+inline
+void  ListModelBase::disconnectListDataIntervalRemoved(const ListDataIntervalRemovedEventType::group_type &group)
+{
+    _ListDataIntervalRemovedEvent.disconnect(group);
+}
+
+inline
+void  ListModelBase::disconnectAllSlotsListDataIntervalRemoved(void)
+{
+    _ListDataIntervalRemovedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ListModelBase::isEmptyListDataIntervalRemoved(void) const
+{
+    return _ListDataIntervalRemovedEvent.empty();
+}
+
+inline
+UInt32  ListModelBase::numSlotsListDataIntervalRemoved(void) const
+{
+    return _ListDataIntervalRemovedEvent.num_slots();
+}
+
+inline
+void ListModelBase::produceListDataIntervalRemoved(ListDataIntervalRemovedEventDetailsType* const e)
+{
+    produceEvent(ListDataIntervalRemovedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(ListModel);

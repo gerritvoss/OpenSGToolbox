@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -73,6 +74,56 @@ OSG::UInt16 AbsoluteLayoutBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the value of the AbsoluteLayout::_sfScaling field.
+
+inline
+bool &AbsoluteLayoutBase::editScaling(void)
+{
+    editSField(ScalingFieldMask);
+
+    return _sfScaling.getValue();
+}
+
+//! Get the value of the AbsoluteLayout::_sfScaling field.
+inline
+      bool  AbsoluteLayoutBase::getScaling(void) const
+{
+    return _sfScaling.getValue();
+}
+
+//! Set the value of the AbsoluteLayout::_sfScaling field.
+inline
+void AbsoluteLayoutBase::setScaling(const bool value)
+{
+    editSField(ScalingFieldMask);
+
+    _sfScaling.setValue(value);
+}
+//! Get the value of the AbsoluteLayout::_sfOriginalDimensions field.
+
+inline
+Vec2f &AbsoluteLayoutBase::editOriginalDimensions(void)
+{
+    editSField(OriginalDimensionsFieldMask);
+
+    return _sfOriginalDimensions.getValue();
+}
+
+//! Get the value of the AbsoluteLayout::_sfOriginalDimensions field.
+inline
+const Vec2f &AbsoluteLayoutBase::getOriginalDimensions(void) const
+{
+    return _sfOriginalDimensions.getValue();
+}
+
+//! Set the value of the AbsoluteLayout::_sfOriginalDimensions field.
+inline
+void AbsoluteLayoutBase::setOriginalDimensions(const Vec2f &value)
+{
+    editSField(OriginalDimensionsFieldMask);
+
+    _sfOriginalDimensions.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -84,6 +135,12 @@ void AbsoluteLayoutBase::execSync (      AbsoluteLayoutBase *pFrom,
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ScalingFieldMask & whichField))
+        _sfScaling.syncWith(pFrom->_sfScaling);
+
+    if(FieldBits::NoField != (OriginalDimensionsFieldMask & whichField))
+        _sfOriginalDimensions.syncWith(pFrom->_sfOriginalDimensions);
 }
 #endif
 

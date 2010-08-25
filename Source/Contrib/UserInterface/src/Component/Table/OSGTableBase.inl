@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -338,6 +339,22 @@ void TableBase::setGlobalCellEditor(CellEditor * const value)
     _sfGlobalCellEditor.setValue(value);
 }
 
+//! Get the value of the Table::_sfRowSelectionModel field.
+inline
+ListSelectionModel * TableBase::getRowSelectionModel(void) const
+{
+    return _sfRowSelectionModel.getValue();
+}
+
+//! Set the value of the Table::_sfRowSelectionModel field.
+inline
+void TableBase::setRowSelectionModel(ListSelectionModel * const value)
+{
+    editSField(RowSelectionModelFieldMask);
+
+    _sfRowSelectionModel.setValue(value);
+}
+
 //! Get the value of the \a index element the Table::_mfTable field.
 inline
 Component * TableBase::getTable(const UInt32 index) const
@@ -397,6 +414,9 @@ void TableBase::execSync (      TableBase *pFrom,
 
     if(FieldBits::NoField != (GlobalCellEditorFieldMask & whichField))
         _sfGlobalCellEditor.syncWith(pFrom->_sfGlobalCellEditor);
+
+    if(FieldBits::NoField != (RowSelectionModelFieldMask & whichField))
+        _sfRowSelectionModel.syncWith(pFrom->_sfRowSelectionModel);
 }
 #endif
 

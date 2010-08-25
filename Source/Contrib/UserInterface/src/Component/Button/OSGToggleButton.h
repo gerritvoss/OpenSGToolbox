@@ -43,9 +43,6 @@
 #endif
 
 #include "OSGToggleButtonBase.h"
-#include "OSGButtonSelectedListener.h"
-
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -95,10 +92,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ToggleButton : public ToggleButtonBase
 
     /*! \}                                                                 */
 
-    EventConnection addButtonSelectedListener(ButtonSelectedListenerPtr Listener);
-	bool isButtonSelectedListenerAttached(ButtonSelectedListenerPtr Listener) const;
-    void removeButtonSelectedListener(ButtonSelectedListenerPtr Listener);
-
     void setSelectedBorder   ( Border* const value );
     void setSelectedBackground( Layer* const value );
     void setSelectedTextColor( const Color4f &value );
@@ -146,15 +139,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ToggleButton : public ToggleButtonBase
 
     /*! \}                                                                 */
     
-    virtual void actionPreformed(const ActionEventUnrecPtr e);
+    virtual void actionPreformed(ActionEventDetails* const e);
 
-	typedef std::set<ButtonSelectedListenerPtr> ButtonSelectedListenerSet;
-    typedef ButtonSelectedListenerSet::iterator ButtonSelectedListenerSetItor;
-    typedef ButtonSelectedListenerSet::const_iterator ButtonSelectedListenerSetConstItor;
-	
-    ButtonSelectedListenerSet       _ButtonSelectedListeners;
-    void produceButtonSelected(const ButtonSelectedEventUnrecPtr e);
-    void produceButtonDeselected(const ButtonSelectedEventUnrecPtr e);
+    void produceButtonSelected(ButtonSelectedEventDetails* const e);
+    void produceButtonDeselected(ButtonSelectedEventDetails* const e);
     
     virtual Border* getDrawnBorder(void) const;
     virtual Layer* getDrawnBackground(void) const;

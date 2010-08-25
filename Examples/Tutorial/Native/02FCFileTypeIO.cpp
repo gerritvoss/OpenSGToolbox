@@ -25,17 +25,22 @@
 // with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
-NodeUnrecPtr createScene(void);
+NodeTransitPtr createScene(void);
 
 // Initialize OpenSG and set up the scene
 int main(int argc, char **argv)
 {
+    preloadSharedObject("OSGContribCgFX");
+    preloadSharedObject("OSGDynamics");
+    preloadSharedObject("OSGTBAnimation");
+    preloadSharedObject("OSGFileIO");
+    preloadSharedObject("OSGTBFileIO");
     // OSG init
     osgInit(argc,argv);
 
     {
         //Create some Field Containers
-        NodeUnrecPtr Root = createScene();
+        NodeRecPtr Root = createScene();
 
         FCFileType::FCPtrStore Containers;
         Containers.insert(Root);
@@ -63,49 +68,49 @@ int main(int argc, char **argv)
     return 0;
 }
 
-NodeUnrecPtr createScene(void)
+NodeTransitPtr createScene(void)
 {
 	//Create some Field Containers
-	/*NodeUnrecPtr ChildNode1 = Node::create();
+	/*NodeRecPtr ChildNode1 = Node::create();
 	ChildNode1->setCore(Group::create());
 
-	NodeUnrecPtr ChildNode2 = Node::create();
+	NodeRecPtr ChildNode2 = Node::create();
 	ChildNode2->setCore(Group::create());
 
-	NodeUnrecPtr CameraBeaconNode = Node::create();
+	NodeRecPtr CameraBeaconNode = Node::create();
 	CameraBeaconNode->setCore(Transform::create());
 	CameraBeaconNode->addChild(ChildNode1);
 	CameraBeaconNode->addChild(ChildNode2);*/
 
-	NodeUnrecPtr BoxNode = makeBox(2.0,0.5,0.5,1,1,1);
+	NodeRecPtr BoxNode = makeBox(2.0,0.5,0.5,1,1,1);
     setName(BoxNode, "Box\"\' <>& Node");
 
-	NodeUnrecPtr PlaneNode = makePlane(1.0,1.0,2,2);
+	NodeRecPtr PlaneNode = makePlane(1.0,1.0,2,2);
 
-	//DistanceLODUnrecPtr TheLODCore = DistanceLOD::create();
+	//DistanceLODRecPtr TheLODCore = DistanceLOD::create();
 	//TheLODCore->getRange().push_back(10.0f);
 	//TheLODCore->getRange().push_back(50.0f);
 
 
-	//NodeUnrecPtr LODNode = Node::create();
+	//NodeRecPtr LODNode = Node::create();
 	//LODNode->setCore(TheLODCore);
 	//LODNode->addChild(BoxNode);
 	//LODNode->addChild(PlaneNode);
 	
-	NodeUnrecPtr BeaconNode = Node::create();
+	NodeRecPtr BeaconNode = Node::create();
     setName(BeaconNode, "Spotlight Beacon Node");
 	BeaconNode->setCore(Transform::create());
 
 
-	SpotLightUnrecPtr SpotLightCore = SpotLight::create();
+	SpotLightRecPtr SpotLightCore = SpotLight::create();
 	SpotLightCore->setBeacon(BeaconNode);
 
-	NodeUnrecPtr TheNode = Node::create();
+	NodeRecPtr TheNode = Node::create();
     setName(TheNode, "Root Node");
 	TheNode->setCore(SpotLightCore);
     TheNode->addChild(BoxNode);
 	//TheNode->updateVolume();
 
-	return TheNode;
+	return NodeTransitPtr(TheNode);
 }
 

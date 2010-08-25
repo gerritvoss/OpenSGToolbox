@@ -41,18 +41,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-TextArea::CaretUpdateListener::CaretUpdateListener(TextArea* const TheTextArea) :
-									_TextArea(TheTextArea)
-{
-}
-
-inline
-TextArea::MouseDownListener::MouseDownListener(TextArea* const TheTextArea) :
-_TextArea(TheTextArea)
-{
-}
-
-inline
 std::string TextArea::getLine(UInt32 line) const
 {
     return getText().substr(_LineContents[line]._StartPosition, _LineContents[line]._EndPosition-_LineContents[line]._StartPosition);

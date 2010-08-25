@@ -82,6 +82,14 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
+/*! \var bool            AbsoluteLayoutBase::_sfScaling
+    
+*/
+
+/*! \var Vec2f           AbsoluteLayoutBase::_sfOriginalDimensions
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -107,6 +115,32 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void AbsoluteLayoutBase::classDescInserter(TypeObject &oType)
 {
+    FieldDescriptionBase *pDesc = NULL;
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Scaling",
+        "",
+        ScalingFieldId, ScalingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbsoluteLayout::editHandleScaling),
+        static_cast<FieldGetMethodSig >(&AbsoluteLayout::getHandleScaling));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "OriginalDimensions",
+        "",
+        OriginalDimensionsFieldId, OriginalDimensionsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbsoluteLayout::editHandleOriginalDimensions),
+        static_cast<FieldGetMethodSig >(&AbsoluteLayout::getHandleOriginalDimensions));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -137,6 +171,26 @@ AbsoluteLayoutBase::TypeObject AbsoluteLayoutBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI AbsoluteLayout.\n"
+    "\t<Field\n"
+    "\t\tname=\"Scaling\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"OriginalDimensions\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1,1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     "A UI AbsoluteLayout.\n"
     );
@@ -161,6 +215,32 @@ UInt32 AbsoluteLayoutBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
+SFBool *AbsoluteLayoutBase::editSFScaling(void)
+{
+    editSField(ScalingFieldMask);
+
+    return &_sfScaling;
+}
+
+const SFBool *AbsoluteLayoutBase::getSFScaling(void) const
+{
+    return &_sfScaling;
+}
+
+
+SFVec2f *AbsoluteLayoutBase::editSFOriginalDimensions(void)
+{
+    editSField(OriginalDimensionsFieldMask);
+
+    return &_sfOriginalDimensions;
+}
+
+const SFVec2f *AbsoluteLayoutBase::getSFOriginalDimensions(void) const
+{
+    return &_sfOriginalDimensions;
+}
+
+
 
 
 
@@ -171,6 +251,14 @@ UInt32 AbsoluteLayoutBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (ScalingFieldMask & whichField))
+    {
+        returnValue += _sfScaling.getBinSize();
+    }
+    if(FieldBits::NoField != (OriginalDimensionsFieldMask & whichField))
+    {
+        returnValue += _sfOriginalDimensions.getBinSize();
+    }
 
     return returnValue;
 }
@@ -180,6 +268,14 @@ void AbsoluteLayoutBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ScalingFieldMask & whichField))
+    {
+        _sfScaling.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (OriginalDimensionsFieldMask & whichField))
+    {
+        _sfOriginalDimensions.copyToBin(pMem);
+    }
 }
 
 void AbsoluteLayoutBase::copyFromBin(BinaryDataHandler &pMem,
@@ -187,6 +283,14 @@ void AbsoluteLayoutBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ScalingFieldMask & whichField))
+    {
+        _sfScaling.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (OriginalDimensionsFieldMask & whichField))
+    {
+        _sfOriginalDimensions.copyFromBin(pMem);
+    }
 }
 
 //! create a new instance of the class
@@ -307,16 +411,19 @@ FieldContainerTransitPtr AbsoluteLayoutBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 AbsoluteLayoutBase::AbsoluteLayoutBase(void) :
-    Inherited()
+    Inherited(),
+    _sfScaling                (bool(false)),
+    _sfOriginalDimensions     (Vec2f(1,1))
 {
 }
 
 AbsoluteLayoutBase::AbsoluteLayoutBase(const AbsoluteLayoutBase &source) :
-    Inherited(source)
+    Inherited(source),
+    _sfScaling                (source._sfScaling                ),
+    _sfOriginalDimensions     (source._sfOriginalDimensions     )
 {
 }
 
@@ -325,6 +432,57 @@ AbsoluteLayoutBase::AbsoluteLayoutBase(const AbsoluteLayoutBase &source) :
 
 AbsoluteLayoutBase::~AbsoluteLayoutBase(void)
 {
+}
+
+
+GetFieldHandlePtr AbsoluteLayoutBase::getHandleScaling         (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfScaling,
+             this->getType().getFieldDesc(ScalingFieldId),
+             const_cast<AbsoluteLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbsoluteLayoutBase::editHandleScaling        (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfScaling,
+             this->getType().getFieldDesc(ScalingFieldId),
+             this));
+
+
+    editSField(ScalingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbsoluteLayoutBase::getHandleOriginalDimensions (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfOriginalDimensions,
+             this->getType().getFieldDesc(OriginalDimensionsFieldId),
+             const_cast<AbsoluteLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbsoluteLayoutBase::editHandleOriginalDimensions(void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfOriginalDimensions,
+             this->getType().getFieldDesc(OriginalDimensionsFieldId),
+             this));
+
+
+    editSField(OriginalDimensionsFieldMask);
+
+    return returnValue;
 }
 
 

@@ -74,56 +74,34 @@
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
 
-ListRefPtr UndoRedoList;
 UndoManagerPtr TheUndoManager;
 CommandManagerPtr TheCommandManager;
-DefaultListModelRefPtr UndoRedoListModel;
-ButtonRefPtr UndoButton;
-ButtonRefPtr RedoButton;
-ListRefPtr MultiFieldList;
-MFieldListModelRefPtr MultiFieldListModel;
-ListRefPtr MultiPtrFieldList;
-MFieldListModelRefPtr MultiPtrFieldListModel;
-GradientBackgroundRefPtr TutorialBackground;
-LabelRefPtr SinglePtrFieldLabel;
-PanelRefPtr MultiPtrFieldInnerPanel;
+GradientBackgroundRecPtr TutorialBackground;
+ListRecPtr MultiFieldList;
+MFieldListModelRecPtr MultiFieldListModel;
+ListRecPtr MultiPtrFieldList;
+MFieldListModelRecPtr MultiPtrFieldListModel;
+PanelRecPtr MultiPtrFieldInnerPanel;
 
-PanelUnrecPtr createSingleFieldPanel(void);
-PanelUnrecPtr createMultiFieldPanel(void);
-PanelUnrecPtr createSinglePtrFieldPanel(void);
-PanelUnrecPtr createMultiPtrFieldPanel(void);
+PanelRecPtr createSingleFieldPanel(void);
+PanelRecPtr createMultiFieldPanel(void);
+PanelRecPtr createSinglePtrFieldPanel(void);
+PanelRecPtr createMultiPtrFieldPanel(void);
 
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-ColorLayerRefPtr ChangableBackground;
-LineBorderRefPtr ChangableBorder;
-
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+//Ctrl+q handler
+void keyTyped(KeyEventDetails* const details)
 {
-public:
-
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() &
+       KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
 
     /******************************************************
 
@@ -133,309 +111,244 @@ public:
 
     ******************************************************/
 
-class SetBorderColorActionListener : public ActionListener
+void handleSetBorderColorAction(ActionEventDetails* const details,
+                                Color4f newColor,
+                                Border* const theBorder)
 {
-protected:
-	Color4f _ChangeToColor;
-	LineBorderRefPtr _TheBorder;
-	CommandManagerPtr _CommandManager;
+    std::ostringstream StrStream;
+    operator<<(StrStream, newColor);
+    SetFieldValueCommandPtr TheCommand = SetFieldValueCommand::create(theBorder,LineBorder::ColorFieldId, StrStream.str());
 
-public:
+	TheCommandManager->executeCommand(TheCommand);
+}
 
-	SetBorderColorActionListener(LineBorderRefPtr TheBorder, Color4f ChangeToColor, CommandManagerPtr Manager) : ActionListener(),
-		_TheBorder(TheBorder),
-		_ChangeToColor(ChangeToColor),
-		_CommandManager(Manager)
+void handleSetBackgroundColorActionPerformed(ActionEventDetails* const details,
+                                Color4f newColor,
+                                Layer* const theBackground)
+{
+    std::ostringstream StrStream;
+    operator<<(StrStream, newColor);
+    SetFieldValueCommandPtr TheCommand = SetFieldValueCommand::create(theBackground,ColorLayer::ColorFieldId, StrStream.str());
+
+	TheCommandManager->executeCommand(TheCommand);
+}
+
+void handleUndoButtonAction(ActionEventDetails* const details)
+{
+	TheUndoManager->undo();
+}
+
+void handleRedoButtonActionPerformed(ActionEventDetails* const details)
+{
+	TheUndoManager->redo();
+}
+
+void handleUndoManagerStateChanged(ChangeEventDetails* const details,
+                                   Button* const undoButton,
+                                   Button* const redoButton,
+                                   DefaultListModel* const undoRedoListModel)
+{
+	while(undoRedoListModel->getSize()-1 > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 	{
+		undoRedoListModel->popBack();
 	}
 
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        std::ostringstream StrStream;
-        operator<<(StrStream, _ChangeToColor);
-        SetFieldValueCommandPtr TheCommand = SetFieldValueCommand::create(_TheBorder,LineBorder::ColorFieldId, StrStream.str());
-
-		_CommandManager->executeCommand(TheCommand);
-    }
-};
-
-class SetBackgroundColorActionListener : public ActionListener
-{
-protected:
-	Color4f _ChangeToColor;
-	ColorLayerRefPtr _TutorialBackground;
-	CommandManagerPtr _CommandManager;
-
-public:
-
-	SetBackgroundColorActionListener(ColorLayerRefPtr TutorialBackground, Color4f ChangeToColor, CommandManagerPtr Manager) : ActionListener(),
-		_TutorialBackground(TutorialBackground),
-		_ChangeToColor(ChangeToColor),
-		_CommandManager(Manager)
+	//Resize
+	while(undoRedoListModel->getSize()-1 < TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 	{
+		undoRedoListModel->pushBack(boost::any(std::string("")));
 	}
 
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        std::ostringstream StrStream;
-        operator<<(StrStream, _ChangeToColor);
-        SetFieldValueCommandPtr TheCommand = SetFieldValueCommand::create(_TutorialBackground,ColorLayer::ColorFieldId, StrStream.str());
-
-		_CommandManager->executeCommand(TheCommand);
-    }
-};
-
-class UndoButtonActionListener : public ActionListener
-{
-protected:
-
-public:
-
-	UndoButtonActionListener(void) : ActionListener()
+	UInt32 UndoCount(TheUndoManager->numberOfUndos());
+	for(UInt32 i(0) ; i<UndoCount ; ++i)
 	{
+		undoRedoListModel->set(i+1, boost::any(std::string(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
+	}
+	UInt32 RedoCount(TheUndoManager->numberOfRedos());
+	for(UInt32 i(0) ; i<RedoCount ; ++i)
+	{
+		undoRedoListModel->set(i+TheUndoManager->numberOfUndos()+1, boost::any(std::string(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
 	}
 
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-		TheUndoManager->undo();
-    }
-};
-
-class RedoButtonActionListener : public ActionListener
-{
-protected:
-
-public:
-
-	RedoButtonActionListener(void) : ActionListener()
+	if((UndoCount == 0 && undoButton->getEnabled()) ||
+		(UndoCount != 0 && !undoButton->getEnabled()) )
 	{
+			undoButton->setEnabled(UndoCount != 0);
 	}
-
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-		TheUndoManager->redo();
-    }
-};
-
-class UndoManagerChangeListener : public ChangeListener
-{
-public:
-
-	virtual void stateChanged(const ChangeEventUnrecPtr e)
+	if((RedoCount == 0 && redoButton->getEnabled()) ||
+		(RedoCount != 0 && !redoButton->getEnabled()) )
 	{
-		while(UndoRedoListModel->getSize()-1 > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
-		{
-			UndoRedoListModel->popBack();
-		}
-
-		//Resize
-		while(UndoRedoListModel->getSize()-1 < TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
-		{
-			UndoRedoListModel->pushBack(boost::any(std::string("")));
-		}
-
-		UInt32 UndoCount(TheUndoManager->numberOfUndos());
-		for(UInt32 i(0) ; i<UndoCount ; ++i)
-		{
-			UndoRedoListModel->set(i+1, boost::any(std::string(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
-		}
-		UInt32 RedoCount(TheUndoManager->numberOfRedos());
-		for(UInt32 i(0) ; i<RedoCount ; ++i)
-		{
-			UndoRedoListModel->set(i+TheUndoManager->numberOfUndos()+1, boost::any(std::string(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
-		}
-
-		if((UndoCount == 0 && UndoButton->getEnabled()) ||
-			(UndoCount != 0 && !UndoButton->getEnabled()) )
-		{
-				UndoButton->setEnabled(UndoCount != 0);
-		}
-		if((RedoCount == 0 && RedoButton->getEnabled()) ||
-			(RedoCount != 0 && !RedoButton->getEnabled()) )
-		{
-				RedoButton->setEnabled(RedoCount != 0);
-		}
+			redoButton->setEnabled(RedoCount != 0);
 	}
-};
+}
 
 // Setup a FontListener to change the label's font
 // when a different item in the FontList is
 // selected
-class UndoRedoListListener: public ListSelectionListener
+void handleUndoRedoListSelectionChanged(ListSelectionEventDetails* const details)
 {
-  public:
-    virtual void selectionChanged(const ListSelectionEventUnrecPtr e)
+	if(!dynamic_cast<ListSelectionModel*>(details->getSource())->isSelectionEmpty())
     {
-		if(!UndoRedoList->getSelectionModel()->isSelectionEmpty())
-        {
-			Int32 ListSelectedIndex(UndoRedoList->getSelectionModel()->getAnchorSelectionIndex());
+		Int32 ListSelectedIndex(dynamic_cast<ListSelectionModel*>(details->getSource())->getAnchorSelectionIndex());
 
-
-			TheUndoManager->undoOrRedoTo(ListSelectedIndex);
-        }
+		TheUndoManager->undoOrRedoTo(ListSelectedIndex);
     }
-};
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1));
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
-        scene->addChild(TorusGeometryNode);
+        // Make Main Scene Node and add the Torus
+        NodeRecPtr scene = Node::create();
+            scene->setCore(Group::create());
+            scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //Background
-    TutorialBackground = GradientBackground::create();
-    TutorialBackground->addLine(Color3f(1.0,0.0,0.0), 0.0);
-    TutorialBackground->addLine(Color3f(0.0,1.0,0.0), 0.2);
-    TutorialBackground->addLine(Color3f(0.0,0.0,1.0), 0.4);
-    TutorialBackground->addLine(Color3f(0.0,1.0,1.0), 0.6);
-    TutorialBackground->addLine(Color3f(1.0,1.0,0.0), 0.8);
-    TutorialBackground->addLine(Color3f(1.0,1.0,1.0), 1.0);
+	    //UndoList
+	    DefaultListModelRecPtr UndoRedoListModel = DefaultListModel::create();
+        UndoRedoListModel->pushBack(boost::any(std::string("Top")));
 
-	TheUndoManager = UndoManager::create();
-	UndoManagerChangeListener TheUndoManagerChangeListener;
-	TheUndoManager->addChangeListener(&TheUndoManagerChangeListener);
-    
-    LabelRefPtr SingleFieldLabel = OSG::Label::create();
-    SingleFieldLabel->setText("Single Field");
-    SingleFieldLabel->setBorders(NULL);
-    SingleFieldLabel->setBackgrounds(NULL);
-
-    LabelRefPtr MultiFieldLabel = OSG::Label::create();
-    MultiFieldLabel->setText("Multi Field");
-    MultiFieldLabel->setBorders(NULL);
-    MultiFieldLabel->setBackgrounds(NULL);
-
-    LabelRefPtr SinglePtrFieldLabel = OSG::Label::create();
-    SinglePtrFieldLabel->setText("Single Ptr Field");
-    SinglePtrFieldLabel->setBorders(NULL);
-    SinglePtrFieldLabel->setBackgrounds(NULL);
-
-    LabelRefPtr MultiPtrFieldLabel = OSG::Label::create();
-    MultiPtrFieldLabel->setText("Multi Ptr Field");
-    MultiPtrFieldLabel->setBorders(NULL);
-    MultiPtrFieldLabel->setBackgrounds(NULL);
-
-    TabPanelRefPtr ExampleTabPanel = OSG::TabPanel::create();
-    ExampleTabPanel->setPreferredSize(Vec2f(600,600));
-    ExampleTabPanel->addTab(SingleFieldLabel, createSingleFieldPanel());
-    ExampleTabPanel->addTab(MultiFieldLabel, createMultiFieldPanel());
-    ExampleTabPanel->addTab(SinglePtrFieldLabel, createSinglePtrFieldPanel());
-    ExampleTabPanel->addTab(MultiPtrFieldLabel, createMultiPtrFieldPanel());
-    ExampleTabPanel->setTabAlignment(0.5f);
-    ExampleTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
-    ExampleTabPanel->setSelectedIndex(0);
-
-	//UndoList
-	UndoRedoListModel = DefaultListModel::create();
-    UndoRedoListModel->pushBack(boost::any(std::string("Top")));
-	ListSelectionModelPtr UndoRedoListSelectionModel(new DefaultListSelectionModel());
-
-	UndoRedoList = List::create();
+	    ListRecPtr UndoRedoList = List::create();
         UndoRedoList->setPreferredSize(Vec2f(200, 300));
         UndoRedoList->setOrientation(List::VERTICAL_ORIENTATION);
-		UndoRedoList->setModel(UndoRedoListModel);
+	    UndoRedoList->setModel(UndoRedoListModel);
 
-    UndoRedoList->setSelectionModel(UndoRedoListSelectionModel);
+        UndoRedoList->getSelectionModel()->connectSelectionChanged(boost::bind(&handleUndoRedoListSelectionChanged, _1));
 
-    UndoRedoListListener TheUndoRedoListListener;
-    UndoRedoList->getSelectionModel()->addListSelectionListener(&TheUndoRedoListListener);
+        ButtonRecPtr UndoButton = Button::create();
+        UndoButton->setText("Undo");
+	    UndoButton->setEnabled(false);
+        UndoButton->connectActionPerformed(boost::bind(&handleUndoButtonAction, _1));
+    	
 
-    UndoButton = OSG::Button::create();
-            UndoButton->setText("Undo");
-			UndoButton->setEnabled(TheUndoManager->numberOfUndos() != 0);
-    UndoButtonActionListener TheUndoButtonActionListener;
-    UndoButton->addActionListener(&TheUndoButtonActionListener);
-	
+        ButtonRecPtr RedoButton = Button::create();
+        RedoButton->setText("Redo");
+	    RedoButton->setEnabled(false);
+        RedoButton->connectActionPerformed(boost::bind(&handleRedoButtonActionPerformed, _1));
 
-    RedoButton = OSG::Button::create();
-            RedoButton->setText("Redo");
-			RedoButton->setEnabled(TheUndoManager->numberOfRedos() != 0);
-    RedoButtonActionListener TheRedoButtonActionListener;
-    RedoButton->addActionListener(&TheRedoButtonActionListener);
+	    TheUndoManager = UndoManager::create();
+        TheUndoManager->connectStateChanged(boost::bind(&handleUndoManagerStateChanged, _1, UndoButton.get(), RedoButton.get(), UndoRedoListModel.get()));
 
-    // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelRefPtr UndoRedoScrollPanel = ScrollPanel::create();
+        //Background
+        TutorialBackground = GradientBackground::create();
+        TutorialBackground->addLine(Color3f(1.0,0.0,0.0), 0.0);
+        TutorialBackground->addLine(Color3f(0.0,1.0,0.0), 0.2);
+        TutorialBackground->addLine(Color3f(0.0,0.0,1.0), 0.4);
+        TutorialBackground->addLine(Color3f(0.0,1.0,1.0), 0.6);
+        TutorialBackground->addLine(Color3f(1.0,1.0,0.0), 0.8);
+        TutorialBackground->addLine(Color3f(1.0,1.0,1.0), 1.0);
+        
+        LabelRecPtr SingleFieldLabel = Label::create();
+        SingleFieldLabel->setText("Single Field");
+        SingleFieldLabel->setBorders(NULL);
+        SingleFieldLabel->setBackgrounds(NULL);
+
+        LabelRecPtr MultiFieldLabel = Label::create();
+        MultiFieldLabel->setText("Multi Field");
+        MultiFieldLabel->setBorders(NULL);
+        MultiFieldLabel->setBackgrounds(NULL);
+
+        LabelRecPtr SinglePtrFieldLabel = Label::create();
+        SinglePtrFieldLabel->setText("Single Ptr Field");
+        SinglePtrFieldLabel->setBorders(NULL);
+        SinglePtrFieldLabel->setBackgrounds(NULL);
+
+        LabelRecPtr MultiPtrFieldLabel = Label::create();
+        MultiPtrFieldLabel->setText("Multi Ptr Field");
+        MultiPtrFieldLabel->setBorders(NULL);
+        MultiPtrFieldLabel->setBackgrounds(NULL);
+
+        TabPanelRecPtr ExampleTabPanel = TabPanel::create();
+        ExampleTabPanel->setPreferredSize(Vec2f(600,600));
+        ExampleTabPanel->addTab(SingleFieldLabel, createSingleFieldPanel());
+        ExampleTabPanel->addTab(MultiFieldLabel, createMultiFieldPanel());
+        ExampleTabPanel->addTab(SinglePtrFieldLabel, createSinglePtrFieldPanel());
+        ExampleTabPanel->addTab(MultiPtrFieldLabel, createMultiPtrFieldPanel());
+        ExampleTabPanel->setTabAlignment(0.5f);
+        ExampleTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
+        ExampleTabPanel->setSelectedIndex(0);
+
+        // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
+        ScrollPanelRecPtr UndoRedoScrollPanel = ScrollPanel::create();
         UndoRedoScrollPanel->setPreferredSize(Vec2f(200,200));
         UndoRedoScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    UndoRedoScrollPanel->setViewComponent(UndoRedoList);
+        UndoRedoScrollPanel->setViewComponent(UndoRedoList);
 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
-        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
-       MainInternalWindow->pushToChildren(ExampleTabPanel);
-       MainInternalWindow->pushToChildren(UndoRedoScrollPanel);
-       MainInternalWindow->pushToChildren(UndoButton);
-       MainInternalWindow->pushToChildren(RedoButton);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.95f,0.95f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
+            MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        LayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
+           MainInternalWindow->pushToChildren(ExampleTabPanel);
+           MainInternalWindow->pushToChildren(UndoRedoScrollPanel);
+           MainInternalWindow->pushToChildren(UndoButton);
+           MainInternalWindow->pushToChildren(RedoButton);
+           MainInternalWindow->setLayout(MainInternalWindowLayout);
+           MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+	       MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+	       MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.95f,0.95f));
+	       MainInternalWindow->setDrawTitlebar(false);
+	       MainInternalWindow->setResizable(false);
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        // Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
-	
-	// Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
-
+        
+	    TutorialDrawingSurface->openWindow(MainInternalWindow);
+    	
+	    // Create the UI Foreground Object
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
+        sceneManager.setRoot(scene);
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
+        // Add the UI Foreground Object to the Scene
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
+        TutorialViewport->setBackground(TutorialBackground);
 
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    TutorialViewport->addForeground(TutorialUIForeground);
-    TutorialViewport->setBackground(TutorialBackground);
-
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "01ChangeFieldCommands");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                WinSize,
+                "01ChangeFieldCommands");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -447,70 +360,64 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }
 
 
-PanelUnrecPtr createSingleFieldPanel(void)
+PanelRecPtr createSingleFieldPanel(void)
 {
 
-    ChangableBorder = OSG::LineBorder::create();
-		ChangableBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+    LineBorderRecPtr ChangableBorder = LineBorder::create();
+    ChangableBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
     
-	ChangableBackground = OSG::ColorLayer::create();
-		ChangableBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	ColorLayerRecPtr ChangableBackground = ColorLayer::create();
+    ChangableBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 
-    LabelRefPtr ChangableLabel = OSG::Label::create();
+    LabelRecPtr ChangableLabel = Label::create();
 
-            ChangableLabel->setText("Changable");
-            ChangableLabel->setBorders(ChangableBorder);
-            ChangableLabel->setBackgrounds(ChangableBackground);
+    ChangableLabel->setText("Changable");
+    ChangableLabel->setBorders(ChangableBorder);
+    ChangableLabel->setBackgrounds(ChangableBackground);
 
 	//Command Buttons
 
     TheCommandManager = CommandManager::create(TheUndoManager);
-    ButtonRefPtr BorderRedButton = OSG::Button::create();
-            BorderRedButton->setText("Border Red");
-    SetBorderColorActionListener* TheSetRedBorderColorActionListener = new SetBorderColorActionListener(ChangableBorder, Color4f(1.0,0.0,0.0,1.0), TheCommandManager);
-    BorderRedButton->addActionListener(TheSetRedBorderColorActionListener);
+    ButtonRecPtr BorderRedButton = Button::create();
+    BorderRedButton->setText("Border Red");
+    BorderRedButton->connectActionPerformed(boost::bind(&handleSetBorderColorAction, _1, Color4f(1.0,0.0,0.0,1.0), ChangableBorder.get()));
 	
-    ButtonRefPtr BorderGreenButton = OSG::Button::create();
-            BorderGreenButton->setText("Border Green");
-    SetBorderColorActionListener* TheSetGreenBorderColorActionListener = new SetBorderColorActionListener(ChangableBorder, Color4f(0.0,1.0,0.0,1.0), TheCommandManager);
-    BorderGreenButton->addActionListener(TheSetGreenBorderColorActionListener);
+    ButtonRecPtr BorderGreenButton = Button::create();
+    BorderGreenButton->setText("Border Green");
+    BorderGreenButton->connectActionPerformed(boost::bind(&handleSetBorderColorAction, _1, Color4f(0.0,1.0,0.0,1.0), ChangableBorder.get()));
 	
-    ButtonRefPtr BorderBlueButton = OSG::Button::create();
-            BorderBlueButton->setText("Border Blue");
-    SetBorderColorActionListener* TheSetBlueBorderColorActionListener = new SetBorderColorActionListener(ChangableBorder, Color4f(0.0,0.0,1.0,1.0), TheCommandManager);
-    BorderBlueButton->addActionListener(TheSetBlueBorderColorActionListener);
+    ButtonRecPtr BorderBlueButton = Button::create();
+    BorderBlueButton->setText("Border Blue");
+    BorderBlueButton->connectActionPerformed(boost::bind(&handleSetBorderColorAction, _1, Color4f(0.0,0.0,1.0,1.0), ChangableBorder.get()));
 	
 	//Background
-    ButtonRefPtr BackgroundRedButton = OSG::Button::create();
-            BackgroundRedButton->setText("Background Red");
-    SetBackgroundColorActionListener* TheSetRedBackgroundColorActionListener = new SetBackgroundColorActionListener(ChangableBackground, Color4f(1.0,0.0,0.0,1.0), TheCommandManager);
-    BackgroundRedButton->addActionListener(TheSetRedBackgroundColorActionListener);
+    ButtonRecPtr BackgroundRedButton = Button::create();
+    BackgroundRedButton->setText("Background Red");
+    BackgroundRedButton->connectActionPerformed(boost::bind(&handleSetBackgroundColorActionPerformed, _1, Color4f(1.0,0.0,0.0,1.0), ChangableBackground.get()));
 	
-    ButtonRefPtr BackgroundGreenButton = OSG::Button::create();
-            BackgroundGreenButton->setText("Background Green");
-    SetBackgroundColorActionListener* TheSetGreenBackgroundColorActionListener = new SetBackgroundColorActionListener(ChangableBackground, Color4f(0.0,1.0,0.0,1.0), TheCommandManager);
-    BackgroundGreenButton->addActionListener(TheSetGreenBackgroundColorActionListener);
+    ButtonRecPtr BackgroundGreenButton = Button::create();
+    BackgroundGreenButton->setText("Background Green");
+    BackgroundGreenButton->connectActionPerformed(boost::bind(&handleSetBackgroundColorActionPerformed, _1, Color4f(0.0,1.0,0.0,1.0), ChangableBackground.get()));
 	
-    ButtonRefPtr BackgroundBlueButton = OSG::Button::create();
-            BackgroundBlueButton->setText("Background Blue");
-    SetBackgroundColorActionListener* TheSetBlueBackgroundColorActionListener = new SetBackgroundColorActionListener(ChangableBackground, Color4f(0.0,0.0,1.0,1.0), TheCommandManager);
-    BackgroundBlueButton->addActionListener(TheSetBlueBackgroundColorActionListener);
+    ButtonRecPtr BackgroundBlueButton = Button::create();
+    BackgroundBlueButton->setText("Background Blue");
+    BackgroundBlueButton->connectActionPerformed(boost::bind(&handleSetBackgroundColorActionPerformed, _1, Color4f(0.0,0.0,1.0,1.0), ChangableBackground.get()));
 
-    LayoutRefPtr ThePanelLayout = OSG::FlowLayout::create();
+    LayoutRecPtr ThePanelLayout = FlowLayout::create();
 
-    PanelRefPtr ThePanel = Panel::createEmpty();
+    PanelRecPtr ThePanel = Panel::createEmpty();
     ThePanel->setLayout(ThePanelLayout);
     ThePanel->pushToChildren(BorderRedButton);
     ThePanel->pushToChildren(BorderGreenButton);
@@ -524,243 +431,194 @@ PanelUnrecPtr createSingleFieldPanel(void)
     
 }
 
-class SetMultiFieldActionListener : public ActionListener, public DialogWindowListener
+void handleSetMultiFieldDialogClosed(DialogWindowEventDetails* const details)
 {
-protected:
-
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("1 0 0");
+        SetFieldValueCommandPtr TheCommand = SetFieldValueCommand::create(TutorialBackground,GradientBackground::ColorFieldId, details->getInput(), MultiFieldList->getSelectionModel()->getMinSelectionIndex());
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Set the value", "Please enter a color below", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
-
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
-
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+	    TheCommandManager->executeCommand(TheCommand);
     }
-   
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            SetFieldValueCommandPtr TheCommand = SetFieldValueCommand::create(TutorialBackground,GradientBackground::ColorFieldId, e->getInput(), MultiFieldList->getSelectionModel()->getMinSelectionIndex());
-
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-
-class AddMultiFieldActionListener : public ActionListener, public DialogWindowListener
+void handleSetMultiFieldAction(ActionEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("1 0 0");
+    std::vector<std::string> inputValues;
+    inputValues.push_back("1 0 0");
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Add value", "Please enter a color below", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Set the value", "Please enter a color below", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleSetMultiFieldDialogClosed, _1));
 
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
 
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-    }
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            UndoableCommandPtr TheCommand1 = AddFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, e->getInput());
-            UndoableCommandPtr TheCommand2 = AddFieldElementCommand::create(TutorialBackground,GradientBackground::PositionFieldId, "1.0");
-
-            std::vector<UndoableCommandPtr> CommandVec;
-            CommandVec.push_back(TheCommand1);
-            CommandVec.push_back(TheCommand2);
-
-            CommandPtr TheCommand = CompoundUndoableCommand::create(CommandVec);
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-class MoveMultiFieldActionListener : public ActionListener, public DialogWindowListener
+void handleAddMultiFieldDialogClosed(DialogWindowEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("0");
+        UndoableCommandPtr TheCommand1 = AddFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, details->getInput());
+        UndoableCommandPtr TheCommand2 = AddFieldElementCommand::create(TutorialBackground,GradientBackground::PositionFieldId, "1.0");
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Move selected index to", "Please enter the index to move to", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
+        std::vector<UndoableCommandPtr> CommandVec;
+        CommandVec.push_back(TheCommand1);
+        CommandVec.push_back(TheCommand2);
 
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
-
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+        CommandPtr TheCommand = CompoundUndoableCommand::create(CommandVec);
+	    TheCommandManager->executeCommand(TheCommand);
     }
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            CommandPtr TheCommand = MoveFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, MultiFieldList->getSelectionModel()->getMinSelectionIndex(), boost::lexical_cast<UInt32>(e->getInput()));
-
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-class InsertMultiFieldActionListener : public ActionListener, public DialogWindowListener
+void handleAddMultiFieldAction(ActionEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("1 0 0");
+    std::vector<std::string> inputValues;
+    inputValues.push_back("1 0 0");
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Insert the value", "Please enter a color below", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Add value", "Please enter a color below", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleAddMultiFieldDialogClosed, _1));
 
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
 
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-    }
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            UndoableCommandPtr TheCommand1 = InsertFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, e->getInput(), MultiFieldList->getSelectionModel()->getMinSelectionIndex());
-
-            UndoableCommandPtr TheCommand2 = InsertFieldElementCommand::create(TutorialBackground,GradientBackground::PositionFieldId, "1.0", MultiFieldList->getSelectionModel()->getMinSelectionIndex());
-
-            std::vector<UndoableCommandPtr> CommandVec;
-            CommandVec.push_back(TheCommand1);
-            CommandVec.push_back(TheCommand2);
-
-            CommandPtr TheCommand = CompoundUndoableCommand::create(CommandVec);
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-class SwapMultiFieldActionListener : public ActionListener, public DialogWindowListener
+void handleMoveMultiFieldDialogClosed(DialogWindowEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("0");
+        CommandPtr TheCommand = MoveFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, MultiFieldList->getSelectionModel()->getMinSelectionIndex(), boost::lexical_cast<UInt32>(details->getInput()));
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Swap selected index with", "Please enter the index to move to", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
-
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
-
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+	    TheCommandManager->executeCommand(TheCommand);
     }
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            CommandPtr TheCommand = SwapFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, MultiFieldList->getSelectionModel()->getMinSelectionIndex(), boost::lexical_cast<UInt32>(e->getInput()));
-
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-class RemoveMultiFieldActionListener : public ActionListener
+void handleMoveMultiFieldAction(ActionEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    std::vector<std::string> inputValues;
+    inputValues.push_back("0");
+
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Move selected index to", "Please enter the index to move to", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleMoveMultiFieldDialogClosed, _1));
+
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
+
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
+
+void handleInsertMultiFieldDialogClosed(DialogWindowEventDetails* const details)
+{
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        if(!MultiFieldList->getSelectionModel()->isSelectionEmpty())
-        {
-            UndoableCommandPtr TheCommand1 = RemoveFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, MultiFieldList->getSelectionModel()->getMinSelectionIndex());
+        UndoableCommandPtr TheCommand1 = InsertFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, details->getInput(), MultiFieldList->getSelectionModel()->getMinSelectionIndex());
 
+        UndoableCommandPtr TheCommand2 = InsertFieldElementCommand::create(TutorialBackground,GradientBackground::PositionFieldId, "1.0", MultiFieldList->getSelectionModel()->getMinSelectionIndex());
 
-            UndoableCommandPtr TheCommand2 = RemoveFieldElementCommand::create(TutorialBackground,GradientBackground::PositionFieldId, MultiFieldList->getSelectionModel()->getMinSelectionIndex());
+        std::vector<UndoableCommandPtr> CommandVec;
+        CommandVec.push_back(TheCommand1);
+        CommandVec.push_back(TheCommand2);
 
-            std::vector<UndoableCommandPtr> CommandVec;
-            CommandVec.push_back(TheCommand1);
-            CommandVec.push_back(TheCommand2);
-
-            CommandPtr TheCommand = CompoundUndoableCommand::create(CommandVec);
-		    TheCommandManager->executeCommand(TheCommand);
-        }
+        CommandPtr TheCommand = CompoundUndoableCommand::create(CommandVec);
+	    TheCommandManager->executeCommand(TheCommand);
     }
-};
+}
 
-PanelUnrecPtr createMultiFieldPanel(void)
+void handleInsertMultiFieldActionPerformed(ActionEventDetails* const details)
+{
+    std::vector<std::string> inputValues;
+    inputValues.push_back("1 0 0");
+
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Insert the value", "Please enter a color below", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleInsertMultiFieldDialogClosed, _1));
+
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
+
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
+
+void handleSwapMultiFieldDialogClosed(DialogWindowEventDetails* const details)
+{
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
+    {
+        CommandPtr TheCommand = SwapFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, MultiFieldList->getSelectionModel()->getMinSelectionIndex(), boost::lexical_cast<UInt32>(details->getInput()));
+
+	    TheCommandManager->executeCommand(TheCommand);
+    }
+}
+
+void handleSwapMultiFieldAction(ActionEventDetails* const details)
+{
+    std::vector<std::string> inputValues;
+    inputValues.push_back("0");
+
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Swap selected index with", "Please enter the index to move to", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleSwapMultiFieldDialogClosed, _1));
+
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
+
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
+
+void handleRemoveMultiFieldAction(ActionEventDetails* const details)
+{
+    if(!MultiFieldList->getSelectionModel()->isSelectionEmpty())
+    {
+        UndoableCommandPtr TheCommand1 = RemoveFieldElementCommand::create(TutorialBackground,GradientBackground::ColorFieldId, MultiFieldList->getSelectionModel()->getMinSelectionIndex());
+
+        UndoableCommandPtr TheCommand2 = RemoveFieldElementCommand::create(TutorialBackground,GradientBackground::PositionFieldId, MultiFieldList->getSelectionModel()->getMinSelectionIndex());
+
+        std::vector<UndoableCommandPtr> CommandVec;
+        CommandVec.push_back(TheCommand1);
+        CommandVec.push_back(TheCommand2);
+
+        CommandPtr TheCommand = CompoundUndoableCommand::create(CommandVec);
+	    TheCommandManager->executeCommand(TheCommand);
+    }
+}
+
+PanelRecPtr createMultiFieldPanel(void)
 {
     //Popup Menu
-    MenuItemRefPtr RemoveIndexMenuItem = MenuItem::create();
+    MenuItemRecPtr RemoveIndexMenuItem = MenuItem::create();
     RemoveIndexMenuItem->setText("Remove Index");
-    RemoveIndexMenuItem->addActionListener(new RemoveMultiFieldActionListener());
+    RemoveIndexMenuItem->connectActionPerformed(boost::bind(&handleRemoveMultiFieldAction, _1));
 
-    MenuItemRefPtr SetValueMenuItem = MenuItem::create();
+    MenuItemRecPtr SetValueMenuItem = MenuItem::create();
     SetValueMenuItem->setText("Set Value");
-    SetValueMenuItem->addActionListener(new SetMultiFieldActionListener());
+    SetValueMenuItem->connectActionPerformed(boost::bind(&handleSetMultiFieldAction, _1));
     
-    MenuItemRefPtr AddValueMenuItem = MenuItem::create();
+    MenuItemRecPtr AddValueMenuItem = MenuItem::create();
     AddValueMenuItem->setText("Add Value");
-    AddValueMenuItem->addActionListener(new AddMultiFieldActionListener());
+    AddValueMenuItem->connectActionPerformed(boost::bind(&handleAddMultiFieldAction, _1));
     
-    MenuItemRefPtr InsertIndexMenuItem = MenuItem::create();
+    MenuItemRecPtr InsertIndexMenuItem = MenuItem::create();
     InsertIndexMenuItem->setText("Insert Value");
-    InsertIndexMenuItem->addActionListener(new InsertMultiFieldActionListener());
+    InsertIndexMenuItem->connectActionPerformed(boost::bind(&handleInsertMultiFieldActionPerformed, _1));
     
-    MenuItemRefPtr MoveIndexMenuItem = MenuItem::create();
+    MenuItemRecPtr MoveIndexMenuItem = MenuItem::create();
     MoveIndexMenuItem->setText("Move Value");
-    MoveIndexMenuItem->addActionListener(new MoveMultiFieldActionListener());
+    MoveIndexMenuItem->connectActionPerformed(boost::bind(&handleMoveMultiFieldAction, _1));
     
-    MenuItemRefPtr SwapIndexMenuItem = MenuItem::create();
+    MenuItemRecPtr SwapIndexMenuItem = MenuItem::create();
     SwapIndexMenuItem->setText("Swap Value");
-    SwapIndexMenuItem->addActionListener(new SwapMultiFieldActionListener());
+    SwapIndexMenuItem->connectActionPerformed(boost::bind(&handleSwapMultiFieldAction, _1));
 
-    PopupMenuRefPtr MultiFieldListPopupMenu = PopupMenu::create();
+    PopupMenuRecPtr MultiFieldListPopupMenu = PopupMenu::create();
     MultiFieldListPopupMenu->addItem(SetValueMenuItem);
     MultiFieldListPopupMenu->addItem(AddValueMenuItem);
     MultiFieldListPopupMenu->addItem(InsertIndexMenuItem);
@@ -779,35 +637,33 @@ PanelUnrecPtr createMultiFieldPanel(void)
     MultiFieldList->setPreferredSize(Vec2f(200, 300));
     MultiFieldList->setOrientation(List::VERTICAL_ORIENTATION);
 	MultiFieldList->setModel(MultiFieldListModel);
-    ListSelectionModelPtr MultiFieldListSelectionModel(new DefaultListSelectionModel());
-    MultiFieldList->setSelectionModel(MultiFieldListSelectionModel);
     MultiFieldList->setPopupMenu(MultiFieldListPopupMenu);
 
     // Create a ScrollPanel for easier viewing of the List
-    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
+    ScrollPanelRecPtr ExampleScrollPanel = ScrollPanel::create();
         ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     ExampleScrollPanel->setViewComponent(MultiFieldList);
 
     // Create MainFramelayout
-    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+    FlowLayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
     MainInternalWindowLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
     MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
     MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
 
     //Label
-    LabelRefPtr ListLabel = Label::create();
+    LabelRecPtr ListLabel = Label::create();
     ListLabel->setText("Background Colors List");
     ListLabel->setPreferredSize(Vec2f(200.0f, ListLabel->getPreferredSize().y()));
 
 
     //Panel
-    FlowLayoutRefPtr ThePanelLayout = OSG::FlowLayout::create();
+    FlowLayoutRecPtr ThePanelLayout = FlowLayout::create();
     ThePanelLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
     ThePanelLayout->setMajorAxisAlignment(0.5f);
     ThePanelLayout->setMinorAxisAlignment(0.5f);
 
-    PanelRefPtr ThePanel = Panel::createEmpty();
+    PanelRecPtr ThePanel = Panel::createEmpty();
     ThePanel->setLayout(ThePanelLayout);
     ThePanel->pushToChildren(ListLabel);
     ThePanel->pushToChildren(ExampleScrollPanel);
@@ -816,78 +672,69 @@ PanelUnrecPtr createMultiFieldPanel(void)
     
 }
 
-class SinglePtrFieldCreateActionListener : public ActionListener, public DialogWindowListener
+
+void handleSinglePtrFieldCreateDialogClosed(DialogWindowEventDetails* const details,
+                                      Label* const singlePtrFieldLabel)
 {
-protected:
-
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("ColorLayer");
-        inputValues.push_back("EmptyLayer");
+        //Create the Layer FieldContainer
+        CreateFieldContainerCommandPtr CreateCommand = CreateFieldContainerCommand::create(details->getInput());
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Create component background", "Please select the component background to create", DialogWindow::INPUT_COMBO,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
+	    TheCommandManager->executeCommand(CreateCommand);
 
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
-
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-    }
-   
-
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
+        //If the layer is a ColorLayer then give it a random color
+        if(CreateCommand->getContainer()->getType() == ColorLayer::getClassType())
         {
-            //Create the Layer FieldContainer
-            CreateFieldContainerCommandPtr CreateCommand = CreateFieldContainerCommand::create(e->getInput());
+            Color4f RandColor(RandomPoolManager::getRandomReal32(0.0f,1.0f),
+                              RandomPoolManager::getRandomReal32(0.0f,1.0f),
+                              RandomPoolManager::getRandomReal32(0.0f,1.0f),
+                              1.0f);
 
-		    TheCommandManager->executeCommand(CreateCommand);
-
-            //If the layer is a ColorLayer then give it a random color
-            if(CreateCommand->getContainer()->getType() == ColorLayer::getClassType())
-            {
-                Color4f RandColor(RandomPoolManager::getRandomReal32(0.0f,1.0f),
-                                  RandomPoolManager::getRandomReal32(0.0f,1.0f),
-                                  RandomPoolManager::getRandomReal32(0.0f,1.0f),
-                                  1.0f);
-
-                dynamic_cast<ColorLayer*>(CreateCommand->getContainer())->setColor(RandColor);
-            }
-
-
-            //Set the background layer to use the newly create layer
-            SetFieldValueCommandPtr SetFieldCommand = SetFieldValueCommand::create(SinglePtrFieldLabel,Component::BackgroundFieldId, boost::lexical_cast<std::string>(CreateCommand->getContainer()->getId()));
-
-		    TheCommandManager->executeCommand(SetFieldCommand);
+            dynamic_cast<ColorLayer*>(CreateCommand->getContainer())->setColor(RandColor);
         }
-    }
-};
 
-PanelUnrecPtr createSinglePtrFieldPanel(void)
+
+        //Set the background layer to use the newly create layer
+        SetFieldValueCommandPtr SetFieldCommand = SetFieldValueCommand::create(singlePtrFieldLabel,Component::BackgroundFieldId, boost::lexical_cast<std::string>(CreateCommand->getContainer()->getId()));
+
+	    TheCommandManager->executeCommand(SetFieldCommand);
+    }
+}
+
+void handleSinglePtrFieldCreateAction(ActionEventDetails* const details,
+                                      Label* const singlePtrFieldLabel)
 {
-    SinglePtrFieldLabel = OSG::Label::create();
+    std::vector<std::string> inputValues;
+    inputValues.push_back("ColorLayer");
+    inputValues.push_back("EmptyLayer");
+
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Create component background", "Please select the component background to create", DialogWindow::INPUT_COMBO,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleSinglePtrFieldCreateDialogClosed, _1, singlePtrFieldLabel));
+
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
+
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
+
+PanelRecPtr createSinglePtrFieldPanel(void)
+{
+    LabelRecPtr SinglePtrFieldLabel = Label::create();
 
     SinglePtrFieldLabel->setText("Changable");
     SinglePtrFieldLabel->setBorders(NULL);
     
-    ButtonRefPtr SinglePtrFieldCreateBackgroundButton = OSG::Button::create();
+    ButtonRecPtr SinglePtrFieldCreateBackgroundButton = Button::create();
     SinglePtrFieldCreateBackgroundButton->setText("Create Background");
     SinglePtrFieldCreateBackgroundButton->setPreferredSize(Vec2f(175.0f,SinglePtrFieldCreateBackgroundButton->getPreferredSize().y()));
-    SinglePtrFieldCreateActionListener* TheCreateBackgroundActionListener = new SinglePtrFieldCreateActionListener();
-    SinglePtrFieldCreateBackgroundButton->addActionListener(TheCreateBackgroundActionListener);
+    SinglePtrFieldCreateBackgroundButton->connectActionPerformed(boost::bind(&handleSinglePtrFieldCreateAction, _1, SinglePtrFieldLabel.get()));
 
-    LayoutRefPtr ThePanelLayout = OSG::FlowLayout::create();
+    LayoutRecPtr ThePanelLayout = FlowLayout::create();
 
-    PanelRefPtr ThePanel = Panel::createEmpty();
+    PanelRecPtr ThePanel = Panel::createEmpty();
     ThePanel->setLayout(ThePanelLayout);
     ThePanel->pushToChildren(SinglePtrFieldLabel);
     ThePanel->pushToChildren(SinglePtrFieldCreateBackgroundButton);
@@ -896,244 +743,196 @@ PanelUnrecPtr createSinglePtrFieldPanel(void)
     
 }
 
-class SetMultiPtrFieldActionListener : public ActionListener, public DialogWindowListener
+void handleSetMultiPtrFieldDialogClosed(DialogWindowEventDetails* const details)
 {
-protected:
-
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("0");
+        SetFieldValueCommandPtr TheCommand = SetFieldValueCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, details->getInput(), MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex());
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Assign the button by Id", "Please enter a button Id", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
-
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
-
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+	    TheCommandManager->executeCommand(TheCommand);
     }
-   
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            SetFieldValueCommandPtr TheCommand = SetFieldValueCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, e->getInput(), MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex());
-
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-
-class AddMultiPtrFieldActionListener : public ActionListener, public DialogWindowListener
+void handleSetMultiPtrFieldAction(ActionEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("C");
+    std::vector<std::string> inputValues;
+    inputValues.push_back("0");
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Add a new button", "Please enter text for the button", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Assign the button by Id", "Please enter a button Id", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleSetMultiPtrFieldDialogClosed, _1));
 
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
 
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-    }
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            ButtonUnrecPtr NewButton = Button::create();
-            NewButton->setText(e->getInput());
-
-            CommandPtr TheCommand = AddFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, boost::lexical_cast<std::string>(NewButton->getId()));
-
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-class MoveMultiPtrFieldActionListener : public ActionListener, public DialogWindowListener
+void handleAddMultiPtrFieldDialogClosed(DialogWindowEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("0");
+        ButtonRecPtr NewButton = Button::create();
+        NewButton->setText(details->getInput());
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Move selected index to", "Please enter the index to move to", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
+        CommandPtr TheCommand = AddFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, boost::lexical_cast<std::string>(NewButton->getId()));
 
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
-
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+	    TheCommandManager->executeCommand(TheCommand);
     }
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            CommandPtr TheCommand = MoveFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex(), boost::lexical_cast<UInt32>(e->getInput()));
-
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-class InsertMultiPtrFieldActionListener : public ActionListener, public DialogWindowListener
+void handleAddMultiPtrFieldActionPerformed(ActionEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("C");
+    std::vector<std::string> inputValues;
+    inputValues.push_back("C");
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Insert a button", "Please enter text for the button", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Add a new button", "Please enter text for the button", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleAddMultiPtrFieldDialogClosed, _1));
 
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
 
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-    }
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            ButtonUnrecPtr NewButton = Button::create();
-            NewButton->setText(e->getInput());
-
-            CommandPtr TheCommand = InsertFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, boost::lexical_cast<std::string>(NewButton->getId()), MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex());
-
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-class SwapMultiPtrFieldActionListener : public ActionListener, public DialogWindowListener
+void handleMoveMultiPtrFieldDialogClosed(DialogWindowEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        std::vector<std::string> inputValues;
-        inputValues.push_back("0");
+        CommandPtr TheCommand = MoveFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex(), boost::lexical_cast<UInt32>(details->getInput()));
 
-        DialogWindowRefPtr TheDialog;
-        TheDialog = DialogWindow::createInputDialog("Swap selected index with", "Please enter the index to swap with", DialogWindow::INPUT_TEXT,true,inputValues);
-        TheDialog->setAllwaysOnTop(true);
-        TheDialog->addDialogWindowListener(this);
-
-        Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(e->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-        TheDialog->setPosition(CenteredPosition);
-
-        dynamic_cast<Component*>(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+	    TheCommandManager->executeCommand(TheCommand);
     }
+}
 
-    virtual void dialogClosing(const DialogWindowEventUnrecPtr e)
-    {
-    }
-
-    virtual void dialogClosed(const DialogWindowEventUnrecPtr e)
-    {
-        if(e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-        {
-            CommandPtr TheCommand = SwapFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex(), boost::lexical_cast<UInt32>(e->getInput()));
-
-		    TheCommandManager->executeCommand(TheCommand);
-        }
-    }
-};
-
-class RemoveMultiPtrFieldActionListener : public ActionListener
+void handleMoveMultiPtrFieldActionPerformed(ActionEventDetails* const details)
 {
-public:
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
+    std::vector<std::string> inputValues;
+    inputValues.push_back("0");
+
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Move selected index to", "Please enter the index to move to", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleMoveMultiPtrFieldDialogClosed, _1));
+
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
+
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
+
+void handleInsertMultiPtrFieldDialogClosed(DialogWindowEventDetails* const details)
+{
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        if(!MultiPtrFieldList->getSelectionModel()->isSelectionEmpty())
-        {
-            UndoableCommandPtr TheCommand = RemoveFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex());
+        ButtonRecPtr NewButton = Button::create();
+        NewButton->setText(details->getInput());
 
-		    TheCommandManager->executeCommand(TheCommand);
-        }
+        CommandPtr TheCommand = InsertFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, boost::lexical_cast<std::string>(NewButton->getId()), MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex());
+
+	    TheCommandManager->executeCommand(TheCommand);
     }
-};
+}
 
-PanelUnrecPtr createMultiPtrFieldPanel(void)
+void handleInsertMultiPtrFieldActionPerformed(ActionEventDetails* const details)
+{
+    std::vector<std::string> inputValues;
+    inputValues.push_back("C");
+
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Insert a button", "Please enter text for the button", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleInsertMultiPtrFieldDialogClosed, _1));
+
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
+
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
+
+void handleSwapMultiPtrFieldDialogClosed(DialogWindowEventDetails* const details)
+{
+    if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
+    {
+        CommandPtr TheCommand = SwapFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex(), boost::lexical_cast<UInt32>(details->getInput()));
+
+	    TheCommandManager->executeCommand(TheCommand);
+    }
+}
+
+void handleSwapMultiPtrFieldActionPerformed(ActionEventDetails* const details)
+{
+    std::vector<std::string> inputValues;
+    inputValues.push_back("0");
+
+    DialogWindowRecPtr TheDialog;
+    TheDialog = DialogWindow::createInputDialog("Swap selected index with", "Please enter the index to swap with", DialogWindow::INPUT_TEXT,true,inputValues);
+    TheDialog->setAllwaysOnTop(true);
+    TheDialog->connectDialogWindowClosed(boost::bind(&handleSwapMultiPtrFieldDialogClosed, _1));
+
+    Pnt2f CenteredPosition = calculateAlignment(dynamic_cast<Component*>(details->getSource())->getParentWindow()->getPosition(), dynamic_cast<Component*>(details->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+    TheDialog->setPosition(CenteredPosition);
+
+    dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->openWindow(TheDialog);
+}
+
+void handleRemoveMultiPtrFieldAction(ActionEventDetails* const details)
+{
+    if(!MultiPtrFieldList->getSelectionModel()->isSelectionEmpty())
+    {
+        UndoableCommandPtr TheCommand = RemoveFieldElementCommand::create(MultiPtrFieldInnerPanel,Panel::ChildrenFieldId, MultiPtrFieldList->getSelectionModel()->getMinSelectionIndex());
+
+	    TheCommandManager->executeCommand(TheCommand);
+    }
+}
+
+PanelRecPtr createMultiPtrFieldPanel(void)
 {
     //Buttons for Inner Panel
-    ButtonRefPtr AButton = Button::create();
+    ButtonRecPtr AButton = Button::create();
     AButton->setText("A");
 
-    ButtonRefPtr BButton = Button::create();
+    ButtonRecPtr BButton = Button::create();
     BButton->setText("B");
 
     //Inner Panel
-    LayoutRefPtr MultiPtrFieldInnerPanelLayout = OSG::FlowLayout::create();
+    LayoutRecPtr MultiPtrFieldInnerPanelLayout = FlowLayout::create();
 
-    MultiPtrFieldInnerPanel = OSG::Panel::create();
+    MultiPtrFieldInnerPanel = Panel::create();
     MultiPtrFieldInnerPanel->setLayout(MultiPtrFieldInnerPanelLayout);
     MultiPtrFieldInnerPanel->setPreferredSize(Vec2f(200.0f, 200.0f));
     MultiPtrFieldInnerPanel->pushToChildren(AButton);
     MultiPtrFieldInnerPanel->pushToChildren(BButton);
 
     //Popup Menu
-    MenuItemRefPtr RemoveIndexMenuItem = MenuItem::create();
+    MenuItemRecPtr RemoveIndexMenuItem = MenuItem::create();
     RemoveIndexMenuItem->setText("Remove Index");
-    RemoveIndexMenuItem->addActionListener(new RemoveMultiPtrFieldActionListener());
+    RemoveIndexMenuItem->connectActionPerformed(boost::bind(&handleRemoveMultiPtrFieldAction, _1));
 
-    MenuItemRefPtr SetValueMenuItem = MenuItem::create();
+    MenuItemRecPtr SetValueMenuItem = MenuItem::create();
     SetValueMenuItem->setText("Set Value");
-    SetValueMenuItem->addActionListener(new SetMultiPtrFieldActionListener());
+    SetValueMenuItem->connectActionPerformed(boost::bind(&handleSetMultiPtrFieldAction, _1));
     
-    MenuItemRefPtr AddValueMenuItem = MenuItem::create();
+    MenuItemRecPtr AddValueMenuItem = MenuItem::create();
     AddValueMenuItem->setText("Add Value");
-    AddValueMenuItem->addActionListener(new AddMultiPtrFieldActionListener());
+    AddValueMenuItem->connectActionPerformed(boost::bind(&handleAddMultiPtrFieldActionPerformed, _1));
     
-    MenuItemRefPtr InsertIndexMenuItem = MenuItem::create();
+    MenuItemRecPtr InsertIndexMenuItem = MenuItem::create();
     InsertIndexMenuItem->setText("Insert Value");
-    InsertIndexMenuItem->addActionListener(new InsertMultiPtrFieldActionListener());
+    InsertIndexMenuItem->connectActionPerformed(boost::bind(&handleInsertMultiPtrFieldActionPerformed, _1));
     
-    MenuItemRefPtr MoveIndexMenuItem = MenuItem::create();
+    MenuItemRecPtr MoveIndexMenuItem = MenuItem::create();
     MoveIndexMenuItem->setText("Move Value");
-    MoveIndexMenuItem->addActionListener(new MoveMultiPtrFieldActionListener());
+    MoveIndexMenuItem->connectActionPerformed(boost::bind(&handleMoveMultiPtrFieldActionPerformed, _1));
     
-    MenuItemRefPtr SwapIndexMenuItem = MenuItem::create();
+    MenuItemRecPtr SwapIndexMenuItem = MenuItem::create();
     SwapIndexMenuItem->setText("Swap Value");
-    SwapIndexMenuItem->addActionListener(new SwapMultiPtrFieldActionListener());
+    SwapIndexMenuItem->connectActionPerformed(boost::bind(&handleSwapMultiPtrFieldActionPerformed, _1));
 
-    PopupMenuRefPtr MultiPtrFieldListPopupMenu = PopupMenu::create();
+    PopupMenuRecPtr MultiPtrFieldListPopupMenu = PopupMenu::create();
     MultiPtrFieldListPopupMenu->addItem(SetValueMenuItem);
     MultiPtrFieldListPopupMenu->addItem(AddValueMenuItem);
     MultiPtrFieldListPopupMenu->addItem(InsertIndexMenuItem);
@@ -1151,20 +950,18 @@ PanelUnrecPtr createMultiPtrFieldPanel(void)
     MultiPtrFieldList->setPreferredSize(Vec2f(200, 300));
     MultiPtrFieldList->setOrientation(List::VERTICAL_ORIENTATION);
 	MultiPtrFieldList->setModel(MultiPtrFieldListModel);
-    ListSelectionModelPtr MultiPtrFieldListSelectionModel(new DefaultListSelectionModel());
-    MultiPtrFieldList->setSelectionModel(MultiPtrFieldListSelectionModel);
     MultiPtrFieldList->setPopupMenu(MultiPtrFieldListPopupMenu);
 
     // Create a ScrollPanel for easier viewing of the List
-    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
+    ScrollPanelRecPtr ExampleScrollPanel = ScrollPanel::create();
         ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     ExampleScrollPanel->setViewComponent(MultiPtrFieldList);
 
 
-    LayoutRefPtr ThePanelLayout = OSG::FlowLayout::create();
+    LayoutRecPtr ThePanelLayout = FlowLayout::create();
 
-    PanelRefPtr ThePanel = Panel::createEmpty();
+    PanelRecPtr ThePanel = Panel::createEmpty();
     ThePanel->setLayout(ThePanelLayout);
     ThePanel->pushToChildren(MultiPtrFieldInnerPanel);
     ThePanel->pushToChildren(ExampleScrollPanel);

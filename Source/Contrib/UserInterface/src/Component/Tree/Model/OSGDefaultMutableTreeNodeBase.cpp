@@ -147,8 +147,8 @@ void DefaultMutableTreeNodeBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecMutableTreeNodePtr::Description(
-        SFUnrecMutableTreeNodePtr::getClassType(),
+    pDesc = new SFWeakMutableTreeNodePtr::Description(
+        SFWeakMutableTreeNodePtr::getClassType(),
         "ParentInternal",
         "",
         ParentInternalFieldId, ParentInternalFieldMask,
@@ -210,7 +210,7 @@ DefaultMutableTreeNodeBase::TypeObject DefaultMutableTreeNodeBase::_type(
     "\t<Field\n"
     "\t\tname=\"ParentInternal\"\n"
     "\t\ttype=\"MutableTreeNode\"\n"
-    "        category=\"pointer\"\n"
+    "        category=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -268,12 +268,12 @@ MFUnrecMutableTreeNodePtr *DefaultMutableTreeNodeBase::editMFChildrenInternal(vo
 }
 
 //! Get the DefaultMutableTreeNode::_sfParentInternal field.
-const SFUnrecMutableTreeNodePtr *DefaultMutableTreeNodeBase::getSFParentInternal(void) const
+const SFWeakMutableTreeNodePtr *DefaultMutableTreeNodeBase::getSFParentInternal(void) const
 {
     return &_sfParentInternal;
 }
 
-SFUnrecMutableTreeNodePtr *DefaultMutableTreeNodeBase::editSFParentInternal (void)
+SFWeakMutableTreeNodePtr *DefaultMutableTreeNodeBase::editSFParentInternal (void)
 {
     editSField(ParentInternalFieldMask);
 
@@ -515,7 +515,6 @@ FieldContainerTransitPtr DefaultMutableTreeNodeBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 DefaultMutableTreeNodeBase::DefaultMutableTreeNodeBase(void) :
@@ -629,8 +628,8 @@ EditFieldHandlePtr DefaultMutableTreeNodeBase::editHandleChildrenInternal(void)
 
 GetFieldHandlePtr DefaultMutableTreeNodeBase::getHandleParentInternal  (void) const
 {
-    SFUnrecMutableTreeNodePtr::GetHandlePtr returnValue(
-        new  SFUnrecMutableTreeNodePtr::GetHandle(
+    SFWeakMutableTreeNodePtr::GetHandlePtr returnValue(
+        new  SFWeakMutableTreeNodePtr::GetHandle(
              &_sfParentInternal,
              this->getType().getFieldDesc(ParentInternalFieldId),
              const_cast<DefaultMutableTreeNodeBase *>(this)));
@@ -640,8 +639,8 @@ GetFieldHandlePtr DefaultMutableTreeNodeBase::getHandleParentInternal  (void) co
 
 EditFieldHandlePtr DefaultMutableTreeNodeBase::editHandleParentInternal (void)
 {
-    SFUnrecMutableTreeNodePtr::EditHandlePtr returnValue(
-        new  SFUnrecMutableTreeNodePtr::EditHandle(
+    SFWeakMutableTreeNodePtr::EditHandlePtr returnValue(
+        new  SFWeakMutableTreeNodePtr::EditHandle(
              &_sfParentInternal,
              this->getType().getFieldDesc(ParentInternalFieldId),
              this));
@@ -654,6 +653,7 @@ EditFieldHandlePtr DefaultMutableTreeNodeBase::editHandleParentInternal (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

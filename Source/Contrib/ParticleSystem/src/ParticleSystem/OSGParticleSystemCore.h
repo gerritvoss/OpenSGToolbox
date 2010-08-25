@@ -43,10 +43,11 @@
 #endif
 
 #include "OSGParticleSystemCoreBase.h"
-#include "OSGParticleSystemListener.h"
 #include "OSGStatElemTypes.h"
 #include "OSGLine.h"
 #include "OSGRenderAction.h"
+#include "OSGParticleSystemEventDetailsFields.h"
+#include "OSGParticleEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -134,29 +135,18 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleS
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-
-    class SystemUpdateListener : public ParticleSystemListener
-    {
-      public:
-        SystemUpdateListener(ParticleSystemCoreRefPtr TheCore);
-        virtual void systemUpdated(const ParticleSystemEventUnrecPtr e);
-        virtual void volumeChanged(const ParticleSystemEventUnrecPtr e);
-        virtual void particleGenerated(const ParticleEventUnrecPtr e);
-        virtual void particleKilled(const ParticleEventUnrecPtr e);
-        virtual void particleStolen(const ParticleEventUnrecPtr e);
-
-      private:
-        ParticleSystemCoreRefPtr _Core;
-    };
-
-
-	SystemUpdateListener _SystemUpdateListener;
 	
     void sortParticles(DrawEnv *pEnv);
 	void checkAndInitializeSort(void);
-	void handleParticleGenerated(const ParticleEventUnrecPtr e);
-	void handleParticleKilled(const ParticleEventUnrecPtr e);
-	void handleParticleStolen(const ParticleEventUnrecPtr e);
+	void handleVolumeChanged(ParticleSystemEventDetails* const details);
+	void handleParticleGenerated(ParticleEventDetails* const details);
+	void handleParticleKilled(ParticleEventDetails* const details);
+	void handleParticleStolen(ParticleEventDetails* const details);
+    
+    boost::signals2::connection _VolumeChangedConnection;
+    boost::signals2::connection _ParticleGeneratedConnection;
+    boost::signals2::connection _ParticleKilledConnection;
+    boost::signals2::connection _ParticleStolenConnection;
 
     /*==========================  PRIVATE  ================================*/
 

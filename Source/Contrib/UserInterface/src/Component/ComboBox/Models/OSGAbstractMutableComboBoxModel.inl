@@ -40,16 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool AbstractMutableComboBoxModel::isListDataListenerAttached(ListDataListenerPtr l) const
-{
-    return _DataListeners.find(l) != _DataListeners.end();
-}
-
-inline
-bool AbstractMutableComboBoxModel::isSelectionListenerAttached(ComboBoxSelectionListenerPtr l) const
-{
-    return _SelectionListeners.find(l) != _SelectionListeners.end();
-}
-
 OSG_END_NAMESPACE

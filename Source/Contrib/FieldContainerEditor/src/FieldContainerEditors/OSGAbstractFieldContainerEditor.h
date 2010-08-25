@@ -139,6 +139,13 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING AbstractFieldContainerEditor : 
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     GenericFieldContainerEditorRefPtr _GenericEditor;
     /*==========================  PRIVATE  ================================*/
 

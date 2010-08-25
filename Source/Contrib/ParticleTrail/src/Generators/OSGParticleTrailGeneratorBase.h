@@ -65,6 +65,7 @@
 
 #include "OSGNode.h" // Parent
 
+#include "OSGParticleSystemFields.h"    // SystemToTrail type
 #include "OSGSysFields.h"               // TrailLength type
 
 #include "OSGParticleTrailGeneratorFields.h"
@@ -86,6 +87,8 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGeneratorBase : public No
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ParticleTrailGenerator);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -93,13 +96,16 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGeneratorBase : public No
 
     enum
     {
-        TrailLengthFieldId = Inherited::NextFieldId,
+        SystemToTrailFieldId = Inherited::NextFieldId,
+        TrailLengthFieldId = SystemToTrailFieldId + 1,
         TrailLengthMethodFieldId = TrailLengthFieldId + 1,
         TrailResolutionFieldId = TrailLengthMethodFieldId + 1,
         TrailResolutionMethodFieldId = TrailResolutionFieldId + 1,
         NextFieldId = TrailResolutionMethodFieldId + 1
     };
 
+    static const OSG::BitVector SystemToTrailFieldMask =
+        (TypeTraits<BitVector>::One << SystemToTrailFieldId);
     static const OSG::BitVector TrailLengthFieldMask =
         (TypeTraits<BitVector>::One << TrailLengthFieldId);
     static const OSG::BitVector TrailLengthMethodFieldMask =
@@ -111,6 +117,7 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGeneratorBase : public No
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
+    typedef SFUnrecParticleSystemPtr SFSystemToTrailType;
     typedef SFReal32          SFTrailLengthType;
     typedef SFUInt32          SFTrailLengthMethodType;
     typedef SFReal64          SFTrailResolutionType;
@@ -139,6 +146,8 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGeneratorBase : public No
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecParticleSystemPtr *getSFSystemToTrail  (void) const;
+                  SFUnrecParticleSystemPtr *editSFSystemToTrail  (void);
 
                   SFReal32            *editSFTrailLength    (void);
             const SFReal32            *getSFTrailLength     (void) const;
@@ -152,6 +161,8 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGeneratorBase : public No
                   SFUInt32            *editSFTrailResolutionMethod(void);
             const SFUInt32            *getSFTrailResolutionMethod (void) const;
 
+
+                  ParticleSystem * getSystemToTrail  (void) const;
 
                   Real32              &editTrailLength    (void);
                   Real32               getTrailLength     (void) const;
@@ -170,10 +181,16 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGeneratorBase : public No
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+            void setSystemToTrail  (ParticleSystem * const value);
             void setTrailLength    (const Real32 value);
             void setTrailLengthMethod(const UInt32 value);
             void setTrailResolution(const Real64 value);
             void setTrailResolutionMethod(const UInt32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,6 +223,7 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGeneratorBase : public No
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFUnrecParticleSystemPtr _sfSystemToTrail;
     SFReal32          _sfTrailLength;
     SFUInt32          _sfTrailLengthMethod;
     SFReal64          _sfTrailResolution;
@@ -231,12 +249,15 @@ class OSG_CONTRIBPARTICLETRAIL_DLLMAPPING ParticleTrailGeneratorBase : public No
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
+    void onCreate(const ParticleTrailGenerator *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
+    GetFieldHandlePtr  getHandleSystemToTrail   (void) const;
+    EditFieldHandlePtr editHandleSystemToTrail  (void);
     GetFieldHandlePtr  getHandleTrailLength     (void) const;
     EditFieldHandlePtr editHandleTrailLength    (void);
     GetFieldHandlePtr  getHandleTrailLengthMethod (void) const;

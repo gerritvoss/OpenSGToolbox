@@ -79,7 +79,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PasswordField : public PasswordFieldBa
 
     /*! \}                                                                 */
 
-	virtual void mouseClicked(const MouseEventUnrecPtr e);
+	virtual void mouseClicked(MouseEventDetails* const e);
 
 	virtual std::string getDrawnText(void) const;
 

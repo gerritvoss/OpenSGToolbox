@@ -110,6 +110,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var bool            UIDrawingSurfaceBase::_sfActive
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -209,6 +213,18 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&UIDrawingSurface::getHandleSize));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Active",
+        "",
+        ActiveFieldId, ActiveFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIDrawingSurface::editHandleActive),
+        static_cast<FieldGetMethodSig >(&UIDrawingSurface::getHandleActive));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -299,6 +315,16 @@ UIDrawingSurfaceBase::TypeObject UIDrawingSurfaceBase::_type(
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
     "\t\tdefaultValue=\"0.0f,0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Active\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"true\"\n"
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
@@ -393,6 +419,19 @@ SFVec2f *UIDrawingSurfaceBase::editSFSize(void)
 const SFVec2f *UIDrawingSurfaceBase::getSFSize(void) const
 {
     return &_sfSize;
+}
+
+
+SFBool *UIDrawingSurfaceBase::editSFActive(void)
+{
+    editSField(ActiveFieldMask);
+
+    return &_sfActive;
+}
+
+const SFBool *UIDrawingSurfaceBase::getSFActive(void) const
+{
+    return &_sfActive;
 }
 
 
@@ -531,6 +570,10 @@ UInt32 UIDrawingSurfaceBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfSize.getBinSize();
     }
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        returnValue += _sfActive.getBinSize();
+    }
 
     return returnValue;
 }
@@ -564,6 +607,10 @@ void UIDrawingSurfaceBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfSize.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyToBin(pMem);
+    }
 }
 
 void UIDrawingSurfaceBase::copyFromBin(BinaryDataHandler &pMem,
@@ -594,6 +641,10 @@ void UIDrawingSurfaceBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SizeFieldMask & whichField))
     {
         _sfSize.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyFromBin(pMem);
     }
 }
 
@@ -715,7 +766,6 @@ FieldContainerTransitPtr UIDrawingSurfaceBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 UIDrawingSurfaceBase::UIDrawingSurfaceBase(void) :
@@ -727,7 +777,8 @@ UIDrawingSurfaceBase::UIDrawingSurfaceBase(void) :
     _sfEventProducer          (NULL),
     _sfGraphics               (NULL),
     _sfMouseTransformFunctor  (NULL),
-    _sfSize                   (Vec2f(0.0f,0.0f))
+    _sfSize                   (Vec2f(0.0f,0.0f)),
+    _sfActive                 (bool(true))
 {
 }
 
@@ -740,7 +791,8 @@ UIDrawingSurfaceBase::UIDrawingSurfaceBase(const UIDrawingSurfaceBase &source) :
     _sfEventProducer          (NULL),
     _sfGraphics               (NULL),
     _sfMouseTransformFunctor  (NULL),
-    _sfSize                   (source._sfSize                   )
+    _sfSize                   (source._sfSize                   ),
+    _sfActive                 (source._sfActive                 )
 {
 }
 
@@ -1001,6 +1053,32 @@ EditFieldHandlePtr UIDrawingSurfaceBase::editHandleSize           (void)
 
     return returnValue;
 }
+
+GetFieldHandlePtr UIDrawingSurfaceBase::getHandleActive          (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfActive,
+             this->getType().getFieldDesc(ActiveFieldId),
+             const_cast<UIDrawingSurfaceBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIDrawingSurfaceBase::editHandleActive         (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfActive,
+             this->getType().getFieldDesc(ActiveFieldId),
+             this));
+
+
+    editSField(ActiveFieldMask);
+
+    return returnValue;
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

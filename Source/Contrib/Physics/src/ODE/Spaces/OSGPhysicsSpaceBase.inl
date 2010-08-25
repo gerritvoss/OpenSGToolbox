@@ -137,22 +137,6 @@ void PhysicsSpaceBase::setSublevel(const Int32 value)
     _sfSublevel.setValue(value);
 }
 
-//! Get the value of the PhysicsSpace::_sfInternalParentHandler field.
-inline
-PhysicsHandler * PhysicsSpaceBase::getInternalParentHandler(void) const
-{
-    return _sfInternalParentHandler.getValue();
-}
-
-//! Set the value of the PhysicsSpace::_sfInternalParentHandler field.
-inline
-void PhysicsSpaceBase::setInternalParentHandler(PhysicsHandler * const value)
-{
-    editSField(InternalParentHandlerFieldMask);
-
-    _sfInternalParentHandler.setValue(value);
-}
-
 //! Get the value of the PhysicsSpace::_sfDefaultCollisionParameters field.
 inline
 CollisionContactParameters * PhysicsSpaceBase::getDefaultCollisionParameters(void) const
@@ -225,8 +209,8 @@ void PhysicsSpaceBase::execSync (      PhysicsSpaceBase *pFrom,
     if(FieldBits::NoField != (SublevelFieldMask & whichField))
         _sfSublevel.syncWith(pFrom->_sfSublevel);
 
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
-        _sfInternalParentHandler.syncWith(pFrom->_sfInternalParentHandler);
+    if(FieldBits::NoField != (ParentHandlerFieldMask & whichField))
+        _sfParentHandler.syncWith(pFrom->_sfParentHandler);
 
     if(FieldBits::NoField != (DefaultCollisionParametersFieldMask & whichField))
         _sfDefaultCollisionParameters.syncWith(pFrom->_sfDefaultCollisionParameters);
@@ -259,70 +243,71 @@ const Char8 *PhysicsSpaceBase::getClassname(void)
 }
 
 inline
-EventConnection PhysicsSpaceBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool PhysicsSpaceBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 PhysicsSpaceBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr PhysicsSpaceBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void PhysicsSpaceBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 PhysicsSpaceBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *PhysicsSpaceBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *PhysicsSpaceBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *PhysicsSpaceBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *PhysicsSpaceBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 PhysicsSpaceBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *PhysicsSpaceBase::editSFEventProducer(void)
+boost::signals2::connection  PhysicsSpaceBase::connectCollision(const CollisionEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _CollisionEvent.connect(listener, at);
 }
 
-//! Get the value of the PhysicsSpace::_sfEventProducer field.
 inline
-EventProducerPtr &PhysicsSpaceBase::editEventProducer(void)
+boost::signals2::connection  PhysicsSpaceBase::connectCollision(const CollisionEventType::group_type &group,
+                                                    const CollisionEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _CollisionEvent.connect(group, listener, at);
+}
+
+inline
+void  PhysicsSpaceBase::disconnectCollision(const CollisionEventType::group_type &group)
+{
+    _CollisionEvent.disconnect(group);
+}
+
+inline
+void  PhysicsSpaceBase::disconnectAllSlotsCollision(void)
+{
+    _CollisionEvent.disconnect_all_slots();
+}
+
+inline
+bool  PhysicsSpaceBase::isEmptyCollision(void) const
+{
+    return _CollisionEvent.empty();
+}
+
+inline
+UInt32  PhysicsSpaceBase::numSlotsCollision(void) const
+{
+    return _CollisionEvent.num_slots();
+}
+
+inline
+void PhysicsSpaceBase::produceCollision(CollisionEventDetailsType* const e)
+{
+    produceEvent(CollisionEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(PhysicsSpace);

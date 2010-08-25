@@ -72,7 +72,7 @@ void ComponentWidthLayoutSpring::initMethod(InitPhase ePhase)
     }
 }
 
-ComponentWidthLayoutSpringTransitPtr ComponentWidthLayoutSpring::create (ComponentRefPtr TheComponent, UInt32 SizeField)
+ComponentWidthLayoutSpringTransitPtr ComponentWidthLayoutSpring::create (Component* const TheComponent, UInt32 SizeField)
 {
     ComponentWidthLayoutSpring* NewSpring = createEmpty();
 

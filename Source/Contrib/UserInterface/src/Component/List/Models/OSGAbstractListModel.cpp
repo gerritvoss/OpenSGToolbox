@@ -46,7 +46,6 @@
 #include <OSGConfig.h>
 
 #include "OSGAbstractListModel.h"
-#include "OSGListDataListener.h"
 
 #include <boost/bind.hpp>
 
@@ -79,54 +78,25 @@ void AbstractListModel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection AbstractListModel::addListDataListener(ListDataListenerPtr l)
-{
-    _DataListeners.insert(l);
-    return EventConnection(
-            boost::bind(&AbstractListModel::isListDataListenerAttached, this, l),
-            boost::bind(&AbstractListModel::removeListDataListener, this, l));
-}
-
-void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
-{
-    ListDataListenerSetIter EraseIter(_DataListeners.find(l));
-    if(EraseIter != _DataListeners.end())
-    {
-        _DataListeners.erase(EraseIter);
-    }
-}
-
 void AbstractListModel::produceListDataContentsChanged(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
-    ListDataListenerSet DataListenerSet(_DataListeners);
-    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->contentsChanged(e);
-    }
-    _Producer.produceEvent(ListDataContentsChangedMethodId,e);
+    ListDataEventDetailsUnrecPtr Details = ListDataEventDetails::create(Source, getSystemTime(), index0, index1);
+
+    Inherited::produceListDataContentsChanged(Details);
 }
 
 void AbstractListModel::produceListDataIntervalAdded(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
-    ListDataListenerSet DataListenerSet(_DataListeners);
-    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->intervalAdded(e);
-    }
-    _Producer.produceEvent(ListDataIntervalAddedMethodId,e);
+    ListDataEventDetailsUnrecPtr Details = ListDataEventDetails::create(Source, getSystemTime(), index0, index1);
+
+    Inherited::produceListDataIntervalAdded(Details);
 }
 
 void AbstractListModel::produceListDataIntervalRemoved(FieldContainer* const Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
-    ListDataListenerSet DataListenerSet(_DataListeners);
-    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->intervalRemoved(e);
-    }
-    _Producer.produceEvent(ListDataIntervalRemovedMethodId,e);
+    ListDataEventDetailsUnrecPtr Details = ListDataEventDetails::create(Source, getSystemTime(), index0, index1);
+
+    Inherited::produceListDataIntervalRemoved(Details);
 }
 
 /*-------------------------------------------------------------------------*\

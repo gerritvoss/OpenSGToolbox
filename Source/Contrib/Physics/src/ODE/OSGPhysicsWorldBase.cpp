@@ -58,7 +58,8 @@
 
 
 
-#include "OSGPhysicsHandler.h"          // InternalParentHandler Class
+
+#include "OSGFieldContainer.h"          // ParentHandler Class
 
 #include "OSGPhysicsWorldBase.h"
 #include "OSGPhysicsWorld.h"
@@ -127,7 +128,7 @@ OSG_BEGIN_NAMESPACE
     the depth of the surface layer around all geometry objects. Contacts are allowed to sink into the surface layer up to the given depth before coming to rest. The default value is zero. Increasing this to some small value (e.g. 0.001) can help prevent jittering problems due to contacts being repeatedly made and broken.
 */
 
-/*! \var PhysicsHandler * PhysicsWorldBase::_sfInternalParentHandler
+/*! \var FieldContainer * PhysicsWorldBase::_sfParentHandler
     
 */
 
@@ -149,6 +150,18 @@ OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
 OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            PhysicsWorld *,
                            0);
+
+DataType &FieldTraits< PhysicsWorld *, 1 >::getType(void)
+{
+    return FieldTraits<PhysicsWorld *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_SFIELD(ChildPointerSField,
+                      PhysicsWorld *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
 
 /***************************************************************************\
  *                         Field Description                               *
@@ -291,15 +304,15 @@ void PhysicsWorldBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecPhysicsHandlerPtr::Description(
-        SFUnrecPhysicsHandlerPtr::getClassType(),
-        "InternalParentHandler",
+    pDesc = new SFParentFieldContainerPtr::Description(
+        SFParentFieldContainerPtr::getClassType(),
+        "ParentHandler",
         "",
-        InternalParentHandlerFieldId, InternalParentHandlerFieldMask,
+        ParentHandlerFieldId, ParentHandlerFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&PhysicsWorld::editHandleInternalParentHandler),
-        static_cast<FieldGetMethodSig >(&PhysicsWorld::getHandleInternalParentHandler));
+        static_cast     <FieldEditMethodSig>(&PhysicsWorld::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&PhysicsWorld::invalidGetField));
 
     oType.addInitialDesc(pDesc);
 }
@@ -329,6 +342,7 @@ PhysicsWorldBase::TypeObject PhysicsWorldBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    childFields=\"single\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "The PhysicsWorld contains all global dWorld attributes from ODE.\n"
@@ -450,14 +464,14 @@ PhysicsWorldBase::TypeObject PhysicsWorldBase::_type(
     "\tthe depth of the surface layer around all geometry objects. Contacts are allowed to sink into the surface layer up to the given depth before coming to rest. The default value is zero. Increasing this to some small value (e.g. 0.001) can help prevent jittering problems due to contacts being repeatedly made and broken.\n"
     "\t</Field>\n"
     "\t<Field\n"
-    "\t\tname=\"InternalParentHandler\"\n"
-    "\t\ttype=\"PhysicsHandler\"\n"
-    "        category=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t>\n"
+    "\t   name=\"ParentHandler\"\n"
+    "\t   type=\"FieldContainer\"\n"
+    "\t   cardinality=\"single\"\n"
+    "\t   access=\"none\"\n"
+    "       doRefCount=\"false\"\n"
+    "       passFieldMask=\"true\"\n"
+    "       category=\"parentpointer\"\n"
+    "\t   >\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
     "The PhysicsWorld contains all global dWorld attributes from ODE.\n"
@@ -626,18 +640,6 @@ const SFReal32 *PhysicsWorldBase::getSFWorldContactSurfaceLayer(void) const
 }
 
 
-//! Get the PhysicsWorld::_sfInternalParentHandler field.
-const SFUnrecPhysicsHandlerPtr *PhysicsWorldBase::getSFInternalParentHandler(void) const
-{
-    return &_sfInternalParentHandler;
-}
-
-SFUnrecPhysicsHandlerPtr *PhysicsWorldBase::editSFInternalParentHandler(void)
-{
-    editSField(InternalParentHandlerFieldMask);
-
-    return &_sfInternalParentHandler;
-}
 
 
 
@@ -693,9 +695,9 @@ UInt32 PhysicsWorldBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfWorldContactSurfaceLayer.getBinSize();
     }
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    if(FieldBits::NoField != (ParentHandlerFieldMask & whichField))
     {
-        returnValue += _sfInternalParentHandler.getBinSize();
+        returnValue += _sfParentHandler.getBinSize();
     }
 
     return returnValue;
@@ -750,9 +752,9 @@ void PhysicsWorldBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfWorldContactSurfaceLayer.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    if(FieldBits::NoField != (ParentHandlerFieldMask & whichField))
     {
-        _sfInternalParentHandler.copyToBin(pMem);
+        _sfParentHandler.copyToBin(pMem);
     }
 }
 
@@ -805,9 +807,9 @@ void PhysicsWorldBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfWorldContactSurfaceLayer.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    if(FieldBits::NoField != (ParentHandlerFieldMask & whichField))
     {
-        _sfInternalParentHandler.copyFromBin(pMem);
+        _sfParentHandler.copyFromBin(pMem);
     }
 }
 
@@ -929,7 +931,6 @@ FieldContainerTransitPtr PhysicsWorldBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 PhysicsWorldBase::PhysicsWorldBase(void) :
@@ -945,7 +946,7 @@ PhysicsWorldBase::PhysicsWorldBase(void) :
     _sfWorldQuickStepNumIterations(Int32(20)),
     _sfWorldContactMaxCorrectingVel(),
     _sfWorldContactSurfaceLayer(Real32(0)),
-    _sfInternalParentHandler  (NULL)
+    _sfParentHandler          (NULL)
 {
 }
 
@@ -962,7 +963,7 @@ PhysicsWorldBase::PhysicsWorldBase(const PhysicsWorldBase &source) :
     _sfWorldQuickStepNumIterations(source._sfWorldQuickStepNumIterations),
     _sfWorldContactMaxCorrectingVel(source._sfWorldContactMaxCorrectingVel),
     _sfWorldContactSurfaceLayer(source._sfWorldContactSurfaceLayer),
-    _sfInternalParentHandler  (NULL)
+    _sfParentHandler          (NULL)
 {
 }
 
@@ -972,18 +973,78 @@ PhysicsWorldBase::PhysicsWorldBase(const PhysicsWorldBase &source) :
 PhysicsWorldBase::~PhysicsWorldBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
 
-void PhysicsWorldBase::onCreate(const PhysicsWorld *source)
+bool PhysicsWorldBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
 {
-    Inherited::onCreate(source);
-
-    if(source != NULL)
+    if(parentFieldId == ParentHandlerFieldId)
     {
-        PhysicsWorld *pThis = static_cast<PhysicsWorld *>(this);
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
 
-        pThis->setInternalParentHandler(source->getInternalParentHandler());
+        if(pTypedParent != NULL)
+        {
+            FieldContainer *pOldParent =
+                _sfParentHandler.getValue         ();
+
+            UInt16 oldChildFieldId =
+                _sfParentHandler.getParentFieldPos();
+
+            if(pOldParent != NULL)
+            {
+                pOldParent->unlinkChild(this, oldChildFieldId);
+            }
+
+            editSField(ParentHandlerFieldMask);
+
+            _sfParentHandler.setValue(static_cast<FieldContainer *>(pParent), childFieldId);
+
+            return true;
+        }
+
+        return false;
     }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
 }
+
+bool PhysicsWorldBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
+{
+    if(parentFieldId == ParentHandlerFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            if(_sfParentHandler.getValue() == pParent)
+            {
+                editSField(ParentHandlerFieldMask);
+
+                _sfParentHandler.setValue(NULL, 0xFFFF);
+
+                return true;
+            }
+
+            FWARNING(("PhysicsWorldBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
+
 
 GetFieldHandlePtr PhysicsWorldBase::getHandleErp             (void) const
 {
@@ -1260,33 +1321,20 @@ EditFieldHandlePtr PhysicsWorldBase::editHandleWorldContactSurfaceLayer(void)
     return returnValue;
 }
 
-GetFieldHandlePtr PhysicsWorldBase::getHandleInternalParentHandler (void) const
+GetFieldHandlePtr PhysicsWorldBase::getHandleParentHandler   (void) const
 {
-    SFUnrecPhysicsHandlerPtr::GetHandlePtr returnValue(
-        new  SFUnrecPhysicsHandlerPtr::GetHandle(
-             &_sfInternalParentHandler,
-             this->getType().getFieldDesc(InternalParentHandlerFieldId),
-             const_cast<PhysicsWorldBase *>(this)));
+    SFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
-EditFieldHandlePtr PhysicsWorldBase::editHandleInternalParentHandler(void)
+EditFieldHandlePtr PhysicsWorldBase::editHandleParentHandler  (void)
 {
-    SFUnrecPhysicsHandlerPtr::EditHandlePtr returnValue(
-        new  SFUnrecPhysicsHandlerPtr::EditHandle(
-             &_sfInternalParentHandler,
-             this->getType().getFieldDesc(InternalParentHandlerFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&PhysicsWorld::setInternalParentHandler,
-                    static_cast<PhysicsWorld *>(this), _1));
-
-    editSField(InternalParentHandlerFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -1324,8 +1372,6 @@ FieldContainer *PhysicsWorldBase::createAspectCopy(
 void PhysicsWorldBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
-
-    static_cast<PhysicsWorld *>(this)->setInternalParentHandler(NULL);
 
 
 }

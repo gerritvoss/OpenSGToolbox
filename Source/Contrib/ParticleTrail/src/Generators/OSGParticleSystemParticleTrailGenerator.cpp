@@ -83,15 +83,15 @@ void ParticleSystemParticleTrailGenerator::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void ParticleSystemParticleTrailGenerator::internalUpdate(const ParticleSystemEventUnrecPtr e)
+void ParticleSystemParticleTrailGenerator::internalUpdate(ParticleSystemEventDetails* const details)
 { //nothing to do
 }
 
-void ParticleSystemParticleTrailGenerator::internalKill(const ParticleEventUnrecPtr e)
+void ParticleSystemParticleTrailGenerator::internalKill(ParticleEventDetails* const details)
 { // nothing to do
 }
 
-void ParticleSystemParticleTrailGenerator::internalGenerated(const ParticleEventUnrecPtr e)
+void ParticleSystemParticleTrailGenerator::internalGenerated(ParticleEventDetails* const details)
 { // nothing to do
 }
 

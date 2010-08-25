@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-DefaultComboBoxEditor::TextFieldListener::TextFieldListener(DefaultComboBoxEditor* const TheDefaultComboBoxEditor) :
-   _DefaultComboBoxEditor(TheDefaultComboBoxEditor)
-{
-}
-
 OSG_END_NAMESPACE

@@ -88,19 +88,6 @@ void ComboBox::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection ComboBox::addPopupMenuListener(PopupMenuListenerPtr Listener)
-{
-    return getComboListPopupMenu()->addPopupMenuListener(Listener);
-}
-
-EventConnection ComboBox::addActionListener(ActionListenerPtr Listener)
-{
-    _ActionListeners.insert(Listener);
-    return EventConnection(
-                           boost::bind(&ComboBox::isActionListenerAttached, this, Listener),
-                           boost::bind(&ComboBox::removeActionListener, this, Listener));
-}
-
 void ComboBox::setEmptyDescText(const std::string& text)
 {
     if(getEditor() != NULL &&
@@ -139,7 +126,7 @@ void ComboBox::updateLayout(void)
     }
 }
 
-void ComboBox::actionPerformed(const ActionEventUnrecPtr e)
+void ComboBox::handleMenuItemActionPerformed(ActionEventDetails* const e)
 {
     //Called by the MenuItems in my popupMenu
 
@@ -166,38 +153,28 @@ void ComboBox::actionPerformed(const ActionEventUnrecPtr e)
     }
 }
 
-void ComboBox::contentsChanged(const ListDataEventUnrecPtr e)
+void ComboBox::handleContentsChanged(ListDataEventDetails* const e)
 {
     updateListFromModel();
 }
 
-void ComboBox::intervalAdded(const ListDataEventUnrecPtr e)
-{
-    //TODO:Implement
-    updateListFromModel();
-}
-
-void ComboBox::intervalRemoved(const ListDataEventUnrecPtr e)
+void ComboBox::handleContentsIntervalAdded(ListDataEventDetails* const e)
 {
     //TODO:Implement
     updateListFromModel();
 }
 
-void ComboBox::selectionChanged(const ComboBoxSelectionEventUnrecPtr e)
+void ComboBox::handleContentsIntervalRemoved(ListDataEventDetails* const e)
+{
+    //TODO:Implement
+    updateListFromModel();
+}
+
+void ComboBox::handleSelectionChanged(ComboBoxSelectionEventDetails* const e)
 {
     //Update the Selected Item Component
     updateSelectedItemComponent();
 }
-
-void ComboBox::removeActionListener(ActionListenerPtr Listener)
-{
-    ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
-    if(EraseIter != _ActionListeners.end())
-    {
-        _ActionListeners.erase(EraseIter);
-    }
-}
-
 
 void ComboBox::addItem(const boost::any& anObject)
 {
@@ -250,7 +227,7 @@ void ComboBox::removeItemAt(const UInt32& anIndex)
     }
 }
 
-bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
+bool ComboBox::selectWithKey(KeyEventDetails::Key TheKey)
 {
     UInt32 i(1);
     boost::any ModelElement;
@@ -272,8 +249,8 @@ bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
         }
 
         if(TheText.size() > 0 &&
-           (TheText[0] == KeyEvent::getCharFromKey(TheKey, 0) ||
-            TheText[0] == KeyEvent::getCharFromKey(TheKey, KeyEvent::KEY_MODIFIER_CAPS_LOCK)))
+           (TheText[0] == KeyEventDetails::getCharFromKey(TheKey, 0) ||
+            TheText[0] == KeyEventDetails::getCharFromKey(TheKey, KeyEventDetails::KEY_MODIFIER_CAPS_LOCK)))
         {
             ExitLoop = true;
         }
@@ -323,12 +300,6 @@ void ComboBox::showPopup(void)
 
 void ComboBox::updateListFromModel(void)
 {
-    //Update the PopupMenu
-    //for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
-    //{
-    //	dynamic_pointer_cast<MenuItem>(getComboListPopupMenu()->getItem(i))->removeActionListener(this);
-    //}
-
     //Update the Selected Item Component
     updateSelectedItemComponent();
 }
@@ -353,26 +324,23 @@ void ComboBox::configurePropertiesFromAction(Action a)
     //TODO:Implement
 }
 
-void ComboBox::produceActionPerformed(const ActionEventUnrecPtr e)
+void ComboBox::produceActionPerformed(void)
 {
-    ActionListenerSet Liseners(_ActionListeners);
-    for(ActionListenerSetConstItor SetItor(Liseners.begin()) ; SetItor != Liseners.end() ; ++SetItor)
-    {
-        (*SetItor)->actionPerformed(e);
-    }
-    _Producer.produceEvent(ActionPerformedMethodId,e);
+    ActionEventDetailsUnrecPtr Details = ActionEventDetails::create(this, getTimeStamp());
+
+    Inherited::produceActionPerformed(Details);
 }
 
-void ComboBox::keyTyped(const KeyEventUnrecPtr e)
+void ComboBox::keyTyped(KeyEventDetails* const e)
 {
-    if(e->getKey() == KeyEvent::KEY_UP)
+    if(e->getKey() == KeyEventDetails::KEY_UP)
     {
         if(getModel()->getSelectedItemIndex() > 0)
         {
             getModel()->setSelectedItem(getModel()->getSelectedItemIndex() - 1);
         }
     }
-    else if(e->getKey() == KeyEvent::KEY_DOWN)
+    else if(e->getKey() == KeyEventDetails::KEY_DOWN)
     {
         if(getModel()->getSelectedItemIndex() < getModel()->getSize()-1)
         {
@@ -381,7 +349,7 @@ void ComboBox::keyTyped(const KeyEventUnrecPtr e)
     }
     else if(!getEditable() && e->getKeyChar() != 0)
     {
-        selectWithKey(static_cast<KeyEvent::Key>(e->getKey()));
+        selectWithKey(static_cast<KeyEventDetails::Key>(e->getKey()));
     }
     else
     {
@@ -389,7 +357,7 @@ void ComboBox::keyTyped(const KeyEventUnrecPtr e)
     }
 }
 
-void ComboBox::mouseClicked(const MouseEventUnrecPtr e)
+void ComboBox::mouseClicked(MouseEventDetails* const e)
 {
     if(getEnabled() && !getEditable() && !getExpandButton()->isContained(e->getLocation(), true))
     {
@@ -450,9 +418,15 @@ void ComboBox::updateSelectionFromEditor(void)
 
 void ComboBox::attachMenuItems(void)
 {
+    for(UInt32 i(0) ; i<_MenuItemActionConnections.size() ; ++i)
+    {
+        _MenuItemActionConnections[i].disconnect();
+    }
+    _MenuItemActionConnections.clear();
+
     for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
     {
-        getComboListPopupMenu()->getItem(i)->addActionListener(this);
+        _MenuItemActionConnections.push_back(getComboListPopupMenu()->getItem(i)->connectActionPerformed(boost::bind(&ComboBox::handleMenuItemActionPerformed, this, _1)));
     }
 }
 
@@ -489,16 +463,12 @@ void ComboBox::onDestroy()
 /*----------------------- constructors & destructors ----------------------*/
 
 ComboBox::ComboBox(void) :
-    Inherited(),
-		_ExpandButtonSelectedListener(this),
-		_EditorListener(this)
+    Inherited()
 {
 }
 
 ComboBox::ComboBox(const ComboBox &source) :
-    Inherited(source),
-		_ExpandButtonSelectedListener(this),
-		_EditorListener(this)
+    Inherited(source)
 {
 }
 
@@ -522,8 +492,13 @@ void ComboBox::changed(ConstFieldMaskArg whichField,
     if((whichField & ExpandButtonFieldMask) &&
        getExpandButton() != NULL)
     {
-        getExpandButton()->addButtonSelectedListener(&_ExpandButtonSelectedListener);
-        getComboListPopupMenu()->addPopupMenuListener(&_ExpandButtonSelectedListener);
+        _ExpandButtonSelectedConnection = getExpandButton()->connectButtonSelected(boost::bind(&ComboBox::handleExpandButtonSelected, this, _1));
+        _ExpandButtonDeselectedConnection = getExpandButton()->connectButtonDeselected(boost::bind(&ComboBox::handleExpandButtonDeselected, this, _1));
+        
+        _ExpandPopupMenuCanceledConnection = getComboListPopupMenu()->connectPopupMenuCanceled(boost::bind(&ComboBox::handleExpandPopupMenuCanceled, this, _1));
+        _ExpandPopupMenuWillBecomeInvisibleConnection = getComboListPopupMenu()->connectPopupMenuWillBecomeInvisible(boost::bind(&ComboBox::handleExpandPopupMenuWillBecomeInvisible, this, _1));
+        _ExpandPopupMenuWillBecomeVisibleConnection = getComboListPopupMenu()->connectPopupMenuWillBecomeVisible(boost::bind(&ComboBox::handleExpandPopupMenuWillBecomeVisible, this, _1));
+        _ExpandPopupMenuContentsChangedConnection = getComboListPopupMenu()->connectPopupMenuContentsChanged(boost::bind(&ComboBox::handleExpandPopupMenuContentsChanged, this, _1));
     }
 
     if( (whichField & ExpandButtonFieldMask) ||
@@ -551,7 +526,7 @@ void ComboBox::changed(ConstFieldMaskArg whichField,
 
     if( (whichField & EditorFieldMask) && getEditor() != NULL)
     {
-        getEditor()->addActionListener(&_EditorListener);
+        _EditorActionConnection = getEditor()->connectActionPerformed(boost::bind(&ComboBox::handleEditorAction, this, _1));
     }
 
     if(whichField & ModelFieldMask)
@@ -560,8 +535,10 @@ void ComboBox::changed(ConstFieldMaskArg whichField,
         {
             getComboListPopupMenu()->setModel(getModel());
 
-            getModel()->addListDataListener(this);
-            getModel()->addSelectionListener(this);
+            _ContentsChangedConnection = getModel()->connectListDataContentsChanged(boost::bind(&ComboBox::handleContentsChanged, this, _1));
+            _ContentsIntervalAddedConnection = getModel()->connectListDataIntervalAdded(boost::bind(&ComboBox::handleContentsIntervalAdded, this, _1));
+            _ContentsIntervalRemovedConnection = getModel()->connectListDataIntervalRemoved(boost::bind(&ComboBox::handleContentsIntervalRemoved, this, _1));
+            _SelectionChangedConnection = getModel()->connectSelectionChanged(boost::bind(&ComboBox::handleSelectionChanged, this, _1));
             updateListFromModel();
         }
     }
@@ -580,47 +557,47 @@ void ComboBox::dump(      UInt32    ,
     SLOG << "Dump ComboBox NI" << std::endl;
 }
 
-void ComboBox::ExpandButtonSelectedListener::buttonSelected(const ButtonSelectedEventUnrecPtr e)
+void ComboBox::handleExpandButtonSelected(ButtonSelectedEventDetails* const e)
 {
-    _ComboBox->setPopupVisible(true);
+    setPopupVisible(true);
 }
 
-void ComboBox::ExpandButtonSelectedListener::buttonDeselected(const ButtonSelectedEventUnrecPtr e)
+void ComboBox::handleExpandButtonDeselected(ButtonSelectedEventDetails* const e)
 {
-    _ComboBox->setPopupVisible(false);
+    setPopupVisible(false);
 }
 
-void ComboBox::ExpandButtonSelectedListener::popupMenuCanceled(const PopupMenuEventUnrecPtr e)
+void ComboBox::handleExpandPopupMenuCanceled(PopupMenuEventDetails* const e)
 {
-    if(_ComboBox->getExpandButton()->getSelected())
+    if(getExpandButton()->getSelected())
     {
-        _ComboBox->getExpandButton()->setSelected(false);
+        getExpandButton()->setSelected(false);
     }
 }
 
-void ComboBox::ExpandButtonSelectedListener::popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e)
+void ComboBox::handleExpandPopupMenuWillBecomeInvisible(PopupMenuEventDetails* const e)
 {
-    if(_ComboBox->getExpandButton()->getSelected())
+    if(getExpandButton()->getSelected())
     {
-        _ComboBox->getExpandButton()->setSelected(false);
+        getExpandButton()->setSelected(false);
     }
 }
-void ComboBox::ExpandButtonSelectedListener::popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e)
+void ComboBox::handleExpandPopupMenuWillBecomeVisible(PopupMenuEventDetails* const e)
 {
-    if(!_ComboBox->getExpandButton()->getSelected())
+    if(!getExpandButton()->getSelected())
     {
-        _ComboBox->getExpandButton()->setSelected(true);
+        getExpandButton()->setSelected(true);
     }
 }
 
-void ComboBox::ExpandButtonSelectedListener::popupMenuContentsChanged(const PopupMenuEventUnrecPtr e)
+void ComboBox::handleExpandPopupMenuContentsChanged(PopupMenuEventDetails* const e)
 {
-    _ComboBox->attachMenuItems();
+    attachMenuItems();
 }
 
-void ComboBox::EditorListener::actionPerformed(const ActionEventUnrecPtr e)
+void ComboBox::handleEditorAction(ActionEventDetails* const e)
 {
-    _ComboBox->updateSelectionFromEditor();
+    updateSelectionFromEditor();
 }
 
 OSG_END_NAMESPACE

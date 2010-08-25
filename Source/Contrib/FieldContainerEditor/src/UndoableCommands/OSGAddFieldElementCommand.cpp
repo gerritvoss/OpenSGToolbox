@@ -105,9 +105,9 @@ void AddFieldElementCommand::execute(void)
     if(TheFieldHandle->isPointerField())
     {
         EditMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
-        FieldContainer* FC = FieldContainerFactory::the()->getContainer(boost::lexical_cast<UInt32>(_Value));
+        _AddedPtr = FieldContainerFactory::the()->getContainer(boost::lexical_cast<UInt32>(_Value));
         //Check the pointer types match
-        if(!isFieldContentDerivedFrom(TheFieldHandle->getType(),&FC->getType()))
+        if(_AddedPtr != NULL && !isFieldContentDerivedFrom(TheFieldHandle->getType(),&_AddedPtr->getType()))
         {
             SWARNING << "Cannot add the value of field " << TheFieldHandle->getDescription()->getName() 
                      << ", on FieldContianer of type " << _FC->getType().getName()
@@ -115,7 +115,7 @@ void AddFieldElementCommand::execute(void)
             return;
         }
 
-        TheHandle->add(FC);
+        TheHandle->add(_AddedPtr);
     }
     else
     {
@@ -151,9 +151,8 @@ void AddFieldElementCommand::redo(void)
     if(TheFieldHandle->isPointerField())
     {
         EditMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
-        FieldContainer* FC = FieldContainerFactory::the()->getContainer(boost::lexical_cast<UInt32>(_Value));
 
-        TheHandle->add(FC);
+        TheHandle->add(_AddedPtr);
     }
     else
     {

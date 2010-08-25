@@ -50,7 +50,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-class MethodDescription;
+class EventDescription;
 
 /*! \ingroup GrpSystemFieldContainerFuncs
  */
@@ -80,8 +80,8 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
                        const std::string    &szParentName      = "",
                        const std::string    &szGroupName       = "",
                        //PrototypeCreateF    fPrototypeCreate  = NULL,
-                       InitEventProducerFunctor      fInitMethod       = InitEventProducerFunctor(),
-                       MethodDescription **pDesc             = NULL,
+                       InitEventProducerFunctor      fInitEvent       = InitEventProducerFunctor(),
+                       EventDescription **pDesc             = NULL,
                        UInt32              uiDescByteCounter = 0);
 
     EventProducerType(const EventProducerType &source);
@@ -106,18 +106,19 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
     /*! \name                 Description                                  */
     /*! \{                                                                 */
 
-          MethodDescription *getMethodDescription (UInt32 uiMethodId);
-    const MethodDescription *getMethodDescription (UInt32 uiMethodId) const;
+          EventDescription *getEventDescription (UInt32 uiEventId);
+    const EventDescription *getEventDescription (UInt32 uiEventId) const;
 
-          MethodDescription *findMethodDescription(const std::string &szMethodName);
+          EventDescription *findEventDescription(const std::string &szEventName);
 
-    const MethodDescription *findMethodDescription(
-        const std::string &szMethodName) const; 
+    const EventDescription *findEventDescription(const std::string &szEventName) const; 
 
-    UInt32                 getNumMethodDescs(void) const;
+    UInt32 getProducedEventId(const std::string &ProducedEventName) const;
 
-    UInt32                 addDescription  (const MethodDescription &desc     );
-    bool                   subDescription  (      UInt32            uiMethodId);
+    UInt32                 getNumEventDescs(void) const;
+
+    UInt32                 addDescription  (const EventDescription &desc     );
+    bool                   subDescription  (      UInt32            uiEventId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -152,8 +153,8 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
 
   protected:
 
-    typedef std::map   <std::string,  MethodDescription *> DescMap;
-    typedef std::vector<              MethodDescription *> DescVec;
+    typedef std::map   <std::string,  EventDescription *> DescMap;
+    typedef std::vector<              EventDescription *> DescVec;
 
     typedef DescMap::iterator                             DescMapIt;
     typedef DescVec::iterator                             DescVecIt;
@@ -173,7 +174,7 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
     EventProducerType *_pParent;
     std::string                _szParentName;
 
-    MethodDescription  **_pDesc;
+    EventDescription  **_pDesc;
     UInt32              _uiDescByteCounter;
 
     DescMap             _mDescMap;
@@ -191,13 +192,14 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
     /*! \name             Intialization / Termination                      */
     /*! \{                                                                 */
 
-    bool initMethods      (void);
-    bool initParentMethods(void);
+    bool initEvents      (void);
+    bool initParentEvents(void);
 
     bool initialize      (void);
     void terminate       (void);
 
     /*! \}                                                                 */
+    static EventProducerType _baseType;
     /*==========================  PRIVATE  ================================*/
 
   private:
@@ -210,10 +212,10 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
     void operator =(const EventProducerType &source);
 };
 
-struct OSG_BASE_DLLMAPPING MethodDescriptionPLT
+struct OSG_BASE_DLLMAPPING EventDescriptionPLT
 {
-    bool operator()(const MethodDescription *pElemDesc1, 
-                    const MethodDescription *pElemDesc2) const;
+    bool operator()(const EventDescription *pElemDesc1, 
+                    const EventDescription *pElemDesc2) const;
 };
 
 OSG_END_NAMESPACE

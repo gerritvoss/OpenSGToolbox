@@ -11,17 +11,19 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
+    childFields="single"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI LayoutConstraints Interface.
 	<Field
-		name="ParentComponent"
-		type="Component"
-        category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
+	   name="ParentComponent"
+	   type="FieldContainer"
+	   cardinality="multi"
+	   visibility="external"
+	   access="none"
+       doRefCount="false"
+       passFieldMask="true"
+       category="parentpointer"
+	   >
 	</Field>
 </FieldContainer>

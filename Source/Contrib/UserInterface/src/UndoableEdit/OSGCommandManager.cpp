@@ -32,54 +32,49 @@
 
 #include "OSGCommandManager.h"
 #include "OSGUndoableCommand.h"
+#include "OSGCommandEventDetails.h"
+#include "OSGUndoableEditEventDetails.h"
 
 #include <boost/bind.hpp>
 
 OSG_USING_NAMESPACE
 
-void CommandManager::produceCommandExecuted(CommandPtr TheCommand)
+EventDescription *CommandManager::_eventDesc[] =
 {
-	const CommandEventUnrecPtr e = CommandEvent::create(NULL, getSystemTime(), TheCommand);
-	CommandListenerSet Listeners(_CommandListeners);
-	for(CommandListenerSet::const_iterator SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
-    {
-	    (*SetItor)->commandExecuted(e);
-    }
-	if(_UndoManager != NULL && 
-		TheCommand->getType().isDerivedFrom(UndoableCommand::getClassType()))
-	{
-		const UndoableEditEventUnrecPtr Event = UndoableEditEvent::create(e->getSource(), e->getTimeStamp(), boost::dynamic_pointer_cast<UndoableCommand,Command>(TheCommand));
-		_UndoManager->undoableEditHappened(Event);
-	}
-}
+    new EventDescription("CommandExecuted", 
+                          "CommandExecuted",
+                          CommandExecutedEventId, 
+                          FieldTraits<CommandExecutedEventDetailsType *>::getType(),
+                          true,
+                          NULL),
+};
 
-EventConnection CommandManager::addCommandListener(CommandListenerPtr Listener)
+EventProducerType CommandManager::_producerType(
+                                            "CommandManagerProducerType",
+                                            "EventProducerType",
+                                            "",
+                                            InitEventProducerFunctor(),
+                                            _eventDesc,
+                                            sizeof(_eventDesc));
+
+const EventProducerType &CommandManager::getProducerType(void) const
 {
-   _CommandListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&CommandManager::isCommandListenerAttached, this, Listener),
-       boost::bind(&CommandManager::removeCommandListener, this, Listener));
-}
-
-
-bool CommandManager::isCommandListenerAttached(CommandListenerPtr Listener) const
-{
-    return _CommandListeners.find(Listener) != _CommandListeners.end();
-}
-
-void CommandManager::removeCommandListener(CommandListenerPtr Listener)
-{
-	CommandListenerSet::iterator EraseIter(_CommandListeners.find(Listener));
-   if(EraseIter != _CommandListeners.end())
-   {
-      _CommandListeners.erase(EraseIter);
-   }
+    return _producerType;
 }
 
 void CommandManager::executeCommand(CommandPtr TheCommand)
 {
 	TheCommand->execute();
-	produceCommandExecuted(TheCommand);
+	CommandEventDetailsUnrecPtr Details = CommandEventDetails::create(NULL, getSystemTime(), TheCommand);
+
+    produceCommandExecuted(Details);
+
+	if(_UndoManager != NULL && 
+		TheCommand->getType().isDerivedFrom(UndoableCommand::getClassType()))
+	{
+	    UndoableEditEventDetailsUnrecPtr UndoableDetails = UndoableEditEventDetails::create(NULL, Details->getTimeStamp(), dynamic_pointer_cast<UndoableCommand>(TheCommand));
+		_UndoManager->handleUndoableEditHappened(UndoableDetails);
+	}
 
 }
 

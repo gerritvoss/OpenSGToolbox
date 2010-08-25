@@ -70,10 +70,7 @@
 
 #include "OSGUIViewportFields.h"
 
-//Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
+#include "OSGChangeEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -92,6 +89,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewportBase : public ComponentConta
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(UIViewport);
+    
+    
+    typedef ChangeEventDetails StateChangedEventDetailsType;
+
+    typedef boost::signals2::signal<void (ChangeEventDetails* const, UInt32), ConsumableEventCombiner> StateChangedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -120,8 +122,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewportBase : public ComponentConta
 
     enum
     {
-        StateChangedMethodId = Inherited::NextProducedMethodId,
-        NextProducedMethodId = StateChangedMethodId + 1
+        StateChangedEventId = Inherited::NextProducedEventId,
+        NextProducedEventId = StateChangedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -200,12 +202,42 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewportBase : public ComponentConta
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //StateChanged
+    boost::signals2::connection connectStateChanged   (const StateChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectStateChanged   (const StateChangedEventType::group_type &group,
+                                                       const StateChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectStateChanged           (const StateChangedEventType::group_type &group);
+    void   disconnectAllSlotsStateChanged   (void);
+    bool   isEmptyStateChanged              (void) const;
+    UInt32 numSlotsStateChanged             (void) const;
+    
+    
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
@@ -237,6 +269,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewportBase : public ComponentConta
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Produced Event Signals                   */
+    /*! \{                                                                 */
+
+    //Event Event producers
+    StateChangedEventType _StateChangedEvent;
+    /*! \}                                                                 */
 
     static TypeObject _type;
 
@@ -287,6 +326,20 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewportBase : public ComponentConta
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleStateChangedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceStateChanged        (StateChangedEventDetailsType* const e);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -335,7 +388,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewportBase : public ComponentConta
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

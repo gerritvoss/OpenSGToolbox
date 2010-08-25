@@ -47,9 +47,13 @@
 #include "OSGContribUserInterfaceDef.h"
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
-#include "OSGChangeListener.h"
 
-#include "OSGEventConnection.h"
+#include <boost/function.hpp>
+#include "OSGEventDescription.h"
+#include "OSGConsumableEventCombiner.h"
+#include "OSGChangeEventDetailsFields.h"
+#include "OSGEventProducerType.h"
+#include "OSGActivity.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -63,16 +67,36 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING IllegalArgumentException : public std:
 
 class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerModel
 {
-  private:
-  protected:
   public:
+    typedef ChangeEventDetails StateChangedEventDetailsType;
+    typedef boost::signals2::signal<void (StateChangedEventDetailsType* const, UInt32), ConsumableEventCombiner> StateChangedEventType;
 
-    //Adds a ChangeListener to the model's listener list.
-    virtual EventConnection addChangeListener(ChangeListenerPtr l) = 0;
-    virtual bool isChangeListenerAttached(ChangeListenerPtr l) const = 0;
+    enum
+    {
+        StateChangedEventId = 1,
+        NextEventId     = StateChangedEventId            + 1
+    };
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
+    virtual const EventProducerType &getProducerType(void) const; 
 
-    //Removes a ChangeListener from the model's listener list.
-    virtual void removeChangeListener(ChangeListenerPtr l) = 0;
+    boost::signals2::connection          attachActivity(UInt32 eventId,
+                                                       Activity* TheActivity);
+    UInt32                   getNumProducedEvents(void)          const;
+    const EventDescription *getProducedEventDescription(const   Char8 *ProducedEventName) const;
+    const EventDescription *getProducedEventDescription(UInt32  ProducedEventId) const;
+    UInt32                   getProducedEventId(const            Char8 *ProducedEventName) const;
+
+    boost::signals2::connection connectStateChanged(const StateChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectStateChanged(const StateChangedEventType::group_type &group,
+                                                       const StateChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectStateChanged       (const StateChangedEventType::group_type &group);
+    void   disconnectAllSlotsStateChanged(void);
+    bool   isEmptyStateChanged          (void) const;
+    UInt32 numSlotsStateChanged         (void) const;
+
 
     //Return the object in the sequence that comes after the object returned by getValue().
     virtual boost::any getNextValue(void) = 0;
@@ -90,6 +114,15 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerModel
     virtual void setValue(const std::string& value) = 0;
 
     virtual std::string getModelName(void) const = 0;
+  private:
+  protected:
+
+    static EventDescription   *_eventDesc[];
+    static EventProducerType _producerType;
+    StateChangedEventType _StateChangedEvent;
+    
+    void produceStateChanged(StateChangedEventDetailsType* const e);
+
 };
 
 typedef boost::shared_ptr<SpinnerModel> SpinnerModelPtr;
@@ -100,6 +133,8 @@ SpinnerModelPtr OSG_CONTRIBUSERINTERFACE_DLLMAPPING createDefaultNumberSpinnerMo
 SpinnerModelPtr OSG_CONTRIBUSERINTERFACE_DLLMAPPING createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle);
 
 OSG_END_NAMESPACE
+
+#include "OSGSpinnerModel.inl"
 
 #endif /* _OSG_UI_SPINNER_MODEL_H_ */
 

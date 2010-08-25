@@ -49,9 +49,6 @@
 #include "OSGVector.h"
 
 #include "OSGGLViewportBase.h"
-#include "OSGMouseAdapter.h"
-#include "OSGMouseMotionAdapter.h"
-#include "OSGKeyAdapter.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,9 +91,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
     void set(const Matrix& m);
     void setMode(Navigator::Mode TheMode);
 
-    virtual void mousePressed(const MouseEventUnrecPtr e);
-    virtual void keyTyped(const KeyEventUnrecPtr e);
-    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
+    virtual void mousePressed(MouseEventDetails* const e);
+    virtual void keyTyped(KeyEventDetails* const e);
+    virtual void mouseWheelMoved(MouseWheelEventDetails* const e);
 
     void setMultipliers(Real32 YawMultiplier,Real32 PitchMultiplier,Real32 RollMultiplier);
     void setClamps(Vec2f YawClamp,Vec2f PitchClamp,Vec2f RollClamp);
@@ -169,25 +166,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
 
     void updateView(void);
 
-	class MouseControlListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
-	{
-	public :
-		MouseControlListener(GLViewport* const TheGLViewport);
-		
-		virtual void mouseReleased(const MouseEventUnrecPtr e);
-		virtual void mouseDragged(const MouseEventUnrecPtr e);
-		virtual void keyPressed(const KeyEventUnrecPtr e);
+	void handleNavMouseReleased(MouseEventDetails* const e);
+	void handleNavMouseDragged(MouseEventDetails* const e);
+	void handleNavKeyPressed(KeyEventDetails* const e);
+    boost::signals2::connection _NavMouseReleasedConnection,
+                                _NavMouseDraggedConnection,
+                                _NavKeyPressedConnection;
+    Matrix _InitialMat;
 
-		void setInitialMat(const Matrix& Mat);
-        void disconnect(void);
-	protected :
-		GLViewport* _GLViewport;
-		Matrix _InitialMat;
-	};
-
-	friend class MouseControlListener;
-
-	MouseControlListener _MouseControlListener;
     /*==========================  PRIVATE  ================================*/
 
   private:

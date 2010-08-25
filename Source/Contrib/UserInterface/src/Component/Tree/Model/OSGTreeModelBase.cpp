@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -109,19 +109,6 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void TreeModelBase::classDescInserter(TypeObject &oType)
 {
-    FieldDescriptionBase *pDesc = NULL;
-
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&TreeModel::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&TreeModel::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -152,64 +139,79 @@ TreeModelBase::TypeObject TreeModelBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI TreeModel.\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeNodesChanged\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeNodesInserted\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeNodesRemoved\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeNodesWillBeRemoved\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"TreeStructureChanged\"\n"
-    "\t\ttype=\"TreeModelEventPtr\"\n"
+    "\t\tdetailsType=\"TreeModelEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI TreeModel.\n"
     );
 
-//! TreeModel Produced Methods
+//! TreeModel Produced Events
 
-MethodDescription *TreeModelBase::_methodDesc[] =
+EventDescription *TreeModelBase::_eventDesc[] =
 {
-    new MethodDescription("TreeNodesChanged", 
-                    "",
-                     TreeNodesChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeNodesInserted", 
-                    "",
-                     TreeNodesInsertedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeNodesRemoved", 
-                    "",
-                     TreeNodesRemovedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeNodesWillBeRemoved", 
-                    "",
-                     TreeNodesWillBeRemovedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("TreeStructureChanged", 
-                    "",
-                     TreeStructureChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("TreeNodesChanged", 
+                          "",
+                          TreeNodesChangedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelBase::getHandleTreeNodesChangedSignal)),
+
+    new EventDescription("TreeNodesInserted", 
+                          "",
+                          TreeNodesInsertedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelBase::getHandleTreeNodesInsertedSignal)),
+
+    new EventDescription("TreeNodesRemoved", 
+                          "",
+                          TreeNodesRemovedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelBase::getHandleTreeNodesRemovedSignal)),
+
+    new EventDescription("TreeNodesWillBeRemoved", 
+                          "",
+                          TreeNodesWillBeRemovedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelBase::getHandleTreeNodesWillBeRemovedSignal)),
+
+    new EventDescription("TreeStructureChanged", 
+                          "",
+                          TreeStructureChangedEventId, 
+                          FieldTraits<TreeModelEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TreeModelBase::getHandleTreeStructureChangedSignal))
+
 };
 
 EventProducerType TreeModelBase::_producerType(
@@ -217,8 +219,8 @@ EventProducerType TreeModelBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -255,10 +257,6 @@ UInt32 TreeModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -268,10 +266,6 @@ void TreeModelBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void TreeModelBase::copyFromBin(BinaryDataHandler &pMem,
@@ -279,28 +273,224 @@ void TreeModelBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 }
 
 
+
+/*------------------------- event producers ----------------------------------*/
+void TreeModelBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case TreeNodesChangedEventId:
+        OSG_ASSERT(dynamic_cast<TreeNodesChangedEventDetailsType* const>(e));
+
+        _TreeNodesChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeNodesChangedEvent(dynamic_cast<TreeNodesChangedEventDetailsType* const>(e), TreeNodesChangedEventId);
+        break;
+    case TreeNodesInsertedEventId:
+        OSG_ASSERT(dynamic_cast<TreeNodesInsertedEventDetailsType* const>(e));
+
+        _TreeNodesInsertedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeNodesInsertedEvent(dynamic_cast<TreeNodesInsertedEventDetailsType* const>(e), TreeNodesInsertedEventId);
+        break;
+    case TreeNodesRemovedEventId:
+        OSG_ASSERT(dynamic_cast<TreeNodesRemovedEventDetailsType* const>(e));
+
+        _TreeNodesRemovedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeNodesRemovedEvent(dynamic_cast<TreeNodesRemovedEventDetailsType* const>(e), TreeNodesRemovedEventId);
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        OSG_ASSERT(dynamic_cast<TreeNodesWillBeRemovedEventDetailsType* const>(e));
+
+        _TreeNodesWillBeRemovedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeNodesWillBeRemovedEvent(dynamic_cast<TreeNodesWillBeRemovedEventDetailsType* const>(e), TreeNodesWillBeRemovedEventId);
+        break;
+    case TreeStructureChangedEventId:
+        OSG_ASSERT(dynamic_cast<TreeStructureChangedEventDetailsType* const>(e));
+
+        _TreeStructureChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _TreeStructureChangedEvent(dynamic_cast<TreeStructureChangedEventDetailsType* const>(e), TreeStructureChangedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection TreeModelBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case TreeNodesChangedEventId:
+        return _TreeNodesChangedEvent.connect(listener, at);
+        break;
+    case TreeNodesInsertedEventId:
+        return _TreeNodesInsertedEvent.connect(listener, at);
+        break;
+    case TreeNodesRemovedEventId:
+        return _TreeNodesRemovedEvent.connect(listener, at);
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        return _TreeNodesWillBeRemovedEvent.connect(listener, at);
+        break;
+    case TreeStructureChangedEventId:
+        return _TreeStructureChangedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  TreeModelBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case TreeNodesChangedEventId:
+        return _TreeNodesChangedEvent.connect(group, listener, at);
+        break;
+    case TreeNodesInsertedEventId:
+        return _TreeNodesInsertedEvent.connect(group, listener, at);
+        break;
+    case TreeNodesRemovedEventId:
+        return _TreeNodesRemovedEvent.connect(group, listener, at);
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        return _TreeNodesWillBeRemovedEvent.connect(group, listener, at);
+        break;
+    case TreeStructureChangedEventId:
+        return _TreeStructureChangedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  TreeModelBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case TreeNodesChangedEventId:
+        _TreeNodesChangedEvent.disconnect(group);
+        break;
+    case TreeNodesInsertedEventId:
+        _TreeNodesInsertedEvent.disconnect(group);
+        break;
+    case TreeNodesRemovedEventId:
+        _TreeNodesRemovedEvent.disconnect(group);
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        _TreeNodesWillBeRemovedEvent.disconnect(group);
+        break;
+    case TreeStructureChangedEventId:
+        _TreeStructureChangedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  TreeModelBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case TreeNodesChangedEventId:
+        _TreeNodesChangedEvent.disconnect_all_slots();
+        break;
+    case TreeNodesInsertedEventId:
+        _TreeNodesInsertedEvent.disconnect_all_slots();
+        break;
+    case TreeNodesRemovedEventId:
+        _TreeNodesRemovedEvent.disconnect_all_slots();
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        _TreeNodesWillBeRemovedEvent.disconnect_all_slots();
+        break;
+    case TreeStructureChangedEventId:
+        _TreeStructureChangedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  TreeModelBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case TreeNodesChangedEventId:
+        return _TreeNodesChangedEvent.empty();
+        break;
+    case TreeNodesInsertedEventId:
+        return _TreeNodesInsertedEvent.empty();
+        break;
+    case TreeNodesRemovedEventId:
+        return _TreeNodesRemovedEvent.empty();
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        return _TreeNodesWillBeRemovedEvent.empty();
+        break;
+    case TreeStructureChangedEventId:
+        return _TreeStructureChangedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  TreeModelBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case TreeNodesChangedEventId:
+        return _TreeNodesChangedEvent.num_slots();
+        break;
+    case TreeNodesInsertedEventId:
+        return _TreeNodesInsertedEvent.num_slots();
+        break;
+    case TreeNodesRemovedEventId:
+        return _TreeNodesRemovedEvent.num_slots();
+        break;
+    case TreeNodesWillBeRemovedEventId:
+        return _TreeNodesWillBeRemovedEvent.num_slots();
+        break;
+    case TreeStructureChangedEventId:
+        return _TreeStructureChangedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
 
 
 /*------------------------- constructors ----------------------------------*/
 
 TreeModelBase::TreeModelBase(void) :
-    _Producer(&getProducerType()),
-    Inherited(),
-    _sfEventProducer(&_Producer)
+    Inherited()
 {
 }
 
 TreeModelBase::TreeModelBase(const TreeModelBase &source) :
-    _Producer(&source.getProducerType()),
-    Inherited(source),
-    _sfEventProducer(&_Producer)
+    Inherited(source)
 {
 }
 
@@ -313,27 +503,57 @@ TreeModelBase::~TreeModelBase(void)
 
 
 
-GetFieldHandlePtr TreeModelBase::getHandleEventProducer        (void) const
+GetEventHandlePtr TreeModelBase::getHandleTreeNodesChangedSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeNodesChangedEventType>(
+             const_cast<TreeNodesChangedEventType *>(&_TreeNodesChangedEvent),
+             _producerType.getEventDescription(TreeNodesChangedEventId),
              const_cast<TreeModelBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr TreeModelBase::editHandleEventProducer       (void)
+GetEventHandlePtr TreeModelBase::getHandleTreeNodesInsertedSignal(void) const
 {
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeNodesInsertedEventType>(
+             const_cast<TreeNodesInsertedEventType *>(&_TreeNodesInsertedEvent),
+             _producerType.getEventDescription(TreeNodesInsertedEventId),
+             const_cast<TreeModelBase *>(this)));
 
+    return returnValue;
+}
 
-    editSField(EventProducerFieldMask);
+GetEventHandlePtr TreeModelBase::getHandleTreeNodesRemovedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeNodesRemovedEventType>(
+             const_cast<TreeNodesRemovedEventType *>(&_TreeNodesRemovedEvent),
+             _producerType.getEventDescription(TreeNodesRemovedEventId),
+             const_cast<TreeModelBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TreeModelBase::getHandleTreeNodesWillBeRemovedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeNodesWillBeRemovedEventType>(
+             const_cast<TreeNodesWillBeRemovedEventType *>(&_TreeNodesWillBeRemovedEvent),
+             _producerType.getEventDescription(TreeNodesWillBeRemovedEventId),
+             const_cast<TreeModelBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr TreeModelBase::getHandleTreeStructureChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<TreeStructureChangedEventType>(
+             const_cast<TreeStructureChangedEventType *>(&_TreeStructureChangedEvent),
+             _producerType.getEventDescription(TreeStructureChangedEventId),
+             const_cast<TreeModelBase *>(this)));
 
     return returnValue;
 }

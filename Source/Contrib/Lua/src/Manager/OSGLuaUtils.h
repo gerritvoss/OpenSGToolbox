@@ -51,6 +51,7 @@
 #include <vector>
 #include <map>
 
+#define OSG_WITH_LUA_DEBUGGER
 #ifdef OSG_WITH_LUA_DEBUGGER
 
 OSG_BEGIN_NAMESPACE
@@ -80,13 +81,16 @@ namespace lua_details
         Thread        =  8
     };
 
-    struct Value	// value on a virtual stack or elsewhere
+    struct OSG_CONTRIBLUA_DLLMAPPING Value	// value on a virtual stack or elsewhere
     {
         Value(void);
 
         ValType type;
         const Char8* type_name;
         std::string value;	// simplified string representation of value
+
+        bool push(lua_State* L) const;
+        bool operator==(const Value& Right) const;
     };
 
     typedef std::vector<Value> ValueStack;
@@ -97,13 +101,16 @@ namespace lua_details
         Value v;
     };
 
-    struct LuaField	// table entry
+    struct OSG_CONTRIBLUA_DLLMAPPING LuaField	// table entry
     {
         Value key;
         Value val;
+
+        bool operator==(const LuaField& Right) const;
     };
 
     typedef std::vector<LuaField> TableInfo;
+    typedef std::vector<LuaField> FieldStack;
 
     struct StackFrame
     {
@@ -225,12 +232,13 @@ namespace lua_details
         int num_;
     };
 
-    char* OSG_CONTRIBLUA_DLLMAPPING to_pointer(char* buffer, const void* ptr);
+    char OSG_CONTRIBLUA_DLLMAPPING *to_pointer(char* buffer, const void* ptr);
 
     std::string OSG_CONTRIBLUA_DLLMAPPING to_table(lua_State* L, int index);
 
     bool OSG_CONTRIBLUA_DLLMAPPING list_table(lua_State* L, int idx, TableInfo& out, int recursive= 0);
 
+    UInt32 OSG_CONTRIBLUA_DLLMAPPING get_num_fields(lua_State* L, int idx);
 
     std::string OSG_CONTRIBLUA_DLLMAPPING table_as_string(const TableInfo& table, size_t limit);
 
@@ -241,6 +249,9 @@ namespace lua_details
 
     // fill stack frame variable with info from Lua debug struct
     void OSG_CONTRIBLUA_DLLMAPPING fill_frame(const lua_Debug& dbg, StackFrame& frame);
+    
+
+    bool OSG_CONTRIBLUA_DLLMAPPING pushFieldOntoStack(lua_State* L, const FieldStack& theNode);
 
 
 }

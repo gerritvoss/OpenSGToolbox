@@ -152,49 +152,49 @@ void WindowsLookAndFeel::initMethod(InitPhase ePhase)
 
 void WindowsLookAndFeel::init(void)
 {
-    ButtonRefPtr WindowsButton = Button::create();
-    LabelRefPtr WindowsLabel = Label::create();
-    InternalWindowRefPtr WindowsInternalWindow = InternalWindow::create();
-    DialogWindowRefPtr WindowsDialogWindow = DialogWindow::create();
-    PanelRefPtr WindowsPanel = Panel::create();
-    //ToolbarRefPtr WindowsToolbar = Toolbar::create();
-    SplitPanelRefPtr WindowsSplitPanel = SplitPanel::create();
-    TabPanelRefPtr WindowsTabPanel = TabPanel::create();
-    ImageComponentRefPtr WindowsImageComponent = ImageComponent::create();
-    CheckboxButtonRefPtr WindowsCheckboxButton = CheckboxButton::create();
-    RadioButtonRefPtr WindowsRadioButton = RadioButton::create();
-    ToggleButtonRefPtr WindowsToggleButton = ToggleButton::create();
-    TextFieldRefPtr WindowsTextField = TextField::create();
-    PasswordFieldRefPtr WindowsPasswordField = PasswordField::create();
-    TextAreaRefPtr WindowsTextArea = TextArea::create();
-    ToolTipRefPtr WindowsToolTip = ToolTip::create();
-    ScrollBarRefPtr WindowsScrollBar = ScrollBar::create();
-    ScrollPanelRefPtr WindowsScrollPanel = ScrollPanel::create();
-    UIViewportRefPtr WindowsUIViewport = UIViewport::create();
-    RotatedComponentRefPtr WindowsRotatedComponent = RotatedComponent::create();
-    DefaultListComponentGeneratorRefPtr WindowsDefaultListComponentGenerator = DefaultListComponentGenerator::create();
-    ListRefPtr WindowsList = List::create();
-    SpinnerRefPtr WindowsSpinner = Spinner::create();
-    SpinnerDefaultEditorRefPtr WindowsSpinnerDefaultEditor = SpinnerDefaultEditor::create();
-    SpinnerNumberEditorRefPtr WindowsSpinnerNumberEditor = SpinnerNumberEditor::create();
-    SeparatorRefPtr WindowsSeparator = Separator::create();
-    ProgressBarRefPtr WindowsProgressBar = ProgressBar::create();
-    SliderRefPtr WindowsSlider = Slider::create();
-    DefaultComboBoxComponentGeneratorRefPtr WindowsDefaultComboBoxComponentGenerator = DefaultComboBoxComponentGenerator::create();
-    ComboBoxRefPtr WindowsComboBox = ComboBox::create();
-    TableHeaderRefPtr WindowsTableHeader = TableHeader::create();
-    TableRefPtr WindowsTable = Table::create();
-    DefaultTreeCellEditorRefPtr WindowsDefaultTreeCellEditor = DefaultTreeCellEditor::create();
-    DefaultTreeComponentGeneratorRefPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::create();
-    TreeRefPtr WindowsTree = Tree::create();
-    ColorChooserRefPtr WindowsColorChooser = ColorChooser::create();
-    MenuItemRefPtr WindowsMenuItem = MenuItem::create();
-    ComponentMenuItemRefPtr WindowsComponentMenuItem = ComponentMenuItem::create();
-    PopupMenuRefPtr WindowsPopupMenu = PopupMenu::create();
-    MenuRefPtr WindowsMenu = Menu::create();
-    MenuBarRefPtr WindowsMenuBar = MenuBar::create();
-    MenuButtonRefPtr WindowsMenuButton = MenuButton::create();
-    ListGeneratedPopupMenuRefPtr WindowsListGeneratedPopupMenu = ListGeneratedPopupMenu::create();
+    ButtonRefPtr WindowsButton = Button::createEmpty();
+    LabelRefPtr WindowsLabel = Label::createEmpty();
+    InternalWindowRefPtr WindowsInternalWindow = InternalWindow::createEmpty();
+    DialogWindowRefPtr WindowsDialogWindow = DialogWindow::createEmpty();
+    PanelRefPtr WindowsPanel = Panel::createEmpty();
+    //ToolbarRefPtr WindowsToolbar = Toolbar::createEmpty();
+    SplitPanelRefPtr WindowsSplitPanel = SplitPanel::createEmpty();
+    TabPanelRefPtr WindowsTabPanel = TabPanel::createEmpty();
+    ImageComponentRefPtr WindowsImageComponent = ImageComponent::createEmpty();
+    CheckboxButtonRefPtr WindowsCheckboxButton = CheckboxButton::createEmpty();
+    RadioButtonRefPtr WindowsRadioButton = RadioButton::createEmpty();
+    ToggleButtonRefPtr WindowsToggleButton = ToggleButton::createEmpty();
+    TextFieldRefPtr WindowsTextField = TextField::createEmpty();
+    PasswordFieldRefPtr WindowsPasswordField = PasswordField::createEmpty();
+    TextAreaRefPtr WindowsTextArea = TextArea::createEmpty();
+    ToolTipRefPtr WindowsToolTip = ToolTip::createEmpty();
+    ScrollBarRefPtr WindowsScrollBar = ScrollBar::createEmpty();
+    ScrollPanelRefPtr WindowsScrollPanel = ScrollPanel::createEmpty();
+    UIViewportRefPtr WindowsUIViewport = UIViewport::createEmpty();
+    RotatedComponentRefPtr WindowsRotatedComponent = RotatedComponent::createEmpty();
+    DefaultListComponentGeneratorRefPtr WindowsDefaultListComponentGenerator = DefaultListComponentGenerator::createEmpty();
+    ListRefPtr WindowsList = List::createEmpty();
+    SpinnerRefPtr WindowsSpinner = Spinner::createEmpty();
+    SpinnerDefaultEditorRefPtr WindowsSpinnerDefaultEditor = SpinnerDefaultEditor::createEmpty();
+    SpinnerNumberEditorRefPtr WindowsSpinnerNumberEditor = SpinnerNumberEditor::createEmpty();
+    SeparatorRefPtr WindowsSeparator = Separator::createEmpty();
+    ProgressBarRefPtr WindowsProgressBar = ProgressBar::createEmpty();
+    SliderRefPtr WindowsSlider = Slider::createEmpty();
+    DefaultComboBoxComponentGeneratorRefPtr WindowsDefaultComboBoxComponentGenerator = DefaultComboBoxComponentGenerator::createEmpty();
+    ComboBoxRefPtr WindowsComboBox = ComboBox::createEmpty();
+    TableHeaderRefPtr WindowsTableHeader = TableHeader::createEmpty();
+    TableRefPtr WindowsTable = Table::createEmpty();
+    DefaultTreeCellEditorRefPtr WindowsDefaultTreeCellEditor = DefaultTreeCellEditor::createEmpty();
+    DefaultTreeComponentGeneratorRefPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::createEmpty();
+    TreeRefPtr WindowsTree = Tree::createEmpty();
+    ColorChooserRefPtr WindowsColorChooser = ColorChooser::createEmpty();
+    MenuItemRefPtr WindowsMenuItem = MenuItem::createEmpty();
+    ComponentMenuItemRefPtr WindowsComponentMenuItem = ComponentMenuItem::createEmpty();
+    PopupMenuRefPtr WindowsPopupMenu = PopupMenu::createEmpty();
+    MenuRefPtr WindowsMenu = Menu::createEmpty();
+    MenuBarRefPtr WindowsMenuBar = MenuBar::createEmpty();
+    MenuButtonRefPtr WindowsMenuButton = MenuButton::createEmpty();
+    ListGeneratedPopupMenuRefPtr WindowsListGeneratedPopupMenu = ListGeneratedPopupMenu::createEmpty();
 
     pushToPrototypes(WindowsButton);
     pushToPrototypes(WindowsMenuButton);
@@ -1835,7 +1835,7 @@ void WindowsLookAndFeel::init(void)
 
     //Accelerators
     WindowsMenuItem->setAcceleratorModifiers(0);
-    WindowsMenuItem->setAcceleratorKey(KeyEvent::KEY_NONE);
+    WindowsMenuItem->setAcceleratorKey(KeyEventDetails::KEY_NONE);
 
     //Selected
     WindowsMenuItem->setSelected(false);
@@ -1890,7 +1890,7 @@ void WindowsLookAndFeel::init(void)
 
     //Accelerators
     WindowsComponentMenuItem->setAcceleratorModifiers(0);
-    WindowsComponentMenuItem->setAcceleratorKey(KeyEvent::KEY_NONE);
+    WindowsComponentMenuItem->setAcceleratorKey(KeyEventDetails::KEY_NONE);
 
     //Selected
     WindowsComponentMenuItem->setSelected(false);
@@ -1957,7 +1957,7 @@ void WindowsLookAndFeel::init(void)
 
     //Accelerators
     WindowsMenu->setAcceleratorModifiers(0);
-    WindowsMenu->setAcceleratorKey(KeyEvent::KEY_NONE);
+    WindowsMenu->setAcceleratorKey(KeyEventDetails::KEY_NONE);
 
     //Selected
     WindowsMenu->setSelected(false);
@@ -3731,7 +3731,6 @@ void WindowsLookAndFeel::init(void)
     WindowsTableHeader->setOpacity(1.0);
 
     //Table Values
-    WindowsTableHeader->setTable(NULL);
     WindowsTableHeader->setReorderingAllowed(true);
     WindowsTableHeader->setResizingAllowed(true);
     WindowsTableHeader->setDefaultMarginDrawObject(NULL);
@@ -4042,8 +4041,7 @@ void WindowsLookAndFeel::init(void)
     WindowsColorChooser->setOpacity(1.0);
 
     //ColorChooser Values
-    WindowsColorChooser->addChooserPanel(WindowsRGBColorChooserPanel);
-    //WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
+    WindowsColorChooser->editMFChooserPanelTypeIds()->push_back(RGBColorChooserPanel::getClassType().getId());
     WindowsColorChooser->setPreviewPanel(NULL);
 
     initUndefinedPrototypes();

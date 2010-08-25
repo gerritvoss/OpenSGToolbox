@@ -16,7 +16,7 @@
 	<Field
 		name="Beacon"
 		type="Node"
-        category="pointer"
+        category="weakpointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -259,29 +259,34 @@
 	>
     The Size of the Largest particle in this system
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="SystemUpdated"
-		type="ParticleSystemEvent"
+		detailsType="ParticleSystemEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="VolumeChanged"
-		type="ParticleSystemEvent"
+		detailsType="ParticleSystemEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ParticleGenerated"
-		type="ParticleEvent"
+		detailsType="ParticleEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ParticleKilled"
-		type="ParticleEvent"
+		detailsType="ParticleEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ParticleStolen"
-		type="ParticleEvent"
+		detailsType="ParticleEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

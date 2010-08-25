@@ -67,7 +67,7 @@
 
 #include "OSGSysFields.h"               // Erp type
 #include "OSGVecFields.h"               // Gravity type
-#include "OSGPhysicsHandlerFields.h"    // InternalParentHandler type
+#include "OSGFieldContainerFields.h"    // ParentHandler type
 
 #include "OSGPhysicsWorldFields.h"
 
@@ -88,6 +88,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsWorld);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -106,8 +108,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
         WorldQuickStepNumIterationsFieldId = AutoDisableTimeFieldId + 1,
         WorldContactMaxCorrectingVelFieldId = WorldQuickStepNumIterationsFieldId + 1,
         WorldContactSurfaceLayerFieldId = WorldContactMaxCorrectingVelFieldId + 1,
-        InternalParentHandlerFieldId = WorldContactSurfaceLayerFieldId + 1,
-        NextFieldId = InternalParentHandlerFieldId + 1
+        ParentHandlerFieldId = WorldContactSurfaceLayerFieldId + 1,
+        NextFieldId = ParentHandlerFieldId + 1
     };
 
     static const OSG::BitVector ErpFieldMask =
@@ -132,8 +134,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
         (TypeTraits<BitVector>::One << WorldContactMaxCorrectingVelFieldId);
     static const OSG::BitVector WorldContactSurfaceLayerFieldMask =
         (TypeTraits<BitVector>::One << WorldContactSurfaceLayerFieldId);
-    static const OSG::BitVector InternalParentHandlerFieldMask =
-        (TypeTraits<BitVector>::One << InternalParentHandlerFieldId);
+    static const OSG::BitVector ParentHandlerFieldMask =
+        (TypeTraits<BitVector>::One << ParentHandlerFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -148,7 +150,7 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
     typedef SFInt32           SFWorldQuickStepNumIterationsType;
     typedef SFReal32          SFWorldContactMaxCorrectingVelType;
     typedef SFReal32          SFWorldContactSurfaceLayerType;
-    typedef SFUnrecPhysicsHandlerPtr SFInternalParentHandlerType;
+    typedef SFParentFieldContainerPtr SFParentHandlerType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -260,11 +262,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Ptr Field Set                                 */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
@@ -332,7 +329,7 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
     SFInt32           _sfWorldQuickStepNumIterations;
     SFReal32          _sfWorldContactMaxCorrectingVel;
     SFReal32          _sfWorldContactSurfaceLayer;
-    SFUnrecPhysicsHandlerPtr _sfInternalParentHandler;
+    SFParentFieldContainerPtr _sfParentHandler;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -354,7 +351,17 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
-    void onCreate(const PhysicsWorld *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -383,31 +390,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsWorldBase : public Attachment
     EditFieldHandlePtr editHandleWorldContactMaxCorrectingVel(void);
     GetFieldHandlePtr  getHandleWorldContactSurfaceLayer (void) const;
     EditFieldHandlePtr editHandleWorldContactSurfaceLayer(void);
-    GetFieldHandlePtr  getHandleInternalParentHandler (void) const;
-    EditFieldHandlePtr editHandleInternalParentHandler(void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-            const SFUnrecPhysicsHandlerPtr *getSFInternalParentHandler (void) const;
-                  SFUnrecPhysicsHandlerPtr *editSFInternalParentHandler(void);
-
-
-                  PhysicsHandler * getInternalParentHandler(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-            void setInternalParentHandler(PhysicsHandler * const value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr MField Set                                */
-    /*! \{                                                                 */
+    GetFieldHandlePtr  getHandleParentHandler   (void) const;
+    EditFieldHandlePtr editHandleParentHandler  (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

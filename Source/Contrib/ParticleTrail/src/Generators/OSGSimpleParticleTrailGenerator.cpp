@@ -84,7 +84,7 @@ void SimpleParticleTrailGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void SimpleParticleTrailGenerator::internalUpdate(const ParticleSystemEventUnrecPtr e)
+void SimpleParticleTrailGenerator::internalUpdate(ParticleSystemEventDetails* const details)
 {	
     static int updates(0);
     static int nonUpdates(0);
@@ -108,12 +108,12 @@ void SimpleParticleTrailGenerator::internalUpdate(const ParticleSystemEventUnrec
     return;
 }
 
-void SimpleParticleTrailGenerator::internalKill(const ParticleEventUnrecPtr e)
+void SimpleParticleTrailGenerator::internalKill(ParticleEventDetails* const details)
 {	// since a particle was killed, we need a full update
     updateNeeded = true;
 }
 
-void SimpleParticleTrailGenerator::internalGenerated(const ParticleEventUnrecPtr e)
+void SimpleParticleTrailGenerator::internalGenerated(ParticleEventDetails* const details)
 {	// since a particle was generated, we need a full update
     updateNeeded = true;
 }
@@ -132,11 +132,24 @@ void SimpleParticleTrailGenerator::internalTrailSectKilled(const TrailSection& t
 
 void SimpleParticleTrailGenerator::updatePoints(void)
 {
-    GeoUInt32PropertyRecPtr types = GeoUInt32Property::create();
+    GeometryRecPtr geo = dynamic_cast<Geometry*>(getCore());
+    
+    GeoUInt32PropertyRecPtr types = dynamic_cast<GeoUInt32Property*>(geo->getTypes());
+    if(types == NULL)
+    {
+        types = GeoUInt32Property::create();
+        geo->setTypes(types);
+    }
+    types->clear();
     types->addValue(GL_POINTS);
 
-    GeoPnt3fPropertyRecPtr pos = GeoPnt3fProperty::create();
-    // need to know the number of points to draw & those positions
+    GeoPnt3fPropertyRecPtr pos = dynamic_cast<GeoPnt3fProperty*>(geo->getPositions());
+    if(pos == NULL)
+    {
+        pos = GeoPnt3fProperty::create();
+        geo->setPositions(pos);
+    }
+    pos->clear();
     int numPnts(0);
     for(PTMItor it = _mTrails.begin(); it != _mTrails.end(); it++)
     {
@@ -156,21 +169,51 @@ void SimpleParticleTrailGenerator::updatePoints(void)
         }
     }
 
-    GeoUInt32PropertyRecPtr lengths = GeoUInt32Property::create();
+
+    GeoUInt32PropertyRecPtr lengths = dynamic_cast<GeoUInt32Property*>(geo->getLengths());
+    if(lengths == NULL)
+    {
+        lengths = GeoUInt32Property::create();
+        geo->setLengths(lengths);
+    }
+    lengths->clear();
     lengths->addValue(numPnts);   // # of pts to be drawn
 
-    GeometryRecPtr geo = dynamic_cast<Geometry*>(getCore());
-    geo->setTypes(types);
-    geo->setLengths(lengths);
-    geo->setPositions(pos);
+    if(numPnts == 0)
+    {
+        geo->setTypes(NULL);
+        geo->setLengths(NULL);
+        geo->setPositions(NULL);
+    }
 }
 
 void SimpleParticleTrailGenerator::updateLines(void)
 {
+    GeometryRecPtr geo = dynamic_cast<Geometry*>(getCore());
+    
+    GeoUInt32PropertyRecPtr types = dynamic_cast<GeoUInt32Property*>(geo->getTypes());
+    if(types == NULL)
+    {
+        types = GeoUInt32Property::create();
+        geo->setTypes(types);
+    }
+    types->clear();
 
-    GeoUInt32PropertyRecPtr types = GeoUInt32Property::create();
-    GeoPnt3fPropertyRecPtr pos = GeoPnt3fProperty::create();
-    GeoUInt32PropertyRecPtr lengths = GeoUInt32Property::create();
+    GeoPnt3fPropertyRecPtr pos = dynamic_cast<GeoPnt3fProperty*>(geo->getPositions());
+    if(pos == NULL)
+    {
+        pos = GeoPnt3fProperty::create();
+        geo->setPositions(pos);
+    }
+    pos->clear();
+
+    GeoUInt32PropertyRecPtr lengths = dynamic_cast<GeoUInt32Property*>(geo->getLengths());
+    if(lengths == NULL)
+    {
+        lengths = GeoUInt32Property::create();
+        geo->setLengths(lengths);
+    }
+    lengths->clear();
 
     for(PTMItor it = _mTrails.begin(); it != _mTrails.end(); it++)
     {
@@ -198,10 +241,12 @@ void SimpleParticleTrailGenerator::updateLines(void)
         }
     }
 
-    GeometryRecPtr geo = dynamic_cast<Geometry*>(getCore());
-    geo->setTypes(types);
-    geo->setLengths(lengths);
-    geo->setPositions(pos);
+    if(lengths->size() == 0)
+    {
+        geo->setTypes(NULL);
+        geo->setLengths(NULL);
+        geo->setPositions(NULL);
+    }
 }
 
 Material* SimpleParticleTrailGenerator::getTrailMaterial() const

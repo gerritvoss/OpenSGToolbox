@@ -89,6 +89,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandlerBase : public Attachment
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsHandler);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -117,9 +119,9 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandlerBase : public Attachment
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecPhysicsWorldPtr SFWorldType;
-    typedef MFUnrecPhysicsSpacePtr MFSpacesType;
-    typedef SFUnrecNodePtr    SFUpdateNodeType;
+    typedef SFUnrecChildPhysicsWorldPtr SFWorldType;
+    typedef MFUnrecChildPhysicsSpacePtr MFSpacesType;
+    typedef SFWeakNodePtr     SFUpdateNodeType;
     typedef SFReal32          SFStepSizeType;
     typedef SFUInt32          SFMaxStepsPerUpdateType;
 
@@ -146,12 +148,11 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandlerBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecPhysicsWorldPtr *getSFWorld          (void) const;
-                  SFUnrecPhysicsWorldPtr *editSFWorld          (void);
-            const MFUnrecPhysicsSpacePtr *getMFSpaces         (void) const;
-                  MFUnrecPhysicsSpacePtr *editMFSpaces         (void);
-            const SFUnrecNodePtr      *getSFUpdateNode     (void) const;
-                  SFUnrecNodePtr      *editSFUpdateNode     (void);
+            const SFUnrecChildPhysicsWorldPtr *getSFWorld          (void) const;
+                  SFUnrecChildPhysicsWorldPtr *editSFWorld          (void);
+            const MFUnrecChildPhysicsSpacePtr *getMFSpaces         (void) const;
+            const SFWeakNodePtr       *getSFUpdateNode     (void) const;
+                  SFWeakNodePtr       *editSFUpdateNode     (void);
 
                   SFReal32            *editSFStepSize       (void);
             const SFReal32            *getSFStepSize        (void) const;
@@ -193,10 +194,16 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandlerBase : public Attachment
     /*! \{                                                                 */
 
     void pushToSpaces              (PhysicsSpace * const value   );
-    void assignSpaces             (const MFUnrecPhysicsSpacePtr &value);
+    void assignSpaces             (const MFUnrecChildPhysicsSpacePtr &value);
+    void clearSpaces                (void                         );
+    void insertIntoSpaces      (UInt32               uiIndex,
+                                             PhysicsSpace * const value   );
+    void replaceInSpaces  (      UInt32         uiIndex,
+                                             PhysicsSpace * const value   );
+    void replaceObjInSpaces (PhysicsSpace * const pOldElem,
+                                             PhysicsSpace * const pNewElem);
     void removeFromSpaces (UInt32               uiIndex );
     void removeObjFromSpaces(PhysicsSpace * const value   );
-    void clearSpaces                (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -251,9 +258,9 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandlerBase : public Attachment
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecPhysicsWorldPtr _sfWorld;
-    MFUnrecPhysicsSpacePtr _mfSpaces;
-    SFUnrecNodePtr    _sfUpdateNode;
+    SFUnrecChildPhysicsWorldPtr _sfWorld;
+    MFUnrecChildPhysicsSpacePtr _mfSpaces;
+    SFWeakNodePtr     _sfUpdateNode;
     SFReal32          _sfStepSize;
     SFUInt32          _sfMaxStepsPerUpdate;
 
@@ -278,6 +285,14 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandlerBase : public Attachment
     /*! \{                                                                 */
 
     void onCreate(const PhysicsHandler *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Child linking                                                */
+    /*! \{                                                                 */
+
+    virtual bool unlinkChild(FieldContainer * const pChild,
+                             UInt16           const childFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

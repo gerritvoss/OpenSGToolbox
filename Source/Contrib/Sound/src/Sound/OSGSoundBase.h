@@ -72,10 +72,10 @@
 #include "OSGSoundFields.h"
 
 //Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+#include "OSGActivity.h"
+#include "OSGConsumableEventCombiner.h"
+
+#include "OSGSoundEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,6 +94,22 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(Sound);
+    
+    
+    typedef SoundEventDetails  SoundPlayedEventDetailsType;
+    typedef SoundEventDetails  SoundStoppedEventDetailsType;
+    typedef SoundEventDetails  SoundPausedEventDetailsType;
+    typedef SoundEventDetails  SoundUnpausedEventDetailsType;
+    typedef SoundEventDetails  SoundLoopedEventDetailsType;
+    typedef SoundEventDetails  SoundEndedEventDetailsType;
+
+    typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
+    typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundPlayedEventType;
+    typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundStoppedEventType;
+    typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundPausedEventType;
+    typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundUnpausedEventType;
+    typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundLoopedEventType;
+    typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundEndedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -110,8 +126,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
         StreamingFieldId = LoopingFieldId + 1,
         FileFieldId = StreamingFieldId + 1,
         Enable3DFieldId = FileFieldId + 1,
-        EventProducerFieldId = Enable3DFieldId + 1,
-        NextFieldId = EventProducerFieldId + 1
+        NextFieldId = Enable3DFieldId + 1
     };
 
     static const OSG::BitVector PositionFieldMask =
@@ -132,8 +147,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
         (TypeTraits<BitVector>::One << FileFieldId);
     static const OSG::BitVector Enable3DFieldMask =
         (TypeTraits<BitVector>::One << Enable3DFieldId);
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -146,17 +159,16 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     typedef SFBool            SFStreamingType;
     typedef SFBoostPath       SFFileType;
     typedef SFBool            SFEnable3DType;
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        SoundPlayedMethodId = 1,
-        SoundStoppedMethodId = SoundPlayedMethodId + 1,
-        SoundPausedMethodId = SoundStoppedMethodId + 1,
-        SoundUnpausedMethodId = SoundPausedMethodId + 1,
-        SoundLoopedMethodId = SoundUnpausedMethodId + 1,
-        SoundEndedMethodId = SoundLoopedMethodId + 1,
-        NextProducedMethodId = SoundEndedMethodId + 1
+        SoundPlayedEventId = 1,
+        SoundStoppedEventId = SoundPlayedEventId + 1,
+        SoundPausedEventId = SoundStoppedEventId + 1,
+        SoundUnpausedEventId = SoundPausedEventId + 1,
+        SoundLoopedEventId = SoundUnpausedEventId + 1,
+        SoundEndedEventId = SoundLoopedEventId + 1,
+        NextProducedEventId = SoundEndedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -274,40 +286,116 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //SoundPlayed
+    boost::signals2::connection connectSoundPlayed    (const SoundPlayedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSoundPlayed    (const SoundPlayedEventType::group_type &group,
+                                                       const SoundPlayedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSoundPlayed            (const SoundPlayedEventType::group_type &group);
+    void   disconnectAllSlotsSoundPlayed    (void);
+    bool   isEmptySoundPlayed               (void) const;
+    UInt32 numSlotsSoundPlayed              (void) const;
+    
+    //SoundStopped
+    boost::signals2::connection connectSoundStopped   (const SoundStoppedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSoundStopped   (const SoundStoppedEventType::group_type &group,
+                                                       const SoundStoppedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSoundStopped           (const SoundStoppedEventType::group_type &group);
+    void   disconnectAllSlotsSoundStopped   (void);
+    bool   isEmptySoundStopped              (void) const;
+    UInt32 numSlotsSoundStopped             (void) const;
+    
+    //SoundPaused
+    boost::signals2::connection connectSoundPaused    (const SoundPausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSoundPaused    (const SoundPausedEventType::group_type &group,
+                                                       const SoundPausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSoundPaused            (const SoundPausedEventType::group_type &group);
+    void   disconnectAllSlotsSoundPaused    (void);
+    bool   isEmptySoundPaused               (void) const;
+    UInt32 numSlotsSoundPaused              (void) const;
+    
+    //SoundUnpaused
+    boost::signals2::connection connectSoundUnpaused  (const SoundUnpausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSoundUnpaused  (const SoundUnpausedEventType::group_type &group,
+                                                       const SoundUnpausedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSoundUnpaused          (const SoundUnpausedEventType::group_type &group);
+    void   disconnectAllSlotsSoundUnpaused  (void);
+    bool   isEmptySoundUnpaused             (void) const;
+    UInt32 numSlotsSoundUnpaused            (void) const;
+    
+    //SoundLooped
+    boost::signals2::connection connectSoundLooped    (const SoundLoopedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSoundLooped    (const SoundLoopedEventType::group_type &group,
+                                                       const SoundLoopedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSoundLooped            (const SoundLoopedEventType::group_type &group);
+    void   disconnectAllSlotsSoundLooped    (void);
+    bool   isEmptySoundLooped               (void) const;
+    UInt32 numSlotsSoundLooped              (void) const;
+    
+    //SoundEnded
+    boost::signals2::connection connectSoundEnded     (const SoundEndedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSoundEnded     (const SoundEndedEventType::group_type &group,
+                                                       const SoundEndedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSoundEnded             (const SoundEndedEventType::group_type &group);
+    void   disconnectAllSlotsSoundEnded     (void);
+    bool   isEmptySoundEnded                (void) const;
+    UInt32 numSlotsSoundEnded               (void) const;
+    
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Event Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
-    
-    GetFieldHandlePtr  getHandleEventProducer        (void) const;
-    EditFieldHandlePtr editHandleEventProducer       (void);
 
+    //Event Event producers
+    SoundPlayedEventType _SoundPlayedEvent;
+    SoundStoppedEventType _SoundStoppedEvent;
+    SoundPausedEventType _SoundPausedEvent;
+    SoundUnpausedEventType _SoundUnpausedEvent;
+    SoundLoopedEventType _SoundLoopedEvent;
+    SoundEndedEventType _SoundEndedEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -328,7 +416,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     SFBool            _sfStreaming;
     SFBoostPath       _sfFile;
     SFBool            _sfEnable3D;
-    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -377,6 +464,30 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleSoundPlayedSignal(void) const;
+    GetEventHandlePtr getHandleSoundStoppedSignal(void) const;
+    GetEventHandlePtr getHandleSoundPausedSignal(void) const;
+    GetEventHandlePtr getHandleSoundUnpausedSignal(void) const;
+    GetEventHandlePtr getHandleSoundLoopedSignal(void) const;
+    GetEventHandlePtr getHandleSoundEndedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceSoundPlayed         (SoundPlayedEventDetailsType* const e);
+    void produceSoundStopped        (SoundStoppedEventDetailsType* const e);
+    void produceSoundPaused         (SoundPausedEventDetailsType* const e);
+    void produceSoundUnpaused       (SoundUnpausedEventDetailsType* const e);
+    void produceSoundLooped         (SoundLoopedEventDetailsType* const e);
+    void produceSoundEnded          (SoundEndedEventDetailsType* const e);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -420,7 +531,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

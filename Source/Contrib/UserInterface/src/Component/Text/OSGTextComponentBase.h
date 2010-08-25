@@ -71,10 +71,8 @@
 
 #include "OSGTextComponentFields.h"
 
-//Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
+#include "OSGTextEventDetailsFields.h"
+#include "OSGCaretEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -93,6 +91,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextComponentBase : public Component
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(TextComponent);
+    
+    
+    typedef TextEventDetails   TextValueChangedEventDetailsType;
+    typedef CaretEventDetails  CaretChangedEventDetailsType;
+
+    typedef boost::signals2::signal<void (TextEventDetails* const , UInt32), ConsumableEventCombiner> TextValueChangedEventType;
+    typedef boost::signals2::signal<void (CaretEventDetails* const, UInt32), ConsumableEventCombiner> CaretChangedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -149,9 +154,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextComponentBase : public Component
 
     enum
     {
-        TextValueChangedMethodId = Inherited::NextProducedMethodId,
-        CaretChangedMethodId = TextValueChangedMethodId + 1,
-        NextProducedMethodId = CaretChangedMethodId + 1
+        TextValueChangedEventId = Inherited::NextProducedEventId,
+        CaretChangedEventId = TextValueChangedEventId + 1,
+        NextProducedEventId = CaretChangedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -279,16 +284,65 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextComponentBase : public Component
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //TextValueChanged
+    boost::signals2::connection connectTextValueChanged(const TextValueChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectTextValueChanged(const TextValueChangedEventType::group_type &group,
+                                                       const TextValueChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectTextValueChanged       (const TextValueChangedEventType::group_type &group);
+    void   disconnectAllSlotsTextValueChanged(void);
+    bool   isEmptyTextValueChanged          (void) const;
+    UInt32 numSlotsTextValueChanged         (void) const;
+    
+    //CaretChanged
+    boost::signals2::connection connectCaretChanged   (const CaretChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectCaretChanged   (const CaretChangedEventType::group_type &group,
+                                                       const CaretChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectCaretChanged           (const CaretChangedEventType::group_type &group);
+    void   disconnectAllSlotsCaretChanged   (void);
+    bool   isEmptyCaretChanged              (void) const;
+    UInt32 numSlotsCaretChanged             (void) const;
+    
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Produced Event Signals                   */
+    /*! \{                                                                 */
+
+    //Event Event producers
+    TextValueChangedEventType _TextValueChangedEvent;
+    CaretChangedEventType _CaretChangedEvent;
+    /*! \}                                                                 */
 
     static TypeObject _type;
 
@@ -360,6 +414,22 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextComponentBase : public Component
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleTextValueChangedSignal(void) const;
+    GetEventHandlePtr getHandleCaretChangedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceTextValueChanged    (TextValueChangedEventDetailsType* const e);
+    void produceCaretChanged        (CaretChangedEventDetailsType* const e);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -403,7 +473,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextComponentBase : public Component
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

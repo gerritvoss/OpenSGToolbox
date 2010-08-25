@@ -156,7 +156,6 @@ typedef TreePath* TreePathPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGTreeModel.h"
 #include "OSGTreePath.inl"
 
 #endif /* _OSG_UI_TREE_PATH_H_ */

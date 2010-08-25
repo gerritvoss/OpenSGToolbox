@@ -87,6 +87,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditorBase : public Spin
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(SpinnerDefaultEditor);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -107,7 +109,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditorBase : public Spin
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecTextFieldPtr SFTextFieldType;
-    typedef SFUnrecSpinnerPtr SFSpinnerType;
+    typedef SFWeakSpinnerPtr  SFSpinnerType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -134,8 +136,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditorBase : public Spin
 
             const SFUnrecTextFieldPtr *getSFTextField      (void) const;
                   SFUnrecTextFieldPtr *editSFTextField      (void);
-            const SFUnrecSpinnerPtr   *getSFSpinner        (void) const;
-                  SFUnrecSpinnerPtr   *editSFSpinner        (void);
+            const SFWeakSpinnerPtr    *getSFSpinner        (void) const;
+                  SFWeakSpinnerPtr    *editSFSpinner        (void);
 
 
                   TextField * getTextField      (void) const;
@@ -214,7 +216,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerDefaultEditorBase : public Spin
     /*! \{                                                                 */
 
     SFUnrecTextFieldPtr _sfTextField;
-    SFUnrecSpinnerPtr _sfSpinner;
+    SFWeakSpinnerPtr  _sfSpinner;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

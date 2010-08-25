@@ -46,7 +46,7 @@
 #include <OSGConfig.h>
 
 #include "OSGAbstractTableColumnModel.h"
-#include "OSGTableColumnModelEvent.h"
+#include "OSGTableColumnModelEventDetails.h"
 
 #include <boost/bind.hpp>
 
@@ -79,74 +79,36 @@ void AbstractTableColumnModel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection AbstractTableColumnModel::addColumnModelListener(TableColumnModelListenerPtr l)
-{
-    _ModelListeners.insert(l);
-    return EventConnection(
-                           boost::bind(&AbstractTableColumnModel::isColumnModelListenerAttached, this, l),
-                           boost::bind(&AbstractTableColumnModel::removeColumnModelListener, this, l));
-}
-
-void AbstractTableColumnModel::removeColumnModelListener(TableColumnModelListenerPtr l)
-{
-    TableColumnModelListenerSetItor EraseIter(_ModelListeners.find(l));
-    if(EraseIter != _ModelListeners.end())
-    {
-        _ModelListeners.erase(EraseIter);
-    }
-}
-
 void AbstractTableColumnModel::produceColumnAdded(const UInt32& ToIndex)
 {
-    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(this, getSystemTime(), 0, ToIndex);
-    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->columnAdded(TheEvent);
-    }
-    _Producer.produceEvent(ColumnAddedMethodId,TheEvent);
+    TableColumnModelEventDetailsUnrecPtr Details = TableColumnModelEventDetails::create(this, getSystemTime(), 0, ToIndex);
+
+    Inherited::produceColumnAdded(Details);
 }
 void AbstractTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex)
 {
-    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(this, getSystemTime(), FromIndex, ToIndex);
-    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->columnMoved(TheEvent);
-    }
-    _Producer.produceEvent(ColumnMovedMethodId,TheEvent);
+    TableColumnModelEventDetailsUnrecPtr Details = TableColumnModelEventDetails::create(this, getSystemTime(), FromIndex, ToIndex);
+
+    Inherited::produceColumnMoved(Details);
 }
 
 void AbstractTableColumnModel::produceColumnRemoved(const UInt32& FromIndex)
 {
-    const TableColumnModelEventUnrecPtr TheEvent = TableColumnModelEvent::create(this, getSystemTime(), FromIndex, 0);
-    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->columnRemoved(TheEvent);
-    }
-    _Producer.produceEvent(ColumnRemovedMethodId,TheEvent);
+    TableColumnModelEventDetailsUnrecPtr Details = TableColumnModelEventDetails::create(this, getSystemTime(), FromIndex, 0);
+
+    Inherited::produceColumnRemoved(Details);
 }
 
 void AbstractTableColumnModel::produceColumnMarginChanged(void)
 {
-    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(this, getSystemTime());
-    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->columnMarginChanged(TheEvent);
-    }
-    _Producer.produceEvent(ColumnMarginChangedMethodId,TheEvent);
+    ChangeEventDetailsUnrecPtr Details = ChangeEventDetails::create(this, getSystemTime());
+
+    Inherited::produceColumnMarginChanged(Details);
 }
 
-void AbstractTableColumnModel::produceColumnSelectionChanged(const ListSelectionEventUnrecPtr e)
+void AbstractTableColumnModel::produceColumnSelectionChanged(ListSelectionEventDetails* const Details)
 {
-    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
-    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->columnSelectionChanged(e);
-    }
-    _Producer.produceEvent(ColumnSelectionChangedMethodId,e);
+    Inherited::produceColumnSelectionChanged(Details);
 }
 
 /*-------------------------------------------------------------------------*\

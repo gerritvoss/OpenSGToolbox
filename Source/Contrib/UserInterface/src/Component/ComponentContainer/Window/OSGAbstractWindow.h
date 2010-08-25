@@ -43,14 +43,6 @@
 #endif
 
 #include "OSGAbstractWindowBase.h"
-
-#include "OSGMouseAdapter.h"
-#include "OSGMouseMotionAdapter.h"
-#include "OSGKeyAdapter.h"
-
-#include "OSGWindowListener.h"
-
-#include "OSGEventConnection.h"
 #include "OSGUIDrawingSurfaceFields.h"
 
 OSG_BEGIN_NAMESPACE
@@ -88,22 +80,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindow : public AbstractWindow
 
     /*! \}                                                                 */
 
-    EventConnection addWindowListener(WindowListenerPtr Listener);
-	bool isWindowListenerAttached(WindowListenerPtr Listener) const;
-    void removeWindowListener(WindowListenerPtr Listener);
-
 	virtual bool isAlignableInDrawingSurface(void) const;
 	virtual bool isScalableInDrawingSurface(void) const;
 	
     virtual void updateContainerLayout(void);
 	virtual void updateClipBounds(void);
 	
-    virtual void mouseEntered(const MouseEventUnrecPtr e);
-    virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mouseEntered(MouseEventDetails* const e);
+    virtual void mouseExited(MouseEventDetails* const e);
 
 	//Focus Events
-	virtual void focusGained(const FocusEventUnrecPtr e);
-	virtual void focusLost(const FocusEventUnrecPtr e);
+	virtual void focusGained(FocusEventDetails* const e);
+	virtual void focusLost(FocusEventDetails* const e);
 
 	void vetoWindowClose(void);
 
@@ -112,6 +100,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindow : public AbstractWindow
 	virtual void close(void) = 0;
 
     UIDrawingSurface* getParentDrawingSurface(void) const;
+
+    bool operator<(const AbstractWindow& right) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -144,12 +134,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindow : public AbstractWindow
     virtual Border* getDrawnBorder(void) const;
     virtual Layer* getDrawnBackground(void) const;
     virtual Layer* getDrawnForeground(void) const;
-	
-	typedef std::set<WindowListenerPtr> WindowListenerSet;
-    typedef WindowListenerSet::iterator WindowListenerSetItor;
-    typedef WindowListenerSet::const_iterator WindowListenerSetConstItor;
-	
-    WindowListenerSet       _WindowListeners;
 	
     void produceWindowOpened     ( void);
     void produceWindowClosing    ( void);

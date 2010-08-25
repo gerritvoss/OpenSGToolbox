@@ -123,12 +123,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutSpring : public LayoutSpringBase
 
     static LayoutSpringRefPtr scale(LayoutSpringRefPtr s, const Real32& factor);
 
-    static LayoutSpringRefPtr width(ComponentRefPtr c);
+    static LayoutSpringRefPtr width(Component* const c);
 
-    static LayoutSpringRefPtr height(ComponentRefPtr c);
-    static LayoutSpringRefPtr requestedWidth(ComponentRefPtr c);
+    static LayoutSpringRefPtr height(Component* const c);
+    static LayoutSpringRefPtr requestedWidth(Component* const c);
 
-    static LayoutSpringRefPtr requestedHeight(ComponentRefPtr c);
+    static LayoutSpringRefPtr requestedHeight(Component* const c);
 
     /*=========================  PROTECTED  ===============================*/
 

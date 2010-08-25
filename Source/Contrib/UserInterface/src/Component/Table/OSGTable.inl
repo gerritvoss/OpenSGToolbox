@@ -102,12 +102,6 @@ UInt32 Table::getSelectedRowCount(void) const
 }
 
 inline
-ListSelectionModelPtr Table::getSelectionModel(void) const
-{
-    return _RowSelectionModel;
-}
-
-inline
 boost::any Table::getValueAt(const UInt32& row, const UInt32& column) const
 {
     return getModel()->getValueAt(row, column);
@@ -134,14 +128,14 @@ bool Table::isEditing(void) const
 inline
 bool Table::isRowSelected(const UInt32& row) const
 {
-    return _RowSelectionModel->isSelectedIndex(row);
+    return getRowSelectionModel()->isSelectedIndex(row);
 }
 
 inline
 void Table::setColumnSelectionAllowed(bool columnSelectionAllowed)
 {
     getColumnModel()->setColumnSelectionAllowed(columnSelectionAllowed);
-    _RowSelectionModel->clearSelection();
+    getRowSelectionModel()->clearSelection();
     getColumnModel()->getSelectionModel()->clearSelection();
 }
 
@@ -178,7 +172,7 @@ void Table::setDefaultRenderer(const std::type_info& TheType, TableCellRendererP
 inline
 void Table::setRowSelectionInterval(const UInt32& index0, const UInt32& index1)
 {
-    _RowSelectionModel->setSelectionInterval(index0, index1);
+    getRowSelectionModel()->setSelectionInterval(index0, index1);
 }
 
 inline
@@ -190,7 +184,7 @@ void Table::setColumnSelectionInterval(const UInt32& index0, const UInt32& index
 inline
 void Table::removeRowSelectionInterval(const UInt32& index0, const UInt32& index1)
 {
-    _RowSelectionModel->removeIndexInterval(index0, index1);
+    getRowSelectionModel()->removeIndexInterval(index0, index1);
 }
 
 inline
@@ -220,7 +214,7 @@ void Table::removeColumnSelectionInterval(const UInt32& index0, const UInt32& in
 inline
 Int32 Table::getSelectedRow(void) const
 {
-    return _RowSelectionModel->getMinSelectionIndex();
+    return getRowSelectionModel()->getMinSelectionIndex();
 }
 
 inline
@@ -238,7 +232,7 @@ void Table::addColumnSelectionInterval(const UInt32& index0, const UInt32& index
 inline
 void Table::addRowSelectionInterval(const UInt32& index0, const UInt32& index1)
 {
-    _RowSelectionModel->addSelectionInterval(index0, index1);
+    getRowSelectionModel()->addSelectionInterval(index0, index1);
 }
 
 inline

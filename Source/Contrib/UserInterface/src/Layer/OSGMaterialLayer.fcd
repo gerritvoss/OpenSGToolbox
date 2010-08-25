@@ -24,4 +24,54 @@ UI Material Background.
         defaultValue="NULL"
 	>
 	</Field>
+	<Field
+		name="Color"
+		type="Color4f"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0f,1.0f,1.0f,1.0f"
+	>
+	</Field>
+	<Field
+		name="Scale"
+		type="UInt32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="MaterialLayer::SCALE_STRETCH"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ScaleAbsoluteSize"
+		type="Vec2s"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1,1"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="VerticalAlignment"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.5"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="HorizontalAlignment"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.5"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

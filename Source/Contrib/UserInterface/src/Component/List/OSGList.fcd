@@ -74,4 +74,14 @@
 		defaultValue="true"
 		>
 	</Field>
+	<Field
+		name="SelectionModel"
+		type="ListSelectionModel"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NULL"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

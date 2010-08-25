@@ -79,6 +79,13 @@ void UIForeground::initMethod(InitPhase ePhase)
 \***************************************************************************/
 void UIForeground::draw(DrawEnv * env, Viewport * port)
 {
+    if(!getDrawingSurface() ||
+       !getDrawingSurface()->getGraphics() ||
+       !getActive())
+    {
+        return;
+    }
+
     if(getDrawingSurface()->getSize().x() != port->getPixelWidth() ||
        getDrawingSurface()->getSize().y() != port->getPixelHeight())
     {
@@ -165,6 +172,12 @@ void UIForeground::changed(ConstFieldMaskArg whichField,
     {
         getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
 	}
+	if((whichField & (ActiveFieldMask | DrawingSurfaceFieldMask)) && 
+        getDrawingSurface() != NULL &&
+        getDrawingSurface()->getActive() != getActive())
+    {
+        getDrawingSurface()->setActive(getActive());
+    }
 }
 
 void UIForeground::dump(      UInt32    ,

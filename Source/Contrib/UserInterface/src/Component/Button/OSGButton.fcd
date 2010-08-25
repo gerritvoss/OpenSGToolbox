@@ -213,14 +213,16 @@ A UI Button.
 		access="public"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="ActionPerformed"
-		type="ActionEventPtr"
+		detailsType="ActionEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="MousePressedActionPerformed"
-		type="ActionEventPtr"
+		detailsType="ActionEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

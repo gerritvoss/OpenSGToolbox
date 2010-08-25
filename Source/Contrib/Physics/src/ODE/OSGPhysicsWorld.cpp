@@ -93,6 +93,11 @@ bool PhysicsWorld::odeExitFunc(void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+PhysicsHandler* PhysicsWorld::getParentHandler(void) const
+{
+    return dynamic_cast<PhysicsHandler* const>(_sfParentHandler.getValue());
+}
+
 dWorldID PhysicsWorld::getWorldID(void)
 {
     return _World;

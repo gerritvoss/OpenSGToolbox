@@ -48,6 +48,8 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGTreeModelEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -108,70 +110,247 @@ const Char8 *TreeModelBase::getClassname(void)
 }
 
 inline
-EventConnection TreeModelBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool TreeModelBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 TreeModelBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr TreeModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void TreeModelBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 TreeModelBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *TreeModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *TreeModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *TreeModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *TreeModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 TreeModelBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *TreeModelBase::editSFEventProducer(void)
+boost::signals2::connection  TreeModelBase::connectTreeNodesChanged(const TreeNodesChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _TreeNodesChangedEvent.connect(listener, at);
 }
 
-//! Get the value of the TreeModel::_sfEventProducer field.
 inline
-EventProducerPtr &TreeModelBase::editEventProducer(void)
+boost::signals2::connection  TreeModelBase::connectTreeNodesChanged(const TreeNodesChangedEventType::group_type &group,
+                                                    const TreeNodesChangedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _TreeNodesChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  TreeModelBase::disconnectTreeNodesChanged(const TreeNodesChangedEventType::group_type &group)
+{
+    _TreeNodesChangedEvent.disconnect(group);
+}
+
+inline
+void  TreeModelBase::disconnectAllSlotsTreeNodesChanged(void)
+{
+    _TreeNodesChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TreeModelBase::isEmptyTreeNodesChanged(void) const
+{
+    return _TreeNodesChangedEvent.empty();
+}
+
+inline
+UInt32  TreeModelBase::numSlotsTreeNodesChanged(void) const
+{
+    return _TreeNodesChangedEvent.num_slots();
+}
+
+inline
+void TreeModelBase::produceTreeNodesChanged(TreeNodesChangedEventDetailsType* const e)
+{
+    produceEvent(TreeNodesChangedEventId, e);
+}
+
+inline
+boost::signals2::connection  TreeModelBase::connectTreeNodesInserted(const TreeNodesInsertedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _TreeNodesInsertedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TreeModelBase::connectTreeNodesInserted(const TreeNodesInsertedEventType::group_type &group,
+                                                    const TreeNodesInsertedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _TreeNodesInsertedEvent.connect(group, listener, at);
+}
+
+inline
+void  TreeModelBase::disconnectTreeNodesInserted(const TreeNodesInsertedEventType::group_type &group)
+{
+    _TreeNodesInsertedEvent.disconnect(group);
+}
+
+inline
+void  TreeModelBase::disconnectAllSlotsTreeNodesInserted(void)
+{
+    _TreeNodesInsertedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TreeModelBase::isEmptyTreeNodesInserted(void) const
+{
+    return _TreeNodesInsertedEvent.empty();
+}
+
+inline
+UInt32  TreeModelBase::numSlotsTreeNodesInserted(void) const
+{
+    return _TreeNodesInsertedEvent.num_slots();
+}
+
+inline
+void TreeModelBase::produceTreeNodesInserted(TreeNodesInsertedEventDetailsType* const e)
+{
+    produceEvent(TreeNodesInsertedEventId, e);
+}
+
+inline
+boost::signals2::connection  TreeModelBase::connectTreeNodesRemoved(const TreeNodesRemovedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _TreeNodesRemovedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TreeModelBase::connectTreeNodesRemoved(const TreeNodesRemovedEventType::group_type &group,
+                                                    const TreeNodesRemovedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _TreeNodesRemovedEvent.connect(group, listener, at);
+}
+
+inline
+void  TreeModelBase::disconnectTreeNodesRemoved(const TreeNodesRemovedEventType::group_type &group)
+{
+    _TreeNodesRemovedEvent.disconnect(group);
+}
+
+inline
+void  TreeModelBase::disconnectAllSlotsTreeNodesRemoved(void)
+{
+    _TreeNodesRemovedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TreeModelBase::isEmptyTreeNodesRemoved(void) const
+{
+    return _TreeNodesRemovedEvent.empty();
+}
+
+inline
+UInt32  TreeModelBase::numSlotsTreeNodesRemoved(void) const
+{
+    return _TreeNodesRemovedEvent.num_slots();
+}
+
+inline
+void TreeModelBase::produceTreeNodesRemoved(TreeNodesRemovedEventDetailsType* const e)
+{
+    produceEvent(TreeNodesRemovedEventId, e);
+}
+
+inline
+boost::signals2::connection  TreeModelBase::connectTreeNodesWillBeRemoved(const TreeNodesWillBeRemovedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _TreeNodesWillBeRemovedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TreeModelBase::connectTreeNodesWillBeRemoved(const TreeNodesWillBeRemovedEventType::group_type &group,
+                                                    const TreeNodesWillBeRemovedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _TreeNodesWillBeRemovedEvent.connect(group, listener, at);
+}
+
+inline
+void  TreeModelBase::disconnectTreeNodesWillBeRemoved(const TreeNodesWillBeRemovedEventType::group_type &group)
+{
+    _TreeNodesWillBeRemovedEvent.disconnect(group);
+}
+
+inline
+void  TreeModelBase::disconnectAllSlotsTreeNodesWillBeRemoved(void)
+{
+    _TreeNodesWillBeRemovedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TreeModelBase::isEmptyTreeNodesWillBeRemoved(void) const
+{
+    return _TreeNodesWillBeRemovedEvent.empty();
+}
+
+inline
+UInt32  TreeModelBase::numSlotsTreeNodesWillBeRemoved(void) const
+{
+    return _TreeNodesWillBeRemovedEvent.num_slots();
+}
+
+inline
+void TreeModelBase::produceTreeNodesWillBeRemoved(TreeNodesWillBeRemovedEventDetailsType* const e)
+{
+    produceEvent(TreeNodesWillBeRemovedEventId, e);
+}
+
+inline
+boost::signals2::connection  TreeModelBase::connectTreeStructureChanged(const TreeStructureChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _TreeStructureChangedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  TreeModelBase::connectTreeStructureChanged(const TreeStructureChangedEventType::group_type &group,
+                                                    const TreeStructureChangedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _TreeStructureChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  TreeModelBase::disconnectTreeStructureChanged(const TreeStructureChangedEventType::group_type &group)
+{
+    _TreeStructureChangedEvent.disconnect(group);
+}
+
+inline
+void  TreeModelBase::disconnectAllSlotsTreeStructureChanged(void)
+{
+    _TreeStructureChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  TreeModelBase::isEmptyTreeStructureChanged(void) const
+{
+    return _TreeStructureChangedEvent.empty();
+}
+
+inline
+UInt32  TreeModelBase::numSlotsTreeStructureChanged(void) const
+{
+    return _TreeStructureChangedEvent.num_slots();
+}
+
+inline
+void TreeModelBase::produceTreeStructureChanged(TreeStructureChangedEventDetailsType* const e)
+{
+    produceEvent(TreeStructureChangedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(TreeModel);

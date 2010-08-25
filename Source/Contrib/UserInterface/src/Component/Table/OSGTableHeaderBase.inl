@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -73,22 +74,6 @@ OSG::UInt16 TableHeaderBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
-
-//! Get the value of the TableHeader::_sfTable field.
-inline
-Table * TableHeaderBase::getTable(void) const
-{
-    return _sfTable.getValue();
-}
-
-//! Set the value of the TableHeader::_sfTable field.
-inline
-void TableHeaderBase::setTable(Table * const value)
-{
-    editSField(TableFieldMask);
-
-    _sfTable.setValue(value);
-}
 
 //! Get the value of the TableHeader::_sfColumnModel field.
 inline

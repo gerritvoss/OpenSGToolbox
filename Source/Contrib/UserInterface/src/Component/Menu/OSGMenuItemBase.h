@@ -65,7 +65,7 @@
 
 #include "OSGToggleButton.h" // Parent
 
-#include "OSGMenuFields.h"              // ParentMenu type
+#include "OSGFieldContainerFields.h"    // ParentMenu type
 #include "OSGSysFields.h"               // AcceleratorModifiers type
 
 #include "OSGMenuItemFields.h"
@@ -87,6 +87,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItemBase : public ToggleButton
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(MenuItem);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -112,7 +114,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItemBase : public ToggleButton
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecMenuPtr    SFParentMenuType;
+    typedef SFParentFieldContainerPtr SFParentMenuType;
     typedef SFUInt32          SFAcceleratorModifiersType;
     typedef SFUInt32          SFAcceleratorKeyType;
     typedef SFUInt32          SFMnemonicKeyType;
@@ -140,8 +142,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItemBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecMenuPtr      *getSFParentMenu     (void) const;
-                  SFUnrecMenuPtr      *editSFParentMenu     (void);
 
                   SFUInt32            *editSFAcceleratorModifiers(void);
             const SFUInt32            *getSFAcceleratorModifiers (void) const;
@@ -152,8 +152,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItemBase : public ToggleButton
                   SFUInt32            *editSFMnemonicKey    (void);
             const SFUInt32            *getSFMnemonicKey     (void) const;
 
-
-                  Menu * getParentMenu     (void) const;
 
                   UInt32              &editAcceleratorModifiers(void);
                   UInt32               getAcceleratorModifiers (void) const;
@@ -169,15 +167,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItemBase : public ToggleButton
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setParentMenu     (Menu * const value);
             void setAcceleratorModifiers(const UInt32 value);
             void setAcceleratorKey (const UInt32 value);
             void setMnemonicKey    (const UInt32 value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr Field Set                                 */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -237,7 +229,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItemBase : public ToggleButton
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecMenuPtr    _sfParentMenu;
+    SFParentFieldContainerPtr _sfParentMenu;
     SFUInt32          _sfAcceleratorModifiers;
     SFUInt32          _sfAcceleratorKey;
     SFUInt32          _sfMnemonicKey;
@@ -262,7 +254,17 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItemBase : public ToggleButton
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
-    void onCreate(const MenuItem *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

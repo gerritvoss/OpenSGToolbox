@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TreeSelectionModel"
+	parent="AttachmentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="abstract"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+A UI TreeModel.
+	<ProducedEvent
+		name="SelectionAdded"
+		detailsType="TreeSelectionEventDetails"
+		consumable="true"
+	>
+	</ProducedEvent>
+	<ProducedEvent
+		name="SelectionRemoved"
+		detailsType="TreeSelectionEventDetails"
+		consumable="true"
+	>
+	</ProducedEvent>
+</FieldContainer>

@@ -68,7 +68,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -680,34 +680,40 @@ ButtonBase::TypeObject ButtonBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ActionPerformed\"\n"
-    "\t\ttype=\"ActionEventPtr\"\n"
+    "\t\tdetailsType=\"ActionEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"MousePressedActionPerformed\"\n"
-    "\t\ttype=\"ActionEventPtr\"\n"
+    "\t\tdetailsType=\"ActionEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Button.\n"
     );
 
-//! Button Produced Methods
+//! Button Produced Events
 
-MethodDescription *ButtonBase::_methodDesc[] =
+EventDescription *ButtonBase::_eventDesc[] =
 {
-    new MethodDescription("ActionPerformed", 
-                    "",
-                     ActionPerformedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("MousePressedActionPerformed", 
-                    "",
-                     MousePressedActionPerformedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("ActionPerformed", 
+                          "",
+                          ActionPerformedEventId, 
+                          FieldTraits<ActionEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ButtonBase::getHandleActionPerformedSignal)),
+
+    new EventDescription("MousePressedActionPerformed", 
+                          "",
+                          MousePressedActionPerformedEventId, 
+                          FieldTraits<ActionEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ButtonBase::getHandleMousePressedActionPerformedSignal))
+
 };
 
 EventProducerType ButtonBase::_producerType(
@@ -715,8 +721,8 @@ EventProducerType ButtonBase::_producerType(
     "ComponentProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -1414,6 +1420,134 @@ FieldContainerTransitPtr ButtonBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void ButtonBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        OSG_ASSERT(dynamic_cast<ActionPerformedEventDetailsType* const>(e));
+
+        _ActionPerformedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ActionPerformedEvent(dynamic_cast<ActionPerformedEventDetailsType* const>(e), ActionPerformedEventId);
+        break;
+    case MousePressedActionPerformedEventId:
+        OSG_ASSERT(dynamic_cast<MousePressedActionPerformedEventDetailsType* const>(e));
+
+        _MousePressedActionPerformedEvent.set_combiner(ConsumableEventCombiner(e));
+        _MousePressedActionPerformedEvent(dynamic_cast<MousePressedActionPerformedEventDetailsType* const>(e), MousePressedActionPerformedEventId);
+        break;
+    default:
+        Inherited::produceEvent(eventId, e);
+        break;
+    }
+}
+
+boost::signals2::connection ButtonBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.connect(listener, at);
+        break;
+    case MousePressedActionPerformedEventId:
+        return _MousePressedActionPerformedEvent.connect(listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  ButtonBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.connect(group, listener, at);
+        break;
+    case MousePressedActionPerformedEventId:
+        return _MousePressedActionPerformedEvent.connect(group, listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, group, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  ButtonBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        _ActionPerformedEvent.disconnect(group);
+        break;
+    case MousePressedActionPerformedEventId:
+        _MousePressedActionPerformedEvent.disconnect(group);
+        break;
+    default:
+        return Inherited::disconnectEvent(eventId, group);
+        break;
+    }
+}
+
+void  ButtonBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        _ActionPerformedEvent.disconnect_all_slots();
+        break;
+    case MousePressedActionPerformedEventId:
+        _MousePressedActionPerformedEvent.disconnect_all_slots();
+        break;
+    default:
+        Inherited::disconnectAllSlotsEvent(eventId);
+        break;
+    }
+}
+
+bool  ButtonBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.empty();
+        break;
+    case MousePressedActionPerformedEventId:
+        return _MousePressedActionPerformedEvent.empty();
+        break;
+    default:
+        return Inherited::isEmptyEvent(eventId);
+        break;
+    }
+}
+
+UInt32  ButtonBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ActionPerformedEventId:
+        return _ActionPerformedEvent.num_slots();
+        break;
+    case MousePressedActionPerformedEventId:
+        return _MousePressedActionPerformedEvent.num_slots();
+        break;
+    default:
+        return Inherited::numSlotsEvent(eventId);
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
@@ -1441,7 +1575,6 @@ ButtonBase::ButtonBase(void) :
     _sfDrawObjectToTextAlignment(UInt32(Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT)),
     _sfDrawObjectToTextPadding(Real32(2.0))
 {
-    _Producer.setType(&_producerType);
 }
 
 ButtonBase::ButtonBase(const ButtonBase &source) :
@@ -2053,6 +2186,29 @@ EditFieldHandlePtr ButtonBase::editHandleDrawObjectToTextPadding(void)
 
 
     editSField(DrawObjectToTextPaddingFieldMask);
+
+    return returnValue;
+}
+
+
+GetEventHandlePtr ButtonBase::getHandleActionPerformedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ActionPerformedEventType>(
+             const_cast<ActionPerformedEventType *>(&_ActionPerformedEvent),
+             _producerType.getEventDescription(ActionPerformedEventId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr ButtonBase::getHandleMousePressedActionPerformedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<MousePressedActionPerformedEventType>(
+             const_cast<MousePressedActionPerformedEventType *>(&_MousePressedActionPerformedEvent),
+             _producerType.getEventDescription(MousePressedActionPerformedEventId),
+             const_cast<ButtonBase *>(this)));
 
     return returnValue;
 }

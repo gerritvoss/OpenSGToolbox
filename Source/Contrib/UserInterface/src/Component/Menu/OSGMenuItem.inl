@@ -40,31 +40,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool MenuItem::isActionListenerAttached(ActionListenerPtr Listener) const
-{
-    return _ActionListeners.find(Listener) != _ActionListeners.end();
-}
-
-inline
-MenuItem::MenuItemKeyAcceleratorListener::MenuItemKeyAcceleratorListener(MenuItem* const TheMenuItem) :
-									_MenuItem(TheMenuItem)
-{
-}
-
-inline
-MenuItem::KeyAcceleratorMenuFlashUpdateListener::KeyAcceleratorMenuFlashUpdateListener(MenuItem* const TheMenuItem) :
-									_MenuItem(TheMenuItem),
-									_FlashElps(0.0)
-{
-}
-
-inline
-void MenuItem::KeyAcceleratorMenuFlashUpdateListener::reset(void)
-{
-    _FlashElps = 0.0;
-}
-
 
 inline
 void MenuItem::setDrawAsThoughSelected(bool Selected)

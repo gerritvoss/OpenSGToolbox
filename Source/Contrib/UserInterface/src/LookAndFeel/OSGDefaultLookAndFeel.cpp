@@ -892,7 +892,7 @@ void DefaultLookAndFeel::init(void)
 
     //Accelerators
     DefaultMenuItem->setAcceleratorModifiers(0);
-    DefaultMenuItem->setAcceleratorKey(KeyEvent::KEY_NONE);
+    DefaultMenuItem->setAcceleratorKey(KeyEventDetails::KEY_NONE);
 
     //Selected
     DefaultMenuItem->setSelected(false);
@@ -959,7 +959,7 @@ void DefaultLookAndFeel::init(void)
 
     //Accelerators
     DefaultMenu->setAcceleratorModifiers(0);
-    DefaultMenu->setAcceleratorKey(KeyEvent::KEY_NONE);
+    DefaultMenu->setAcceleratorKey(KeyEventDetails::KEY_NONE);
 
     //Selected
     DefaultMenu->setSelected(false);

@@ -88,6 +88,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsCharacteristicsDrawableBase : public 
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsCharacteristicsDrawable);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -134,7 +136,7 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsCharacteristicsDrawableBase : public 
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecNodePtr    SFRootType;
+    typedef SFWeakNodePtr     SFRootType;
     typedef SFBool            SFDrawGeomsType;
     typedef SFColor4f         SFGeomColorType;
     typedef SFBool            SFDrawJointsType;
@@ -169,8 +171,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsCharacteristicsDrawableBase : public 
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecNodePtr      *getSFRoot           (void) const;
-                  SFUnrecNodePtr      *editSFRoot           (void);
+            const SFWeakNodePtr       *getSFRoot           (void) const;
+                  SFWeakNodePtr       *editSFRoot           (void);
 
                   SFBool              *editSFDrawGeoms      (void);
             const SFBool              *getSFDrawGeoms       (void) const;
@@ -315,7 +317,7 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsCharacteristicsDrawableBase : public 
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecNodePtr    _sfRoot;
+    SFWeakNodePtr     _sfRoot;
     SFBool            _sfDrawGeoms;
     SFColor4f         _sfGeomColor;
     SFBool            _sfDrawJoints;

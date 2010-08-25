@@ -137,8 +137,8 @@ void ProxyLayoutSpringBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecComponentPtr::Description(
-        SFUnrecComponentPtr::getClassType(),
+    pDesc = new SFWeakComponentPtr::Description(
+        SFWeakComponentPtr::getClassType(),
         "Component",
         "",
         ComponentFieldId, ComponentFieldMask,
@@ -149,8 +149,8 @@ void ProxyLayoutSpringBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecSpringLayoutPtr::Description(
-        SFUnrecSpringLayoutPtr::getClassType(),
+    pDesc = new SFWeakSpringLayoutPtr::Description(
+        SFWeakSpringLayoutPtr::getClassType(),
         "Layout",
         "",
         LayoutFieldId, LayoutFieldMask,
@@ -204,7 +204,7 @@ ProxyLayoutSpringBase::TypeObject ProxyLayoutSpringBase::_type(
     "\t<Field\n"
     "\t\tname=\"Component\"\n"
     "\t\ttype=\"Component\"\n"
-    "        category=\"pointer\"\n"
+    "        category=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "      visibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -214,7 +214,7 @@ ProxyLayoutSpringBase::TypeObject ProxyLayoutSpringBase::_type(
     "\t<Field\n"
     "\t\tname=\"Layout\"\n"
     "\t\ttype=\"SpringLayout\"\n"
-    "        category=\"pointer\"\n"
+    "        category=\"weakpointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "      visibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
@@ -259,12 +259,12 @@ const SFUInt32 *ProxyLayoutSpringBase::getSFEdge(void) const
 
 
 //! Get the ProxyLayoutSpring::_sfComponent field.
-const SFUnrecComponentPtr *ProxyLayoutSpringBase::getSFComponent(void) const
+const SFWeakComponentPtr *ProxyLayoutSpringBase::getSFComponent(void) const
 {
     return &_sfComponent;
 }
 
-SFUnrecComponentPtr *ProxyLayoutSpringBase::editSFComponent      (void)
+SFWeakComponentPtr  *ProxyLayoutSpringBase::editSFComponent      (void)
 {
     editSField(ComponentFieldMask);
 
@@ -272,12 +272,12 @@ SFUnrecComponentPtr *ProxyLayoutSpringBase::editSFComponent      (void)
 }
 
 //! Get the ProxyLayoutSpring::_sfLayout field.
-const SFUnrecSpringLayoutPtr *ProxyLayoutSpringBase::getSFLayout(void) const
+const SFWeakSpringLayoutPtr *ProxyLayoutSpringBase::getSFLayout(void) const
 {
     return &_sfLayout;
 }
 
-SFUnrecSpringLayoutPtr *ProxyLayoutSpringBase::editSFLayout         (void)
+SFWeakSpringLayoutPtr *ProxyLayoutSpringBase::editSFLayout         (void)
 {
     editSField(LayoutFieldMask);
 
@@ -466,7 +466,6 @@ FieldContainerTransitPtr ProxyLayoutSpringBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 ProxyLayoutSpringBase::ProxyLayoutSpringBase(void) :
@@ -533,8 +532,8 @@ EditFieldHandlePtr ProxyLayoutSpringBase::editHandleEdge           (void)
 
 GetFieldHandlePtr ProxyLayoutSpringBase::getHandleComponent       (void) const
 {
-    SFUnrecComponentPtr::GetHandlePtr returnValue(
-        new  SFUnrecComponentPtr::GetHandle(
+    SFWeakComponentPtr::GetHandlePtr returnValue(
+        new  SFWeakComponentPtr::GetHandle(
              &_sfComponent,
              this->getType().getFieldDesc(ComponentFieldId),
              const_cast<ProxyLayoutSpringBase *>(this)));
@@ -544,8 +543,8 @@ GetFieldHandlePtr ProxyLayoutSpringBase::getHandleComponent       (void) const
 
 EditFieldHandlePtr ProxyLayoutSpringBase::editHandleComponent      (void)
 {
-    SFUnrecComponentPtr::EditHandlePtr returnValue(
-        new  SFUnrecComponentPtr::EditHandle(
+    SFWeakComponentPtr::EditHandlePtr returnValue(
+        new  SFWeakComponentPtr::EditHandle(
              &_sfComponent,
              this->getType().getFieldDesc(ComponentFieldId),
              this));
@@ -561,8 +560,8 @@ EditFieldHandlePtr ProxyLayoutSpringBase::editHandleComponent      (void)
 
 GetFieldHandlePtr ProxyLayoutSpringBase::getHandleLayout          (void) const
 {
-    SFUnrecSpringLayoutPtr::GetHandlePtr returnValue(
-        new  SFUnrecSpringLayoutPtr::GetHandle(
+    SFWeakSpringLayoutPtr::GetHandlePtr returnValue(
+        new  SFWeakSpringLayoutPtr::GetHandle(
              &_sfLayout,
              this->getType().getFieldDesc(LayoutFieldId),
              const_cast<ProxyLayoutSpringBase *>(this)));
@@ -572,8 +571,8 @@ GetFieldHandlePtr ProxyLayoutSpringBase::getHandleLayout          (void) const
 
 EditFieldHandlePtr ProxyLayoutSpringBase::editHandleLayout         (void)
 {
-    SFUnrecSpringLayoutPtr::EditHandlePtr returnValue(
-        new  SFUnrecSpringLayoutPtr::EditHandle(
+    SFWeakSpringLayoutPtr::EditHandlePtr returnValue(
+        new  SFWeakSpringLayoutPtr::EditHandle(
              &_sfLayout,
              this->getType().getFieldDesc(LayoutFieldId),
              this));
@@ -586,6 +585,7 @@ EditFieldHandlePtr ProxyLayoutSpringBase::editHandleLayout         (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

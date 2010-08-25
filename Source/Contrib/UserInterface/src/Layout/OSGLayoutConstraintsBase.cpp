@@ -58,7 +58,7 @@
 
 
 
-#include "OSGComponent.h"               // ParentComponent Class
+#include "OSGFieldContainer.h"          // ParentComponent Class
 
 #include "OSGLayoutConstraintsBase.h"
 #include "OSGLayoutConstraints.h"
@@ -83,7 +83,7 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var Component *     LayoutConstraintsBase::_sfParentComponent
+/*! \var FieldContainer * LayoutConstraintsBase::_mfParentComponent
     
 */
 
@@ -106,6 +106,18 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            LayoutConstraints *,
                            0);
 
+DataType &FieldTraits< LayoutConstraints *, 1 >::getType(void)
+{
+    return FieldTraits<LayoutConstraints *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_SFIELD(ChildPointerSField,
+                      LayoutConstraints *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
+
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
@@ -115,15 +127,15 @@ void LayoutConstraintsBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecComponentPtr::Description(
-        SFUnrecComponentPtr::getClassType(),
+    pDesc = new MFParentFieldContainerPtr::Description(
+        MFParentFieldContainerPtr::getClassType(),
         "ParentComponent",
         "",
         ParentComponentFieldId, ParentComponentFieldMask,
         false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&LayoutConstraints::editHandleParentComponent),
-        static_cast<FieldGetMethodSig >(&LayoutConstraints::getHandleParentComponent));
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&LayoutConstraints::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&LayoutConstraints::invalidGetField));
 
     oType.addInitialDesc(pDesc);
 }
@@ -153,18 +165,20 @@ LayoutConstraintsBase::TypeObject LayoutConstraintsBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    childFields=\"single\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI LayoutConstraints Interface.\n"
     "\t<Field\n"
-    "\t\tname=\"ParentComponent\"\n"
-    "\t\ttype=\"Component\"\n"
-    "        category=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
+    "\t   name=\"ParentComponent\"\n"
+    "\t   type=\"FieldContainer\"\n"
+    "\t   cardinality=\"multi\"\n"
+    "\t   visibility=\"external\"\n"
+    "\t   access=\"none\"\n"
+    "       doRefCount=\"false\"\n"
+    "       passFieldMask=\"true\"\n"
+    "       category=\"parentpointer\"\n"
+    "\t   >\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
     "A UI LayoutConstraints Interface.\n"
@@ -190,18 +204,6 @@ UInt32 LayoutConstraintsBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-//! Get the LayoutConstraints::_sfParentComponent field.
-const SFUnrecComponentPtr *LayoutConstraintsBase::getSFParentComponent(void) const
-{
-    return &_sfParentComponent;
-}
-
-SFUnrecComponentPtr *LayoutConstraintsBase::editSFParentComponent(void)
-{
-    editSField(ParentComponentFieldMask);
-
-    return &_sfParentComponent;
-}
 
 
 
@@ -215,7 +217,7 @@ UInt32 LayoutConstraintsBase::getBinSize(ConstFieldMaskArg whichField)
 
     if(FieldBits::NoField != (ParentComponentFieldMask & whichField))
     {
-        returnValue += _sfParentComponent.getBinSize();
+        returnValue += _mfParentComponent.getBinSize();
     }
 
     return returnValue;
@@ -228,7 +230,7 @@ void LayoutConstraintsBase::copyToBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (ParentComponentFieldMask & whichField))
     {
-        _sfParentComponent.copyToBin(pMem);
+        _mfParentComponent.copyToBin(pMem);
     }
 }
 
@@ -239,10 +241,9 @@ void LayoutConstraintsBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (ParentComponentFieldMask & whichField))
     {
-        _sfParentComponent.copyFromBin(pMem);
+        _mfParentComponent.copyFromBin(pMem);
     }
 }
-
 
 
 
@@ -250,13 +251,13 @@ void LayoutConstraintsBase::copyFromBin(BinaryDataHandler &pMem,
 
 LayoutConstraintsBase::LayoutConstraintsBase(void) :
     Inherited(),
-    _sfParentComponent        (NULL)
+    _mfParentComponent        ()
 {
 }
 
 LayoutConstraintsBase::LayoutConstraintsBase(const LayoutConstraintsBase &source) :
     Inherited(source),
-    _sfParentComponent        (NULL)
+    _mfParentComponent        ()
 {
 }
 
@@ -266,46 +267,84 @@ LayoutConstraintsBase::LayoutConstraintsBase(const LayoutConstraintsBase &source
 LayoutConstraintsBase::~LayoutConstraintsBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
 
-void LayoutConstraintsBase::onCreate(const LayoutConstraints *source)
+bool LayoutConstraintsBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
 {
-    Inherited::onCreate(source);
-
-    if(source != NULL)
+    if(parentFieldId == ParentComponentFieldId)
     {
-        LayoutConstraints *pThis = static_cast<LayoutConstraints *>(this);
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
 
-        pThis->setParentComponent(source->getParentComponent());
+        if(pTypedParent != NULL)
+        {
+            editMField(ParentComponentFieldMask, _mfParentComponent);
+
+            _mfParentComponent.push_back(pParent, childFieldId);
+
+            return true;
+        }
+
+        return false;
     }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
 }
+
+bool LayoutConstraintsBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
+{
+    if(parentFieldId == ParentComponentFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            Int32 iParentIdx = _mfParentComponent.findIndex(pParent);
+
+            if(iParentIdx != -1)
+            {
+                editMField(ParentComponentFieldMask, _mfParentComponent);
+
+                _mfParentComponent.erase(iParentIdx);
+
+                return true;
+            }
+
+            FWARNING(("LayoutConstraintsBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
+
 
 GetFieldHandlePtr LayoutConstraintsBase::getHandleParentComponent (void) const
 {
-    SFUnrecComponentPtr::GetHandlePtr returnValue(
-        new  SFUnrecComponentPtr::GetHandle(
-             &_sfParentComponent,
-             this->getType().getFieldDesc(ParentComponentFieldId),
-             const_cast<LayoutConstraintsBase *>(this)));
+    MFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
 EditFieldHandlePtr LayoutConstraintsBase::editHandleParentComponent(void)
 {
-    SFUnrecComponentPtr::EditHandlePtr returnValue(
-        new  SFUnrecComponentPtr::EditHandle(
-             &_sfParentComponent,
-             this->getType().getFieldDesc(ParentComponentFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&LayoutConstraints::setParentComponent,
-                    static_cast<LayoutConstraints *>(this), _1));
-
-    editSField(ParentComponentFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -330,8 +369,6 @@ void LayoutConstraintsBase::execSyncV(      FieldContainer    &oFrom,
 void LayoutConstraintsBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
-
-    static_cast<LayoutConstraints *>(this)->setParentComponent(NULL);
 
 
 }

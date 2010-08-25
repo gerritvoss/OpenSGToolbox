@@ -87,14 +87,6 @@ void PopupMenu::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection PopupMenu::addPopupMenuListener(PopupMenuListenerPtr Listener)
-{
-   _PopupMenuListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&PopupMenu::isPopupMenuListenerAttached, this, Listener),
-       boost::bind(&PopupMenu::removePopupMenuListener, this, Listener));
-}
-
 void PopupMenu::updateLayout(void)
 {
     //Determine the Max Preferred Width of my MenuItems
@@ -159,7 +151,7 @@ ComponentContainer* PopupMenu::getParentContainer(void) const
 void PopupMenu::addItem(MenuItem* const Item)
 {
     pushToChildren(Item);
-	producePopupMenuContentsChanged(PopupMenuEvent::create(this, getSystemTime()));
+	producePopupMenuContentsChanged();
 }
 
 void PopupMenu::addItem(MenuItem* const Item, const UInt32& Index)
@@ -181,14 +173,14 @@ void PopupMenu::addItem(MenuItem* const Item, const UInt32& Index)
     if(i < getMFChildren()->size())
     {
         insertIntoChildren(i, Item);
-        producePopupMenuContentsChanged(PopupMenuEvent::create(this, getSystemTime()));
+        producePopupMenuContentsChanged();
     }
 }
 
 void PopupMenu::removeItem(MenuItem* const Item)
 {
     removeObjFromChildren(Item);
-    producePopupMenuContentsChanged(PopupMenuEvent::create(this, getSystemTime()));
+    producePopupMenuContentsChanged();
 }
 
 void PopupMenu::removeItem(const UInt32& Index)
@@ -211,7 +203,7 @@ void PopupMenu::removeItem(const UInt32& Index)
         if(i<getMFChildren()->size())
         {
             removeFromChildren(i);
-	        producePopupMenuContentsChanged(PopupMenuEvent::create(this, getSystemTime()));
+	        producePopupMenuContentsChanged();
         }
     }
 }
@@ -329,7 +321,7 @@ void PopupMenu::updateSeparatorSizes(void)
         }
     }
 }
-void PopupMenu::mouseMoved(const MouseEventUnrecPtr e)
+void PopupMenu::mouseMoved(MouseEventDetails* const e)
 {
     UInt32 i(0);
     while (i<getMFChildren()->size() && !getChildren(i)->isContained(e->getLocation(), true))
@@ -348,7 +340,7 @@ void PopupMenu::mouseMoved(const MouseEventUnrecPtr e)
     ComponentContainer::mouseMoved(e);
 }
 
-void PopupMenu::mouseDragged(const MouseEventUnrecPtr e)
+void PopupMenu::mouseDragged(MouseEventDetails* const e)
 {
     UInt32 i(0);
     while (i<getMFChildren()->size() && !getChildren(i)->isContained(e->getLocation(), true))
@@ -363,22 +355,13 @@ void PopupMenu::mouseDragged(const MouseEventUnrecPtr e)
     ComponentContainer::mouseDragged(e);
 }
 
-void PopupMenu::removePopupMenuListener(PopupMenuListenerPtr Listener)
-{
-   PopupMenuListenerSetItor EraseIter(_PopupMenuListeners.find(Listener));
-   if(EraseIter != _PopupMenuListeners.end())
-   {
-      _PopupMenuListeners.erase(EraseIter);
-   }
-}
-
 void PopupMenu::cancel(void)
 {
     if(getVisible())
     {
         clearSelection();
-            setVisible(false);
-        producePopupMenuCanceled(PopupMenuEvent::create(this, getSystemTime()));
+        setVisible(false);
+        producePopupMenuCanceled();
     }
 }
 
@@ -439,52 +422,43 @@ UInt32 PopupMenu::getNumItems(void) const
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void  PopupMenu::producePopupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e)
+void  PopupMenu::producePopupMenuWillBecomeVisible(void)
 {
-	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
-    for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->popupMenuWillBecomeVisible(e);
-    }
-    _Producer.produceEvent(PopupMenuWillBecomeVisibleMethodId,e);
+    PopupMenuEventDetailsUnrecPtr Details(PopupMenuEventDetails::create(this,getSystemTime()));
+
+    Inherited::producePopupMenuWillBecomeVisible(Details);
 }
 
-void  PopupMenu::producePopupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e)
+void  PopupMenu::producePopupMenuWillBecomeInvisible(void)
 {
-	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
-    for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->popupMenuWillBecomeInvisible(e);
-    }
-    _Producer.produceEvent(PopupMenuWillBecomeInvisibleMethodId,e);
+    PopupMenuEventDetailsUnrecPtr Details(PopupMenuEventDetails::create(this,getSystemTime()));
+
+    Inherited::producePopupMenuWillBecomeInvisible(Details);
 }
 
-void  PopupMenu::producePopupMenuCanceled(const PopupMenuEventUnrecPtr e)
+void  PopupMenu::producePopupMenuCanceled(void)
 {
-	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
-    for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->popupMenuCanceled(e);
-    }
-    _Producer.produceEvent(PopupMenuCanceledMethodId,e);
+    PopupMenuEventDetailsUnrecPtr Details(PopupMenuEventDetails::create(this,getSystemTime()));
+
+    Inherited::producePopupMenuCanceled(Details);
 }
     
-void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEventUnrecPtr e)
+void PopupMenu::producePopupMenuContentsChanged(void)
 {
-	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
-    for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->popupMenuContentsChanged(e);
-    }
-    _Producer.produceEvent(PopupMenuContentsChangedMethodId,e);
+    PopupMenuEventDetailsUnrecPtr Details(PopupMenuEventDetails::create(this,getSystemTime()));
+
+    Inherited::producePopupMenuContentsChanged(Details);
 }
 
 void PopupMenu::onCreate(const PopupMenu * Id)
 {
 	Inherited::onCreate(Id);
 
-    DefaultSingleSelectionModelUnrecPtr TheModel(DefaultSingleSelectionModel::create());
-    setSelectionModel(TheModel);
+    if(Id != NULL)
+    {
+        DefaultSingleSelectionModelUnrecPtr TheModel(DefaultSingleSelectionModel::create());
+        setSelectionModel(TheModel);
+    }
 }
 
 void PopupMenu::onDestroy()
@@ -494,14 +468,12 @@ void PopupMenu::onDestroy()
 /*----------------------- constructors & destructors ----------------------*/
 
 PopupMenu::PopupMenu(void) :
-    Inherited(),
-    _MenuSelectionListener(this)
+    Inherited()
 {
 }
 
 PopupMenu::PopupMenu(const PopupMenu &source) :
-    Inherited(source),
-    _MenuSelectionListener(this)
+    Inherited(source)
 {
 }
 
@@ -521,11 +493,11 @@ void PopupMenu::changed(ConstFieldMaskArg whichField,
     {
         if(getVisible())
         {
-            producePopupMenuWillBecomeVisible(PopupMenuEvent::create(this, getSystemTime()));
+            producePopupMenuWillBecomeVisible();
         }
         else
         {
-            producePopupMenuWillBecomeInvisible(PopupMenuEvent::create(this, getSystemTime()));
+            producePopupMenuWillBecomeInvisible();
             if(getSelectionModel() != NULL)
             {
                 getSelectionModel()->clearSelection();
@@ -539,9 +511,13 @@ void PopupMenu::changed(ConstFieldMaskArg whichField,
         updateSeparatorSizes();
     }
 
-    if(whichField & SelectionModelFieldMask && getSelectionModel() != NULL)
+    if(whichField & SelectionModelFieldMask)
     {
-        getSelectionModel()->addSelectionListener(&_MenuSelectionListener);
+        _SelectionChangedConnection.disconnect();
+        if(getSelectionModel() != NULL)
+        {
+            _SelectionChangedConnection = getSelectionModel()->connectSelectionChanged(boost::bind(&PopupMenu::selectionChanged, this, _1));
+        }
     }
 }
 
@@ -551,23 +527,23 @@ void PopupMenu::dump(      UInt32    ,
     SLOG << "Dump PopupMenu NI" << std::endl;
 }
 
-void PopupMenu::MenuSelectionListener::selectionChanged(const SelectionEventUnrecPtr e)
+void PopupMenu::selectionChanged(SelectionEventDetails* const e)
 {
     for(UInt32 i(0) ; i<e->getMFPreviouslySelected()->size() ; ++i)
     {
-        if(_PopupMenu->getChildren(e->getPreviouslySelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           dynamic_cast<MenuItem*>(_PopupMenu->getChildren(e->getPreviouslySelected(i)))->getSelected())
+        if(getChildren(e->getPreviouslySelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           dynamic_cast<MenuItem*>(getChildren(e->getPreviouslySelected(i)))->getSelected())
         {
-                dynamic_cast<MenuItem*>(_PopupMenu->getChildren(e->getPreviouslySelected(i)))->setSelected(false);
+            dynamic_cast<MenuItem*>(getChildren(e->getPreviouslySelected(i)))->setSelected(false);
         }
     }
 
     for(UInt32 i(0) ; i<e->getMFSelected()->size() ; ++i)
     {
-        if(_PopupMenu->getChildren(e->getSelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           !dynamic_cast<MenuItem*>(_PopupMenu->getChildren(e->getSelected(i)))->getSelected())
+        if(getChildren(e->getSelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           !dynamic_cast<MenuItem*>(getChildren(e->getSelected(i)))->getSelected())
         {
-                dynamic_cast<MenuItem*>(_PopupMenu->getChildren(e->getSelected(i)))->setSelected(true);
+            dynamic_cast<MenuItem*>(getChildren(e->getSelected(i)))->setSelected(true);
         }
     }
 }

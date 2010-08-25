@@ -57,16 +57,18 @@
 #include "OSGConfig.h"
 
 
+#include "OSGCollisionEventDetails.h"
 
-#include "OSGPhysicsHandler.h"          // InternalParentHandler Class
+
+#include "OSGFieldContainer.h"          // ParentHandler Class
 #include "OSGCollisionContactParameters.h" // DefaultCollisionParameters Class
 
-#include "OSGPhysicsSpaceBase.h"
 #include "OSGPhysicsSpace.h"
+#include "OSGPhysicsSpaceBase.h"
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -94,7 +96,7 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var PhysicsHandler * PhysicsSpaceBase::_sfInternalParentHandler
+/*! \var FieldContainer * PhysicsSpaceBase::_sfParentHandler
     
 */
 
@@ -133,6 +135,18 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            PhysicsSpace *,
                            0);
 
+DataType &FieldTraits< PhysicsSpace *, 1 >::getType(void)
+{
+    return FieldTraits<PhysicsSpace *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_MFIELD(ChildPointerMField,
+                      PhysicsSpace *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
+
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
@@ -166,15 +180,15 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecPhysicsHandlerPtr::Description(
-        SFUnrecPhysicsHandlerPtr::getClassType(),
-        "InternalParentHandler",
+    pDesc = new SFParentFieldContainerPtr::Description(
+        SFParentFieldContainerPtr::getClassType(),
+        "ParentHandler",
         "",
-        InternalParentHandlerFieldId, InternalParentHandlerFieldMask,
+        ParentHandlerFieldId, ParentHandlerFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&PhysicsSpace::editHandleInternalParentHandler),
-        static_cast<FieldGetMethodSig >(&PhysicsSpace::getHandleInternalParentHandler));
+        static_cast     <FieldEditMethodSig>(&PhysicsSpace::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&PhysicsSpace::invalidGetField));
 
     oType.addInitialDesc(pDesc);
 
@@ -225,17 +239,6 @@ void PhysicsSpaceBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&PhysicsSpace::getHandleCategoryCollisionParameters));
 
     oType.addInitialDesc(pDesc);
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        true,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&PhysicsSpace::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&PhysicsSpace::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -263,6 +266,7 @@ PhysicsSpaceBase::TypeObject PhysicsSpaceBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    childFields=\"multi\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -284,13 +288,13 @@ PhysicsSpaceBase::TypeObject PhysicsSpaceBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
-    "\t\tname=\"InternalParentHandler\"\n"
-    "\t\ttype=\"PhysicsHandler\"\n"
-    "        category=\"pointer\"\n"
+    "\t\tname=\"ParentHandler\"\n"
+    "\t\ttype=\"FieldContainer\"\n"
     "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"protected\"\n"
+    "\t    access=\"none\"\n"
+    "        doRefCount=\"false\"\n"
+    "        passFieldMask=\"true\"\n"
+    "        category=\"parentpointer\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
@@ -330,24 +334,27 @@ PhysicsSpaceBase::TypeObject PhysicsSpaceBase::_type(
     "\t\taccess=\"protected\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"Collision\"\n"
-    "\t\ttype=\"CollisionEvent\"\n"
+    "\t\tdetailsType=\"CollisionEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     ""
     );
 
-//! PhysicsSpace Produced Methods
+//! PhysicsSpace Produced Events
 
-MethodDescription *PhysicsSpaceBase::_methodDesc[] =
+EventDescription *PhysicsSpaceBase::_eventDesc[] =
 {
-    new MethodDescription("Collision", 
-                    "",
-                     CollisionMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("Collision", 
+                          "",
+                          CollisionEventId, 
+                          FieldTraits<CollisionEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&PhysicsSpaceBase::getHandleCollisionSignal))
+
 };
 
 EventProducerType PhysicsSpaceBase::_producerType(
@@ -355,8 +362,8 @@ EventProducerType PhysicsSpaceBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -409,18 +416,6 @@ const SFInt32 *PhysicsSpaceBase::getSFSublevel(void) const
 }
 
 
-//! Get the PhysicsSpace::_sfInternalParentHandler field.
-const SFUnrecPhysicsHandlerPtr *PhysicsSpaceBase::getSFInternalParentHandler(void) const
-{
-    return &_sfInternalParentHandler;
-}
-
-SFUnrecPhysicsHandlerPtr *PhysicsSpaceBase::editSFInternalParentHandler(void)
-{
-    editSField(InternalParentHandlerFieldMask);
-
-    return &_sfInternalParentHandler;
-}
 
 //! Get the PhysicsSpace::_sfDefaultCollisionParameters field.
 const SFUnrecCollisionContactParametersPtr *PhysicsSpaceBase::getSFDefaultCollisionParameters(void) const
@@ -545,9 +540,9 @@ UInt32 PhysicsSpaceBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfSublevel.getBinSize();
     }
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    if(FieldBits::NoField != (ParentHandlerFieldMask & whichField))
     {
-        returnValue += _sfInternalParentHandler.getBinSize();
+        returnValue += _sfParentHandler.getBinSize();
     }
     if(FieldBits::NoField != (DefaultCollisionParametersFieldMask & whichField))
     {
@@ -564,10 +559,6 @@ UInt32 PhysicsSpaceBase::getBinSize(ConstFieldMaskArg whichField)
     if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
     {
         returnValue += _mfCategoryCollisionParameters.getBinSize();
-    }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
     }
 
     return returnValue;
@@ -586,9 +577,9 @@ void PhysicsSpaceBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfSublevel.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    if(FieldBits::NoField != (ParentHandlerFieldMask & whichField))
     {
-        _sfInternalParentHandler.copyToBin(pMem);
+        _sfParentHandler.copyToBin(pMem);
     }
     if(FieldBits::NoField != (DefaultCollisionParametersFieldMask & whichField))
     {
@@ -606,10 +597,6 @@ void PhysicsSpaceBase::copyToBin(BinaryDataHandler &pMem,
     {
         _mfCategoryCollisionParameters.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void PhysicsSpaceBase::copyFromBin(BinaryDataHandler &pMem,
@@ -625,9 +612,9 @@ void PhysicsSpaceBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfSublevel.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (InternalParentHandlerFieldMask & whichField))
+    if(FieldBits::NoField != (ParentHandlerFieldMask & whichField))
     {
-        _sfInternalParentHandler.copyFromBin(pMem);
+        _sfParentHandler.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (DefaultCollisionParametersFieldMask & whichField))
     {
@@ -644,10 +631,6 @@ void PhysicsSpaceBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
     {
         _mfCategoryCollisionParameters.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
     }
 }
 
@@ -769,34 +752,138 @@ FieldContainerTransitPtr PhysicsSpaceBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void PhysicsSpaceBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case CollisionEventId:
+        OSG_ASSERT(dynamic_cast<CollisionEventDetailsType* const>(e));
+
+        _CollisionEvent.set_combiner(ConsumableEventCombiner(e));
+        _CollisionEvent(dynamic_cast<CollisionEventDetailsType* const>(e), CollisionEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection PhysicsSpaceBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case CollisionEventId:
+        return _CollisionEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  PhysicsSpaceBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case CollisionEventId:
+        return _CollisionEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  PhysicsSpaceBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case CollisionEventId:
+        _CollisionEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  PhysicsSpaceBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case CollisionEventId:
+        _CollisionEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  PhysicsSpaceBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case CollisionEventId:
+        return _CollisionEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  PhysicsSpaceBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case CollisionEventId:
+        return _CollisionEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
 PhysicsSpaceBase::PhysicsSpaceBase(void) :
-    _Producer(&getProducerType()),
     Inherited(),
     _sfCleanup                (),
     _sfSublevel               (),
-    _sfInternalParentHandler  (NULL),
+    _sfParentHandler          (NULL),
     _sfDefaultCollisionParameters(NULL),
     _mfCategory1              (),
     _mfCategory2              (),
     _mfCategoryCollisionParameters()
-    ,_sfEventProducer(&_Producer)
 {
 }
 
 PhysicsSpaceBase::PhysicsSpaceBase(const PhysicsSpaceBase &source) :
-    _Producer(&source.getProducerType()),
     Inherited(source),
     _sfCleanup                (source._sfCleanup                ),
     _sfSublevel               (source._sfSublevel               ),
-    _sfInternalParentHandler  (NULL),
+    _sfParentHandler          (NULL),
     _sfDefaultCollisionParameters(NULL),
     _mfCategory1              (source._mfCategory1              ),
     _mfCategory2              (source._mfCategory2              ),
     _mfCategoryCollisionParameters()
-    ,_sfEventProducer(&_Producer)
 {
 }
 
@@ -806,6 +893,77 @@ PhysicsSpaceBase::PhysicsSpaceBase(const PhysicsSpaceBase &source) :
 PhysicsSpaceBase::~PhysicsSpaceBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
+
+bool PhysicsSpaceBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
+{
+    if(parentFieldId == ParentHandlerFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            FieldContainer *pOldParent =
+                _sfParentHandler.getValue         ();
+
+            UInt16 oldChildFieldId =
+                _sfParentHandler.getParentFieldPos();
+
+            if(pOldParent != NULL)
+            {
+                pOldParent->unlinkChild(this, oldChildFieldId);
+            }
+
+            editSField(ParentHandlerFieldMask);
+
+            _sfParentHandler.setValue(static_cast<FieldContainer *>(pParent), childFieldId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
+}
+
+bool PhysicsSpaceBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
+{
+    if(parentFieldId == ParentHandlerFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            if(_sfParentHandler.getValue() == pParent)
+            {
+                editSField(ParentHandlerFieldMask);
+
+                _sfParentHandler.setValue(NULL, 0xFFFF);
+
+                return true;
+            }
+
+            FWARNING(("PhysicsSpaceBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
 
 void PhysicsSpaceBase::onCreate(const PhysicsSpace *source)
 {
@@ -814,8 +972,6 @@ void PhysicsSpaceBase::onCreate(const PhysicsSpace *source)
     if(source != NULL)
     {
         PhysicsSpace *pThis = static_cast<PhysicsSpace *>(this);
-
-        pThis->setInternalParentHandler(source->getInternalParentHandler());
 
         pThis->setDefaultCollisionParameters(source->getDefaultCollisionParameters());
 
@@ -883,30 +1039,16 @@ EditFieldHandlePtr PhysicsSpaceBase::editHandleSublevel       (void)
     return returnValue;
 }
 
-GetFieldHandlePtr PhysicsSpaceBase::getHandleInternalParentHandler (void) const
+GetFieldHandlePtr PhysicsSpaceBase::getHandleParentHandler   (void) const
 {
-    SFUnrecPhysicsHandlerPtr::GetHandlePtr returnValue(
-        new  SFUnrecPhysicsHandlerPtr::GetHandle(
-             &_sfInternalParentHandler,
-             this->getType().getFieldDesc(InternalParentHandlerFieldId),
-             const_cast<PhysicsSpaceBase *>(this)));
+    SFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
-EditFieldHandlePtr PhysicsSpaceBase::editHandleInternalParentHandler(void)
+EditFieldHandlePtr PhysicsSpaceBase::editHandleParentHandler  (void)
 {
-    SFUnrecPhysicsHandlerPtr::EditHandlePtr returnValue(
-        new  SFUnrecPhysicsHandlerPtr::EditHandle(
-             &_sfInternalParentHandler,
-             this->getType().getFieldDesc(InternalParentHandlerFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&PhysicsSpace::setInternalParentHandler,
-                    static_cast<PhysicsSpace *>(this), _1));
-
-    editSField(InternalParentHandlerFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
@@ -1027,27 +1169,13 @@ EditFieldHandlePtr PhysicsSpaceBase::editHandleCategoryCollisionParameters(void)
 }
 
 
-GetFieldHandlePtr PhysicsSpaceBase::getHandleEventProducer        (void) const
+GetEventHandlePtr PhysicsSpaceBase::getHandleCollisionSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<CollisionEventType>(
+             const_cast<CollisionEventType *>(&_CollisionEvent),
+             _producerType.getEventDescription(CollisionEventId),
              const_cast<PhysicsSpaceBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr PhysicsSpaceBase::editHandleEventProducer       (void)
-{
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
-
-
-    editSField(EventProducerFieldMask);
 
     return returnValue;
 }
@@ -1088,8 +1216,6 @@ FieldContainer *PhysicsSpaceBase::createAspectCopy(
 void PhysicsSpaceBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
-
-    static_cast<PhysicsSpace *>(this)->setInternalParentHandler(NULL);
 
     static_cast<PhysicsSpace *>(this)->setDefaultCollisionParameters(NULL);
 

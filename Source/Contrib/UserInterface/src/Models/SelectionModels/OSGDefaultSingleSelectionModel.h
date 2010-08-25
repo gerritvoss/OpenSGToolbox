@@ -43,8 +43,6 @@
 #endif
 
 #include "OSGDefaultSingleSelectionModelBase.h"
-#include <set>
-#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,9 +78,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultSingleSelectionModel : public D
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    //Adds listener as a listener to changes in the model.
-    virtual EventConnection addSelectionListener(SelectionListenerPtr listener);
-	bool isSelectionListenerAttached(SelectionListenerPtr listener) const;
 
     //Clears the selection (to -1).
     virtual void clearSelection(void);
@@ -92,9 +87,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultSingleSelectionModel : public D
     
     //Returns true if the selection model currently has a selected value.
     virtual bool isSelected(void);
-    
-    //Removes listener as a listener to changes in the model.
-    virtual void removeSelectionListener(SelectionListenerPtr listener);
     
     //Sets the model's selected index to index.
     virtual void setSelectedIndex(Int32 index);
@@ -126,11 +118,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultSingleSelectionModel : public D
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-	typedef std::set<SelectionListenerPtr> SelectionListenerSet;
-    typedef SelectionListenerSet::iterator SelectionListenerSetItor;
-    typedef SelectionListenerSet::const_iterator SelectionListenerSetConstItor;
-	
-    SelectionListenerSet       _SelectionListeners;
     
     virtual void produceSelectionChanged(const Int32& SelectedIndex, const Int32& PreviouslySelectedIndex);
     /*==========================  PRIVATE  ================================*/

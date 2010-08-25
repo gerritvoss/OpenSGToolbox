@@ -48,6 +48,12 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGMouseEventDetails.h"
+#include "OSGMouseWheelEventDetails.h"
+#include "OSGKeyEventDetails.h"
+#include "OSGFocusEventDetails.h"
+#include "OSGComponentEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -124,70 +130,863 @@ const Char8 *ComponentDecoratorBase::getClassname(void)
 }
 
 inline
-EventConnection ComponentDecoratorBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool ComponentDecoratorBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 ComponentDecoratorBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr ComponentDecoratorBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void ComponentDecoratorBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 ComponentDecoratorBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *ComponentDecoratorBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *ComponentDecoratorBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *ComponentDecoratorBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *ComponentDecoratorBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 ComponentDecoratorBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *ComponentDecoratorBase::editSFEventProducer(void)
+boost::signals2::connection  ComponentDecoratorBase::connectMouseMoved(const MouseMovedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _MouseMovedEvent.connect(listener, at);
 }
 
-//! Get the value of the ComponentDecorator::_sfEventProducer field.
 inline
-EventProducerPtr &ComponentDecoratorBase::editEventProducer(void)
+boost::signals2::connection  ComponentDecoratorBase::connectMouseMoved(const MouseMovedEventType::group_type &group,
+                                                    const MouseMovedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _MouseMovedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectMouseMoved(const MouseMovedEventType::group_type &group)
+{
+    _MouseMovedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsMouseMoved(void)
+{
+    _MouseMovedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyMouseMoved(void) const
+{
+    return _MouseMovedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsMouseMoved(void) const
+{
+    return _MouseMovedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceMouseMoved(MouseMovedEventDetailsType* const e)
+{
+    produceEvent(MouseMovedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseDragged(const MouseDraggedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseDraggedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseDragged(const MouseDraggedEventType::group_type &group,
+                                                    const MouseDraggedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseDraggedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectMouseDragged(const MouseDraggedEventType::group_type &group)
+{
+    _MouseDraggedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsMouseDragged(void)
+{
+    _MouseDraggedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyMouseDragged(void) const
+{
+    return _MouseDraggedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsMouseDragged(void) const
+{
+    return _MouseDraggedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceMouseDragged(MouseDraggedEventDetailsType* const e)
+{
+    produceEvent(MouseDraggedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseClicked(const MouseClickedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseClickedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseClicked(const MouseClickedEventType::group_type &group,
+                                                    const MouseClickedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseClickedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectMouseClicked(const MouseClickedEventType::group_type &group)
+{
+    _MouseClickedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsMouseClicked(void)
+{
+    _MouseClickedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyMouseClicked(void) const
+{
+    return _MouseClickedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsMouseClicked(void) const
+{
+    return _MouseClickedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceMouseClicked(MouseClickedEventDetailsType* const e)
+{
+    produceEvent(MouseClickedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseEntered(const MouseEnteredEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseEnteredEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseEntered(const MouseEnteredEventType::group_type &group,
+                                                    const MouseEnteredEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseEnteredEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectMouseEntered(const MouseEnteredEventType::group_type &group)
+{
+    _MouseEnteredEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsMouseEntered(void)
+{
+    _MouseEnteredEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyMouseEntered(void) const
+{
+    return _MouseEnteredEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsMouseEntered(void) const
+{
+    return _MouseEnteredEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceMouseEntered(MouseEnteredEventDetailsType* const e)
+{
+    produceEvent(MouseEnteredEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseExited(const MouseExitedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseExitedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseExited(const MouseExitedEventType::group_type &group,
+                                                    const MouseExitedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseExitedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectMouseExited(const MouseExitedEventType::group_type &group)
+{
+    _MouseExitedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsMouseExited(void)
+{
+    _MouseExitedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyMouseExited(void) const
+{
+    return _MouseExitedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsMouseExited(void) const
+{
+    return _MouseExitedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceMouseExited(MouseExitedEventDetailsType* const e)
+{
+    produceEvent(MouseExitedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMousePressed(const MousePressedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MousePressedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMousePressed(const MousePressedEventType::group_type &group,
+                                                    const MousePressedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MousePressedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectMousePressed(const MousePressedEventType::group_type &group)
+{
+    _MousePressedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsMousePressed(void)
+{
+    _MousePressedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyMousePressed(void) const
+{
+    return _MousePressedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsMousePressed(void) const
+{
+    return _MousePressedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceMousePressed(MousePressedEventDetailsType* const e)
+{
+    produceEvent(MousePressedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseReleased(const MouseReleasedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseReleasedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseReleased(const MouseReleasedEventType::group_type &group,
+                                                    const MouseReleasedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseReleasedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectMouseReleased(const MouseReleasedEventType::group_type &group)
+{
+    _MouseReleasedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsMouseReleased(void)
+{
+    _MouseReleasedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyMouseReleased(void) const
+{
+    return _MouseReleasedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsMouseReleased(void) const
+{
+    return _MouseReleasedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceMouseReleased(MouseReleasedEventDetailsType* const e)
+{
+    produceEvent(MouseReleasedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseWheelMoved(const MouseWheelMovedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _MouseWheelMovedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectMouseWheelMoved(const MouseWheelMovedEventType::group_type &group,
+                                                    const MouseWheelMovedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _MouseWheelMovedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectMouseWheelMoved(const MouseWheelMovedEventType::group_type &group)
+{
+    _MouseWheelMovedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsMouseWheelMoved(void)
+{
+    _MouseWheelMovedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyMouseWheelMoved(void) const
+{
+    return _MouseWheelMovedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsMouseWheelMoved(void) const
+{
+    return _MouseWheelMovedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceMouseWheelMoved(MouseWheelMovedEventDetailsType* const e)
+{
+    produceEvent(MouseWheelMovedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectKeyPressed(const KeyPressedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _KeyPressedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectKeyPressed(const KeyPressedEventType::group_type &group,
+                                                    const KeyPressedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _KeyPressedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectKeyPressed(const KeyPressedEventType::group_type &group)
+{
+    _KeyPressedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsKeyPressed(void)
+{
+    _KeyPressedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyKeyPressed(void) const
+{
+    return _KeyPressedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsKeyPressed(void) const
+{
+    return _KeyPressedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceKeyPressed(KeyPressedEventDetailsType* const e)
+{
+    produceEvent(KeyPressedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectKeyReleased(const KeyReleasedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _KeyReleasedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectKeyReleased(const KeyReleasedEventType::group_type &group,
+                                                    const KeyReleasedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _KeyReleasedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectKeyReleased(const KeyReleasedEventType::group_type &group)
+{
+    _KeyReleasedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsKeyReleased(void)
+{
+    _KeyReleasedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyKeyReleased(void) const
+{
+    return _KeyReleasedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsKeyReleased(void) const
+{
+    return _KeyReleasedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceKeyReleased(KeyReleasedEventDetailsType* const e)
+{
+    produceEvent(KeyReleasedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectKeyTyped(const KeyTypedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _KeyTypedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectKeyTyped(const KeyTypedEventType::group_type &group,
+                                                    const KeyTypedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _KeyTypedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectKeyTyped(const KeyTypedEventType::group_type &group)
+{
+    _KeyTypedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsKeyTyped(void)
+{
+    _KeyTypedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyKeyTyped(void) const
+{
+    return _KeyTypedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsKeyTyped(void) const
+{
+    return _KeyTypedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceKeyTyped(KeyTypedEventDetailsType* const e)
+{
+    produceEvent(KeyTypedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectFocusGained(const FocusGainedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _FocusGainedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectFocusGained(const FocusGainedEventType::group_type &group,
+                                                    const FocusGainedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _FocusGainedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectFocusGained(const FocusGainedEventType::group_type &group)
+{
+    _FocusGainedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsFocusGained(void)
+{
+    _FocusGainedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyFocusGained(void) const
+{
+    return _FocusGainedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsFocusGained(void) const
+{
+    return _FocusGainedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceFocusGained(FocusGainedEventDetailsType* const e)
+{
+    produceEvent(FocusGainedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectFocusLost(const FocusLostEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _FocusLostEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectFocusLost(const FocusLostEventType::group_type &group,
+                                                    const FocusLostEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _FocusLostEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectFocusLost(const FocusLostEventType::group_type &group)
+{
+    _FocusLostEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsFocusLost(void)
+{
+    _FocusLostEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyFocusLost(void) const
+{
+    return _FocusLostEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsFocusLost(void) const
+{
+    return _FocusLostEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceFocusLost(FocusLostEventDetailsType* const e)
+{
+    produceEvent(FocusLostEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentHidden(const ComponentHiddenEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ComponentHiddenEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentHidden(const ComponentHiddenEventType::group_type &group,
+                                                    const ComponentHiddenEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ComponentHiddenEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectComponentHidden(const ComponentHiddenEventType::group_type &group)
+{
+    _ComponentHiddenEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsComponentHidden(void)
+{
+    _ComponentHiddenEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyComponentHidden(void) const
+{
+    return _ComponentHiddenEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsComponentHidden(void) const
+{
+    return _ComponentHiddenEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceComponentHidden(ComponentHiddenEventDetailsType* const e)
+{
+    produceEvent(ComponentHiddenEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentVisible(const ComponentVisibleEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ComponentVisibleEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentVisible(const ComponentVisibleEventType::group_type &group,
+                                                    const ComponentVisibleEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ComponentVisibleEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectComponentVisible(const ComponentVisibleEventType::group_type &group)
+{
+    _ComponentVisibleEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsComponentVisible(void)
+{
+    _ComponentVisibleEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyComponentVisible(void) const
+{
+    return _ComponentVisibleEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsComponentVisible(void) const
+{
+    return _ComponentVisibleEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceComponentVisible(ComponentVisibleEventDetailsType* const e)
+{
+    produceEvent(ComponentVisibleEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentMoved(const ComponentMovedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ComponentMovedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentMoved(const ComponentMovedEventType::group_type &group,
+                                                    const ComponentMovedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ComponentMovedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectComponentMoved(const ComponentMovedEventType::group_type &group)
+{
+    _ComponentMovedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsComponentMoved(void)
+{
+    _ComponentMovedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyComponentMoved(void) const
+{
+    return _ComponentMovedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsComponentMoved(void) const
+{
+    return _ComponentMovedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceComponentMoved(ComponentMovedEventDetailsType* const e)
+{
+    produceEvent(ComponentMovedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentResized(const ComponentResizedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ComponentResizedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentResized(const ComponentResizedEventType::group_type &group,
+                                                    const ComponentResizedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ComponentResizedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectComponentResized(const ComponentResizedEventType::group_type &group)
+{
+    _ComponentResizedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsComponentResized(void)
+{
+    _ComponentResizedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyComponentResized(void) const
+{
+    return _ComponentResizedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsComponentResized(void) const
+{
+    return _ComponentResizedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceComponentResized(ComponentResizedEventDetailsType* const e)
+{
+    produceEvent(ComponentResizedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentEnabled(const ComponentEnabledEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ComponentEnabledEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentEnabled(const ComponentEnabledEventType::group_type &group,
+                                                    const ComponentEnabledEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ComponentEnabledEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectComponentEnabled(const ComponentEnabledEventType::group_type &group)
+{
+    _ComponentEnabledEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsComponentEnabled(void)
+{
+    _ComponentEnabledEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyComponentEnabled(void) const
+{
+    return _ComponentEnabledEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsComponentEnabled(void) const
+{
+    return _ComponentEnabledEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceComponentEnabled(ComponentEnabledEventDetailsType* const e)
+{
+    produceEvent(ComponentEnabledEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentDisabled(const ComponentDisabledEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ComponentDisabledEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectComponentDisabled(const ComponentDisabledEventType::group_type &group,
+                                                    const ComponentDisabledEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ComponentDisabledEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectComponentDisabled(const ComponentDisabledEventType::group_type &group)
+{
+    _ComponentDisabledEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsComponentDisabled(void)
+{
+    _ComponentDisabledEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyComponentDisabled(void) const
+{
+    return _ComponentDisabledEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsComponentDisabled(void) const
+{
+    return _ComponentDisabledEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceComponentDisabled(ComponentDisabledEventDetailsType* const e)
+{
+    produceEvent(ComponentDisabledEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(ComponentDecorator);

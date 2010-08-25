@@ -65,6 +65,8 @@
 
 #include "OSGLayout.h" // Parent
 
+#include "OSGSysFields.h"               // Scaling type
+#include "OSGVecFields.h"               // OriginalDimensions type
 
 #include "OSGAbsoluteLayoutFields.h"
 
@@ -85,11 +87,29 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbsoluteLayoutBase : public Layout
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(AbsoluteLayout);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
   public:
 
+    enum
+    {
+        ScalingFieldId = Inherited::NextFieldId,
+        OriginalDimensionsFieldId = ScalingFieldId + 1,
+        NextFieldId = OriginalDimensionsFieldId + 1
+    };
+
+    static const OSG::BitVector ScalingFieldMask =
+        (TypeTraits<BitVector>::One << ScalingFieldId);
+    static const OSG::BitVector OriginalDimensionsFieldMask =
+        (TypeTraits<BitVector>::One << OriginalDimensionsFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFBool            SFScalingType;
+    typedef SFVec2f           SFOriginalDimensionsType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -108,6 +128,38 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbsoluteLayoutBase : public Layout
     virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+
+                  SFBool              *editSFScaling        (void);
+            const SFBool              *getSFScaling         (void) const;
+
+                  SFVec2f             *editSFOriginalDimensions(void);
+            const SFVec2f             *getSFOriginalDimensions (void) const;
+
+
+                  bool                &editScaling        (void);
+                  bool                 getScaling         (void) const;
+
+                  Vec2f               &editOriginalDimensions(void);
+            const Vec2f               &getOriginalDimensions (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setScaling        (const bool value);
+            void setOriginalDimensions(const Vec2f &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -159,6 +211,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbsoluteLayoutBase : public Layout
     static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFBool            _sfScaling;
+    SFVec2f           _sfOriginalDimensions;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
@@ -183,6 +243,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbsoluteLayoutBase : public Layout
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
+    GetFieldHandlePtr  getHandleScaling         (void) const;
+    EditFieldHandlePtr editHandleScaling        (void);
+    GetFieldHandlePtr  getHandleOriginalDimensions (void) const;
+    EditFieldHandlePtr editHandleOriginalDimensions(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

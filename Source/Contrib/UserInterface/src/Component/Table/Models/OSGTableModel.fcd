@@ -14,24 +14,28 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI TableModel.
-	<ProducedMethod
+	<ProducedEvent
 		name="ContentsHeaderRowChanged"
-		type="TableModelEventPtr"
+		detailsType="TableModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ContentsChanged"
-		type="TableModelEventPtr"
+		detailsType="TableModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="IntervalAdded"
-		type="TableModelEventPtr"
+		detailsType="TableModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="IntervalRemoved"
-		type="TableModelEventPtr"
+		detailsType="TableModelEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

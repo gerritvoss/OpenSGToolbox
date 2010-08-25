@@ -14,19 +14,22 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI ListModel.
-	<ProducedMethod
+	<ProducedEvent
 		name="ListDataContentsChanged"
-		type="ListDataEventPtr"
+		detailsType="ListDataEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ListDataIntervalAdded"
-		type="ListDataEventPtr"
+		detailsType="ListDataEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ListDataIntervalRemoved"
-		type="ListDataEventPtr"
+		detailsType="ListDataEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

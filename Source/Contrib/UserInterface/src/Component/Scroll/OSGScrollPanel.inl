@@ -53,16 +53,4 @@ Component * ScrollPanel::getViewComponent  (void) const
     }
 }
 
-inline
-ScrollPanel::ViewportChangeListener::ViewportChangeListener(ScrollPanel* const TheScrollPanel) :
-   _ScrollPanel(TheScrollPanel)
-{
-}
-
-inline
-ScrollPanel::ViewportRangeModelChangeListener::ViewportRangeModelChangeListener(ScrollPanel* const TheScrollPanel) :
-   _ScrollPanel(TheScrollPanel)
-{
-}
-
 OSG_END_NAMESPACE

@@ -47,8 +47,6 @@
 #include <ode/ode.h>
 #include "OSGStatElemTypes.h"
 #include "OSGPhysicsBodyFields.h"
-#include "OSGWindowEventProducer.h"
-#include "OSGUpdateListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,7 +54,7 @@ OSG_BEGIN_NAMESPACE
            PageContribPhysicsPhysicsHandler for a description.
 */
 
-class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, public EventListener
+class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
 {
   protected:
 
@@ -84,22 +82,9 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, 
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /**************************************************************************//**
-     * @fn	void attachUpdateProducer(WindowEventProducerUnrecPtr TheProducer)
-     * 
-     * @brief	Attaches this Physics Handler to the update event produced by
-     *          TheProducer. 
-     * 
-     * @param	TheProducer	the Event producer that sends update events. 
-     *
-     * @see     PhysicsHandler::update
-     *****************************************************************************/
-    void attachUpdateProducer(EventProducerPtr TheProducer);
+    void attachUpdateProducer(ReflexiveContainer* const producer);
     void detachUpdateProducer(void);
 
-    virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId);
-
-    /*! \}                                                                 */
     static StatElemDesc<StatTimeElem   > statCollisionTime;
     static StatElemDesc<StatTimeElem   > statPerStepCollisionTime;
     static StatElemDesc<StatTimeElem   > statSimulationTime;
@@ -141,12 +126,13 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, 
     /*! \}                                                                 */
     void onCreate(const PhysicsHandler *id = NULL);
     void onDestroy();
-    void updateWorld(NodeUnrecPtr node);
+    void updateWorld(Node* const node);
 
     StatCollector* _statistics;
     bool _ownStat;
     Time _TimeSinceLast;
-    EventConnection _UpdateEventConnection;
+    void attachedUpdate(EventDetails* const details);
+    boost::signals2::connection _UpdateEventConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:

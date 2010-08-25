@@ -75,10 +75,7 @@
 
 #include "OSGButtonFields.h"
 
-//Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
+#include "OSGActionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -97,6 +94,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ButtonBase : public Component
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(Button);
+    
+    
+    typedef ActionEventDetails ActionPerformedEventDetailsType;
+    typedef ActionEventDetails MousePressedActionPerformedEventDetailsType;
+
+    typedef boost::signals2::signal<void (ActionEventDetails* const, UInt32), ConsumableEventCombiner> ActionPerformedEventType;
+    typedef boost::signals2::signal<void (ActionEventDetails* const, UInt32), ConsumableEventCombiner> MousePressedActionPerformedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -197,9 +201,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ButtonBase : public Component
 
     enum
     {
-        ActionPerformedMethodId = Inherited::NextProducedMethodId,
-        MousePressedActionPerformedMethodId = ActionPerformedMethodId + 1,
-        NextProducedMethodId = MousePressedActionPerformedMethodId + 1
+        ActionPerformedEventId = Inherited::NextProducedEventId,
+        MousePressedActionPerformedEventId = ActionPerformedEventId + 1,
+        NextProducedEventId = MousePressedActionPerformedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -388,12 +392,53 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ButtonBase : public Component
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //ActionPerformed
+    boost::signals2::connection connectActionPerformed(const ActionPerformedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectActionPerformed(const ActionPerformedEventType::group_type &group,
+                                                       const ActionPerformedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectActionPerformed        (const ActionPerformedEventType::group_type &group);
+    void   disconnectAllSlotsActionPerformed(void);
+    bool   isEmptyActionPerformed           (void) const;
+    UInt32 numSlotsActionPerformed          (void) const;
+    
+    //MousePressedActionPerformed
+    boost::signals2::connection connectMousePressedActionPerformed(const MousePressedActionPerformedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectMousePressedActionPerformed(const MousePressedActionPerformedEventType::group_type &group,
+                                                       const MousePressedActionPerformedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectMousePressedActionPerformed(const MousePressedActionPerformedEventType::group_type &group);
+    void   disconnectAllSlotsMousePressedActionPerformed(void);
+    bool   isEmptyMousePressedActionPerformed(void) const;
+    UInt32 numSlotsMousePressedActionPerformed(void) const;
+    
+    
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
@@ -425,6 +470,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ButtonBase : public Component
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Produced Event Signals                   */
+    /*! \{                                                                 */
+
+    //Event Event producers
+    ActionPerformedEventType _ActionPerformedEvent;
+    MousePressedActionPerformedEventType _MousePressedActionPerformedEvent;
+    /*! \}                                                                 */
 
     static TypeObject _type;
 
@@ -529,6 +582,22 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ButtonBase : public Component
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleActionPerformedSignal(void) const;
+    GetEventHandlePtr getHandleMousePressedActionPerformedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceActionPerformed     (ActionPerformedEventDetailsType* const e);
+    void produceMousePressedActionPerformed  (MousePressedActionPerformedEventDetailsType* const e);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -577,7 +646,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ButtonBase : public Component
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

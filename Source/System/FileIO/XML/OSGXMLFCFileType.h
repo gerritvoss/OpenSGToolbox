@@ -39,8 +39,6 @@
 #include <utility>
 #include "OSGFCFileType.h"
 #include "OSGFCFileHandler.h"
-#include "OSGEventProducer.h"
-#include "OSGEventListener.h"
 #include "OSGContainerIdMapper.h"
 #include "OSGFieldContainer.h"
 

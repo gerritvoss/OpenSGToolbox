@@ -88,14 +88,6 @@ UIDrawingSurface* AbstractWindow::getParentDrawingSurface(void) const
     return dynamic_cast<UIDrawingSurface*>(_sfParentDrawingSurface.getValue());
 }
 
-EventConnection AbstractWindow::addWindowListener(WindowListenerPtr Listener)
-{
-   _WindowListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&AbstractWindow::isWindowListenerAttached, this, Listener),
-       boost::bind(&AbstractWindow::removeWindowListener, this, Listener));
-}
-
 void AbstractWindow::updateContainerLayout(void)
 {
     if(getParentContainer() != NULL)
@@ -239,122 +231,86 @@ Layer* AbstractWindow::getDrawnForeground(void) const
 
 void AbstractWindow::produceWindowOpened(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowOpened(TheEvent);
-   }
-   _Producer.produceEvent(WindowOpenedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create( this, getSystemTime() );
+
+   Inherited::produceWindowOpened(Details);
 }
 
 void AbstractWindow::produceWindowClosing(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowClosing(TheEvent);
-   }
-   _Producer.produceEvent(WindowClosingMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create( this, getSystemTime() );
+
+   Inherited::produceWindowClosing(Details);
 }
 
 void AbstractWindow::produceWindowClosed(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( NULL, getSystemTime() );
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowClosed(TheEvent);
-   }
-   _Producer.produceEvent(WindowClosedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create( NULL, getSystemTime() );
+
+   Inherited::produceWindowClosed(Details);
 }
 
 void AbstractWindow::produceWindowIconified(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowIconified(TheEvent);
-   }
-   _Producer.produceEvent(WindowIconifiedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create( this, getSystemTime() );
+
+   Inherited::produceWindowIconified(Details);
 }
 
 void AbstractWindow::produceWindowDeiconified(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowDeiconified(TheEvent);
-   }
-   _Producer.produceEvent(WindowDeiconifiedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create( this, getSystemTime() );
+
+   Inherited::produceWindowDeiconified(Details);
 }
 
 void AbstractWindow::produceWindowActivated(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowActivated(TheEvent);
-   }
-   _Producer.produceEvent(WindowActivatedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create( this, getSystemTime() );
+
+   Inherited::produceWindowActivated(Details);
 }
 
 void AbstractWindow::produceWindowDeactivated(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowDeactivated(TheEvent);
-   }
-   _Producer.produceEvent(WindowDeactivatedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create( this, getSystemTime() );
+
+   Inherited::produceWindowDeactivated(Details);
 }
 
 void AbstractWindow::produceWindowEntered(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowEntered(TheEvent);
-   }
-   _Producer.produceEvent(WindowEnteredMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create( this, getSystemTime() );
+
+   Inherited::produceWindowEntered(Details);
 }
 
 void AbstractWindow::produceWindowExited(void)
 {
-   const WindowEventUnrecPtr TheEvent = WindowEvent::create( this, getSystemTime() );
-   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->windowExited(TheEvent);
-   }
-   _Producer.produceEvent(WindowExitedMethodId,TheEvent);
+   WindowEventDetailsUnrecPtr Details = WindowEventDetails::create( this, getSystemTime() );
+
+   Inherited::produceWindowExited(Details);
 }
 
-void AbstractWindow::removeWindowListener(WindowListenerPtr Listener)
-{
-   WindowListenerSetItor EraseIter(_WindowListeners.find(Listener));
-   if(EraseIter != _WindowListeners.end())
-   {
-      _WindowListeners.erase(EraseIter);
-   }
-}
-
-void AbstractWindow::focusGained(const FocusEventUnrecPtr e)
+void AbstractWindow::focusGained(FocusEventDetails* const e)
 {
 	Inherited::focusGained(e);
 	produceWindowActivated();
 }
 
-void AbstractWindow::focusLost(const FocusEventUnrecPtr e)
+void AbstractWindow::focusLost(FocusEventDetails* const e)
 {
 	Inherited::focusLost(e);
 	produceWindowDeactivated();
 }
 
-void AbstractWindow::mouseEntered(const MouseEventUnrecPtr e)
+void AbstractWindow::mouseEntered(MouseEventDetails* const e)
 {
 	Inherited::mouseEntered(e);
 	produceWindowEntered();
 }
 
-void AbstractWindow::mouseExited(const MouseEventUnrecPtr e)
+void AbstractWindow::mouseExited(MouseEventDetails* const e)
 {
 	Inherited::mouseExited(e);
 	produceWindowExited();
@@ -389,6 +345,12 @@ void AbstractWindow::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if( whichField & (AlignmentInDrawingSurfaceFieldMask |
+                      ScalingInDrawingSurfaceFieldMask))
+    {
+        updateContainerLayout();
+    }
 }
 
 void AbstractWindow::dump(      UInt32    ,

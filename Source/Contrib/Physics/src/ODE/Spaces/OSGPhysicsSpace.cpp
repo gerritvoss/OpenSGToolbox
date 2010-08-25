@@ -46,7 +46,7 @@
 #include <OSGConfig.h>
 
 #include "OSGPhysicsSpace.h"
-#include "OSGCollisionEvent.h"
+#include "OSGStatCollector.h"
 #include "rapidxml.h"
 #include "rapidxml_iterators.h"
 
@@ -66,16 +66,16 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 bool PhysicsSpace::registerXMLHandler(void)
 {
-        return XMLFCFileType::the()->registerHandler(&PhysicsSpace::getClassType(),boost::bind(&OSG::PhysicsSpace::xmlReadHandler,_1,_2,_3),boost::bind(&OSG::PhysicsSpace::xmlWriteHandler,_1));
+    return XMLFCFileType::the()->registerHandler(&PhysicsSpace::getClassType(),boost::bind(&OSG::PhysicsSpace::xmlReadHandler,_1,_2,_3),boost::bind(&OSG::PhysicsSpace::xmlWriteHandler,_1));
 }
 
 void PhysicsSpace::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
-    if(ePhase == TypeObject::Static)
+    if(ePhase == TypeObject::SystemPre)
     {
-        addPostFactoryInitFunction(boost::bind(&PhysicsSpace::registerXMLHandler));
+        //addPostFactoryInitFunction(boost::bind(&PhysicsSpace::registerXMLHandler));
     }
 }
 
@@ -115,7 +115,7 @@ bool PhysicsSpace::xmlWriteHandler (const FieldContainerUnrecPtr& PhysicsSpaceFC
  *                           Instance methods                              *
 \***************************************************************************/
 
-void PhysicsSpace::onCreate(const PhysicsSpace *id /* = NULL */)
+void PhysicsSpace::onCreate(const PhysicsSpace *id)
 {
 	//spaces are created in subclasses
 }
@@ -134,39 +134,27 @@ bool PhysicsSpace::isPlaceable(void) const
     return false;
 }
 
-EventConnection PhysicsSpace::addCollisionListener(CollisionListenerPtr Listener, UInt64 Category, Real32 SpeedThreshold)
+boost::signals2::connection PhysicsSpace::connectCollision(const CollisionEventType::slot_type &listener, 
+                                                           UInt64 Category,
+                                                           Real32 SpeedThreshold,
+                                                           boost::signals2::connect_position at)
 {
-   _CollisionListeners.insert(Listener);
-   
-   
-    CollisionListenParams newParams;
-    newParams._Category = Category;
-    newParams._SpeedThreshold = SpeedThreshold;
-    newParams._Listener = Listener;
+    CollisionListenParams newParams(Category, SpeedThreshold, &listener);
     _CollisionListenParamsVec.push_back(newParams);
 
-   return EventConnection(
-       boost::bind(&PhysicsSpace::isCollisionListenerAttached, this, Listener),
-       boost::bind(&PhysicsSpace::removeCollisionListener, this, Listener));
+    return Inherited::connectCollision(listener,at);
 }
 
-void PhysicsSpace::removeCollisionListener(CollisionListenerPtr Listener)
+boost::signals2::connection PhysicsSpace::connectCollision(const CollisionEventType::group_type &group,
+                                                           const CollisionEventType::slot_type &listener, 
+                                                           UInt64 Category,
+                                                           Real32 SpeedThreshold,
+                                                           boost::signals2::connect_position at)
 {
-    CollisionListenerSetItor EraseIter(_CollisionListeners.find(Listener));
-    if(EraseIter != _CollisionListeners.end())
-    {
-        _CollisionListeners.erase(EraseIter);
-    }
-   
-    std::vector<CollisionListenParams>::iterator ParamsEraseItor(_CollisionListenParamsVec.begin());
-    for(; ParamsEraseItor!=_CollisionListenParamsVec.end() ; ++ParamsEraseItor)
-    {
-        if(ParamsEraseItor->_Listener == Listener)
-        {
-            _CollisionListenParamsVec.erase(ParamsEraseItor);
-            break;
-        }
-    }
+    CollisionListenParams newParams(Category, SpeedThreshold, &listener);
+    _CollisionListenParamsVec.push_back(newParams);
+
+   return Inherited::connectCollision(group, listener, at);
 }
 
 void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
@@ -252,7 +240,8 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
                     {
                         //TODO: Add a way to get the PhysicsGeomUnrecPtr from the GeomIDs so that the PhysicsGeomUnrecPtr can be 
                         //sent to the collision event
-                        produceCollision(_CollisionListenParamsVec[i]._Listener,position,
+                        produceCollision(_CollisionListenParamsVec[i]._Listener,
+                                position,
                                 normal,
                                 NULL,
                                 NULL,
@@ -292,23 +281,23 @@ void PhysicsSpace::setSpaceID(dSpaceID id)
 CollisionContactParametersTransitPtr PhysicsSpace::createDefaultContactParams(void) const
 {
     CollisionContactParameters* Params = CollisionContactParameters::createEmpty();
-        Params->setMode(dContactApprox1);
-        Params->setMu(1.0);
-        Params->setMu2(1.0);
-        Params->setBounce(0.0);
-        Params->setBounceSpeedThreshold(0.0);
-        Params->setSoftCFM(0.1);
-        Params->setSoftERP(0.2);
-        Params->setMotion1(0.0);
-        Params->setMotion2(0.0);
-        Params->setMotionN(0.0);
-        Params->setSlip1(0.0);
-        Params->setSlip2(0.0);
+    Params->setMode(dContactApprox1);
+    Params->setMu(1.0);
+    Params->setMu2(1.0);
+    Params->setBounce(0.0);
+    Params->setBounceSpeedThreshold(0.0);
+    Params->setSoftCFM(0.1);
+    Params->setSoftERP(0.2);
+    Params->setMotion1(0.0);
+    Params->setMotion2(0.0);
+    Params->setMotionN(0.0);
+    Params->setSlip1(0.0);
+    Params->setSlip2(0.0);
 
     return CollisionContactParametersTransitPtr(Params);
 }
 
-void PhysicsSpace::addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParametersUnrecPtr ContactParams)
+void PhysicsSpace::addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParameters* const ContactParams)
 {
     for(UInt32 i(0) ; i<getMFCategory1()->size() ; ++i)
     {
@@ -341,7 +330,7 @@ void PhysicsSpace::removeCollisionContactCategory(UInt64 Category1, UInt64 Categ
     }
 }
 
-CollisionContactParametersUnrecPtr PhysicsSpace::getCollisionContactCategory(UInt64 Category1, UInt64 Category2)
+CollisionContactParameters* PhysicsSpace::getCollisionContactCategory(UInt64 Category1, UInt64 Category2)
 {
     for(UInt32 i(0) ; i<getMFCategory1()->size() ; ++i)
     {
@@ -353,7 +342,7 @@ CollisionContactParametersUnrecPtr PhysicsSpace::getCollisionContactCategory(UIn
     return NULL;
 }
 
-CollisionContactParametersUnrecPtr PhysicsSpace::getCollisionContact(UInt64 Category1, UInt64 Category2)
+CollisionContactParameters* PhysicsSpace::getCollisionContact(UInt64 Category1, UInt64 Category2)
 {
     CollisionContactParametersUnrecPtr Params(getCollisionContactCategory(Category1, Category2));
     if(Params != NULL)
@@ -375,6 +364,7 @@ void PhysicsSpace::initSpace()
 {
     setCleanup(PhysicsSpaceBase::getCleanup());
 }
+
 void PhysicsSpace::AddGeom( dGeomID g)
 {
 	dSpaceAdd(_SpaceID, g);
@@ -415,7 +405,7 @@ dGeomID PhysicsSpace::GetGeom( Int32 i )
 	return dSpaceGetGeom(_SpaceID, i);
 }
 
-void PhysicsSpace::Collide( PhysicsWorldUnrecPtr w )
+void PhysicsSpace::Collide( PhysicsWorld* const w )
 {
     _CollideWorldID = w->getWorldID();
 
@@ -427,46 +417,68 @@ void PhysicsSpace::Collide( PhysicsWorldUnrecPtr w )
 }
 
 void PhysicsSpace::produceCollision(const Pnt3f& Position,
-                            const Vec3f& Normal, 
-                            PhysicsGeomUnrecPtr Geom1,
-                            PhysicsGeomUnrecPtr Geom2,
-                            UInt64 Geom1Cat,
-                            UInt64 Geom1Col,
-                            UInt64 Geom2Cat,
-                            UInt64 Geom2Col,
-                            const Vec3f& Velocity1,
-                            const Vec3f& Velocity2,
-                            const Real32& ProjectedNormalSpeed)
-{
-    const CollisionEventUnrecPtr TheEvent = CollisionEvent::create( PhysicsSpaceUnrecPtr(this), getSystemTime(), Position, Normal, Geom1, Geom2, Geom1Cat, Geom1Col,Geom2Cat , Geom2Col,Velocity1,Velocity2,ProjectedNormalSpeed);
-	CollisionListenerSet Listeners(_CollisionListeners);
-    for(CollisionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
-    {
-	    (*SetItor)->collision(TheEvent);
-    }
-    _Producer.produceEvent(CollisionMethodId,TheEvent);
+                                    const Vec3f& Normal, 
+                                    PhysicsGeom* const Geom1,
+                                    PhysicsGeom* const Geom2,
+                                    UInt64 Geom1Cat,
+                                    UInt64 Geom1Col,
+                                    UInt64 Geom2Cat,
+                                    UInt64 Geom2Col,
+                                    const Vec3f& Velocity1,
+                                    const Vec3f& Velocity2,
+                                    const Real32& ProjectedNormalSpeed)
+{                           
+    CollisionEventDetailsUnrecPtr Details = CollisionEventDetails::create(this,
+                                                                          getTimeStamp(),
+                                                                          Position,
+                                                                          Normal,
+                                                                          Geom1,
+                                                                          Geom2,
+                                                                          Geom1Cat,
+                                                                          Geom1Col,
+                                                                          Geom2Cat,
+                                                                          Geom2Col,
+                                                                          Velocity1,
+                                                                          Velocity2,
+                                                                          ProjectedNormalSpeed);
+   
+    Inherited::produceCollision(Details);
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void PhysicsSpace::produceCollision(CollisionListenerPtr _Listener, 
-                          const Pnt3f& Position,
-                          const Vec3f& Normal, 
-                          PhysicsGeomUnrecPtr Geom1,
-                          PhysicsGeomUnrecPtr Geom2,
-                          UInt64 Geom1Cat,
-                          UInt64 Geom1Col,
-                          UInt64 Geom2Cat,
-                          UInt64 Geom2Col,
-                          const Vec3f& Velocity1,
-                          const Vec3f& Velocity2,
-                          const Real32& ProjectedNormalSpeed)
+void PhysicsSpace::produceCollision(const CollisionEventType::slot_type* listener, 
+                                    const Pnt3f& Position,
+                                    const Vec3f& Normal, 
+                                    PhysicsGeom* const Geom1,
+                                    PhysicsGeom* const Geom2,
+                                    UInt64 Geom1Cat,
+                                    UInt64 Geom1Col,
+                                    UInt64 Geom2Cat,
+                                    UInt64 Geom2Col,
+                                    const Vec3f& Velocity1,
+                                    const Vec3f& Velocity2,
+                                    const Real32& ProjectedNormalSpeed)
 {
-    const CollisionEventUnrecPtr TheEvent = CollisionEvent::create( PhysicsSpaceUnrecPtr(this), getSystemTime(), Position, Normal, Geom1, Geom2, Geom1Cat, Geom1Col,Geom2Cat , Geom2Col,Velocity1,Velocity2,ProjectedNormalSpeed);
-    _Listener->collision(TheEvent);
-   _Producer.produceEvent(CollisionMethodId,TheEvent);
+    CollisionEventDetailsUnrecPtr Details = CollisionEventDetails::create(this,
+                                                                          getTimeStamp(),
+                                                                          Position,
+                                                                          Normal,
+                                                                          Geom1,
+                                                                          Geom2,
+                                                                          Geom1Cat,
+                                                                          Geom1Col,
+                                                                          Geom2Cat,
+                                                                          Geom2Col,
+                                                                          Velocity1,
+                                                                          Velocity2,
+                                                                          ProjectedNormalSpeed);
+
+    (*listener)(Details, CollisionEventId);
+   
+    Inherited::produceCollision(Details);
 }
 
 /*----------------------- constructors & destructors ----------------------*/

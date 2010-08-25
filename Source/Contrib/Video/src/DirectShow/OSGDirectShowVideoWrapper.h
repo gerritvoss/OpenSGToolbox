@@ -43,10 +43,13 @@
 #endif
 
 #include "OSGDirectShowVideoWrapperBase.h"
-#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
 
+#ifdef OSG_WITH_DIRECT_SHOW
+
+#include <atlbase.h>
 #include <windows.h>
 #include <dshow.h>
+#include <guiddef.h>
 
 #pragma include_alias( "dxtrans.h", "qedit.h" )
 #define __IDxtCompositor_INTERFACE_DEFINED__
@@ -89,12 +92,11 @@ class OSG_CONTRIBVIDEO_DLLMAPPING DirectShowVideoWrapper : public DirectShowVide
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool open(const std::string& ThePath, WindowUnrecPtr TheWindow);
-
-    virtual bool seek(Int64 SeekPos);
-    virtual bool jump(Int64 Amount);
-    virtual bool setRate(Real32 Rate);
-    virtual Real32 getRate(void) const;
+    virtual bool open(const std::string& ThePath, Window* const window);
+    virtual bool seek(Real64 SeekPos);
+    virtual bool jump(Real64 Amount);
+    virtual bool setRate(Real64 Rate);
+    virtual Real64 getRate(void) const;
     virtual bool play(void);
     virtual bool pause(void);
     virtual bool unpause(void);
@@ -106,10 +108,22 @@ class OSG_CONTRIBVIDEO_DLLMAPPING DirectShowVideoWrapper : public DirectShowVide
     virtual bool isInitialized(void) const;
     virtual bool isStopped(void) const;
 	
-	virtual Int64 getPosition(void) const;
-	virtual Int64 getDuration(void) const;
+    virtual bool canSeekForward(void) const;
+    virtual bool canSeekBackward(void) const;
+	virtual Real64 getPosition(void) const;
+	virtual Real64 getDuration(void) const;
+    virtual UInt32 getWidth(void) const;
+    virtual UInt32 getHeight(void) const;
 
-    virtual ImageRefPtr getCurrentFrame(void);
+    virtual bool hasAudio(void) const;
+    virtual void enableAudio(void);
+    virtual void disableAudio(void);
+    virtual bool isAudioEnabled(void) const;
+
+    virtual Real32 getAudioVolume(void) const;
+    virtual void setAudioVolume(Real32 volume);
+
+    virtual Image* getCurrentFrame(void);
     virtual bool updateImage(void);
     /*=========================  PROTECTED  ===============================*/
 
@@ -139,14 +153,40 @@ class OSG_CONTRIBVIDEO_DLLMAPPING DirectShowVideoWrapper : public DirectShowVide
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+    // These are needed by the GraphBuilder
+    CComPtr<IGraphBuilder>  _pGraphBuilder;          // GraphBuilder
+    CComPtr<ICaptureGraphBuilder2>  _pGraphCaptureBuilder;          // GraphBuilder
+    CComPtr<IMediaControl>  _pMediaControl;          // Media Control
+    CComPtr<IMediaPosition> _pMediaPosition;          // Media Position
+    CComPtr<IMediaEvent>    _pMediaEvent;          // Media Event
+    CComPtr<IFileSourceFilter>       g_IFileSource; // interface to the WM ASF Reader
+    //D3DFORMAT               g_TextureFormat; // Texture format
 
-    ICaptureGraphBuilder2* graphBuilder;
-    IFilterGraph2* filterGraph;
-    ISampleGrabber* sampleGrabber;
+    // These are needed by the Source Filter
+    CComPtr<IBaseFilter>    _pSourceFilter;          // Source Filter
+    CComPtr<IPin>           _pSourceAudioPin;   // #0 Source Filter Output Pin (force to be audio) 
+    CComPtr<IPin>           _pSourceVideoPin;   // #1 Source Filter Output Pin (force to be video) 
+
+    CComPtr<IBaseFilter>    _pDecoderFilter;       // Decoder Filter
+    CComPtr<IBaseFilter>    _pVideoRenderer;      // Video Renderer
+    CComPtr<IPin>           _DecoderOutputPin;     // Decoder Filter Output Pin
+    
+    CComPtr<IBaseFilter>    _pNullAudioFilter;       // NULL Audio Filter
+    CComPtr<IBaseFilter>    _pAudioRenderer;      // Audio Renderer
+    
+
+    CComPtr<IBaseFilter> _pSampleGrabberFilter;
+    CComPtr<IBaseFilter> _pCSCFilter;
+    ISampleGrabber* _pSampleGrabber;
+    CComPtr<IPin>           _SampleGrabberIntputPin;     // SampleGrabber Intput Pin
+    CComPtr<IPin>           _SampleGrabberOutputPin;     // SampleGrabber Output Pin
+
+    
+    DWORD dwROT;
     
     bool videoInitialized;
-    int videoWidth;
-    int videoHeight;
+    int _VideoWidth;
+    int _VideoHeight;
     long* frameBuffer;
     long bufferSize;
     bool reachEndOnce;
@@ -162,6 +202,12 @@ class OSG_CONTRIBVIDEO_DLLMAPPING DirectShowVideoWrapper : public DirectShowVide
                  PIN_DIRECTION direction,
                  int pinNumber,
                  IPin** destPin);
+
+    HRESULT ConnectWMVFile(const std::string& ThePath);
+    HRESULT ConnectMPGFile(const std::string& ThePath);
+    HRESULT ConnectAVCHDFile(const std::string& ThePath);
+    HRESULT ConnectAVIFile(const std::string& ThePath);
+    HRESULT ConnectSampleGrabber(void);
     /*==========================  PRIVATE  ================================*/
 
   private:
@@ -179,5 +225,7 @@ OSG_END_NAMESPACE
 
 #include "OSGDirectShowVideoWrapperBase.inl"
 #include "OSGDirectShowVideoWrapper.inl"
+
+#endif /* OSG_WITH_DIRECT_SHOW */
 
 #endif /* _OSGDIRECTSHOWVIDEOWRAPPER_H_ */

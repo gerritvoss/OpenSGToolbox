@@ -65,7 +65,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -224,17 +224,6 @@ void TableColumnBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TableColumn::getHandleCellEditor));
 
     oType.addInitialDesc(pDesc);
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&TableColumn::editHandleEventProducer),
-        static_cast     <FieldGetMethodSig >(&TableColumn::getHandleEventProducer));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -335,24 +324,27 @@ TableColumnBase::TypeObject TableColumnBase::_type(
     "        access=\"public\"\n"
     "        >\n"
     "    </Field>\n"
-    "    <ProducedMethod\n"
+    "    <ProducedEvent\n"
     "        name=\"FieldChanged\"\n"
-    "        type=\"FieldChangedEventPtr\"\n"
+    "        detailsType=\"ChangeEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "        >\n"
-    "    </ProducedMethod>\n"
+    "    </ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Table Column.\n"
     );
 
-//! TableColumn Produced Methods
+//! TableColumn Produced Events
 
-MethodDescription *TableColumnBase::_methodDesc[] =
+EventDescription *TableColumnBase::_eventDesc[] =
 {
-    new MethodDescription("FieldChanged", 
-                    "",
-                     FieldChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("FieldChanged", 
+                          "",
+                          FieldChangedEventId, 
+                          FieldTraits<ChangeEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&TableColumnBase::getHandleFieldChangedSignal))
+
 };
 
 EventProducerType TableColumnBase::_producerType(
@@ -360,8 +352,8 @@ EventProducerType TableColumnBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -517,10 +509,6 @@ UInt32 TableColumnBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfCellEditor.getBinSize();
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -558,10 +546,6 @@ void TableColumnBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfCellEditor.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void TableColumnBase::copyFromBin(BinaryDataHandler &pMem,
@@ -596,10 +580,6 @@ void TableColumnBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
     {
         _sfCellEditor.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
     }
 }
 
@@ -721,11 +701,118 @@ FieldContainerTransitPtr TableColumnBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void TableColumnBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case FieldChangedEventId:
+        OSG_ASSERT(dynamic_cast<FieldChangedEventDetailsType* const>(e));
+
+        _FieldChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _FieldChangedEvent(dynamic_cast<FieldChangedEventDetailsType* const>(e), FieldChangedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+boost::signals2::connection TableColumnBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case FieldChangedEventId:
+        return _FieldChangedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  TableColumnBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case FieldChangedEventId:
+        return _FieldChangedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  TableColumnBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case FieldChangedEventId:
+        _FieldChangedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+void  TableColumnBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case FieldChangedEventId:
+        _FieldChangedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        break;
+    }
+}
+
+bool  TableColumnBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case FieldChangedEventId:
+        return _FieldChangedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return true;
+        break;
+    }
+}
+
+UInt32  TableColumnBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case FieldChangedEventId:
+        return _FieldChangedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with that ID";
+        return 0;
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
 TableColumnBase::TableColumnBase(void) :
-    _Producer(&getProducerType()),
     Inherited(),
     _sfMaxWidth               (UInt32(1000)),
     _sfMinWidth               (UInt32(1)),
@@ -734,12 +821,10 @@ TableColumnBase::TableColumnBase(void) :
     _sfWidth                  (UInt32(100)),
     _sfResizable              (bool(true)),
     _sfCellEditor             (NULL)
-    ,_sfEventProducer(&_Producer)
 {
 }
 
 TableColumnBase::TableColumnBase(const TableColumnBase &source) :
-    _Producer(&source.getProducerType()),
     Inherited(source),
     _sfMaxWidth               (source._sfMaxWidth               ),
     _sfMinWidth               (source._sfMinWidth               ),
@@ -748,7 +833,6 @@ TableColumnBase::TableColumnBase(const TableColumnBase &source) :
     _sfWidth                  (source._sfWidth                  ),
     _sfResizable              (source._sfResizable              ),
     _sfCellEditor             (NULL)
-    ,_sfEventProducer(&_Producer)
 {
 }
 
@@ -950,27 +1034,13 @@ EditFieldHandlePtr TableColumnBase::editHandleCellEditor     (void)
 }
 
 
-GetFieldHandlePtr TableColumnBase::getHandleEventProducer        (void) const
+GetEventHandlePtr TableColumnBase::getHandleFieldChangedSignal(void) const
 {
-    SFEventProducerPtr::GetHandlePtr returnValue(
-        new  SFEventProducerPtr::GetHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<FieldChangedEventType>(
+             const_cast<FieldChangedEventType *>(&_FieldChangedEvent),
+             _producerType.getEventDescription(FieldChangedEventId),
              const_cast<TableColumnBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr TableColumnBase::editHandleEventProducer       (void)
-{
-    SFEventProducerPtr::EditHandlePtr returnValue(
-        new  SFEventProducerPtr::EditHandle(
-             &_sfEventProducer,
-             this->getType().getFieldDesc(EventProducerFieldId),
-             this));
-
-
-    editSField(EventProducerFieldMask);
 
     return returnValue;
 }

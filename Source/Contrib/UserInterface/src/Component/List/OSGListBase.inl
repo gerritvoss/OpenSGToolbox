@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -206,6 +207,22 @@ void ListBase::setAutoScrollToFocused(const bool value)
     _sfAutoScrollToFocused.setValue(value);
 }
 
+//! Get the value of the List::_sfSelectionModel field.
+inline
+ListSelectionModel * ListBase::getSelectionModel(void) const
+{
+    return _sfSelectionModel.getValue();
+}
+
+//! Set the value of the List::_sfSelectionModel field.
+inline
+void ListBase::setSelectionModel(ListSelectionModel * const value)
+{
+    editSField(SelectionModelFieldMask);
+
+    _sfSelectionModel.setValue(value);
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -234,6 +251,9 @@ void ListBase::execSync (      ListBase *pFrom,
 
     if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
         _sfAutoScrollToFocused.syncWith(pFrom->_sfAutoScrollToFocused);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pFrom->_sfSelectionModel);
 }
 #endif
 

@@ -64,14 +64,16 @@ A UI Dialog Window.
 		access="public"
 	>
 	</Field>
-	<ProducedMethod
+	<ProducedEvent
 		name="DialogWindowClosing"
-		type="DialogWindowEventPtr"
+		detailsType="DialogWindowEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="DialogWindowClosed"
-		type="DialogWindowEventPtr"
+		detailsType="DialogWindowEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>
