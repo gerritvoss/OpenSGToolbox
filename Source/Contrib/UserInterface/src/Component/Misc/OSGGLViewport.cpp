@@ -194,7 +194,7 @@ void GLViewport::drawInternal(Graphics* const Graphics, Real32 Opacity) const
             UInt32 ContainingViewportTravMask(ContainingViewport->getTravMask());
             Real32 ContainingViewportDrawTime(ContainingViewport->getDrawTime());
             Int32 ContainingViewportDrawableId(ContainingViewport->getDrawableId());
-            RenderOptionsPtr ContainingViewportRenderOptions(ContainingViewport->getRenderOptions());
+            RenderOptionsUnrecPtr ContainingViewportRenderOptions(ContainingViewport->getRenderOptions());
 
             //Set the properties of the viewport to render this scene into
             ContainingViewport->setSize(InsideInsetTopLeftToWindow.x(), InsideInsetBottomRightToWindow.y()+1, InsideInsetBottomRightToWindow.x()-1, InsideInsetTopLeftToWindow.y());

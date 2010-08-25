@@ -51,6 +51,7 @@
 #include "OSGTreePath.h"
 
 #include <deque>
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 

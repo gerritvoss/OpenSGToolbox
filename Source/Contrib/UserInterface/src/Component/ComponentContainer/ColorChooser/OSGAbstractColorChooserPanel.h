@@ -82,7 +82,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractColorChooserPanel : public Abs
     /*! \}                                                                 */
 
 	//Returns the model that the chooser panel is editing.
-	ColorSelectionModelPtr getColorSelectionModel(void);
+	ColorSelectionModel* getColorSelectionModel(void);
 
 	//Returns the large display icon for the panel.
 	//virtual Icon getLargeDisplayIcon(void) const = 0;

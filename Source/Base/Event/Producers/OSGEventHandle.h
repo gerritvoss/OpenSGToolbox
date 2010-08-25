@@ -86,7 +86,7 @@ class OSG_BASE_DLLMAPPING EventHandle
 
     bool               isConsumable        (void) const;
     UInt32             getEventId         (void) const;
-    const std::string &getName             (void) const;
+    std::string        getName             (void) const;
     TypeBase const    *getEventArgumentType(void) const;
 
 

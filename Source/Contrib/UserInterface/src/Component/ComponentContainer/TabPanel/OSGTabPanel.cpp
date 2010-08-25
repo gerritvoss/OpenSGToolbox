@@ -133,7 +133,7 @@ void TabPanel::calculateContentBorderLengths(Border* const TheBorder, Real32& Le
 
 void TabPanel::calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
 {
-    std::vector<Border* const> Borders;
+    std::vector<Border*> Borders;
     Borders.push_back(getTabBorder());
     Borders.push_back(getTabActiveBorder());
     Borders.push_back(getTabDisabledBorder());

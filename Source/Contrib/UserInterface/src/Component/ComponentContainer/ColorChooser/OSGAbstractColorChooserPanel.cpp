@@ -93,7 +93,7 @@ Color4f AbstractColorChooserPanel::getColorFromModel(void) const
     }
 }
 
-ColorSelectionModelPtr AbstractColorChooserPanel::getColorSelectionModel(void)
+ColorSelectionModel* AbstractColorChooserPanel::getColorSelectionModel(void)
 {
     if(getParentChooser() != NULL)
     {
@@ -101,7 +101,7 @@ ColorSelectionModelPtr AbstractColorChooserPanel::getColorSelectionModel(void)
     }
     else
     {
-        return ColorSelectionModelPtr();
+        return NULL;
     }
 }
 

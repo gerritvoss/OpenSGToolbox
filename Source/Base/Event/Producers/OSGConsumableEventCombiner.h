@@ -50,7 +50,7 @@ OSG_BEGIN_NAMESPACE
 class OSG_BASE_DLLMAPPING ConsumableEventCombiner
 {
 private:
-    mutable const EventDetails const * _pDetails;
+    mutable EventDetails const * _pDetails;
 
 public:
     ConsumableEventCombiner(void);

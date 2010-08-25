@@ -97,7 +97,7 @@ TypeBase const    *EventHandle::getEventArgumentType(void) const
 }
 
 inline
-const std::string &EventHandle::getName(void) const
+std::string EventHandle::getName(void) const
 {
     if(_pDescription != NULL)
     {
@@ -105,7 +105,7 @@ const std::string &EventHandle::getName(void) const
     }
     else
     {
-        return std::string();
+        return "";
     }
 }
 

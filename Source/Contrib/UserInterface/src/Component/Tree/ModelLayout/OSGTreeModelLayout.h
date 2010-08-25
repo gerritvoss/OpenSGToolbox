@@ -116,7 +116,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelLayout : public TreeModelLayo
 	virtual Real32 getDepthOffset(void) const = 0;
 
 	//Returns the model used to maintain the selection.
-	virtual TreeSelectionModelPtr getSelectionModel(void) const = 0;
+	virtual TreeSelectionModel* getSelectionModel(void) const = 0;
 
 	//Returns the number of visible children for row.
 	virtual UInt32 getVisibleChildCount(const TreePath& path) const = 0;
@@ -168,7 +168,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelLayout : public TreeModelLayo
 	virtual void setDepthOffset(const Real32& depthOffset) = 0;
 
 	//Sets the TreeSelectionModel used to manage the selection to new LSM.
-	virtual void setSelectionModel(TreeSelectionModelPtr newLSM) = 0;
+	virtual void setSelectionModel(TreeSelectionModel* const newLSM) = 0;
 
 	//Returns true if the height of each row is a fixed size.
 	virtual bool isFixedRowHeight(void) const = 0;

@@ -151,11 +151,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTableColumnModel : public Defau
     /*! \}                                                                 */
     
     void recalcWidthCache(void);
-    static ListSelectionModelPtr createSelectionModel(void);
 
     UInt32 _ColumnMargin;
     bool _ColumnSelectionAllowed;;
-    ListSelectionModelPtr _SelectionModel;
     UInt32 _TotalColumnWidth;
     
     void handleSelectionChanged(ListSelectionEventDetails* const e);

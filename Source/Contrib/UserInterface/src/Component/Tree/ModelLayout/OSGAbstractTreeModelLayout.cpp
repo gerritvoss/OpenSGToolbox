@@ -131,7 +131,7 @@ void AbstractTreeModelLayout::setDepthOffset(const Real32& depthOffset)
     setDepthOffsetInternal(depthOffset);
 }
 
-TreeSelectionModelPtr AbstractTreeModelLayout::getSelectionModel(void) const
+TreeSelectionModel* AbstractTreeModelLayout::getSelectionModel(void) const
 {
     return _TreeSelectionModel;
 }
@@ -192,7 +192,7 @@ void AbstractTreeModelLayout::setRowHeight(const Real32& rowHeight)
     setRowHeightInternal(rowHeight);
 }
 
-void AbstractTreeModelLayout::setSelectionModel(TreeSelectionModelPtr newLSM)
+void AbstractTreeModelLayout::setSelectionModel(TreeSelectionModel* const newLSM)
 {
     _TreeSelectionModel = newLSM;
 }
@@ -481,10 +481,10 @@ void AbstractTreeModelLayout::handleTreeNodesRemoved(TreeModelEventDetails* cons
 
 void AbstractTreeModelLayout::handleTreeStructureChanged(TreeModelEventDetails* const e)
 {
-    bool isExpanded(isExpanded(e->getPath()));
+    bool expanded(isExpanded(e->getPath()));
 
     //If the node that the changes are rooted at is expanded then
-    if(isExpanded)
+    if(expanded)
     {
 
         //collapse the node
@@ -514,7 +514,7 @@ void AbstractTreeModelLayout::handleTreeStructureChanged(TreeModelEventDetails* 
     produceTreeStructureChanged(e);
 
     //If is root node
-    if(e->getPath().getDepth() == 1 || isExpanded)
+    if(e->getPath().getDepth() == 1 || expanded)
     {
         setExpanded(e->getPath(), true);
     }

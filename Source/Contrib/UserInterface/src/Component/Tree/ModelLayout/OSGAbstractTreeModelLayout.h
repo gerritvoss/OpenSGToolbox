@@ -44,6 +44,7 @@
 
 #include "OSGAbstractTreeModelLayoutBase.h"
 #include "OSGTreeModelEventDetailsFields.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -104,7 +105,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
 	virtual Real32 getDepthOffset(void) const;
 
 	//Returns the model used to maintain the selection.
-	virtual TreeSelectionModelPtr getSelectionModel(void) const;
+	virtual TreeSelectionModel* getSelectionModel(void) const;
     
 	//Returns the Visible Paths
     virtual std::vector<TreePath> getVisiblePaths(void) const;
@@ -135,7 +136,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
 	virtual void setDepthOffset(const Real32& depthOffset);
 
 	//Sets the TreeSelectionModel used to manage the selection to new LSM.
-	virtual void setSelectionModel(TreeSelectionModelPtr newLSM);
+	virtual void setSelectionModel(TreeSelectionModel* const newLSM);
 
 	//Returns true if the height of each row is a fixed size.
 	virtual bool isFixedRowHeight(void) const;
@@ -194,7 +195,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
     TreeModelRefPtr _TreeModel;
 
     //Selection model.
-    TreeSelectionModelPtr _TreeSelectionModel;
+    TreeSelectionModelRecPtr _TreeSelectionModel;
 
     typedef std::set<TreePath, TreePath::BreadthFirstFunctional> TreePathSet;
     typedef TreePathSet::iterator TreePathSetItor;

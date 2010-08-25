@@ -48,6 +48,7 @@
 #include "OSGStatElemTypes.h"
 
 #include "OSGLine.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 

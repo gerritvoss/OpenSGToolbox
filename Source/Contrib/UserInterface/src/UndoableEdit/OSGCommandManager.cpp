@@ -72,7 +72,7 @@ void CommandManager::executeCommand(CommandPtr TheCommand)
 	if(_UndoManager != NULL && 
 		TheCommand->getType().isDerivedFrom(UndoableCommand::getClassType()))
 	{
-	    UndoableEditEventDetailsUnrecPtr UndoableDetails = UndoableEditEventDetails::create(NULL, Details->getTimeStamp(), dynamic_pointer_cast<UndoableCommand>(TheCommand));
+	    UndoableEditEventDetailsUnrecPtr UndoableDetails = UndoableEditEventDetails::create(NULL, Details->getTimeStamp(), boost::dynamic_pointer_cast<UndoableCommand>(TheCommand));
 		_UndoManager->handleUndoableEditHappened(UndoableDetails);
 	}
 

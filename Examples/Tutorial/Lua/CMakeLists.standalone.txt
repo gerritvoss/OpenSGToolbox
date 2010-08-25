@@ -28,8 +28,6 @@ SET(OSG_COMPONENTS OSGBase
                    OSGUtil 
                    OSGWindow 
                    OSGContribLua 
-                   OSGContribLuaToolbox 
-                   OSGContribUserInterface 
                    )
 
 IF(UNIX)
