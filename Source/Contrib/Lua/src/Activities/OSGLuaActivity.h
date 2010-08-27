@@ -87,7 +87,11 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaActivity : public LuaActivityBase
 
     static boost::signals2::connection addLuaCallback(FieldContainerRefPtr producerObject,
                                             std::string funcName,
-                                            UInt32 producedMethodId);
+                                            UInt32 producedEventId);
+    
+    static boost::signals2::connection addLuaCallback(FieldContainerRefPtr producerObject,
+                                            std::string funcName,
+                                            const std::string& producedEventName);
 
     /*=========================  PROTECTED  ===============================*/
 

@@ -52320,7 +52320,7 @@ static swig_lua_class *swig_OSG_LuaActivityRefPtr_bases[] = {0,0};
 static const char *swig_OSG_LuaActivityRefPtr_base_names[] = {"OSG::ActivityRefPtr *",0};
 static swig_lua_class _wrap_class_OSG_LuaActivityRefPtr = { "LuaActivityRefPtr", &SWIGTYPE_p_OSG__LuaActivityRefPtr,_wrap_new_LuaActivityRefPtr, swig_delete_LuaActivityRefPtr, swig_OSG_LuaActivityRefPtr_methods, swig_OSG_LuaActivityRefPtr_attributes, swig_OSG_LuaActivityRefPtr_bases, swig_OSG_LuaActivityRefPtr_base_names };
 
-static int _wrap_LuaActivity_addLuaCallback(lua_State* L) {
+static int _wrap_LuaActivity_addLuaCallback__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   OSG::FieldContainerRefPtr arg1 ;
   std::string arg2 ;
@@ -52353,6 +52353,106 @@ static int _wrap_LuaActivity_addLuaCallback(lua_State* L) {
 fail:
   lua_error(L);
   return SWIG_arg;
+}
+
+
+static int _wrap_LuaActivity_addLuaCallback__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::FieldContainerRefPtr arg1 ;
+  std::string arg2 ;
+  std::string *arg3 = 0 ;
+  OSG::FieldContainerRefPtr *argp1 ;
+  std::string temp3 ;
+  boost::signals2::connection result;
+  
+  SWIG_check_num_args("OSG::LuaActivity::addLuaCallback",3,3)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::LuaActivity::addLuaCallback",1,"OSG::FieldContainerRefPtr");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("OSG::LuaActivity::addLuaCallback",2,"std::string");
+  if(!lua_isstring(L,3)) SWIG_fail_arg("OSG::LuaActivity::addLuaCallback",3,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_OSG__FieldContainerRefPtr,0))){
+    SWIG_fail_ptr("LuaActivity_addLuaCallback",1,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+  }
+  arg1 = *argp1;
+  
+  (&arg2)->assign(lua_tostring(L,2),lua_strlen(L,2));
+  temp3.assign(lua_tostring(L,3),lua_strlen(L,3)); arg3=&temp3;
+  result = OSG::LuaActivity::addLuaCallback(arg1,arg2,(std::string const &)*arg3);
+  {
+    boost::signals2::connection * resultptr = new boost::signals2::connection((const boost::signals2::connection &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_boost__signals2__connection,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaActivity_addLuaCallback(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__FieldContainerRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_LuaActivity_addLuaCallback__SWIG_0(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__FieldContainerRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isstring(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_LuaActivity_addLuaCallback__SWIG_1(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'LuaActivity_addLuaCallback'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addLuaCallback(OSG::FieldContainerRefPtr,std::string,OSG::UInt32)\n"
+    "    OSG::LuaActivity::addLuaCallback(OSG::FieldContainerRefPtr,std::string,std::string const &)\n");
+  lua_error(L);return 0;
 }
 
 
@@ -53426,7 +53526,7 @@ static const struct luaL_reg swig_commands[] = {
     { "GenericEventDetails_create",_wrap_GenericEventDetails_create},
     { "ActivityRefPtr_dcast", _wrap_ActivityRefPtr_dcast},
     { "LuaActivityRefPtr_dcast", _wrap_LuaActivityRefPtr_dcast},
-    { "LuaActivity_addLuaCallback", _wrap_LuaActivity_addLuaCallback},
+    { "LuaActivity_addLuaCallback",_wrap_LuaActivity_addLuaCallback},
     { "makePlaneGeo", _wrap_makePlaneGeo},
     { "makePlane", _wrap_makePlane},
     { "makeBoxGeo", _wrap_makeBoxGeo},

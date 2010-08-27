@@ -3806,6 +3806,7 @@ namespace OSG
         public:
 
             static boost::signals2::connection addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, UInt32 producedEventId);
+            static boost::signals2::connection addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, const std::string& producedEventName);
 
         protected:
             LuaActivity(void);

@@ -136,6 +136,10 @@ boost::signals2::connection LuaActivity::addLuaCallback(FieldContainerRefPtr pro
 
         LuaActivityUnrecPtr TheLuaActivity = LuaActivity::create();
         TheLuaActivity->setEntryFunction(funcName);
+
+        //BUG: Need to add ref count to keep it from being deleted,
+        //but who has responsibility for deleting it?
+        TheLuaActivity->addReferenceUnrecorded();
         return producerObject->attachActivity(producedMethodId, TheLuaActivity);
     }
     else
@@ -143,6 +147,19 @@ boost::signals2::connection LuaActivity::addLuaCallback(FieldContainerRefPtr pro
         SWARNING << "LuaActivity::addLuaCallback(): Producer object is not an event producer." << std::endl;
         return boost::signals2::connection();
     }
+}
+    
+boost::signals2::connection LuaActivity::addLuaCallback(FieldContainerRefPtr producerObject,
+                                        std::string funcName,
+                                        const std::string& producedEventName)
+{
+    const EventDescription* Desc(producerObject->getEventDescription(producedEventName.c_str()));
+    if(Desc == NULL)
+    {
+        SWARNING << "No producedEvent named: " << producedEventName << " defined on containers of type: " << producerObject->getType().getName() << "." << std::endl;
+        return boost::signals2::connection();
+    }
+    return addLuaCallback(producerObject, funcName, Desc->getEventId());
 }
 
 /***************************************************************************\
@@ -204,13 +221,7 @@ void LuaActivity::eventProduced(EventDetails* const details, UInt32 producedEven
         {
             lua_pop(LuaState, 1); //Pop the value off the stack
 
-            std::string TablePath("");
-            for(UInt32 i(0) ; i<_EntryFunctionPath.size() ; ++i)
-            {
-                if(i!=0) TablePath += ".";
-                TablePath += _EntryFunctionPath[i];
-            }
-            SWARNING << TablePath << " cannot be referenced in lua because it is not a function" << std::endl;
+            SWARNING << getEntryFunction() << " cannot be referenced in lua because it is not a function" << std::endl;
             return;
         }
 
