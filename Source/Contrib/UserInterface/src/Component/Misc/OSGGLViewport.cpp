@@ -574,7 +574,8 @@ void GLViewport::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-	if(whichField & PortFieldMask)
+	if((whichField & PortFieldMask) &&
+        getPort() != NULL)
 	{
 		updateNavigatorConnections();
 	}

@@ -323,7 +323,14 @@ void DefaultTreeModel::changed(ConstFieldMaskArg whichField,
 
     if(whichField & InternalRootFieldMask)
     {
-        nodeChanged(getInternalRoot());
+        if(getInternalRoot() != NULL)
+        {
+            nodeChanged(getInternalRoot());
+        }
+        else
+        {
+            //produceTreeStructureChanged();
+        }
     }
 }
 

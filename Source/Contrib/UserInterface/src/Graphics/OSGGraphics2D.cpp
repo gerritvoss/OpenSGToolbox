@@ -159,6 +159,7 @@ void Graphics2D::preDraw()
     {
         glEnable(GL_POLYGON_SMOOTH);
     }
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glClearStencil(0);
     glClear(GL_STENCIL_BUFFER_BIT);
 }
