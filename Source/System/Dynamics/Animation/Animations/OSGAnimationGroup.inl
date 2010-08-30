@@ -40,22 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool AnimationGroup::isPlaying(void) const
-{
-    return _IsPlaying;
-}
-
-inline
-bool AnimationGroup::isPaused(void) const
-{
-    return _IsPaused;
-}
-
-inline
-void AnimationGroup::detachUpdateProducer(void)
-{
-    _UpdateEventConnection.disconnect();
-}
-
 OSG_END_NAMESPACE

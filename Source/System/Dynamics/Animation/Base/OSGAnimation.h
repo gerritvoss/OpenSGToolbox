@@ -137,11 +137,12 @@ class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
 
     boost::signals2::connection _UpdateEventConnection;
 
+    Time _CurrentTime,_PrevTime;
+    bool _IsPlaying,_IsPaused;
+
     /*==========================  PRIVATE  ================================*/
 
   private:
-    Time _CurrentTime,_PrevTime;
-    bool _IsPlaying,_IsPaused;
 
     friend class FieldContainer;
     friend class AnimationBase;

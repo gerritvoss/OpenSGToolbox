@@ -78,23 +78,79 @@ void AnimationGroup::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AnimationGroup::start(const Time& StartTime)
+
+bool AnimationGroup::update(const Time& ElapsedTime)
 {
-    if(_IsPlaying)
+    if(!_IsPlaying || _IsPaused)
     {
-        stop(false);
+        return false;
+    }
+    _CurrentTime += getScale()*ElapsedTime;
+
+    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
+    {
+        getAnimations(i)->update(ElapsedTime * getScale());
     }
 
-    _IsPlaying = true;
+ //   UInt32 PreUpdateCycleCount(getCycles());
+	//if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
+	//{
+	//	Real32 CycleLength(getCycleLength()),
+	//		   t(_CurrentTime + getOffset());
+ //       
+	//	//Check if the Animation Time is past the end
+	//	if(t >= CycleLength)
+	//	{
+	//		//Update the number of cycles completed
+ //           setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osgFloor( t / CycleLength ) )) );
+ //           commitChanges();
+	//	}
+	//	//Internal Update
+	//	if(getCycling() > 0 && getCycles() >= getCycling())
+	//	{
+	//		internalUpdate(CycleLength-.0001, _PrevTime);
+	//	}
+	//	else
+	//	{
+	//		internalUpdate(t, _PrevTime);
+	//	}
+
+
+	//	//If the number of cycles has changed
+	//	if(getCycles() != PreUpdateCycleCount)
+	//	{
+	//		if(getCycling() > 0 && getCycles() >= getCycling())
+	//		{
+ //               _UpdateEventConnection.disconnect();
+ //               _IsPlaying = false;
+	//			produceAnimationEnded();
+	//		}
+	//		else
+	//		{
+	//			produceAnimationCycled();
+	//		}
+	//	}
+	//}
+
+    _PrevTime = _CurrentTime;
+	//Return true if the animation has completed its number of cycles, false otherwise
+	return (getCycling() > 0 && getCycles() >= getCycling());
+}
+
+void AnimationGroup::start(const Time& StartTime)
+{
+    Inherited::start(StartTime);
+
     for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
     {
         getAnimations(i)->start(StartTime);
     }
-    produceAnimationsStarted();
 }
 
 void AnimationGroup::seek(const Time& SeekTime)
 {
+    Inherited::seek(SeekTime);
+
     if(_IsPlaying)
     {
         for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
@@ -111,16 +167,7 @@ void AnimationGroup::pause(bool ShouldPause)
         getAnimations(i)->pause(ShouldPause);
     }
 
-    if(_IsPaused && !ShouldPause)
-    {
-        _IsPaused = ShouldPause;
-        produceAnimationsUnpaused();
-    }
-    if(!_IsPaused && ShouldPause)
-    {
-        _IsPaused = ShouldPause;
-        produceAnimationsPaused();
-    }
+    Inherited::pause(ShouldPause);
 }
 
 void AnimationGroup::stop(bool DisconnectFromEventProducer)
@@ -131,56 +178,12 @@ void AnimationGroup::stop(bool DisconnectFromEventProducer)
         {
             getAnimations(i)->stop(true);
         }
-
-        _IsPlaying = false;
-        if(DisconnectFromEventProducer)
-        {
-            _UpdateEventConnection.disconnect();
-        }
-        produceAnimationsStopped();
     }
+    Inherited::stop();
 }
 
-bool AnimationGroup::update(const Time& ElapsedTime)
+void AnimationGroup::internalUpdate(Real32 t, const Real32 prev_t)
 {
-    if(!_IsPlaying || _IsPaused)
-    {
-        return false;
-    }
-
-    bool Result(true);
-
-    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
-    {
-        Result = getAnimations(i)->update(ElapsedTime * getScale()) && Result;
-    }
-
-    if(Result)
-    {
-        _UpdateEventConnection.disconnect();
-        _IsPlaying = false;
-        produceAnimationsEnded();
-    }
-
-	return Result;
-}
-
-void AnimationGroup::attachUpdateProducer(ReflexiveContainer* const producer)
-{
-    if(_UpdateEventConnection.connected())
-    {
-        _UpdateEventConnection.disconnect();
-    }
-    //Get the Id of the UpdateEvent
-    const EventDescription* Desc(producer->getProducerType().findEventDescription("Update"));
-    if(Desc == NULL)
-    {
-        SWARNING << "There is no Update event defined on " << producer->getType().getName() << " types." << std::endl;
-    }
-    else
-    {
-        _UpdateEventConnection = producer->connectEvent(Desc->getEventId(), boost::bind(&AnimationGroup::attachedUpdate, this, _1));
-    }
 }
 
 Real32 AnimationGroup::getLength(void) const
@@ -193,51 +196,9 @@ Real32 AnimationGroup::getLength(void) const
     return MaxLength;
 }
 
-void AnimationGroup::attachedUpdate(EventDetails* const details)
+Real32 AnimationGroup::getCycleLength(void) const
 {
-    update(dynamic_cast<UpdateEventDetails* const>(details)->getElapsedTime());
-}
-
-void AnimationGroup::produceAnimationsStarted(void)
-{
-    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
-   
-    Inherited::produceAnimationsStarted(Details);
-}
-
-void AnimationGroup::produceAnimationsStopped(void)
-{
-    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
-   
-    Inherited::produceAnimationsStopped(Details);
-}
-
-void AnimationGroup::produceAnimationsPaused(void)
-{
-    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
-   
-    Inherited::produceAnimationsPaused(Details);
-}
-
-void AnimationGroup::produceAnimationsUnpaused(void)
-{
-    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
-   
-    Inherited::produceAnimationsUnpaused(Details);
-}
-
-void AnimationGroup::produceAnimationsEnded(void)
-{
-    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
-   
-    Inherited::produceAnimationsEnded(Details);
-}
-
-void AnimationGroup::produceAnimationsCycled(void)
-{
-    AnimationEventDetailsUnrecPtr Details = AnimationEventDetails::create(this,getTimeStamp());
-   
-    Inherited::produceAnimationsCycled(Details);
+    return getLength();
 }
 
 
@@ -248,20 +209,12 @@ void AnimationGroup::produceAnimationsCycled(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 AnimationGroup::AnimationGroup(void) :
-    Inherited(),
-    _CurrentTime(0.0),
-    _PrevTime(0.0),
-    _IsPlaying(false),
-    _IsPaused(false)
+    Inherited()
 {
 }
 
 AnimationGroup::AnimationGroup(const AnimationGroup &source) :
-    Inherited(source),
-    _CurrentTime(0.0),
-    _PrevTime(0.0),
-    _IsPlaying(false),
-    _IsPaused(false)
+    Inherited(source)
 {
 }
 

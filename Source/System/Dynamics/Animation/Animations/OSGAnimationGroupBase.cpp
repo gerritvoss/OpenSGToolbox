@@ -57,8 +57,6 @@
 #include "OSGConfig.h"
 
 
-#include "OSGAnimationEventDetails.h"
-
 
 #include "OSGAnimation.h"               // Animations Class
 
@@ -66,8 +64,6 @@
 #include "OSGAnimationGroup.h"
 
 #include <boost/bind.hpp>
-
-#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -91,25 +87,13 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var Real32          AnimationGroupBase::_sfScale
-    
-*/
-
-/*! \var Real32          AnimationGroupBase::_sfOffset
-    
-*/
-
-/*! \var Real32          AnimationGroupBase::_sfSpan
-    
-*/
-
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<AnimationGroup *>::_type("AnimationGroupPtr", "AttachmentContainerPtr");
+DataType FieldTraits<AnimationGroup *>::_type("AnimationGroupPtr", "AnimationPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(AnimationGroup *)
@@ -142,42 +126,6 @@ void AnimationGroupBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AnimationGroup::getHandleAnimations));
 
     oType.addInitialDesc(pDesc);
-
-    pDesc = new SFReal32::Description(
-        SFReal32::getClassType(),
-        "Scale",
-        "",
-        ScaleFieldId, ScaleFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&AnimationGroup::editHandleScale),
-        static_cast<FieldGetMethodSig >(&AnimationGroup::getHandleScale));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new SFReal32::Description(
-        SFReal32::getClassType(),
-        "Offset",
-        "",
-        OffsetFieldId, OffsetFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&AnimationGroup::editHandleOffset),
-        static_cast<FieldGetMethodSig >(&AnimationGroup::getHandleOffset));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new SFReal32::Description(
-        SFReal32::getClassType(),
-        "Span",
-        "",
-        SpanFieldId, SpanFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&AnimationGroup::editHandleSpan),
-        static_cast<FieldGetMethodSig >(&AnimationGroup::getHandleSpan));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -196,7 +144,7 @@ AnimationGroupBase::TypeObject AnimationGroupBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"AnimationGroup\"\n"
-    "\tparent=\"AttachmentContainer\"\n"
+    "\tparent=\"Animation\"\n"
     "    library=\"TBAnimation\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
@@ -215,131 +163,9 @@ AnimationGroupBase::TypeObject AnimationGroupBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Scale\"\n"
-    "\t\ttype=\"Real32\"\n"
-    "        category=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"public\"\n"
-    "        defaultValue=\"1.0\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Offset\"\n"
-    "\t\ttype=\"Real32\"\n"
-    "        category=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"public\"\n"
-    "        defaultValue=\"0.0\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Span\"\n"
-    "\t\ttype=\"Real32\"\n"
-    "        category=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"public\"\n"
-    "        defaultValue=\"-1.0\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"AnimationsStarted\"\n"
-    "\t\tdetailsType=\"AnimationEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"AnimationsStopped\"\n"
-    "\t\tdetailsType=\"AnimationEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"AnimationsPaused\"\n"
-    "\t\tdetailsType=\"AnimationEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"AnimationsUnpaused\"\n"
-    "\t\tdetailsType=\"AnimationEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"AnimationsEnded\"\n"
-    "\t\tdetailsType=\"AnimationEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"AnimationsCycled\"\n"
-    "\t\tdetailsType=\"AnimationEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     ""
     );
-
-//! AnimationGroup Produced Events
-
-EventDescription *AnimationGroupBase::_eventDesc[] =
-{
-    new EventDescription("AnimationsStarted", 
-                          "",
-                          AnimationsStartedEventId, 
-                          FieldTraits<AnimationEventDetails *>::getType(),
-                          true,
-                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsStartedSignal)),
-
-    new EventDescription("AnimationsStopped", 
-                          "",
-                          AnimationsStoppedEventId, 
-                          FieldTraits<AnimationEventDetails *>::getType(),
-                          true,
-                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsStoppedSignal)),
-
-    new EventDescription("AnimationsPaused", 
-                          "",
-                          AnimationsPausedEventId, 
-                          FieldTraits<AnimationEventDetails *>::getType(),
-                          true,
-                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsPausedSignal)),
-
-    new EventDescription("AnimationsUnpaused", 
-                          "",
-                          AnimationsUnpausedEventId, 
-                          FieldTraits<AnimationEventDetails *>::getType(),
-                          true,
-                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsUnpausedSignal)),
-
-    new EventDescription("AnimationsEnded", 
-                          "",
-                          AnimationsEndedEventId, 
-                          FieldTraits<AnimationEventDetails *>::getType(),
-                          true,
-                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsEndedSignal)),
-
-    new EventDescription("AnimationsCycled", 
-                          "",
-                          AnimationsCycledEventId, 
-                          FieldTraits<AnimationEventDetails *>::getType(),
-                          true,
-                          static_cast<EventGetMethod>(&AnimationGroupBase::getHandleAnimationsCycledSignal))
-
-};
-
-EventProducerType AnimationGroupBase::_producerType(
-    "AnimationGroupProducerType",
-    "EventProducerType",
-    "",
-    InitEventProducerFunctor(),
-    _eventDesc,
-    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -351,11 +177,6 @@ FieldContainerType &AnimationGroupBase::getType(void)
 const FieldContainerType &AnimationGroupBase::getType(void) const
 {
     return _type;
-}
-
-const EventProducerType &AnimationGroupBase::getProducerType(void) const
-{
-    return _producerType;
 }
 
 UInt32 AnimationGroupBase::getContainerSize(void) const
@@ -378,45 +199,6 @@ MFUnrecAnimationPtr *AnimationGroupBase::editMFAnimations     (void)
 
     return &_mfAnimations;
 }
-
-SFReal32 *AnimationGroupBase::editSFScale(void)
-{
-    editSField(ScaleFieldMask);
-
-    return &_sfScale;
-}
-
-const SFReal32 *AnimationGroupBase::getSFScale(void) const
-{
-    return &_sfScale;
-}
-
-
-SFReal32 *AnimationGroupBase::editSFOffset(void)
-{
-    editSField(OffsetFieldMask);
-
-    return &_sfOffset;
-}
-
-const SFReal32 *AnimationGroupBase::getSFOffset(void) const
-{
-    return &_sfOffset;
-}
-
-
-SFReal32 *AnimationGroupBase::editSFSpan(void)
-{
-    editSField(SpanFieldMask);
-
-    return &_sfSpan;
-}
-
-const SFReal32 *AnimationGroupBase::getSFSpan(void) const
-{
-    return &_sfSpan;
-}
-
 
 
 
@@ -485,18 +267,6 @@ UInt32 AnimationGroupBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _mfAnimations.getBinSize();
     }
-    if(FieldBits::NoField != (ScaleFieldMask & whichField))
-    {
-        returnValue += _sfScale.getBinSize();
-    }
-    if(FieldBits::NoField != (OffsetFieldMask & whichField))
-    {
-        returnValue += _sfOffset.getBinSize();
-    }
-    if(FieldBits::NoField != (SpanFieldMask & whichField))
-    {
-        returnValue += _sfSpan.getBinSize();
-    }
 
     return returnValue;
 }
@@ -510,18 +280,6 @@ void AnimationGroupBase::copyToBin(BinaryDataHandler &pMem,
     {
         _mfAnimations.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (ScaleFieldMask & whichField))
-    {
-        _sfScale.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (OffsetFieldMask & whichField))
-    {
-        _sfOffset.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (SpanFieldMask & whichField))
-    {
-        _sfSpan.copyToBin(pMem);
-    }
 }
 
 void AnimationGroupBase::copyFromBin(BinaryDataHandler &pMem,
@@ -532,18 +290,6 @@ void AnimationGroupBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (AnimationsFieldMask & whichField))
     {
         _mfAnimations.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (ScaleFieldMask & whichField))
-    {
-        _sfScale.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (OffsetFieldMask & whichField))
-    {
-        _sfOffset.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (SpanFieldMask & whichField))
-    {
-        _sfSpan.copyFromBin(pMem);
     }
 }
 
@@ -619,7 +365,6 @@ AnimationGroup *AnimationGroupBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr AnimationGroupBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -665,252 +410,17 @@ FieldContainerTransitPtr AnimationGroupBase::shallowCopy(void) const
 
 
 
-/*------------------------- event producers ----------------------------------*/
-void AnimationGroupBase::produceEvent(UInt32 eventId, EventDetails* const e)
-{
-    switch(eventId)
-    {
-    case AnimationsStartedEventId:
-        OSG_ASSERT(dynamic_cast<AnimationsStartedEventDetailsType* const>(e));
-
-        _AnimationsStartedEvent.set_combiner(ConsumableEventCombiner(e));
-        _AnimationsStartedEvent(dynamic_cast<AnimationsStartedEventDetailsType* const>(e), AnimationsStartedEventId);
-        break;
-    case AnimationsStoppedEventId:
-        OSG_ASSERT(dynamic_cast<AnimationsStoppedEventDetailsType* const>(e));
-
-        _AnimationsStoppedEvent.set_combiner(ConsumableEventCombiner(e));
-        _AnimationsStoppedEvent(dynamic_cast<AnimationsStoppedEventDetailsType* const>(e), AnimationsStoppedEventId);
-        break;
-    case AnimationsPausedEventId:
-        OSG_ASSERT(dynamic_cast<AnimationsPausedEventDetailsType* const>(e));
-
-        _AnimationsPausedEvent.set_combiner(ConsumableEventCombiner(e));
-        _AnimationsPausedEvent(dynamic_cast<AnimationsPausedEventDetailsType* const>(e), AnimationsPausedEventId);
-        break;
-    case AnimationsUnpausedEventId:
-        OSG_ASSERT(dynamic_cast<AnimationsUnpausedEventDetailsType* const>(e));
-
-        _AnimationsUnpausedEvent.set_combiner(ConsumableEventCombiner(e));
-        _AnimationsUnpausedEvent(dynamic_cast<AnimationsUnpausedEventDetailsType* const>(e), AnimationsUnpausedEventId);
-        break;
-    case AnimationsEndedEventId:
-        OSG_ASSERT(dynamic_cast<AnimationsEndedEventDetailsType* const>(e));
-
-        _AnimationsEndedEvent.set_combiner(ConsumableEventCombiner(e));
-        _AnimationsEndedEvent(dynamic_cast<AnimationsEndedEventDetailsType* const>(e), AnimationsEndedEventId);
-        break;
-    case AnimationsCycledEventId:
-        OSG_ASSERT(dynamic_cast<AnimationsCycledEventDetailsType* const>(e));
-
-        _AnimationsCycledEvent.set_combiner(ConsumableEventCombiner(e));
-        _AnimationsCycledEvent(dynamic_cast<AnimationsCycledEventDetailsType* const>(e), AnimationsCycledEventId);
-        break;
-    default:
-        SWARNING << "No event defined with that ID";
-        break;
-    }
-}
-
-boost::signals2::connection AnimationGroupBase::connectEvent(UInt32 eventId, 
-                                                             const BaseEventType::slot_type &listener, 
-                                                             boost::signals2::connect_position at)
-{
-    switch(eventId)
-    {
-    case AnimationsStartedEventId:
-        return _AnimationsStartedEvent.connect(listener, at);
-        break;
-    case AnimationsStoppedEventId:
-        return _AnimationsStoppedEvent.connect(listener, at);
-        break;
-    case AnimationsPausedEventId:
-        return _AnimationsPausedEvent.connect(listener, at);
-        break;
-    case AnimationsUnpausedEventId:
-        return _AnimationsUnpausedEvent.connect(listener, at);
-        break;
-    case AnimationsEndedEventId:
-        return _AnimationsEndedEvent.connect(listener, at);
-        break;
-    case AnimationsCycledEventId:
-        return _AnimationsCycledEvent.connect(listener, at);
-        break;
-    default:
-        SWARNING << "No event defined with that ID";
-        return boost::signals2::connection();
-        break;
-    }
-
-    return boost::signals2::connection();
-}
-
-boost::signals2::connection  AnimationGroupBase::connectEvent(UInt32 eventId, 
-                                                              const BaseEventType::group_type &group,
-                                                              const BaseEventType::slot_type &listener,
-                                                              boost::signals2::connect_position at)
-{
-    switch(eventId)
-    {
-    case AnimationsStartedEventId:
-        return _AnimationsStartedEvent.connect(group, listener, at);
-        break;
-    case AnimationsStoppedEventId:
-        return _AnimationsStoppedEvent.connect(group, listener, at);
-        break;
-    case AnimationsPausedEventId:
-        return _AnimationsPausedEvent.connect(group, listener, at);
-        break;
-    case AnimationsUnpausedEventId:
-        return _AnimationsUnpausedEvent.connect(group, listener, at);
-        break;
-    case AnimationsEndedEventId:
-        return _AnimationsEndedEvent.connect(group, listener, at);
-        break;
-    case AnimationsCycledEventId:
-        return _AnimationsCycledEvent.connect(group, listener, at);
-        break;
-    default:
-        SWARNING << "No event defined with that ID";
-        return boost::signals2::connection();
-        break;
-    }
-
-    return boost::signals2::connection();
-}
-    
-void  AnimationGroupBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
-{
-    switch(eventId)
-    {
-    case AnimationsStartedEventId:
-        _AnimationsStartedEvent.disconnect(group);
-        break;
-    case AnimationsStoppedEventId:
-        _AnimationsStoppedEvent.disconnect(group);
-        break;
-    case AnimationsPausedEventId:
-        _AnimationsPausedEvent.disconnect(group);
-        break;
-    case AnimationsUnpausedEventId:
-        _AnimationsUnpausedEvent.disconnect(group);
-        break;
-    case AnimationsEndedEventId:
-        _AnimationsEndedEvent.disconnect(group);
-        break;
-    case AnimationsCycledEventId:
-        _AnimationsCycledEvent.disconnect(group);
-        break;
-    default:
-        SWARNING << "No event defined with that ID";
-        break;
-    }
-}
-
-void  AnimationGroupBase::disconnectAllSlotsEvent(UInt32 eventId)
-{
-    switch(eventId)
-    {
-    case AnimationsStartedEventId:
-        _AnimationsStartedEvent.disconnect_all_slots();
-        break;
-    case AnimationsStoppedEventId:
-        _AnimationsStoppedEvent.disconnect_all_slots();
-        break;
-    case AnimationsPausedEventId:
-        _AnimationsPausedEvent.disconnect_all_slots();
-        break;
-    case AnimationsUnpausedEventId:
-        _AnimationsUnpausedEvent.disconnect_all_slots();
-        break;
-    case AnimationsEndedEventId:
-        _AnimationsEndedEvent.disconnect_all_slots();
-        break;
-    case AnimationsCycledEventId:
-        _AnimationsCycledEvent.disconnect_all_slots();
-        break;
-    default:
-        SWARNING << "No event defined with that ID";
-        break;
-    }
-}
-
-bool  AnimationGroupBase::isEmptyEvent(UInt32 eventId) const
-{
-    switch(eventId)
-    {
-    case AnimationsStartedEventId:
-        return _AnimationsStartedEvent.empty();
-        break;
-    case AnimationsStoppedEventId:
-        return _AnimationsStoppedEvent.empty();
-        break;
-    case AnimationsPausedEventId:
-        return _AnimationsPausedEvent.empty();
-        break;
-    case AnimationsUnpausedEventId:
-        return _AnimationsUnpausedEvent.empty();
-        break;
-    case AnimationsEndedEventId:
-        return _AnimationsEndedEvent.empty();
-        break;
-    case AnimationsCycledEventId:
-        return _AnimationsCycledEvent.empty();
-        break;
-    default:
-        SWARNING << "No event defined with that ID";
-        return true;
-        break;
-    }
-}
-
-UInt32  AnimationGroupBase::numSlotsEvent(UInt32 eventId) const
-{
-    switch(eventId)
-    {
-    case AnimationsStartedEventId:
-        return _AnimationsStartedEvent.num_slots();
-        break;
-    case AnimationsStoppedEventId:
-        return _AnimationsStoppedEvent.num_slots();
-        break;
-    case AnimationsPausedEventId:
-        return _AnimationsPausedEvent.num_slots();
-        break;
-    case AnimationsUnpausedEventId:
-        return _AnimationsUnpausedEvent.num_slots();
-        break;
-    case AnimationsEndedEventId:
-        return _AnimationsEndedEvent.num_slots();
-        break;
-    case AnimationsCycledEventId:
-        return _AnimationsCycledEvent.num_slots();
-        break;
-    default:
-        SWARNING << "No event defined with that ID";
-        return 0;
-        break;
-    }
-}
-
-
 /*------------------------- constructors ----------------------------------*/
 
 AnimationGroupBase::AnimationGroupBase(void) :
     Inherited(),
-    _mfAnimations             (),
-    _sfScale                  (Real32(1.0)),
-    _sfOffset                 (Real32(0.0)),
-    _sfSpan                   (Real32(-1.0))
+    _mfAnimations             ()
 {
 }
 
 AnimationGroupBase::AnimationGroupBase(const AnimationGroupBase &source) :
     Inherited(source),
-    _mfAnimations             (),
-    _sfScale                  (source._sfScale                  ),
-    _sfOffset                 (source._sfOffset                 ),
-    _sfSpan                   (source._sfSpan                   )
+    _mfAnimations             ()
 {
 }
 
@@ -980,147 +490,6 @@ EditFieldHandlePtr AnimationGroupBase::editHandleAnimations     (void)
     return returnValue;
 }
 
-GetFieldHandlePtr AnimationGroupBase::getHandleScale           (void) const
-{
-    SFReal32::GetHandlePtr returnValue(
-        new  SFReal32::GetHandle(
-             &_sfScale,
-             this->getType().getFieldDesc(ScaleFieldId),
-             const_cast<AnimationGroupBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr AnimationGroupBase::editHandleScale          (void)
-{
-    SFReal32::EditHandlePtr returnValue(
-        new  SFReal32::EditHandle(
-             &_sfScale,
-             this->getType().getFieldDesc(ScaleFieldId),
-             this));
-
-
-    editSField(ScaleFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr AnimationGroupBase::getHandleOffset          (void) const
-{
-    SFReal32::GetHandlePtr returnValue(
-        new  SFReal32::GetHandle(
-             &_sfOffset,
-             this->getType().getFieldDesc(OffsetFieldId),
-             const_cast<AnimationGroupBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr AnimationGroupBase::editHandleOffset         (void)
-{
-    SFReal32::EditHandlePtr returnValue(
-        new  SFReal32::EditHandle(
-             &_sfOffset,
-             this->getType().getFieldDesc(OffsetFieldId),
-             this));
-
-
-    editSField(OffsetFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr AnimationGroupBase::getHandleSpan            (void) const
-{
-    SFReal32::GetHandlePtr returnValue(
-        new  SFReal32::GetHandle(
-             &_sfSpan,
-             this->getType().getFieldDesc(SpanFieldId),
-             const_cast<AnimationGroupBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr AnimationGroupBase::editHandleSpan           (void)
-{
-    SFReal32::EditHandlePtr returnValue(
-        new  SFReal32::EditHandle(
-             &_sfSpan,
-             this->getType().getFieldDesc(SpanFieldId),
-             this));
-
-
-    editSField(SpanFieldMask);
-
-    return returnValue;
-}
-
-
-GetEventHandlePtr AnimationGroupBase::getHandleAnimationsStartedSignal(void) const
-{
-    GetEventHandlePtr returnValue(
-        new  GetTypedEventHandle<AnimationsStartedEventType>(
-             const_cast<AnimationsStartedEventType *>(&_AnimationsStartedEvent),
-             _producerType.getEventDescription(AnimationsStartedEventId),
-             const_cast<AnimationGroupBase *>(this)));
-
-    return returnValue;
-}
-
-GetEventHandlePtr AnimationGroupBase::getHandleAnimationsStoppedSignal(void) const
-{
-    GetEventHandlePtr returnValue(
-        new  GetTypedEventHandle<AnimationsStoppedEventType>(
-             const_cast<AnimationsStoppedEventType *>(&_AnimationsStoppedEvent),
-             _producerType.getEventDescription(AnimationsStoppedEventId),
-             const_cast<AnimationGroupBase *>(this)));
-
-    return returnValue;
-}
-
-GetEventHandlePtr AnimationGroupBase::getHandleAnimationsPausedSignal(void) const
-{
-    GetEventHandlePtr returnValue(
-        new  GetTypedEventHandle<AnimationsPausedEventType>(
-             const_cast<AnimationsPausedEventType *>(&_AnimationsPausedEvent),
-             _producerType.getEventDescription(AnimationsPausedEventId),
-             const_cast<AnimationGroupBase *>(this)));
-
-    return returnValue;
-}
-
-GetEventHandlePtr AnimationGroupBase::getHandleAnimationsUnpausedSignal(void) const
-{
-    GetEventHandlePtr returnValue(
-        new  GetTypedEventHandle<AnimationsUnpausedEventType>(
-             const_cast<AnimationsUnpausedEventType *>(&_AnimationsUnpausedEvent),
-             _producerType.getEventDescription(AnimationsUnpausedEventId),
-             const_cast<AnimationGroupBase *>(this)));
-
-    return returnValue;
-}
-
-GetEventHandlePtr AnimationGroupBase::getHandleAnimationsEndedSignal(void) const
-{
-    GetEventHandlePtr returnValue(
-        new  GetTypedEventHandle<AnimationsEndedEventType>(
-             const_cast<AnimationsEndedEventType *>(&_AnimationsEndedEvent),
-             _producerType.getEventDescription(AnimationsEndedEventId),
-             const_cast<AnimationGroupBase *>(this)));
-
-    return returnValue;
-}
-
-GetEventHandlePtr AnimationGroupBase::getHandleAnimationsCycledSignal(void) const
-{
-    GetEventHandlePtr returnValue(
-        new  GetTypedEventHandle<AnimationsCycledEventType>(
-             const_cast<AnimationsCycledEventType *>(&_AnimationsCycledEvent),
-             _producerType.getEventDescription(AnimationsCycledEventId),
-             const_cast<AnimationGroupBase *>(this)));
-
-    return returnValue;
-}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

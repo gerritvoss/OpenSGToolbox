@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="AnimationGroup"
-	parent="AttachmentContainer"
+	parent="Animation"
     library="TBAnimation"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -21,70 +21,4 @@
 		access="public"
 	>
 	</Field>
-	<Field
-		name="Scale"
-		type="Real32"
-        category="data"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="1.0"
-	>
-	</Field>
-	<Field
-		name="Offset"
-		type="Real32"
-        category="data"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="0.0"
-	>
-	</Field>
-	<Field
-		name="Span"
-		type="Real32"
-        category="data"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="-1.0"
-	>
-	</Field>
-	<ProducedEvent
-		name="AnimationsStarted"
-		detailsType="AnimationEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="AnimationsStopped"
-		detailsType="AnimationEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="AnimationsPaused"
-		detailsType="AnimationEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="AnimationsUnpaused"
-		detailsType="AnimationEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="AnimationsEnded"
-		detailsType="AnimationEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="AnimationsCycled"
-		detailsType="AnimationEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
 </FieldContainer>

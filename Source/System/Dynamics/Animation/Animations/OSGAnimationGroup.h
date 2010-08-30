@@ -78,20 +78,15 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroup : public AnimationGroupBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    //virtual bool update(const AnimationAdvancerPtr& advancer);
     virtual bool update(const Time& ElapsedTime);
     
     virtual void start(const Time& StartTime=0.0f);
     virtual void seek(const Time& SeekTime);
     virtual void pause(bool ShouldPause);
-    virtual bool isPaused(void) const;
-    virtual bool isPlaying(void) const;
     virtual void stop(bool DisconnectFromEventProducer = true);
 
     virtual Real32 getLength(void) const;
-
-    void attachUpdateProducer(ReflexiveContainer* const producer);
-    void detachUpdateProducer(void);
+    virtual Real32 getCycleLength(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -120,19 +115,8 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroup : public AnimationGroupBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    void produceAnimationsStarted(void);
-    void produceAnimationsStopped(void);
-    void produceAnimationsPaused(void);
-    void produceAnimationsUnpaused(void);
-    void produceAnimationsEnded(void);
-    void produceAnimationsCycled(void);
 
-    void attachedUpdate(EventDetails* const details);
-
-    Time _CurrentTime,_PrevTime;
-    bool _IsPlaying,_IsPaused;
-
-    boost::signals2::connection _UpdateEventConnection;
+    virtual void internalUpdate(Real32 t, const Real32 prev_t);
     /*==========================  PRIVATE  ================================*/
 
   private:
