@@ -19,6 +19,7 @@
 #include "OSGGeometry.h"
 #include "OSGViewport.h"
 #include "OSGCamera.h"
+#include "OSGIntersectAction.h"
 #include "OSGImage.h"
 #include "OSGTextureObjChunk.h"
 #include "OSGMathFields.h"
@@ -3812,6 +3813,143 @@ namespace OSG
             LuaActivity(void);
             LuaActivity(const LuaActivity &obj);
             virtual ~LuaActivity(void);
+    };
+    
+    /******************************************************/
+    /*              Intersect Action                      */
+    /******************************************************/
+    class ActionBase
+    {
+      public:
+     
+        enum ResultE
+        {
+            Continue,   // continue with my children
+            Skip,       // skip my children
+                        // really needed? Cancel, 
+                        // skip my brothers, go one step up
+            Quit        // forget it, you're done
+        };
+      protected:
+        ActionBase(void);
+        ActionBase(const Action &source);
+    };
+    
+    class Action : public ActionBase
+    {
+      public:
+        static Action *create(void);
+        //static void    setPrototype(Action *proto);
+        //static Action *getPrototype(void         );
+    
+        virtual ~Action(void);
+        
+        //static void registerEnterDefault (const FieldContainerType &type, 
+        //                                  const Functor            &func);
+        //static void registerLeaveDefault (const FieldContainerType &type, 
+        //                                  const Functor            &func);
+        //       void registerEnterFunction(const FieldContainerType &type, 
+        //                                  const Functor            &func);
+        //       void registerLeaveFunction(const FieldContainerType &type, 
+        //                                  const Functor            &func);
+    
+        //virtual ResultE apply(std::vector<Node *>::iterator begin, 
+        //                      std::vector<Node *>::iterator end  );
+        virtual ResultE apply(Node * const                   node);
+        
+        //inline Node           *getActNode  (void);
+        //inline FieldContainer *getActParent(void);
+        //void setActNode(Node * const node);
+        //UInt32       getNNodes  (void                 ) const;
+        //Node        *getNode    (int             index);
+        //void         addNode    (Node * const node);
+        //void         useNodeList(bool bVal = true    ); 
+        UInt32 getTravMask (void      ) const;
+        void   setTravMask (UInt32 val);
+        void   andTravMask (UInt32 val);
+        void pushTravMask(void);
+        void popTravMask (void);
+        //bool operator <  (const Action &other);
+        //bool operator == (const Action &other);
+        //bool operator != (const Action &other);
+    
+      protected:
+        Action(void);
+        Action(const Action &source);
+      private:
+    };
+    %extend Action
+    {
+        ResultE apply(NodeRefPtr node)
+        {
+            return $self->apply(node);
+        }
+    };
+
+    class IntersectAction : public Action
+    {
+      public:
+    
+        // create a new IntersectAction by cloning the prototype
+        static IntersectAction *create(      void                 );
+        static IntersectAction *create(const Line   &line, 
+                                       const Real32  maxdist = Inf);
+        
+    
+        //static void             setPrototype(IntersectAction *proto);
+        //static IntersectAction *getPrototype(void                  );
+     
+        //IntersectAction& operator =(const IntersectAction &source);
+    
+        virtual ~IntersectAction(void); 
+    
+              void     setLine(       const Line   &line, 
+                                      const Real32  maxdist = Inf);
+              void     setTestLines     ( bool value );
+              void     setTestLineWidth (Real32 width);
+        const Line    &getLine       (      void                 ) const;
+              Real32   getMaxDist    (      void                 ) const;
+              bool     getTestLines  (      void                 ) const;
+              Real32   getTestLineWidth (   void                 ) const;
+              bool     didHit        (      void                 ) const;
+              Real32   getHitT       (      void                 ) const;
+              Pnt3f    getHitPoint   (      void                 ) const;
+              Vec3f    getHitNormal  (      void                 ) const;
+              //Node    *getHitObject  (      void                 ) const;
+              Int32    getHitTriangle(      void                 ) const;
+              Int32    getHitLine    (      void                 ) const;
+        /* Action::ResultE setEnterLeave(Real32   enter, 
+                                      Real32   leave   );
+        void            setHit       (Real32   t, 
+                                      Node    *obj, 
+                                      Int32    triIndex, 
+                                      Vec3f   &normal,
+                                      Int32    lineIndex );
+        void scale(Real32 s); */
+        //bool operator < (const IntersectAction &other) const;
+        
+        //bool operator == (const IntersectAction &other) const;
+        //bool operator != (const IntersectAction &other) const;
+        
+        
+        // default registration. static, so it can be called during static init
+        //static void registerEnterDefault(const FieldContainerType &type, 
+        //                                 const Action::Functor    &func);
+        //
+        //static void registerLeaveDefault(const FieldContainerType &type, 
+        //                                 const Action::Functor    &func);
+    
+      protected:
+        IntersectAction(void);
+        IntersectAction(const IntersectAction &source);
+      private:
+    };
+    %extend IntersectAction
+    {
+        NodeRefPtr getHitObject(void) const
+        {
+            return $self->getHitObject();
+        }
     };
     
     /******************************************************/

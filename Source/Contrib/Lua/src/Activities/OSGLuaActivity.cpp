@@ -136,6 +136,7 @@ boost::signals2::connection LuaActivity::addLuaCallback(FieldContainerRefPtr pro
 
         LuaActivityUnrecPtr TheLuaActivity = LuaActivity::create();
         TheLuaActivity->setEntryFunction(funcName);
+        commitChanges();
 
         //BUG: Need to add ref count to keep it from being deleted,
         //but who has responsibility for deleting it?

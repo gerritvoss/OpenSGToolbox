@@ -1526,96 +1526,99 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_Inherited swig_types[0]
 #define SWIGTYPE_p_MFChildrenType swig_types[1]
 #define SWIGTYPE_p_MatrixType swig_types[2]
-#define SWIGTYPE_p_OSG__Activity swig_types[3]
-#define SWIGTYPE_p_OSG__ActivityRefPtr swig_types[4]
-#define SWIGTYPE_p_OSG__Attachment swig_types[5]
-#define SWIGTYPE_p_OSG__AttachmentContainer swig_types[6]
-#define SWIGTYPE_p_OSG__AttachmentContainerRefPtr swig_types[7]
-#define SWIGTYPE_p_OSG__AttachmentRefPtr swig_types[8]
-#define SWIGTYPE_p_OSG__BoxVolume swig_types[9]
-#define SWIGTYPE_p_OSG__Camera swig_types[10]
-#define SWIGTYPE_p_OSG__CameraRefPtr swig_types[11]
-#define SWIGTYPE_p_OSG__Color3f swig_types[12]
-#define SWIGTYPE_p_OSG__Color4f swig_types[13]
-#define SWIGTYPE_p_OSG__DataType swig_types[14]
-#define SWIGTYPE_p_OSG__EventDescription swig_types[15]
-#define SWIGTYPE_p_OSG__EventDetails swig_types[16]
-#define SWIGTYPE_p_OSG__EventDetailsRefPtr swig_types[17]
-#define SWIGTYPE_p_OSG__EventProducerType swig_types[18]
-#define SWIGTYPE_p_OSG__FactoryBase swig_types[19]
-#define SWIGTYPE_p_OSG__FieldContainer swig_types[20]
-#define SWIGTYPE_p_OSG__FieldContainerFactory swig_types[21]
-#define SWIGTYPE_p_OSG__FieldContainerFactoryBase swig_types[22]
-#define SWIGTYPE_p_OSG__FieldContainerRefPtr swig_types[23]
-#define SWIGTYPE_p_OSG__FieldContainerType swig_types[24]
-#define SWIGTYPE_p_OSG__FieldDescriptionBase swig_types[25]
-#define SWIGTYPE_p_OSG__FieldType swig_types[26]
-#define SWIGTYPE_p_OSG__FrustumVolume swig_types[27]
-#define SWIGTYPE_p_OSG__GenericEventDetails swig_types[28]
-#define SWIGTYPE_p_OSG__GenericEventDetailsRefPtr swig_types[29]
-#define SWIGTYPE_p_OSG__Geometry swig_types[30]
-#define SWIGTYPE_p_OSG__GeometryRefPtr swig_types[31]
-#define SWIGTYPE_p_OSG__Image swig_types[32]
-#define SWIGTYPE_p_OSG__ImageRefPtr swig_types[33]
-#define SWIGTYPE_p_OSG__Line swig_types[34]
-#define SWIGTYPE_p_OSG__LuaActivity swig_types[35]
-#define SWIGTYPE_p_OSG__LuaActivityRefPtr swig_types[36]
-#define SWIGTYPE_p_OSG__Matrix swig_types[37]
-#define SWIGTYPE_p_OSG__Node swig_types[38]
-#define SWIGTYPE_p_OSG__NodeCore swig_types[39]
-#define SWIGTYPE_p_OSG__NodeCoreRefPtr swig_types[40]
-#define SWIGTYPE_p_OSG__NodeRefPtr swig_types[41]
-#define SWIGTYPE_p_OSG__Plane swig_types[42]
-#define SWIGTYPE_p_OSG__Pnt2f swig_types[43]
-#define SWIGTYPE_p_OSG__Pnt3f swig_types[44]
-#define SWIGTYPE_p_OSG__Pnt4f swig_types[45]
-#define SWIGTYPE_p_OSG__Quaternion swig_types[46]
-#define SWIGTYPE_p_OSG__ReflexiveContainer swig_types[47]
-#define SWIGTYPE_p_OSG__ReflexiveContainerType swig_types[48]
-#define SWIGTYPE_p_OSG__TextureObjChunk swig_types[49]
-#define SWIGTYPE_p_OSG__TextureObjChunkRefPtr swig_types[50]
-#define SWIGTYPE_p_OSG__TypeBase swig_types[51]
-#define SWIGTYPE_p_OSG__TypeFactory swig_types[52]
-#define SWIGTYPE_p_OSG__Vec2f swig_types[53]
-#define SWIGTYPE_p_OSG__Vec3f swig_types[54]
-#define SWIGTYPE_p_OSG__Vec4f swig_types[55]
-#define SWIGTYPE_p_OSG__Viewport swig_types[56]
-#define SWIGTYPE_p_OSG__ViewportRefPtr swig_types[57]
-#define SWIGTYPE_p_OSG__Volume swig_types[58]
-#define SWIGTYPE_p_ParentContainer swig_types[59]
-#define SWIGTYPE_p_PlaneSet swig_types[60]
-#define SWIGTYPE_p_PointType swig_types[61]
-#define SWIGTYPE_p_PointType3f swig_types[62]
-#define SWIGTYPE_p_QuaternionType swig_types[63]
-#define SWIGTYPE_p_SFCoreType swig_types[64]
-#define SWIGTYPE_p_SFParentType swig_types[65]
-#define SWIGTYPE_p_SFTravMaskType swig_types[66]
-#define SWIGTYPE_p_SFVolumeType swig_types[67]
-#define SWIGTYPE_p_TypeObject swig_types[68]
-#define SWIGTYPE_p_ValueType swig_types[69]
-#define SWIGTYPE_p_VectorType swig_types[70]
-#define SWIGTYPE_p_VectorType3f swig_types[71]
-#define SWIGTYPE_p_VolumeType swig_types[72]
-#define SWIGTYPE_p_boost__signals2__connection swig_types[73]
-#define SWIGTYPE_p_char swig_types[74]
-#define SWIGTYPE_p_difference_type swig_types[75]
-#define SWIGTYPE_p_double swig_types[76]
-#define SWIGTYPE_p_float swig_types[77]
-#define SWIGTYPE_p_int swig_types[78]
-#define SWIGTYPE_p_key_type swig_types[79]
-#define SWIGTYPE_p_long swig_types[80]
-#define SWIGTYPE_p_long_double swig_types[81]
-#define SWIGTYPE_p_mapped_type swig_types[82]
-#define SWIGTYPE_p_signed_char swig_types[83]
-#define SWIGTYPE_p_size_type swig_types[84]
-#define SWIGTYPE_p_std__mapT_int_std__string_t swig_types[85]
-#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[86]
-#define SWIGTYPE_p_std__string swig_types[87]
-#define SWIGTYPE_p_unsigned_char swig_types[88]
-#define SWIGTYPE_p_unsigned_int swig_types[89]
-#define SWIGTYPE_p_unsigned_long swig_types[90]
-static swig_type_info *swig_types[92];
-static swig_module_info swig_module = {swig_types, 91, 0, 0, 0, 0};
+#define SWIGTYPE_p_OSG__Action swig_types[3]
+#define SWIGTYPE_p_OSG__ActionBase swig_types[4]
+#define SWIGTYPE_p_OSG__Activity swig_types[5]
+#define SWIGTYPE_p_OSG__ActivityRefPtr swig_types[6]
+#define SWIGTYPE_p_OSG__Attachment swig_types[7]
+#define SWIGTYPE_p_OSG__AttachmentContainer swig_types[8]
+#define SWIGTYPE_p_OSG__AttachmentContainerRefPtr swig_types[9]
+#define SWIGTYPE_p_OSG__AttachmentRefPtr swig_types[10]
+#define SWIGTYPE_p_OSG__BoxVolume swig_types[11]
+#define SWIGTYPE_p_OSG__Camera swig_types[12]
+#define SWIGTYPE_p_OSG__CameraRefPtr swig_types[13]
+#define SWIGTYPE_p_OSG__Color3f swig_types[14]
+#define SWIGTYPE_p_OSG__Color4f swig_types[15]
+#define SWIGTYPE_p_OSG__DataType swig_types[16]
+#define SWIGTYPE_p_OSG__EventDescription swig_types[17]
+#define SWIGTYPE_p_OSG__EventDetails swig_types[18]
+#define SWIGTYPE_p_OSG__EventDetailsRefPtr swig_types[19]
+#define SWIGTYPE_p_OSG__EventProducerType swig_types[20]
+#define SWIGTYPE_p_OSG__FactoryBase swig_types[21]
+#define SWIGTYPE_p_OSG__FieldContainer swig_types[22]
+#define SWIGTYPE_p_OSG__FieldContainerFactory swig_types[23]
+#define SWIGTYPE_p_OSG__FieldContainerFactoryBase swig_types[24]
+#define SWIGTYPE_p_OSG__FieldContainerRefPtr swig_types[25]
+#define SWIGTYPE_p_OSG__FieldContainerType swig_types[26]
+#define SWIGTYPE_p_OSG__FieldDescriptionBase swig_types[27]
+#define SWIGTYPE_p_OSG__FieldType swig_types[28]
+#define SWIGTYPE_p_OSG__FrustumVolume swig_types[29]
+#define SWIGTYPE_p_OSG__GenericEventDetails swig_types[30]
+#define SWIGTYPE_p_OSG__GenericEventDetailsRefPtr swig_types[31]
+#define SWIGTYPE_p_OSG__Geometry swig_types[32]
+#define SWIGTYPE_p_OSG__GeometryRefPtr swig_types[33]
+#define SWIGTYPE_p_OSG__Image swig_types[34]
+#define SWIGTYPE_p_OSG__ImageRefPtr swig_types[35]
+#define SWIGTYPE_p_OSG__IntersectAction swig_types[36]
+#define SWIGTYPE_p_OSG__Line swig_types[37]
+#define SWIGTYPE_p_OSG__LuaActivity swig_types[38]
+#define SWIGTYPE_p_OSG__LuaActivityRefPtr swig_types[39]
+#define SWIGTYPE_p_OSG__Matrix swig_types[40]
+#define SWIGTYPE_p_OSG__Node swig_types[41]
+#define SWIGTYPE_p_OSG__NodeCore swig_types[42]
+#define SWIGTYPE_p_OSG__NodeCoreRefPtr swig_types[43]
+#define SWIGTYPE_p_OSG__NodeRefPtr swig_types[44]
+#define SWIGTYPE_p_OSG__Plane swig_types[45]
+#define SWIGTYPE_p_OSG__Pnt2f swig_types[46]
+#define SWIGTYPE_p_OSG__Pnt3f swig_types[47]
+#define SWIGTYPE_p_OSG__Pnt4f swig_types[48]
+#define SWIGTYPE_p_OSG__Quaternion swig_types[49]
+#define SWIGTYPE_p_OSG__ReflexiveContainer swig_types[50]
+#define SWIGTYPE_p_OSG__ReflexiveContainerType swig_types[51]
+#define SWIGTYPE_p_OSG__TextureObjChunk swig_types[52]
+#define SWIGTYPE_p_OSG__TextureObjChunkRefPtr swig_types[53]
+#define SWIGTYPE_p_OSG__TypeBase swig_types[54]
+#define SWIGTYPE_p_OSG__TypeFactory swig_types[55]
+#define SWIGTYPE_p_OSG__Vec2f swig_types[56]
+#define SWIGTYPE_p_OSG__Vec3f swig_types[57]
+#define SWIGTYPE_p_OSG__Vec4f swig_types[58]
+#define SWIGTYPE_p_OSG__Viewport swig_types[59]
+#define SWIGTYPE_p_OSG__ViewportRefPtr swig_types[60]
+#define SWIGTYPE_p_OSG__Volume swig_types[61]
+#define SWIGTYPE_p_ParentContainer swig_types[62]
+#define SWIGTYPE_p_PlaneSet swig_types[63]
+#define SWIGTYPE_p_PointType swig_types[64]
+#define SWIGTYPE_p_PointType3f swig_types[65]
+#define SWIGTYPE_p_QuaternionType swig_types[66]
+#define SWIGTYPE_p_SFCoreType swig_types[67]
+#define SWIGTYPE_p_SFParentType swig_types[68]
+#define SWIGTYPE_p_SFTravMaskType swig_types[69]
+#define SWIGTYPE_p_SFVolumeType swig_types[70]
+#define SWIGTYPE_p_TypeObject swig_types[71]
+#define SWIGTYPE_p_ValueType swig_types[72]
+#define SWIGTYPE_p_VectorType swig_types[73]
+#define SWIGTYPE_p_VectorType3f swig_types[74]
+#define SWIGTYPE_p_VolumeType swig_types[75]
+#define SWIGTYPE_p_boost__signals2__connection swig_types[76]
+#define SWIGTYPE_p_char swig_types[77]
+#define SWIGTYPE_p_difference_type swig_types[78]
+#define SWIGTYPE_p_double swig_types[79]
+#define SWIGTYPE_p_float swig_types[80]
+#define SWIGTYPE_p_int swig_types[81]
+#define SWIGTYPE_p_key_type swig_types[82]
+#define SWIGTYPE_p_long swig_types[83]
+#define SWIGTYPE_p_long_double swig_types[84]
+#define SWIGTYPE_p_mapped_type swig_types[85]
+#define SWIGTYPE_p_signed_char swig_types[86]
+#define SWIGTYPE_p_size_type swig_types[87]
+#define SWIGTYPE_p_std__mapT_int_std__string_t swig_types[88]
+#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[89]
+#define SWIGTYPE_p_std__string swig_types[90]
+#define SWIGTYPE_p_unsigned_char swig_types[91]
+#define SWIGTYPE_p_unsigned_int swig_types[92]
+#define SWIGTYPE_p_unsigned_long swig_types[93]
+static swig_type_info *swig_types[95];
+static swig_module_info swig_module = {swig_types, 94, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1823,6 +1826,7 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
 #include "OSGGeometry.h"
 #include "OSGViewport.h"
 #include "OSGCamera.h"
+#include "OSGIntersectAction.h"
 #include "OSGImage.h"
 #include "OSGTextureObjChunk.h"
 #include "OSGMathFields.h"
@@ -2715,24 +2719,31 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           else if(TheFieldHandle->isPointerField())
           {
               OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+              if(lua_isnil(L,3))
+              {
+                  static_cast<OSG::SFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->setValue(NULL);
+              }
+              else if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
               {
                   LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
                   return SWIG_arg;
               }
-              switch(TheFieldHandle->getType().getClass())
+              else
               {
-                  case OSG::FieldType::ChildPtrField:
-                       static_cast<OSG::ChildPointerSField <OSG::FieldContainer *,
-                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->setValue(*arg3);
-                       break;
-                  case OSG::FieldType::ParentPtrField:
-                       lua_pushfstring(L,"Error in setFieldValue the FieldContainer given is of the ParentPtr class.  Cannot set the value of this field directly");
-                       lua_error(L);
-                       break;
-                  case OSG::FieldType::PtrField:
-                       static_cast<OSG::SFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->setValue(*arg3);
-                       break;
+                  switch(TheFieldHandle->getType().getClass())
+                  {
+                      case OSG::FieldType::ChildPtrField:
+                           static_cast<OSG::ChildPointerSField <OSG::FieldContainer *,
+                                       OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->setValue(*arg3);
+                           break;
+                      case OSG::FieldType::ParentPtrField:
+                           lua_pushfstring(L,"Error in setFieldValue the FieldContainer given is of the ParentPtr class.  Cannot set the value of this field directly");
+                           lua_error(L);
+                           break;
+                      case OSG::FieldType::PtrField:
+                           static_cast<OSG::SFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->setValue(*arg3);
+                           break;
+                  }
               }
           }
           //bool
@@ -4553,6 +4564,12 @@ SWIGINTERN OSG::ActivityRefPtr OSG_ActivityRefPtr_dcast(OSG::FieldContainerRefPt
         }
 SWIGINTERN OSG::LuaActivityRefPtr OSG_LuaActivityRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
             return OSG::dynamic_pointer_cast<OSG::LuaActivity>(oIn);
+        }
+SWIGINTERN OSG::ActionBase::ResultE OSG_Action_apply__SWIG_1(OSG::Action *self,OSG::NodeRefPtr node){
+            return self->apply(node);
+        }
+SWIGINTERN OSG::NodeRefPtr OSG_IntersectAction_getHitObject(OSG::IntersectAction const *self){
+            return self->getHitObject();
         }
 #ifdef __cplusplus
 extern "C" {
@@ -52466,6 +52483,915 @@ static swig_lua_class *swig_OSG_LuaActivity_bases[] = {0,0};
 static const char *swig_OSG_LuaActivity_base_names[] = {"OSG::Activity *",0};
 static swig_lua_class _wrap_class_OSG_LuaActivity = { "LuaActivity", &SWIGTYPE_p_OSG__LuaActivity,0,0, swig_OSG_LuaActivity_methods, swig_OSG_LuaActivity_attributes, swig_OSG_LuaActivity_bases, swig_OSG_LuaActivity_base_names };
 
+static void swig_delete_ActionBase(void *obj) {
+OSG::ActionBase *arg1 = (OSG::ActionBase *) obj;
+delete arg1;
+}
+static swig_lua_method swig_OSG_ActionBase_methods[] = {
+    {0,0}
+};
+static swig_lua_attribute swig_OSG_ActionBase_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_OSG_ActionBase_bases[] = {0};
+static const char *swig_OSG_ActionBase_base_names[] = {0};
+static swig_lua_class _wrap_class_OSG_ActionBase = { "ActionBase", &SWIGTYPE_p_OSG__ActionBase,0, swig_delete_ActionBase, swig_OSG_ActionBase_methods, swig_OSG_ActionBase_attributes, swig_OSG_ActionBase_bases, swig_OSG_ActionBase_base_names };
+
+static int _wrap_Action_create(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Action *result = 0 ;
+  
+  SWIG_check_num_args("OSG::Action::create",0,0)
+  result = (OSG::Action *)OSG::Action::create();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__Action,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Action_apply__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Action *arg1 = (OSG::Action *) 0 ;
+  OSG::Node *arg2 = (OSG::Node *) (OSG::Node *)0 ;
+  OSG::ActionBase::ResultE result;
+  
+  SWIG_check_num_args("apply",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("apply",1,"OSG::Action *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("apply",2,"OSG::Node *const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Action,0))){
+    SWIG_fail_ptr("Action_apply",1,SWIGTYPE_p_OSG__Action);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Node,0))){
+    SWIG_fail_ptr("Action_apply",2,SWIGTYPE_p_OSG__Node);
+  }
+  
+  result = (OSG::ActionBase::ResultE)(arg1)->apply(arg2);
+  lua_pushnumber(L, (lua_Number)(int)(result)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Action_getTravMask(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Action *arg1 = (OSG::Action *) 0 ;
+  OSG::UInt32 result;
+  
+  SWIG_check_num_args("getTravMask",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTravMask",1,"OSG::Action const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Action,0))){
+    SWIG_fail_ptr("Action_getTravMask",1,SWIGTYPE_p_OSG__Action);
+  }
+  
+  result = (OSG::UInt32)((OSG::Action const *)arg1)->getTravMask();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Action_setTravMask(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Action *arg1 = (OSG::Action *) 0 ;
+  OSG::UInt32 arg2 ;
+  
+  SWIG_check_num_args("setTravMask",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setTravMask",1,"OSG::Action *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setTravMask",2,"OSG::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Action,0))){
+    SWIG_fail_ptr("Action_setTravMask",1,SWIGTYPE_p_OSG__Action);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (OSG::UInt32)lua_tonumber(L, 2);
+  (arg1)->setTravMask(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Action_andTravMask(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Action *arg1 = (OSG::Action *) 0 ;
+  OSG::UInt32 arg2 ;
+  
+  SWIG_check_num_args("andTravMask",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("andTravMask",1,"OSG::Action *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("andTravMask",2,"OSG::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Action,0))){
+    SWIG_fail_ptr("Action_andTravMask",1,SWIGTYPE_p_OSG__Action);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (OSG::UInt32)lua_tonumber(L, 2);
+  (arg1)->andTravMask(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Action_pushTravMask(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Action *arg1 = (OSG::Action *) 0 ;
+  
+  SWIG_check_num_args("pushTravMask",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pushTravMask",1,"OSG::Action *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Action,0))){
+    SWIG_fail_ptr("Action_pushTravMask",1,SWIGTYPE_p_OSG__Action);
+  }
+  
+  (arg1)->pushTravMask();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Action_popTravMask(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Action *arg1 = (OSG::Action *) 0 ;
+  
+  SWIG_check_num_args("popTravMask",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("popTravMask",1,"OSG::Action *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Action,0))){
+    SWIG_fail_ptr("Action_popTravMask",1,SWIGTYPE_p_OSG__Action);
+  }
+  
+  (arg1)->popTravMask();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Action_apply__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Action *arg1 = (OSG::Action *) 0 ;
+  OSG::NodeRefPtr arg2 ;
+  OSG::NodeRefPtr *argp2 ;
+  OSG::ActionBase::ResultE result;
+  
+  SWIG_check_num_args("apply",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("apply",1,"OSG::Action *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("apply",2,"OSG::NodeRefPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Action,0))){
+    SWIG_fail_ptr("Action_apply",1,SWIGTYPE_p_OSG__Action);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_OSG__NodeRefPtr,0))){
+    SWIG_fail_ptr("Action_apply",2,SWIGTYPE_p_OSG__NodeRefPtr);
+  }
+  arg2 = *argp2;
+  
+  result = (OSG::ActionBase::ResultE)OSG_Action_apply__SWIG_1(arg1,arg2);
+  lua_pushnumber(L, (lua_Number)(int)(result)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Action_apply(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Action, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (SWIG_isptrtype(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__Node, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_Action_apply__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Action, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__NodeRefPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_Action_apply__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Action_apply'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    apply(OSG::Action *,OSG::Node *const)\n"
+    "    apply(OSG::Action *,OSG::NodeRefPtr)\n");
+  lua_error(L);return 0;
+}
+
+
+static void swig_delete_Action(void *obj) {
+OSG::Action *arg1 = (OSG::Action *) obj;
+delete arg1;
+}
+static swig_lua_method swig_OSG_Action_methods[] = {
+    {"getTravMask", _wrap_Action_getTravMask}, 
+    {"setTravMask", _wrap_Action_setTravMask}, 
+    {"andTravMask", _wrap_Action_andTravMask}, 
+    {"pushTravMask", _wrap_Action_pushTravMask}, 
+    {"popTravMask", _wrap_Action_popTravMask}, 
+    {"apply", _wrap_Action_apply}, 
+    {0,0}
+};
+static swig_lua_attribute swig_OSG_Action_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_OSG_Action_bases[] = {0,0};
+static const char *swig_OSG_Action_base_names[] = {"OSG::ActionBase *",0};
+static swig_lua_class _wrap_class_OSG_Action = { "Action", &SWIGTYPE_p_OSG__Action,0, swig_delete_Action, swig_OSG_Action_methods, swig_OSG_Action_attributes, swig_OSG_Action_bases, swig_OSG_Action_base_names };
+
+static int _wrap_IntersectAction_create__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *result = 0 ;
+  
+  SWIG_check_num_args("OSG::IntersectAction::create",0,0)
+  result = (OSG::IntersectAction *)OSG::IntersectAction::create();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__IntersectAction,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_create__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Line *arg1 = 0 ;
+  OSG::Real32 arg2 ;
+  OSG::IntersectAction *result = 0 ;
+  
+  SWIG_check_num_args("OSG::IntersectAction::create",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::IntersectAction::create",1,"OSG::Line const &");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("OSG::IntersectAction::create",2,"OSG::Real32 const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Line,0))){
+    SWIG_fail_ptr("IntersectAction_create",1,SWIGTYPE_p_OSG__Line);
+  }
+  
+  arg2 = (OSG::Real32 const)lua_tonumber(L, 2);
+  result = (OSG::IntersectAction *)OSG::IntersectAction::create((OSG::Line const &)*arg1,arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__IntersectAction,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_create__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Line *arg1 = 0 ;
+  OSG::IntersectAction *result = 0 ;
+  
+  SWIG_check_num_args("OSG::IntersectAction::create",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::IntersectAction::create",1,"OSG::Line const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Line,0))){
+    SWIG_fail_ptr("IntersectAction_create",1,SWIGTYPE_p_OSG__Line);
+  }
+  
+  result = (OSG::IntersectAction *)OSG::IntersectAction::create((OSG::Line const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__IntersectAction,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_create(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_IntersectAction_create__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Line, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_IntersectAction_create__SWIG_2(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__Line, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_IntersectAction_create__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'IntersectAction_create'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    create()\n"
+    "    create(OSG::Line const &,OSG::Real32 const)\n"
+    "    OSG::IntersectAction::create(OSG::Line const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_IntersectAction_setLine__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Line *arg2 = 0 ;
+  OSG::Real32 arg3 ;
+  
+  SWIG_check_num_args("setLine",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setLine",1,"OSG::IntersectAction *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setLine",2,"OSG::Line const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setLine",3,"OSG::Real32 const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_setLine",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Line,0))){
+    SWIG_fail_ptr("IntersectAction_setLine",2,SWIGTYPE_p_OSG__Line);
+  }
+  
+  arg3 = (OSG::Real32 const)lua_tonumber(L, 3);
+  (arg1)->setLine((OSG::Line const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_setLine__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Line *arg2 = 0 ;
+  
+  SWIG_check_num_args("setLine",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setLine",1,"OSG::IntersectAction *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setLine",2,"OSG::Line const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_setLine",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Line,0))){
+    SWIG_fail_ptr("IntersectAction_setLine",2,SWIGTYPE_p_OSG__Line);
+  }
+  
+  (arg1)->setLine((OSG::Line const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_setLine(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__IntersectAction, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_IntersectAction_setLine__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__IntersectAction, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_OSG__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_IntersectAction_setLine__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'IntersectAction_setLine'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    setLine(OSG::IntersectAction *,OSG::Line const &,OSG::Real32 const)\n"
+    "    setLine(OSG::IntersectAction *,OSG::Line const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_IntersectAction_setTestLines(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setTestLines",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setTestLines",1,"OSG::IntersectAction *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setTestLines",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_setTestLines",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->setTestLines(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_setTestLineWidth(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Real32 arg2 ;
+  
+  SWIG_check_num_args("setTestLineWidth",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setTestLineWidth",1,"OSG::IntersectAction *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setTestLineWidth",2,"OSG::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_setTestLineWidth",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  arg2 = (OSG::Real32)lua_tonumber(L, 2);
+  (arg1)->setTestLineWidth(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getLine(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Line *result = 0 ;
+  
+  SWIG_check_num_args("getLine",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getLine",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getLine",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = (OSG::Line *) &((OSG::IntersectAction const *)arg1)->getLine();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_OSG__Line,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getMaxDist(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Real32 result;
+  
+  SWIG_check_num_args("getMaxDist",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getMaxDist",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getMaxDist",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = (OSG::Real32)((OSG::IntersectAction const *)arg1)->getMaxDist();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getTestLines(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getTestLines",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTestLines",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getTestLines",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = (bool)((OSG::IntersectAction const *)arg1)->getTestLines();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getTestLineWidth(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Real32 result;
+  
+  SWIG_check_num_args("getTestLineWidth",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTestLineWidth",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getTestLineWidth",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = (OSG::Real32)((OSG::IntersectAction const *)arg1)->getTestLineWidth();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_didHit(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("didHit",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("didHit",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_didHit",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = (bool)((OSG::IntersectAction const *)arg1)->didHit();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getHitT(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Real32 result;
+  
+  SWIG_check_num_args("getHitT",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getHitT",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getHitT",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = (OSG::Real32)((OSG::IntersectAction const *)arg1)->getHitT();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getHitPoint(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Pnt3f result;
+  
+  SWIG_check_num_args("getHitPoint",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getHitPoint",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getHitPoint",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = ((OSG::IntersectAction const *)arg1)->getHitPoint();
+  {
+    OSG::Pnt3f * resultptr = new OSG::Pnt3f((const OSG::Pnt3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt3f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getHitNormal(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Vec3f result;
+  
+  SWIG_check_num_args("getHitNormal",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getHitNormal",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getHitNormal",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = ((OSG::IntersectAction const *)arg1)->getHitNormal();
+  {
+    OSG::Vec3f * resultptr = new OSG::Vec3f((const OSG::Vec3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Vec3f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getHitTriangle(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Int32 result;
+  
+  SWIG_check_num_args("getHitTriangle",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getHitTriangle",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getHitTriangle",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = (OSG::Int32)((OSG::IntersectAction const *)arg1)->getHitTriangle();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getHitLine(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::Int32 result;
+  
+  SWIG_check_num_args("getHitLine",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getHitLine",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getHitLine",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = (OSG::Int32)((OSG::IntersectAction const *)arg1)->getHitLine();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IntersectAction_getHitObject(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::IntersectAction *arg1 = (OSG::IntersectAction *) 0 ;
+  OSG::NodeRefPtr result;
+  
+  SWIG_check_num_args("getHitObject",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getHitObject",1,"OSG::IntersectAction const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__IntersectAction,0))){
+    SWIG_fail_ptr("IntersectAction_getHitObject",1,SWIGTYPE_p_OSG__IntersectAction);
+  }
+  
+  result = OSG_IntersectAction_getHitObject((OSG::IntersectAction const *)arg1);
+  {
+    OSG::NodeRefPtr * resultptr = new OSG::NodeRefPtr((const OSG::NodeRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__NodeRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_IntersectAction(void *obj) {
+OSG::IntersectAction *arg1 = (OSG::IntersectAction *) obj;
+delete arg1;
+}
+static swig_lua_method swig_OSG_IntersectAction_methods[] = {
+    {"setLine", _wrap_IntersectAction_setLine}, 
+    {"setTestLines", _wrap_IntersectAction_setTestLines}, 
+    {"setTestLineWidth", _wrap_IntersectAction_setTestLineWidth}, 
+    {"getLine", _wrap_IntersectAction_getLine}, 
+    {"getMaxDist", _wrap_IntersectAction_getMaxDist}, 
+    {"getTestLines", _wrap_IntersectAction_getTestLines}, 
+    {"getTestLineWidth", _wrap_IntersectAction_getTestLineWidth}, 
+    {"didHit", _wrap_IntersectAction_didHit}, 
+    {"getHitT", _wrap_IntersectAction_getHitT}, 
+    {"getHitPoint", _wrap_IntersectAction_getHitPoint}, 
+    {"getHitNormal", _wrap_IntersectAction_getHitNormal}, 
+    {"getHitTriangle", _wrap_IntersectAction_getHitTriangle}, 
+    {"getHitLine", _wrap_IntersectAction_getHitLine}, 
+    {"getHitObject", _wrap_IntersectAction_getHitObject}, 
+    {0,0}
+};
+static swig_lua_attribute swig_OSG_IntersectAction_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_OSG_IntersectAction_bases[] = {0,0};
+static const char *swig_OSG_IntersectAction_base_names[] = {"OSG::Action *",0};
+static swig_lua_class _wrap_class_OSG_IntersectAction = { "IntersectAction", &SWIGTYPE_p_OSG__IntersectAction,0, swig_delete_IntersectAction, swig_OSG_IntersectAction_methods, swig_OSG_IntersectAction_attributes, swig_OSG_IntersectAction_bases, swig_OSG_IntersectAction_base_names };
+
 static int _wrap_makePlaneGeo(lua_State* L) {
   int SWIG_arg = 0;
   OSG::Real32 arg1 ;
@@ -53527,6 +54453,8 @@ static const struct luaL_reg swig_commands[] = {
     { "ActivityRefPtr_dcast", _wrap_ActivityRefPtr_dcast},
     { "LuaActivityRefPtr_dcast", _wrap_LuaActivityRefPtr_dcast},
     { "LuaActivity_addLuaCallback",_wrap_LuaActivity_addLuaCallback},
+    { "Action_create", _wrap_Action_create},
+    { "IntersectAction_create",_wrap_IntersectAction_create},
     { "makePlaneGeo", _wrap_makePlaneGeo},
     { "makePlane", _wrap_makePlane},
     { "makeBoxGeo", _wrap_makeBoxGeo},
@@ -53608,6 +54536,9 @@ static swig_lua_const_info swig_constants[] = {
 { SWIG_LUA_INT,     (char *)"Image_OSG_RESUNIT_INVALID", (long) OSG::Image::OSG_RESUNIT_INVALID, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"Image_OSG_RESUNIT_NONE", (long) OSG::Image::OSG_RESUNIT_NONE, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"Image_OSG_RESUNIT_INCH", (long) OSG::Image::OSG_RESUNIT_INCH, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"ActionBase_Continue", (long) OSG::ActionBase::Continue, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"ActionBase_Skip", (long) OSG::ActionBase::Skip, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"ActionBase_Quit", (long) OSG::ActionBase::Quit, 0, 0, 0},
     {0,0,0,0,0,0}
 };
 
@@ -53618,6 +54549,12 @@ static void *_p_OSG__LuaActivityTo_p_OSG__Activity(void *x, int *SWIGUNUSEDPARM(
 }
 static void *_p_OSG__Vec2fTo_p_OSG__Pnt2f(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::Pnt2f *)  ((OSG::Vec2f *) x));
+}
+static void *_p_OSG__ActionTo_p_OSG__ActionBase(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((OSG::ActionBase *)  ((OSG::Action *) x));
+}
+static void *_p_OSG__IntersectActionTo_p_OSG__ActionBase(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((OSG::ActionBase *) (OSG::Action *) ((OSG::IntersectAction *) x));
 }
 static void *_p_OSG__NodeTo_p_OSG__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::AttachmentContainer *)  ((OSG::Node *) x));
@@ -53732,6 +54669,9 @@ static void *_p_OSG__GenericEventDetailsRefPtrTo_p_OSG__EventDetailsRefPtr(void 
 }
 static void *_p_OSG__LuaActivityRefPtrTo_p_OSG__ActivityRefPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::ActivityRefPtr *)  ((OSG::LuaActivityRefPtr *) x));
+}
+static void *_p_OSG__IntersectActionTo_p_OSG__Action(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((OSG::Action *)  ((OSG::IntersectAction *) x));
 }
 static void *_p_OSG__FieldContainerFactoryTo_p_OSG__FieldContainerFactoryBase(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((OSG::FieldContainerFactoryBase *)  ((OSG::FieldContainerFactory *) x));
@@ -53853,6 +54793,8 @@ static void *_p_OSG__FieldContainerTypeTo_p_OSG__DataType(void *x, int *SWIGUNUS
 static swig_type_info _swigt__p_Inherited = {"_p_Inherited", "Inherited *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_MFChildrenType = {"_p_MFChildrenType", "MFChildrenType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_MatrixType = {"_p_MatrixType", "MatrixType *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_OSG__Action = {"_p_OSG__Action", "OSG::Action *", 0, 0, (void*)&_wrap_class_OSG_Action, 0};
+static swig_type_info _swigt__p_OSG__ActionBase = {"_p_OSG__ActionBase", "OSG::ActionBase *", 0, 0, (void*)&_wrap_class_OSG_ActionBase, 0};
 static swig_type_info _swigt__p_OSG__Activity = {"_p_OSG__Activity", "OSG::Activity *", 0, 0, (void*)&_wrap_class_OSG_Activity, 0};
 static swig_type_info _swigt__p_OSG__ActivityRefPtr = {"_p_OSG__ActivityRefPtr", "OSG::ActivityRefPtr *", 0, 0, (void*)&_wrap_class_OSG_ActivityRefPtr, 0};
 static swig_type_info _swigt__p_OSG__Attachment = {"_p_OSG__Attachment", "OSG::Attachment *", 0, 0, (void*)&_wrap_class_OSG_Attachment, 0};
@@ -53884,6 +54826,7 @@ static swig_type_info _swigt__p_OSG__Geometry = {"_p_OSG__Geometry", "OSG::Geome
 static swig_type_info _swigt__p_OSG__GeometryRefPtr = {"_p_OSG__GeometryRefPtr", "OSG::GeometryRefPtr *", 0, 0, (void*)&_wrap_class_OSG_GeometryRefPtr, 0};
 static swig_type_info _swigt__p_OSG__Image = {"_p_OSG__Image", "OSG::Image *", 0, 0, (void*)&_wrap_class_OSG_Image, 0};
 static swig_type_info _swigt__p_OSG__ImageRefPtr = {"_p_OSG__ImageRefPtr", "OSG::ImageRefPtr *", 0, 0, (void*)&_wrap_class_OSG_ImageRefPtr, 0};
+static swig_type_info _swigt__p_OSG__IntersectAction = {"_p_OSG__IntersectAction", "OSG::IntersectAction *", 0, 0, (void*)&_wrap_class_OSG_IntersectAction, 0};
 static swig_type_info _swigt__p_OSG__Line = {"_p_OSG__Line", "OSG::Line *", 0, 0, (void*)&_wrap_class_OSG_Line, 0};
 static swig_type_info _swigt__p_OSG__LuaActivity = {"_p_OSG__LuaActivity", "OSG::LuaActivity *", 0, 0, (void*)&_wrap_class_OSG_LuaActivity, 0};
 static swig_type_info _swigt__p_OSG__LuaActivityRefPtr = {"_p_OSG__LuaActivityRefPtr", "OSG::LuaActivityRefPtr *", 0, 0, (void*)&_wrap_class_OSG_LuaActivityRefPtr, 0};
@@ -53946,6 +54889,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Inherited,
   &_swigt__p_MFChildrenType,
   &_swigt__p_MatrixType,
+  &_swigt__p_OSG__Action,
+  &_swigt__p_OSG__ActionBase,
   &_swigt__p_OSG__Activity,
   &_swigt__p_OSG__ActivityRefPtr,
   &_swigt__p_OSG__Attachment,
@@ -53977,6 +54922,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_OSG__GeometryRefPtr,
   &_swigt__p_OSG__Image,
   &_swigt__p_OSG__ImageRefPtr,
+  &_swigt__p_OSG__IntersectAction,
   &_swigt__p_OSG__Line,
   &_swigt__p_OSG__LuaActivity,
   &_swigt__p_OSG__LuaActivityRefPtr,
@@ -54039,6 +54985,8 @@ static swig_type_info *swig_type_initial[] = {
 static swig_cast_info _swigc__p_Inherited[] = {  {&_swigt__p_Inherited, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_MFChildrenType[] = {  {&_swigt__p_MFChildrenType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_MatrixType[] = {  {&_swigt__p_MatrixType, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OSG__Action[] = {  {&_swigt__p_OSG__IntersectAction, _p_OSG__IntersectActionTo_p_OSG__Action, 0, 0},  {&_swigt__p_OSG__Action, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OSG__ActionBase[] = {  {&_swigt__p_OSG__ActionBase, 0, 0, 0},  {&_swigt__p_OSG__IntersectAction, _p_OSG__IntersectActionTo_p_OSG__ActionBase, 0, 0},  {&_swigt__p_OSG__Action, _p_OSG__ActionTo_p_OSG__ActionBase, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Activity[] = {  {&_swigt__p_OSG__Activity, 0, 0, 0},  {&_swigt__p_OSG__LuaActivity, _p_OSG__LuaActivityTo_p_OSG__Activity, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__ActivityRefPtr[] = {  {&_swigt__p_OSG__ActivityRefPtr, 0, 0, 0},  {&_swigt__p_OSG__LuaActivityRefPtr, _p_OSG__LuaActivityRefPtrTo_p_OSG__ActivityRefPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Attachment[] = {  {&_swigt__p_OSG__Attachment, 0, 0, 0},{0, 0, 0, 0}};
@@ -54070,6 +55018,7 @@ static swig_cast_info _swigc__p_OSG__Geometry[] = {  {&_swigt__p_OSG__Geometry, 
 static swig_cast_info _swigc__p_OSG__GeometryRefPtr[] = {  {&_swigt__p_OSG__GeometryRefPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Image[] = {  {&_swigt__p_OSG__Image, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__ImageRefPtr[] = {  {&_swigt__p_OSG__ImageRefPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OSG__IntersectAction[] = {  {&_swigt__p_OSG__IntersectAction, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__Line[] = {  {&_swigt__p_OSG__Line, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__LuaActivity[] = {  {&_swigt__p_OSG__LuaActivity, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_OSG__LuaActivityRefPtr[] = {  {&_swigt__p_OSG__LuaActivityRefPtr, 0, 0, 0},{0, 0, 0, 0}};
@@ -54132,6 +55081,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Inherited,
   _swigc__p_MFChildrenType,
   _swigc__p_MatrixType,
+  _swigc__p_OSG__Action,
+  _swigc__p_OSG__ActionBase,
   _swigc__p_OSG__Activity,
   _swigc__p_OSG__ActivityRefPtr,
   _swigc__p_OSG__Attachment,
@@ -54163,6 +55114,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_OSG__GeometryRefPtr,
   _swigc__p_OSG__Image,
   _swigc__p_OSG__ImageRefPtr,
+  _swigc__p_OSG__IntersectAction,
   _swigc__p_OSG__Line,
   _swigc__p_OSG__LuaActivity,
   _swigc__p_OSG__LuaActivityRefPtr,
