@@ -195,79 +195,94 @@ void Tree::keyTyped(KeyEventDetails* const e)
 	case KeyEventDetails::KEY_UP:
         //Move Up one Row
         {
-            Int32 SelectedRow = getSelectionModel()->getSelectionRow();
-            if(SelectedRow > 0 && SelectedRow < getModelLayout()->getRowCount())
+            if(!getSelectionModel()->isSelectionEmpty())
             {
-                getSelectionModel()->setSelectionRow(SelectedRow - 1);
-                scrollRowToVisible(SelectedRow - 1);
+                Int32 SelectedRow = getSelectionModel()->getSelectionRow();
+                if(SelectedRow > 0 && SelectedRow < getModelLayout()->getRowCount())
+                {
+                    getSelectionModel()->setSelectionRow(SelectedRow - 1);
+                    scrollRowToVisible(SelectedRow - 1);
+                }
             }
         }
         break;
 	case KeyEventDetails::KEY_DOWN:
         //Move Down one Row
         {
-            Int32 SelectedRow = getSelectionModel()->getSelectionRow();
-            if(SelectedRow >= 0 && SelectedRow < getModelLayout()->getRowCount()-1)
+            if(!getSelectionModel()->isSelectionEmpty())
             {
-                getSelectionModel()->setSelectionRow(SelectedRow + 1);
-                scrollRowToVisible(SelectedRow + 1);
+                Int32 SelectedRow = getSelectionModel()->getSelectionRow();
+                if(SelectedRow >= 0 && SelectedRow < getModelLayout()->getRowCount()-1)
+                {
+                    getSelectionModel()->setSelectionRow(SelectedRow + 1);
+                    scrollRowToVisible(SelectedRow + 1);
+                }
             }
         }
         break;
 	case KeyEventDetails::KEY_RIGHT:
         //Move Down one depth
         {
-            TreePath SelectedPath = getSelectionModel()->getSelectionPath();
-            Int32 SelectedRow = getSelectionModel()->getSelectionRow();
-            if(!isExpanded(SelectedRow))
+            if(!getSelectionModel()->isSelectionEmpty())
             {
-                expandRow(SelectedRow);
-            }
-            else if(getModel()->getChildCount(SelectedPath.getLastPathComponent()) > 0)
-            {
-                TreePath ToPath(SelectedPath.getChildPath(0));
-                getSelectionModel()->setSelectionPath(ToPath);
-                scrollPathToVisible(ToPath);
+                TreePath SelectedPath = getSelectionModel()->getSelectionPath();
+                Int32 SelectedRow = getSelectionModel()->getSelectionRow();
+                if(!isExpanded(SelectedRow))
+                {
+                    expandRow(SelectedRow);
+                }
+                else if(getModel()->getChildCount(SelectedPath.getLastPathComponent()) > 0)
+                {
+                    TreePath ToPath(SelectedPath.getChildPath(0));
+                    getSelectionModel()->setSelectionPath(ToPath);
+                    scrollPathToVisible(ToPath);
+                }
             }
         }
         break;
 	case KeyEventDetails::KEY_LEFT:
         //Move Up one depth
         {
-            TreePath SelectedPath = getSelectionModel()->getSelectionPath();
-            Int32 SelectedRow = getSelectionModel()->getSelectionRow();
-            if(isExpanded(SelectedRow))
+            if(!getSelectionModel()->isSelectionEmpty())
             {
-                collapseRow(SelectedRow);
-            }
-            else if((getRootVisible() && SelectedPath.getPathCount() > 1) ||
-                (!getRootVisible() && SelectedPath.getPathCount() > 2))
-            {
-                TreePath ToPath(SelectedPath.getParentPath());
-                getSelectionModel()->setSelectionPath(ToPath);
-                scrollPathToVisible(ToPath);
-            }
-        }
-		break;
-	case KeyEventDetails::KEY_ENTER:
-        {
-            TreePath SelectedPath = getSelectionModel()->getSelectionPath();
-		    if (getModel()->isLeaf(SelectedPath.getLastPathComponent()))
-		    {
-                //Send Action command for that leaf
-		    }
-		    else
-		    {
+                TreePath SelectedPath = getSelectionModel()->getSelectionPath();
                 Int32 SelectedRow = getSelectionModel()->getSelectionRow();
                 if(isExpanded(SelectedRow))
                 {
                     collapseRow(SelectedRow);
                 }
-                else
+                else if((getRootVisible() && SelectedPath.getPathCount() > 1) ||
+                    (!getRootVisible() && SelectedPath.getPathCount() > 2))
                 {
-                    expandRow(SelectedRow);
+                    TreePath ToPath(SelectedPath.getParentPath());
+                    getSelectionModel()->setSelectionPath(ToPath);
+                    scrollPathToVisible(ToPath);
                 }
-		    }
+            }
+        }
+		break;
+	case KeyEventDetails::KEY_ENTER:
+        {
+            if(!getSelectionModel()->isSelectionEmpty())
+            {
+                TreePath SelectedPath = getSelectionModel()->getSelectionPath();
+		        if (getModel()->isLeaf(SelectedPath.getLastPathComponent()))
+		        {
+                    //Send Action command for that leaf
+		        }
+		        else
+		        {
+                    Int32 SelectedRow = getSelectionModel()->getSelectionRow();
+                    if(isExpanded(SelectedRow))
+                    {
+                        collapseRow(SelectedRow);
+                    }
+                    else
+                    {
+                        expandRow(SelectedRow);
+                    }
+		        }
+            }
         }
 		break;
 	case KeyEventDetails::KEY_HOME:
