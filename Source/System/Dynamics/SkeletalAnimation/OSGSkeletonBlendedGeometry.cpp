@@ -477,8 +477,11 @@ void SkeletonBlendedGeometry::changed(ConstFieldMaskArg whichField,
         (whichField & InternalWeightsFieldMask) ||
         (whichField & BindTransformationFieldMask))
     {
-        _JointPoseTransforms.resize(getNumJoints());
-        calculatePositions();
+		if(getNumJoints() > 0)
+		{
+			_JointPoseTransforms.resize(getNumJoints());
+			calculatePositions();
+		}
     }
 }
 
