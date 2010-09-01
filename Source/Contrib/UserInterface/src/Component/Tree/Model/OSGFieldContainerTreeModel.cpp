@@ -154,7 +154,7 @@ boost::any FieldContainerTreeModel::getChild(const boost::any& parent, const UIn
             else if(fcType.getContentType() == FieldTraits<AttachmentMap>::getType())
             {
                 //Attachment Map
-                if(index < ThePair._Container->getField(ThePair._FieldID)->size())
+                if(index < static_cast<const SFAttachmentPtrMap*>(ThePair._Container->getField(ThePair._FieldID).get()->getField())->getValue().size())
                 {
                     GetMapFieldHandle::ContainerList TheContainerList;
                     static_cast<GetSFieldHandle<SFAttachmentPtrMap>*>(ThePair._Container->getField(ThePair._FieldID).get())->flatten(TheContainerList);

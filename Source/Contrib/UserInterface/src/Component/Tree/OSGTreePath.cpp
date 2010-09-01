@@ -146,7 +146,7 @@ bool TreePath::breadthFirstLessThan(const TreePath& Right) const
         return false;
     }
     UInt32 LeftChildIndex,RightChildIndex;
-    for(UInt32 i(0) ; i<osgMin<UInt32>(getPathCount(), Right.getPathCount())-1 ; ++i)
+    for(Int32 i(0) ; i<osgMin<Int32>(getPathCount(), Right.getPathCount())-1 ; ++i)
     {
         LeftChildIndex = _Model->getIndexOfChild(getPathComponent(i),getPathComponent(i+1));
         RightChildIndex = _Model->getIndexOfChild(Right.getPathComponent(i),Right.getPathComponent(i+1));
