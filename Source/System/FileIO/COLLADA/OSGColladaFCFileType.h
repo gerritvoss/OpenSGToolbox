@@ -58,15 +58,15 @@ virtual std::string getName(void) const;
      /*---------------------------------------------------------------------*/
      
      /*---------------------------------------------------------------------*/
-ColladaFCFileType(void);
-ColladaFCFileType(const ColladaFCFileType &obj);
+     ColladaFCFileType(void);
+     ColladaFCFileType(const ColladaFCFileType &obj);
      virtual ~ColladaFCFileType(void);
  
      /*---------------------------------------------------------------------*/
      //void setOptions(const Char8 *options);
 
    /* Inherited typedefs
-* typedef std::set<FieldContainerUnrecPtr> FCPtrStore;
+* typedef FCFileType::FCPtrStore FCPtrStore;
 * typedef std::vector<std::string> ExtensionVector;
 * typedef std::vector<UInt32> FCTypeVector;
 */
@@ -74,7 +74,7 @@ ColladaFCFileType(const ColladaFCFileType &obj);
 
      /*---------------------------------------------------------------------*/
      virtual FCPtrStore read(std::istream &is,
-const std::string& fileNameOrExtension) const;
+     const std::string& fileNameOrExtension) const;
  
      /*---------------------------------------------------------------------*/
      virtual bool write(const FCPtrStore &Containers, std::ostream &os,

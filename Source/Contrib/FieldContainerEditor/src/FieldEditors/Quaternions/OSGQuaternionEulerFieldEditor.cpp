@@ -100,7 +100,7 @@ bool QuaternionEulerFieldEditor::internalAttachField (FieldContainer* fc, UInt32
     Inherited::internalAttachField(fc, fieldId, index);
     const DataType& type(fc->getFieldDescription(fieldId)->getFieldType().getContentType());
 
-    for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
+    for(UInt32 i(0) ; i<_SpinnerStateChangedConnections.size() ; ++i)
     {
         _SpinnerStateChangedConnections[i].disconnect();
     }
@@ -150,7 +150,7 @@ void QuaternionEulerFieldEditor::internalFieldChanged (void)
     const DataType& type(getEditingFC()->getFieldDescription(getEditingFieldId())->getFieldType().getContentType());
     GetFieldHandlePtr TheFieldHandle = getEditingFC()->getField(getEditingFieldId());
 
-    for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
+    for(UInt32 i(0) ; i<_SpinnerStateChangedConnections.size() ; ++i)
     {
         _SpinnerStateChangedConnections[i].disconnect();
     }
@@ -326,7 +326,7 @@ void QuaternionEulerFieldEditor::resolveLinks(void)
     _EditingLabels.clear();
     _EditingSpinnerModels.clear();
 
-    for(UInt32 i(0) ; i<_EditingSpinners.size() ; ++i)
+    for(UInt32 i(0) ; i<_SpinnerStateChangedConnections.size() ; ++i)
     {
         _SpinnerStateChangedConnections[i].disconnect();
     }

@@ -42,4 +42,10 @@ const FCFileType::ExtensionVector &FCFileType::getSuffixList(void) const
 	return _suffixList;
 }
 
+inline
+bool FCFileType::FCIdCompare::operator()(const FieldContainerUnrecPtr& Left, const FieldContainerUnrecPtr& Right) const
+{
+    return Left->getId() < Right->getId();
+}
+
 OSG_END_NAMESPACE

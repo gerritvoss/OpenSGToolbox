@@ -53,12 +53,19 @@ class OSG_SYSTEM_DLLMAPPING FCFileType : public IOFileTypeBase
     typedef IOFileTypeBase Inherited;
     typedef FCFileType  Self;
  
-     typedef std::set<FieldContainerUnrecPtr> FCPtrStore;
-	 typedef std::vector<std::string> ExtensionVector;
-     typedef std::vector<UInt32> FCTypeVector;
+	typedef std::vector<std::string> ExtensionVector;
+    typedef std::vector<UInt32> FCTypeVector;
 
-     /*---------------------------------------------------------------------*/
-	 virtual std::string getName(void) const = 0;
+    class FCIdCompare
+    {
+      public:
+        bool operator()(const FieldContainerUnrecPtr& Left, const FieldContainerUnrecPtr& Right) const;
+    };
+
+    typedef std::set<FieldContainerUnrecPtr, FCIdCompare> FCPtrStore;
+
+    /*---------------------------------------------------------------------*/
+	virtual std::string getName(void) const = 0;
  
      /*---------------------------------------------------------------------*/
      

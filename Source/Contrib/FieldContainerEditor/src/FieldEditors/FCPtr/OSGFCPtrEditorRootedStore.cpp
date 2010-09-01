@@ -85,25 +85,25 @@ void FCPtrEditorRootedStore::updateList(void)
         return;
     }
 
-    std::set<FieldContainerUnrecPtr> SearchRoots;
+    FCFileType::FCPtrStore SearchRoots;
     for(std::vector<FieldContainer*>::const_iterator Itor(_Roots.begin()) ; Itor!=_Roots.end() ; ++Itor)
     {
         SearchRoots.insert(*Itor);
     }
 
-    std::set<FieldContainerUnrecPtr> Exclude;
+    FCFileType::FCPtrStore Exclude;
     for(std::vector<FieldContainer*>::const_iterator Itor(_ExcludedPtrs.begin()) ; Itor!=_ExcludedPtrs.end() ; ++Itor)
     {
         Exclude.insert(*Itor);
     }
 
-    std::set<FieldContainerUnrecPtr> AllContainers =
+    FCFileType::FCPtrStore AllContainers =
         getAllDependantFCs(SearchRoots,
                            Exclude,
                            _ExcludedTypes,
                            true);
 
-    for(std::set<FieldContainerUnrecPtr>::iterator StoreItor(AllContainers.begin());
+    for(FCFileType::FCPtrStore::iterator StoreItor(AllContainers.begin());
         StoreItor != AllContainers.end();
         ++StoreItor)
     {

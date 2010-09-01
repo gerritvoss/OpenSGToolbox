@@ -74,6 +74,8 @@
 #include "rapidxml_iterators.h"
 #include "rapidxml_print.h"
 
+#include "OSGSceneFileHandler.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -780,12 +782,21 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
     BoostPath RootPath = FCFileHandler::the()->getRootFilePath();
 
     //Get all of the dependent FieldContainers
-    const std::set<FieldContainerUnrecPtr> IgnoreContainers;
+    FCFileType::FCPtrStore IgnoreContainers;
     FCPtrStore AllContainers;
     AllContainers = getAllDependantFCs(Containers,
                                        IgnoreContainers,
                                        IgnoreTypes,
                                        false);
+
+    //Normalize the FieldContainer Ids for the file
+    std::map<UInt32,UInt32> RunTimeToFileIDMap;
+    UInt32 i(1);
+    for(FCFileType::FCPtrStore::iterator StoreItor(AllContainers.begin()) ; StoreItor!=AllContainers.end() ; ++StoreItor)
+    {
+        RunTimeToFileIDMap.insert(std::make_pair((*StoreItor)->getId(), i));
+        ++i;
+    }
 
     // root node
     rapidxml::xml_node<>* root = doc.allocate_node(rapidxml::node_element,
@@ -805,7 +816,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 
 		FieldContainer* FCAddr = (*FCItor);
 
-        alloc_str = doc.allocate_string(boost::lexical_cast<std::string>((*FCItor)->getId()).c_str());
+        alloc_str = doc.allocate_string(boost::lexical_cast<std::string>(RunTimeToFileIDMap[(*FCItor)->getId()]).c_str());
         attr = doc.allocate_attribute(FieldContainerIDXMLToken.c_str(),
                                       alloc_str);
         child->append_attribute(attr);
@@ -833,6 +844,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                 child->append_attribute(attr);
 
                 bool RecurseWrite(true);
+                //Write FC File type
                 if((!getOptionAs<bool>(getOptions(), "RecurseWriteDepFCFiles", RecurseWrite) ||
                    RecurseWrite) &&
                    FCFileHandler::the()->getFileType(*FilePath,FCFileType::OSG_WRITE_SUPPORTED) != NULL)
@@ -849,6 +861,20 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                     //Put the file path attachment back on
                     dynamic_pointer_cast<AttachmentContainer>(*FCItor)->addAttachment(att);
                 }
+                //Write Scene File Type
+                else if((*FCItor)->getType().isDerivedFrom(Node::getClassType()) &&
+                        (!getOptionAs<bool>(getOptions(), "RecurseWriteDepSceneFiles", RecurseWrite) || RecurseWrite) &&
+                        SceneFileHandler::the()->getFileType(FilePath->string().c_str()) != NULL)
+                {
+                    AttachmentUnrecPtr att  = 
+                        dynamic_pointer_cast<AttachmentContainer>(*FCItor)->findAttachment(FilePathAttachment::getClassType().getGroupId());
+
+                    dynamic_pointer_cast<AttachmentContainer>(*FCItor)->subAttachment(att);
+
+                    SceneFileHandler::the()->write(dynamic_pointer_cast<Node>(*FCItor),FilePath->string().c_str());
+                    //Put the file path attachment back on
+                    dynamic_pointer_cast<AttachmentContainer>(*FCItor)->addAttachment(att);
+                }
                 continue;
             }
 
@@ -862,7 +888,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                    MapItor->second->getType() != FilePathAttachment::getClassType() &&
                    MapItor->second->getType() != DrawableStatsAttachment::getClassType())
                 {
-                    AttachmentIds.push_back(boost::lexical_cast<std::string>(MapItor->second->getId()));
+                    AttachmentIds.push_back(boost::lexical_cast<std::string>(RunTimeToFileIDMap[MapItor->second->getId()]));
                 }
             }
 
@@ -926,10 +952,8 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                     }
                     else
                     {
-                        alloc_str =
-                            doc.allocate_string(boost::lexical_cast<std::string>(static_cast<const
-                                                                                 SFUnrecFieldContainerPtr
-                                                                                 *>(TheField)->getValue()->getId()).c_str());
+                        alloc_str = doc.allocate_string(boost::lexical_cast<std::string>(
+                            RunTimeToFileIDMap[static_cast<const SFUnrecFieldContainerPtr*>(TheField)->getValue()->getId()]).c_str());
                     }
                 }
                 else if(TheFieldHandle->getCardinality() == FieldType::MultiField)
@@ -948,7 +972,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                         }
                         else
                         {
-                            IdListStr += boost::lexical_cast<std::string>(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index)->getId());
+                            IdListStr += boost::lexical_cast<std::string>(RunTimeToFileIDMap[static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index)->getId()]);
                         }
                     }
                     alloc_str = doc.allocate_string(IdListStr.c_str());

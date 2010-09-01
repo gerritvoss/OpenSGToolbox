@@ -7,10 +7,10 @@
 
 OSG_BEGIN_NAMESPACE
 
-std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers,
-                                                    const std::set<FieldContainerUnrecPtr>& IgnoreContainers,
-                                                    const std::vector<const FieldContainerType*>& IgnoreTypes,
-                                                    bool RecurseFilePathAttachedContainers)
+FCFileType::FCPtrStore getAllDependantFCs(const FCFileType::FCPtrStore& Containers,
+                                    const FCFileType::FCPtrStore& IgnoreContainers,
+                                    const std::vector<const FieldContainerType*>& IgnoreTypes,
+                                    bool RecurseFilePathAttachedContainers)
 {
     std::vector<UInt32> IgnoreTypeIds;
     for(UInt32 i = 0; i < IgnoreTypes.size(); ++i)
@@ -24,13 +24,13 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
                               RecurseFilePathAttachedContainers);
 }
 
-std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers,
-                                                    const std::set<FieldContainerUnrecPtr>& IgnoreContainers,
+FCFileType::FCPtrStore getAllDependantFCs(const FCFileType::FCPtrStore& Containers,
+                                                    const FCFileType::FCPtrStore& IgnoreContainers,
                                                     const std::vector<UInt32>& IgnoreTypes,
                                                     bool RecurseFilePathAttachedContainers)
 {
-    std::set<FieldContainerUnrecPtr> AllContainers(Containers);
-    std::set<FieldContainerUnrecPtr> NewIgnores(IgnoreContainers);
+    FCFileType::FCPtrStore AllContainers(Containers);
+    FCFileType::FCPtrStore NewIgnores(IgnoreContainers);
 
     UInt32 NumFields;
     const FieldDescriptionBase* TheFieldDesc(NULL);
@@ -38,9 +38,12 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
     const Field* TheField(NULL);
 
     //Loop through all of the given containers
-    std::set<FieldContainerUnrecPtr> ContainersDifference;
-    std::set_difference(AllContainers.begin(),AllContainers.end(), NewIgnores.begin(), NewIgnores.end(), std::inserter(ContainersDifference, ContainersDifference.begin()));
-    for(std::set<FieldContainerUnrecPtr>::iterator ContainersItor(ContainersDifference.begin()) ; ContainersItor != ContainersDifference.end() ; ++ContainersItor)
+    FCFileType::FCPtrStore ContainersDifference;
+    std::set_difference(AllContainers.begin(),AllContainers.end(), 
+                        NewIgnores.begin(), NewIgnores.end(), 
+                        std::inserter(ContainersDifference, ContainersDifference.begin()),
+                        FCFileType::FCPtrStore::key_compare() );
+    for(FCFileType::FCPtrStore::iterator ContainersItor(ContainersDifference.begin()) ; ContainersItor != ContainersDifference.end() ; ++ContainersItor)
     {
         if(std::find(IgnoreTypes.begin(), IgnoreTypes.end(), (*ContainersItor)->getType().getId()) != IgnoreTypes.end())
         {
@@ -68,13 +71,13 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
                    MapItor->second->getType() != FilePathAttachment::getClassType() &&
                    MapItor->second->getType() != DrawableStatsAttachment::getClassType())
                 {
-                    std::set<FieldContainerUnrecPtr> TheContainer;
+                    FCFileType::FCPtrStore TheContainer;
                     TheContainer.insert(MapItor->second);
                     
                     AllContainers.insert(MapItor->second);
                     NewIgnores.insert(Containers.begin(), Containers.end());
 
-                    std::set<FieldContainerUnrecPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
+                    FCFileType::FCPtrStore NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
 
                     AllContainers.insert(NewContainers.begin(), NewContainers.end());
                     NewIgnores.insert(NewContainers.begin(), NewContainers.end());
@@ -111,14 +114,14 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
                             NewIgnores.find(static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue()) == NewIgnores.end() && 
                             std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue()->getTypeId()) == IgnoreTypes.end())
                         {
-                            std::set<FieldContainerUnrecPtr> TheContainer;
+                            FCFileType::FCPtrStore TheContainer;
                             
                             TheContainer.insert(static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue());
                             
                             AllContainers.insert(static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue());
                             NewIgnores.insert(Containers.begin(), Containers.end());
                         
-                            std::set<FieldContainerUnrecPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
+                            FCFileType::FCPtrStore NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
 
                             AllContainers.insert(NewContainers.begin(), NewContainers.end());
                             NewIgnores.insert(NewContainers.begin(), NewContainers.end());
@@ -133,13 +136,13 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
                                 NewIgnores.find(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](i)) == NewIgnores.end() && 
                                 std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](i)->getTypeId()) == IgnoreTypes.end())
                             {
-                                std::set<FieldContainerUnrecPtr> TheContainer;
+                                FCFileType::FCPtrStore TheContainer;
                                 TheContainer.insert(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](i));
                                 
                                 AllContainers.insert(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](i));
                                 NewIgnores.insert(Containers.begin(), Containers.end());
 
-                                std::set<FieldContainerUnrecPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
+                                FCFileType::FCPtrStore NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
 
                                 AllContainers.insert(NewContainers.begin(), NewContainers.end());
                                 NewIgnores.insert(NewContainers.begin(), NewContainers.end());
@@ -165,13 +168,13 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
                 //                   NewIgnores.find(TheActvitiy) == NewIgnores.end() && 
                 //                   std::find(IgnoreTypes.begin(), IgnoreTypes.end(), TheActvitiy->getTypeId()) == IgnoreTypes.end())
                 //                {
-                //                    std::set<FieldContainerUnrecPtr> TheContainer;
+                //                    FCFileType::FCPtrStore TheContainer;
                 //                    TheContainer.insert(TheActvitiy);
                 //                    
                 //                    AllContainers.insert(TheActvitiy);
                 //                    NewIgnores.insert(Containers.begin(), Containers.end());
 
-                //                    std::set<FieldContainerUnrecPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
+                //                    FCFileType::FCPtrStore NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
 
                 //                    AllContainers.insert(NewContainers.begin(), NewContainers.end());
                 //                    NewIgnores.insert(NewContainers.begin(), NewContainers.end());
