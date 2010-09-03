@@ -104,6 +104,12 @@ void UIRectangle::initMethod(InitPhase ePhase)
 
 Action::ResultE UIRectangle::renderActionEnterHandler(Action *action)
 {
+    if(getDrawingSurface() == NULL ||
+       getDrawingSurface()->getGraphics() == NULL)
+    {
+        return Action::Continue;
+    }
+
     RenderAction *a = dynamic_cast<RenderAction *>(action);
 
     DrawEnv::DrawFunctor func;
@@ -135,6 +141,7 @@ Action::ResultE UIRectangle::renderActionLeaveHandler(Action *action)
 
 void UIRectangle::drawPrimitives          (DrawEnv *pEnv  )
 {
+
     glPushMatrix();
 
     glTranslatef(getPoint().x(),getPoint().y()+getHeight(),getPoint().z());
@@ -164,7 +171,7 @@ void UIRectangle::drawPrimitives          (DrawEnv *pEnv  )
 	getRectPolygon()->activate(pEnv);
     Pnt2f TopLeft,BottomRight;
 	glBegin(GL_QUADS);
-        //Draw all of the InternalWindows
+        //Draw depth for each of the InternalWindows
         for(UInt32 i(0) ; i<getDrawingSurface()->getMFInternalWindows()->size() ; ++i)
         {
             TopLeft = getDrawingSurface()->getInternalWindows(i)->getPosition();
