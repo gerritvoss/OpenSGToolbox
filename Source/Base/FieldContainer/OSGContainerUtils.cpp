@@ -55,14 +55,21 @@ std::vector<FieldContainerUnrecPtr> getAllContainersByDerivedType(const FieldCon
     const FieldContainerFactoryBase::ContainerStore &FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
 
     FieldContainerFactoryBase::ContainerStore::const_iterator FCStoreIter;
-    FieldContainerFactoryBase::ContainerPtr Cont;
+    FieldContainerFactoryBase::ContainerPtr Cont(NULL);
     for(FCStoreIter = FCStore.begin() ; FCStoreIter != FCStore.end() ; ++FCStoreIter)
     {
+        if(*FCStoreIter != NULL)
+        {
 #ifdef OSG_MT_CPTR_ASPECT
-        Cont = (*FCStoreIter)->getPtr();
+            Cont = (*FCStoreIter)->getPtr();
 #else
-        Cont = *FCStoreIter;
+            Cont = *FCStoreIter;
 #endif
+        }
+        else
+        {
+            Cont = NULL;
+        }
         if( Cont != NULL && Cont->getType().isDerivedFrom(*szType) )
         {
             Result.push_back(Cont);
