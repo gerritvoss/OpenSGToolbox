@@ -11,6 +11,7 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
+    group="PhysicsAMotorJoint"
     authors="David Kabala (djkabala@gmail.com),  Behboud Kalantary         "
 >
 	<Field

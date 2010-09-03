@@ -85,6 +85,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsPlane2DJointBase : public PhysicsJoin
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsPlane2DJoint);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

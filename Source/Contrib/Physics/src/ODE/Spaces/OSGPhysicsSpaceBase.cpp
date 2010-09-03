@@ -57,8 +57,6 @@
 #include "OSGConfig.h"
 
 
-#include "OSGCollisionEventDetails.h"
-
 
 #include "OSGFieldContainer.h"          // ParentHandler Class
 #include "OSGCollisionContactParameters.h" // DefaultCollisionParameters Class
@@ -706,7 +704,6 @@ PhysicsSpace *PhysicsSpaceBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsSpaceBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -764,7 +761,7 @@ void PhysicsSpaceBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _CollisionEvent(dynamic_cast<CollisionEventDetailsType* const>(e), CollisionEventId);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -779,7 +776,7 @@ boost::signals2::connection PhysicsSpaceBase::connectEvent(UInt32 eventId,
         return _CollisionEvent.connect(listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -798,7 +795,7 @@ boost::signals2::connection  PhysicsSpaceBase::connectEvent(UInt32 eventId,
         return _CollisionEvent.connect(group, listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -814,7 +811,7 @@ void  PhysicsSpaceBase::disconnectEvent(UInt32 eventId, const BaseEventType::gro
         _CollisionEvent.disconnect(group);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -827,7 +824,7 @@ void  PhysicsSpaceBase::disconnectAllSlotsEvent(UInt32 eventId)
         _CollisionEvent.disconnect_all_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -840,7 +837,7 @@ bool  PhysicsSpaceBase::isEmptyEvent(UInt32 eventId) const
         return _CollisionEvent.empty();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
         break;
     }
@@ -854,7 +851,7 @@ UInt32  PhysicsSpaceBase::numSlotsEvent(UInt32 eventId) const
         return _CollisionEvent.num_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
         break;
     }

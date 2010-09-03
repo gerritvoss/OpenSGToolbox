@@ -86,6 +86,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHashSpaceBase : public PhysicsSpace
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsHashSpace);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

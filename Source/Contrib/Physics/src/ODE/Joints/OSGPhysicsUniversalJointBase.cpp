@@ -355,7 +355,7 @@ void PhysicsUniversalJointBase::classDescInserter(TypeObject &oType)
 PhysicsUniversalJointBase::TypeObject PhysicsUniversalJointBase::_type(
     PhysicsUniversalJointBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsUniversalJoint",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsUniversalJointBase::createEmptyLocal),
     PhysicsUniversalJoint::initMethod,
@@ -376,6 +376,7 @@ PhysicsUniversalJointBase::TypeObject PhysicsUniversalJointBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsUniversalJoint\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -1017,7 +1018,6 @@ PhysicsUniversalJoint *PhysicsUniversalJointBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsUniversalJointBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -1060,7 +1060,6 @@ FieldContainerTransitPtr PhysicsUniversalJointBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -1488,6 +1487,7 @@ EditFieldHandlePtr PhysicsUniversalJointBase::editHandleStopCFM2       (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

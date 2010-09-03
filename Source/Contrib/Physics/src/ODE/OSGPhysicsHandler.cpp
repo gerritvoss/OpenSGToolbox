@@ -72,14 +72,13 @@ Action::ResultE updateOsgOde(Node* const node)
 {   
     //SLOG << "entering " << node << endLog;
     TransformUnrecPtr t = dynamic_cast<Transform*>(node->getCore());
-    Matrix m,r;
     if(t!=NULL)
     {
         //SLOG << "found a TransformNode " << endLog;
         AttachmentUnrecPtr a = node->findAttachment(PhysicsBody::getClassType());
         if(a!=NULL)
         {
-            //SLOG << "found a bodyNode " << endLog;
+            Matrix m,r;
             PhysicsBodyUnrecPtr body = dynamic_pointer_cast<PhysicsBody>(a);
             body->updateToODEState();
 
@@ -91,16 +90,9 @@ Action::ResultE updateOsgOde(Node* const node)
             r.setRotate(q);
             m.setTransform(p);
             m.mult(r);
-            //CPEdit(t, Transform::MatrixFieldMask);
             t->setMatrix(m);
             //update BB
-            //CPEdit(node, Node::VolumeFieldMask);
             node->updateVolume();
-
-            if(p.z() < -10)
-            {
-                //subRefCP(node);
-            }
         }
     }
 
@@ -185,12 +177,13 @@ void PhysicsHandler::attachUpdateProducer(ReflexiveContainer* const producer)
     }
     else
     {
-        _UpdateEventConnection = producer->connectEvent(Desc->getEventId(), boost::bind(&PhysicsHandler::attachedUpdate, this, _1));
+        _UpdateEventConnection = producer->connectEvent(Desc->getEventId(), boost::bind(&PhysicsHandler::attachedUpdate, this, _1), boost::signals2::at_back);
     }
 }
 
 void PhysicsHandler::attachedUpdate(EventDetails* const details)
 {
+    commitChanges();
     getStatistics()->reset();
     getStatistics()->getElem(statCollisionTime)->start();
     getStatistics()->getElem(statCollisionTime)->stop();

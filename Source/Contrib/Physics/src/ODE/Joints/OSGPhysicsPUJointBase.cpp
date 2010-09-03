@@ -467,7 +467,7 @@ void PhysicsPUJointBase::classDescInserter(TypeObject &oType)
 PhysicsPUJointBase::TypeObject PhysicsPUJointBase::_type(
     PhysicsPUJointBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsPUJoint",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsPUJointBase::createEmptyLocal),
     PhysicsPUJoint::initMethod,
@@ -488,6 +488,7 @@ PhysicsPUJointBase::TypeObject PhysicsPUJointBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsPUJoint\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -1380,7 +1381,6 @@ PhysicsPUJoint *PhysicsPUJointBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsPUJointBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -1423,7 +1423,6 @@ FieldContainerTransitPtr PhysicsPUJointBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -2040,6 +2039,7 @@ EditFieldHandlePtr PhysicsPUJointBase::editHandleStopCFM3       (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

@@ -87,6 +87,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsUniversalJointBase : public PhysicsJo
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsUniversalJoint);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

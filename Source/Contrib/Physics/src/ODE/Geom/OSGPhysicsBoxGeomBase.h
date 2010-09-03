@@ -86,6 +86,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsBoxGeomBase : public PhysicsGeom
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsBoxGeom);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

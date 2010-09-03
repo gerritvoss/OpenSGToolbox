@@ -387,7 +387,7 @@ void PhysicsHinge2JointBase::classDescInserter(TypeObject &oType)
 PhysicsHinge2JointBase::TypeObject PhysicsHinge2JointBase::_type(
     PhysicsHinge2JointBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsHinge2Joint",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsHinge2JointBase::createEmptyLocal),
     PhysicsHinge2Joint::initMethod,
@@ -408,6 +408,7 @@ PhysicsHinge2JointBase::TypeObject PhysicsHinge2JointBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsHinge2Joint\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -1126,7 +1127,6 @@ PhysicsHinge2Joint *PhysicsHinge2JointBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsHinge2JointBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -1169,7 +1169,6 @@ FieldContainerTransitPtr PhysicsHinge2JointBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -1651,6 +1650,7 @@ EditFieldHandlePtr PhysicsHinge2JointBase::editHandleSuspensionCFM  (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

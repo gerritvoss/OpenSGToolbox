@@ -63,7 +63,7 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGAttachmentContainer.h" // Parent
+#include "OSGAttachment.h" // Parent
 
 #include "OSGPhysicsWorldFields.h"      // World type
 #include "OSGPhysicsBodyFields.h"       // FirstBody type
@@ -76,17 +76,19 @@ class PhysicsJoint;
 
 //! \brief PhysicsJoint Base Class.
 
-class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsJointBase : public AttachmentContainer
+class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsJointBase : public Attachment
 {
   public:
 
-    typedef AttachmentContainer Inherited;
-    typedef AttachmentContainer ParentContainer;
+    typedef Attachment Inherited;
+    typedef Attachment ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsJoint);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

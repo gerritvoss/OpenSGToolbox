@@ -135,12 +135,14 @@ void PhysicsJoint::onDestroy()
 /*----------------------- constructors & destructors ----------------------*/
 
 PhysicsJoint::PhysicsJoint(void) :
-    Inherited()
+    Inherited(),
+    _JointID(0)
 {
 }
 
 PhysicsJoint::PhysicsJoint(const PhysicsJoint &source) :
-    Inherited(source)
+    Inherited(source),
+    _JointID(0)
 {
 }
 

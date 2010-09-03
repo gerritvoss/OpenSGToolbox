@@ -228,7 +228,7 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
-                                                         
+
     virtual UInt32                   getNumProducedEvents       (void                                ) const;
     virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
     virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;

@@ -817,7 +817,6 @@ PhysicsGeom *PhysicsGeomBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsGeomBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -860,7 +859,6 @@ FieldContainerTransitPtr PhysicsGeomBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -1199,6 +1197,7 @@ EditFieldHandlePtr PhysicsGeomBase::editHandleEnable         (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

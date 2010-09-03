@@ -86,6 +86,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSweepAndPruneSpaceBase : public Physi
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsSweepAndPruneSpace);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

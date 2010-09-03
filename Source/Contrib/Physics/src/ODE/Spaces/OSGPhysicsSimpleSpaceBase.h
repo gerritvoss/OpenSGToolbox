@@ -85,6 +85,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsSimpleSpaceBase : public PhysicsSpace
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsSimpleSpace);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

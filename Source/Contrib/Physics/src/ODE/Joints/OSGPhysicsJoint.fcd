@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="PhysicsJoint"
-	parent="AttachmentContainer"
+	parent="Attachment"
     library="ContribPhysics"
     pointerfieldtypes="both"
     structure="concrete"

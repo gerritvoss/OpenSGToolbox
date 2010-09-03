@@ -131,7 +131,7 @@ void PhysicsHashSpaceBase::classDescInserter(TypeObject &oType)
 PhysicsHashSpaceBase::TypeObject PhysicsHashSpaceBase::_type(
     PhysicsHashSpaceBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsGeom",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsHashSpaceBase::createEmptyLocal),
     PhysicsHashSpace::initMethod,
@@ -152,6 +152,7 @@ PhysicsHashSpaceBase::TypeObject PhysicsHashSpaceBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsGeom\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -312,7 +313,6 @@ PhysicsHashSpace *PhysicsHashSpaceBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsHashSpaceBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -355,7 +355,6 @@ FieldContainerTransitPtr PhysicsHashSpaceBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -405,6 +404,7 @@ EditFieldHandlePtr PhysicsHashSpaceBase::editHandleLevels         (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

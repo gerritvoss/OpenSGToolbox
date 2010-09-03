@@ -339,7 +339,7 @@ void PhysicsPistonJointBase::classDescInserter(TypeObject &oType)
 PhysicsPistonJointBase::TypeObject PhysicsPistonJointBase::_type(
     PhysicsPistonJointBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsPistonJoint",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsPistonJointBase::createEmptyLocal),
     PhysicsPistonJoint::initMethod,
@@ -360,6 +360,7 @@ PhysicsPistonJointBase::TypeObject PhysicsPistonJointBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsPistonJoint\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -974,7 +975,6 @@ PhysicsPistonJoint *PhysicsPistonJointBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsPistonJointBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -1017,7 +1017,6 @@ FieldContainerTransitPtr PhysicsPistonJointBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -1418,6 +1417,7 @@ EditFieldHandlePtr PhysicsPistonJointBase::editHandleStopCFM2       (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

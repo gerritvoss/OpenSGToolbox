@@ -131,7 +131,7 @@ void PhysicsSphereGeomBase::classDescInserter(TypeObject &oType)
 PhysicsSphereGeomBase::TypeObject PhysicsSphereGeomBase::_type(
     PhysicsSphereGeomBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsGeom",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsSphereGeomBase::createEmptyLocal),
     PhysicsSphereGeom::initMethod,
@@ -152,6 +152,7 @@ PhysicsSphereGeomBase::TypeObject PhysicsSphereGeomBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsGeom\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -313,7 +314,6 @@ PhysicsSphereGeom *PhysicsSphereGeomBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsSphereGeomBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -356,7 +356,6 @@ FieldContainerTransitPtr PhysicsSphereGeomBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -406,6 +405,7 @@ EditFieldHandlePtr PhysicsSphereGeomBase::editHandleRadius         (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

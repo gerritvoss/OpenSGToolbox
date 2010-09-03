@@ -87,6 +87,8 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsQuadTreeSpaceBase : public PhysicsSpa
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(PhysicsQuadTreeSpace);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

@@ -676,7 +676,7 @@ void PhysicsAMotorJointBase::classDescInserter(TypeObject &oType)
 PhysicsAMotorJointBase::TypeObject PhysicsAMotorJointBase::_type(
     PhysicsAMotorJointBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsAMotorJoint",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsAMotorJointBase::createEmptyLocal),
     PhysicsAMotorJoint::initMethod,
@@ -697,6 +697,7 @@ PhysicsAMotorJointBase::TypeObject PhysicsAMotorJointBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsAMotorJoint\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -2049,7 +2050,6 @@ PhysicsAMotorJoint *PhysicsAMotorJointBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsAMotorJointBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -2092,7 +2092,6 @@ FieldContainerTransitPtr PhysicsAMotorJointBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -3060,6 +3059,7 @@ EditFieldHandlePtr PhysicsAMotorJointBase::editHandleStopCFM3       (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

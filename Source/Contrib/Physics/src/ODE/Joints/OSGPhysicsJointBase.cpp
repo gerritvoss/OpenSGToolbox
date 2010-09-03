@@ -102,7 +102,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<PhysicsJoint *>::_type("PhysicsJointPtr", "AttachmentContainerPtr");
+DataType FieldTraits<PhysicsJoint *>::_type("PhysicsJointPtr", "AttachmentPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(PhysicsJoint *)
@@ -165,7 +165,7 @@ void PhysicsJointBase::classDescInserter(TypeObject &oType)
 PhysicsJointBase::TypeObject PhysicsJointBase::_type(
     PhysicsJointBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsJoint",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsJointBase::createEmptyLocal),
     PhysicsJoint::initMethod,
@@ -177,7 +177,7 @@ PhysicsJointBase::TypeObject PhysicsJointBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"PhysicsJoint\"\n"
-    "\tparent=\"AttachmentContainer\"\n"
+    "\tparent=\"Attachment\"\n"
     "    library=\"ContribPhysics\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "    structure=\"concrete\"\n"
@@ -417,7 +417,6 @@ PhysicsJoint *PhysicsJointBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsJointBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -460,7 +459,6 @@ FieldContainerTransitPtr PhysicsJointBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -588,6 +586,7 @@ EditFieldHandlePtr PhysicsJointBase::editHandleSecondBody     (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

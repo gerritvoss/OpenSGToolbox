@@ -163,7 +163,7 @@ void PhysicsQuadTreeSpaceBase::classDescInserter(TypeObject &oType)
 PhysicsQuadTreeSpaceBase::TypeObject PhysicsQuadTreeSpaceBase::_type(
     PhysicsQuadTreeSpaceBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsGeom",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsQuadTreeSpaceBase::createEmptyLocal),
     PhysicsQuadTreeSpace::initMethod,
@@ -184,6 +184,7 @@ PhysicsQuadTreeSpaceBase::TypeObject PhysicsQuadTreeSpaceBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsGeom\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -412,7 +413,6 @@ PhysicsQuadTreeSpace *PhysicsQuadTreeSpaceBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsQuadTreeSpaceBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -455,7 +455,6 @@ FieldContainerTransitPtr PhysicsQuadTreeSpaceBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -559,6 +558,7 @@ EditFieldHandlePtr PhysicsQuadTreeSpaceBase::editHandleDepth          (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

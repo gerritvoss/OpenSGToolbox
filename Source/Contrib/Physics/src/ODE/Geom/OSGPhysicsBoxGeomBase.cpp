@@ -131,7 +131,7 @@ void PhysicsBoxGeomBase::classDescInserter(TypeObject &oType)
 PhysicsBoxGeomBase::TypeObject PhysicsBoxGeomBase::_type(
     PhysicsBoxGeomBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsGeom",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsBoxGeomBase::createEmptyLocal),
     PhysicsBoxGeom::initMethod,
@@ -152,6 +152,7 @@ PhysicsBoxGeomBase::TypeObject PhysicsBoxGeomBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsGeom\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -313,7 +314,6 @@ PhysicsBoxGeom *PhysicsBoxGeomBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsBoxGeomBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -356,7 +356,6 @@ FieldContainerTransitPtr PhysicsBoxGeomBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -406,6 +405,7 @@ EditFieldHandlePtr PhysicsBoxGeomBase::editHandleLengths        (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

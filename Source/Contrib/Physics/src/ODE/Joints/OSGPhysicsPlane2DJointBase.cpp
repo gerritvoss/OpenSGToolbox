@@ -113,7 +113,7 @@ void PhysicsPlane2DJointBase::classDescInserter(TypeObject &oType)
 PhysicsPlane2DJointBase::TypeObject PhysicsPlane2DJointBase::_type(
     PhysicsPlane2DJointBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsPlane2DJoint",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsPlane2DJointBase::createEmptyLocal),
     PhysicsPlane2DJoint::initMethod,
@@ -134,6 +134,7 @@ PhysicsPlane2DJointBase::TypeObject PhysicsPlane2DJointBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsPlane2DJoint\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "</FieldContainer>\n",
@@ -260,7 +261,6 @@ PhysicsPlane2DJoint *PhysicsPlane2DJointBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsPlane2DJointBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -306,7 +306,6 @@ FieldContainerTransitPtr PhysicsPlane2DJointBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 PhysicsPlane2DJointBase::PhysicsPlane2DJointBase(void) :
@@ -325,6 +324,7 @@ PhysicsPlane2DJointBase::PhysicsPlane2DJointBase(const PhysicsPlane2DJointBase &
 PhysicsPlane2DJointBase::~PhysicsPlane2DJointBase(void)
 {
 }
+
 
 
 

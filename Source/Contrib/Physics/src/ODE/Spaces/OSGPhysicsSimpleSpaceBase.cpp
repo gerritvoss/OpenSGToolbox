@@ -113,7 +113,7 @@ void PhysicsSimpleSpaceBase::classDescInserter(TypeObject &oType)
 PhysicsSimpleSpaceBase::TypeObject PhysicsSimpleSpaceBase::_type(
     PhysicsSimpleSpaceBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsGeom",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsSimpleSpaceBase::createEmptyLocal),
     PhysicsSimpleSpace::initMethod,
@@ -134,6 +134,7 @@ PhysicsSimpleSpaceBase::TypeObject PhysicsSimpleSpaceBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsGeom\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "</FieldContainer>\n",
@@ -260,7 +261,6 @@ PhysicsSimpleSpace *PhysicsSimpleSpaceBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsSimpleSpaceBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -306,7 +306,6 @@ FieldContainerTransitPtr PhysicsSimpleSpaceBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 PhysicsSimpleSpaceBase::PhysicsSimpleSpaceBase(void) :
@@ -325,6 +324,7 @@ PhysicsSimpleSpaceBase::PhysicsSimpleSpaceBase(const PhysicsSimpleSpaceBase &sou
 PhysicsSimpleSpaceBase::~PhysicsSimpleSpaceBase(void)
 {
 }
+
 
 
 

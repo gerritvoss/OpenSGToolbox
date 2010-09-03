@@ -132,7 +132,7 @@ void PhysicsTriMeshGeomBase::classDescInserter(TypeObject &oType)
 PhysicsTriMeshGeomBase::TypeObject PhysicsTriMeshGeomBase::_type(
     PhysicsTriMeshGeomBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsGeom",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsTriMeshGeomBase::createEmptyLocal),
     PhysicsTriMeshGeom::initMethod,
@@ -153,6 +153,7 @@ PhysicsTriMeshGeomBase::TypeObject PhysicsTriMeshGeomBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsGeom\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -315,7 +316,6 @@ PhysicsTriMeshGeom *PhysicsTriMeshGeomBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsTriMeshGeomBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -358,7 +358,6 @@ FieldContainerTransitPtr PhysicsTriMeshGeomBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -422,6 +421,7 @@ EditFieldHandlePtr PhysicsTriMeshGeomBase::editHandleGeometryNode   (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

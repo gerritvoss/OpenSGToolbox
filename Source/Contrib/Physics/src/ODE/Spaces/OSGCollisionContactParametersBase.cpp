@@ -862,7 +862,6 @@ CollisionContactParameters *CollisionContactParametersBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr CollisionContactParametersBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -905,7 +904,6 @@ FieldContainerTransitPtr CollisionContactParametersBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -1252,6 +1250,7 @@ EditFieldHandlePtr CollisionContactParametersBase::editHandleSlip2          (voi
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

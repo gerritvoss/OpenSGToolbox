@@ -227,7 +227,7 @@ void PhysicsSliderJointBase::classDescInserter(TypeObject &oType)
 PhysicsSliderJointBase::TypeObject PhysicsSliderJointBase::_type(
     PhysicsSliderJointBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsSliderJoint",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsSliderJointBase::createEmptyLocal),
     PhysicsSliderJoint::initMethod,
@@ -248,6 +248,7 @@ PhysicsSliderJointBase::TypeObject PhysicsSliderJointBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsSliderJoint\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -618,7 +619,6 @@ PhysicsSliderJoint *PhysicsSliderJointBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsSliderJointBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -661,7 +661,6 @@ FieldContainerTransitPtr PhysicsSliderJointBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -873,6 +872,7 @@ EditFieldHandlePtr PhysicsSliderJointBase::editHandleStopCFM        (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

@@ -147,7 +147,7 @@ void PhysicsCapsuleGeomBase::classDescInserter(TypeObject &oType)
 PhysicsCapsuleGeomBase::TypeObject PhysicsCapsuleGeomBase::_type(
     PhysicsCapsuleGeomBase::getClassname(),
     Inherited::getClassname(),
-    "NULL",
+    "PhysicsGeom",
     0,
     reinterpret_cast<PrototypeCreateF>(&PhysicsCapsuleGeomBase::createEmptyLocal),
     PhysicsCapsuleGeom::initMethod,
@@ -168,6 +168,7 @@ PhysicsCapsuleGeomBase::TypeObject PhysicsCapsuleGeomBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    group=\"PhysicsGeom\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com),  Behboud Kalantary         \"\n"
     ">\n"
     "\t<Field\n"
@@ -362,7 +363,6 @@ PhysicsCapsuleGeom *PhysicsCapsuleGeomBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PhysicsCapsuleGeomBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -405,7 +405,6 @@ FieldContainerTransitPtr PhysicsCapsuleGeomBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -482,6 +481,7 @@ EditFieldHandlePtr PhysicsCapsuleGeomBase::editHandleLength         (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT
