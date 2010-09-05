@@ -43,6 +43,9 @@
 #endif
 
 #include "OSGVLCVideoWrapperBase.h"
+
+#ifdef OSG_WITH_VLC
+
 #include "OSGLock.h"
 #include "OSGImageFields.h"
 
@@ -82,8 +85,8 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VLCVideoWrapper : public VLCVideoWrapperBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-  	virtual bool open(BoostPath ThePath, WindowUnrecPtr TheWindow);
-    virtual bool open(const std::string& ThePath, WindowUnrecPtr TheWindow);
+  	virtual bool open(BoostPath ThePath, Window* const TheWindow);
+    virtual bool open(const std::string& ThePath, Window* const TheWindow);
     virtual bool seek(Int64 SeekPos);
     virtual bool jump(Int64 Amount);
     virtual bool setRate(Real32 Rate);
@@ -102,7 +105,7 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VLCVideoWrapper : public VLCVideoWrapperBase
 	virtual Int64 getPosition(void) const;
 	virtual Int64 getDuration(void) const;
 
-    virtual ImageRefPtr getCurrentFrame(void);
+    virtual Image* getCurrentFrame(void);
     virtual bool updateImage(void);
     /*=========================  PROTECTED  ===============================*/
 
@@ -115,7 +118,8 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VLCVideoWrapper : public VLCVideoWrapperBase
     /*! \{                                                                 */
 
     VLCVideoWrapper(void);
-    VLCVideoWrapper(const VLCVideoWrapper &source);
+    VLCVideoWrapper(void *carbonWindow);
+    VLCVideoWrapper(const VLCVideoWrapper &source, void *carbonWindow);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -138,24 +142,39 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VLCVideoWrapper : public VLCVideoWrapperBase
     /*==========================  PRIVATE  ================================*/
 
   private:
+    struct ctx	
+    {
+        UInt8*               pixels;
+        Lock*                lock;
+        //MainWindow*             mainWindow;
+    };
 	
-    // media player handling the video being played
-    libvlc_media_player_t * mTheMediaPlayer;
+	// media player handling the video being played
+	libvlc_media_player_t * mTheMediaPlayer;
 
-    // vlc struct holding data to the video file
+	// vlc struct holding data to the video file
     libvlc_media_t * mTheMedia;
 
-    bool mPaused, mStopped, mInitialized;
-    UInt32 videoWidth;
-    UInt32 videoHeight; 
-    bool reachEndOnce;
+	bool mPaused, mStopped, mInitialized;
+	UInt32 videoWidth;
+	UInt32 videoHeight; 
+	bool reachEndOnce;
     void *theCarbonWindow;
 
-    struct ctx* context;
+    friend class FieldContainer;
+    friend class VLCVideoWrapperBase;
 
-    static void lock(struct ctx* ctx, void** pp_ret);
-    static void unlock(struct ctx* ctx);
-    void processNewFrame(struct ctx* ctx);
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const VLCVideoWrapper &source);
+	
+	struct ctx _VideoMemContext;
+	
+	static void lock(struct ctx* ctx, void** pp_ret);
+	static void unlock(struct ctx* ctx);
+	void processNewFrame(struct ctx* ctx);
 
     friend class FieldContainer;
     friend class VLCVideoWrapperBase;
@@ -176,5 +195,7 @@ OSG_END_NAMESPACE
 
 #include "OSGVLCVideoWrapperBase.inl"
 #include "OSGVLCVideoWrapper.inl"
+
+#endif /* OSG_WITH_VLC */
 
 #endif /* _OSGVLCVIDEOWRAPPER_H_ */

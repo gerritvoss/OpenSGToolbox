@@ -77,6 +77,29 @@ void VideoWrapper::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void VideoWrapper::attachUpdateProducer(ReflexiveContainer* const producer)
+{
+    if(_UpdateEventConnection.connected())
+    {
+        _UpdateEventConnection.disconnect();
+    }
+    //Get the Id of the UpdateEvent
+    const EventDescription* Desc(producer->getProducerType().findEventDescription("Update"));
+    if(Desc == NULL)
+    {
+        SWARNING << "There is no Update event defined on " << producer->getType().getName() << " types." << std::endl;
+    }
+    else
+    {
+        _UpdateEventConnection = producer->connectEvent(Desc->getEventId(), boost::bind(&VideoWrapper::handleUpdate, this, _1));
+    }
+}
+
+void VideoWrapper::handleUpdate(EventDetails* const details)
+{
+    updateImage();
+}
+
 bool VideoWrapper::open(const BoostPath& ThePath, Window* const TheWindow)
 {
     //Check if the file exists
@@ -86,31 +109,9 @@ bool VideoWrapper::open(const BoostPath& ThePath, Window* const TheWindow)
     }
     else
     {
-        SWARNING << "VideoWrapper::open(): File " << ThePath.file_string() << " could not be opened, because no file by that path exists" << std::endl;
+        SWARNING << "VideoWrapper::open(): File " << ThePath.file_string() << " could not be opened, because no file with that path exists" << std::endl;
         return false;
     }
-}
-
-bool VideoWrapper::updateTexture(TextureObjChunk* const TheTexture)
-{
-    bool Result(updateImage());
-
-    if(_VideoImage != NULL)
-    {
-	    //if(!hasNPOT)
-	    //{
-		//    TheImage->scaleNextPower2(TheImage);
-	    //}
-	    if(TheTexture->getImage() != _VideoImage)
-	    {
-			    TheTexture->setImage(_VideoImage);
-	    }
-	    else
-	    {
-		    //tex->imageContentChanged();
-	    }
-    }
-    return Result;
 }
 
 void VideoWrapper::producePaused(void)

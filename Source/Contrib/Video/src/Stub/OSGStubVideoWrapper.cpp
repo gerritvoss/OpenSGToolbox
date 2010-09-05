@@ -81,25 +81,25 @@ bool StubVideoWrapper::open(const std::string& ThePath, Window* const TheWindow)
     return false;
 }
 
-bool StubVideoWrapper::seek(Int64 SeekPos)
+bool StubVideoWrapper::seek(Real64 SeekPos)
 {
     //The Stub Video Wrapper does nothing, intentionally
     return false;
 }
 
-bool StubVideoWrapper::jump(Int64 Amount)
+bool StubVideoWrapper::jump(Real64 Amount)
 {
     //The Stub Video Wrapper does nothing, intentionally
     return false;
 }
 
-bool StubVideoWrapper::setRate(Real32 Rate)
+bool StubVideoWrapper::setRate(Real64 Rate)
 {
     //The Stub Video Wrapper does nothing, intentionally
     return false;
 }
 
-Real32 StubVideoWrapper::getRate(void) const
+Real64 StubVideoWrapper::getRate(void) const
 {
     //The Stub Video Wrapper does nothing, intentionally
     return 1.0;
@@ -167,23 +167,16 @@ bool StubVideoWrapper::isInitialized(void) const
 }
 
 
-Int64 StubVideoWrapper::getPosition(void) const
+Real64 StubVideoWrapper::getPosition(void) const
 {
     //The Stub Video Wrapper does nothing, intentionally
     return 0;
 }
 
-Int64 StubVideoWrapper::getDuration(void) const
+Real64 StubVideoWrapper::getDuration(void) const
 {
     //The Stub Video Wrapper does nothing, intentionally
     return 0;
-}
-
-
-Image* StubVideoWrapper::getCurrentFrame(void)
-{
-    //The Stub Video Wrapper does nothing, intentionally
-    return NULL;
 }
 
 bool StubVideoWrapper::updateImage(void)
@@ -191,6 +184,66 @@ bool StubVideoWrapper::updateImage(void)
     //The Stub Video Wrapper does nothing, intentionally
     return false;
 }
+
+bool StubVideoWrapper::canSeekForward(void) const
+{
+    //The Stub Video Wrapper does nothing, intentionally
+    return false;
+}
+
+bool StubVideoWrapper::canSeekBackward(void) const
+{
+    //The Stub Video Wrapper does nothing, intentionally
+    return false;
+}
+
+UInt32 StubVideoWrapper::getWidth(void) const
+{
+    //The Stub Video Wrapper does nothing, intentionally
+    return 0;
+}
+
+UInt32 StubVideoWrapper::getHeight(void) const
+{
+    //The Stub Video Wrapper does nothing, intentionally
+    return 0;
+}
+
+
+bool StubVideoWrapper::hasAudio(void) const
+{
+    //The Stub Video Wrapper does nothing, intentionally
+    return false;
+}
+
+void StubVideoWrapper::enableAudio(void)
+{
+    //The Stub Video Wrapper does nothing, intentionally
+}
+
+void StubVideoWrapper::disableAudio(void)
+{
+    //The Stub Video Wrapper does nothing, intentionally
+}
+
+bool StubVideoWrapper::isAudioEnabled(void) const
+{
+    //The Stub Video Wrapper does nothing, intentionally
+    return false;
+}
+
+
+Real32 StubVideoWrapper::getAudioVolume(void) const
+{
+    //The Stub Video Wrapper does nothing, intentionally
+    return 0.0f;
+}
+
+void StubVideoWrapper::setAudioVolume(Real32 volume)
+{
+    //The Stub Video Wrapper does nothing, intentionally
+}
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

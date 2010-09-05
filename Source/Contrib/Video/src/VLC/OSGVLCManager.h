@@ -48,7 +48,7 @@ public:
     virtual void init(int   argc, char *argv[]);
     virtual void exit(void);
 
-    virtual VideoWrapperRefPtr createVideoWrapper(void) const;
+    virtual VideoWrapperTransitPtr createVideoWrapper(void) const;
 
 private:
     VLCManager(void);

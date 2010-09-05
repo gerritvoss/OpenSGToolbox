@@ -43,34 +43,35 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include <OSGConfig.h>
+#include "OSGConfig.h"
+
+#ifdef OSG_WITH_VLC
 
 #ifdef WIN32
 #include <Windowsx.h>
+#include <OpenSG/OSGWIN32Window.h>
 #endif
 
 
-#if __STDC_VERSION__ >= 199901L
-
-	#include <stdint.h>
-
-#else
-
-	#include <boost/cstdint.hpp>
-	using namespace boost;
-
-#endif
+//#if __STDC_VERSION__ >= 199901L
+//
+//	#include <stdint.h>
+//
+//#else
+//
+//	#include <boost/cstdint.hpp>
+//	using namespace boost;
+//
+//#endif
 
 #include <vlc/vlc.h>
 #include <vlc/libvlc_media_player.h>
-#ifdef __APPLE__
-#include <AGL/agl.h>
-#endif
 
 #include "OSGVLCVideoWrapper.h"
 
 #ifdef __APPLE__
-#include "OSGCarbonWindow.h"
+#include <OpenSG/OSGCarbonWindow.h>
+#include <AGL/agl.h>
 #endif
 
 OSG_BEGIN_NAMESPACE
@@ -104,9 +105,9 @@ bool VLCVideoWrapper::VLC_Execption_catch (libvlc_exception_t ex, std::string me
 	// check if the passed exception is a problem
     if (libvlc_exception_raised (&ex))
     {
-				// printing out what/where the exception happend (message should contain this info!)
-				SWARNING << "A VLC exception occured: " << message << std::endl;
-				SWARNING << libvlc_exception_get_message(&ex) << std::endl << std::endl;
+		// printing out what/where the exception happend (message should contain this info!)
+		SWARNING << "A VLC exception occured: " << message << std::endl;
+		SWARNING << libvlc_exception_get_message(&ex) << std::endl;
         error = true;
     }
 
@@ -119,18 +120,62 @@ bool VLCVideoWrapper::VLC_Execption_catch (libvlc_exception_t ex, std::string me
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool VLCVideoWrapper::open(const std::string& ThePath, WindowUnrecPtr TheWindow)
+bool VLCVideoWrapper::open(const std::string& ThePath, Window* const TheWindow)
 {
-    bool errorOpening(false);
+	bool errorOpening(false);
 
-    libvlc_exception_t ex; 
-    libvlc_exception_init( &ex );
+	libvlc_exception_t ex; 
+	libvlc_exception_init( &ex );
+	
+	// Creating some char[] to store the media options
+	char clock[64], cunlock[64], cdata[64];
+	char width[32], height[32], chroma[32], pitch[32];
 
-    // libvlc settings 
-    const char* args[] = { 
+    _VideoWidth = 1280;
+    _VideoHeight = 1024;
+	
+	
+	// We now need a struct for storing the video buffer
+	// and a mutex to protect it.
+	// The structure will be given as an arguments for the
+	// lock/unlock callbacks.
+	//struct ctx* _VideoMemContext;
+	// Allocating the video buffer
+	_VideoMemContext.pixels = ( UInt8* )malloc( ( sizeof( *( _VideoMemContext.pixels ) ) * _VideoWidth * _VideoHeight ) * 4 );
+	// Allocating the mutex
+	_VideoMemContext.lock = Lock::create();
+	//_VideoMemContext.mainWindow = this;
+	
+	// Preparing the options for the media
+	// The clock and cunlock contain a pointer to the associated
+	// static method (note the use of %lld).
+	//
+	// In that specific case we can't use Qt:
+	// The sprintf method of the QString does not support
+	// length modifiers (like %lld).    
+    /*
+     *  Initialise libVLC
+     */
+    sprintf(clock, "%lld", (long long int)(intptr_t)lock);
+    sprintf(cunlock, "%lld", (long long int)(intptr_t)unlock);
+    sprintf(cdata, "%lld", (long long int)(intptr_t)&_VideoMemContext);
+    sprintf(width, "%i", _VideoWidth);
+    sprintf(height, "%i", _VideoHeight);
+    sprintf(pitch, "%i", _VideoWidth * 3);
+
+	// libvlc settings 
+	const char* args[] = { 
         "-I", "dummy",                      /* no interface */
-        "--vout=dummy",                  /* we don't want video (output) */
-        "--plugin-path=/Applications/VLC.app/Contents/MacOS/modules",                  /* we don't want video (output) */
+        "--vout=vmem",
+        "--vmem-width", width,
+        "--vmem-height", height,
+        "--vmem-pitch", pitch,
+        "--vmem-chroma", "RV24",
+        "--vmem-lock", clock,
+        "--vmem-unlock", cunlock,
+        "--vmem-data", cdata,                  /* we don't want video (output) */
+        //"--plugin-path=/Applications/VLC.app/Contents/MacOS/modules",                  /* we don't want video (output) */
+        "--plugin-path=C:\\Users\\David\\Documents\\Work\\vlc-1.0.6-git\\plugins",                  /* we don't want video (output) */
         "--no-audio",                       /* we don't want audio */
         "--verbose=0",                      /* show only errors */
         "--no-media-library",               /* don't want that */
@@ -141,156 +186,156 @@ bool VLCVideoWrapper::open(const std::string& ThePath, WindowUnrecPtr TheWindow)
         "--no-sub-autodetect",              /* don't want subtitles */
         "--control=",                    /* don't want interface (again) */
         /*"--no-inhibit=",                     [> i say no interface ! <]*/
-        "--no-disable-screensaver",         /* wanna fight ? */
-        "--extraintf=",                   /* ok, it will be a piece of cake */
-        "--verbose=0"
-            //"--vout=minimal_macosx",
-            //"--opengl-provider=minimal_macosx",
+        //"--extraintf=logger",                   /* ok, it will be a piece of cake */
+		//"--verbose=3",
+        "--no-disable-screensaver"         /* wanna fight ? */
     };
-    // const char* const args[] = {
-    //   "-I","dummy",                      /* no interface */
-    //  "--ignore-config",									/* don't use/overwrite the config */
-    //"--intf=dummy",                      /* no interface */
-    //"--vout", "dummy",                  /* we want video (output)? */
-    //"--vout=dummy",                  /* we want video (output)? */
-    //  "--no-audio",                       /* we don't want audio */
-    //  "--verbose=0",                      /* show only errors */
-    //  "--no-media-library",               /* don't want */
-    //  "--services-discovery=",         /* nor that */
-    //  "--no-video-title-show",            /* nor the filename displayed */
-    //  "--no-stats",                       /* no stats */
-    //  "--no-sub-autodetect",              /* don't want subtitles */
-    //  "--control=",                    /* don't want interface (again) */
-    //"--no-inhibit",                     /* no interface ! */
-    //  "--no-disable-screensaver",         /* no screensaver popping up  */
-    //  "--extraintf=",	                /* ok, it will be a piece of cake */
-    //		"--vout=minimal_macosx",
-    //			"--opengl-provider=minimal_macosx",
-    //			"--plugin-path=/Users/dtnaylor/Documents/Work/opensgtoolbox/VLC/modules"
+   // const char* const args[] = {
+     //   "-I","dummy",                      /* no interface */
+      //  "--ignore-config",									/* don't use/overwrite the config */
+        //"--intf=dummy",                      /* no interface */
+        //"--vout", "dummy",                  /* we want video (output)? */
+        //"--vout=dummy",                  /* we want video (output)? */
+      //  "--no-audio",                       /* we don't want audio */
+      //  "--verbose=0",                      /* show only errors */
+      //  "--no-media-library",               /* don't want */
+      //  "--services-discovery=",         /* nor that */
+      //  "--no-video-title-show",            /* nor the filename displayed */
+      //  "--no-stats",                       /* no stats */
+      //  "--no-sub-autodetect",              /* don't want subtitles */
+      //  "--control=",                    /* don't want interface (again) */
+        //"--no-inhibit",                     /* no interface ! */
+      //  "--no-disable-screensaver",         /* no screensaver popping up  */
+      //  "--extraintf=",	                /* ok, it will be a piece of cake */
+		//		"--vout=minimal_macosx",
+	//			"--opengl-provider=minimal_macosx",
+	//			"--plugin-path=/Users/dtnaylor/Documents/Work/opensgtoolbox/VLC/modules"
     //};
 
 
-    int nargs = sizeof(args) / sizeof(args[0]);
-    libvlc_instance_t *libvlc = libvlc_new( nargs, args, &ex );
+	int nargs = sizeof(args) / sizeof(args[0]);
+	libvlc_instance_t *libvlc = libvlc_new( nargs, args, &ex );
     errorOpening = VLC_Execption_catch(ex, "Error creating libvlc_instance_t.");
+	
 
-
-
-    // creates vlc struct holding data to the video file
-    libvlc_media_t *TheMedia = libvlc_media_new( libvlc, ThePath.c_str(), &ex );
+		// creates vlc struct holding data to the video file
+	libvlc_media_t *TheMedia = libvlc_media_new( libvlc, ThePath.c_str(), &ex );
     errorOpening = VLC_Execption_catch(ex, "Error initializing media file.");
-
-    // initialize a temporary media player so we can get height and width before
-    // adding the vmem options to TheMedia
+	
+		// initialize a temporary media player so we can get height and width before
+		// adding the vmem options to TheMedia
     libvlc_media_player_t * tempMediaPlayer = libvlc_media_player_new_from_media( TheMedia, &ex );
-    errorOpening =  VLC_Execption_catch(ex, "Error initializing temporary media player.");
+	  errorOpening =  VLC_Execption_catch(ex, "Error initializing temporary media player.");
 
-    // get height and width of video
-    videoWidth = libvlc_video_get_width (tempMediaPlayer, &ex);
-    errorOpening = VLC_Execption_catch(ex, "Error getting width of the video.");
-    videoHeight = libvlc_video_get_height (tempMediaPlayer, &ex);
-    errorOpening = VLC_Execption_catch(ex, "Error getting heigh of the video.");
-
-    //SLOG << "Width: " << videoWidth << std::endl;
-    //SLOG << "Height: " << videoHeight << std::endl;	
-
-    // We now need a struct for storing the video buffer
-    // and a mutex to protect it.
-    // The structure will be given as an arguments for the
-    // lock/unlock callbacks.
-    //struct ctx* context;
-    // Allocating the space for the structure
-    context = ( struct ctx* )malloc( sizeof( *context ) );
-    // Allocating the video buffer
-    context->pixels = ( UInt8* )malloc( ( sizeof( *( context->pixels ) ) * videoWidth * videoHeight ) * 4 );
-    // Allocating the mutex
-    context->lock = Lock::create();
-    //context->mainWindow = this;
-
-    // Creating some char[] to store the media options
-    char clock[64], cunlock[64], cdata[64];
-    char width[32], height[32], chroma[32], pitch[32];
-    // Preparing the options for the media
-    // The clock and cunlock contain a pointer to the associated
-    // static method (note the use of %lld).
-    //
-    // In that specific case we can't use Qt:
-    // The sprintf method of the QString does not support
-    // length modifiers (like %lld).
-    sprintf( clock,   ":vmem-lock=%lld",   (long long int)(intptr_t)lock    );
-    sprintf( cunlock, ":vmem-unlock=%lld", (long long int)(intptr_t)unlock  );
-    sprintf( cdata,   ":vmem-data=%lld",   (long long int)(intptr_t)context );
-    sprintf( width,   ":vmem-width=%i",    videoWidth           );
-    sprintf( height,  ":vmem-height=%i",   videoHeight          );
-    sprintf( chroma,  ":vmem-chroma=%s",   "RV24"                           );  
-    sprintf( pitch,   ":vmem-pitch=%i",    videoWidth*3       );		
-    // List of options
-    // This part can be easily replaced by a QStringList
-    // instead of a C array.
-    char const* media_options[] =
-    {
-        ":vout=vmem",
-        width, height,
-        chroma, pitch,
-        clock, cunlock,
-        cdata
-    };
-    int media_options_size = sizeof( media_options )
-        / sizeof( *media_options );
-    // Adding each option from the array to the media
-    for ( int i = 0; i < media_options_size; ++i )
-    {
-        libvlc_media_add_option( TheMedia, media_options[i], &ex );
-        errorOpening = VLC_Execption_catch(ex, "Error adding options to TheMedia.");
-    }
+		// get height and width of video
+		/*_VideoWidth = libvlc_video_get_width (tempMediaPlayer, &ex);
+		errorOpening = VLC_Execption_catch(ex, "Error getting width of the video.");
+		_VideoHeight = libvlc_video_get_height (tempMediaPlayer, &ex);
+		errorOpening = VLC_Execption_catch(ex, "Error getting heigh of the video.");
+	
+SLOG << "Width: " << _VideoWidth << std::endl;
+SLOG << "Height: " << _VideoHeight << std::endl;	*/
 
 
+	
+	
+	
 
-
-
-
-    // initialize the media player
+	//sprintf( clock,   ":vmem-lock=%lld",   (long long int)(intptr_t)lock    );
+	//sprintf( cunlock, ":vmem-unlock=%lld", (long long int)(intptr_t)unlock  );
+	//sprintf( cdata,   ":vmem-data=%lld",   (long long int)(intptr_t)_VideoMemContext );
+	//sprintf( width,   ":vmem-width=%i",    _VideoWidth           );
+	//sprintf( height,  ":vmem-height=%i",   _VideoHeight          );
+	////sprintf( chroma,  ":vmem-chroma=%s",   "RV24"                           );  
+	//sprintf( pitch,   ":vmem-pitch=%i",    _VideoWidth*3       );		
+	// List of options
+	// This part can be easily replaced by a QStringList
+	// instead of a C array.
+	//char const* media_options[] =
+	//{
+	//	":vout=vmem",
+	//	width, height,
+	//	chroma, pitch,
+	//	clock, cunlock,
+	//	cdata
+	//};
+	//int media_options_size = sizeof( media_options )
+	//						/ sizeof( *media_options );
+	//// Adding each option from the array to the media
+	//for ( int i = 0; i < media_options_size; ++i )
+	//{
+	//	libvlc_media_add_option( TheMedia, media_options[i], &ex );
+	//	errorOpening = VLC_Execption_catch(ex, "Error adding options to TheMedia.");
+	//}
+	
+	
+	
+	
+	
+   
+	// initialize the media player
     mTheMediaPlayer = libvlc_media_player_new_from_media( TheMedia, &ex );
-    errorOpening =  VLC_Execption_catch(ex, "Error initializing media player.");
-
-
-    //set agl handle (if window is pointing to a carbon window)
+	errorOpening =  VLC_Execption_catch(ex, "Error initializing media player.");
+	
+	
+	//set agl handle (if window is pointing to a carbon window)
 #ifdef __APPLE__
-    if (TheWindow->getType().isDerivedFrom(CarbonWindow::getClassType()))
-    {
-        HIWindowRef windowRef = aglGetWindowRef(dynamic_pointer_cast<CarbonWindow>(TheWindow)->getContext());
-
-        HIViewRef contentView = 0;
-        GetRootControl(windowRef, &contentView);
-
-
-        //uint32_t aglHandler = dynamic_pointer_cast<CarbonWindow>(TheWindow)->winId();
-        libvlc_media_player_set_agl (mTheMediaPlayer, reinterpret_cast<uint32_t>(contentView), &ex );
-        errorOpening = VLC_Execption_catch(ex, "Error attaching media player to carbon window.");
-    }
+	if (window->getType().isDerivedFrom(CarbonWindow::getClassType()))
+	{
+		HIWindowRef windowRef = aglGetWindowRef(CarbonWindowPtr::dcast(window)->getContext());
+		
+		HIViewRef contentView = 0;
+		GetRootControl(windowRef, &contentView);
+		
+		
+		//uint32_t aglHandler = CarbonWindowPtr::dcast(window)->winId();
+		libvlc_media_player_set_agl (mTheMediaPlayer, reinterpret_cast<uint32_t>(contentView), &ex );
+		errorOpening = VLC_Execption_catch(ex, "Error attaching media player to carbon window.");
+	}
 #else
 #ifdef WIN32
+	if (window->getType().isDerivedFrom(WIN32Window::getClassType()))
+	{
+		libvlc_media_player_set_hwnd (mTheMediaPlayer, WIN32WindowPtr::dcast(window)->getHwnd(), &ex );
+		errorOpening = VLC_Execption_catch(ex, "Error attaching media player to WIN32 window.");
+	}
 #endif
 #endif
 
-    // release media file
+		// release media file
     libvlc_media_release( TheMedia );
+    
+
+		// set position to the beginning of the file
+	
+
+    libvlc_media_player_play( mTheMediaPlayer, &ex );
+    bool error = VLC_Execption_catch(ex, "Error playing the media.");
+
+	// check if the player can be paused
+	if(libvlc_media_player_can_pause(mTheMediaPlayer, &ex))
+	{	// can pause it?  do it
+		libvlc_media_player_pause(mTheMediaPlayer, &ex);
+		// error checking of course
+		errorOpening = VLC_Execption_catch(ex, "Error pausing media player.");
+        
+        libvlc_media_player_set_position( mTheMediaPlayer, 0.0f, &ex );
+        errorOpening = VLC_Execption_catch(ex, "Error setting position during player initialization.");
+	}
+
+	
 
 
-    // set position to the beginning of the file
-    //libvlc_media_player_set_position( mTheMediaPlayer, 0.0f, &ex );
-    //errorOpening = VLC_Execption_catch(ex, "Error setting position during player initialization.");
-
-    // since we keep track of whether the vid is initialized...
-    if(!errorOpening)
-    {
-        mInitialized = true;
-    } else
-    {
-        mInitialized = false;
-    }
-
-    return errorOpening;
+	// since we keep track of whether the vid is initialized...
+	if(!errorOpening)
+	{
+		mInitialized = true;
+	} else
+	{
+		mInitialized = false;
+	}
+	
+	return errorOpening;
 }
 
 void VLCVideoWrapper::lock( struct ctx* ctx, void** pp_ret )	
@@ -306,12 +351,13 @@ void VLCVideoWrapper::unlock( struct ctx* ctx )
 {
     ctx->lock->release();
 }
+
 void VLCVideoWrapper::processNewFrame( struct ctx* ctx )	
 {
     // Not sure why this needs to be here, but if it's not, we get errors
 }
 
-bool VLCVideoWrapper::open(BoostPath ThePath, WindowUnrecPtr TheWindow)
+bool VLCVideoWrapper::open(BoostPath ThePath, Window* const TheWindow)
 {
     return open(ThePath.string(), TheWindow);
 }
@@ -450,7 +496,8 @@ bool VLCVideoWrapper::pauseToggle(void)
     {
         unpause();
         mPaused = false;
-    } else 
+    } 
+    else 
     {
         pause();
         mPaused = true;
@@ -548,19 +595,34 @@ Int64 VLCVideoWrapper::getDuration(void) const
     return totalTime;
 }
 
-
-ImageRefPtr VLCVideoWrapper::getCurrentFrame(void)
+UInt32 VLCVideoWrapper::getWidth(void) const
 {
+	libvlc_exception_t ex; 
+	libvlc_exception_init( &ex );
+	// just ask VLC for the vid length
+	int width = libvlc_video_get_width(mTheMediaPlayer,&ex);
+	VLC_Execption_catch(ex, "Error getting width: in VLCVideoWrapper::getWidth().");
+	// libvlc_time_t is just a typedef for a 64 bit integer
+	return width;
+}
 
-    // creating image ptr to return
-    ImageRefPtr currentFrame = Image::create();
-    // ran into a wall, ouch
-    // not sure about this whole vld_drawable_t deal going on
-    //currentFrame->set
+UInt32 VLCVideoWrapper::getHeight(void) const
+{
+	libvlc_exception_t ex; 
+	libvlc_exception_init( &ex );
+	// just ask VLC for the vid length
+	int height = libvlc_video_get_height(mTheMediaPlayer,&ex);
+	VLC_Execption_catch(ex, "Error getting height: in VLCVideoWrapper::getHeight().");
+	// libvlc_time_t is just a typedef for a 64 bit integer
+	return height;
+}
 
-    return currentFrame;
 
+Image* VLCVideoWrapper::getCurrentFrame(void)
+{
+    updateImage();
 
+    return _VideoImage;
 }
 
 bool VLCVideoWrapper::updateImage(void)
@@ -676,3 +738,5 @@ void VLCVideoWrapper::dump(      UInt32    ,
 }
 
 OSG_END_NAMESPACE
+
+#endif

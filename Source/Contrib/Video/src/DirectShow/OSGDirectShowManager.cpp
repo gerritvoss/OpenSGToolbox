@@ -47,9 +47,10 @@ VideoManager *DirectShowManager::the(void)
     return _the;
 }
 
-VideoWrapperRefPtr DirectShowManager::createVideoWrapper(void) const
+VideoWrapperTransitPtr DirectShowManager::createVideoWrapper(void) const
 {
-	return DirectShowVideoWrapper::create();
+    VideoWrapperUnrecPtr Video(DirectShowVideoWrapper::create());
+	return VideoWrapperTransitPtr(Video.get());
 }
 
 void DirectShowManager::init(int   argc, char *argv[])

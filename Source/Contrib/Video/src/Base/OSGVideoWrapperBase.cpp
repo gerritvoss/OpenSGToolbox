@@ -57,8 +57,6 @@
 #include "OSGConfig.h"
 
 
-#include "OSGVideoEventDetails.h"
-
 
 
 #include "OSGVideoWrapperBase.h"
@@ -92,7 +90,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<VideoWrapper *>::_type("VideoWrapperPtr", "AttachmentContainerPtr");
+DataType FieldTraits<VideoWrapper *>::_type("VideoWrapperPtr", "TextureObjChunkPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(VideoWrapper *)
@@ -129,7 +127,7 @@ VideoWrapperBase::TypeObject VideoWrapperBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"VideoWrapper\"\n"
-    "\tparent=\"AttachmentContainer\"\n"
+    "\tparent=\"TextureObjChunk\"\n"
     "\tlibrary=\"ContribVideo\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "    structure=\"abstract\"\n"
@@ -390,7 +388,7 @@ void VideoWrapperBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _SeekedEvent(dynamic_cast<SeekedEventDetailsType* const>(e), SeekedEventId);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -429,7 +427,7 @@ boost::signals2::connection VideoWrapperBase::connectEvent(UInt32 eventId,
         return _SeekedEvent.connect(listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -472,7 +470,7 @@ boost::signals2::connection  VideoWrapperBase::connectEvent(UInt32 eventId,
         return _SeekedEvent.connect(group, listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -512,7 +510,7 @@ void  VideoWrapperBase::disconnectEvent(UInt32 eventId, const BaseEventType::gro
         _SeekedEvent.disconnect(group);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -549,7 +547,7 @@ void  VideoWrapperBase::disconnectAllSlotsEvent(UInt32 eventId)
         _SeekedEvent.disconnect_all_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -586,7 +584,7 @@ bool  VideoWrapperBase::isEmptyEvent(UInt32 eventId) const
         return _SeekedEvent.empty();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
         break;
     }
@@ -624,7 +622,7 @@ UInt32  VideoWrapperBase::numSlotsEvent(UInt32 eventId) const
         return _SeekedEvent.num_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
         break;
     }

@@ -41,9 +41,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-Image* VideoWrapper::getImage(void) const
+void VideoWrapper::detachUpdateProducer(void)
 {
-	return _VideoImage;
+    _UpdateEventConnection.disconnect();
 }
 
 

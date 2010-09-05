@@ -63,7 +63,7 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGAttachmentContainer.h" // Parent
+#include "OSGTextureObjChunk.h" // Parent
 
 
 #include "OSGVideoWrapperFields.h"
@@ -80,12 +80,12 @@ class VideoWrapper;
 
 //! \brief VideoWrapper Base Class.
 
-class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapperBase : public AttachmentContainer
+class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapperBase : public TextureObjChunk
 {
   public:
 
-    typedef AttachmentContainer Inherited;
-    typedef AttachmentContainer ParentContainer;
+    typedef TextureObjChunk Inherited;
+    typedef TextureObjChunk ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;

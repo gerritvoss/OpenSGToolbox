@@ -26,7 +26,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGUtil 
                    OSGDynamics 
                    OSGWindow 
-                   OSGContribSound 
+                   OSGContribVideo 
                    )
 
 IF(UNIX)
@@ -53,8 +53,6 @@ FIND_PACKAGE(X11)
 IF(X11_FOUND)
     LIST(APPEND DEP_INCLUDE_DIRS ${X11_X11_INCLUDE_PATH})
     LIST(APPEND DEP_LIBRARIES ${X11_X11_LIB})
-ELSE(X11_FOUND)
-    LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/clusterserverx.cpp")
 ENDIF(X11_FOUND)
 
 #############
@@ -95,15 +93,6 @@ IF(Boost_FOUND)
     LIST(APPEND DEP_LIBRARIES ${Boost_SYSTEM_LIBRARY})
     LIST(APPEND DEP_LIBRARIES ${Boost_FILESYSTEM_LIBRARY})
 ENDIF(Boost_FOUND)
-
-#############
-#### Fmod
-#FIND_PACKAGE(Fmod)
-#IF(FMOD_FOUND)
-#    LIST(APPEND DEP_INCLUDE_DIRS ${FMOD_INCLUDE_DIR})
-#    LIST(APPEND DEP_LIBRARY_DIRS ${FMOD_LIBRARY_DIR})
-#    LIST(APPEND DEP_LIBRARIES ${FMOD_LIBRARY_RELEASE})
-#ENDIF(FMOD_FOUND)
 
 #############
 #### OpenSG

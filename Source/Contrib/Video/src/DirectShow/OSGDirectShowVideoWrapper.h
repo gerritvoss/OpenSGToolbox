@@ -123,7 +123,6 @@ class OSG_CONTRIBVIDEO_DLLMAPPING DirectShowVideoWrapper : public DirectShowVide
     virtual Real32 getAudioVolume(void) const;
     virtual void setAudioVolume(Real32 volume);
 
-    virtual Image* getCurrentFrame(void);
     virtual bool updateImage(void);
     /*=========================  PROTECTED  ===============================*/
 
@@ -184,12 +183,12 @@ class OSG_CONTRIBVIDEO_DLLMAPPING DirectShowVideoWrapper : public DirectShowVide
     
     DWORD dwROT;
     
-    bool videoInitialized;
-    int _VideoWidth;
-    int _VideoHeight;
-    long* frameBuffer;
-    long bufferSize;
-    bool reachEndOnce;
+    bool _VideoInitialized;
+    Int32  _VideoWidth;
+    Int32  _VideoHeight;
+    long* _FrameBuffer;
+    long _BufferSize;
+    bool _ReachEndOnce;
 
     void uninitVideo();
 

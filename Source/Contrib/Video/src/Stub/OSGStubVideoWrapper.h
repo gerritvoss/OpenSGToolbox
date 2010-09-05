@@ -79,27 +79,36 @@ class OSG_CONTRIBVIDEO_DLLMAPPING StubVideoWrapper : public StubVideoWrapperBase
 
     /*! \}                                                                 */
     virtual bool open(const std::string& ThePath, Window* const TheWindow);
-
-    virtual bool seek(Int64 SeekPos);
-    virtual bool jump(Int64 Amount);
-    virtual bool setRate(Real32 Rate);
-    virtual Real32 getRate(void) const;
+    virtual bool seek(Real64 SeekPos);
+    virtual bool jump(Real64 Amount);
+    virtual bool setRate(Real64 Rate);
+    virtual Real64 getRate(void) const;
     virtual bool play(void);
     virtual bool pause(void);
     virtual bool unpause(void);
     virtual bool pauseToggle(void);
     virtual bool stop(void);
     virtual bool close(void);
-	
     virtual bool isPlaying(void) const;
-    virtual bool isStopped(void) const;
     virtual bool isPaused(void) const;
     virtual bool isInitialized(void) const;
+    virtual bool isStopped(void) const;
+	
+    virtual bool canSeekForward(void) const;
+    virtual bool canSeekBackward(void) const;
+	virtual Real64 getPosition(void) const;
+	virtual Real64 getDuration(void) const;
+    virtual UInt32 getWidth(void) const;
+    virtual UInt32 getHeight(void) const;
 
-	virtual Int64 getPosition(void) const;
-	virtual Int64 getDuration(void) const;
+    virtual bool hasAudio(void) const;
+    virtual void enableAudio(void);
+    virtual void disableAudio(void);
+    virtual bool isAudioEnabled(void) const;
 
-    virtual Image* getCurrentFrame(void);
+    virtual Real32 getAudioVolume(void) const;
+    virtual void setAudioVolume(Real32 volume);
+
     virtual bool updateImage(void);
     /*=========================  PROTECTED  ===============================*/
 

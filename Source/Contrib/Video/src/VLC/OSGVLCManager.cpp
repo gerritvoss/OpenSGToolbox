@@ -39,7 +39,9 @@ VLCManager *VLCManager::_the = NULL;
 VideoManager *VLCManager::the(void)
 {
     if(_the == NULL)
+    {
         _the = new VLCManager;
+    }
 
     return _the;
 }

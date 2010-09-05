@@ -46,9 +46,10 @@
 #include <OSGConfig.h>
 
 #include "OSGDirectShowVideoWrapper.h"
-#include "dshowutil.h"
+#include "OSGdshowutil.h"
 #include <algorithm>
 #include <cctype>
+#include <boost/filesystem/operations.hpp>
 
 #ifdef OSG_WITH_DIRECT_SHOW
 
@@ -151,9 +152,12 @@ bool DirectShowVideoWrapper::isPlaying(void) const
 		hr = _pGraphBuilder->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
 
 		OAFilterState GraphState;
-		if (SUCCEEDED(mediaControl->GetState(0.1f, &GraphState))) {
+		if (SUCCEEDED(mediaControl->GetState(0.1f, &GraphState)))
+        {
 			return GraphState == State_Running;
-		} else {
+		}
+        else
+        {
 			return false;
 		}
     }
@@ -170,9 +174,12 @@ bool DirectShowVideoWrapper::isStopped(void) const
 		hr = _pGraphBuilder->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
 
 		OAFilterState GraphState;
-		if (SUCCEEDED(mediaControl->GetState(0.1f, &GraphState))) {
+		if (SUCCEEDED(mediaControl->GetState(0.1f, &GraphState)))
+        {
 			return GraphState == State_Stopped;
-		} else {
+		}
+        else
+        {
 			return false;
 		}
     }
@@ -189,9 +196,12 @@ bool DirectShowVideoWrapper::isPaused(void) const
 		hr = _pGraphBuilder->QueryInterface(IID_IMediaControl,(void**)&mediaControl);
 
 		OAFilterState GraphState;
-		if (SUCCEEDED(mediaControl->GetState(0.1f, &GraphState))) {
+		if (SUCCEEDED(mediaControl->GetState(0.1f, &GraphState)))
+        {
 			return GraphState == State_Paused;
-		} else {
+		}
+        else
+        {
 			return false;
 		}
     }
@@ -200,7 +210,7 @@ bool DirectShowVideoWrapper::isPaused(void) const
 
 bool DirectShowVideoWrapper::isInitialized(void) const
 {
-    return videoInitialized;
+    return _VideoInitialized;
 }
 
 bool DirectShowVideoWrapper::canSeekForward(void) const
@@ -513,7 +523,7 @@ bool DirectShowVideoWrapper::stop(void)
         }
 
 		produceStopped();
-        reachEndOnce = false;
+        _ReachEndOnce = false;
         return true;
     }
     return false;
@@ -695,7 +705,7 @@ void DirectShowVideoWrapper::enableAudio(void)
     }
 }
 
- bool DirectShowVideoWrapper::isAudioEnabled(void) const
+bool DirectShowVideoWrapper::isAudioEnabled(void) const
 {
     if(isInitialized() && hasAudio())
     {
@@ -771,66 +781,65 @@ bool DirectShowVideoWrapper::close(void)
 {
     uninitVideo();
 	produceClosed();
-    reachEndOnce = false;
+    _ReachEndOnce = false;
     return true;
 }
 
 bool DirectShowVideoWrapper::updateImage(void)
 {
-    if (videoInitialized)
+    if (_VideoInitialized)
     {
         // Only need to do this once
-        if (!frameBuffer)
+        if (!_FrameBuffer)
         {
             // The Sample Grabber requires an arbitrary buffer
             // That we only know at runtime.
             // (width * height * 3) bytes will not work.
             HRESULT result;
-            result = _pSampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
+            result = _pSampleGrabber->GetCurrentBuffer(&_BufferSize, NULL);
             if(FAILED(result))
             {
                 return false;
             }
 
-            if(bufferSize<=0)
+            if(_BufferSize<=0)
             {
-                SWARNING << "bufferSize<=0" << std::endl;
+                SWARNING << "_BufferSize<=0" << std::endl;
                 return false;
             }
-            if(bufferSize>10000000)
+            if(_BufferSize>10000000)
             {
-                SWARNING << "bufferSize>10000000" << std::endl;
+                SWARNING << "_BufferSize>10000000" << std::endl;
                 return false;
             }
-            frameBuffer = new long[bufferSize];
+            _FrameBuffer = new long[_BufferSize];
         }
         
-        _pSampleGrabber->GetCurrentBuffer(&bufferSize, (long*)frameBuffer);
+        _pSampleGrabber->GetCurrentBuffer(&_BufferSize, (long*)_FrameBuffer);
     
-		if(_VideoImage == NullFC ||
-		_VideoImage->getWidth() != _VideoWidth ||
-		_VideoImage->getHeight() != _VideoHeight)
+		if(getImage() == NULL ||
+		getImage()->getWidth() != _VideoWidth ||
+		getImage()->getHeight() != _VideoHeight)
 		{
-			_VideoImage = Image::create();
-			addRefCP(_VideoImage);
+            ImageUnrecPtr NewImage(Image::create());
+			setImage(NewImage);
             try
             {
-			    _VideoImage->set(Image::OSG_BGR_PF,_VideoWidth,_VideoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
+			    getImage()->set(Image::OSG_BGR_PF,_VideoWidth,_VideoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(_FrameBuffer),Image::OSG_UINT8_IMAGEDATA);
             }
             catch(...)
             {
-			    subRefCP(_VideoImage);
-                _VideoImage= NullFC;
+			    setImage(NULL);
                 return false;
             }
 		}
 		else
 		{
-            _VideoImage->setData(reinterpret_cast<const UInt8*>(frameBuffer));		
+            getImage()->setData(reinterpret_cast<const UInt8*>(_FrameBuffer));		
 		}
-        if(!reachEndOnce && getPosition() == getDuration())
+        if(!_ReachEndOnce && getPosition() == getDuration())
         {
-            reachEndOnce = true;
+            _ReachEndOnce = true;
             produceEnded();
         }
 
@@ -840,53 +849,124 @@ bool DirectShowVideoWrapper::updateImage(void)
     return false;
 }
 
-ImagePtr DirectShowVideoWrapper::getCurrentFrame(void)
+void DirectShowVideoWrapper::uninitVideo()
 {
-    if (videoInitialized) {
-        // Only need to do this once
-        if (!frameBuffer) {
-            // The Sample Grabber requires an arbitrary buffer
-            // That we only know at runtime.
-            // (width * height * 3) bytes will not work.
-            _pSampleGrabber->GetCurrentBuffer(&bufferSize, NULL);
-            if(bufferSize<=0)
-            {
-                return NullFC;
-            }
-            frameBuffer = new long[bufferSize];
+    _VideoInitialized = false;
 
-        }
-        
-        _pSampleGrabber->GetCurrentBuffer(&bufferSize, (long*)frameBuffer);
-    
-        ImagePtr TheImage = Image::create();
-        TheImage->set(Image::OSG_BGR_PF,_VideoWidth,_VideoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
 
-        return TheImage;
-    }
-
-    return NullFC;
-}
-
-void DirectShowVideoWrapper::uninitVideo() {
-    videoInitialized = false;
-
+    //Stop the video if need be
     HRESULT hr;
-    if (videoInitialized) {
+    if (_VideoInitialized &&
+        _pGraphBuilder)
+    {
         //_pSampleGrabberFilter->Release();
         IMediaControl* mediaControl;
         hr = _pGraphBuilder->QueryInterface(IID_IMediaControl,
-    (void**)&mediaControl);
+                                            (void**)&mediaControl);
         mediaControl->Stop();
-        //filterGraph->Release();
-        //graphBuilder->Release();
     }
 
-    if(frameBuffer != NULL)
+    //Clear all reference counted pointers
+    if(_pGraphBuilder)
     {
-        delete[] frameBuffer;
+        _pGraphBuilder.Release();
+        _pGraphBuilder.Detach();
     }
-    frameBuffer = NULL;
+    if(_pGraphCaptureBuilder)
+    {
+        _pGraphCaptureBuilder.Release();
+        _pGraphCaptureBuilder.Detach();
+    }
+    if(_pMediaControl)
+    {
+        _pMediaControl.Release();
+        _pMediaControl.Detach();
+    }
+    if(_pMediaPosition)
+    {
+        _pMediaPosition.Release();
+        _pMediaPosition.Detach();
+    }
+    if(_pMediaEvent)
+    {
+        _pMediaEvent.Release();
+        _pMediaEvent.Detach();
+    }
+    if(g_IFileSource)
+    {
+        g_IFileSource.Release();
+        g_IFileSource.Detach();
+    }
+    if(_pSourceFilter)
+    {
+        _pSourceFilter.Release();
+        _pSourceFilter.Detach();
+    }
+    if(_pSourceAudioPin)
+    {
+        _pSourceAudioPin.Release();
+        _pSourceAudioPin.Detach();
+    }
+    if(_pSourceVideoPin)
+    {
+        _pSourceVideoPin.Release();
+        _pSourceVideoPin.Detach();
+    }
+    if(_pDecoderFilter)
+    {
+        _pDecoderFilter.Release();
+        _pDecoderFilter.Detach();
+    }
+    if(_pVideoRenderer)
+    {
+        _pVideoRenderer.Release();
+        _pVideoRenderer.Detach();
+    }
+    if(_DecoderOutputPin)
+    {
+        _DecoderOutputPin.Release();
+        _DecoderOutputPin.Detach();
+    }
+    if(_pNullAudioFilter)
+    {
+        _pNullAudioFilter.Release();
+        _pNullAudioFilter.Detach();
+    }
+    if(_pAudioRenderer)
+    {
+        _pAudioRenderer.Release();
+        _pAudioRenderer.Detach();
+    }
+    if(_pSampleGrabberFilter)
+    {
+        _pSampleGrabberFilter.Release();
+        _pSampleGrabberFilter.Detach();
+    }
+    if(_pCSCFilter)
+    {
+        _pCSCFilter.Release();
+        _pCSCFilter.Detach();
+    }
+    if(_SampleGrabberIntputPin)
+    {
+        _SampleGrabberIntputPin.Release();
+        _SampleGrabberIntputPin.Detach();
+    }
+    if(_SampleGrabberOutputPin)
+    {
+        _SampleGrabberOutputPin.Release();
+        _SampleGrabberOutputPin.Detach();
+    }
+
+    //deallocate framebuffer
+    if(_FrameBuffer != NULL)
+    {
+        delete[] _FrameBuffer;
+        _FrameBuffer = NULL;
+    }
+
+    //Set image to NULL
+    setImage(NULL);
 }
 
 HRESULT DirectShowVideoWrapper::ConnectWMVFile(const std::string& ThePath)
@@ -992,22 +1072,28 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
 
     // Create the Sample Grabber which we will use
     // To take each frame for texture generation
-    hr = _pCSCFilter.CoCreateInstance(CLSID_Colour, NULL, CLSCTX_INPROC_SERVER);
-    if (FAILED(hr))
+    if(_pCSCFilter == NULL)
     {
-        AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
-        SWARNING << "Could not create Color Space Converter Filter, error: " << szErr << std::endl;
-        return hr;
+        hr = _pCSCFilter.CoCreateInstance(CLSID_Colour, NULL, CLSCTX_INPROC_SERVER);
+        if (FAILED(hr))
+        {
+            AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+            SWARNING << "Could not create Color Space Converter Filter, error: " << szErr << std::endl;
+            return hr;
+        }
     }
 
     // Create the Sample Grabber which we will use
     // To take each frame for texture generation
-    hr = _pSampleGrabberFilter.CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER);
-    if (FAILED(hr))
+    if(_pSampleGrabberFilter == NULL)
     {
-        AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
-        SWARNING << "Could not create SampleGrabberFilter, error: " << szErr << std::endl;
-        return hr;
+        hr = _pSampleGrabberFilter.CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER);
+        if (FAILED(hr))
+        {
+            AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+            SWARNING << "Could not create SampleGrabberFilter, error: " << szErr << std::endl;
+            return hr;
+        }
     }
 
     _pSampleGrabberFilter->QueryInterface(IID_ISampleGrabber, reinterpret_cast<void**>(&_pSampleGrabber));
@@ -1021,7 +1107,7 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
     //desiredType.subtype = MEDIASUBTYPE_RGB565;
     desiredType.subtype = MEDIASUBTYPE_RGB24;
     //desiredType.subtype = GUID_NULL;
-    desiredType.formattype = GUID_NULL;
+    desiredType.formattype = GUID();
     //desiredType.formattype = FORMAT_VideoInfo;
 
     _pSampleGrabber->SetMediaType(&desiredType);
@@ -1032,12 +1118,15 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
     // But it allows the Sample Grabber to run
     // And it will keep proper playback timing
     // Unless specified otherwise.
-    hr = _pVideoRenderer.CoCreateInstance(CLSID_NullRenderer,   NULL, CLSCTX_INPROC_SERVER);
-    if (FAILED(hr))
+    if(_pVideoRenderer == NULL)
     {
-        AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
-        SWARNING << "Unable to create Null Renderer, error: " << szErr << std::endl;
-        return hr;
+        hr = _pVideoRenderer.CoCreateInstance(CLSID_NullRenderer,   NULL, CLSCTX_INPROC_SERVER);
+        if (FAILED(hr))
+        {
+            AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+            SWARNING << "Unable to create Null Renderer, error: " << szErr << std::endl;
+            return hr;
+        }
     }
     
     //Get Input pins to VideoRenderer
@@ -1228,7 +1317,8 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
         return hr;
     }
 
-    /*if (!mediaConnected) {
+    /*if (!mediaConnected)
+    {
         uninitVideo();
         return false;
     }*/
@@ -1241,8 +1331,15 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
 //                will initialize the appropriate graph.  WMV (Requires a 
 //                different source filter to operate properly)
 //-----------------------------------------------------------------------------
-bool DirectShowVideoWrapper::open(const std::string& ThePath, WindowPtr window)
+bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const window)
 {
+    //Check that the file exists
+    if(!boost::filesystem::exists(BoostPath(ThePath)))
+    {
+        SWARNING << "Could not open file: " << ThePath << ", because no such file exists." << std::endl;
+        return false;
+    }
+
     // Determine the file to load based on DirectX Media path (from SDK)
     // Use a helper function included in DXUtils.cpp
     std::vector<std::string> wmv_ext;
@@ -1306,21 +1403,27 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, WindowPtr window)
     TCHAR szErr[MAX_ERROR_TEXT_LEN];
 
     // Create the filter graph
-    hr = _pGraphBuilder.CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER);
-    if (FAILED(hr))
+    if(_pGraphBuilder == NULL)
     {
-        AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
-        SWARNING << "Unable to Create FilterGraph object, error: " << szErr << std::endl;
-        return hr;
+        hr = _pGraphBuilder.CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER);
+        if (FAILED(hr))
+        {
+            AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+            SWARNING << "Unable to Create FilterGraph object, error: " << szErr << std::endl;
+            return hr;
+        }
     }
 
     // Create the capture filter graph
-    hr = _pGraphCaptureBuilder.CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL, CLSCTX_INPROC_SERVER);
-    if (FAILED(hr))
+    if(_pGraphCaptureBuilder == NULL)
     {
-        AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
-        SWARNING << "Unable to Create CaptureFilterGraph object, error: " << szErr << std::endl;
-        return hr;
+        hr = _pGraphCaptureBuilder.CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL, CLSCTX_INPROC_SERVER);
+        if (FAILED(hr))
+        {
+            AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+            SWARNING << "Unable to Create CaptureFilterGraph object, error: " << szErr << std::endl;
+            return hr;
+        }
     }
 
     hr = _pGraphCaptureBuilder->SetFiltergraph(_pGraphBuilder);
@@ -1374,12 +1477,15 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, WindowPtr window)
     }
 
     // A Null Audio Renderer
-    hr = _pNullAudioFilter.CoCreateInstance(CLSID_NullRenderer,   NULL, CLSCTX_INPROC_SERVER);
-    if (FAILED(hr))
+    if(_pNullAudioFilter == NULL)
     {
-        AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
-        SWARNING << "Unable to create Null Audio Renderer, error: " << szErr << std::endl;
-        return hr;
+        hr = _pNullAudioFilter.CoCreateInstance(CLSID_NullRenderer,   NULL, CLSCTX_INPROC_SERVER);
+        if (FAILED(hr))
+        {
+            AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+            SWARNING << "Unable to create Null Audio Renderer, error: " << szErr << std::endl;
+            return hr;
+        }
     }
 
     //The Audio Renderer
@@ -1400,7 +1506,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, WindowPtr window)
     }
 
 
-	videoInitialized = true;
+	_VideoInitialized = true;
 
     SLOG << "Successfully created filter graph for file: " << ThePath << std::endl;
 	produceOpened();
@@ -1482,9 +1588,9 @@ UInt32 DirectShowVideoWrapper::getHeight(void) const
 
 DirectShowVideoWrapper::DirectShowVideoWrapper(void) :
     Inherited(),
-        videoInitialized(false),
-        frameBuffer(NULL),
-        reachEndOnce(false)
+        _VideoInitialized(false),
+        _FrameBuffer(NULL),
+        _ReachEndOnce(false)
 {
     HRESULT hr;
     hr = CoInitialize(NULL);
@@ -1497,9 +1603,9 @@ DirectShowVideoWrapper::DirectShowVideoWrapper(void) :
 
 DirectShowVideoWrapper::DirectShowVideoWrapper(const DirectShowVideoWrapper &source) :
     Inherited(source),
-        videoInitialized(false),
-        frameBuffer(NULL),
-        reachEndOnce(false)
+        _VideoInitialized(false),
+        _FrameBuffer(NULL),
+        _ReachEndOnce(false)
 {
     HRESULT hr;
     hr = CoInitialize(NULL);
