@@ -430,6 +430,13 @@ bool Component::setupClipping(Graphics* const Graphics) const
         glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
         glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
     }
+    else
+    {
+        if(glIsEnabled(GL_CLIP_PLANE0)) { glDisable(GL_CLIP_PLANE0); }
+        if(glIsEnabled(GL_CLIP_PLANE1)) { glDisable(GL_CLIP_PLANE1); }
+        if(glIsEnabled(GL_CLIP_PLANE2)) { glDisable(GL_CLIP_PLANE2); }
+        if(glIsEnabled(GL_CLIP_PLANE3)) { glDisable(GL_CLIP_PLANE3); }
+    }
     return true;
 }
 
