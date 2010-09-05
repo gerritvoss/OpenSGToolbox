@@ -110,7 +110,7 @@ bool FieldEditorComponent::attachField(FieldContainer* fc, UInt32 fieldId, UInt3
     GetFieldHandlePtr TheFieldHandle = fc->getField(fieldId);
     if(!TheFieldHandle.get())
     {
-        SWARNING << "Cannot attach to field " << TheFieldHandle->getDescription()->getName() 
+        SWARNING << "Cannot attach to field " << Desc->getCName() 
                  << ", on a FieldContainer with type " << fc->getType().getCName()
                  << " because no GetFieldHandle is defined for that field type." << std::endl;
         return false;
