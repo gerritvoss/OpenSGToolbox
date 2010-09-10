@@ -218,6 +218,38 @@ void TransformAnimatorBase::setZScaleSequence(KeyframeNumberSequenceReal32 * con
     _sfZScaleSequence.setValue(value);
 }
 
+//! Get the value of the TransformAnimator::_sfTranslationSequence field.
+inline
+KeyframeVectorSequenceVec3f * TransformAnimatorBase::getTranslationSequence(void) const
+{
+    return _sfTranslationSequence.getValue();
+}
+
+//! Set the value of the TransformAnimator::_sfTranslationSequence field.
+inline
+void TransformAnimatorBase::setTranslationSequence(KeyframeVectorSequenceVec3f * const value)
+{
+    editSField(TranslationSequenceFieldMask);
+
+    _sfTranslationSequence.setValue(value);
+}
+
+//! Get the value of the TransformAnimator::_sfScaleSequence field.
+inline
+KeyframeVectorSequenceVec3f * TransformAnimatorBase::getScaleSequence(void) const
+{
+    return _sfScaleSequence.getValue();
+}
+
+//! Set the value of the TransformAnimator::_sfScaleSequence field.
+inline
+void TransformAnimatorBase::setScaleSequence(KeyframeVectorSequenceVec3f * const value)
+{
+    editSField(ScaleSequenceFieldMask);
+
+    _sfScaleSequence.setValue(value);
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -255,6 +287,12 @@ void TransformAnimatorBase::execSync (      TransformAnimatorBase *pFrom,
 
     if(FieldBits::NoField != (ZScaleSequenceFieldMask & whichField))
         _sfZScaleSequence.syncWith(pFrom->_sfZScaleSequence);
+
+    if(FieldBits::NoField != (TranslationSequenceFieldMask & whichField))
+        _sfTranslationSequence.syncWith(pFrom->_sfTranslationSequence);
+
+    if(FieldBits::NoField != (ScaleSequenceFieldMask & whichField))
+        _sfScaleSequence.syncWith(pFrom->_sfScaleSequence);
 }
 #endif
 

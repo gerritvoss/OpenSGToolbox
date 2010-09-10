@@ -112,4 +112,26 @@ Keyframe Animator Class.
 		typeHeader="OSGKeyframeNumberSequenceTmpl.h"
 	>
 	</Field>
+	<Field
+		name="TranslationSequence"
+		type="KeyframeVectorSequenceVec3f"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		fieldHeader="OSGKeyframeNumberSequenceTmplFields.h"
+		typeHeader="OSGKeyframeVectorSequenceTmpl.h"
+	>
+	</Field>
+	<Field
+		name="ScaleSequence"
+		type="KeyframeVectorSequenceVec3f"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		fieldHeader="OSGKeyframeVectorSequenceTmplFields.h"
+		typeHeader="OSGKeyframeVectorSequenceTmpl.h"
+	>
+	</Field>
 </FieldContainer>

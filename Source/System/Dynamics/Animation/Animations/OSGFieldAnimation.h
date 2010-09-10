@@ -133,6 +133,8 @@ typedef FieldAnimation *FieldAnimationP;
 
 OSG_END_NAMESPACE
 
+#include "OSGAnimator.h"
+
 #include "OSGFieldAnimationBase.inl"
 #include "OSGFieldAnimation.inl"
 

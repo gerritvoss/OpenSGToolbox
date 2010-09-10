@@ -66,6 +66,7 @@
 #include "OSGAnimator.h" // Parent
 
 #include "OSGKeyframeNumberSequenceTmplFields.h" // XTranslationSequence type
+#include "OSGKeyframeVectorSequenceTmplFields.h" // ScaleSequence type
 
 #include "OSGTransformAnimatorFields.h"
 
@@ -102,7 +103,9 @@ class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
         XScaleSequenceFieldId = ZRotationSequenceFieldId + 1,
         YScaleSequenceFieldId = XScaleSequenceFieldId + 1,
         ZScaleSequenceFieldId = YScaleSequenceFieldId + 1,
-        NextFieldId = ZScaleSequenceFieldId + 1
+        TranslationSequenceFieldId = ZScaleSequenceFieldId + 1,
+        ScaleSequenceFieldId = TranslationSequenceFieldId + 1,
+        NextFieldId = ScaleSequenceFieldId + 1
     };
 
     static const OSG::BitVector XTranslationSequenceFieldMask =
@@ -123,6 +126,10 @@ class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
         (TypeTraits<BitVector>::One << YScaleSequenceFieldId);
     static const OSG::BitVector ZScaleSequenceFieldMask =
         (TypeTraits<BitVector>::One << ZScaleSequenceFieldId);
+    static const OSG::BitVector TranslationSequenceFieldMask =
+        (TypeTraits<BitVector>::One << TranslationSequenceFieldId);
+    static const OSG::BitVector ScaleSequenceFieldMask =
+        (TypeTraits<BitVector>::One << ScaleSequenceFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -135,6 +142,8 @@ class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
     typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFXScaleSequenceType;
     typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFYScaleSequenceType;
     typedef SFUnrecKeyframeNumberSequenceReal32Ptr SFZScaleSequenceType;
+    typedef SFUnrecKeyframeVectorSequenceVec3fPtr SFTranslationSequenceType;
+    typedef SFUnrecKeyframeVectorSequenceVec3fPtr SFScaleSequenceType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -177,6 +186,10 @@ class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
                   SFUnrecKeyframeNumberSequenceReal32Ptr *editSFYScaleSequence (void);
             const SFUnrecKeyframeNumberSequenceReal32Ptr *getSFZScaleSequence (void) const;
                   SFUnrecKeyframeNumberSequenceReal32Ptr *editSFZScaleSequence (void);
+            const SFUnrecKeyframeVectorSequenceVec3fPtr *getSFTranslationSequence(void) const;
+                  SFUnrecKeyframeVectorSequenceVec3fPtr *editSFTranslationSequence(void);
+            const SFUnrecKeyframeVectorSequenceVec3fPtr *getSFScaleSequence  (void) const;
+                  SFUnrecKeyframeVectorSequenceVec3fPtr *editSFScaleSequence  (void);
 
 
                   KeyframeNumberSequenceReal32 * getXTranslationSequence(void) const;
@@ -197,6 +210,10 @@ class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
 
                   KeyframeNumberSequenceReal32 * getZScaleSequence (void) const;
 
+                  KeyframeVectorSequenceVec3f * getTranslationSequence(void) const;
+
+                  KeyframeVectorSequenceVec3f * getScaleSequence  (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -211,6 +228,8 @@ class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
             void setXScaleSequence (KeyframeNumberSequenceReal32 * const value);
             void setYScaleSequence (KeyframeNumberSequenceReal32 * const value);
             void setZScaleSequence (KeyframeNumberSequenceReal32 * const value);
+            void setTranslationSequence(KeyframeVectorSequenceVec3f * const value);
+            void setScaleSequence  (KeyframeVectorSequenceVec3f * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -284,6 +303,8 @@ class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
     SFUnrecKeyframeNumberSequenceReal32Ptr _sfXScaleSequence;
     SFUnrecKeyframeNumberSequenceReal32Ptr _sfYScaleSequence;
     SFUnrecKeyframeNumberSequenceReal32Ptr _sfZScaleSequence;
+    SFUnrecKeyframeVectorSequenceVec3fPtr _sfTranslationSequence;
+    SFUnrecKeyframeVectorSequenceVec3fPtr _sfScaleSequence;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -330,6 +351,10 @@ class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
     EditFieldHandlePtr editHandleYScaleSequence (void);
     GetFieldHandlePtr  getHandleZScaleSequence  (void) const;
     EditFieldHandlePtr editHandleZScaleSequence (void);
+    GetFieldHandlePtr  getHandleTranslationSequence (void) const;
+    EditFieldHandlePtr editHandleTranslationSequence(void);
+    GetFieldHandlePtr  getHandleScaleSequence   (void) const;
+    EditFieldHandlePtr editHandleScaleSequence  (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
