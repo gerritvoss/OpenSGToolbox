@@ -159,7 +159,8 @@ boost::signals2::connection PhysicsSpace::connectCollision(const CollisionEventT
 
 void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
 {
-    getParentHandler()->getStatistics()->getElem(PhysicsHandler::statNCollisionTests)->inc();
+    StatRealElem *NCollisionTestsStatElem = StatCollector::getGlobalElem(PhysicsHandler::statNCollisionTests);
+    if(NCollisionTestsStatElem) { NCollisionTestsStatElem->add(1.0f); }
 
     if (dGeomIsSpace (o1) || dGeomIsSpace (o2))
     {
@@ -178,7 +179,8 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
         Int32 numContacts = dCollide(o1, o2, _ContactJoints.size(), 
             &(_ContactJoints[0].geom), sizeof(dContact));
     
-        getParentHandler()->getStatistics()->getElem(PhysicsHandler::statNCollisions)->add(numContacts);
+        StatRealElem *NCollisionsStatElem = StatCollector::getGlobalElem(PhysicsHandler::statNCollisions);
+        if(NCollisionsStatElem) { NCollisionsStatElem->add(static_cast<Real32>(numContacts)); }
 
         if(numContacts>0)
         {

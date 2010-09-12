@@ -50,6 +50,8 @@
 #ifdef OSG_WITH_FMOD
 #include "OSGFModSound.h"
 
+#include "OSGStatCollector.h"
+
 //fmod include files
 #include "fmod_errors.h"
 
@@ -223,6 +225,17 @@ void FModSoundManager::update(const Time& ElapsedTime)
 	//call FMOD's update
 	result = _FModSystem->update();
     FMOD_ERRCHECK(result,"FModSoundManager: update()");
+
+    //Update the number of channels statistic
+    StatIntElem *NChannelsStatElem = StatCollector::getGlobalElem(SoundManager::statNChannels);
+    if(NChannelsStatElem)
+    {
+        int channels;
+        _FModSystem->getChannelsPlaying(&channels);
+        FMOD_ERRCHECK(result,"FModSoundManager: getChannelsPlaying()");
+        NChannelsStatElem->set(channels);
+    }
+
 }
 
 void FModSoundManager::setCamera(CameraUnrecPtr TheCamera)

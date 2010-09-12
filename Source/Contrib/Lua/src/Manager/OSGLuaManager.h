@@ -54,6 +54,7 @@
 #include "OSGEventDescription.h"
 #include "OSGActivity.h"
 #include "OSGPathType.h"
+#include "OSGStatElemTypes.h"
 
 #include <boost/function.hpp>
 
@@ -102,6 +103,7 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
 
     int runScript(const std::string& Script);
     int runScript(const BoostPath& ScriptPath);
+    int runPushedFunction(UInt32 NumArgs, UInt32 NumReturns);
 
     static void report_errors(lua_State *L, int status);
 
@@ -145,6 +147,8 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
 
     lua_State *getLuaState(void);
     void checkError(int Status);
+
+    static StatElemDesc<StatTimeElem   > statScriptsRunTime;
 
 #ifdef OSG_WITH_LUA_DEBUGGER
 

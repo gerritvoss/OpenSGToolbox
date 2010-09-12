@@ -86,16 +86,12 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     void detachUpdateProducer(void);
 
     static StatElemDesc<StatTimeElem   > statCollisionTime;
-    static StatElemDesc<StatTimeElem   > statPerStepCollisionTime;
     static StatElemDesc<StatTimeElem   > statSimulationTime;
-    static StatElemDesc<StatTimeElem   > statPerStepSimulationTime;
+    static StatElemDesc<StatTimeElem   > statTransformUpdateTime;
     static StatElemDesc<StatTimeElem   > statPhysicsTime;
     static StatElemDesc<StatIntElem    > statNPhysicsSteps;
-    static StatElemDesc<StatIntElem    > statNCollisionTests;
-    static StatElemDesc<StatIntElem    > statNCollisions;
-
-    StatCollector* getStatistics(void);
-    void setStatistics(StatCollector *stat);
+    static StatElemDesc<StatRealElem   > statNCollisionTests;
+    static StatElemDesc<StatRealElem   > statNCollisions;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -128,8 +124,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase
     void onDestroy();
     void updateWorld(Node* const node);
 
-    StatCollector* _statistics;
-    bool _ownStat;
     Time _TimeSinceLast;
     void attachedUpdate(EventDetails* const details);
     boost::signals2::connection _UpdateEventConnection;

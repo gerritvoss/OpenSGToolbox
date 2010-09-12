@@ -124,6 +124,7 @@ typedef MultiParticleSystemAffector *MultiParticleSystemAffectorP;
 
 OSG_END_NAMESPACE
 
+#include "OSGParticleSystem.h"
 #include "OSGMultiParticleSystemAffectorBase.inl"
 #include "OSGMultiParticleSystemAffector.inl"
 

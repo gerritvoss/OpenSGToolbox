@@ -195,7 +195,10 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystem : public ParticleSyste
     void detachUpdateProducer(void);
 
     static StatElemDesc<StatIntElem    > statNParticles;
-    static StatElemDesc<StatTimeElem    > statParticleSystemUpdate;
+    static StatElemDesc<StatIntElem    > statNParticlesCreated;
+    static StatElemDesc<StatIntElem    > statNParticlesKilled;
+    static StatElemDesc<StatTimeElem    > statParticleUpdateTime;
+    static StatElemDesc<StatTimeElem    > statParticleSortTime;
 
 
     std::vector<UInt32> intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort = false, NodeRefPtr Beacon = NULL) const;

@@ -109,9 +109,22 @@ void ParticleSystemCore::drawPrimitives (DrawEnv *pEnv)
     //If I have a Drawer tell it to draw the particles
     if(getDrawer() != NULL && getSystem() != NULL)
     {
+        //If the Sort Time statistic is being tracked then start the timer
+        StatTimeElem *SortTimeStatElem = StatCollector::getGlobalElem(ParticleSystem::statParticleSortTime);
+        if(SortTimeStatElem)
+        {
+            SortTimeStatElem->start();
+        }
+
         //Sorting particles
         checkAndInitializeSort();
 		sortParticles(pEnv);
+
+        //If the Sort Time statistic is being tracked then stop the timer
+        if(SortTimeStatElem)
+        {
+            SortTimeStatElem->stop();
+        }
 
 		getDrawer()->draw(pEnv, getSystem(), *getMFSort());
     }
@@ -165,6 +178,13 @@ void ParticleSystemCore::fill(DrawableStatsAttachment *pStat)
                "No System Attached.\n"));
 
         return;
+    }
+
+    //Fill the number of Particles
+    StatIntElem *statElem = StatCollector::getGlobalElem(ParticleSystem::statNParticles);
+    if(statElem)
+    {
+        statElem->add(getSystem()->getNumParticles());
     }
 
     getDrawer()->fill(pStat, getSystem(), *getMFSort());

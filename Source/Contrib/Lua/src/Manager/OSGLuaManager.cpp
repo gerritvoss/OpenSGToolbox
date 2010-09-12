@@ -51,6 +51,7 @@
 #include "OSGBaseInitFunctions.h"
 #include "OSGLog.h"
 #include "OSGEventDetails.h"
+#include "OSGStatCollector.h"
 
 #include "OSGLuaManager.h"
 #include <boost/bind.hpp>
@@ -105,6 +106,9 @@ EventProducerType LuaManager::_producerType(
                                             InitEventProducerFunctor(),
                                             _eventDesc,
                                             sizeof(_eventDesc));
+
+StatElemDesc<StatTimeElem> LuaManager::statScriptsRunTime("ScriptsRunTime", 
+                                                         "time to run the lua scripts");
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -252,6 +256,10 @@ void LuaManager::FunctionHook(lua_State *l, lua_Debug *ar)
 
 int LuaManager::runScript(const std::string& Script)
 {
+    //Start the  scripts run time statistic
+    StatTimeElem *ScriptsRunTimeStatElem = StatCollector::getGlobalElem(statScriptsRunTime);
+    if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->start(); }
+
     //If Stack Trace is enabled
     if(_EnableStackTrace)
     {
@@ -269,6 +277,7 @@ int LuaManager::runScript(const std::string& Script)
     if(s != 0)
     {
         //Error loading the string
+        if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->stop(); }
         return s;
     }
 
@@ -276,6 +285,7 @@ int LuaManager::runScript(const std::string& Script)
     s = lua_pcall(_State, 0, LUA_MULTRET, 0);
     checkError(s);
 
+    if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->stop(); }
     return s;
 }
 
@@ -283,6 +293,10 @@ int LuaManager::runScript(const BoostPath& ScriptPath)
 {
     if(boost::filesystem::exists(ScriptPath))
     {
+        //Start the  scripts run time statistic
+        StatTimeElem *ScriptsRunTimeStatElem = StatCollector::getGlobalElem(statScriptsRunTime);
+        if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->start(); }
+
         //If Stack Trace is enabled
         if(_EnableStackTrace)
         {
@@ -300,6 +314,7 @@ int LuaManager::runScript(const BoostPath& ScriptPath)
         if(s != 0)
         {
             //Error loading the string
+            if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->stop(); }
             return s;
         }
 
@@ -307,6 +322,7 @@ int LuaManager::runScript(const BoostPath& ScriptPath)
         s = lua_pcall(_State, 0, LUA_MULTRET, 0);
         checkError(s);
 
+        if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->stop(); }
         return s;
     }
     else
@@ -314,6 +330,31 @@ int LuaManager::runScript(const BoostPath& ScriptPath)
         SWARNING << "LuaManager::runScript(): File by path: " << ScriptPath.string() << ", does not exist." << std::endl;
         return 0;
     }
+}
+
+int LuaManager::runPushedFunction(UInt32 NumArgs, UInt32 NumReturns)
+{
+    //Start the  scripts run time statistic
+    StatTimeElem *ScriptsRunTimeStatElem = StatCollector::getGlobalElem(statScriptsRunTime);
+    if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->start(); }
+
+    //If Stack Trace is enabled
+    if(_EnableStackTrace)
+    {
+        _LuaStack.clear();
+        lua_sethook(_State,&LuaManager::FunctionHook,LUA_MASKCALL | LUA_MASKRET,0);
+    }
+    else
+    {
+        lua_sethook(_State,NULL,LUA_MASKCALL | LUA_MASKRET,0);
+    }
+
+    int s = lua_pcall(_State, NumArgs, NumReturns, 0);
+    checkError(s);
+
+    //Stop the  scripts run time statistic
+    if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->stop(); }
+    return s;
 }
 
 void LuaManager::checkError(int Status)

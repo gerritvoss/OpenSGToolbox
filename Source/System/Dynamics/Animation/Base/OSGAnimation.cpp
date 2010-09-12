@@ -47,6 +47,7 @@
 
 #include "OSGAnimation.h"
 #include "OSGUpdateEventDetails.h"
+#include "OSGStatCollector.h"
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
@@ -59,6 +60,13 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
+
+StatElemDesc<StatTimeElem> Animation::statAnimUpdateTime("AnimUpdateTime", 
+                                                         "time to update all animations");
+
+StatElemDesc<StatIntElem> Animation::statNAnimations("NAnimations", 
+                                                     "number of animations updated");
+
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -146,6 +154,14 @@ bool Animation::update(const Time& ElapsedTime)
         return false;
     }
 
+    //Increment the updated animations statistic
+    StatIntElem *NAnimationsStatElem = StatCollector::getGlobalElem(statNAnimations);
+    if(NAnimationsStatElem) { NAnimationsStatElem->inc(); }
+
+    //Start the  animation update time statistic
+    StatTimeElem *AnimUpdateTimeStatElem = StatCollector::getGlobalElem(statAnimUpdateTime);
+    if(AnimUpdateTimeStatElem) { AnimUpdateTimeStatElem->start(); }
+
     _CurrentTime += getScale()*ElapsedTime;
     UInt32 PreUpdateCycleCount(getCycles());
 	if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
@@ -188,6 +204,10 @@ bool Animation::update(const Time& ElapsedTime)
 	}
 
     _PrevTime = _CurrentTime;
+
+    //Stp[ the  animation update time statistic
+    if(AnimUpdateTimeStatElem) { AnimUpdateTimeStatElem->stop(); }
+
 	//Return true if the animation has completed its number of cycles, false otherwise
 	return (getCycling() > 0 && getCycles() >= getCycling());
 }

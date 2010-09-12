@@ -232,12 +232,12 @@ void LuaActivity::eventProduced(EventDetails* const details, UInt32 producedEven
         lua_pushnumber(LuaState,producedEventId);             //Argument 2: the ProducedEvent ID
 
         //Execute the Function
-        //                                                 |------2 arguments to function
-        //                                                 |
-        //                                                 |  |---0 arguments returned
-        //                                                 |  |
-        //                                                 V  V
-        LuaManager::the()->checkError( lua_pcall(LuaState, 2, 0, 0) );
+        //                                   |------2 arguments to function
+        //                                   |
+        //                                   |  |---0 arguments returned
+        //                                   |  |
+        //                                   V  V
+        LuaManager::the()->runPushedFunction(2, 0);
     }
 }
 

@@ -73,6 +73,9 @@ A SoundManager Interface.
 
 SoundManager *SoundManager::_the = NULL;
 
+StatElemDesc<StatIntElem> SoundManager::statNChannels("NChannels", 
+                                                      "number of sound channels");
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/

@@ -46,6 +46,7 @@
 
 //#include "OSGAnimationAdvancer.h"
 #include "OSGAnimationEventDetails.h"
+#include "OSGStatElemTypes.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -96,6 +97,9 @@ class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
 
     void attachUpdateProducer(ReflexiveContainer* const producer);
     void detachUpdateProducer(void);
+
+    static StatElemDesc<StatTimeElem   > statAnimUpdateTime;
+    static StatElemDesc<StatIntElem    > statNAnimations;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

@@ -46,6 +46,7 @@
 #include "OSGCamera.h"
 
 #include "OSGSound.h"
+#include "OSGStatElemTypes.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -70,6 +71,8 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundManager
 
     void attachUpdateProducer(ReflexiveContainer* const producer);
     void detachUpdateProducer(void);
+
+    static StatElemDesc<StatIntElem    > statNChannels;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

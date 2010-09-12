@@ -152,7 +152,7 @@ void FieldAnimation::internalUpdate(Real32 t, const Real32 prev_t)
                                TheField,
                                getIndex()) )
     {
-        commitChanges();
+        //commitChanges();
     }
 }
 

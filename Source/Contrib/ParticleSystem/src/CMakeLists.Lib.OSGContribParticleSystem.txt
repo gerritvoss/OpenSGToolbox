@@ -37,7 +37,7 @@ OSG_STORE_PROJECT_DEPENDENCIES()
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}")
 
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/Events")
-OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/MultipleParticleSystemAffectors")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/MultiParticleSystemAffectors")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/ParticleSystemAffectors")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/ParticleSystemDrawers")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/ParticleSystemDrawers/DrawerFunctions")
