@@ -37,7 +37,7 @@ OSG_BEGIN_NAMESPACE
 
 DirectShowManager *DirectShowManager::_the = NULL;
 
-VideoManager *DirectShowManager::the(void)
+DirectShowManager *DirectShowManager::the(void)
 {
     if(_the == NULL)
     {
@@ -53,7 +53,7 @@ VideoWrapperTransitPtr DirectShowManager::createVideoWrapper(void) const
 	return VideoWrapperTransitPtr(Video.get());
 }
 
-void DirectShowManager::init(int   argc, char *argv[])
+bool DirectShowManager::init(int   argc, char *argv[])
 {
     HRESULT hr;
     SLOG << "Initializing COM library." << std::endl;
@@ -61,14 +61,16 @@ void DirectShowManager::init(int   argc, char *argv[])
     if (FAILED(hr))
     {
         SWARNING << "Could not initialize COM library." << std::endl;
-        return;
+        return false;
     }
+    return true;
 }
 
-void DirectShowManager::exit(void)
+bool DirectShowManager::exit(void)
 {
     SLOG << "Uninitializing COM library." << std::endl;
     CoUninitialize();
+    return true;
 }
 
 /*-------------------------------------------------------------------------*/

@@ -46,10 +46,13 @@
 #include <OSGConfig.h>
 
 #include "OSGDirectShowVideoWrapper.h"
+#include "OSGDirectShowManager.h"
 #include "OSGdshowutil.h"
 #include <algorithm>
 #include <cctype>
 #include <boost/filesystem/operations.hpp>
+
+#include "OSGBaseInitFunctions.h"
 
 #ifdef OSG_WITH_DIRECT_SHOW
 
@@ -72,8 +75,11 @@ void DirectShowVideoWrapper::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
-    if(ePhase == TypeObject::SystemPost)
+    if(ePhase == TypeObject::Static)
     {
+        char *c[] = {""};
+        addPreFactoryInitFunction(boost::bind(&DirectShowManager::init, DirectShowManager::the(), 0, c));
+        addPostFactoryExitFunction(boost::bind(&DirectShowManager::exit, DirectShowManager::the()));
     }
 }
 

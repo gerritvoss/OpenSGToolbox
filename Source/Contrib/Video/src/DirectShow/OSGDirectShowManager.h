@@ -43,10 +43,10 @@ OSG_BEGIN_NAMESPACE
 class OSG_CONTRIBVIDEO_DLLMAPPING DirectShowManager : public VideoManager
 {
 public:
-    static VideoManager *the(void);
+    static DirectShowManager *the(void);
 
-    virtual void init(int   argc, char *argv[]);
-    virtual void exit(void);
+    virtual bool init(int   argc, char *argv[]);
+    virtual bool exit(void);
 
     virtual VideoWrapperTransitPtr createVideoWrapper(void) const;
 

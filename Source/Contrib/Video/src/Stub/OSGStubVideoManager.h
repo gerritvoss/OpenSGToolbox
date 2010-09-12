@@ -43,8 +43,8 @@ class OSG_CONTRIBVIDEO_DLLMAPPING StubVideoManager : public VideoManager
 public:
     static VideoManager *the(void);
 
-    virtual void init(int   argc, char *argv[]);
-    virtual void exit(void);
+    virtual bool init(int   argc, char *argv[]);
+    virtual bool exit(void);
 
     virtual VideoWrapperTransitPtr createVideoWrapper(void) const;
 
