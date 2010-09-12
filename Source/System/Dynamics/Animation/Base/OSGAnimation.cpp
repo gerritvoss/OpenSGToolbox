@@ -317,7 +317,8 @@ void Animation::dump(      UInt32    ,
 
 void Animation::attachedUpdate(EventDetails* const details)
 {
-    update(dynamic_cast<UpdateEventDetails* const>(details)->getElapsedTime());
+	Time elapsed = dynamic_cast<UpdateEventDetails* const>(details)->getElapsedTime();
+    update(elapsed);
 }
 
 OSG_END_NAMESPACE

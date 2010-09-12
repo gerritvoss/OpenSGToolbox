@@ -59,6 +59,7 @@
 
 
 #include "OSGKeyframeNumberSequenceTmpl.h" // XTranslationSequence Class
+#include "OSGKeyframeVectorSequenceTmpl.h" // TranslationSequence Class
 
 #include "OSGTransformAnimatorBase.h"
 #include "OSGTransformAnimator.h"
@@ -116,6 +117,14 @@ OSG_BEGIN_NAMESPACE
 */
 
 /*! \var KeyframeNumberSequenceReal32 * TransformAnimatorBase::_sfZScaleSequence
+    
+*/
+
+/*! \var KeyframeVectorSequenceVec3f * TransformAnimatorBase::_sfTranslationSequence
+    
+*/
+
+/*! \var KeyframeVectorSequenceVec3f * TransformAnimatorBase::_sfScaleSequence
     
 */
 
@@ -254,6 +263,30 @@ void TransformAnimatorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TransformAnimator::getHandleZScaleSequence));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecKeyframeVectorSequenceVec3fPtr::Description(
+        SFUnrecKeyframeVectorSequenceVec3fPtr::getClassType(),
+        "TranslationSequence",
+        "",
+        TranslationSequenceFieldId, TranslationSequenceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TransformAnimator::editHandleTranslationSequence),
+        static_cast<FieldGetMethodSig >(&TransformAnimator::getHandleTranslationSequence));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecKeyframeVectorSequenceVec3fPtr::Description(
+        SFUnrecKeyframeVectorSequenceVec3fPtr::getClassType(),
+        "ScaleSequence",
+        "",
+        ScaleSequenceFieldId, ScaleSequenceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TransformAnimator::editHandleScaleSequence),
+        static_cast<FieldGetMethodSig >(&TransformAnimator::getHandleScaleSequence));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -380,6 +413,28 @@ TransformAnimatorBase::TypeObject TransformAnimatorBase::_type(
     "\t\taccess=\"public\"\n"
     "\t\tfieldHeader=\"OSGKeyframeNumberSequenceTmplFields.h\"\n"
     "\t\ttypeHeader=\"OSGKeyframeNumberSequenceTmpl.h\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TranslationSequence\"\n"
+    "\t\ttype=\"KeyframeVectorSequenceVec3f\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tfieldHeader=\"OSGKeyframeNumberSequenceTmplFields.h\"\n"
+    "\t\ttypeHeader=\"OSGKeyframeVectorSequenceTmpl.h\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ScaleSequence\"\n"
+    "\t\ttype=\"KeyframeVectorSequenceVec3f\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tfieldHeader=\"OSGKeyframeVectorSequenceTmplFields.h\"\n"
+    "\t\ttypeHeader=\"OSGKeyframeVectorSequenceTmpl.h\"\n"
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
@@ -523,6 +578,32 @@ SFUnrecKeyframeNumberSequenceReal32Ptr *TransformAnimatorBase::editSFZScaleSeque
     return &_sfZScaleSequence;
 }
 
+//! Get the TransformAnimator::_sfTranslationSequence field.
+const SFUnrecKeyframeVectorSequenceVec3fPtr *TransformAnimatorBase::getSFTranslationSequence(void) const
+{
+    return &_sfTranslationSequence;
+}
+
+SFUnrecKeyframeVectorSequenceVec3fPtr *TransformAnimatorBase::editSFTranslationSequence(void)
+{
+    editSField(TranslationSequenceFieldMask);
+
+    return &_sfTranslationSequence;
+}
+
+//! Get the TransformAnimator::_sfScaleSequence field.
+const SFUnrecKeyframeVectorSequenceVec3fPtr *TransformAnimatorBase::getSFScaleSequence(void) const
+{
+    return &_sfScaleSequence;
+}
+
+SFUnrecKeyframeVectorSequenceVec3fPtr *TransformAnimatorBase::editSFScaleSequence  (void)
+{
+    editSField(ScaleSequenceFieldMask);
+
+    return &_sfScaleSequence;
+}
+
 
 
 
@@ -569,6 +650,14 @@ UInt32 TransformAnimatorBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfZScaleSequence.getBinSize();
     }
+    if(FieldBits::NoField != (TranslationSequenceFieldMask & whichField))
+    {
+        returnValue += _sfTranslationSequence.getBinSize();
+    }
+    if(FieldBits::NoField != (ScaleSequenceFieldMask & whichField))
+    {
+        returnValue += _sfScaleSequence.getBinSize();
+    }
 
     return returnValue;
 }
@@ -614,6 +703,14 @@ void TransformAnimatorBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfZScaleSequence.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (TranslationSequenceFieldMask & whichField))
+    {
+        _sfTranslationSequence.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (ScaleSequenceFieldMask & whichField))
+    {
+        _sfScaleSequence.copyToBin(pMem);
+    }
 }
 
 void TransformAnimatorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -656,6 +753,14 @@ void TransformAnimatorBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ZScaleSequenceFieldMask & whichField))
     {
         _sfZScaleSequence.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (TranslationSequenceFieldMask & whichField))
+    {
+        _sfTranslationSequence.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ScaleSequenceFieldMask & whichField))
+    {
+        _sfScaleSequence.copyFromBin(pMem);
     }
 }
 
@@ -790,7 +895,9 @@ TransformAnimatorBase::TransformAnimatorBase(void) :
     _sfZRotationSequence      (NULL),
     _sfXScaleSequence         (NULL),
     _sfYScaleSequence         (NULL),
-    _sfZScaleSequence         (NULL)
+    _sfZScaleSequence         (NULL),
+    _sfTranslationSequence    (NULL),
+    _sfScaleSequence          (NULL)
 {
 }
 
@@ -804,7 +911,9 @@ TransformAnimatorBase::TransformAnimatorBase(const TransformAnimatorBase &source
     _sfZRotationSequence      (NULL),
     _sfXScaleSequence         (NULL),
     _sfYScaleSequence         (NULL),
-    _sfZScaleSequence         (NULL)
+    _sfZScaleSequence         (NULL),
+    _sfTranslationSequence    (NULL),
+    _sfScaleSequence          (NULL)
 {
 }
 
@@ -840,6 +949,10 @@ void TransformAnimatorBase::onCreate(const TransformAnimator *source)
         pThis->setYScaleSequence(source->getYScaleSequence());
 
         pThis->setZScaleSequence(source->getZScaleSequence());
+
+        pThis->setTranslationSequence(source->getTranslationSequence());
+
+        pThis->setScaleSequence(source->getScaleSequence());
     }
 }
 
@@ -1095,6 +1208,62 @@ EditFieldHandlePtr TransformAnimatorBase::editHandleZScaleSequence (void)
     return returnValue;
 }
 
+GetFieldHandlePtr TransformAnimatorBase::getHandleTranslationSequence (void) const
+{
+    SFUnrecKeyframeVectorSequenceVec3fPtr::GetHandlePtr returnValue(
+        new  SFUnrecKeyframeVectorSequenceVec3fPtr::GetHandle(
+             &_sfTranslationSequence,
+             this->getType().getFieldDesc(TranslationSequenceFieldId),
+             const_cast<TransformAnimatorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TransformAnimatorBase::editHandleTranslationSequence(void)
+{
+    SFUnrecKeyframeVectorSequenceVec3fPtr::EditHandlePtr returnValue(
+        new  SFUnrecKeyframeVectorSequenceVec3fPtr::EditHandle(
+             &_sfTranslationSequence,
+             this->getType().getFieldDesc(TranslationSequenceFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TransformAnimator::setTranslationSequence,
+                    static_cast<TransformAnimator *>(this), _1));
+
+    editSField(TranslationSequenceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TransformAnimatorBase::getHandleScaleSequence   (void) const
+{
+    SFUnrecKeyframeVectorSequenceVec3fPtr::GetHandlePtr returnValue(
+        new  SFUnrecKeyframeVectorSequenceVec3fPtr::GetHandle(
+             &_sfScaleSequence,
+             this->getType().getFieldDesc(ScaleSequenceFieldId),
+             const_cast<TransformAnimatorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TransformAnimatorBase::editHandleScaleSequence  (void)
+{
+    SFUnrecKeyframeVectorSequenceVec3fPtr::EditHandlePtr returnValue(
+        new  SFUnrecKeyframeVectorSequenceVec3fPtr::EditHandle(
+             &_sfScaleSequence,
+             this->getType().getFieldDesc(ScaleSequenceFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TransformAnimator::setScaleSequence,
+                    static_cast<TransformAnimator *>(this), _1));
+
+    editSField(ScaleSequenceFieldMask);
+
+    return returnValue;
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void TransformAnimatorBase::execSyncV(      FieldContainer    &oFrom,
@@ -1149,6 +1318,10 @@ void TransformAnimatorBase::resolveLinks(void)
     static_cast<TransformAnimator *>(this)->setYScaleSequence(NULL);
 
     static_cast<TransformAnimator *>(this)->setZScaleSequence(NULL);
+
+    static_cast<TransformAnimator *>(this)->setTranslationSequence(NULL);
+
+    static_cast<TransformAnimator *>(this)->setScaleSequence(NULL);
 
 
 }

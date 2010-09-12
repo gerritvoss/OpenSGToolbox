@@ -102,24 +102,34 @@ bool TransformAnimator::animate(UInt32 InterpType,
     MatResult.getTransform(Translation,Rotation,ScaleMagnitude,ScaleOrientation);
 
     //Tranlations
-    if( getXTranslationSequence() != NULL)
-    {
-        getXTranslationSequence()->interpolate(InterpType, time, prevTime,
-                                               ReplacementPolicy, Cycling,
-                                               Translation[0], 1.0f);
-    }
-    if( getYTranslationSequence() != NULL)
-    {
-        getYTranslationSequence()->interpolate(InterpType, time, prevTime,
-                                               ReplacementPolicy, Cycling,
-                                               Translation[1], 1.0f);
-    }
-    if( getZTranslationSequence() != NULL)
-    {
-        getZTranslationSequence()->interpolate(InterpType, time, prevTime,
-                                               ReplacementPolicy, Cycling,
-                                               Translation[2], 1.0f);
-    }
+	if(getTranslationSequence() != NULL)
+	{
+		getTranslationSequence()->interpolate(  InterpType, time, prevTime,
+												ReplacementPolicy, Cycling,
+												Translation, 1.0f);
+	}
+	else
+	{
+		if( getXTranslationSequence() != NULL)
+		{
+			getXTranslationSequence()->interpolate(InterpType, time, prevTime,
+												   ReplacementPolicy, Cycling,
+												   Translation[0], 1.0f);
+		}
+		if( getYTranslationSequence() != NULL)
+		{
+			getYTranslationSequence()->interpolate(InterpType, time, prevTime,
+												   ReplacementPolicy, Cycling,
+												   Translation[1], 1.0f);
+		}
+		if( getZTranslationSequence() != NULL)
+		{
+			getZTranslationSequence()->interpolate(InterpType, time, prevTime,
+												   ReplacementPolicy, Cycling,
+												   Translation[2], 1.0f);
+		}
+	}
+
 
     //Rotations
     if( getXRotationSequence() ||
@@ -151,24 +161,33 @@ bool TransformAnimator::animate(UInt32 InterpType,
                           osgDegree2Rad(EulerRot.z()));
     }
     //Scales
-    if( getXScaleSequence() != NULL)
-    {
-        getXScaleSequence()->interpolate(InterpType, time, prevTime,
-                                               ReplacementPolicy, Cycling,
-                                               ScaleMagnitude[0], 1.0f);
-    }
-    if( getYScaleSequence() != NULL)
-    {
-        getYScaleSequence()->interpolate(InterpType, time, prevTime,
-                                               ReplacementPolicy, Cycling,
-                                               ScaleMagnitude[1], 1.0f);
-    }
-    if( getZScaleSequence() != NULL)
-    {
-        getZScaleSequence()->interpolate(InterpType, time, prevTime,
-                                               ReplacementPolicy, Cycling,
-                                               ScaleMagnitude[2], 1.0f);
-    }
+	if(getScaleSequence() != NULL)
+	{
+		getScaleSequence()->interpolate(InterpType, time, prevTime,
+										ReplacementPolicy, Cycling,
+										ScaleMagnitude, 1.0f);
+	}
+	else
+	{
+		if( getXScaleSequence() != NULL)
+		{
+			getXScaleSequence()->interpolate(InterpType, time, prevTime,
+												   ReplacementPolicy, Cycling,
+												   ScaleMagnitude[0], 1.0f);
+		}
+		if( getYScaleSequence() != NULL)
+		{
+			getYScaleSequence()->interpolate(InterpType, time, prevTime,
+												   ReplacementPolicy, Cycling,
+												   ScaleMagnitude[1], 1.0f);
+		}
+		if( getZScaleSequence() != NULL)
+		{
+			getZScaleSequence()->interpolate(InterpType, time, prevTime,
+												   ReplacementPolicy, Cycling,
+												   ScaleMagnitude[2], 1.0f);
+		}
+	}
 
     MatResult.setTransform(Translation,Rotation,ScaleMagnitude);
 
