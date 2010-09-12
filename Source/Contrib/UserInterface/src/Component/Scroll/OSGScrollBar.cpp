@@ -104,40 +104,58 @@ void ScrollBar::updateLayout(void)
     Vec2f Size;
 
     //Min Button
-    if(editMinButton() != NULL)
+    if(getMinButton() != NULL)
     {
-        Size[MajorAxis] = editMinButton()->getPreferredSize()[MajorAxis];
+        Size[MajorAxis] = getMinButton()->getPreferredSize()[MajorAxis];
         Size[MinorAxis] = BottomRight[MinorAxis] - TopLeft[MinorAxis];
 
         Position = TopLeft;
 
-        editMinButton()->setPosition(Position);
-        editMinButton()->setSize(Size);
+        if(getMinButton()->getPosition() != Position)
+        {
+            getMinButton()->setPosition(Position);
+        }
+        if(getMinButton()->getSize() != Size)
+        {
+            getMinButton()->setSize(Size);
+        }
     }
 
     //Max Button
-    if(editMaxButton() != NULL)
+    if(getMaxButton() != NULL)
     {
-        Size[MajorAxis] = editMaxButton()->getPreferredSize()[MajorAxis];
+        Size[MajorAxis] = getMaxButton()->getPreferredSize()[MajorAxis];
         Size[MinorAxis] = BottomRight[MinorAxis] - TopLeft[MinorAxis];
 
         Position = BottomRight - Size;
 
-        editMaxButton()->setPosition(Position);
-        editMaxButton()->setSize(Size);
+        if(getMaxButton()->getPosition() != Position)
+        {
+            getMaxButton()->setPosition(Position);
+        }
+        if(getMaxButton()->getSize() != Size)
+        {
+            getMaxButton()->setSize(Size);
+        }
     }
 
     //Scroll Field
-    if(editScrollField() != NULL)
+    if(getScrollField() != NULL)
     {
-        Size[MajorAxis] = (BottomRight[MajorAxis] - TopLeft[MajorAxis]) - editMinButton()->getSize()[MajorAxis] - editMaxButton()->getSize()[MajorAxis];
+        Size[MajorAxis] = (BottomRight[MajorAxis] - TopLeft[MajorAxis]) - getMinButton()->getSize()[MajorAxis] - getMaxButton()->getSize()[MajorAxis];
         Size[MinorAxis] = BottomRight[MinorAxis] - TopLeft[MinorAxis];
 
-        Position[MajorAxis] = editMinButton()->getPosition()[MajorAxis] + editMinButton()->getSize()[MajorAxis];
-        Position[MinorAxis] = editMinButton()->getPosition()[MinorAxis];
+        Position[MajorAxis] = getMinButton()->getPosition()[MajorAxis] + getMinButton()->getSize()[MajorAxis];
+        Position[MinorAxis] = getMinButton()->getPosition()[MinorAxis];
 
-        editScrollField()->setPosition(Position);
-        editScrollField()->setSize(Size);
+        if(getScrollField()->getPosition() != Position)
+        {
+            getScrollField()->setPosition(Position);
+        }
+        if(getScrollField()->getSize() != Size)
+        {
+            getScrollField()->setSize(Size);
+        }
     }
 
     //ScrollBar
@@ -159,9 +177,9 @@ Pnt2f ScrollBar::calculateScrollBarPosition(void) const
     }
     MinorAxis = (MajorAxis+1)%2;
 
-    Position[MajorAxis] = editScrollField()->getPosition()[MajorAxis] + 
-        (static_cast<Real32>(getValue() - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum() - getExtent())) * (editScrollField()->getSize()[MajorAxis] - editScrollBar()->getSize()[MajorAxis]);
-    Position[MinorAxis] = editScrollField()->getPosition()[MinorAxis];
+    Position[MajorAxis] = getScrollField()->getPosition()[MajorAxis] + 
+        (static_cast<Real32>(getValue() - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum() - getExtent())) * (getScrollField()->getSize()[MajorAxis] - getScrollBar()->getSize()[MajorAxis]);
+    Position[MinorAxis] = getScrollField()->getPosition()[MinorAxis];
 
     return Position;
 }
@@ -181,7 +199,7 @@ Int32 ScrollBar::calculateValueFromPosition(const Pnt2f Position) const
     }
     MinorAxis = (MajorAxis+1)%2;
 
-    Value = (Position[MajorAxis] - editScrollField()->getPosition()[MajorAxis])/(editScrollField()->getSize()[MajorAxis] - editScrollBar()->getSize()[MajorAxis])*static_cast<Real32>(getMaximum() - getMinimum() - getExtent()) + getMinimum();
+    Value = (Position[MajorAxis] - getScrollField()->getPosition()[MajorAxis])/(getScrollField()->getSize()[MajorAxis] - getScrollBar()->getSize()[MajorAxis])*static_cast<Real32>(getMaximum() - getMinimum() - getExtent()) + getMinimum();
 
     return Value;
 
@@ -202,18 +220,26 @@ Vec2f ScrollBar::calculateScrollBarSize(void) const
     }
     MinorAxis = (MajorAxis+1)%2;
 
-    Size[MajorAxis] = osgMax<Real32>( getScrollBarMinLength(),(static_cast<Real32>(getExtent())/static_cast<Real32>(getMaximum() - getMinimum())) * (editScrollField()->getSize()[MajorAxis]));
-    Size[MinorAxis] = editScrollField()->getSize()[MinorAxis];
+    Size[MajorAxis] = osgMax<Real32>( getScrollBarMinLength(),(static_cast<Real32>(getExtent())/static_cast<Real32>(getMaximum() - getMinimum())) * (getScrollField()->getSize()[MajorAxis]));
+    Size[MinorAxis] = getScrollField()->getSize()[MinorAxis];
 
     return Size;
 }
 
 void ScrollBar::updateScrollBarLayout(void)
 {
-    if(getRangeModel() != NULL && editScrollBar() != NULL)
+    if(getRangeModel() != NULL && getScrollBar() != NULL)
     {
-        editScrollBar()->setSize(calculateScrollBarSize());
-        editScrollBar()->setPosition(calculateScrollBarPosition());
+        Vec2f Size(calculateScrollBarSize());
+        if(getScrollBar()->getSize() != Size)
+        {
+            getScrollBar()->setSize(Size);
+        }
+        Pnt2f Pos(calculateScrollBarPosition());
+        if(getScrollBar()->getPosition() != Pos)
+        {
+            getScrollBar()->setPosition(Pos);
+        }
     }
 }
 
@@ -289,7 +315,7 @@ void ScrollBar::setMajorAxisScrollBarPosition(const Pnt2f& Pos)
     MinorAxis = (MajorAxis+1)%2;
 
     //Calculate the Value Based on the Bar Position
-    //Int32 ScrollValue( static_cast<Real32>(Pos - editScrollField()->getPosition()[MajorAxis])/static_cast<Real32>(editScrollField()->getSize()[MajorAxis]) * (getMaximum() - getMinimum()) + getMinimum());
+    //Int32 ScrollValue( static_cast<Real32>(Pos - getScrollField()->getPosition()[MajorAxis])/static_cast<Real32>(getScrollField()->getSize()[MajorAxis]) * (getMaximum() - getMinimum()) + getMinimum());
     Int32 ScrollValue(calculateValueFromPosition(Pos));
     if(ScrollValue < getMinimum())
     {
@@ -318,7 +344,7 @@ void ScrollBar::mouseWheelMoved(MouseWheelEventDetails* const e)
     ComponentContainer::mouseWheelMoved(e);
 }
 
-Button* ScrollBar::editMinButton(void) const
+Button* ScrollBar::getMinButton(void) const
 {
     if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
@@ -330,7 +356,7 @@ Button* ScrollBar::editMinButton(void) const
     }
 }
 
-Button* ScrollBar::editMaxButton(void) const
+Button* ScrollBar::getMaxButton(void) const
 {
     if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
@@ -342,7 +368,7 @@ Button* ScrollBar::editMaxButton(void) const
     }
 }
 
-Button* ScrollBar::editScrollField(void) const
+Button* ScrollBar::getScrollField(void) const
 {
     if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
@@ -354,7 +380,7 @@ Button* ScrollBar::editScrollField(void) const
     }
 }
 
-Button* ScrollBar::editScrollBar(void) const
+Button* ScrollBar::getScrollBar(void) const
 {
     if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
@@ -645,7 +671,7 @@ void ScrollBar::handleScrollBarMousePressed(MouseEventDetails* const e)
     if(getEnabled() && e->getButton() == MouseEventDetails::BUTTON1)
 	{
         _ScrollBarInitialMousePosition = ViewportToComponent(e->getLocation(), this, e->getViewport());
-        _ScrollBarInitialScrollBarPosition = editScrollBar()->getPosition();
+        _ScrollBarInitialScrollBarPosition = getScrollBar()->getPosition();
 
         _ScrollBarDragMouseDraggedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseDragged(boost::bind(&ScrollBar::handleScrollBarDragMouseDragged, this, _1));
         _ScrollBarDragMouseReleasedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseReleased(boost::bind(&ScrollBar::handleScrollBarDragMouseReleased, this, _1));
@@ -679,13 +705,13 @@ void ScrollBar::handleScrollFieldAction(ActionEventDetails* const e)
 
 		Pnt2f ComponentMousePosition(DrawingSurfaceToComponent(getParentWindow()->getParentDrawingSurface()->getMousePosition(), this));
 		//Is Mouse Major axis on the min or max side of the scroll bar
-		if(ComponentMousePosition[AxisIndex] < editScrollBar()->getPosition()[AxisIndex])
+		if(ComponentMousePosition[AxisIndex] < getScrollBar()->getPosition()[AxisIndex])
 		{
 			//Move the Bounded range model one block in the Min direction
 			scrollBlock(-1);
 		}
 		else if(ComponentMousePosition[AxisIndex] > 
-			(editScrollBar()->getPosition()[AxisIndex] + editScrollBar()->getSize()[AxisIndex]))
+			(getScrollBar()->getPosition()[AxisIndex] + getScrollBar()->getSize()[AxisIndex]))
 		{
 			//Move the Bounded range model one block in the Max direction
 			scrollBlock(1);

@@ -603,7 +603,7 @@ bool Tree::getScrollableTracksViewportHeight(void)
 
 bool Tree::getScrollableTracksViewportWidth(void)
 {
-    return true;
+    return false;
 }
 
 
@@ -614,7 +614,7 @@ bool Tree::getScrollableHeightMinTracksViewport(void)
 
 bool Tree::getScrollableWidthMinTracksViewport(void)
 {
-    return false;
+    return true;
 }
 
 Int32 Tree::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
@@ -913,12 +913,15 @@ Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
         }
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
+            //Create the Expand component
             ComponentUnrecPtr NewExpComp(dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeExpandedComponent(this, NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false));
+            //Create the Row Component
             ComponentUnrecPtr NewComp(dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeComponent(this, NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false));
             return TreeRowComponents( NewExpComp, NewComp, Row);
         }
         else
         {
+            //Create the Row Component
             ComponentUnrecPtr NewComp(getCellGenerator()->getComponent(this,NodePath.getLastPathComponent(), Row, 0,Selected, false));
             return TreeRowComponents(NULL, NewComp,Row);
         }
@@ -948,9 +951,6 @@ void Tree::updateChildren(void)
         {
             pushToChildren(_DrawnRows[i]._ExpandedComponent);
         }
-    }
-    for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
-    {
         pushToChildren(_DrawnRows[i]._ValueComponent);
     }
 }

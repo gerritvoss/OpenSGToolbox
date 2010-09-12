@@ -85,19 +85,32 @@ void OverlayLayout::updateLayout(const MFUnrecChildComponentPtr* Components, con
 
 	int maxX = 0;
 	int maxY = 0;
-	for(UInt32 i = 0; i < Components->size(); i++){
-		   (*Components)[i]->setSize((*Components)[i]->getPreferredSize());
+	for(UInt32 i = 0; i < Components->size(); i++)
+    {
+        if((*Components)[i]->getSize() != (*Components)[i]->getPreferredSize())
+        {
+            (*Components)[i]->setSize((*Components)[i]->getPreferredSize());
+        }
 		if((*Components)[i]->getSize().x()>maxX)
+        {
 			maxX = (*Components)[i]->getSize().x();
+        }
 		if((*Components)[i]->getSize().y()>maxY)
+        {
 			maxY = (*Components)[i]->getSize().y();
+        }
 	}
+    Pnt2f Pos;
 	//overlay layout simply draws all the components on top of each other, with the reference point for all the components being the same
-	for(UInt32 i = 0; i <Components->size(); i++){
-		//(*Components)[i]->setSize((*Components)[i]->getPreferredSize());
-		(*Components)[i]->setPosition(borderTopLeft + 
+	for(UInt32 i = 0; i <Components->size(); i++)
+    {
+        Pos = borderTopLeft + 
             Vec2f((maxX-(*Components)[i]->getSize().x())/2.0,
-			(maxY-(*Components)[i]->getSize().y())/2.0));
+			(maxY-(*Components)[i]->getSize().y())/2.0);
+        if((*Components)[i]->getPosition() != Pos)
+        {
+		    (*Components)[i]->setPosition(Pos);
+        }
 	}
 }
 

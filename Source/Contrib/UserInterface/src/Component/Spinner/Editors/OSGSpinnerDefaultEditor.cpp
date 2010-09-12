@@ -82,8 +82,14 @@ void SpinnerDefaultEditor::updateLayout(void)
 {
     for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        getChildren(i)->setPosition(Pnt2f(0,0));
-        getChildren(i)->setSize(getSize());
+        if(getChildren(i)->getPosition() != Pnt2f(0,0))
+        {
+            getChildren(i)->setPosition(Pnt2f(0,0));
+        }
+        if(getChildren(i)->getSize() != getSize())
+        {
+            getChildren(i)->setSize(getSize());
+        }
     }
 }
 

@@ -279,12 +279,18 @@ void Menu::changed(ConstFieldMaskArg whichField,
 
     if((whichField & ExpandDrawObjectFieldMask) && getExpandDrawObject() != NULL)
     {
-        getExpandDrawObject()->setSize(getExpandDrawObject()->getRequestedSize());
+        if(getExpandDrawObject()->getSize() != getExpandDrawObject()->getRequestedSize())
+        {
+            getExpandDrawObject()->setSize(getExpandDrawObject()->getRequestedSize());
+        }
     }
 
     if((whichField & SizeFieldMask) && getExpandDrawObject() != NULL)
     {
-        getExpandDrawObject()->setSize(getExpandDrawObject()->getRequestedSize());
+        if(getExpandDrawObject()->getSize() != getExpandDrawObject()->getRequestedSize())
+        {
+            getExpandDrawObject()->setSize(getExpandDrawObject()->getRequestedSize());
+        }
 
         //Calculate Alignment
         Pnt2f TopLeft, BottomRight;
@@ -295,7 +301,10 @@ void Menu::changed(ConstFieldMaskArg whichField,
         Pnt2f AlignedPosition;
         AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (ExpandBottomRight - ExpandTopLeft),0.5, 1.0);
 
-        getExpandDrawObject()->setPosition(AlignedPosition);
+        if(getExpandDrawObject()->getPosition() != AlignedPosition)
+        {
+            getExpandDrawObject()->setPosition(AlignedPosition);
+        }
     }
 }
 

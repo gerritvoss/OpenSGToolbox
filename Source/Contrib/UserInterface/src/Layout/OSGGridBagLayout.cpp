@@ -266,11 +266,18 @@ void GridBagLayout::updateLayout(const MFUnrecChildComponentPtr* Components, con
             offset[0] += (cellSize[0] - size[0]) * constraints->getHorizontalAlignment();
             offset[1] += (cellSize[1] - size[1]) * constraints->getVerticalAlignment();
         }
-        if (size[0] >= (*Components)[i]->getMinSize().x() && size[1] > (*Components)[i]->getMinSize().y())
+        if (!(size[0] >= (*Components)[i]->getMinSize().x() && size[1] > (*Components)[i]->getMinSize().y()))
+        {
+            size.setValues(0,0);
+        }
+        if((*Components)[i]->getSize() != size)
+        {
             (*Components)[i]->setSize(size);
-        else
-            (*Components)[i]->setSize(Vec2f(0,0));
-        (*Components)[i]->setPosition(Pnt2f(offset));
+        }
+        if((*Components)[i]->getPosition() != Pnt2f(offset))
+        {
+            (*Components)[i]->setPosition(Pnt2f(offset));
+        }
     }
 }
 

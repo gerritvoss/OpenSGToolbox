@@ -121,10 +121,20 @@ void PopupMenu::updateLayout(void)
 
     //Now position and size the Items
     Real32 TopOffset(InsetsTopLeft.y());
+    Vec2f Size;
+    Pnt2f Pos;
     for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        getChildren(i)->setSize(Vec2f(MaxWidth, getChildren(i)->getRequestedSize().y()));
-        getChildren(i)->setPosition(Pnt2f(InsetsTopLeft.x(), TopOffset));
+        Size.setValues(MaxWidth, getChildren(i)->getRequestedSize().y());
+        if(getChildren(i)->getSize() != Size)
+        {
+            getChildren(i)->setSize(Size);
+        }
+        Pos.setValues(InsetsTopLeft.x(), TopOffset);
+        if(getChildren(i)->getPosition() != Pos)
+        {
+            getChildren(i)->setPosition(Pos);
+        }
 
         TopOffset += getChildren(i)->getRequestedSize().y() +1;
     }

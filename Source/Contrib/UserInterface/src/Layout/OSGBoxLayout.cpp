@@ -171,6 +171,7 @@ void BoxLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const C
 	  This second sweep through the components sets each component to the
 	  matching highest height, then positions each component equally spaced apart
     */
+    Pnt2f Pos;
 	for(UInt32 i=0; i<Components->size(); ++i)
 	{	
 		// for each individual button, keep track of the offsetMinorAxis in height
@@ -204,8 +205,15 @@ void BoxLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const C
 		{
 			size = (*Components)[i]->getPreferredSize();
 		}
-			(*Components)[i]->setSize(size);
-			(*Components)[i]->setPosition(borderTopLeft + offset);
+        if((*Components)[i]->getSize() != size)
+        {
+		    (*Components)[i]->setSize(size);
+        }
+        Pos = borderTopLeft + offset;
+        if((*Components)[i]->getPosition() != Pos)
+        {
+		    (*Components)[i]->setPosition(Pos);
+        }
 
 		// now set offset for the next button
 		offset[AxisIndex] += spacing + (*Components)[i]->getPreferredSize()[AxisIndex];

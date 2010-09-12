@@ -87,27 +87,53 @@ void Spinner::initMethod(InitPhase ePhase)
 \***************************************************************************/
 void Spinner::updateLayout(void)
 {
+    Pnt2f Pos;
+    Vec2f Size;
     if(getOrientation() == Spinner::VERTICAL_ORIENTATION)
     {
         //Next Button
         if(getNextButton() != NULL)
         {
-            getNextButton()->setSize(Vec2f(getNextButton()->getPreferredSize().x(), getSize().y()/2));
-            getNextButton()->setPosition(Pnt2f(getSize().x() - getNextButton()->getSize().x(), 0));
+            Size.setValues(getNextButton()->getPreferredSize().x(), getSize().y()/2);
+            if(getNextButton()->getSize() != Size)
+            {
+                getNextButton()->setSize(Size);
+            }
+            Pos.setValues(getSize().x() - getNextButton()->getSize().x(), 0);
+            if(getNextButton()->getPosition() != Pos)
+            {
+                getNextButton()->setPosition(Pos);
+            }
         }
 
         //Previous Button
         if(getPreviousButton() != NULL)
         {
-            getPreviousButton()->setSize(Vec2f(getPreviousButton()->getPreferredSize().x(), getSize().y()/2));
-            getPreviousButton()->setPosition(Pnt2f(getSize().x() - getPreviousButton()->getSize().x(), getSize().y()/2));
+            Size.setValues(getPreviousButton()->getPreferredSize().x(), getSize().y()/2);
+            if(getPreviousButton()->getSize() != Size)
+            {
+                getPreviousButton()->setSize(Size);
+            }
+            Pos.setValues(getSize().x() - getPreviousButton()->getSize().x(), getSize().y()/2);
+            if(getPreviousButton()->getPosition() != Pos)
+            {
+                getPreviousButton()->setPosition(Pos);
+            }
         }
 
         //Editor
         if(getEditor() != NULL)
         {
-            getEditor()->setSize(Vec2f(getSize().x() - getNextButton()->getSize().x() - getEditorToButtonOffset(), getSize().y()));
-            getEditor()->setPosition(Pnt2f(0,0));
+            Size.setValues(getSize().x() - getNextButton()->getSize().x() - getEditorToButtonOffset(), getSize().y());
+            if(getEditor()->getSize() != Size)
+            {
+                getEditor()->setSize(Size);
+            }
+            Pos.setValues(0,0);
+            if(getEditor()->getPosition() != Pos)
+            {
+                getEditor()->setPosition(Pos);
+            }
         }
 
     }
@@ -116,22 +142,46 @@ void Spinner::updateLayout(void)
         //Next Button
         if(getNextButton() != NULL)
         {
-            getNextButton()->setSize(Vec2f(getSize().x()/2, getNextButton()->getPreferredSize().y()));
-            getNextButton()->setPosition(Pnt2f(0, getSize().y() - getNextButton()->getSize().y()));
+            Size.setValues(getSize().x()/2, getNextButton()->getPreferredSize().y());
+            if(getNextButton()->getSize() != Size)
+            {
+                getNextButton()->setSize(Size);
+            }
+            Pos.setValues(0, getSize().y() - getNextButton()->getSize().y());
+            if(getNextButton()->getPosition() != Pos)
+            {
+                getNextButton()->setPosition(Pos);
+            }
         }
 
         //Previous Button
         if(getPreviousButton() != NULL)
         {
-            getPreviousButton()->setSize(Vec2f(getSize().x()/2, getPreviousButton()->getPreferredSize().y()));
-            getPreviousButton()->setPosition(Pnt2f(getSize().x()/2, getSize().y() - getPreviousButton()->getSize().y()));
+            Size.setValues(getSize().x()/2, getPreviousButton()->getPreferredSize().y());
+            if(getPreviousButton()->getSize() != Size)
+            {
+                getPreviousButton()->setSize(Size);
+            }
+            Pos.setValues(getSize().x()/2, getSize().y() - getPreviousButton()->getSize().y());
+            if(getPreviousButton()->getPosition() != Pos)
+            {
+                getPreviousButton()->setPosition(Pos);
+            }
         }
 
         //Editor
         if(getEditor() != NULL)
         {
-            getEditor()->setSize(Vec2f(getSize().x(), getSize().y() - getNextButton()->getSize().y() - getEditorToButtonOffset()));
-            getEditor()->setPosition(Pnt2f(0,0));
+            Size.setValues(getSize().x(), getSize().y() - getNextButton()->getSize().y() - getEditorToButtonOffset());
+            if(getEditor()->getSize() != Size)
+            {
+                getEditor()->setSize(Size);
+            }
+            Pos.setValues(0,0);
+            if(getEditor()->getPosition() != Pos)
+            {
+                getEditor()->setPosition(Pos);
+            }
         }
     }
 }

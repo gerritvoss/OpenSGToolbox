@@ -80,7 +80,7 @@ void Toolbar::initMethod(InitPhase ePhase)
 
 void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
 {
-    dynamic_pointer_cast<BoxLayout>(getLayout())->setOrientation(TheOrientation);
+    dynamic_cast<BoxLayout*>(getLayout())->setOrientation(TheOrientation);
 
     Separator::Orientation Or;
     if(TheOrientation == BoxLayout::VERTICAL_ORIENTATION)
@@ -96,7 +96,7 @@ void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
     {
         if(getChildren(i)->getType() == Separator::getClassType())
         {
-            dynamic_pointer_cast<Separator>(getChildren(i))->setOrientation(Or);
+            dynamic_cast<Separator*>(getChildren(i))->setOrientation(Or);
         }
     }
 
@@ -105,7 +105,7 @@ void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
 
 BoxLayout::Orientation Toolbar::getOrientation(void) const
 {
-    return BoxLayout::Orientation(dynamic_pointer_cast<BoxLayout>(getLayout())->getOrientation());
+    return BoxLayout::Orientation(dynamic_cast<BoxLayout*>(getLayout())->getOrientation());
 }
 
 void Toolbar::addTool(ComponentRefPtr TheTool)
@@ -120,18 +120,13 @@ void Toolbar::addTool(ComponentRefPtr TheTool)
 
 void Toolbar::removeTool(ComponentRefPtr TheTool)
 {
-    MFComponentRefPtr::iterator RemoveItor(editMFChildren()->find(TheTool));
-    if(RemoveItor != editMFChildren()->end())
-    {
-        editMFChildren()->erase(RemoveItor);
-    }
+    removeObjFromChildren(TheTool);
 }
 
 void Toolbar::removeTool(const UInt32&  Index)
 {
     if(Index < getNumTools())
     {
-        MFComponentRefPtr::iterator RemoveItor(editMFChildren()->begin());
         UInt32 ToolCount(0);
         for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
@@ -143,10 +138,9 @@ void Toolbar::removeTool(const UInt32&  Index)
             {
                 break;
             }
-            ++RemoveItor;
         }
 
-        editMFChildren()->erase(RemoveItor);
+        removeFromChildren(ToolCount);
     }
 }
 
@@ -199,9 +193,8 @@ void Toolbar::removeSeparator(const UInt32&  Index)
 {
     if(Index < getNumSeparators())
     {
-        MFComponentRefPtr::iterator RemoveItor(editMFChildren()->begin());
         UInt32 SeparatorCount(0);
-        for(UInt32 i(0) ; i<editMFChildren()->size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
             if(getChildren(i)->getType() == Separator::getClassType())
             {
@@ -211,20 +204,15 @@ void Toolbar::removeSeparator(const UInt32&  Index)
             {
                 break;
             }
-            ++RemoveItor;
         }
 
-        editMFChildren()->erase(RemoveItor);
+        removeFromChildren(SeparatorCount);
     }
 }
 
 void Toolbar::removeSeparator(SeparatorRefPtr TheSeparator)
 {
-    MFComponentRefPtr::iterator RemoveItor(editMFChildren()->find(TheSeparator));
-    if(RemoveItor != editMFChildren()->end())
-    {
-        editMFChildren()->erase(RemoveItor);
-    }
+    removeObjFromChildren(TheSeparator);
 }
 
 void Toolbar::removeAllSeparators(void)
@@ -268,11 +256,11 @@ void Toolbar::updateSeparatorSizes(void)
         {
             if(getOrientation() == BoxLayout::HORIZONTAL_ORIENTATION)
             {
-                dynamic_pointer_cast<Separator>(getChildren(i))->setPreferredSize(Vec2f(getChildren(i)->getRequestedSize().x(), InsideInsetsSize.y()));
+                dynamic_cast<Separator*>(getChildren(i))->setPreferredSize(Vec2f(getChildren(i)->getRequestedSize().x(), InsideInsetsSize.y()));
             }
             else
             {
-                dynamic_pointer_cast<Separator>(getChildren(i))->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren(i)->getRequestedSize().y()));
+                dynamic_cast<Separator*>(getChildren(i))->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren(i)->getRequestedSize().y()));
             }
         }
     }
@@ -284,7 +272,12 @@ void Toolbar::updateSeparatorSizes(void)
 
 void Toolbar::onCreate(const Toolbar * Id)
 {
-    setLayout(createDefaultLayout());
+	Inherited::onCreate(Id);
+
+	if(Id != NULL)
+	{
+        setLayout(createDefaultLayout());
+    }
 }
 
 void Toolbar::onDestroy()

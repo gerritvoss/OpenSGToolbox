@@ -192,18 +192,36 @@ void SplitPanel::updateLayout(void)
     // set the components to the right size and positions
     if (getMinComponent() != NULL)
     {
-        getMinComponent()->setSize(minSize);
-        getMinComponent()->setPosition(minPos);
+        if(getMinComponent()->getSize() != minSize)
+        {
+            getMinComponent()->setSize(minSize);
+        }
+        if(getMinComponent()->getPosition() != minPos)
+        {
+            getMinComponent()->setPosition(minPos);
+        }
     }
     if (getMaxComponent() != NULL)
     {
-        getMaxComponent()->setSize(maxSize);
-        getMaxComponent()->setPosition(maxPos);
+        if(getMaxComponent()->getSize() != maxSize)
+        {
+            getMaxComponent()->setSize(maxSize);
+        }
+        if(getMaxComponent()->getPosition() != maxPos)
+        {
+            getMaxComponent()->setPosition(maxPos);
+        }
     }
     if (getDividerDrawObject() != NULL)
     {
-        getDividerDrawObject()->setSize(divSize);
-        getDividerDrawObject()->setPosition(divPos);
+        if(getDividerDrawObject()->getSize() != divSize)
+        {
+            getDividerDrawObject()->setSize(divSize);
+        }
+        if(getDividerDrawObject()->getPosition() != divPos)
+        {
+            getDividerDrawObject()->setPosition(divPos);
+        }
     }
 }
 

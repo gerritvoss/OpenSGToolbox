@@ -247,11 +247,13 @@ void InternalWindow::keyPressed(KeyEventDetails* const e)
            getFocusedComponent() != this)
         {
             getFocusedComponent()->keyPressed(e);
+            if(e->isConsumed()) return;
             ComponentContainerRefPtr ParentContainer(getFocusedComponent()->getParentContainer());
             while(ParentContainer != NULL &&
                   ParentContainer != this)
             {
                 ParentContainer->keyPressed(e);
+                if(e->isConsumed()) return;
                 ParentContainer = dynamic_cast<ComponentContainer*>(ParentContainer->getParentContainer());
             }
         }
@@ -269,11 +271,13 @@ void InternalWindow::keyReleased(KeyEventDetails* const e)
            getFocusedComponent() != this)
         {
             getFocusedComponent()->keyReleased(e);
+            if(e->isConsumed()) return;
             ComponentContainerRefPtr ParentContainer(getFocusedComponent()->getParentContainer());
             while(ParentContainer != NULL &&
                   ParentContainer != this)
             {
                 ParentContainer->keyReleased(e);
+                if(e->isConsumed()) return;
                 ParentContainer = dynamic_cast<ComponentContainer*>(ParentContainer->getParentContainer());
             }
         }
@@ -291,11 +295,13 @@ void InternalWindow::keyTyped(KeyEventDetails* const e)
            getFocusedComponent() != this)
         {
             getFocusedComponent()->keyTyped(e);
+            if(e->isConsumed()) return;
             ComponentContainerRefPtr ParentContainer(getFocusedComponent()->getParentContainer());
             while(ParentContainer != NULL &&
                   ParentContainer != this)
             {
                 ParentContainer->keyTyped(e);
+                if(e->isConsumed()) return;
                 ParentContainer = dynamic_cast<ComponentContainer*>(ParentContainer->getParentContainer());
             }
         }
@@ -315,6 +321,7 @@ void InternalWindow::mouseClicked(MouseEventDetails* const e)
             if(isContained)
             {
                 getMenuBar()->mouseClicked(e);
+                if(e->isConsumed()) return;
                 Component::mouseClicked(e);
                 return;
             }
@@ -327,6 +334,7 @@ void InternalWindow::mouseClicked(MouseEventDetails* const e)
             if(isContained)
             {
                 getTitlebar()->mouseClicked(e);
+                if(e->isConsumed()) return;
                 Component::mouseClicked(e);
                 return;
             }
@@ -420,6 +428,7 @@ void InternalWindow::mousePressed(MouseEventDetails* const e)
             if(isContained)
             {
                 getMenuBar()->mousePressed(e);
+                if(e->isConsumed()) return;
                 Component::mousePressed(e);
                 return;
             }
@@ -432,6 +441,7 @@ void InternalWindow::mousePressed(MouseEventDetails* const e)
             if(isContained)
             {
                 getTitlebar()->mousePressed(e);
+                if(e->isConsumed()) return;
                 Component::mousePressed(e);
                 return;
             }
@@ -451,6 +461,7 @@ void InternalWindow::mousePressed(MouseEventDetails* const e)
                     getChildren(i)->takeFocus();
                 }
                 getChildren(i)->mousePressed(e);
+                if(e->isConsumed()) return;
                 break;
             }
         }
@@ -470,6 +481,7 @@ void InternalWindow::mouseReleased(MouseEventDetails* const e)
             if(isContained)
             {
                 getMenuBar()->mouseReleased(e);
+                if(e->isConsumed()) return;
                 Component::mouseReleased(e);
                 return;
             }
@@ -482,6 +494,7 @@ void InternalWindow::mouseReleased(MouseEventDetails* const e)
             if(isContained)
             {
                 getTitlebar()->mouseReleased(e);
+                if(e->isConsumed()) return;
                 Component::mouseReleased(e);
                 return;
             }
@@ -623,6 +636,7 @@ void InternalWindow::mouseMoved(MouseEventDetails* const e)
         if(isContained)
         {
             getMenuBar()->mouseMoved(e);
+            if(e->isConsumed()) return;
             Component::mouseMoved(e);
             return;
         }
@@ -635,6 +649,7 @@ void InternalWindow::mouseMoved(MouseEventDetails* const e)
         if(isContained)
         {
             getTitlebar()->mouseMoved(e);
+            if(e->isConsumed()) return;
             Component::mouseMoved(e);
             return;
         }
@@ -841,8 +856,15 @@ void InternalWindow::updateLayout(void)
         Pnt2f MenuTopLeft, MenuBottomRight;
         getMenuBar()->updateLayout();
         getMenuBarBounds(MenuTopLeft, MenuBottomRight);
-        getMenuBar()->setPosition(MenuTopLeft);
-        getMenuBar()->setSize(Vec2f( MenuBottomRight.x() - MenuTopLeft.x(), getMenuBar()->getPreferredSize().y()));
+        if(getMenuBar()->getPosition() != MenuTopLeft)
+        {
+            getMenuBar()->setPosition(MenuTopLeft);
+        }
+        Vec2f Size(MenuBottomRight.x() - MenuTopLeft.x(), getMenuBar()->getPreferredSize().y());
+        if(getMenuBar()->getSize() != Size)
+        {
+            getMenuBar()->setSize(Size);
+        }
     }
 
     //If I have a Titlebar then update it's layout
@@ -850,8 +872,15 @@ void InternalWindow::updateLayout(void)
     {
         Pnt2f TitlebarTopLeft, TitlebarBottomRight;
         getTitlebarBounds(TitlebarTopLeft, TitlebarBottomRight);
-        getTitlebar()->setPosition(TitlebarTopLeft);
-        getTitlebar()->setSize(Vec2f( TitlebarBottomRight.x() - TitlebarTopLeft.x(), getTitlebar()->getPreferredSize().y()));
+        if(getTitlebar()->getPosition() != TitlebarTopLeft)
+        {
+            getTitlebar()->setPosition(TitlebarTopLeft);
+        }
+        Vec2f Size(TitlebarBottomRight.x() - TitlebarTopLeft.x(), getTitlebar()->getPreferredSize().y());
+        if(getTitlebar()->getSize() != Size)
+        {
+            getTitlebar()->setSize(Size);
+        }
     }
 
     ComponentContainer::updateLayout();
@@ -1272,8 +1301,14 @@ void InternalWindow::borderDragKeyPressed(KeyEventDetails* const e)
         setLockInput(false);
 
         //Reset the Window to it's original Position and size
-        setPosition(_WindowStartPosition);
-        setSize(_WindowStartSize);
+        if(getPosition() != _WindowStartPosition)
+        {
+            setPosition(_WindowStartPosition);
+        }
+        if(getSize() != _WindowStartSize)
+        {
+            setSize(_WindowStartSize);
+        }
     }
 }
 

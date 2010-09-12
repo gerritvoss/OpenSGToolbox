@@ -118,9 +118,10 @@ void CardLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const 
 
     for(UInt32 i(0) ; i<Components->size() ; ++i)
     {
-        if((*Components)[i] != curCard)
+        if((*Components)[i] != curCard &&
+            (*Components)[i]->getSize() != Vec2f(0.0f,0.0f))
         {
-            (*Components)[i]->setSize(Vec2f(0,0));
+            (*Components)[i]->setSize(Vec2f(0.0f,0.0f));
         }
     }
     // check each dimension against the max size of the component;
@@ -129,12 +130,19 @@ void CardLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const 
     if (size[1] > curCard->getMaxSize()[1]) 
         size[1] = curCard->getMaxSize()[1];
     // set the component to its parent component's size, or its max size
-    curCard->setSize(size);
+    if(curCard->getSize() != size)
+    {
+        curCard->setSize(size);
+    }
 
     offset[0] = (borderSize.x()-size.x())/2;
     offset[1] = (borderSize.y()-size.y())/2;
 
-    curCard->setPosition(borderTopLeft + Vec2f(offset));
+    Pnt2f Pos(borderTopLeft + Vec2f(offset));
+    if(curCard->getPosition() != Pos)
+    {
+        curCard->setPosition(Pos);
+    }
 
 }
 

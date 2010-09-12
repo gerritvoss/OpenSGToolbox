@@ -98,7 +98,10 @@ void AbstractWindow::updateContainerLayout(void)
 	{
 		Vec2f Size(osgMax(osgMin(getPreferredSize().x(), getMaxSize().x()), getMinSize().x()),
 			       osgMax(osgMin(getPreferredSize().y(), getMaxSize().y()), getMinSize().y()));
+        if(getSize() != Size)
+        {
 			setSize(Size);
+        }
 	}
 }
 

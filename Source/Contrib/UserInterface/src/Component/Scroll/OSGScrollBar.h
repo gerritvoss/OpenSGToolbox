@@ -116,10 +116,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
 	//Mouse Wheel Events
     virtual void mouseWheelMoved(MouseWheelEventDetails* const e);
 
-    Button* editMinButton(void) const;
-    Button* editMaxButton(void) const;
-    Button* editScrollField(void) const;
-    Button* editScrollBar(void) const;
+    Button* getMinButton(void) const;
+    Button* getMaxButton(void) const;
+    Button* getScrollField(void) const;
+    Button* getScrollBar(void) const;
 
     virtual void detachFromEventProducer(void);
     

@@ -130,7 +130,6 @@ void ToolbarBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFString::Description(
         SFString::getClassType(),
         "FloatingTitle",
@@ -142,7 +141,6 @@ void ToolbarBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Toolbar::getHandleFloatingTitle));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -196,7 +194,6 @@ ToolbarBase::TypeObject ToolbarBase::_type(
     "</FieldContainer>\n",
     "A UI Toolbar.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 
@@ -368,7 +365,6 @@ Toolbar *ToolbarBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr ToolbarBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -411,7 +407,6 @@ FieldContainerTransitPtr ToolbarBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -488,6 +483,7 @@ EditFieldHandlePtr ToolbarBase::editHandleFloatingTitle  (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

@@ -307,7 +307,7 @@ void List::mousePressed(MouseEventDetails* const e)
 {
     if(getSelectable())
     {
-        bool isContained;
+        bool isContained(false);
         for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
         {
             isContained = getChildren(i)->isContained(e->getLocation(), true);

@@ -131,14 +131,15 @@ void FlowLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const 
     Real64 offsetY(borderTopLeft.y());
     bool firstOne = true;
 
-    for(UInt32 i=0 ; i<Components->size(); ++i)
-    {
-    }
-
+    Vec2f Size;
     for(UInt32 i=0 ; i<Components->size(); ++i)
     {
         // set the component to its preferred size
-        (*Components)[i]->setSize(getAppropriateComponentSize((*Components)[i]));
+        Size = getAppropriateComponentSize((*Components)[i]);
+        if((*Components)[i]->getSize() != Size)
+        {
+            (*Components)[i]->setSize(Size);
+        }
 
         // if there is only one so far, then it can't draw it using cumMajorAxis
         // because it hasn't been set yet
@@ -161,7 +162,11 @@ void FlowLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const 
                     offsetX += offsetMajorAxis;
                 }
 
-                (*Components)[i]->setPosition(Pnt2f(offsetX, offsetY));
+                if((*Components)[i]->getPosition().x() != offsetX ||
+                    (*Components)[i]->getPosition().y() != offsetY)
+                {
+                    (*Components)[i]->setPosition(Pnt2f(offsetX, offsetY));
+                }
 
                 // get to the next row
                 if (AxisIndex)
@@ -226,7 +231,11 @@ void FlowLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const 
                     offsetY += offsetMinorAxis;
                 }
 
-                (*Components)[j]->setPosition(Pnt2f(offsetX, offsetY));
+                if((*Components)[j]->getPosition().x() != offsetX ||
+                    (*Components)[j]->getPosition().y() != offsetY)
+                {
+                    (*Components)[j]->setPosition(Pnt2f(offsetX, offsetY));
+                }
 
                 // translate to next button
                 if (AxisIndex)
@@ -294,7 +303,11 @@ void FlowLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const 
                 {
                     offsetY += offsetMinorAxis;
                 }
-                (*Components)[j]->setPosition(Pnt2f(offsetX, offsetY));
+                if((*Components)[j]->getPosition().x() != offsetX ||
+                    (*Components)[j]->getPosition().y() != offsetY)
+                {
+                    (*Components)[j]->setPosition(Pnt2f(offsetX, offsetY));
+                }
 
                 if (AxisIndex)
                 {
@@ -329,11 +342,10 @@ void FlowLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const 
     {
         offset = (*Components)[i]->getPosition();
         offset[(AxisIndex+1)%2] += displacement;
-        (*Components)[i]->setPosition(offset);
-    }
-
-    for(UInt32 i=0 ; i<Components->size(); ++i)
-    {
+        if((*Components)[i]->getPosition() != offset)
+        {
+            (*Components)[i]->setPosition(offset);
+        }
     }
 }
 

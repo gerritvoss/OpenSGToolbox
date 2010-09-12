@@ -113,10 +113,20 @@ void MenuBar::updateLayout(void)
 	
 	//Now position and size the Items
 	Real32 LeftOffset(InsetsTopLeft.x());
+    Vec2f Size;
+    Pnt2f Pos;
     for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        getChildren(i)->setSize(Vec2f(getChildren(i)->getPreferredSize().x(), MaxHeight));
-        getChildren(i)->setPosition(Pnt2f(LeftOffset, InsetsTopLeft.y()));
+        Size.setValues(getChildren(i)->getPreferredSize().x(), MaxHeight);
+        if(getChildren(i)->getSize() != Size)
+        {
+            getChildren(i)->setSize(Size);
+        }
+        Pos.setValues(LeftOffset, InsetsTopLeft.y());
+        if(getChildren(i)->getPosition() != Pos)
+        {
+            getChildren(i)->setPosition(Pos);
+        }
 
         LeftOffset += getChildren(i)->getPreferredSize().x();
     }

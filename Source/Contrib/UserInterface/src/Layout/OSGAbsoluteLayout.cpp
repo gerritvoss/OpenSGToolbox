@@ -129,8 +129,15 @@ void AbsoluteLayout::updateLayout(const MFUnrecChildComponentPtr* Components,
             }
         }
 
-        (*Components)[i]->setPosition(ParentInsetsTopLeft + ComponentPosition.subZero());
-        (*Components)[i]->setSize(ComponentSize);
+        ComponentPosition = ParentInsetsTopLeft + ComponentPosition.subZero();
+        if((*Components)[i]->getPosition() != ComponentPosition)
+        {
+            (*Components)[i]->setPosition(ComponentPosition);
+        }
+        if((*Components)[i]->getSize() != ComponentSize)
+        {
+            (*Components)[i]->setSize(ComponentSize);
+        }
     }
 }
 

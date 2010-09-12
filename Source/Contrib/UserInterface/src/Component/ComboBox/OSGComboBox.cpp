@@ -103,26 +103,52 @@ void ComboBox::updateLayout(void)
     Pnt2f BorderTopLeft, BorderBottomRight;
     getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
+    Vec2f Size;
+    Pnt2f Pos;
     if(getExpandButton() != NULL)
     {
         //Place the Expand button on the Left
-        getExpandButton()->setSize(getExpandButton()->getPreferredSize());
+        Size = getExpandButton()->getPreferredSize();
+        if(getExpandButton()->getSize() != Size)
+        {
+            getExpandButton()->setSize(Size);
+        }
 
-        getExpandButton()->setPosition(calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), getExpandButton()->getSize(),0.5, 1.0));
+        Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), getExpandButton()->getSize(),0.5, 1.0);
+        if(getExpandButton()->getPosition() != Pos)
+        {
+            getExpandButton()->setPosition(Pos);
+        }
     }
 
     //Editor
     if(getEditable() && getEditor() != NULL && getEditor()->getEditorComponent() != NULL)
     {
-        getEditor()->getEditorComponent()->setSize(Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
-        getEditor()->getEditorComponent()->setPosition(Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
+        Size = Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y());
+        if(getEditor()->getEditorComponent()->getSize() != Size)
+        {
+            getEditor()->getEditorComponent()->setSize(Size);
+        }
+        Pos = Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y());
+        if(getEditor()->getEditorComponent()->getPosition() != Pos)
+        {
+            getEditor()->getEditorComponent()->setPosition(Pos);
+        }
     }
 
     //Selected Item Component
     if(!getEditable() && getComponentGeneratorSelectedItem() != NULL)
     {
-        getComponentGeneratorSelectedItem()->setSize(Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
-        getComponentGeneratorSelectedItem()->setPosition(Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
+        Size = Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y());
+        if(getComponentGeneratorSelectedItem()->getSize() != Size)
+        {
+            getComponentGeneratorSelectedItem()->setSize(Size);
+        }
+        Pos = Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y());
+        if(getComponentGeneratorSelectedItem()->getPosition() != Pos)
+        {
+            getComponentGeneratorSelectedItem()->setPosition(Pos);
+        }
     }
 }
 

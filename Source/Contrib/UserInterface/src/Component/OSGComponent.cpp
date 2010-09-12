@@ -296,6 +296,11 @@ Layer* Component::getDrawnForeground(void) const
 
 bool Component::isContained(const Pnt2f& p, bool TestAgainstClipBounds) const
 {
+    if(!getVisible())
+    {
+        return false;
+    }
+
     Pnt2f PointInCompSpace(DrawingSurfaceToComponent(p,this));
     Border* DrawnBorder(getDrawnBorder());
     Pnt2f TopLeft, BottomRight;
@@ -539,8 +544,14 @@ void Component::updateClipBounds(void)
     }
     //The Clip Bounds calculated are in my Parent Containers coordinate space
     //Translate these bounds into my own coordinate space
-    setClipTopLeft(TopLeft);
-    setClipBottomRight(BottomRight);
+    if(getClipTopLeft() != TopLeft)
+    {
+        setClipTopLeft(TopLeft);
+    }
+    if(getClipBottomRight() != BottomRight)
+    {
+        setClipBottomRight(BottomRight);
+    }
 }
 
 void Component::mouseClicked(MouseEventDetails* const e)

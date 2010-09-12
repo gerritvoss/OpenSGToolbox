@@ -217,8 +217,16 @@ void SpringLayout::updateLayout(const MFUnrecChildComponentPtr* Components, cons
         Real32 width = getDecycledSpring(TheConstraints->getWidth())->getValue();
         Real32 height = getDecycledSpring(TheConstraints->getHeight())->getValue();
         
+        if((*Components)[i]->getPosition().x() != x ||
+           (*Components)[i]->getPosition().y() != y)
+        {
             (*Components)[i]->setPosition(Pnt2f(x,y));
+        }
+        if((*Components)[i]->getSize().x() != width ||
+           (*Components)[i]->getSize().y() != height)
+        {
             (*Components)[i]->setSize(Vec2f(width, height));
+        }
      }
 }
 

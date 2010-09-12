@@ -172,8 +172,14 @@ void Slider::updateLayout(void)
             AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, getAlignment(), 0.5);
         }
 
-        getTrackDrawObject()->setPosition(AlignedPosition);
-        getTrackDrawObject()->setSize(Size);
+        if(getTrackDrawObject()->getPosition() != AlignedPosition)
+        {
+            getTrackDrawObject()->setPosition(AlignedPosition);
+        }
+        if(getTrackDrawObject()->getSize() != Size)
+        {
+            getTrackDrawObject()->setSize(Size);
+        }
     }
 
     //Update the MinorTickMarks
@@ -266,8 +272,14 @@ void Slider::updateLayout(void)
                 Pos[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] - getTrackToLabelOffset() - dynamic_pointer_cast<Component>((*Itor).second)->getPreferredSize()[MinorAxis];
             }
 
-            dynamic_pointer_cast<Component>((*Itor).second)->setPosition(Pos);
-            dynamic_pointer_cast<Component>((*Itor).second)->setSize(dynamic_pointer_cast<Component>((*Itor).second)->getPreferredSize());
+            if(dynamic_pointer_cast<Component>((*Itor).second)->getPosition() != Pos)
+            {
+                dynamic_pointer_cast<Component>((*Itor).second)->setPosition(Pos);
+            }
+            if(dynamic_pointer_cast<Component>((*Itor).second)->getSize() != dynamic_pointer_cast<Component>((*Itor).second)->getPreferredSize())
+            {
+                dynamic_pointer_cast<Component>((*Itor).second)->setSize(dynamic_pointer_cast<Component>((*Itor).second)->getPreferredSize());
+            }
         }
     }
 }
@@ -301,8 +313,14 @@ void Slider::updateSliderTrack(void)
 
         AlignedPosition = calculateSliderAlignment(getSliderTrackTopLeft(), getSliderTrackSize(), getKnobButton()->getPreferredSize(), Alignment.y(), Alignment.x());
 
-        getKnobButton()->setPosition(AlignedPosition);
-        getKnobButton()->setSize(Size);
+        if(getKnobButton()->getPosition() != AlignedPosition)
+        {
+            getKnobButton()->setPosition(AlignedPosition);
+        }
+        if(getKnobButton()->getSize() != Size)
+        {
+            getKnobButton()->setSize(Size);
+        }
     }
 
 }

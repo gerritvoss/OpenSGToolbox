@@ -255,7 +255,10 @@ void UIViewport::updateViewComponentSize(void)
     {
         Size[0] = osgMax(Size[0],(InsetsBottomRight - InsetsTopLeft).x());
     }
-    getViewComponent()->setSize(Size);
+    if(Size != getViewComponent()->getSize())
+    {
+        getViewComponent()->setSize(Size);
+    }
 }
 
 OSG_END_NAMESPACE

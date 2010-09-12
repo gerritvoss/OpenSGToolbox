@@ -135,8 +135,14 @@ void ProgressBar::drawInternal(Graphics* const Graphics, Real32 Opacity) const
     UIDrawObjectCanvasRefPtr DrawObject(getDrawnDrawObject());
     if(DrawObject != NULL)
     {
+        if(DrawObject->getPosition() != _ProgressBarPosition)
+        {
             DrawObject->setPosition(_ProgressBarPosition);
+        }
+        if(DrawObject->getSize() != _ProgressBarSize)
+        {
             DrawObject->setSize(_ProgressBarSize);
+        }
         DrawObject->draw(Graphics,getOpacity()*Opacity);
     }
 	

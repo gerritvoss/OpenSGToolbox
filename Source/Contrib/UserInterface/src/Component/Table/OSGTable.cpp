@@ -507,8 +507,14 @@ void Table::updateItem(const UInt32& index)
     _ItemFocusLostConnections[getChildren(index)] = getChildren(index)->connectFocusGained(boost::bind(&Table::handleItemFocusLost, this, _1));
 
     getChildren(index)->setFocused(PrevComponent->getFocused());
-    getChildren(index)->setPosition(PrevComponent->getPosition());
-    getChildren(index)->setSize(PrevComponent->getSize());
+    if(getChildren(index)->getPosition() != PrevComponent->getPosition())
+    {
+        getChildren(index)->setPosition(PrevComponent->getPosition());
+    }
+    if(getChildren(index)->getSize() != PrevComponent->getSize())
+    {
+        getChildren(index)->setSize(PrevComponent->getSize());
+    }
     getChildren(index)->setParentWindow(PrevComponent->getParentWindow());
     getChildren(index)->updateClipBounds();
 }

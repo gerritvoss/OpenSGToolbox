@@ -114,6 +114,7 @@ void BorderLayout::updateLayout(const MFUnrecChildComponentPtr* Components, cons
 			}
 		}
 	}
+    Pnt2f Pos;
 	// this second pass sets its size and draws them
 	for(UInt32 i = 0 ; i<Components->size(); ++i)
     {
@@ -213,8 +214,15 @@ void BorderLayout::updateLayout(const MFUnrecChildComponentPtr* Components, cons
 			size[0] = osgMin(osgMax(size[0], (*Components)[i]->getMinSize().x()), (*Components)[i]->getMaxSize().x());
 			size[1] = osgMin(osgMax(size[1], (*Components)[i]->getMinSize().y()), (*Components)[i]->getMaxSize().y());
             // now set the position and size of the button
-            (*Components)[i]->setSize(size);
-            (*Components)[i]->setPosition(borderTopLeft + Vec2f(offset));
+            if((*Components)[i]->getSize() != size)
+            {
+                (*Components)[i]->setSize(size);
+            }
+            Pos = borderTopLeft + Vec2f(offset);
+            if((*Components)[i]->getPosition() != Pos)
+            {
+                (*Components)[i]->setPosition(Pos);
+            }
 		}
 	}
 }

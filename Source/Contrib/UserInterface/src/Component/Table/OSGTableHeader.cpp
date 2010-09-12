@@ -147,8 +147,8 @@ void TableHeader::updateLayout(void)
     //Use the Model to update the position and sizes of the Headers
     for(UInt32 i(0) ; i<getMFColumnHeaders()->size() ; ++i)
     {
-            getColumnHeaders(i)->setPosition( Pnt2f(BorderTopLeft.x() + CumulativeWidth, BorderTopLeft.y()) );
-            getColumnHeaders(i)->setSize( Vec2f(getColumnModel()->getColumn(i)->getWidth(), getColumnHeaders(i)->getPreferredSize().y()) );
+        getColumnHeaders(i)->setPosition( Pnt2f(BorderTopLeft.x() + CumulativeWidth, BorderTopLeft.y()) );
+        getColumnHeaders(i)->setSize( Vec2f(getColumnModel()->getColumn(i)->getWidth(), getColumnHeaders(i)->getPreferredSize().y()) );
 
         Height = osgMax<UInt32>(Height, getColumnHeaders(i)->getSize().y());
         CumulativeWidth += getColumnHeaders(i)->getSize().x();

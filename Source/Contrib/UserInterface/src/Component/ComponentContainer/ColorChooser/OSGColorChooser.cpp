@@ -99,21 +99,44 @@ void ColorChooser::updateLayout(void)
 	}
 	Pnt2f PreviewTopLeft(InsetsTopLeft.x(), InsetsBottomRight.y()), PreviewBottomRight(InsetsBottomRight);
 	PreviewTopLeft.setValues(PreviewTopLeft.x(), InsetsBottomRight.y()-PreviewPanel->getPreferredSize().y());
+    if(PreviewPanel->getPosition() != PreviewTopLeft)
+    {
 		PreviewPanel->setPosition(PreviewTopLeft);
-		PreviewPanel->setSize(PreviewBottomRight - PreviewTopLeft);
+    }
+       
+    Vec2f Size; 
+    Size = PreviewBottomRight - PreviewTopLeft;
+    if(PreviewPanel->getSize() != Size)
+    {
+		PreviewPanel->setSize(Size);
+    }
 
 	Pnt2f ChooserTopLeft(InsetsTopLeft),
 		  ChooserBottomRight(InsetsBottomRight.x(), PreviewTopLeft.y());
 	if(_ColorChooserPanels.size() > 1 &&
 		_LayoutTabPanel != NULL)
 	{
+        if(_LayoutTabPanel->getPosition() != ChooserTopLeft)
+        {
 			_LayoutTabPanel->setPosition(ChooserTopLeft);
-			_LayoutTabPanel->setSize(ChooserBottomRight - ChooserTopLeft);
+        }
+        Size = ChooserBottomRight - ChooserTopLeft;
+        if(_LayoutTabPanel->getSize() != Size)
+        {
+			_LayoutTabPanel->setSize(Size);
+        }
 	}
 	else if(_ColorChooserPanels.size() == 1)
 	{
+        if(_ColorChooserPanels.front()->getPosition() != ChooserTopLeft)
+        {
 			_ColorChooserPanels.front()->setPosition(ChooserTopLeft);
-			_ColorChooserPanels.front()->setSize(ChooserBottomRight - ChooserTopLeft);
+        }
+        Size = ChooserBottomRight - ChooserTopLeft;
+        if(_ColorChooserPanels.front()->getSize() != Size)
+        {
+			_ColorChooserPanels.front()->setSize(Size);
+        }
 	}
 
 }

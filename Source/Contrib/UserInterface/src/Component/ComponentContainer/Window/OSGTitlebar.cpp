@@ -112,8 +112,14 @@ void Titlebar::updateLayout(void)
     if(getFrameIcon() != NULL)
     {
         FrameIconSize.setValues( getFrameIcon()->getPreferredSize().x(), InsetsSize.y() );
-        getFrameIcon()->setPosition(FrameIconPos);
-        getFrameIcon()->setSize(FrameIconSize);
+        if(getFrameIcon()->getPosition() != FrameIconPos)
+        {
+            getFrameIcon()->setPosition(FrameIconPos);
+        }
+        if(getFrameIcon()->getSize() != FrameIconSize)
+        {
+            getFrameIcon()->setSize(FrameIconSize);
+        }
     }
     Pnt2f CloseButtonPos(InsetsBottomRight.x(), InsetsTopLeft.y()+1);
     Vec2f CloseButtonSize;
@@ -121,8 +127,14 @@ void Titlebar::updateLayout(void)
     {
         CloseButtonSize.setValues(getCloseButton()->getPreferredSize().x(), InsetsSize.y()-2);
         CloseButtonPos -= Vec2f(CloseButtonSize.x(),0) + Vec2f(3,0);
-        getCloseButton()->setPosition(CloseButtonPos);
-        getCloseButton()->setSize(CloseButtonSize);
+        if(getCloseButton()->getPosition() != CloseButtonPos)
+        {
+            getCloseButton()->setPosition(CloseButtonPos);
+        }
+        if(getCloseButton()->getSize() != CloseButtonSize)
+        {
+            getCloseButton()->setSize(CloseButtonSize);
+        }
     }
     Pnt2f MaximizeButtonPos(CloseButtonPos);
     Vec2f MaximizeButtonSize;
@@ -130,8 +142,14 @@ void Titlebar::updateLayout(void)
     {
         MaximizeButtonSize.setValues(getMaximizeButton()->getPreferredSize().x(), InsetsSize.y()-2);
         MaximizeButtonPos -= Vec2f(MaximizeButtonSize.x(),0) + Vec2f(3,0);
-        getMaximizeButton()->setPosition(MaximizeButtonPos);
-        getMaximizeButton()->setSize(MaximizeButtonSize);
+        if(getMaximizeButton()->getPosition() != MaximizeButtonPos)
+        {
+            getMaximizeButton()->setPosition(MaximizeButtonPos);
+        }
+        if(getMaximizeButton()->getSize() != MaximizeButtonSize)
+        {
+            getMaximizeButton()->setSize(MaximizeButtonSize);
+        }
     }
     Pnt2f IconifyButtonPos(MaximizeButtonPos);
     Vec2f IconifyButtonSize;
@@ -139,16 +157,28 @@ void Titlebar::updateLayout(void)
     {
         IconifyButtonSize.setValues(getIconifyButton()->getPreferredSize().x(), InsetsSize.y()-2);
         IconifyButtonPos -= Vec2f(IconifyButtonSize.x(),0) + Vec2f(3,0);
-        getIconifyButton()->setPosition(IconifyButtonPos);
-        getIconifyButton()->setSize(IconifyButtonSize);
+        if(getIconifyButton()->getPosition() != IconifyButtonPos)
+        {
+            getIconifyButton()->setPosition(IconifyButtonPos);
+        }
+        if(getIconifyButton()->getSize() != IconifyButtonSize)
+        {
+            getIconifyButton()->setSize(IconifyButtonSize);
+        }
     }
     Pnt2f TitleLabelPos(FrameIconPos + FrameIconSize);
     Vec2f TitleLabelSize;
     if(getTitleLabel() != NULL)
     {
         TitleLabelSize.setValues(IconifyButtonPos.x()-1-FrameIconPos.x()-FrameIconSize.x(), InsetsSize.y());
-        getTitleLabel()->setPosition(TitleLabelPos);
-        getTitleLabel()->setSize(TitleLabelSize);
+        if(getTitleLabel()->getPosition() != TitleLabelPos)
+        {
+            getTitleLabel()->setPosition(TitleLabelPos);
+        }
+        if(getTitleLabel()->getSize() != TitleLabelSize)
+        {
+            getTitleLabel()->setSize(TitleLabelSize);
+        }
     }
 }
 

@@ -107,14 +107,24 @@ void GridLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const 
 		if ((*Components)[i] != NULL) 
 		{
 			if(maxSizeX < (*Components)[i]->getMaxSize().x())
+            {
 				buttonXSize = maxSizeX;
+            }
 			else
 				buttonXSize = (*Components)[i]->getMaxSize().x();
 			if(maxSizeY<(*Components)[i]->getMaxSize().y())
+            {
 				buttonYSize = maxSizeY;
+            }
 			else
+            {
 				buttonYSize = (*Components)[i]->getMaxSize().y();
+            }
+            
+            if((*Components)[i]->getSize() != Vec2f(buttonXSize, buttonYSize))
+            {
 			   (*Components)[i]->setSize(Vec2f(buttonXSize, buttonYSize));
+            }
 		}
 	}
 
@@ -124,9 +134,14 @@ void GridLayout::updateLayout(const MFUnrecChildComponentPtr* Components, const 
     {
 		if ((*Components)[i] != NULL) 
 		{
+            Pnt2f Pos;
 			for(UInt16 j = 0; j < osgMin(getColumns(),numComp - i*getColumns()) ; j++)
             {
-                (*Components)[i*getColumns()+j]->setPosition(borderTopLeft + Vec2f(Xpos, Ypos));
+                Pos = borderTopLeft + Vec2f(Xpos, Ypos);
+                if((*Components)[i*getColumns()+j]->getPosition() != Pos)
+                {
+                    (*Components)[i*getColumns()+j]->setPosition(Pos);
+                }
 				Xpos = Xpos + (maxSizeX+getHorizontalGap());
 			}
 			Xpos = 0;

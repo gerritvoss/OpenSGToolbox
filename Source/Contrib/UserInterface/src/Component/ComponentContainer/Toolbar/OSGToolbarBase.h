@@ -87,6 +87,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ToolbarBase : public Panel
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(Toolbar);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

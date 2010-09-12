@@ -131,13 +131,13 @@ void UIDrawObjectCanvas::drawInternal(Graphics* const Graphics, Real32 Opacity) 
 UIDrawObjectCanvas::UIDrawObjectCanvas(void) :
     Inherited()
 {
-	setClipping(false);
+	//setClipping(false);
 }
 
 UIDrawObjectCanvas::UIDrawObjectCanvas(const UIDrawObjectCanvas &source) :
     Inherited(source)
 {
-	setClipping(false);
+	//setClipping(false);
 }
 
 UIDrawObjectCanvas::~UIDrawObjectCanvas(void)

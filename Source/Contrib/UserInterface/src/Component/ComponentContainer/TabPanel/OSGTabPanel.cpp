@@ -489,15 +489,25 @@ void TabPanel::updateLayout(void)
     offset[(AxisIndex+1)%2] += TabBorderTopLeftWidth[(AxisIndex+1)%2];
 
     // set sizes and positions of all tabs
+    Vec2f Size;
+    Pnt2f Pos;
     for (UInt32 i=0; i < getMFTabs()->size(); ++i)
     {
         offset[AxisIndex] += TabBorderTopLeftWidth[AxisIndex];
-        getTabs(i)->setSize(getTabs(i)->getRequestedSize() + 2.0f * TabMajorAxisSpacing);
-        getTabs(i)->setPosition(alignOffset + offset);
+        Size = getTabs(i)->getRequestedSize() + 2.0f * TabMajorAxisSpacing;
+        if(getTabs(i)->getSize() != Size)
+        {
+            getTabs(i)->setSize(Size);
+        }
+        Pos = alignOffset + offset;
+        if(getTabs(i)->getPosition() != Pos)
+        {
+            getTabs(i)->setPosition(Pos);
+        }
         offset[AxisIndex] += getTabs(i)->getSize()[AxisIndex] + TabBorderBottomRightWidth[AxisIndex];
     }
 
-    if((getSelectedIndex()+1)>getMFTabContents()->size())
+    if((getSelectedIndex()+1) > getMFTabContents()->size())
     {
         setSelectedIndex(getMFTabContents()->size()-1);
     }
@@ -511,10 +521,17 @@ void TabPanel::updateLayout(void)
         {
             offset[(AxisIndex+1)%2] += largestMinorAxis;
         }
-        Vec2f ContentsSize(InsideInsetsBottomRight-InsideInsetsTopLeft);
-        ContentsSize[(AxisIndex+1)%2] -= TabSize[(AxisIndex+1)%2];
-        getTabContents(getSelectedIndex())->setSize(ContentsSize);
-        getTabContents(getSelectedIndex())->setPosition(offset + ContentBorderTopLeftWidth);
+        Size = InsideInsetsBottomRight-InsideInsetsTopLeft;
+        Size[(AxisIndex+1)%2] -= TabSize[(AxisIndex+1)%2];
+        if(getTabContents(getSelectedIndex())->getSize() != Size)
+        {
+            getTabContents(getSelectedIndex())->setSize(Size);
+        }
+        Pos = Pnt2f(0.0f,0.0f) + offset + ContentBorderTopLeftWidth;
+        if(getTabContents(getSelectedIndex())->getPosition() != Pos)
+        {
+            getTabContents(getSelectedIndex())->setPosition(Pos);
+        }
     }
 }
 

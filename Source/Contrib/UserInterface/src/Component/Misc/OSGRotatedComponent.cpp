@@ -139,8 +139,14 @@ void RotatedComponent::updateLayout(void)
 
     for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        getChildren(i)->setPosition(Pnt2f(0,0));
-        getChildren(i)->setSize(getChildren(i)->getPreferredSize());
+        if(getChildren(i)->getPosition() != Pnt2f(0,0))
+        {
+            getChildren(i)->setPosition(Pnt2f(0,0));
+        }
+        if(getChildren(i)->getSize() != getChildren(i)->getPreferredSize())
+        {
+            getChildren(i)->setSize(getChildren(i)->getPreferredSize());
+        }
     }
 }
 

@@ -207,7 +207,7 @@ void ComponentContainer::mouseClicked(MouseEventDetails* const e)
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
     {
         //If the event is consumed then stop sending the event
-        if(e->isConsumed()) break;
+        if(e->isConsumed()) return;
 
         isContained = getChildren(i)->isContained(e->getLocation(), true);
         checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
@@ -226,7 +226,7 @@ void ComponentContainer::mouseEntered(MouseEventDetails* const e)
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
         //If the event is consumed then stop sending the event
-        if(e->isConsumed()) break;
+        if(e->isConsumed()) return;
 
         isContained = getChildren(i)->isContained(e->getLocation(), true);
         checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
@@ -240,7 +240,7 @@ void ComponentContainer::mouseExited(MouseEventDetails* const e)
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
         //If the event is consumed then stop sending the event
-        if(e->isConsumed()) break;
+        if(e->isConsumed()) return;
 
         isContained = getChildren(i)->isContained(e->getLocation(), true);
         checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
@@ -254,7 +254,7 @@ void ComponentContainer::mousePressed(MouseEventDetails* const e)
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
     {
         //If the event is consumed then stop sending the event
-        if(e->isConsumed()) break;
+        if(e->isConsumed()) return;
 
         isContained = getChildren(i)->isContained(e->getLocation(), true);
         checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
@@ -289,7 +289,7 @@ void ComponentContainer::mouseReleased(MouseEventDetails* const e)
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
     {
         //If the event is consumed then stop sending the event
-        if(e->isConsumed()) break;
+        if(e->isConsumed()) return;
 
         isContained = getChildren(i)->isContained(e->getLocation(), true);
         checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
@@ -312,7 +312,7 @@ void ComponentContainer::mouseMoved(MouseEventDetails* const e)
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
     {
         //If the event is consumed then stop sending the event
-        if(e->isConsumed()) break;
+        if(e->isConsumed()) return;
 
         isContained = getChildren(i)->isContained(e->getLocation(), true);
         checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained && !isContainedAbove,e->getViewport());
@@ -331,7 +331,7 @@ void ComponentContainer::mouseDragged(MouseEventDetails* const e)
     for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
     {
         //If the event is consumed then stop sending the event
-        if(e->isConsumed()) break;
+        if(e->isConsumed()) return;
 
         isContained = getChildren(i)->isContained(e->getLocation(), true);
         checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained && !isContainedAbove,e->getViewport());
@@ -350,7 +350,7 @@ void ComponentContainer::mouseWheelMoved(MouseWheelEventDetails* const e)
     for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
         //If the event is consumed then stop sending the event
-        if(e->isConsumed()) break;
+        if(e->isConsumed()) return;
 
         isContained = getChildren(i)->isContained(e->getLocation(), true);
         checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());

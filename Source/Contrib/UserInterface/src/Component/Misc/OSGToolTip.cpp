@@ -148,7 +148,10 @@ void ToolTip::changed(ConstFieldMaskArg whichField,
     if(whichField & TextFieldMask)
     {
         setPreferredSize(calculatePreferredSize());
-        setSize(getPreferredSize());
+        if(getSize() != getPreferredSize())
+        {
+            setSize(getPreferredSize());
+        }
     }
 }
 
