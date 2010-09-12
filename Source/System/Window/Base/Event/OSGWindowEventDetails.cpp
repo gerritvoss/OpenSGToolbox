@@ -71,13 +71,24 @@ void WindowEventDetails::initMethod(InitPhase ePhase)
     }
 }
 
-WindowEventDetailsTransitPtr WindowEventDetails::create(  FieldContainer* const Source,
-                                        Time TimeStamp)
+WindowEventDetailsTransitPtr WindowEventDetails::create(FieldContainer* const Source,
+                                                        Time TimeStamp)
 {
     WindowEventDetails* TheEventDetails = WindowEventDetails::createUnregistered();
 
-    TheEventDetails->setSource(Source);
+    TheEventDetails->setSource   (Source   );
     TheEventDetails->setTimeStamp(TimeStamp);
+
+    return WindowEventDetailsTransitPtr(TheEventDetails);
+}
+
+WindowEventDetailsTransitPtr WindowEventDetails::create(WindowEventDetails* const Details,
+                                                        FieldContainer*     const NewSource)
+{
+    WindowEventDetails* TheEventDetails = WindowEventDetails::createUnregistered();
+
+    TheEventDetails->setSource   (NewSource              );
+    TheEventDetails->setTimeStamp(Details->getTimeStamp());
 
     return WindowEventDetailsTransitPtr(TheEventDetails);
 }

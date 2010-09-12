@@ -93,13 +93,16 @@ class OSG_SYSTEM_DLLMAPPING MouseWheelEventDetails : public MouseWheelEventDetai
     Int32 getScrollAmount(void) const;
     Int32 getUnitsToScroll(void) const;
 
-    static  MouseWheelEventDetailsTransitPtr      create(  FieldContainer* const Source,
+    static  MouseWheelEventDetailsTransitPtr create(FieldContainer* const Source,
                                                     Time TimeStamp,
                                                     Int32 WheelRotation,
                                                     UInt8 TheScrollType,
                                                     UInt8 ScrollOrientation,
                                                     Pnt2f Location,
                                                     Viewport* const TheViewport); 
+
+    static  MouseWheelEventDetailsTransitPtr create(MouseWheelEventDetails* const Details,
+                                                    FieldContainer*         const NewSource);
 
     /*=========================  PROTECTED  ===============================*/
 

@@ -293,11 +293,14 @@ class OSG_SYSTEM_DLLMAPPING KeyEventDetails : public KeyEventDetailsBase
 	static std::string getStringFromNonDisplayedKey(UInt32 k, UInt32 Modifier);
 	UChar8 getKeyChar(void) const;
 
-    static  KeyEventDetailsTransitPtr      create(  FieldContainer* const Source,
-                                        Time TimeStamp,
-                                        UInt32 TheKey,
-                                        UInt32 Modifiers,
-                                        Window* const TheWindow); 
+    static  KeyEventDetailsTransitPtr create(FieldContainer* const Source,
+                                             Time TimeStamp,
+                                             UInt32 TheKey,
+                                             UInt32 Modifiers,
+                                             Window* const TheWindow);
+
+    static  KeyEventDetailsTransitPtr create(KeyEventDetails* const Details,
+                                             FieldContainer*  const NewSource);
     /*=========================  PROTECTED  ===============================*/
 
   protected:

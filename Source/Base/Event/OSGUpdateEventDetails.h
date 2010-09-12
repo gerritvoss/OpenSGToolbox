@@ -80,7 +80,10 @@ class OSG_BASE_DLLMAPPING UpdateEventDetails : public UpdateEventDetailsBase
     /*! \}                                                                 */
     static  UpdateEventDetailsTransitPtr create(FieldContainer* const Source,
                                                 Time TimeStamp,
-                                                Time ElapsedTime); 
+                                                Time ElapsedTime);
+
+    static  UpdateEventDetailsTransitPtr create(UpdateEventDetails* const Details,
+                                                FieldContainer*     const NewSource);
     /*=========================  PROTECTED  ===============================*/
 
   protected:

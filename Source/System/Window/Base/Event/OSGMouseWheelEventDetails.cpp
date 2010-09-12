@@ -71,23 +71,38 @@ void MouseWheelEventDetails::initMethod(InitPhase ePhase)
     }
 }
 
-MouseWheelEventDetailsTransitPtr MouseWheelEventDetails::create(  FieldContainer* const Source,
-                                    Time TimeStamp,
-                                    Int32 WheelRotation,
-                                    UInt8 TheScrollType,
-                                    UInt8 ScrollOrientation,
-                                    Pnt2f Location,
-                                    Viewport* const TheViewport)
+MouseWheelEventDetailsTransitPtr MouseWheelEventDetails::create(FieldContainer* const Source,
+                                                                Time TimeStamp,
+                                                                Int32 WheelRotation,
+                                                                UInt8 TheScrollType,
+                                                                UInt8 ScrollOrientation,
+                                                                Pnt2f Location,
+                                                                Viewport* const TheViewport)
 {
     MouseWheelEventDetails* TheEventDetails = MouseWheelEventDetails::createUnregistered();
 
-    TheEventDetails->setSource(Source);
-    TheEventDetails->setTimeStamp(TimeStamp);
-    TheEventDetails->setWheelRotation(WheelRotation);
-    TheEventDetails->setScrollType(TheScrollType);
+    TheEventDetails->setSource           (Source           );
+    TheEventDetails->setTimeStamp        (TimeStamp        );
+    TheEventDetails->setWheelRotation    (WheelRotation    );
+    TheEventDetails->setScrollType       (TheScrollType    );
     TheEventDetails->setScrollOrientation(ScrollOrientation);
-    TheEventDetails->setLocation(Location);
-    TheEventDetails->setViewport(TheViewport);
+    TheEventDetails->setLocation         (Location         );
+    TheEventDetails->setViewport         (TheViewport      );
+
+    return MouseWheelEventDetailsTransitPtr(TheEventDetails);
+}
+MouseWheelEventDetailsTransitPtr MouseWheelEventDetails::create(MouseWheelEventDetails* const Details,
+                                                                FieldContainer*         const NewSource)
+{
+    MouseWheelEventDetails* TheEventDetails = MouseWheelEventDetails::createUnregistered();
+
+    TheEventDetails->setSource           (NewSource                      );
+    TheEventDetails->setTimeStamp        (Details->getTimeStamp()        );
+    TheEventDetails->setWheelRotation    (Details->getWheelRotation()    );
+    TheEventDetails->setScrollType       (Details->getScrollType()       );
+    TheEventDetails->setScrollOrientation(Details->getScrollOrientation());
+    TheEventDetails->setLocation         (Details->getLocation()         );
+    TheEventDetails->setViewport         (Details->getViewport()         );
 
     return MouseWheelEventDetailsTransitPtr(TheEventDetails);
 }

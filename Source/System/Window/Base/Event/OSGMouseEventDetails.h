@@ -98,13 +98,16 @@ class OSG_SYSTEM_DLLMAPPING MouseEventDetails : public MouseEventDetailsBase
     Real32 getY(void) const;
     Real32 getYOnScreen(void) const;
 
-    static  MouseEventDetailsTransitPtr      create(  FieldContainer* const Source,
-                                                Time TimeStamp,
-                                                UInt16 Button,
-                                                UInt16 ClickCount,
-                                                Pnt2f Location,
-                                                Viewport* const TheViewport,
-                                                Vec2f Delta = Vec2f(0.0f,0.0f)); 
+    static  MouseEventDetailsTransitPtr create(FieldContainer* const Source,
+                                               Time TimeStamp,
+                                               UInt16 Button,
+                                               UInt16 ClickCount,
+                                               Pnt2f Location,
+                                               Viewport* const TheViewport,
+                                               Vec2f Delta = Vec2f(0.0f,0.0f)); 
+
+    static  MouseEventDetailsTransitPtr create(MouseEventDetails* const Details,
+                                               FieldContainer*    const NewSource);
     /*=========================  PROTECTED  ===============================*/
 
   protected:

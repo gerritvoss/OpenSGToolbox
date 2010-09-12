@@ -79,8 +79,11 @@ class OSG_SYSTEM_DLLMAPPING WindowEventDetails : public WindowEventDetailsBase
 
     /*! \}                                                                 */
 
-    static  WindowEventDetailsTransitPtr      create(  FieldContainer* const Source,
-                                                Time TimeStamp); 
+    static  WindowEventDetailsTransitPtr      create(FieldContainer* const Source,
+                                                     Time TimeStamp); 
+
+    static  WindowEventDetailsTransitPtr      create(WindowEventDetails* const Details,
+                                                     FieldContainer*     const NewSource); 
 
     /*=========================  PROTECTED  ===============================*/
 

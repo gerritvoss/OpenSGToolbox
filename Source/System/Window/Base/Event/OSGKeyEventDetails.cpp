@@ -71,19 +71,33 @@ void KeyEventDetails::initMethod(InitPhase ePhase)
     }
 }
 
-KeyEventDetailsTransitPtr      KeyEventDetails::create(  FieldContainer* const Source,
-                                    Time TimeStamp,
-                                    UInt32 TheKey,
-                                    UInt32 Modifiers,
-                                    Window* const TheWindow)
+KeyEventDetailsTransitPtr KeyEventDetails::create(FieldContainer* const Source,
+                                                  Time TimeStamp,
+                                                  UInt32 TheKey,
+                                                  UInt32 Modifiers,
+                                                  Window* const TheWindow)
 {
     KeyEventDetails* TheEventDetails = KeyEventDetails::createUnregistered();
 
-    TheEventDetails->setSource(Source);
+    TheEventDetails->setSource   (Source   );
     TheEventDetails->setTimeStamp(TimeStamp);
-    TheEventDetails->setKey(TheKey);
+    TheEventDetails->setKey      (TheKey   );
     TheEventDetails->setModifiers(Modifiers);
-    TheEventDetails->setWindow(TheWindow);
+    TheEventDetails->setWindow   (TheWindow);
+
+    return KeyEventDetailsTransitPtr(TheEventDetails);
+}
+
+KeyEventDetailsTransitPtr KeyEventDetails::create(KeyEventDetails* const Details,
+                                                  FieldContainer*  const NewSource)
+{
+    KeyEventDetails* TheEventDetails = KeyEventDetails::createUnregistered();
+
+    TheEventDetails->setSource   (NewSource              );
+    TheEventDetails->setTimeStamp(Details->getTimeStamp());
+    TheEventDetails->setKey      (Details->getKey()      );
+    TheEventDetails->setModifiers(Details->getModifiers());
+    TheEventDetails->setWindow   (Details->getWindow()   );
 
     return KeyEventDetailsTransitPtr(TheEventDetails);
 }

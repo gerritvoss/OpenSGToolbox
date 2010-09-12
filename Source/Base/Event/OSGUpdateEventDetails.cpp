@@ -71,15 +71,27 @@ void UpdateEventDetails::initMethod(InitPhase ePhase)
     }
 }
 
-UpdateEventDetailsTransitPtr      UpdateEventDetails::create(FieldContainer* const Source,
-                                                Time TimeStamp,
-                                                Time ElapsedTime)
+UpdateEventDetailsTransitPtr UpdateEventDetails::create(FieldContainer* const Source,
+                                                        Time TimeStamp,
+                                                        Time ElapsedTime)
 {
     UpdateEventDetails* TheEventDetails = UpdateEventDetails::createUnregistered();
 
-    TheEventDetails->setSource(Source);
-    TheEventDetails->setTimeStamp(TimeStamp);
+    TheEventDetails->setSource     (Source     );
+    TheEventDetails->setTimeStamp  (TimeStamp  );
     TheEventDetails->setElapsedTime(ElapsedTime);
+
+    return UpdateEventDetailsTransitPtr(TheEventDetails);
+}
+
+UpdateEventDetailsTransitPtr UpdateEventDetails::create(UpdateEventDetails* const Details,
+                                                        FieldContainer*     const NewSource)
+{
+    UpdateEventDetails* TheEventDetails = UpdateEventDetails::createUnregistered();
+
+    TheEventDetails->setSource     (NewSource                );
+    TheEventDetails->setTimeStamp  (Details->getTimeStamp()  );
+    TheEventDetails->setElapsedTime(Details->getElapsedTime());
 
     return UpdateEventDetailsTransitPtr(TheEventDetails);
 }

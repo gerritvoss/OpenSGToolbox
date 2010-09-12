@@ -71,23 +71,39 @@ void MouseEventDetails::initMethod(InitPhase ePhase)
     }
 }
 
-MouseEventDetailsTransitPtr MouseEventDetails::create(  FieldContainer* const Source,
-                                Time TimeStamp,
-                                UInt16 Button,
-                                UInt16 ClickCount,
-                                Pnt2f Location,
-                                Viewport* const TheViewport,
-                                Vec2f Delta)
+MouseEventDetailsTransitPtr MouseEventDetails::create(FieldContainer* const Source,
+                                                      Time TimeStamp,
+                                                      UInt16 Button,
+                                                      UInt16 ClickCount,
+                                                      Pnt2f Location,
+                                                      Viewport* const TheViewport,
+                                                      Vec2f Delta)
 {
     MouseEventDetails* TheEventDetails = MouseEventDetails::createUnregistered();
 
-    TheEventDetails->setSource(Source);
-    TheEventDetails->setTimeStamp(TimeStamp);
-    TheEventDetails->setButton(Button);
-    TheEventDetails->setClickCount(ClickCount);
-    TheEventDetails->setLocation(Location);
-    TheEventDetails->setViewport(TheViewport);
-    TheEventDetails->setDelta(Delta);
+    TheEventDetails->setSource    (Source     );
+    TheEventDetails->setTimeStamp (TimeStamp  );
+    TheEventDetails->setButton    (Button     );
+    TheEventDetails->setClickCount(ClickCount );
+    TheEventDetails->setLocation  (Location   );
+    TheEventDetails->setViewport  (TheViewport);
+    TheEventDetails->setDelta     (Delta      );
+
+    return MouseEventDetailsTransitPtr(TheEventDetails);
+}
+
+MouseEventDetailsTransitPtr MouseEventDetails::create(MouseEventDetails* const Details,
+                                                      FieldContainer*    const NewSource)
+{
+    MouseEventDetails* TheEventDetails = MouseEventDetails::createUnregistered();
+
+    TheEventDetails->setSource    (NewSource               );
+    TheEventDetails->setTimeStamp (Details->getTimeStamp() );
+    TheEventDetails->setButton    (Details->getButton()    );
+    TheEventDetails->setClickCount(Details->getClickCount());
+    TheEventDetails->setLocation  (Details->getLocation()  );
+    TheEventDetails->setViewport  (Details->getViewport()  );
+    TheEventDetails->setDelta     (Details->getDelta()     );
 
     return MouseEventDetailsTransitPtr(TheEventDetails);
 }
