@@ -245,15 +245,15 @@ void WindowEventProducer::produceMouseReleased(const MouseEventDetails::MouseBut
    Pnt2f ViewportLocation;
    ViewportUnrecPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
+   if(_ButtonClickMap[Button] == Location)
+   {
+	   produceMouseClicked(Button, Location);
+   }
    if(ResultViewport != NULL)
    {
 	   MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 
        WindowEventProducerBase::produceMouseReleased(Details);
-   }
-   if(_ButtonClickMap[Button] == Location)
-   {
-	   produceMouseClicked(Button, Location);
    }
 }
 
