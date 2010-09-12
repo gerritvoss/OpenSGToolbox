@@ -559,8 +559,13 @@ void Button::mouseReleased(MouseEventDetails* const e)
         if(e->getButton() == MouseEventDetails::BUTTON1 && _Armed)
         {
             this->setActive(false);
+
             produceActionPerformed();
             _Armed = false;
+
+            //Consume the event
+            e->consume();
+            return;
         }
     }
     Component::mouseReleased(e);
