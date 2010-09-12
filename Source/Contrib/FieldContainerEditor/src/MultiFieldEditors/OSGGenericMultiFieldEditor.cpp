@@ -61,6 +61,7 @@
 #include "OSGContainerUtils.h"
 #include "OSGRemoveFieldElementCommand.h"
 #include "OSGInsertFieldElementCommand.h"
+#include "OSGAddFieldElementCommand.h"
 #include "OSGCreateFieldContainerCommand.h"
 #include "OSGDialogWindow.h"
 #include "OSGUIDrawingSurface.h"
@@ -149,14 +150,30 @@ void GenericMultiFieldEditor::insertAtIndex(FieldContainer* const fc,
         CreateCommand = CreateFieldContainerCommand::create(type);
         cmdMgr->executeCommand(CreateCommand);
     }
+        
+    EditFieldHandlePtr TheFieldHandle = fc->editField(fieldID);
+    EditMFieldHandle<FieldContainerPtrMFieldBase>* TheHandle(dynamic_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
 
-    //Set the value of the field
-    InsertFieldElementCommandPtr InsertIndexCommand = InsertFieldElementCommand::create(fc,
-                                                                                        fieldID,
-                                                                                        boost::lexical_cast<std::string>(CreateCommand->getContainer()->getId()),
-                                                                                        index);
+    if(index >= fc->getField(fieldID)->size() ||
+       !TheHandle->supportsInsert())
+    {
+        //Set the value of the field
+        AddFieldElementCommandPtr AddCommand = AddFieldElementCommand::create(fc,
+                                                                            fieldID,
+                                                                            boost::lexical_cast<std::string>(CreateCommand->getContainer()->getId()));
 
-    cmdMgr->executeCommand(InsertIndexCommand);
+        cmdMgr->executeCommand(AddCommand);
+    }
+    else
+    {
+        //Set the value of the field
+        InsertFieldElementCommandPtr InsertIndexCommand = InsertFieldElementCommand::create(fc,
+                                                                                            fieldID,
+                                                                                            boost::lexical_cast<std::string>(CreateCommand->getContainer()->getId()),
+                                                                                            index);
+
+        cmdMgr->executeCommand(InsertIndexCommand);
+    }
 }
 
 void GenericMultiFieldEditor::insertAtIndex(FieldContainer* const fc,
