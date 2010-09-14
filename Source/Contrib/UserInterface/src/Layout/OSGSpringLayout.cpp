@@ -468,6 +468,11 @@ void SpringLayout::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if(whichField & ConstraintsFieldMask)
+    {
+        updateParentContainers();
+    }
 }
 
 void SpringLayout::dump(      UInt32    ,

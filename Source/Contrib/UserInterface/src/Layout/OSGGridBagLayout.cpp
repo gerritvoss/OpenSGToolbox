@@ -340,6 +340,16 @@ void GridBagLayout::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if(whichField & ( RowsFieldMask |
+                      ColumnsFieldMask |
+                      ColumnWeightsFieldMask |
+                      ColumnWidthsFieldMask |
+                      RowWeightsFieldMask |
+                      RowHeightsFieldMask))
+    {
+        updateParentContainers();
+    }
 }
 
 void GridBagLayout::dump(      UInt32    ,

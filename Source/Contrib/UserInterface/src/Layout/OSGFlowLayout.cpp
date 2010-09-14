@@ -423,6 +423,16 @@ void FlowLayout::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if(whichField & ( OrientationFieldMask | 
+                      HorizontalGapFieldMask | 
+                      VerticalGapFieldMask | 
+                      MajorAxisAlignmentFieldMask | 
+                      MinorAxisAlignmentFieldMask | 
+                      ComponentAlignmentFieldMask))
+    {
+        updateParentContainers();
+    }
 }
 
 void FlowLayout::dump(      UInt32    ,

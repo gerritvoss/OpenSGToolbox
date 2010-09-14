@@ -218,10 +218,7 @@ void CardLayout::changed(ConstFieldMaskArg whichField,
 
     if(whichField & CardFieldMask)
     {
-        for(UInt32 i(0) ; i<getNumParentContainers() ; ++i)
-        {
-            getParentContainer(i)->updateLayout();
-        }
+        updateParentContainers();
     }
 }
 

@@ -295,6 +295,16 @@ void BoxLayout::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if(whichField & ( OrientationFieldMask |
+                      MajorAxisAlignmentFieldMask |
+                      MinorAxisAlignmentFieldMask |
+                      ComponentAlignmentFieldMask |
+                      MajorAxisMinimumGapFieldMask |
+                      MajorAxisMaximumGapFieldMask))
+    {
+        updateParentContainers();
+    }
 }
 
 void BoxLayout::dump(      UInt32    ,

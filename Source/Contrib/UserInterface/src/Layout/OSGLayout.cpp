@@ -129,6 +129,14 @@ Vec2f Layout::getComponentSize(const Component* TheComponent, SizeType TheSizeTy
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void Layout::updateParentContainers(void)
+{
+    for(UInt32 i(0) ; i<_mfParentContainers.size() ; ++i)
+    {
+        getParentContainer(i)->updateLayout();
+    }
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 Layout::Layout(void) :

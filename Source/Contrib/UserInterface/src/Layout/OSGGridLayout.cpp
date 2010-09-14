@@ -225,6 +225,14 @@ void GridLayout::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if(whichField & ( RowsFieldMask | 
+                      ColumnsFieldMask | 
+                      HorizontalGapFieldMask | 
+                      VerticalGapFieldMask))
+    {
+        updateParentContainers();
+    }
 }
 
 void GridLayout::dump(      UInt32    ,

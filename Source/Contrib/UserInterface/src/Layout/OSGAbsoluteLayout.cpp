@@ -223,6 +223,11 @@ void AbsoluteLayout::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if(whichField & ( ScalingFieldMask | OriginalDimensionsFieldMask))
+    {
+        updateParentContainers();
+    }
 }
 
 void AbsoluteLayout::dump(      UInt32    ,

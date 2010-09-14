@@ -144,6 +144,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Layout : public LayoutBase
 
     UInt32 getNumParentContainers(void) const;
 
+    void updateParentContainers(void);
+
     /*==========================  PRIVATE  ================================*/
 
   private:
