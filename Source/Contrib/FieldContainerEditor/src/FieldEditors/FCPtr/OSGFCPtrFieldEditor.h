@@ -45,6 +45,7 @@
 #include "OSGFCPtrFieldEditorBase.h"
 #include "OSGTextFieldFields.h"
 #include "OSGMenuButtonFields.h"
+#include "OSGLabelFields.h"
 #include "OSGActionEventDetailsFields.h"
 #include "OSGDialogWindowEventDetailsFields.h"
 #include "OSGFCPtrEditorStore.h"
@@ -143,6 +144,7 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
     virtual void updateLayout(void);
 
     static std::vector<const DataType*> _EditableTypes;
+    LabelRefPtr _NameTypeLabel;
     TextFieldRefPtr _EditingTextField;
     MenuButtonRefPtr _EditingMenuButton;
     std::string _InitialValue;
