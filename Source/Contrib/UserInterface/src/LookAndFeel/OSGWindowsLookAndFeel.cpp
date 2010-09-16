@@ -1219,17 +1219,20 @@ void WindowsLookAndFeel::init(void)
     //Normal
     WindowsCheckboxDrawObject->pushToDrawObjects(CheckboxBackgroundBorder);
     WindowsCheckboxDrawObject->pushToDrawObjects(CheckboxBackground);
+    WindowsCheckboxDrawObject->setClipping(false);
 
     //Normal Selected
     WindowsSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxBackgroundBorder);
     WindowsSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxBackground);
     WindowsSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxCheckQuad1);
     WindowsSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxCheckQuad2);
+    WindowsSelectedCheckboxDrawObject->setClipping(false);
 
     //Active Selected
     WindowsActiveSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxBackgroundBorder);
     WindowsActiveSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxBackground);
     WindowsActiveSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxActiveBackground);
+    WindowsActiveSelectedCheckboxDrawObject->setClipping(false);
 
     //Active Non-selected
     WindowsActiveCheckboxDrawObject->pushToDrawObjects(CheckboxBackgroundBorder);
@@ -1237,6 +1240,7 @@ void WindowsLookAndFeel::init(void)
     WindowsActiveCheckboxDrawObject->pushToDrawObjects(CheckboxActiveBackground);
     WindowsActiveCheckboxDrawObject->pushToDrawObjects(CheckboxCheckQuad1);
     WindowsActiveCheckboxDrawObject->pushToDrawObjects(CheckboxCheckQuad2);
+    WindowsActiveCheckboxDrawObject->setClipping(false);
 
 
     //Rollover Border
@@ -1263,11 +1267,13 @@ void WindowsLookAndFeel::init(void)
     WindowsRolloverSelectedCheckboxDrawObject->pushToDrawObjects(RolloverCheckboxBackground);
     WindowsRolloverSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxCheckQuad1);
     WindowsRolloverSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxCheckQuad2);
+    WindowsRolloverSelectedCheckboxDrawObject->setClipping(false);
 
     //Rollover Non-selected
     WindowsRolloverCheckboxDrawObject->pushToDrawObjects(CheckboxBackgroundBorder);
     WindowsRolloverCheckboxDrawObject->pushToDrawObjects(RolloverCheckboxBorder);
     WindowsRolloverCheckboxDrawObject->pushToDrawObjects(RolloverCheckboxBackground);
+    WindowsRolloverCheckboxDrawObject->setClipping(false);
 
     //Disabled Selected
     WindowsDisabledSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxDisabledBackgroundBorder);
@@ -1275,10 +1281,12 @@ void WindowsLookAndFeel::init(void)
     WindowsDisabledSelectedCheckboxDrawObject->pushToDrawObjects(RolloverCheckboxBackground);
     WindowsDisabledSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxDisabledCheckQuad1);
     WindowsDisabledSelectedCheckboxDrawObject->pushToDrawObjects(CheckboxDisabledCheckQuad2);
+    WindowsDisabledSelectedCheckboxDrawObject->setClipping(false);
 
     //Disabled Non-selected
     WindowsDisabledCheckboxDrawObject->pushToDrawObjects(CheckboxDisabledBackgroundBorder);
     WindowsDisabledCheckboxDrawObject->pushToDrawObjects(CheckboxDisabledBackground);
+    WindowsDisabledCheckboxDrawObject->setClipping(false);
 
     //Border
     EmptyBorderRefPtr WindowsCheckboxButtonBorder = EmptyBorder::create();
@@ -1441,37 +1449,45 @@ void WindowsLookAndFeel::init(void)
 
     WindowsRadioDrawObject->pushToDrawObjects(RadioBackground);
     WindowsRadioDrawObject->pushToDrawObjects(RadioBackgroundBorder);
+    WindowsRadioDrawObject->setClipping(false);
 
     WindowsSelectedRadioDrawObject->pushToDrawObjects(RadioBackground);
     WindowsSelectedRadioDrawObject->pushToDrawObjects(RadioBackgroundBorder);
     WindowsSelectedRadioDrawObject->pushToDrawObjects(RadioSelected);
+    WindowsSelectedRadioDrawObject->setClipping(false);
 
     WindowsActiveRadioDrawObject->pushToDrawObjects(RadioActiveBackground);
     WindowsActiveRadioDrawObject->pushToDrawObjects(RadioBackgroundBorder);
     WindowsActiveRadioDrawObject->pushToDrawObjects(RadioSelected);
+    WindowsActiveRadioDrawObject->setClipping(false);
 
     WindowsActiveSelectedRadioDrawObject->pushToDrawObjects(RadioActiveBackground);
     WindowsActiveSelectedRadioDrawObject->pushToDrawObjects(RadioBackgroundBorder);
+    WindowsActiveSelectedRadioDrawObject->setClipping(false);
 
     //Rollover Not Selected
     WindowsRolloverRadioDrawObject->pushToDrawObjects(RadioBackground);
     WindowsRolloverRadioDrawObject->pushToDrawObjects(RadioBackgroundBorder);
     WindowsRolloverRadioDrawObject->pushToDrawObjects(RadioRolloverBorder);
+    WindowsRolloverRadioDrawObject->setClipping(false);
 
     //Rollover Selected
     WindowsRolloverSelectedRadioDrawObject->pushToDrawObjects(RadioBackground);
     WindowsRolloverSelectedRadioDrawObject->pushToDrawObjects(RadioBackgroundBorder);
     WindowsRolloverSelectedRadioDrawObject->pushToDrawObjects(RadioRolloverBorder);
     WindowsRolloverSelectedRadioDrawObject->pushToDrawObjects(RadioSelected);
+    WindowsRolloverSelectedRadioDrawObject->setClipping(false);
 
     //Disabled Not Selected
     WindowsDisabledRadioDrawObject->pushToDrawObjects(RadioDisabledBackground);
     WindowsDisabledRadioDrawObject->pushToDrawObjects(RadioDisabledBackgroundBorder);
+    WindowsDisabledRadioDrawObject->setClipping(false);
 
     //Disabled Selected
     WindowsDisabledSelectedRadioDrawObject->pushToDrawObjects(RadioDisabledBackground);
     WindowsDisabledSelectedRadioDrawObject->pushToDrawObjects(RadioDisabledBackgroundBorder);
     WindowsDisabledSelectedRadioDrawObject->pushToDrawObjects(RadioDisabledSelected);
+    WindowsDisabledSelectedRadioDrawObject->setClipping(false);
 
     EmptyBorderRefPtr WindowsRadioButtonBorder = EmptyBorder::create();
     EmptyLayerRefPtr WindowsRadioButtonBackground = EmptyLayer::create();
