@@ -92,8 +92,11 @@ class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
     virtual bool isPlaying(void) const;
     virtual void stop(bool DisconnectFromEventProducer = true);
 
-    virtual Real32 getLength(void) const;
-    virtual Real32 getCycleLength(void) const = 0;
+    Real32 getLength(void) const;
+    Real32 getCycleLength(void) const;
+
+    virtual Real32 getUnclippedCycleLength(void) const = 0;
+    virtual Real32 getUnclippedLength(void) const;
 
     void attachUpdateProducer(ReflexiveContainer* const producer);
     void detachUpdateProducer(void);

@@ -92,46 +92,6 @@ bool AnimationGroup::update(const Time& ElapsedTime)
         getAnimations(i)->update(ElapsedTime * getScale());
     }
 
- //   UInt32 PreUpdateCycleCount(getCycles());
-	//if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
-	//{
-	//	Real32 CycleLength(getCycleLength()),
-	//		   t(_CurrentTime + getOffset());
- //       
-	//	//Check if the Animation Time is past the end
-	//	if(t >= CycleLength)
-	//	{
-	//		//Update the number of cycles completed
- //           setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osgFloor( t / CycleLength ) )) );
- //           commitChanges();
-	//	}
-	//	//Internal Update
-	//	if(getCycling() > 0 && getCycles() >= getCycling())
-	//	{
-	//		internalUpdate(CycleLength-.0001, _PrevTime);
-	//	}
-	//	else
-	//	{
-	//		internalUpdate(t, _PrevTime);
-	//	}
-
-
-	//	//If the number of cycles has changed
-	//	if(getCycles() != PreUpdateCycleCount)
-	//	{
-	//		if(getCycling() > 0 && getCycles() >= getCycling())
-	//		{
- //               _UpdateEventConnection.disconnect();
- //               _IsPlaying = false;
-	//			produceAnimationEnded();
-	//		}
-	//		else
-	//		{
-	//			produceAnimationCycled();
-	//		}
-	//	}
-	//}
-
     _PrevTime = _CurrentTime;
 	//Return true if the animation has completed its number of cycles, false otherwise
 	return (getCycling() > 0 && getCycles() >= getCycling());
@@ -186,19 +146,28 @@ void AnimationGroup::internalUpdate(Real32 t, const Real32 prev_t)
 {
 }
 
-Real32 AnimationGroup::getLength(void) const
+Real32 AnimationGroup::getUnclippedLength(void) const
 {
-    Real32 MaxLength(0.0f);
-    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
+    if(getMFAnimations()->size() > 0)
     {
-        MaxLength = osgMax(MaxLength,getAnimations(i)->getLength());
+        return getAnimations(0)->getUnclippedLength();
     }
-    return MaxLength;
+    else
+    {
+        return -1.0f;
+    }
 }
 
-Real32 AnimationGroup::getCycleLength(void) const
+Real32 AnimationGroup::getUnclippedCycleLength(void) const
 {
-    return getLength();
+    if(getMFAnimations()->size() > 0)
+    {
+        return getAnimations(0)->getUnclippedCycleLength();
+    }
+    else
+    {
+        return -1.0f;
+    }
 }
 
 
