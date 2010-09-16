@@ -231,9 +231,10 @@ void MenuItem::setParentWindow(InternalWindow* const parent)
         getEnabled() && 
         getAcceleratorKey() != KeyEventDetails::KEY_NONE)
     {
-        //_AcceleratorTypedConnection = getParentWindow()->connectKeyAccelerator(static_cast<KeyEventDetails::Key>(getAcceleratorKey()),
-        //    getAcceleratorModifiers(), 
-        //    boost::bind(&MenuItem::handleAcceleratorTyped, this, _1));
+        _AcceleratorTypedConnection = 
+            getParentWindow()->connectKeyAccelerator(static_cast<KeyEventDetails::Key>(getAcceleratorKey()),
+                                                     getAcceleratorModifiers(), 
+                                                     boost::bind(&MenuItem::handleAcceleratorTyped, this, _1));
     }
 }
 
@@ -342,7 +343,7 @@ void MenuItem::dump(      UInt32    ,
     SLOG << "Dump MenuItem NI" << std::endl;
 }
 
-void MenuItem::handleAcceleratorTyped(KeyAcceleratorEventDetails* const e)
+void MenuItem::handleAcceleratorTyped(KeyEventDetails* const e)
 {
     //Set TopLevelMenu
     MenuRefPtr TopMenu(getTopLevelMenu());

@@ -128,7 +128,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
     
     virtual void actionPreformed(ActionEventDetails* const e);
     
-    void handleAcceleratorTyped(KeyAcceleratorEventDetails* const e);
+    void handleAcceleratorTyped(KeyEventDetails* const e);
     boost::signals2::connection _AcceleratorTypedConnection;
 
 
