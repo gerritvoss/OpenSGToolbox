@@ -43,6 +43,9 @@
 #endif
 
 #include "OSGAdvancedTextDomAreaBase.h"
+#include "OSGScrollPanel.h"
+#include "OSGTextDomArea.h"
+#include "OSGUIFont.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,9 +57,21 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
 {
   protected:
 
+	
+  	virtual Vec2f getPreferredScrollableViewportSize(void);
+    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+	//virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+	virtual Vec2f getContentRequestedSize(void) const;
+
+	UIFontRefPtr _Font;
+	//void createDefaultDom(void);
     /*==========================  PUBLIC  =================================*/
 
   public:
+
+	virtual void updateLayout(void);
+    void loadFile(BoostPath path);
+	void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
 
     typedef AdvancedTextDomAreaBase Inherited;
     typedef AdvancedTextDomArea     Self;
@@ -69,6 +84,12 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
                          UInt32            origin,
                          BitVector         details    );
 
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const AdvancedTextDomArea *source = NULL);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
@@ -81,6 +102,13 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+
+	ScrollPanelRefPtr TextAreaScrollPanel;
+	TextDomAreaRefPtr ExampleTextDomArea;
+
+	void drawGutter(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
+
+	/*! \}                                                                 */
 
     // Variables should all be in AdvancedTextDomAreaBase.
 

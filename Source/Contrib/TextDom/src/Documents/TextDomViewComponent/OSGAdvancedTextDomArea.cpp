@@ -48,6 +48,14 @@
 #include <OSGConfig.h>
 
 #include "OSGAdvancedTextDomArea.h"
+#include "OSGBorderLayoutConstraints.h"
+#include "OSGBorderLayout.h"
+#include "OSGFlowLayout.h"
+#include "OSGTextDomArea.h"
+#include "OSGSpringLayout.h"
+#include "OSGSpringLayoutConstraints.h";
+#include "OSGSplitPanel.h"
+#include "OSGUIFont.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,6 +79,127 @@ void AdvancedTextDomArea::initMethod(InitPhase ePhase)
     if(ePhase == TypeObject::SystemPost)
     {
     }
+}
+
+
+void AdvancedTextDomArea::loadFile(BoostPath path)
+{
+		// Create a TextDomArea component
+		ExampleTextDomArea = OSG::TextDomArea::create();
+		ExampleTextDomArea->setWrapStyleWord(false);
+        ExampleTextDomArea->setPreferredSize(Vec2f(600, 400));
+        ExampleTextDomArea->setMinSize(Vec2f(600,400));
+		ExampleTextDomArea->setFont(_Font);
+		ExampleTextDomArea->loadFile(path);
+		//ExampleTextDomArea->setLeftInset(25);
+		clearChildren();
+		pushToChildren(ExampleTextDomArea);
+		setPreferredSize(ExampleTextDomArea->getContentRequestedSize());
+}
+
+void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
+{
+	//Create and add the TextDomArea
+	if(source == NULL) return;
+		
+	_Font = UIFont::create();
+	_Font->setFamily("SANS");
+	_Font->setGap(3);
+	_Font->setGlyphPixelSize(46);
+	_Font->setSize(15);
+	_Font->setTextureWidth(0);
+	_Font->setStyle(TextFace::STYLE_PLAIN);
+
+	// Create a TextDomArea component
+	ExampleTextDomArea = OSG::TextDomArea::create();
+	ExampleTextDomArea->setWrapStyleWord(false);
+    ExampleTextDomArea->setPreferredSize(Vec2f(600, 400));
+    ExampleTextDomArea->setMinSize(Vec2f(600,400));
+	ExampleTextDomArea->setFont(_Font);
+	ExampleTextDomArea->loadFile(BoostPath("D:\\Work_Office_RA\\OpenSGToolBox\\Examples\\Tutorial\\TextDom\\Data\\SampleText3.txt"));
+//	ExampleTextDomArea->setLeftInset(25);
+
+	setPreferredSize(ExampleTextDomArea->getContentRequestedSize());
+
+	pushToChildren(ExampleTextDomArea);
+	
+	
+}
+
+void AdvancedTextDomArea::updateLayout()
+{
+    Pnt2f TopLeft, BottomRight;
+    getInsideInsetsBounds(TopLeft, BottomRight);
+
+	if(getMFChildren()->size() > 0)
+	{
+		Vec2f GutterSize(getGutterWidth(), 0.0f);
+		getChildren(0)->setPosition(TopLeft + GutterSize);
+		getChildren(0)->setSize(BottomRight - TopLeft - GutterSize);
+	}
+}
+
+void AdvancedTextDomArea::drawGutter(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+{
+	if(getMFChildren()->size())
+	{
+		TextDomAreaRefPtr textDomArea = dynamic_cast<TextDomArea*>(getChildren(0));
+
+		FixedHeightLayoutManagerRefPtr theManager = textDomArea->getTheManager();
+
+		Pnt2f topLeft,bottomRight;
+		textDomArea->getClipBounds(topLeft,bottomRight);
+		
+		Graphics->drawRect(topLeft,Pnt2f(topLeft.x()+getGutterWidth(),bottomRight.y()),Color4f(1,1,0,1),Opacity);
+
+		UInt32 topMostVisibleLine = theManager->getTopmostVisibleLineNumber();
+		UInt32 linesToBeDisplayed = theManager->getLinesToBeDisplayed();
+
+		std::ostringstream o;
+		for(UInt32 i=topMostVisibleLine ; i<topMostVisibleLine + linesToBeDisplayed;i++)
+		{
+			o<<(i+1);
+			Graphics->drawText(Pnt2f(topLeft.x(),i*theManager->getHeightOfLine()),o.str(),textDomArea->getFont(),Color4f(0.2,0.2,0.2,1.0),Opacity);
+			o.str("");
+			o.clear();
+		}
+		
+	}
+}
+
+Vec2f AdvancedTextDomArea::getPreferredScrollableViewportSize(void)
+{
+	if(getMFChildren()->size() > 0)
+	{
+		getChildren(0)->getPreferredScrollableViewportSize();
+	}
+	return getPreferredSize();
+}
+
+Int32 AdvancedTextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+{
+	return 15;
+}
+
+Vec2f AdvancedTextDomArea::getContentRequestedSize(void) const
+{
+	if(getMFChildren()->size()>0)
+	{
+		getChildren(0)->getRequestedSize();
+	}
+	else{ return Inherited::getContentRequestedSize();}
+}
+
+void AdvancedTextDomArea::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+{
+	
+	drawGutter(Graphics,Opacity);
+	Inherited::drawInternal(Graphics,Opacity);
+
+	
+	
+	/*if(getGutterVisible() && getTextDomArea() && getTextDomArea()->getManager())
+		getTextDomArea()->getManager()->drawGutter(Graphics,Opacity);*/
 }
 
 

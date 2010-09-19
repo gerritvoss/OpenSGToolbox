@@ -138,30 +138,30 @@ bool FixedHeightLayoutManager::isLastCharacterOfDocument() const
 UInt32 FixedHeightLayoutManager::getTopmostVisibleLineNumber() const
 {
 	Pnt2f topLeft,bottomRight;
-	if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-	{
+	/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
+	{*/
 		getTextDomArea()->getClipBounds(topLeft,bottomRight);
-	}
+	/*}
 	else
 	{
 		topLeft = _TheClipBoundsTopLeft;
 		bottomRight = _TheClipBoundsBottomRight;
-	}
+	}*/
 	return (UInt32(floor((topLeft.y()/* - getTextDomArea()->getPosition().y()*/ ) / heightOfLine))); 
 }
 
 UInt32 FixedHeightLayoutManager::getLinesToBeDisplayed() const
 {
 	Pnt2f topLeft,bottomRight;
-	if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-	{
+	/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
+	{*/
 		getTextDomArea()->getClipBounds(topLeft,bottomRight);
-	}
+	/*}
 	else
 	{
 		topLeft = _TheClipBoundsTopLeft;
 		bottomRight = _TheClipBoundsBottomRight;
-	}
+	}*/
 
 	if(bottomRight.x() == 0 && bottomRight.y() == 0 )
 		return (UInt32(ceil(getTextDomArea()->getPreferredSize().y()/ heightOfLine)));
@@ -290,15 +290,15 @@ void FixedHeightLayoutManager::calculatePreferredSize(void)
 	if(getTextDomArea()->getWrapStyleWord())
 	{
 		Pnt2f topLeft,bottomRight;
-		if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-		{
+		/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
+		{*/
 			getTextDomArea()->getClipBounds(topLeft,bottomRight);
-		}
+		/*}
 		else
 		{
 			topLeft = _TheClipBoundsTopLeft;
 			bottomRight = _TheClipBoundsBottomRight;
-		}
+		}*/
 		//getTextDomArea()->getClipBounds(topLeft,bottomRight);
 
 		if(topLeft.x() == 0 && topLeft.y() == 0)
@@ -386,15 +386,15 @@ Real32 FixedHeightLayoutManager::calculateWidthOfLongestLine(PlainDocumentBranch
 bool FixedHeightLayoutManager::insideGutterRegion(Real32 PointOnComponentX)const
 {
 	Pnt2f topLeft,bottomRight;
-	if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-	{
+	/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
+	{*/
 		getTextDomArea()->getClipBounds(topLeft,bottomRight);
-	}
+	/*}
 	else
 	{
 		topLeft = _TheClipBoundsTopLeft;
 		bottomRight = _TheClipBoundsBottomRight;
-	}
+	}*/
 	return ((PointOnComponentX - topLeft.x())<=(_GutterSpace + _GutterSeparation));
 }
 
@@ -1090,15 +1090,15 @@ bool FixedHeightLayoutManager::isCaretInWidthRange()
 {
 
 	Pnt2f topLeft,bottomRight;
-	if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-	{
+	/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
+	{*/
 		getTextDomArea()->getClipBounds(topLeft,bottomRight);
-	}
+	/*}
 	else
 	{
 		topLeft = _TheClipBoundsTopLeft;
 		bottomRight = _TheClipBoundsBottomRight;
-	}
+	}*/
 	return (_CaretXPosition>=topLeft.x() && _CaretXPosition<=bottomRight.x());
 }
 

@@ -376,23 +376,24 @@ void TextEditor::loadNewFile(BoostPath file)
 		_Font->setTextureWidth(0);
 		_Font->setStyle(TextFace::STYLE_PLAIN);
 
-		TextDomAreaRefPtr ExampleTextDomArea = TextDomArea::create();
+		AdvancedTextDomAreaRefPtr ExampleTextDomArea = AdvancedTextDomArea::create();
+		ExampleTextDomArea->setPreferredSize(Vec2f(400,400));
 		ExampleTextDomArea->loadFile(file);
-		ExampleTextDomArea->setPreferredSize(Vec2f(400, 400));
-		ExampleTextDomArea->setWrapStyleWord(false);
-		ExampleTextDomArea->setFont(_Font);
+		
+		/*ExampleTextDomArea->setWrapStyleWord(false);
+		ExampleTextDomArea->setFont(_Font);*/
 
 		ScrollPanelRefPtr _NewLeftTabContent = ScrollPanel::create();
 		_NewLeftTabContent->setPreferredSize(Vec2f(200,400));
 		_NewLeftTabContent->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-		_NewLeftTabContent->setViewComponent(ExampleTextDomArea);
+		_NewLeftTabContent->setViewComponent(ExampleTextDomArea); 
 
 		PanelRefPtr _NewRightTabLabelPanel = Panel::createEmpty();
 
 		ButtonRefPtr _RightTabLabelCloseButtonRefPtr = dynamic_pointer_cast<Button>(dynamic_cast<InternalWindow*>(InternalWindow::getClassType().getPrototype())->getTitlebar()->getCloseButton()->shallowCopy());
 
 		//_RightTabLabelCloseButtonRefPtr->setPreferredSize(Vec2f(20,10));
-		//_RightTabLabelCloseButtonRefPtr->setText("X");
+		// _RightTabLabelCloseButtonRefPtr->setText("X");
 
 		_RightTabLabelCloseButtonRefPtr->addActionListener(&_CloseButtonListener);
 
@@ -420,17 +421,15 @@ void TextEditor::loadNewFile(BoostPath file)
 		_NewRightTabLabelPanel->setLayout(/*LayoutRefPtr(FlowLayout::create())*/_NewRightTabLabelPanelSpringLayout);
 
 
-		TextDomAreaRefPtr ExampleTextDomArea2 =  /*dynamic_pointer_cast<TextDomArea>(deepClone(ExampleTextDomArea));*/TextDomArea::create();
-		//ExampleTextDomArea2->setManager(ExampleTextDomArea->getManager());
-		ExampleTextDomArea2->loadFile(file);
+		AdvancedTextDomAreaRefPtr ExampleTextDomArea2 =  /*dynamic_pointer_cast<AdvancedTextDomArea>(deepClone(ExampleTextDomArea));*/AdvancedTextDomArea::create();
 		ExampleTextDomArea2->setPreferredSize(Vec2f(400, 400));
-		ExampleTextDomArea2->setWrapStyleWord(false);
-		ExampleTextDomArea2->setFont(_Font);
+		ExampleTextDomArea2->loadFile(file);
+		
 
 		ScrollPanelRefPtr _NewRightTabContent = ScrollPanel::create();
 		_NewRightTabContent->setPreferredSize(Vec2f(200,400));
 		_NewRightTabContent->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-		_NewRightTabContent->setViewComponent(ExampleTextDomArea);
+		_NewRightTabContent->setViewComponent(ExampleTextDomArea2);
 
 
 		_LeftTabPanel->addTab(_NewLeftTabLabelPanel, _NewLeftTabContent);

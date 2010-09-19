@@ -85,7 +85,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 	bool isDocumentModelChangedListenerAttached(DocumentModelChangedListenerPtr Listener) const;
     void removeDocumentModelChangedListener(DocumentModelChangedListenerPtr Listener);
 	
-	//FixedHeightLayoutManagerRefPtr getManager(void);
+	FixedHeightLayoutManagerRefPtr getTheManager(void);
 	void setupCursor(void);
 
 	void  createDefaultFont(void);
@@ -125,6 +125,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
     virtual bool getScrollableHeightMinTracksViewport(void);
     virtual bool getScrollableWidthMinTracksViewport(void);*/
 	virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+
+	void handleDocumentModelChanged();
 
 	void disconnect(void);
 

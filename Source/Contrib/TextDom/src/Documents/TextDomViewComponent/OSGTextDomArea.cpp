@@ -122,7 +122,10 @@ void TextDomArea::loadFile(BoostPath pathOfFile)
 {
 	PlainDocumentRefPtr temp=dynamic_pointer_cast<PlainDocument>(TextFileHandler::the()->forceRead(pathOfFile));
 	if(temp)
+	{
 		setDocumentModel(temp);
+		handleDocumentModelChanged();
+	}
 }
 
 void TextDomArea::saveFile(BoostPath pathOfFile)
@@ -694,6 +697,26 @@ Vec2f TextDomArea::getContentRequestedSize(void) const
 	}
 }
 
+void TextDomArea::handleDocumentModelChanged(void)
+{
+	setPosition(Pnt2f(0,0));
+	SLOG<<"DocumentModel changed"<<std::endl;
+	if(Manager == NULL)
+	{
+		Manager = FixedHeightLayoutManager::create();
+		Manager->setTextDomArea(this);
+		Manager->calculateLineHeight();
+	}
+	Manager->initializeRootElement();
+	Manager->calculatePreferredSize();
+	if(getDocumentModel())getDocumentModel()->addDocumentListener(&_DocumentModifiedListener);
+	Manager->setHighlight(0,0,0,0);
+	Manager->populateCache();
+	updatePreferredSize();
+	Manager->updateViews();
+}
+
+
 TextDomArea::CaretUpdateListener::CaretUpdateListener(TextDomAreaRefPtr TheTextDomArea):_DrawCaret(true)
 {
 	_TextDomArea=TheTextDomArea;
@@ -741,22 +764,8 @@ void TextDomArea::changed(ConstFieldMaskArg whichField,
     Inherited::changed(whichField, origin, details);
 	if(whichField & TextDomArea::DocumentModelFieldMask)
 	{
-
-		setPosition(Pnt2f(0,0));
-		SLOG<<"DocumentModel changed"<<std::endl;
-		if(Manager == NULL)
-		{
-			Manager = FixedHeightLayoutManager::create();
-			Manager->setTextDomArea(this);
-			Manager->calculateLineHeight();
-		}
-		Manager->calculatePreferredSize();
-		if(getDocumentModel())getDocumentModel()->addDocumentListener(&_DocumentModifiedListener);
-		Manager->initializeRootElement();
-		Manager->setHighlight(0,0,0,0);
-		Manager->populateCache();
-		updatePreferredSize();
-		Manager->updateViews();
+		handleDocumentModelChanged();
+	
 	}
 	else if(whichField & TextDomArea::ClipBoundsFieldMask)
 	{
