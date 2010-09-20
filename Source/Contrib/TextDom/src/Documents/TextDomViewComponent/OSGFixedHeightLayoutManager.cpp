@@ -147,7 +147,8 @@ UInt32 FixedHeightLayoutManager::getTopmostVisibleLineNumber() const
 		topLeft = _TheClipBoundsTopLeft;
 		bottomRight = _TheClipBoundsBottomRight;
 	}*/
-	return (UInt32(floor((topLeft.y()/* - getTextDomArea()->getPosition().y()*/ ) / heightOfLine))); 
+	UInt32 topmostVisibleLineNumber = UInt32(floor((topLeft.y()) / heightOfLine));
+	return topmostVisibleLineNumber; 
 }
 
 UInt32 FixedHeightLayoutManager::getLinesToBeDisplayed() const
@@ -163,9 +164,13 @@ UInt32 FixedHeightLayoutManager::getLinesToBeDisplayed() const
 		bottomRight = _TheClipBoundsBottomRight;
 	}*/
 
+	UInt32 linesToBeDisplayed = 0;
 	if(bottomRight.x() == 0 && bottomRight.y() == 0 )
-		return (UInt32(ceil(getTextDomArea()->getPreferredSize().y()/ heightOfLine)));
-	return (UInt32(ceil((bottomRight.y() - topLeft.y())/heightOfLine)));
+		linesToBeDisplayed = (UInt32(ceil(getTextDomArea()->getPreferredSize().y()/ heightOfLine)));
+	else
+		linesToBeDisplayed = (UInt32(ceil((bottomRight.y() - topLeft.y())/heightOfLine)));
+
+	return linesToBeDisplayed;
 }
 
 
@@ -381,7 +386,6 @@ Real32 FixedHeightLayoutManager::calculateWidthOfLongestLine(PlainDocumentBranch
 	}
 	return finalWidth + 15.0;
 }
-
 
 bool FixedHeightLayoutManager::insideGutterRegion(Real32 PointOnComponentX)const
 {
@@ -1159,22 +1163,27 @@ void FixedHeightLayoutManager::doubleClickHandler(void)
 void FixedHeightLayoutManager::makeCaretVisible(UInt32 dir)
 {
 
-	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+	//PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
 	
+	Pnt2f TempTopLeft, TempBottomRight;
+	/*Vec2f Offset(getTextDomArea()->getPosition().x(),_CaretLine * heightOfLine);
+	getTextDomArea()->getFont()->getBounds(theElement->getText(), TempTopLeft, TempBottomRight);*/
+
+	TempTopLeft = Pnt2f(_CaretXPosition,_CaretYPosition);//TempTopLeft + Offset;
+	TempBottomRight = Pnt2f(_CaretXPosition + 25 + 2,_CaretYPosition+heightOfLine);//25 here denotes the gutterwidth .. should not hardcode here
+
 	if(getTextDomArea()->getParentContainer() != NULL && getTextDomArea()->getParentContainer()->getType().isDerivedFrom(UIViewport::getClassType()))
 	{
 		//Get the bounds of this line
-		Pnt2f TempTopLeft, TempBottomRight;
-		Vec2f Offset(getTextDomArea()->getPosition().x(),_CaretLine * heightOfLine);
-		getTextDomArea()->getFont()->getBounds(theElement->getText(), TempTopLeft, TempBottomRight);
-
-		TempTopLeft = Pnt2f(_CaretXPosition,_CaretYPosition);//TempTopLeft + Offset;
-		TempBottomRight = Pnt2f(_CaretXPosition + 2,_CaretYPosition+heightOfLine);//TempBottomRight + Offset;
-
 		dynamic_cast<UIViewport*>(getTextDomArea()->getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
-
-		this->updateViews();
 	}
+	else if(getTextDomArea()->getParentContainer() != NULL && 
+		getTextDomArea()->getParentContainer()->getParentContainer() != NULL && 
+		getTextDomArea()->getParentContainer()->getParentContainer()->getType().isDerivedFrom(UIViewport::getClassType()))
+	{
+		dynamic_cast<UIViewport*>(getTextDomArea()->getParentContainer()->getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
+	}
+	updateViews();
 
 
 	//Pnt2f topLeft,bottomRight;

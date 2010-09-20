@@ -90,7 +90,14 @@ void PlainTextFileType::removeSlashRandSlashN(std::string &word)
 	std::string temp="";
 	for(UInt32 i=0;i<word.length();i++)
 	{
-		if(word[i]!='\r' && word[i]!='\n')temp+=word[i];
+		if(word[i]!='\r' && word[i]!='\n' && word[i]!='\t')
+		{
+			temp+=word[i];
+		}
+		else if(word[i]=='\t')
+		{
+			temp+="    ";
+		}
 	}
 	word = temp;
 }

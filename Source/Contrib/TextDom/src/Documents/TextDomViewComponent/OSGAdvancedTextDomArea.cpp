@@ -126,6 +126,18 @@ void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
 	
 }
 
+std::string AdvancedTextDomArea::getHighlightedString(void)
+{
+	if(getMFChildren()->size() > 0)
+	{
+		return dynamic_cast<TextDomArea*>(getChildren(0))->getHighlightedString();
+	}
+	else 
+	{
+		return "";
+	}
+}
+
 void AdvancedTextDomArea::updateLayout()
 {
     Pnt2f TopLeft, BottomRight;
@@ -148,9 +160,9 @@ void AdvancedTextDomArea::drawGutter(const GraphicsWeakPtr Graphics, Real32 Opac
 		FixedHeightLayoutManagerRefPtr theManager = textDomArea->getTheManager();
 
 		Pnt2f topLeft,bottomRight;
-		textDomArea->getClipBounds(topLeft,bottomRight);
+		getClipBounds(topLeft,bottomRight);
 		
-		Graphics->drawRect(topLeft,Pnt2f(topLeft.x()+getGutterWidth(),bottomRight.y()),Color4f(1,1,0,1),Opacity);
+		Graphics->drawRect(topLeft,Pnt2f(topLeft.x()/*+getGutterWidth()*/+getGutterWidth(),bottomRight.y()),Color4f(1,1,0,1),Opacity);
 
 		UInt32 topMostVisibleLine = theManager->getTopmostVisibleLineNumber();
 		UInt32 linesToBeDisplayed = theManager->getLinesToBeDisplayed();
@@ -193,9 +205,9 @@ Vec2f AdvancedTextDomArea::getContentRequestedSize(void) const
 void AdvancedTextDomArea::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {
 	
-	drawGutter(Graphics,Opacity);
+	
 	Inherited::drawInternal(Graphics,Opacity);
-
+	drawGutter(Graphics,Opacity);
 	
 	
 	/*if(getGutterVisible() && getTextDomArea() && getTextDomArea()->getManager())

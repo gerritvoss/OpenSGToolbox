@@ -165,7 +165,6 @@ void TextDomArea::drawHighlightBG(const GraphicsWeakPtr Graphics, Real32 Opacity
 {
 	if(Manager->getRootElement())
 	{
-		// draw the lines inbetweeen
 		if(Manager->getHSL() != Manager->getHEL() ||  Manager->getHSI() != Manager->getHEI() )
 		{
 			if(Manager->isStartLocationBeforeEndLocation())
@@ -429,17 +428,20 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 
 				if(e->getKey() == KeyEvent::KEY_C)
 				{
-
-
-
-
-
-
-					getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard("hellooo");
+					std::string stringToTheClipboard = getHighlightedString();
+					getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard(stringToTheClipboard);
 				}
-				if(e->getKeyChar() == KeyEvent::KEY_V)
+				if(e->getKey() == KeyEvent::KEY_V)
 				{
-					std::cout<<getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard();
+					if(Manager->isSomethingSelected())
+					{
+						Manager->deleteSelected();
+					}
+					std::string theClipboard = getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard();
+					getDocumentModel()->insertString(getCaretPosition(),theClipboard,temp);
+					Manager->updateViews();
+					Manager->updateSize();
+					updatePreferredSize();
 				}
 			}
 			else
@@ -463,6 +465,56 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 	}
 }
 
+
+std::string TextDomArea::getHighlightedString(void)
+{
+	if(Manager->getHSL() != Manager->getHEL() ||  Manager->getHSI() != Manager->getHEI() )
+	{
+		if(Manager->isStartLocationBeforeEndLocation())
+		{
+			return(getHighlightedStringInternal(Manager->getHSL(),Manager->getHSI(),Manager->getHEL(),Manager->getHEI()));
+		}
+		else
+		{
+			return(getHighlightedStringInternal(Manager->getHEL(),Manager->getHEI(),Manager->getHSL(),Manager->getHSI()));
+		}
+	}
+	else 
+	{
+		return "";
+	}
+}
+
+std::string TextDomArea::getHighlightedStringInternal(UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex)
+{
+	std::string firstLine="";
+	std::string lastLine="";
+	std::string intermediateLines="";
+	PlainDocumentLeafElementRefPtr temp1 = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(lesserLine));
+	std::string temp2 = temp1->getText();
+	if(lesserLine== greaterLine)
+	{
+		return temp2.substr(lesserIndex,greaterIndex-lesserIndex);
+	}
+	else
+	{
+		// get the first line ...
+		firstLine = temp2.substr(lesserIndex);
+
+		// get the last line
+		temp1 = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(greaterLine));
+		temp2 = temp1->getText();
+		lastLine = temp2.substr(0,greaterIndex);
+	}
+
+	for(UInt32 i=lesserLine+1;i<greaterLine;i++)
+	{
+		PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(i));
+		intermediateLines+=theElement->getText();
+	}
+
+	return firstLine + intermediateLines + lastLine;
+}
 
 void TextDomArea::setupCursor(void)
 {

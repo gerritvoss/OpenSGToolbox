@@ -92,7 +92,7 @@ void TextEditor::keyTyped(const KeyEventUnrecPtr e)
 {
 		if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
-			if(e->getKeyChar() == 'f' || e->getKeyChar() == 'F')
+			if(e->getKey() == KeyEvent::KEY_F)
 			{
 				if(!TheDialog)
 				{
@@ -100,6 +100,8 @@ void TextEditor::keyTyped(const KeyEventUnrecPtr e)
 					inputValues.push_back("Main");
 					inputValues.push_back("main");
 					TheDialog = SearchWindow::createDialog("Search Window",inputValues);
+					TheDialog->setIconable(false);
+					TheDialog->setAllwaysOnTop(true);
 					TheDialog->addSearchWindowListener(&_TheSearchWindowListener);
 					TheDialog->setPosition(getParentWindow()->getPosition());
 					getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
@@ -120,8 +122,40 @@ void TextEditor::keyTyped(const KeyEventUnrecPtr e)
 					}
 				}
 			}
+			else if(e->getKey() == KeyEvent::KEY_C)
+			{
+				std::string theClipboard = getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard();
+				TheClipboardListModel->pushBack(boost::any(theClipboard));
+			}
 		}
 }
+
+void TextEditor::mouseClicked(const MouseEventUnrecPtr e)
+{
+	if(e->getButton() == e->BUTTON1)
+	{
+		if(e->getClickCount() == 2)
+		{
+			std::cout<<"double clicked\n";
+			if(e->getSource()== TheClipboardList)
+			{
+				std::cout<<"on the clipboard list\n";
+			}
+		}
+	}
+	Inherited::mouseClicked(e);
+}
+/*
+TextEditor::TheMouseListener::TheMouseListener(TextEditorRefPtr TheTextEditor)
+{
+	_TextEditor = TheTextEditor;
+}
+
+void TextEditor::TheMouseListener::mouseClicked(const MouseEventUnrecPtr e)
+{
+	_TextEditor->mouseClicked(e);
+}
+*/
 
 TextEditor::TheSearchWindowListener::TheSearchWindowListener(TextEditorRefPtr TheTextEditor)
 {
@@ -490,7 +524,7 @@ void TextEditor::clipboardInitialization()
 	TheClipboardListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 
 	TheClipboardListModel = DefaultListModel::create();
-	TheClipboardListModel->pushBack(boost::any(std::string("Red")));
+	//TheClipboardListModel->pushBack(boost::any(std::string("Red")));
 
 	TheClipboardList = List::create();
 	TheClipboardList->setPreferredSize(Vec2f(200, 400));

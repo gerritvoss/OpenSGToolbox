@@ -78,6 +78,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 	  void drawBraceHighlight(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
 	  void drawTheCaret(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
 	  void drawHighlightBGInternal(const GraphicsWeakPtr Graphics, Real32 Opacity,UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex) const;
+	  std::string getHighlightedStringInternal(UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex);
+	  
 
   public:
 
@@ -85,6 +87,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 	bool isDocumentModelChangedListenerAttached(DocumentModelChangedListenerPtr Listener) const;
     void removeDocumentModelChangedListener(DocumentModelChangedListenerPtr Listener);
 	
+	std::string getHighlightedString(void);
 	FixedHeightLayoutManagerRefPtr getTheManager(void);
 	void setupCursor(void);
 

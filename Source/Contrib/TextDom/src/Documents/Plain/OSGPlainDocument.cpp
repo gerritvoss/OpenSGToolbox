@@ -352,13 +352,18 @@ void PlainDocument::tokenize(std::string sentence,std::vector<std::string> & set
 	sentsize = sentence.length();
 	for(UInt32 i=0;i<sentence.size();i++)
 	{
-		if(i+1<sentence.size() && sentence[i] == '\\' && sentence[i+1] == 'n')
+		if(sentence[i] == '\r')
 		{
-			word=word+"\n";
+		}
+		else if(sentence[i] == '\t')
+		{
+			word+="    ";
+		}
+		else if(sentence[i] == '\n')
+		{
+			word=word+"\r\n";
 			setOfWords.push_back(word);
-			Int32 sizeofword = word.size();
 			word="";
-			i++;
 		}
 		else
 		{

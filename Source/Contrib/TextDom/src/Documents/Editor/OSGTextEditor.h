@@ -97,6 +97,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 		SpringLayoutRefPtr TheClipboardPanelLayout;
 
 			
+		virtual void mouseClicked(MouseEventUnrecPtr e);
+
 		void clipboardInitialization(void);
 		void createDomArea(void);
 
@@ -237,6 +239,21 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 
     void onCreate(const TextEditor *source = NULL);
 
+	/*void mouseClicked(const MouseEventUnrecPtr e);
+
+	class TheMouseListener : public MouseListener
+	{
+	public :
+		TheMouseListener(TextEditorRefPtr TheTextEditor);
+		
+        virtual void mouseClicked(const MouseEventUnrecPtr e);
+
+	protected :
+		TextEditor _TextEditor;
+	};
+
+	TheMouseListener _MouseListener;
+*/
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
 

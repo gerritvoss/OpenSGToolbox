@@ -69,6 +69,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
 
   public:
 
+	std::string getHighlightedString(void);
 	virtual void updateLayout(void);
     void loadFile(BoostPath path);
 	void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
