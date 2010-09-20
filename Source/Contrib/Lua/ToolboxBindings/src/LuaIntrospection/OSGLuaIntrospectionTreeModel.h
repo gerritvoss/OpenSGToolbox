@@ -36,27 +36,22 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFCPTRFIELDEDITOR_H_
-#define _OSGFCPTRFIELDEDITOR_H_
+#ifndef _OSGLUAINTROSPECTIONTREEMODEL_H_
+#define _OSGLUAINTROSPECTIONTREEMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGFCPtrFieldEditorBase.h"
-#include "OSGTextFieldFields.h"
-#include "OSGMenuButtonFields.h"
-#include "OSGLabelFields.h"
-#include "OSGActionEventDetailsFields.h"
-#include "OSGDialogWindowEventDetailsFields.h"
-#include "OSGFCPtrEditorStore.h"
+#include "OSGLuaIntrospectionTreeModelBase.h"
+#include "OSGLuaUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FCPtrFieldEditor class. See \ref
-           PageContribFieldContainerEditorFCPtrFieldEditor for a description.
+/*! \brief LuaIntrospectionTreeModel class. See \ref
+           PageContribLuaToolboxLuaIntrospectionTreeModel for a description.
 */
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtrFieldEditorBase
+class OSG_CONTRIBLUATOOLBOX_DLLMAPPING LuaIntrospectionTreeModel : public LuaIntrospectionTreeModelBase
 {
   protected:
 
@@ -64,8 +59,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
 
   public:
 
-    typedef FCPtrFieldEditorBase Inherited;
-    typedef FCPtrFieldEditor     Self;
+    typedef LuaIntrospectionTreeModelBase Inherited;
+    typedef LuaIntrospectionTreeModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -84,33 +79,55 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	//Returns the child of parent at index index in the parent's child array.
+	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const;
 
-    virtual const std::vector<const DataType*>& getEditableTypes(void) const;
+	//Returns the number of children of parent.
+	virtual UInt32 getChildCount(const boost::any& parent) const;
 
-    FCPtrEditorStorePtr getFCStore(void) const;
-    void setFCStore(FCPtrEditorStorePtr store);
+	//Returns the index of child in parent.
+	virtual UInt32 getIndexOfChild(const boost::any& parent, const boost::any& child) const;
 
-    static FCPtrEditorStorePtr getDefaultFindFCStorePrototype(void);
-    static void setDefaultFindFCStorePrototype(FCPtrEditorStorePtr fcStore);
+	//Returns the root of the tree.
+	virtual boost::any getRoot(void) const;
+
+	//Returns true if node is a leaf.
+	virtual bool isLeaf(const boost::any& node) const;
+
+	//Messaged when the user has altered the value for the item identified by path to newValue.
+	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
+
+    //Sets the root to root.
+    void setRoot(const std::string& root);
+
+    //Get the NodeUnrecPtr to the Root Node
+    const std::string& getRootLuaPath(void) const;
+
+    //Returns true if these objects represent the same node in the tree
+    virtual bool isEqual(const boost::any& left, const boost::any& right) const;
+
+    //Produces a TreeModelEvent that indicates the entire model has changed
+    //and any objects listening to the event need to update accordingly
+    void produceModelChanged(void);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in FCPtrFieldEditorBase.
+    // Variables should all be in LuaIntrospectionTreeModelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    FCPtrFieldEditor(void);
-    FCPtrFieldEditor(const FCPtrFieldEditor &source);
+    LuaIntrospectionTreeModel(void);
+    LuaIntrospectionTreeModel(const LuaIntrospectionTreeModel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FCPtrFieldEditor(void);
+    virtual ~LuaIntrospectionTreeModel(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -120,75 +137,23 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrFieldEditor : public FCPtr
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-	/*---------------------------------------------------------------------*/
-	/*! \name                   Class Specific                             */
-	/*! \{                                                                 */
-	void onCreate(const FCPtrFieldEditor *Id = NULL);
-	void onDestroy();
-	
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    virtual void resolveLinks(void);
-
-    /*! \}                                                                 */
-    virtual bool internalAttachField (FieldContainer* fc, UInt32 fieldId, UInt32 index);
-    virtual bool internalDettachField(void);
-
-    virtual void internalFieldChanged (void);
-    virtual void internalStartEditing (void);
-    virtual void internalStopEditing  (void);
-    virtual void internalCancelEditing(void);
-    virtual void updateLayout(void);
-
-    static std::vector<const DataType*> _EditableTypes;
-    LabelRefPtr _NameTypeLabel;
-    TextFieldRefPtr _EditingTextField;
-    MenuButtonRefPtr _EditingMenuButton;
-    std::string _InitialValue;
-    
-    virtual void openCreateHandler(void);
-    virtual void openFindContainerHandler(void);
-
-    void handleTextFieldFocusGained    (FocusEventDetails* const details);
-    void handleTextFieldFocusLost      (FocusEventDetails* const details);
-    void handleTextFieldActionPerformed(ActionEventDetails* const details);
-    void handleTextFieldKeyTyped       (KeyEventDetails* const details);
-    boost::signals2::connection _TextFieldFocusGainedConnection,
-                                _TextFieldFocusLostConnection,
-                                _TextFieldActionPerformedConnection,
-                                _TextFieldKeyTypedConnection;
-
-    void handleMenuButtonAction(ActionEventDetails* const details);
-    boost::signals2::connection _MenuButtonActionConnection;
-
-    void handleCreateContainerDialogClosed(DialogWindowEventDetails* const details);
-    boost::signals2::connection _CreateContainerDialogClosedConnection;
-
-    void handleFindContainerDialogClosed(DialogWindowEventDetails* const details);
-    boost::signals2::connection _FindContainerDialogClosedConnection;
-
-    FCPtrEditorStorePtr _FindFCStore;
-
-    static FCPtrEditorStorePtr _DefaultFindFCStorePrototype;
+    TreePath createPath(const std::string& luaPath) const;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class FCPtrFieldEditorBase;
+    friend class LuaIntrospectionTreeModelBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const FCPtrFieldEditor &source);
+    void operator =(const LuaIntrospectionTreeModel &source);
 };
 
-typedef FCPtrFieldEditor *FCPtrFieldEditorP;
+typedef LuaIntrospectionTreeModel *LuaIntrospectionTreeModelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFCPtrFieldEditorBase.inl"
-#include "OSGFCPtrFieldEditor.inl"
+#include "OSGLuaIntrospectionTreeModelBase.inl"
+#include "OSGLuaIntrospectionTreeModel.inl"
 
-#endif /* _OSGFCPTRFIELDEDITOR_H_ */
+#endif /* _OSGLUAINTROSPECTIONTREEMODEL_H_ */

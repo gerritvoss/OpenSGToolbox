@@ -886,6 +886,48 @@ void InternalWindow::updateLayout(void)
     ComponentContainer::updateLayout();
 }
 
+boost::signals2::connection InternalWindow::connectKeyAccelerator(KeyEventDetails::Key TheKey, 
+                                                                  UInt32 Modifiers,
+                                                                  const KeyPressedEventType::slot_type &listener,
+                                                                  boost::signals2::connect_position at)
+{
+    //Bind a predicate function to check the key/modifier pair
+    boost::function<bool (KeyEventDetails* const)> predicateFunc(boost::bind(&InternalWindow::doKeyDetailsMatch, _1, TheKey, Modifiers));
+
+    //Use the predicate function with a handleKeyAcceleratorCheck function
+    return connectKeyPressed(boost::bind(&InternalWindow::handleKeyAcceleratorCheck, _1, predicateFunc, listener), at);
+}
+
+boost::signals2::connection InternalWindow::connectKeyAccelerator(KeyEventDetails::Key TheKey, 
+                                                                  UInt32 Modifiers,
+                                                                  const KeyPressedEventType::group_type &group,
+                                                                  const KeyPressedEventType::slot_type &listener,
+                                                                  boost::signals2::connect_position at)
+{
+    //Bind a predicate function to check the key/modifier pair
+    boost::function<bool (KeyEventDetails* const)> predicateFunc(boost::bind(&InternalWindow::doKeyDetailsMatch, _1, TheKey, Modifiers));
+
+    //Use the predicate function with a handleKeyAcceleratorCheck function
+    return connectKeyPressed(group, boost::bind(&InternalWindow::handleKeyAcceleratorCheck, _1, predicateFunc, listener), at);
+}
+
+void InternalWindow::handleKeyAcceleratorCheck(KeyEventDetails* const details,
+                                               boost::function<bool (KeyEventDetails* const)> predicateFunc,
+                                               KeyPressedEventType::slot_type &listener)
+{
+    if(predicateFunc(details))
+    {
+        listener.operator()(details, InternalWindow::KeyPressedEventId);
+    }
+}
+
+bool InternalWindow::doKeyDetailsMatch(KeyEventDetails* const Details,
+                                       KeyEventDetails::Key   Key,
+                                       UInt32                 Modifires)
+{
+    return (Details->getKey() == Key) && (Details->getModifiers() & Modifires);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

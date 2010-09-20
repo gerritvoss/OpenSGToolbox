@@ -79,6 +79,7 @@
 #include "OSGNameAttachment.h"
 #include "OSGTextField.h"
 #include "OSGMenuButton.h"
+#include "OSGComboBox.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -158,31 +159,44 @@ void FCPtrFieldEditor::internalFieldChanged (void)
     assert(TheFieldHandle->getType().getClass() == FieldType::PtrField ||
            TheFieldHandle->getType().getClass() == FieldType::ChildPtrField);
 
+    //Get the Editing FCPtr
+    FieldContainer* EditingFC(NULL);
     if(TheFieldHandle->getCardinality() == FieldType::SingleField)
     {
         GetSFieldHandle<FieldContainerPtrSFieldBase>* ThePtrFieldHandle(dynamic_cast<GetSFieldHandle<FieldContainerPtrSFieldBase>*>(TheFieldHandle.get()));
-        if(ThePtrFieldHandle->get() != NULL)
-        {
-            _EditingTextField->setText(boost::lexical_cast<std::string>(ThePtrFieldHandle->get()->getId()));
-        }
-        else
-        {
-            _EditingTextField->setText("NULL");
-        }
+        EditingFC = ThePtrFieldHandle->get();
     }
     else
     {
         GetMFieldHandle<FieldContainerPtrMFieldBase>* ThePtrFieldHandle(dynamic_cast<GetMFieldHandle<FieldContainerPtrMFieldBase>*>(TheFieldHandle.get()));
-        if(ThePtrFieldHandle->size() > getEditingFieldIndex() &&
-           ThePtrFieldHandle->get(getEditingFieldIndex()) != NULL)
-        {
-            _EditingTextField->setText(boost::lexical_cast<std::string>(ThePtrFieldHandle->get(getEditingFieldIndex())->getId()));
-        }
-        else
-        {
-            _EditingTextField->setText("NULL");
-        }
+        EditingFC = ThePtrFieldHandle->get(getEditingFieldIndex());
     }
+
+    //Update the Editing Text
+    std::string EditingText("NULL");
+    std::string Name("");
+    std::string TypeName("");
+
+    if(EditingFC != NULL)
+    {
+        //Get the Id of the FieldContainer
+        EditingText = boost::lexical_cast<std::string>(EditingFC->getId());
+
+        //If the FieldContainer has a name attachment then get the name
+        if(EditingFC->getType().isDerivedFrom(AttachmentContainer::getClassType()) && 
+           getName(dynamic_cast<AttachmentContainer*>(EditingFC)))
+        {
+            Name = getName(dynamic_cast<AttachmentContainer*>(EditingFC));
+        }
+
+        //Get the name of the type of the FieldContainer
+        TypeName = EditingFC->getType().getName();
+    }
+
+
+    //Update the Labels and TextFields
+    _EditingTextField->setText(EditingText);
+    _NameTypeLabel->setText(Name + " [" + TypeName + "]");
 }
 
 void FCPtrFieldEditor::internalStartEditing (void)
@@ -219,12 +233,17 @@ void FCPtrFieldEditor::updateLayout(void)
     Pnt2f TopLeft, BottomRight;
     getInsideBorderBounds(TopLeft, BottomRight);
 
-    _EditingMenuButton->setSize(Vec2f(25.0f,BottomRight.y() - TopLeft.y()));
+    //Menu Button
+    _EditingMenuButton->setSize(Vec2f(_EditingMenuButton->getPreferredSize().x(),BottomRight.y() - TopLeft.y()));
     _EditingMenuButton->setPosition(BottomRight - _EditingMenuButton->getSize());
 
-    _EditingTextField->setPosition(TopLeft);
-    _EditingTextField->setSize(BottomRight - TopLeft -
-                               Vec2f(_EditingMenuButton->getSize().x(), 0.0f));
+    //Editing Text Field
+    _EditingTextField->setPosition(Pnt2f(BottomRight.x() - _EditingTextField->getPreferredSize().x() - _EditingMenuButton->getPreferredSize().x(), TopLeft.y()));
+    _EditingTextField->setSize(Vec2f(_EditingTextField->getPreferredSize().x(), BottomRight.y() - TopLeft.y()));
+
+    //Name/Type Label
+    _NameTypeLabel->setPosition(TopLeft);
+    _NameTypeLabel->setSize(Vec2f(_EditingTextField->getPosition().x() - TopLeft.x(), BottomRight.y() - TopLeft.y()));
     
 }
 
@@ -236,21 +255,63 @@ void FCPtrFieldEditor::onCreate(const FCPtrFieldEditor *Id)
 	Inherited::onCreate(Id);
     if(Id != NULL)
     {
+        //Name/Type Label
+        _NameTypeLabel = Label::create();
+        _NameTypeLabel->setBorders(NULL);
+        _NameTypeLabel->setBackgrounds(NULL);
+        pushToChildren(_NameTypeLabel);
+
+        //Editing Text Field
         _EditingTextField = TextField::create();
         pushToChildren(_EditingTextField);
         _TextFieldFocusGainedConnection = _EditingTextField->connectFocusGained(boost::bind(&FCPtrFieldEditor::handleTextFieldFocusGained, this, _1));
         _TextFieldFocusLostConnection = _EditingTextField->connectFocusLost(boost::bind(&FCPtrFieldEditor::handleTextFieldFocusLost, this, _1));
         _TextFieldActionPerformedConnection = _EditingTextField->connectActionPerformed(boost::bind(&FCPtrFieldEditor::handleTextFieldActionPerformed, this, _1));
         _TextFieldKeyTypedConnection = _EditingTextField->connectKeyTyped(boost::bind(&FCPtrFieldEditor::handleTextFieldKeyTyped, this, _1));
+        _EditingTextField->setPreferredSize(Vec2f(45.0f, 17.0f));
 
         DefaultListModelRefPtr FCCommandsListModel = DefaultListModel::create();
         FCCommandsListModel->pushBack(boost::any(std::string("Create ...")));
+        FCCommandsListModel->pushBack(boost::any(std::string("Load ...")));
         FCCommandsListModel->pushBack(boost::any(std::string("Find ...")));
 
         _EditingMenuButton = MenuButton::create();
+        _EditingMenuButton->setPreferredSize(Vec2f(25.0f, 25.0f));
         //_EditingMenuButton =
             //dynamic_pointer_cast<Button>(dynamic_cast<ComboBox*>(ComboBox::getClassType().getPrototype())->getExpandButton()->shallowCopy());
         _EditingMenuButton->setModel(FCCommandsListModel);
+
+        //Get the Default ComboBox expander
+        Button* ProtoButton = dynamic_cast<ComboBox*>(ComboBox::getClassType().getPrototype())->getExpandButton();
+
+        //Backgrounds
+        _EditingMenuButton->setBackground(ProtoButton->getBackground());
+        _EditingMenuButton->setFocusedBackground(ProtoButton->getFocusedBackground());
+        _EditingMenuButton->setDisabledBackground(ProtoButton->getDisabledBackground());
+        _EditingMenuButton->setRolloverBackground(ProtoButton->getRolloverBackground());
+        _EditingMenuButton->setActiveBackground(ProtoButton->getActiveBackground());
+
+        //Foregrounds
+        _EditingMenuButton->setForeground(ProtoButton->getForeground());
+        _EditingMenuButton->setFocusedForeground(ProtoButton->getFocusedForeground());
+        _EditingMenuButton->setDisabledForeground(ProtoButton->getDisabledForeground());
+        _EditingMenuButton->setRolloverForeground(ProtoButton->getRolloverForeground());
+        _EditingMenuButton->setActiveForeground(ProtoButton->getActiveForeground());
+
+        //DrawObjects
+        _EditingMenuButton->setDrawObject(ProtoButton->getDrawObject());
+        _EditingMenuButton->setFocusedDrawObject(ProtoButton->getFocusedDrawObject());
+        _EditingMenuButton->setDisabledDrawObject(ProtoButton->getDisabledDrawObject());
+        _EditingMenuButton->setRolloverDrawObject(ProtoButton->getRolloverDrawObject());
+        _EditingMenuButton->setActiveDrawObject(ProtoButton->getActiveDrawObject());
+
+        //Borders
+        _EditingMenuButton->setBorder(ProtoButton->getBorder());
+        _EditingMenuButton->setFocusedBorder(ProtoButton->getFocusedBorder());
+        _EditingMenuButton->setDisabledBorder(ProtoButton->getDisabledBorder());
+        _EditingMenuButton->setRolloverBorder(ProtoButton->getRolloverBorder());
+        _EditingMenuButton->setActiveBorder(ProtoButton->getActiveBorder());
+
         _MenuButtonActionConnection = _EditingMenuButton->connectMenuActionPerformed(boost::bind(&FCPtrFieldEditor::handleMenuButtonAction, this, _1));
         pushToChildren(_EditingMenuButton);
     }
@@ -370,7 +431,10 @@ void FCPtrFieldEditor::handleMenuButtonAction(ActionEventDetails* const details)
         case 0:     //Create
             openCreateHandler();
             break;
-        case 1:     //Find
+        case 1:     //Load
+            //openFindContainerHandler();
+            break;
+        case 2:     //Find
             openFindContainerHandler();
             break;
         default:

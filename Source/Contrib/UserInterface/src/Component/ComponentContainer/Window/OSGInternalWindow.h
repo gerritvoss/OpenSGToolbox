@@ -110,15 +110,23 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	bool takeFocus(bool Temporary = false);
 
     boost::signals2::connection connectKeyAccelerator(KeyEventDetails::Key TheKey, 
-                                                      UInt32 Modifiersconst,
-                                                      KeyPressedEventType::slot_type &listener,
-                                                      boost::signals2::connect_position at= boost::signals2::at_back);
+                                                      UInt32 Modifiers,
+                                                      const KeyPressedEventType::slot_type &listener,
+                                                      boost::signals2::connect_position at= boost::signals2::at_front);
 
     boost::signals2::connection connectKeyAccelerator(KeyEventDetails::Key TheKey, 
-                                                      UInt32 Modifiersconst,
+                                                      UInt32 Modifiers,
                                                       const KeyPressedEventType::group_type &group,
-                                                      KeyPressedEventType::slot_type &listener,
-                                                      boost::signals2::connect_position at= boost::signals2::at_back);
+                                                      const KeyPressedEventType::slot_type &listener,
+                                                      boost::signals2::connect_position at= boost::signals2::at_front);
+    
+    static void handleKeyAcceleratorCheck(KeyEventDetails* const details,
+                                          boost::function<bool (KeyEventDetails* const)> predicateFunc,
+                                          KeyPressedEventType::slot_type &listener);
+
+    static bool doKeyDetailsMatch(KeyEventDetails* const Details,
+                                  KeyEventDetails::Key   Key,
+                                  UInt32                 Modifires);
 
 	enum WindowArea
     {

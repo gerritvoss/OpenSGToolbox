@@ -88,9 +88,44 @@ void Animation::initMethod(InitPhase ePhase)
 
 Real32 Animation::getLength(void) const
 {
-    if(getCycles() > 0)
+    if(getCycling() > 0)
     {
-        return getCycleLength() * getCycles();
+        return getCycleLength() * static_cast<Real32>(getCycling());
+    }
+    else
+    {
+        return -1.0f;
+    }
+}
+
+Real32 Animation::getCycleLength(void) const
+{
+    Real32 UnclippedCycleLength;
+    if(getSpan() > 0.0f)
+    {
+        UnclippedCycleLength = getSpan();
+    }
+    else
+    {
+        UnclippedCycleLength = getUnclippedCycleLength();
+    }
+
+    if(UnclippedCycleLength < 0.0f ||
+       getScale() == 0.0f)
+    {
+        return -1.0f;
+    }
+    else
+    {
+        return UnclippedCycleLength / getScale();
+    }
+}
+
+Real32 Animation::getUnclippedLength(void) const
+{
+    if(getCycling() > 0)
+    {
+        return getUnclippedCycleLength() * static_cast<Real32>(getCycling());
     }
     else
     {
@@ -166,25 +201,36 @@ bool Animation::update(const Time& ElapsedTime)
     UInt32 PreUpdateCycleCount(getCycles());
 	if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
 	{
-		Real32 CycleLength(getCycleLength()),
-			   t(_CurrentTime + getOffset());
+		Real32 CycleLength(getCycleLength() * getScale());
         
 		//Check if the Animation Time is past the end
-		if(t >= CycleLength)
+		if(_CurrentTime >= CycleLength)
 		{
 			//Update the number of cycles completed
-            setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osgFloor( t / CycleLength ) )) );
+            setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osgFloor( _CurrentTime / CycleLength ) )) );
             commitChanges();
 		}
-		//Internal Update
+        Real32 t(_CurrentTime);
+
 		if(getCycling() > 0 && getCycles() >= getCycling())
 		{
-			internalUpdate(CycleLength-.0001, _PrevTime);
+            if(getSpan() > 0.0f)
+            {
+                t = getSpan();
+            }
+            t -= 0.0001f;
 		}
 		else
 		{
-			internalUpdate(t, _PrevTime);
+            if(getSpan() > 0.0f)
+            {
+                t -= osgFloor(_CurrentTime/getSpan())*getSpan();
+            }
 		}
+        t += getOffset();
+
+		//Internal Update
+        internalUpdate(t, _PrevTime);
 
 
 		//If the number of cycles has changed
@@ -192,12 +238,18 @@ bool Animation::update(const Time& ElapsedTime)
 		{
 			if(getCycling() > 0 && getCycles() >= getCycling())
 			{
+                //Animation has reached the end
+                //Remove the Animation from it's update producer
                 _UpdateEventConnection.disconnect();
                 _IsPlaying = false;
+
+                //Produce the Ended event
 				produceAnimationEnded();
 			}
 			else
 			{
+                //Animation hasn't finished yet
+                //Produce the Cycled event
 				produceAnimationCycled();
 			}
 		}

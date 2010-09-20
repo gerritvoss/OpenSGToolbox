@@ -78,7 +78,7 @@ void FieldAnimation::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Real32 FieldAnimation::getCycleLength(void) const
+Real32 FieldAnimation::getUnclippedCycleLength(void) const
 {
     return getAnimator()->getLength();
 }

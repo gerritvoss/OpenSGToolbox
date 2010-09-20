@@ -28,7 +28,7 @@
 #define _OPENSG_CAMERA_UTILS_H_
 
 #include "OSGConfig.h"
-#include "OSGSystemDef.h"
+#include "OSGUtilDef.h"
 
 #include "OSGCamera.h"
 #include "OSGPerspectiveCamera.h"
@@ -48,7 +48,7 @@ OSG_BEGIN_NAMESPACE
  * @param[in] Scene The node to view
  * @param[in] Up The direction to use as the up direction when calculating the camera orientation
  */
-void OSG_SYSTEM_DLLMAPPING showAll(PerspectiveCameraRefPtr TheCamera, NodeRefPtr Scene, Vec3f Up = Vec3f(0.0,1.0,0.0));
+void OSG_UTIL_DLLMAPPING showAll(PerspectiveCameraRefPtr TheCamera, NodeRefPtr Scene, Vec3f Up = Vec3f(0.0,1.0,0.0));
 
 /**
  * \brief Set position and direction of camera to show all of a node.
@@ -63,7 +63,7 @@ void OSG_SYSTEM_DLLMAPPING showAll(PerspectiveCameraRefPtr TheCamera, NodeRefPtr
  * @param[in] Scene The node to view
  * @param[in] Up The direction to use as the up direction when calculating the camera orientation
  */
-void OSG_SYSTEM_DLLMAPPING showAll(CameraRefPtr TheCamera, NodeRefPtr Scene, Vec3f Up = Vec3f(0.0,1.0,0.0));
+void OSG_UTIL_DLLMAPPING showAll(CameraRefPtr TheCamera, NodeRefPtr Scene, Vec3f Up = Vec3f(0.0,1.0,0.0));
 
 OSG_END_NAMESPACE
 

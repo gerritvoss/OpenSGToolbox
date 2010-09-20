@@ -538,12 +538,14 @@ void Button::mousePressed(MouseEventDetails* const e)
 
             if(getParentWindow() != NULL && getParentWindow()->getParentDrawingSurface()!=NULL&& getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
             {
+                _ArmedMouseReleasedConnection.disconnect();
                 _ArmedMouseReleasedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseReleased(boost::bind(&Button::handleArmedMouseReleased, this, _1));
 
                 if(getEnableActionOnMouseDownTime())
                 {
                     produceMousePressedActionPerformed();
                     resetArmed();
+                    _ArmedUpdateEventConnection.disconnect();
                     _ArmedUpdateEventConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectUpdate(boost::bind(&Button::handleArmedUpdate, this, _1));
                 }
             }
@@ -887,26 +889,21 @@ void Button::dump(      UInt32    ,
 
 void Button::handleArmedMouseReleased(MouseEventDetails* const e)
 {
-	if(e->getButton() == MouseEventDetails::BUTTON1 &&
-       getParentWindow() &&
-       getParentWindow()->getParentDrawingSurface())
-	{
-		Pnt2f MousePos = ViewportToDrawingSurface(e->getLocation(), getParentWindow()->getParentDrawingSurface(), e->getViewport());
-        //If the Mouse is not within the button
-        if(!isContained(MousePos))
+	if(e->getButton() == MouseEventDetails::BUTTON1)
+    {
+        _ArmedMouseReleasedConnection.disconnect();
+        if(getEnableActionOnMouseDownTime())
         {
-            _Armed = false;
+            _ArmedUpdateEventConnection.disconnect();
         }
-
-		//Remove myself from the listener
-        if(getParentWindow() != NULL &&
-            getParentWindow()->getParentDrawingSurface() != NULL &&
-            getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
-        {
-            _ArmedMouseReleasedConnection.disconnect();
-            if(getEnableActionOnMouseDownTime())
+        if(getParentWindow() &&
+           getParentWindow()->getParentDrawingSurface())
+	    {
+		    Pnt2f MousePos = ViewportToDrawingSurface(e->getLocation(), getParentWindow()->getParentDrawingSurface(), e->getViewport());
+            //If the Mouse is not within the button
+            if(!isContained(MousePos))
             {
-                _ArmedUpdateEventConnection.disconnect();
+                _Armed = false;
             }
         }
 	}

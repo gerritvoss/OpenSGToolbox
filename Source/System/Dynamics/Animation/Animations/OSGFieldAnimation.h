@@ -80,13 +80,14 @@ class OSG_TBANIMATION_DLLMAPPING FieldAnimation : public FieldAnimationBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Real32 getCycleLength(void) const;
 
 	void setAnimatedField(FieldContainerUnrecPtr TheContainer, const std::string& FieldName);
 	void setAnimatedField(FieldContainerUnrecPtr TheContainer, UInt32 FieldID);
     
 	void setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, const std::string& FieldName, UInt32 Index);
 	void setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, UInt32 FieldID, UInt32 Index);
+
+    virtual Real32 getUnclippedCycleLength(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

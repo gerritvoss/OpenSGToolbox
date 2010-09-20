@@ -85,8 +85,8 @@ class OSG_TBANIMATION_DLLMAPPING AnimationGroup : public AnimationGroupBase
     virtual void pause(bool ShouldPause);
     virtual void stop(bool DisconnectFromEventProducer = true);
 
-    virtual Real32 getLength(void) const;
-    virtual Real32 getCycleLength(void) const;
+    virtual Real32 getUnclippedCycleLength(void) const;
+    virtual Real32 getUnclippedLength(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
