@@ -154,16 +154,6 @@ std::string PlainDocument::getText(Int32 offset, Int32 length) const
 
 
 		UInt32 elementCount = rootElement->getElementCount();
-//		std::vector<std::string> names;
-//
-//		for(UInt32 i=0;i<elementCount;i++)
-//		{
-//			PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
-//			names.push_back(temp->getText());	
-///*			std::cout<<"----------------"<<std::endl;
-//			std::cout<<"Element:"<<dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i))->getText()<<"Length:"<<PlainDocumentLeafElementRefPtr::dcast(rootElement->getElement(i))->getTextLength()<<std::endl;
-//			std::cout<<"----------------"<<std::endl;
-//*/		}
 
 		for(UInt32 i=0;i<rootElement->getElementCount();i++)
 		{
@@ -281,7 +271,6 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 			}
 			return;
 		}
-		//UInt32 theStartLeafElementIndex = theLeafElementIndex;
 		while(len>0 && theLeafElementIndex<rootElement->getElementCount())
 		{
 			PlainDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(theLeafElementIndex));
@@ -293,7 +282,6 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 					// delete the current leaf
 					removeElement(theLeafElementIndex,rootElement);
 					len-=leafElement->getTextLength();
-					//theLeafElementIndex--;
 				}
 				else	// current node needs to remain . this can happen only for the leaf element in which the offset was initially located 
 				{
@@ -316,7 +304,6 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 						leafElement->setText(textOfLeafElement);
 						len = 0;
 					}
-					//theLeafElementIndex--;
 				}
 			}
 			else // if all the remaining characters in the current leaf need NOT be removed 
@@ -327,17 +314,10 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 			
 				leafElement->setText(combinedString);
 
-				/*removeElement(theLeafElementIndex,rootElement);// code to delete current leaf ***
-
-				
-				std::vector<std::string> temp; // create and insert a leaf element containing the combinedString at theStartLeafElementIndex
-				temp.push_back(combinedString);
-				addElements(theStartLeafElementIndex,"","",temp,rootElement);*/
 				len = 0;
 				break;
 			}
 			locationToRemoveFrom = 0;
-			//theLeafElementIndex++;
 			
 		}
 	}
@@ -412,7 +392,6 @@ void PlainDocument::insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, 
 
 }
 
-//void PlainDocument::insertString(UInt32 offset, const std::string& str, TextWithProps& properties)
 void PlainDocument::insertCharacter(UInt32 offset, const char character, TextWithProps& properties)
 {
 
@@ -544,10 +523,7 @@ void PlainDocument::deleteCharacters(UInt32 lesserIndex,UInt32 lesserOffset,UInt
 	
 	leafElement2 = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(lesserIndex+1)); // get the last element
 
-	/*if(greaterOffset<leafElement2->getTextLength())
-	{*/
-		leafElement->setText(temp + leafElement2->getText().substr(greaterOffset));		// modify the last element
-	//}
+	leafElement->setText(temp + leafElement2->getText().substr(greaterOffset));		// modify the last element
 
 	removeElement(lesserIndex+1,rootElement);
 
@@ -694,67 +670,10 @@ void PlainDocument::addElements(Int32 theLeafElementIndex,std::string theCharact
 		newPtr->setText(setOfWords[i]);
 		UInt32 tempsize = newPtr->getTextLength();
 		rootElement->addChildElement(theLeafElementIndex,newPtr);
-
-			//rootElement->getMFChildElements().insert(rootElement->getMFChildElements().begin()+theLeafElementIndex,newPtr);
-
 	}
-
 				
 	return;
 }
-//void PlainDocument::putProperty(const std::string& key, UInt32 value)
-//{
-//	// PlainDocument has no property to put!
-//	return;
-//}
-//
-//const std::map<std::string,UInt32>& PlainDocument::getDocumentProperties(void) const
-//{
-//	std::map<std::string,UInt32> temp;
-//	return temp;
-//}
-
-//ElementRefPtr PlainDocument::getParagraphElement(UInt32 pos) const
-//{
-//	// there are not paragraph elements in plain document!
-//	return NULL;
-//}
-//void PlainDocument::readLock(void)
-//{
-//	// TODO:X
-//	return;
-//}
-//
-//void PlainDocument::readUnlock(void)
-//{
-//	// TODO:X
-//	return;
-//}
-//void PlainDocument::setDocumentProperties(const std::map<std::string,UInt32>& properties)
-//{
-//	// no document properties to set!
-//	return;
-//}
-
-
-//ElementRefPtr PlainDocument::createBranchElement(ElementRefPtr parent, const std::map<std::string,UInt32>& a) const
-//{
-//	//TODO:X
-//	//PlainDocumentLeafElementRefPtr par = PlainDocumentLeafElementRefPtr::dcast(parent);
-//	PlainDocumentBranchElementRefPtr newBranchElementRefPtr = PlainDocumentBranchElement::create();
-//	//par->getMFChildElements().push_back(newBranchElementRefPtr);
-//	return newBranchElementRefPtr;
-//
-//}
-//
-//ElementRefPtr PlainDocument::createLeafElement(ElementRefPtr parent, const std::map<std::string,UInt32>& a, Int32 p0, Int32 p1) const
-//{
-//	//TODO:X
-////	PlainDocumentBranchElementRefPtr par = PlainDocumentBranchElementRefPtr::dcast(parent);
-////	PlainDocumentLeafElementRefPtr newLeafElementRefPtr = PlainDocumentLeafElement::create();
-////	par->editMFChildElements()->push_back(newLeafElementRefPtr);
-//	return NULL;
-//}
 
 
 /***************************************************************************\

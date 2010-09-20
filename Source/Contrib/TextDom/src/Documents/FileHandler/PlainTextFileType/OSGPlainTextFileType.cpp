@@ -82,115 +82,68 @@ PlainTextFileType *PlainTextFileType::the(void)
 
 std::string PlainTextFileType::getName(void) const
 {
-	return std::string("PlainTextFileType");
+	return std::string("PlainTextFileType");	// unnecessary function . Can be removed . There for convenience
 }
 
 void PlainTextFileType::removeSlashRandSlashN(std::string &word)
 {
-	std::string temp="";
+	std::string Temp="";
 	for(UInt32 i=0;i<word.length();i++)
 	{
 		if(word[i]!='\r' && word[i]!='\n' && word[i]!='\t')
 		{
-			temp+=word[i];
+			Temp+=word[i];
 		}
 		else if(word[i]=='\t')
 		{
-			temp+="    ";
+			Temp+="    ";
 		}
 	}
-	word = temp;
+	word = Temp;
 }
 
 DocumentRefPtr PlainTextFileType::read(std::istream &InputStream,
 	                     const std::string& FileNameOrExtension)
 {
 	PlainDocumentRefPtr Result = PlainDocument::create();
-	//std::string sentence="";
-	TextWithProps props;
-	std::string word;
-	bool firstTime = true;
+	TextWithProps Props;
+	std::string Word;
+	bool FirstTime = true;
 	
-	GetSystemTime(&now);
-	unsigned int t1 = now.wSecond * 1000 + now.wMilliseconds;
+	//GetSystemTime(&now);
+	//unsigned int t1 = now.wSecond * 1000 + now.wMilliseconds;
 
-	while(std::getline(InputStream,word))
+	while(std::getline(InputStream,Word))
 	{
-		removeSlashRandSlashN(word);
-		Result->addTextAsNewElementToDocument(word+"\r\n",props,firstTime);
-		if(firstTime)firstTime=!firstTime;
+		removeSlashRandSlashN(Word);
+		Result->addTextAsNewElementToDocument(Word+"\r\n",Props,FirstTime);
+		if(FirstTime)FirstTime=!FirstTime;
 	}
 
-	GetSystemTime(&now);
-	unsigned int t2 = now.wSecond * 1000 + now.wMilliseconds;
+	//GetSystemTime(&now);
+	//unsigned int t2 = now.wSecond * 1000 + now.wMilliseconds;
 
-	std::cout<<"\nduration for reading:"<<t2-t1<<std::endl;		// end time in milliseconds
+//	std::cout<<"\nduration for reading:"<<t2-t1<<std::endl;		// end time in milliseconds
 
-
-/*	std::string sentence="";
-	TextWithProps props;
-	char chara;
-	while(InputStream.get(chara))
-	{
-		
-		if(chara == '\n')
-		{
-			sentence +="\\n";
-		}
-		else if(chara == '\r')
-		{
-		}
-		else
-		{
-			sentence += chara ;
-		}
-	}
-*/
-/*	GetSystemTime(&now);
-	t1 = now.wSecond * 1000 + now.wMilliseconds;
-
-	Result->insertString(UInt32(-1),sentence,props);
-
-	GetSystemTime(&now);
-	t2 = now.wSecond * 1000 + now.wMilliseconds;
-
-	std::cout<<"\nduration for inserting:"<<t2-t1<<std::endl;		// end time in milliseconds
-*/
 	return Result;
 }
 
 bool PlainTextFileType::write(DocumentRefPtr Doc, std::ostream &OutputStream,
                     const std::string& FileNameOrExtension)
 {
-	PlainDocumentRefPtr pdoc = dynamic_pointer_cast<PlainDocument>(Doc);
-	std::vector<ElementRefPtr> genericRoots;
-	genericRoots = pdoc->getRootElements();
-	for(UInt32 i=0;i<genericRoots.size();i++)
+	PlainDocumentRefPtr TheDocument = dynamic_pointer_cast<PlainDocument>(Doc);
+	std::vector<ElementRefPtr> GenericRoots;
+	GenericRoots = TheDocument->getRootElements();
+	for(UInt32 i=0;i<GenericRoots.size();i++)
 	{
 		PlainDocumentBranchElementRefPtr RootElement;
-		RootElement = dynamic_pointer_cast<PlainDocumentBranchElement>(genericRoots[i]);	
+		RootElement = dynamic_pointer_cast<PlainDocumentBranchElement>(GenericRoots[i]);	
 		
 		for(UInt32 j=0;j<RootElement->getElementCount()-1;j++)
 		{	
 			PlainDocumentLeafElementRefPtr LeafElement;
 			LeafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(RootElement->getElement(j));
 			OutputStream<<LeafElement->getText();
-
-			/*
-			std::string text = LeafElement->getText();
-
-			for(int i=0;i<text.size();i++)
-			{
-				if(text[i]=='\n')
-				{
-					OutputStream<<'\r';
-					OutputStream<<'\n';
-				}
-				else	
-				{
-					OutputStream.put(text[i]);
-				}
-			}*/
 		}
 		PlainDocumentLeafElementRefPtr LeafElement;
 		LeafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(RootElement->getElement(RootElement->getElementCount()-1));

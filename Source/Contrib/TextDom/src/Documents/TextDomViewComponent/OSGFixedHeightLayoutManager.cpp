@@ -138,15 +138,7 @@ bool FixedHeightLayoutManager::isLastCharacterOfDocument() const
 UInt32 FixedHeightLayoutManager::getTopmostVisibleLineNumber() const
 {
 	Pnt2f topLeft,bottomRight;
-	/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-	{*/
-		getTextDomArea()->getClipBounds(topLeft,bottomRight);
-	/*}
-	else
-	{
-		topLeft = _TheClipBoundsTopLeft;
-		bottomRight = _TheClipBoundsBottomRight;
-	}*/
+	getTextDomArea()->getClipBounds(topLeft,bottomRight);
 	UInt32 topmostVisibleLineNumber = UInt32(floor((topLeft.y()) / heightOfLine));
 	return topmostVisibleLineNumber; 
 }
@@ -154,16 +146,8 @@ UInt32 FixedHeightLayoutManager::getTopmostVisibleLineNumber() const
 UInt32 FixedHeightLayoutManager::getLinesToBeDisplayed() const
 {
 	Pnt2f topLeft,bottomRight;
-	/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-	{*/
-		getTextDomArea()->getClipBounds(topLeft,bottomRight);
-	/*}
-	else
-	{
-		topLeft = _TheClipBoundsTopLeft;
-		bottomRight = _TheClipBoundsBottomRight;
-	}*/
-
+	getTextDomArea()->getClipBounds(topLeft,bottomRight);
+	
 	UInt32 linesToBeDisplayed = 0;
 	if(bottomRight.x() == 0 && bottomRight.y() == 0 )
 		linesToBeDisplayed = (UInt32(ceil(getTextDomArea()->getPreferredSize().y()/ heightOfLine)));
@@ -252,9 +236,6 @@ void FixedHeightLayoutManager::updateViews(void)
 				else break;
 			}
 		}
-	//Vec2f temp = getTextDomArea()->getPreferredSize();
-	//temp.setValues(temp.x(),rootElement->getElementCount() * heightOfLine);
-	//getTextDomArea()->setPreferredSize(temp);
 	}
 }
 
@@ -295,16 +276,7 @@ void FixedHeightLayoutManager::calculatePreferredSize(void)
 	if(getTextDomArea()->getWrapStyleWord())
 	{
 		Pnt2f topLeft,bottomRight;
-		/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-		{*/
-			getTextDomArea()->getClipBounds(topLeft,bottomRight);
-		/*}
-		else
-		{
-			topLeft = _TheClipBoundsTopLeft;
-			bottomRight = _TheClipBoundsBottomRight;
-		}*/
-		//getTextDomArea()->getClipBounds(topLeft,bottomRight);
+		getTextDomArea()->getClipBounds(topLeft,bottomRight);
 
 		if(topLeft.x() == 0 && topLeft.y() == 0)
 		{
@@ -327,7 +299,7 @@ void FixedHeightLayoutManager::calculatePreferredSize(void)
 			_preferredWidth = osgMax(getTextDomArea()->getSize().x(),calculateWidthOfLongestLine(rootElement));
 			_preferredHeight =  rootElement->getElementCount() * heightOfLine;
 		}
-		else // do not know how this reaches here.. but it does reach here.
+		else 
 		{
 			_preferredWidth = getTextDomArea()->getSize().x();
 			_preferredHeight =  getTextDomArea()->getSize().y();
@@ -342,16 +314,12 @@ Vec2f  FixedHeightLayoutManager::getContentRequestedSize(void) const
 
 void FixedHeightLayoutManager::printDebugInformation(void) const
 {
-	//std::cout<<"printing line height..."<< heightOfLine<<std::endl;
-//	std::cout<<"printing width of character..."<< widthOfCharacter<<std::endl;
-//	std::cout<<"_CaretLine: "<<_CaretLine<<" _CaretIndex: "<<_CaretIndex<<std::endl;
-//	std::cout<<"HSL: "<<HSL<<" HSI: "<<HSI<<" HEL: "<<HEL<<" HEI: "<<HEI<<std::endl;
 }
 
 
 void FixedHeightLayoutManager::calculateLineHeight(void)
 {
-		// calculating the character height using 'Q' as the standard character
+		// calculating the character height using 'A' as the standard character
 		heightOfLine = LINEHEIGHT;
 		
 		UInt32 lineSpacing = getTextDomArea()->getLineSpacing();
@@ -363,9 +331,6 @@ void FixedHeightLayoutManager::calculateLineHeight(void)
 			getTextDomArea()->getFont()->getBounds("A",topLeft,bottomRight);
 			heightOfLine = bottomRight.y() - topLeft.y();
 		}
-
-		//heightOfLine +=  lineSpacing;
-
 }
 
 Real32 FixedHeightLayoutManager::calculateWidthOfLongestLine(PlainDocumentBranchElementRefPtr rootElement) const
@@ -390,15 +355,7 @@ Real32 FixedHeightLayoutManager::calculateWidthOfLongestLine(PlainDocumentBranch
 bool FixedHeightLayoutManager::insideGutterRegion(Real32 PointOnComponentX)const
 {
 	Pnt2f topLeft,bottomRight;
-	/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-	{*/
-		getTextDomArea()->getClipBounds(topLeft,bottomRight);
-	/*}
-	else
-	{
-		topLeft = _TheClipBoundsTopLeft;
-		bottomRight = _TheClipBoundsBottomRight;
-	}*/
+	getTextDomArea()->getClipBounds(topLeft,bottomRight);
 	return ((PointOnComponentX - topLeft.x())<=(_GutterSpace + _GutterSeparation));
 }
 
@@ -412,9 +369,9 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 
 		_CaretLine = row;
 		// calculating the caret line and caret y position
-		_CaretYPosition = /*getTextDomArea()->getPosition().y() +*/ row * heightOfLine;
+		_CaretYPosition = row * heightOfLine;
 		
-		Real32 xpos = PointOnComponent.x()/* - getTextDomArea()->getPosition().x()*/ - _GutterSpace - _GutterSeparation ;
+		Real32 xpos = PointOnComponent.x() - _GutterSpace - _GutterSeparation ;
 
 		if(row>=rootElement->getElementCount())
 		{
@@ -436,7 +393,7 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 			printDebugInformation();
 
 			getTextDomArea()->setCaretPosition(getTextDomArea()->getDocumentModel()->getEndPosition()-2);
-			return 0;	// returning not the correct value. 
+			return 0;	
 		}
 		for(UInt32 i=0;i<_CaretLine;i++)
 		{
@@ -474,7 +431,7 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 			
 		}
 
-		_CaretXPosition = _GutterSpace + _GutterSeparation /*+ getTextDomArea()->getPosition().x()*/ + widthSoFar;
+		_CaretXPosition = _GutterSpace + _GutterSeparation + widthSoFar;
 		pos += noOfCharacters;
 
 		HEL = _CaretLine;
@@ -1094,15 +1051,7 @@ bool FixedHeightLayoutManager::isCaretInWidthRange()
 {
 
 	Pnt2f topLeft,bottomRight;
-	/*if(getTextDomArea()->getParentContainer() && !getTextDomArea()->getParentContainer()->getType().isDerivedFrom(AdvancedTextDomArea::getClassType()))
-	{*/
-		getTextDomArea()->getClipBounds(topLeft,bottomRight);
-	/*}
-	else
-	{
-		topLeft = _TheClipBoundsTopLeft;
-		bottomRight = _TheClipBoundsBottomRight;
-	}*/
+	getTextDomArea()->getClipBounds(topLeft,bottomRight);
 	return (_CaretXPosition>=topLeft.x() && _CaretXPosition<=bottomRight.x());
 }
 
@@ -1117,7 +1066,6 @@ void FixedHeightLayoutManager::doubleClickHandler(void)
 	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
 	std::string theString = theElement->getText();
 
-	//Int32 Position(0);
 	Int32 BeginWord = 0;
 	Int32 EndWord = theElement->getTextLength();
 
@@ -1163,12 +1111,9 @@ void FixedHeightLayoutManager::doubleClickHandler(void)
 void FixedHeightLayoutManager::makeCaretVisible(UInt32 dir)
 {
 
-	//PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
 	
 	Pnt2f TempTopLeft, TempBottomRight;
-	/*Vec2f Offset(getTextDomArea()->getPosition().x(),_CaretLine * heightOfLine);
-	getTextDomArea()->getFont()->getBounds(theElement->getText(), TempTopLeft, TempBottomRight);*/
-
+	
 	TempTopLeft = Pnt2f(_CaretXPosition,_CaretYPosition);//TempTopLeft + Offset;
 	TempBottomRight = Pnt2f(_CaretXPosition + 25 + 2,_CaretYPosition+heightOfLine);//25 here denotes the gutterwidth .. should not hardcode here
 
@@ -1184,22 +1129,7 @@ void FixedHeightLayoutManager::makeCaretVisible(UInt32 dir)
 		dynamic_cast<UIViewport*>(getTextDomArea()->getParentContainer()->getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
 	}
 	updateViews();
-
-
-	//Pnt2f topLeft,bottomRight;
-	//getTextDomArea()->getClipBounds(topLeft,bottomRight);
-/*
-	switch(dir)
-	{
-	case DOWN:
-		//getTextDomArea()->setClipBounds(Pnt4f(topLeft.x(),topLeft.y()+heightOfLine,bottomRight.x(),bottomRight.y()+heightOfLine));
-		getTextDomArea()->setPosition(Pnt2f(getTextDomArea()->getPosition().x(),getTextDomArea()->getPosition().y()+heightOfLine));
-		break;
-	case UP:
-		//getTextDomArea()->setClipBounds(Pnt4f(topLeft.x(),topLeft.y()-heightOfLine,bottomRight.x(),bottomRight.y()-heightOfLine));
-		getTextDomArea()->setPosition(Pnt2f(getTextDomArea()->getPosition().x(),getTextDomArea()->getPosition().y()-heightOfLine));
-		break;
-	}*/
+	
 }
 
 bool FixedHeightLayoutManager::isLastCharacter(void)
@@ -1217,7 +1147,7 @@ void FixedHeightLayoutManager::recalculateCaretPositions(void)
 	std::string theSubstring = theElement->getText();
 	theSubstring = theSubstring.substr(0,_CaretIndex);
 	getTextDomArea()->getFont()->getBounds(theSubstring,topLeft,bottomRight);
-	_CaretXPosition = _GutterSpace + _GutterSeparation + /*getTextDomArea()->getPosition().x() + */bottomRight.x();
+	_CaretXPosition = _GutterSpace + _GutterSeparation + bottomRight.x();
 }
 
 Pnt2f FixedHeightLayoutManager::getXYPosition(UInt32 lineNumber,UInt32 index,bool isBeginning) const
@@ -1230,14 +1160,14 @@ Pnt2f FixedHeightLayoutManager::getXYPosition(UInt32 lineNumber,UInt32 index,boo
 	Pnt2f topLeft,bottomRight;
 	getTextDomArea()->getFont()->getBounds(substring,topLeft,bottomRight);
 
-	if(isBeginning)return Pnt2f(/*getTextDomArea()->getPosition().x() +*/ _GutterSpace + _GutterSeparation + bottomRight.x(),/*getTextDomArea()->getPosition().y()+*/lineNumber*heightOfLine);
-	return Pnt2f(/*getTextDomArea()->getPosition().x() + */_GutterSpace + _GutterSeparation + bottomRight.x(),/*getTextDomArea()->getPosition().y()+*/(lineNumber+1)*heightOfLine);
+	if(isBeginning)return Pnt2f( _GutterSpace + _GutterSeparation + bottomRight.x(),lineNumber*heightOfLine);
+	return Pnt2f(_GutterSpace + _GutterSeparation + bottomRight.x(),(lineNumber+1)*heightOfLine);
 
 }
 
 Pnt2f FixedHeightLayoutManager::getStartXYPosition(UInt32 lineNumber) const
 {
-	return Pnt2f(/*getTextDomArea()->getPosition().x() + */_GutterSpace + _GutterSeparation,/*getTextDomArea()->getPosition().y()+*/lineNumber*heightOfLine);
+	return Pnt2f(_GutterSpace + _GutterSeparation,lineNumber*heightOfLine);
 }
 
 Pnt2f FixedHeightLayoutManager::getEndXYPosition(UInt32 lineNumber) const
@@ -1245,7 +1175,7 @@ Pnt2f FixedHeightLayoutManager::getEndXYPosition(UInt32 lineNumber) const
 	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(lineNumber));
 	Pnt2f topLeft,bottomRight;
 	getTextDomArea()->getFont()->getBounds(theElement->getText(),topLeft,bottomRight);
-	return Pnt2f(/*getTextDomArea()->getPosition().x() + */_GutterSpace + _GutterSeparation + bottomRight.x(),/*getTextDomArea()->getPosition().y()+*/(lineNumber+1)*heightOfLine);
+	return Pnt2f(_GutterSpace + _GutterSeparation + bottomRight.x(),(lineNumber+1)*heightOfLine);
 }
 
 
@@ -1392,36 +1322,6 @@ bool FixedHeightLayoutManager::isEndingBraces(char value)
 	if(value == '}' || value == ']' || value == ')' || value == '>') return true;
 	return false;
 }
-
-//
-//void FixedHeightLayoutManager::drawGutter(const GraphicsWeakPtr Graphics, Real32 Opacity) const
-//{
-//	Pnt2f topLeft,bottomRight;
-//	getTextDomArea()->getClipBounds(topLeft,bottomRight);
-//
-//	bottomRight.setValues(topLeft.x() + _GutterSpace,bottomRight.y());
-//
-//	Graphics->drawRect(topLeft,bottomRight,Color4f(1,1,0,1),Opacity);
-//
-//	UInt32 topMostVisibleLine = getTopmostVisibleLineNumber();
-//	UInt32 linesToBeDisplayed = getLinesToBeDisplayed();
-//
-//	std::ostringstream o;
-//	for(UInt32 i=topMostVisibleLine ; i<topMostVisibleLine + linesToBeDisplayed;i++)
-//	{
-//		o<<(i+1);
-//		Graphics->drawText(Pnt2f(topLeft.x(),/*getTextDomArea()->getPosition().y() + */i*heightOfLine),o.str(),getTextDomArea()->getFont(),Color4f(0.2,0.2,0.2,1.0),Opacity);
-//		o.str("");
-//		o.clear();
-//	}
-//}
-
-
-//**********************************************************************************************************************************************
-
-
-// needs to be updated**************************************************************************************************************************
-
 
 
 void FixedHeightLayoutManager::populateCache(void)

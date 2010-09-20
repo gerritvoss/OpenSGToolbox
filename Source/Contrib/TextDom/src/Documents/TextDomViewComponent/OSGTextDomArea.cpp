@@ -132,6 +132,22 @@ void TextDomArea::saveFile(BoostPath pathOfFile)
 {
 	TextFileHandler::the()->forceWrite(getDocumentModel(),pathOfFile);
 }
+
+UInt32 TextDomArea::getTopmostVisibleLineNumber(void)
+{
+	return Manager->getTopmostVisibleLineNumber();
+}
+
+UInt32 TextDomArea::getLinesToBeDisplayed(void)
+{
+	return Manager->getLinesToBeDisplayed();
+}
+
+Real32 TextDomArea::getHeightOfLine(void)
+{
+	return Manager->getHeightOfLine();
+}
+
 void TextDomArea::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {
 	if(Manager)
@@ -152,11 +168,6 @@ void TextDomArea::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) c
 		}
 	}
 	
-	/*if(Manager)
-	{
-		Manager->drawGutter(Graphics,Opacity);
-	}*/
-
 	if(Manager && _CaretUpdateListener.DrawCaret())
 		drawTheCaret(Graphics,Opacity);
 }
@@ -267,27 +278,17 @@ void TextDomArea::DocumentModifiedListener::removeUpdate(const DocumentEventUnre
 
 void TextDomArea::changedUpdate(const DocumentEventUnrecPtr e)
 {
-	//std::cout<<"Detecting a change in the Document"<<std::endl;
-	//Manager->populateCache();
-	//Manager->updateViews();
 }
 
 void TextDomArea::insertUpdate(const DocumentEventUnrecPtr e)
 {
-	//std::cout<<"Detecting an insert	into the Document"<<std::endl;
-	//Manager->populateCache();
-	//Manager->updateViews();
 }
 
 void TextDomArea::removeUpdate(const DocumentEventUnrecPtr e)
 {
-	SWARNING << "Deleted an element"<<std::endl;
 	Manager->updateViews();
 	Manager->updateSize();
 	updatePreferredSize();
-	//std::cout<<"Detecting a remove in the Document"<<std::endl;
-	//Manager->populateCache();
-	//Manager->updateViews();
 }
 
 void TextDomArea::mouseDragged(const MouseEventUnrecPtr e)
@@ -349,16 +350,8 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 		{
 			if(Manager->getCaretLine()!=0 || Manager->getCaretIndex()!=0)
 			{
-				/*if(Manager->getCaretIndex())
-				{
-					Manager->moveTheCaret(LEFT,false);
-					getDocumentModel()->deleteCharacter(Manager->getCaretLine(),Manager->getCaretIndex());
-				}
-				else
-				{*/
-					Manager->moveTheCaret(LEFT,false,false);
-					getDocumentModel()->deleteCharacter(Manager->getCaretLine(),Manager->getCaretIndex());
-				//}
+				Manager->moveTheCaret(LEFT,false,false);
+				getDocumentModel()->deleteCharacter(Manager->getCaretLine(),Manager->getCaretIndex());
 			}
 		}
 	}
@@ -498,7 +491,7 @@ std::string TextDomArea::getHighlightedStringInternal(UInt32 lesserLine,UInt32 l
 	}
 	else
 	{
-		// get the first line ...
+		// get the first line 
 		firstLine = temp2.substr(lesserIndex);
 
 		// get the last line
@@ -566,27 +559,12 @@ void TextDomArea::focusLost(const FocusEventUnrecPtr e)
 	}
 	Inherited::focusLost(e);
 }
-/*
-UInt32 TextDomArea::numVisibleLines(void) const
-{
-	
-    Pnt2f ClipTopLeft, ClipBottomRight;
-	getClipBounds(ClipTopLeft, ClipBottomRight);
-    
-    Pnt2f TopLeft, BottomRight;
-	getFont()->getBounds("A", TopLeft, BottomRight);
-
-    return static_cast<Int32>(ClipBottomRight.y() - ClipTopLeft.y())/static_cast<Int32>(BottomRight.y() - TopLeft.y());
-}
-*/
 
 
 void TextDomArea::mouseClicked(const MouseEventUnrecPtr e)
 {
 
 	Manager->calculateCaretPosition(DrawingSurfaceToComponent(e->getLocation(), TextDomAreaRefPtr(this)),false);
-
-	//setCaretPosition(Position);
 
 	if(e->getButton() == e->BUTTON1)
 	{
@@ -605,6 +583,7 @@ void TextDomArea::mouseReleased(const MouseEventUnrecPtr e)
 	_IsMousePressed = false;
 	Inherited::mouseReleased(e);
 }
+
 void TextDomArea::mousePressed(const MouseEventUnrecPtr e)
 {
 	_IsMousePressed = true;
@@ -661,7 +640,7 @@ void TextDomArea::createDefaultFont(void)
 void TextDomArea::createDefaultLayer(void)
 {
 	tempBackground = ColorLayer::create();
-    this->setBackgrounds(tempBackground);
+    setBackgrounds(tempBackground);
     tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 }
 
@@ -669,53 +648,17 @@ void TextDomArea::createDefaultLayer(void)
 void TextDomArea::updatePreferredSize(void)
 {
 	setPreferredSize(getRequestedSize());
-	//setMinSize(Manager->getContentRequestedSize());
-	///setMaxSize(Manager->getContentRequestedSize());
 	produceDocumentModelChanged(NULL);
 }
 
 Int32 TextDomArea::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-/*    UInt16 MajorAxis;
-    if(orientation == ScrollBar::VERTICAL_ORIENTATION)
-    {
-        MajorAxis = 1;
-    }
-    else
-    {
-        MajorAxis = 0;
-    }
-    
-    return direction * (VisibleRectBottomRight[MajorAxis] - VisibleRectTopLeft[MajorAxis]);
-	*/
 	return 1;
 }
-/*
-bool TextDomArea::getScrollableTracksViewportHeight(void)
-{
-    return true;
-}
 
-bool TextDomArea::getScrollableTracksViewportWidth(void)
-{
-    return true;
-}
-
-
-bool TextDomArea::getScrollableHeightMinTracksViewport(void)
-{
-    return true;
-}
-
-bool TextDomArea::getScrollableWidthMinTracksViewport(void)
-{
-    return true;
-}
-*/
 Int32 TextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-	return 15;
-    /*if(getFont() != NULL)
+	if(getFont() != NULL)
     {
         UInt16 MajorAxis;
         if(orientation == ScrollBar::VERTICAL_ORIENTATION)
@@ -728,13 +671,13 @@ Int32 TextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, c
         }
         Pnt2f TopLeft, BottomRight;
 		getFont()->getBounds("A", TopLeft, BottomRight);
-        return BottomRight[MajorAxis] - TopLeft[MajorAxis] + getLineSpacing();
+		return BottomRight[MajorAxis] - TopLeft[MajorAxis] + (MajorAxis==1?getLineSpacing():0);
     }
     else
     {
         return Inherited::getScrollableUnitIncrement(VisibleRectTopLeft, VisibleRectBottomRight, orientation, direction);
     }
-    */
+    
 }
 
 Vec2f TextDomArea::getContentRequestedSize(void) const
@@ -745,7 +688,7 @@ Vec2f TextDomArea::getContentRequestedSize(void) const
 	}
 	else
 	{
-		return getSize();//getPreferredSize();
+		return getSize();
 	}
 }
 
@@ -821,7 +764,6 @@ void TextDomArea::changed(ConstFieldMaskArg whichField,
 	}
 	else if(whichField & TextDomArea::ClipBoundsFieldMask)
 	{
-		//std::cout<<"CBC"<<std::endl;
 		if(Manager)Manager->updateViews();
 	}
 	else if(whichField & TextDomArea::FontFieldMask)

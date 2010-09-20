@@ -85,16 +85,15 @@ void AdvancedTextDomArea::initMethod(InitPhase ePhase)
 void AdvancedTextDomArea::loadFile(BoostPath path)
 {
 		// Create a TextDomArea component
-		ExampleTextDomArea = OSG::TextDomArea::create();
-		ExampleTextDomArea->setWrapStyleWord(false);
-        ExampleTextDomArea->setPreferredSize(Vec2f(600, 400));
-        ExampleTextDomArea->setMinSize(Vec2f(600,400));
-		ExampleTextDomArea->setFont(_Font);
-		ExampleTextDomArea->loadFile(path);
-		//ExampleTextDomArea->setLeftInset(25);
+		_TheTextDomArea = OSG::TextDomArea::create();
+		_TheTextDomArea->setWrapStyleWord(false);
+        _TheTextDomArea->setPreferredSize(Vec2f(600, 400));
+        _TheTextDomArea->setMinSize(Vec2f(600,400));
+		_TheTextDomArea->setFont(_Font);
+		_TheTextDomArea->loadFile(path);
 		clearChildren();
-		pushToChildren(ExampleTextDomArea);
-		setPreferredSize(ExampleTextDomArea->getContentRequestedSize());
+		pushToChildren(_TheTextDomArea);
+		setPreferredSize(_TheTextDomArea->getContentRequestedSize());
 }
 
 void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
@@ -111,17 +110,16 @@ void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
 	_Font->setStyle(TextFace::STYLE_PLAIN);
 
 	// Create a TextDomArea component
-	ExampleTextDomArea = OSG::TextDomArea::create();
-	ExampleTextDomArea->setWrapStyleWord(false);
-    ExampleTextDomArea->setPreferredSize(Vec2f(600, 400));
-    ExampleTextDomArea->setMinSize(Vec2f(600,400));
-	ExampleTextDomArea->setFont(_Font);
-	ExampleTextDomArea->loadFile(BoostPath("D:\\Work_Office_RA\\OpenSGToolBox\\Examples\\Tutorial\\TextDom\\Data\\SampleText3.txt"));
-//	ExampleTextDomArea->setLeftInset(25);
+	_TheTextDomArea = OSG::TextDomArea::create();
+	_TheTextDomArea->setWrapStyleWord(false);
+    _TheTextDomArea->setPreferredSize(Vec2f(600, 400));
+    _TheTextDomArea->setMinSize(Vec2f(600,400));
+	_TheTextDomArea->setFont(_Font);
+	_TheTextDomArea->loadFile(BoostPath("D:\\Work_Office_RA\\OpenSGToolBox\\Examples\\Tutorial\\TextDom\\Data\\SampleText3.txt"));
 
-	setPreferredSize(ExampleTextDomArea->getContentRequestedSize());
+	setPreferredSize(_TheTextDomArea->getContentRequestedSize());
 
-	pushToChildren(ExampleTextDomArea);
+	pushToChildren(_TheTextDomArea);
 	
 	
 }
@@ -157,21 +155,19 @@ void AdvancedTextDomArea::drawGutter(const GraphicsWeakPtr Graphics, Real32 Opac
 	{
 		TextDomAreaRefPtr textDomArea = dynamic_cast<TextDomArea*>(getChildren(0));
 
-		FixedHeightLayoutManagerRefPtr theManager = textDomArea->getTheManager();
-
 		Pnt2f topLeft,bottomRight;
 		getClipBounds(topLeft,bottomRight);
 		
-		Graphics->drawRect(topLeft,Pnt2f(topLeft.x()/*+getGutterWidth()*/+getGutterWidth(),bottomRight.y()),Color4f(1,1,0,1),Opacity);
+		Graphics->drawRect(topLeft,Pnt2f(topLeft.x()+getGutterWidth(),bottomRight.y()),Color4f(1,1,0,1),Opacity);
 
-		UInt32 topMostVisibleLine = theManager->getTopmostVisibleLineNumber();
-		UInt32 linesToBeDisplayed = theManager->getLinesToBeDisplayed();
+		UInt32 topMostVisibleLine = textDomArea->getTopmostVisibleLineNumber();
+		UInt32 linesToBeDisplayed = textDomArea->getLinesToBeDisplayed();
 
 		std::ostringstream o;
 		for(UInt32 i=topMostVisibleLine ; i<topMostVisibleLine + linesToBeDisplayed;i++)
 		{
 			o<<(i+1);
-			Graphics->drawText(Pnt2f(topLeft.x(),i*theManager->getHeightOfLine()),o.str(),textDomArea->getFont(),Color4f(0.2,0.2,0.2,1.0),Opacity);
+			Graphics->drawText(Pnt2f(topLeft.x(),i* textDomArea->getHeightOfLine()),o.str(),textDomArea->getFont(),Color4f(0.2,0.2,0.2,1.0),Opacity);
 			o.str("");
 			o.clear();
 		}
@@ -190,7 +186,14 @@ Vec2f AdvancedTextDomArea::getPreferredScrollableViewportSize(void)
 
 Int32 AdvancedTextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-	return 15;
+	if(getMFChildren()->size() > 0)
+	{
+		return getChildren(0)->getScrollableUnitIncrement(VisibleRectTopLeft,VisibleRectBottomRight,orientation,direction);
+	}
+	else 
+	{
+		return 15;
+	}
 }
 
 Vec2f AdvancedTextDomArea::getContentRequestedSize(void) const
@@ -199,19 +202,16 @@ Vec2f AdvancedTextDomArea::getContentRequestedSize(void) const
 	{
 		getChildren(0)->getRequestedSize();
 	}
-	else{ return Inherited::getContentRequestedSize();}
+	else
+	{ 
+		return Inherited::getContentRequestedSize();
+	}
 }
 
 void AdvancedTextDomArea::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {
-	
-	
 	Inherited::drawInternal(Graphics,Opacity);
 	drawGutter(Graphics,Opacity);
-	
-	
-	/*if(getGutterVisible() && getTextDomArea() && getTextDomArea()->getManager())
-		getTextDomArea()->getManager()->drawGutter(Graphics,Opacity);*/
 }
 
 

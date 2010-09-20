@@ -102,7 +102,7 @@ void SyntaxHighlighterBase::loadDictionary(void)
 	std::string keyword;
 	while(input>>keyword)dictionary[keyword] = 1;
 
-	displayDictionary();
+	//displayDictionary();
 }
 
 void SyntaxHighlighterBase::displayDictionary(void)

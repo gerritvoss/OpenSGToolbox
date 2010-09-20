@@ -72,25 +72,15 @@ void AbstractBranchElement::initMethod(InitPhase ePhase)
 }
 
 
-//   Returns the children of the receiver as an Enumeration.
-//std::vector<std::string> AbstractBranchElement::children(void)
-//{
-//	//TODO:
-//	std::vector<std::string> temp;
-//	return temp;
-//}
-
 //   Returns true if the receiver allows children.
 bool AbstractBranchElement::getAllowsChildren(void) const
 {
-	//TODO:
 	return true;
 }
 
 //  Gets a child element.
 ElementRefPtr	AbstractBranchElement::getElement(UInt32 index) const
 {
-	//REALLY NEED TO DO!!!:
 	if(index < getElementCount())
 		return getChildElements(index);
 	else return NULL;
@@ -99,14 +89,12 @@ ElementRefPtr	AbstractBranchElement::getElement(UInt32 index) const
 //  Gets the number of children for the element.
 UInt32 AbstractBranchElement::getElementCount(void) const
 {
-	//REALLY NEED TO DO!!!:
 	return getMFChildElements()->size();
 }
 
 //  Gets the child element index closest to the given model offset.
 UInt32 AbstractBranchElement::getElementIndex(UInt32 offset) const
 {
-	//TODO:
 	return 0;
 }
 

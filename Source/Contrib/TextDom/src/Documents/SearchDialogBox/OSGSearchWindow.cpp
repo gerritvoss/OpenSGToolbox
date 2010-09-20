@@ -79,9 +79,7 @@ void SearchWindow::initMethod(InitPhase ePhase)
     }
 }
 
-void SearchWindow::close(/*UInt32 intOption,
-                         std::string searchText,
-						 std::string replaceText*/)
+void SearchWindow::close()
 {
     _VetoWindowClose = false;
 
@@ -195,13 +193,6 @@ SearchWindowUnrecPtr SearchWindow::createDialog(const std::string& Title,
                                                   const std::vector<std::string>& InputValues)
 {
     SearchWindowRefPtr TheDialog = SearchWindow::create();
-    //TheDialog->_InputType = INPUT_TEXT;
-
-    //Icon
-    /*ImageComponentRefPtr TheIcon = ImageComponent::create();
-    LineBorderRefPtr TempIconBorder = LineBorder::create();
-    TheIcon->setPreferredSize(Vec2f(45,45));
-    TheIcon->setBorders(TempIconBorder);*/
 
     //Search Button
     ButtonRefPtr SearchButton = Button::create();
@@ -228,9 +219,6 @@ SearchWindowUnrecPtr SearchWindow::createDialog(const std::string& Title,
     BookmarkAllButton->setMinSize(BookmarkAllButton->getPreferredSize());
     BookmarkAllButton->setPreferredSize(BookmarkAllButton->getRequestedSize());
     BookmarkAllButton->addActionListener(&TheDialog->_BookmarkAllButtonListener);
-
-    //Message Panel
-    /*TextAreaRefPtr MessagePanelText = createTransparentTextArea(Message);*/
 
     // Create Panel for bottom half of SplitPanel
     PanelRefPtr MessageButtonPanel;
@@ -288,7 +276,6 @@ SearchWindowUnrecPtr SearchWindow::createDialog(const std::string& Title,
 
 	TheDialog->_MatchCaseCheckboxButton = OSG::CheckboxButton::create();
     TheDialog->_MatchCaseCheckboxButton->setMinSize(Vec2f(50, 20));
-    //TheDialog->_MatchCaseCheckboxButton->setMaxSize(Vec2f(300, 100));
     TheDialog->_MatchCaseCheckboxButton->setPreferredSize(Vec2f(100, 20));
     TheDialog->_MatchCaseCheckboxButton->setEnabled(true);
     TheDialog->_MatchCaseCheckboxButton->setText("Match Case");
@@ -298,7 +285,6 @@ SearchWindowUnrecPtr SearchWindow::createDialog(const std::string& Title,
 
 	TheDialog->_MatchWholeWordCheckboxButton = OSG::CheckboxButton::create();
     TheDialog->_MatchWholeWordCheckboxButton->setMinSize(Vec2f(50, 20));
-    //TheDialog->_MatchWholeWordCheckboxButton->setMaxSize(Vec2f(300, 100));
     TheDialog->_MatchWholeWordCheckboxButton->setPreferredSize(Vec2f(100, 20));
     TheDialog->_MatchWholeWordCheckboxButton->setEnabled(true);
     TheDialog->_MatchWholeWordCheckboxButton->setText("Match Whole Word");
@@ -308,7 +294,6 @@ SearchWindowUnrecPtr SearchWindow::createDialog(const std::string& Title,
 
 	TheDialog->_MatchUseRegExCheckboxButton = OSG::CheckboxButton::create();
     TheDialog->_MatchUseRegExCheckboxButton->setMinSize(Vec2f(50, 20));
-    //TheDialog->_MatchUseRegExCheckboxButton->setMaxSize(Vec2f(300, 100));
     TheDialog->_MatchUseRegExCheckboxButton->setPreferredSize(Vec2f(100, 20));
     TheDialog->_MatchUseRegExCheckboxButton->setEnabled(true);
     TheDialog->_MatchUseRegExCheckboxButton->setText("Use Regular Expression");
@@ -327,8 +312,6 @@ SearchWindowUnrecPtr SearchWindow::createDialog(const std::string& Title,
 
     //Dialog Window
     SpringLayoutRefPtr DialogLayout = SpringLayout::create();
-    //TheDialog->pushToChildren(MessagePanelText);
-    //TheDialog->pushToChildren(TheIcon);
     TheDialog->pushToChildren(MessageButtonPanel);
 	TheDialog->pushToChildren(CheckBoxPanel);
 	TheDialog->pushToChildren(SearchLabel);
@@ -388,7 +371,6 @@ SearchWindow::SearchButtonListener::SearchButtonListener(SearchWindowRefPtr TheD
 
 void SearchWindow::SearchButtonListener::actionPerformed(const ActionEventUnrecPtr e)
 {
-    //_DialogWindow->close(SearchWindowEvent::DIALOG_OPTION_SEARCH,"",0);
 	_DialogWindow->searchActionPerformed(e);
 }
 
@@ -399,7 +381,6 @@ SearchWindow::ReplaceAllButtonListener::ReplaceAllButtonListener(SearchWindowRef
 
 void SearchWindow::ReplaceAllButtonListener::actionPerformed(const ActionEventUnrecPtr e)
 {
-    //_DialogWindow->close(SearchWindowEvent::DIALOG_OPTION_REPLACE,"",0);
 	_DialogWindow->replaceAllActionPerformed(e);	
 }
 
@@ -410,7 +391,6 @@ SearchWindow::BookmarkAllButtonListener::BookmarkAllButtonListener(SearchWindowR
 
 void SearchWindow::BookmarkAllButtonListener::actionPerformed(const ActionEventUnrecPtr e)
 {
-    //_DialogWindow->close(SearchWindowEvent::DIALOG_OPTION_REPLACE,"",0);
 	_DialogWindow->bookmarkAllActionPerformed(e);	
 }
 

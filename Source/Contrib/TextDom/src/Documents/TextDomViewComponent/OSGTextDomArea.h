@@ -83,6 +83,10 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 
   public:
 
+    typedef TextDomAreaBase Inherited;
+    typedef TextDomArea     Self;
+
+
     EventConnection addDocumentModelChangedListener(DocumentModelChangedListenerPtr Listener);
 	bool isDocumentModelChangedListenerAttached(DocumentModelChangedListenerPtr Listener) const;
     void removeDocumentModelChangedListener(DocumentModelChangedListenerPtr Listener);
@@ -110,10 +114,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 	virtual void focusGained(const FocusEventUnrecPtr e);
 	virtual void focusLost(const FocusEventUnrecPtr e);
 
-
-    typedef TextDomAreaBase Inherited;
-    typedef TextDomArea     Self;
-
 	void loadFile(BoostPath pathOfFile);
 	void saveFile(BoostPath pathOfFile);
 	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
@@ -123,13 +123,13 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 
 	virtual Vec2f getPreferredScrollableViewportSize(void);
     virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-  /*  virtual bool getScrollableTracksViewportHeight(void);
-    virtual bool getScrollableTracksViewportWidth(void);
-    virtual bool getScrollableHeightMinTracksViewport(void);
-    virtual bool getScrollableWidthMinTracksViewport(void);*/
-	virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+  	virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 
 	void handleDocumentModelChanged();
+
+	UInt32 getTopmostVisibleLineNumber(void);
+	UInt32 getLinesToBeDisplayed(void);
+	Real32 getHeightOfLine(void);
 
 	void disconnect(void);
 
@@ -167,9 +167,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 		//Gives notification that a portion of the document has been removed.
 		virtual void removeUpdate(const DocumentEventUnrecPtr e);
 
-		
-		
-
 	private:
 		bool _DrawCaret;
 		TextDomAreaRefPtr _TextDomArea;
@@ -177,24 +174,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 
 	DocumentModifiedListener _DocumentModifiedListener;
 
-
-//	class KeyListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
-////	class KeyListener : public KeyAdapter
-//	{
-//	public :
-//		KeyListener(TextDomAreaRefPtr TheTextDomArea);
-//		
-//        virtual void keyTyped(const KeyEventUnrecPtr e);
-//
-////        virtual void mouseReleased(const MouseEventUnrecPtr e);
-//        virtual void mouseDragged(const MouseEventUnrecPtr e);
-//
-//        void disconnect(void);
-//	protected :
-//		TextDomAreaRefPtr _TextDomArea;
-//	};
-//
-//	KeyListener _KeyListener;
 
 	mutable Time _CurrentCaretBlinkElps;
 

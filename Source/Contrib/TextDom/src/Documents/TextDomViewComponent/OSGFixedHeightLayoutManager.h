@@ -74,27 +74,19 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	UInt32 _EndingBraceIndex;
 	UInt32 _EndingBraceLine;
 
-
-	/*
-	*/
+	// would be used for word wrapped data
 	std::vector<UInt32> linesToElements;
-	/*
-	UInt32 getTopmostVisibleLineNumber() const;
-	UInt32 getLinesToBeDisplayed() const;*/
 	UInt32 getFirstLineOfElement(UInt32 lineNumber);
 	UInt32 totalNumberOfLines(void);
 	UInt32 getNumberOfLines(UInt32 lineNumber);
-	
+	////
+
 	ElementRefPtr defaultRoot;
 	PlainDocumentBranchElementRefPtr rootElement;
 	Real32 _preferredHeight;
 	Real32 _preferredWidth; 
 	Real32 heightOfLine;
 	Real32 calculateWidthOfLongestLine(PlainDocumentBranchElementRefPtr rootElement) const;
-	/*Pnt2f getEndXYPosition(UInt32 lineNumber) const;
-	Pnt2f getStartXYPosition(UInt32 lineNumber) const;
-	Pnt2f getXYPosition(UInt32 lineNumber,UInt32 index,bool isBeginning) const;
-	void drawHighlightBGInternal(const GraphicsWeakPtr Graphics, Real32 Opacity,UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex) const;*/
 	bool insideGutterRegion(Real32 PointOnComponentX)const;
 	bool isCaretInWidthRange(void);
 	UInt32 _CaretLine;
@@ -135,17 +127,12 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	virtual void updateViews(void);
 	bool isLastCharacterOfDocument() const;
 	virtual Vec2f getContentRequestedSize(void) const;
-	//virtual void printDebugInformation(void) const;
 	void calculateLineHeight(void);
 	UInt32 calculateCaretPosition(Pnt2f PointOnComponent,bool isDragging);
-	//void populateCache(void);
-	//void initializeRootElement();
 	void checkCaretVisibility(UInt32 dir);
 	bool isCaretVisible(void);
 	void makeCaretVisible(UInt32 dir);
 	bool isSomethingSelected(void);
-	//void deleteSelected(void);
-	//void deleteCharacters(UInt32 HSL,UInt32 HSI,UInt32 HEL,UInt32 HEI);
 	bool isStartLocationBeforeEndLocation(void) const;
 	void moveCaretEnd(bool isControlPressed);
 	void moveCaretHome(bool isControlPressed);
@@ -153,24 +140,19 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	void moveCaretDown(void);
 	void moveCaretLeft(void);
 	void moveCaretRight(void);
-	//void drawTheCaret(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
 	void moveTheCaret(UInt32 dir,bool isShiftPressed,bool isControlPressed);
 	void moveAndHighlightWord(UInt32 dir);
 	void recalculateCaretPositions(void);
 	void DoIfLineLongerThanPreferredSize() const;
-	//void drawHighlightBG(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
-	//void drawGutter(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
 	UInt32 getCaretIndex(void) const;
 	UInt32 getCaretLine(void) const;
 	void setHighlight(UInt32 startline,UInt32 startindex,UInt32 endline,UInt32 endindex);
-	
 	Real32 getHeightOfLine(void);
 	void doubleClickHandler(void);
 	void selectAll(void);
 	void tabHandler(bool isShiftPressed);
 	bool isLastCharacter(void);
 	void setTheClipBounds(Pnt2f topLeft,Pnt2f bottomRight);
-	/// braces related
 	void setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
 	void setEndingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
 	char oppositeBrace(char val);

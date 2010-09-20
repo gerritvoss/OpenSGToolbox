@@ -46,14 +46,9 @@
 #include "OSGAdvancedTextDomArea.h"
 
 #include "OSGScrollPanel.h"
-#include "OSGGridBagLayout.h"
-#include "OSGGridBagLayoutConstraints.h"
 #include "OSGLabel.h"
-#include "OSGScrollPanel.h"
 #include "OSGTextDomArea.h"
-#include "OSGTextArea.h"
 #include "OSGFixedHeightLayoutManager.h"
-#include "OSGFlowLayout.h"
 #include "OSGPanel.h"
 #include "OSGColorLayer.h"
 #include "OSGLineBorder.h"
@@ -83,18 +78,17 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 {
   protected:
 
-		PanelRefPtr thePanel;
-		SplitPanelRefPtr DomAreaAndClipboard;
-		SplitPanelRefPtr InsideDomArea;
+		SplitPanelRefPtr _DomAreaAndClipboard;
+		SplitPanelRefPtr _InsideDomArea;
 
 	    // Clipboard related
-		ListRefPtr TheClipboardList;
-		DefaultListModelRefPtr TheClipboardListModel;
-		ListSelectionModelPtr TheClipboardListSelectionModel;
-		ScrollPanelRefPtr TheClipboardScrollPanel;
-		LabelRefPtr TheClipboardLabel;
-		PanelRefPtr TheClipboardPanel;
-		SpringLayoutRefPtr TheClipboardPanelLayout;
+		ListRefPtr _TheClipboardList;
+		DefaultListModelRefPtr _TheClipboardListModel;
+		ListSelectionModelPtr _TheClipboardListSelectionModel;
+		ScrollPanelRefPtr _TheClipboardScrollPanel;
+		LabelRefPtr _TheClipboardLabel;
+		PanelRefPtr _TheClipboardPanel;
+		SpringLayoutRefPtr _TheClipboardPanelLayout;
 
 			
 		virtual void mouseClicked(MouseEventUnrecPtr e);
@@ -103,8 +97,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 		void createDomArea(void);
 
 
-		void updateLayout(bool isClipboardVisible);
-		void updateDomLayout(bool isSplit);
+		void updateLayout(bool isClipboardVisible);	// to update the layout of the editor(to show/hide the copy clipboard)
+		void updateDomLayout(bool isSplit);	// to update the layout of the Document Area (to show/hide the second view)
 
 		// Dom related
 		TabPanelRefPtr    _LeftTabPanel;
@@ -121,7 +115,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 
 		void actionPerformed(const ActionEventUnrecPtr e);
 
-		SearchWindowRefPtr TheDialog;
+		SearchWindowRefPtr TheSearchDialog;
 		class TheSearchWindowListener: public SearchWindowListener 
 		{
 		public:
@@ -168,22 +162,27 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 
 		virtual void keyTyped(const KeyEventUnrecPtr e);
 
+		/*void mouseClicked(const MouseEventUnrecPtr e);
+
+		class TheMouseListener : public MouseListener
+		{
+		public :
+			TheMouseListener(TextEditorRefPtr TheTextEditor);
+			
+			virtual void mouseClicked(const MouseEventUnrecPtr e);
+
+		protected :
+			TextEditor _TextEditor;
+		};
+
+		TheMouseListener _MouseListener;
+		*/
+
     /*==========================  PUBLIC  =================================*/
 
   public:
 
-	  void loadNewFile(BoostPath file);
-	  /// newly added////////////////////////////////////////////////////////////
-/*		void addTab(void);
-		void removeTab(UInt32);
-		void setIsSplit(bool value);	
-		bool getIsSplit(void);
-		void init(void);
-		void addTabWithText(BoostPath);
-		void closeCurrentWindow(void);
-		void saveTextFile(BoostPath);
-		void setView(UInt32 Index);*/
-	//////////////////////////////////////////////////////////////////////////////
+	void loadNewFile(BoostPath file);
 
     typedef TextEditorBase Inherited;
     typedef TextEditor     Self;
@@ -208,6 +207,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+
+  	
 
     // Variables should all be in TextEditorBase.
 
@@ -239,21 +240,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 
     void onCreate(const TextEditor *source = NULL);
 
-	/*void mouseClicked(const MouseEventUnrecPtr e);
 
-	class TheMouseListener : public MouseListener
-	{
-	public :
-		TheMouseListener(TextEditorRefPtr TheTextEditor);
-		
-        virtual void mouseClicked(const MouseEventUnrecPtr e);
-
-	protected :
-		TextEditor _TextEditor;
-	};
-
-	TheMouseListener _MouseListener;
-*/
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
 

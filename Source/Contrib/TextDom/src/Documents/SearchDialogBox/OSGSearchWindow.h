@@ -108,7 +108,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindow : public SearchWindowBase
 	bool isEventListenerAttached(EventListenerPtr Listener) const;
     void removeEventListener(EventListenerPtr Listener);
 	
-	virtual void close(/*UInt32 intOption, std::string strInput, std::string replaceText*/);
+	virtual void close();
     
 	static SearchWindowUnrecPtr createDialog(const std::string& Title,
                                                   const std::vector<std::string>& InputValues);
@@ -205,9 +205,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindow : public SearchWindowBase
         SearchWindowRefPtr _DialogWindow;
     };
     BookmarkAllButtonListener _BookmarkAllButtonListener;
-
-
-
 
 	typedef std::set<SearchWindowListenerPtr> SearchWindowListenerSet;
     typedef SearchWindowListenerSet::iterator SearchWindowListenerSetItor;

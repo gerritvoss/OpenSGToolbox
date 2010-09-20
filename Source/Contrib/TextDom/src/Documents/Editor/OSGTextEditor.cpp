@@ -94,38 +94,38 @@ void TextEditor::keyTyped(const KeyEventUnrecPtr e)
 		{
 			if(e->getKey() == KeyEvent::KEY_F)
 			{
-				if(!TheDialog)
+				if(!TheSearchDialog)
 				{
 					std::vector<std::string> inputValues;
 					inputValues.push_back("Main");
 					inputValues.push_back("main");
-					TheDialog = SearchWindow::createDialog("Search Window",inputValues);
-					TheDialog->setIconable(false);
-					TheDialog->setAllwaysOnTop(true);
-					TheDialog->addSearchWindowListener(&_TheSearchWindowListener);
-					TheDialog->setPosition(getParentWindow()->getPosition());
-					getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+					TheSearchDialog = SearchWindow::createDialog("Search Window",inputValues);
+					TheSearchDialog->setIconable(false);
+					TheSearchDialog->setAllwaysOnTop(true);
+					TheSearchDialog->addSearchWindowListener(&_TheSearchWindowListener);
+					TheSearchDialog->setPosition(getParentWindow()->getPosition());
+					getParentWindow()->getDrawingSurface()->openWindow(TheSearchDialog);
 				}
 				else
 				{
 					if(_IsDialogClosed)
 					{
-						getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+						getParentWindow()->getDrawingSurface()->openWindow(TheSearchDialog);
 						_IsDialogClosed = false;
 					}
 					else
 					{
 						getParentWindow()->setFocused(false);
-						TheDialog->setFocused(true);
-						TheDialog->takeFocus();
-						getParentWindow()->giveFocus(TheDialog);
+						TheSearchDialog->setFocused(true);
+						TheSearchDialog->takeFocus();
+						getParentWindow()->giveFocus(TheSearchDialog);
 					}
 				}
 			}
 			else if(e->getKey() == KeyEvent::KEY_C)
 			{
 				std::string theClipboard = getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard();
-				TheClipboardListModel->pushBack(boost::any(theClipboard));
+				_TheClipboardListModel->pushBack(boost::any(theClipboard));
 			}
 		}
 }
@@ -137,7 +137,7 @@ void TextEditor::mouseClicked(const MouseEventUnrecPtr e)
 		if(e->getClickCount() == 2)
 		{
 			std::cout<<"double clicked\n";
-			if(e->getSource()== TheClipboardList)
+			if(e->getSource()== _TheClipboardList)
 			{
 				std::cout<<"on the clipboard list\n";
 			}
@@ -331,15 +331,15 @@ void TextEditor::updateDomLayout(bool isSplit)
 {
     if(isSplit)
     {
-        InsideDomArea->setDividerPosition(.50); 
-        InsideDomArea->setMaxDividerPosition(.75);
-        InsideDomArea->setMinDividerPosition(.25);
+        _InsideDomArea->setDividerPosition(.50); 
+        _InsideDomArea->setMaxDividerPosition(.75);
+        _InsideDomArea->setMinDividerPosition(.25);
     }
     else
     {
-        InsideDomArea->setDividerPosition(1); 
-        InsideDomArea->setMaxDividerPosition(1);
-        InsideDomArea->setMinDividerPosition(1);
+        _InsideDomArea->setDividerPosition(1); 
+        _InsideDomArea->setMaxDividerPosition(1);
+        _InsideDomArea->setMinDividerPosition(1);
     }
 }
 
@@ -347,17 +347,17 @@ void TextEditor::updateLayout(bool isClipboardVisible)
 {
 	if(isClipboardVisible)
 	{
-		DomAreaAndClipboard->setDividerSize(5);
-		DomAreaAndClipboard->setDividerPosition(0.75);
-		DomAreaAndClipboard->setMaxDividerPosition(.9);
-		DomAreaAndClipboard->setMinDividerPosition(0.5);
+		_DomAreaAndClipboard->setDividerSize(5);
+		_DomAreaAndClipboard->setDividerPosition(0.75);
+		_DomAreaAndClipboard->setMaxDividerPosition(.9);
+		_DomAreaAndClipboard->setMinDividerPosition(0.5);
 	}
 	else
 	{
-		DomAreaAndClipboard->setDividerSize(0);
-		DomAreaAndClipboard->setDividerPosition(1); 
-        DomAreaAndClipboard->setMaxDividerPosition(1);
-        DomAreaAndClipboard->setMinDividerPosition(1);
+		_DomAreaAndClipboard->setDividerSize(0);
+		_DomAreaAndClipboard->setDividerPosition(1); 
+        _DomAreaAndClipboard->setMaxDividerPosition(1);
+        _DomAreaAndClipboard->setMinDividerPosition(1);
 	}
 }
 
@@ -484,14 +484,14 @@ void TextEditor::createDomArea(void)
 	BorderLayoutConstraintsRefPtr ExampleSplitPanelConstraints2 = OSG::BorderLayoutConstraints::create();
     ExampleSplitPanelConstraints2->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 	
-	InsideDomArea = SplitPanel::create();
+	_InsideDomArea = SplitPanel::create();
 
-	InsideDomArea->setConstraints(ExampleSplitPanelConstraints2);
-	InsideDomArea->setExpandable(true);
-	InsideDomArea->setDividerSize(2);
-	InsideDomArea->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
-	InsideDomArea->setMinComponent(_LeftTabPanel);
-	InsideDomArea->setMaxComponent(_RightTabPanel);
+	_InsideDomArea->setConstraints(ExampleSplitPanelConstraints2);
+	_InsideDomArea->setExpandable(true);
+	_InsideDomArea->setDividerSize(2);
+	_InsideDomArea->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
+	_InsideDomArea->setMinComponent(_LeftTabPanel);
+	_InsideDomArea->setMaxComponent(_RightTabPanel);
 	
 	updateDomLayout(getIsSplit());
 
@@ -507,57 +507,57 @@ void TextEditor::clipboardInitialization()
 	ExampleButton4Constraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
     ExampleButton5Constraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 
-	TheClipboardPanel = Panel::create();
+	_TheClipboardPanel = Panel::create();
 	
 	// the Clipboard label
-	TheClipboardLabel = Label::create();
-    TheClipboardLabel->setText("Copy Clipboard");
-    TheClipboardLabel->setTextColor(Color4f(0.3, 0.3, 0.3, 1.0));
-    TheClipboardLabel->setAlignment(Vec2f(0.5,0.5));
-    TheClipboardLabel->setPreferredSize(Vec2f(200, 20));
-    TheClipboardLabel->setTextSelectable(false);
-	TheClipboardLabel->setConstraints(ExampleButton4Constraints);
+	_TheClipboardLabel = Label::create();
+    _TheClipboardLabel->setText("Copy Clipboard");
+    _TheClipboardLabel->setTextColor(Color4f(0.3, 0.3, 0.3, 1.0));
+    _TheClipboardLabel->setAlignment(Vec2f(0.5,0.5));
+    _TheClipboardLabel->setPreferredSize(Vec2f(200, 20));
+    _TheClipboardLabel->setTextSelectable(false);
+	_TheClipboardLabel->setConstraints(ExampleButton4Constraints);
 
 	
 	// the Clipboard list
-	TheClipboardListSelectionModel=ListSelectionModelPtr(new DefaultListSelectionModel());
-	TheClipboardListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+	_TheClipboardListSelectionModel=ListSelectionModelPtr(new DefaultListSelectionModel());
+	_TheClipboardListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 
-	TheClipboardListModel = DefaultListModel::create();
-	//TheClipboardListModel->pushBack(boost::any(std::string("Red")));
+	_TheClipboardListModel = DefaultListModel::create();
+	//_TheClipboardListModel->pushBack(boost::any(std::string("Red")));
 
-	TheClipboardList = List::create();
-	TheClipboardList->setPreferredSize(Vec2f(200, 400));
-	TheClipboardList->setOrientation(List::VERTICAL_ORIENTATION);
-	TheClipboardList->setModel(TheClipboardListModel);
+	_TheClipboardList = List::create();
+	_TheClipboardList->setPreferredSize(Vec2f(200, 400));
+	_TheClipboardList->setOrientation(List::VERTICAL_ORIENTATION);
+	_TheClipboardList->setModel(_TheClipboardListModel);
 
-	TheClipboardList->setSelectionModel(TheClipboardListSelectionModel);
+	_TheClipboardList->setSelectionModel(_TheClipboardListSelectionModel);
 
-	TheClipboardScrollPanel = ScrollPanel::create();
-	TheClipboardScrollPanel->setPreferredSize(Vec2f(200,400));
-	TheClipboardScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-	TheClipboardScrollPanel->setViewComponent(TheClipboardList);
-	TheClipboardScrollPanel->setConstraints(ExampleButton5Constraints);
+	_TheClipboardScrollPanel = ScrollPanel::create();
+	_TheClipboardScrollPanel->setPreferredSize(Vec2f(200,400));
+	_TheClipboardScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+	_TheClipboardScrollPanel->setViewComponent(_TheClipboardList);
+	_TheClipboardScrollPanel->setConstraints(ExampleButton5Constraints);
 
 	    
     
 
-	/*SpringLayoutRefPtr TheClipboardPanelLayout = SpringLayout::create();
+	/*SpringLayoutRefPtr _TheClipboardPanelLayout = SpringLayout::create();
 	
-	TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheClipboardLabel, 10, SpringLayoutConstraints::NORTH_EDGE, TheClipboardPanel);
-	TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, TheClipboardLabel, 0, SpringLayoutConstraints::EAST_EDGE, TheClipboardPanel);
-	TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheClipboardLabel, 0, SpringLayoutConstraints::WEST_EDGE, TheClipboardPanel);
-	TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, TheClipboardLabel, 30, SpringLayoutConstraints::NORTH_EDGE, TheClipboardPanel);
+	_TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, _TheClipboardLabel, 10, SpringLayoutConstraints::NORTH_EDGE, _TheClipboardPanel);
+	_TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _TheClipboardLabel, 0, SpringLayoutConstraints::EAST_EDGE, _TheClipboardPanel);
+	_TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _TheClipboardLabel, 0, SpringLayoutConstraints::WEST_EDGE, _TheClipboardPanel);
+	_TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, _TheClipboardLabel, 30, SpringLayoutConstraints::NORTH_EDGE, _TheClipboardPanel);
 
-	TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TheClipboardScrollPanel, 40, SpringLayoutConstraints::NORTH_EDGE, TheClipboardPanel);
-	TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, TheClipboardScrollPanel, 0, SpringLayoutConstraints::EAST_EDGE, TheClipboardPanel);
-	TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TheClipboardScrollPanel, 0, SpringLayoutConstraints::WEST_EDGE, TheClipboardPanel);
-	TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, TheClipboardScrollPanel, 20, SpringLayoutConstraints::SOUTH_EDGE, TheClipboardPanel);*/
+	_TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, _TheClipboardScrollPanel, 40, SpringLayoutConstraints::NORTH_EDGE, _TheClipboardPanel);
+	_TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _TheClipboardScrollPanel, 0, SpringLayoutConstraints::EAST_EDGE, _TheClipboardPanel);
+	_TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _TheClipboardScrollPanel, 0, SpringLayoutConstraints::WEST_EDGE, _TheClipboardPanel);
+	_TheClipboardPanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, _TheClipboardScrollPanel, 20, SpringLayoutConstraints::SOUTH_EDGE, _TheClipboardPanel);*/
 
-	TheClipboardPanel->pushToChildren(TheClipboardLabel);
-	TheClipboardPanel->pushToChildren(TheClipboardScrollPanel);
-	TheClipboardPanel->setLayout(/*LayoutRefPtr(FlowLayout::create())*/MainInternalWindowLayout/*TheClipboardPanelLayout*/);
-	TheClipboardPanel->setPreferredSize(Vec2f(200, 400));
+	_TheClipboardPanel->pushToChildren(_TheClipboardLabel);
+	_TheClipboardPanel->pushToChildren(_TheClipboardScrollPanel);
+	_TheClipboardPanel->setLayout(/*LayoutRefPtr(FlowLayout::create())*/MainInternalWindowLayout/*_TheClipboardPanelLayout*/);
+	_TheClipboardPanel->setPreferredSize(Vec2f(200, 400));
 }
 
 void TextEditor::onCreate(const TextEditor *source)
@@ -571,23 +571,23 @@ void TextEditor::onCreate(const TextEditor *source)
 	createDomArea();
 	clipboardInitialization();
 
-	DomAreaAndClipboard = SplitPanel::create();
+	_DomAreaAndClipboard = SplitPanel::create();
 
 	BorderLayoutRefPtr MainInternalWindowLayout = OSG::BorderLayout::create();
 
     BorderLayoutConstraintsRefPtr ExampleSplitPanelConstraints = OSG::BorderLayoutConstraints::create();
     ExampleSplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 	
-	DomAreaAndClipboard->setConstraints(ExampleSplitPanelConstraints);
-	DomAreaAndClipboard->setExpandable(true);
-	DomAreaAndClipboard->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
-	DomAreaAndClipboard->setMaxComponent(TheClipboardPanel);
-	DomAreaAndClipboard->setMinComponent(InsideDomArea);
+	_DomAreaAndClipboard->setConstraints(ExampleSplitPanelConstraints);
+	_DomAreaAndClipboard->setExpandable(true);
+	_DomAreaAndClipboard->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
+	_DomAreaAndClipboard->setMaxComponent(_TheClipboardPanel);
+	_DomAreaAndClipboard->setMinComponent(_InsideDomArea);
 
 
 	updateLayout(getClipboardVisible());
 
-	pushToChildren(DomAreaAndClipboard);
+	pushToChildren(_DomAreaAndClipboard);
 	setLayout(MainInternalWindowLayout);
 
 }

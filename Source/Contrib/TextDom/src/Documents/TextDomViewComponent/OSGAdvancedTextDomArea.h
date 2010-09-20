@@ -60,11 +60,11 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
 	
   	virtual Vec2f getPreferredScrollableViewportSize(void);
     virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-	//virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 	virtual Vec2f getContentRequestedSize(void) const;
+	void drawGutter(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
 
+	TextDomAreaRefPtr _TheTextDomArea;
 	UIFontRefPtr _Font;
-	//void createDefaultDom(void);
     /*==========================  PUBLIC  =================================*/
 
   public:
@@ -104,10 +104,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
 
   protected:
 
-	ScrollPanelRefPtr TextAreaScrollPanel;
-	TextDomAreaRefPtr ExampleTextDomArea;
-
-	void drawGutter(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
 
 	/*! \}                                                                 */
 
