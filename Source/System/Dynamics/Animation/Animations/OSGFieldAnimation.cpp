@@ -80,7 +80,14 @@ void FieldAnimation::initMethod(InitPhase ePhase)
 
 Real32 FieldAnimation::getUnclippedCycleLength(void) const
 {
-    return getAnimator()->getLength();
+    if(getAnimator())
+    {
+        return getAnimator()->getLength();
+    }
+    else
+    {
+        return -1.0f;
+    }
 }
 
 void FieldAnimation::setAnimatedField(FieldContainerUnrecPtr TheContainer, const std::string& FieldName)
@@ -121,6 +128,13 @@ void FieldAnimation::internalUpdate(Real32 t, const Real32 prev_t)
         return;
     }
     EditFieldHandlePtr TheField = getContainer()->editField( getFieldId() );
+
+    //Check if it's the right type
+    if(getAnimator() == NULL)
+    {
+        SWARNING << "No Animator attached."  << std::endl;
+        return;
+    }
 
     //Check if it's the right type
     if(getAnimator()->getDataType() == NULL)
