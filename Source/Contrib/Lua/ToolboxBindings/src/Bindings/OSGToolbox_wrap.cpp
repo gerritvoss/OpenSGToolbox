@@ -1783,7 +1783,7 @@ SWIGINTERN void OSG_Animation_attachUpdateProducer(OSG::Animation *self,OSG::Fie
             (self)->attachUpdateProducer(producer);
         }
 SWIGINTERN bool OSG_VideoWrapper_open(OSG::VideoWrapper *self,std::string const &ThePath,OSG::FieldContainerRefPtr TheWindow){
-    return (self)->open(ThePath, OSG::dynamic_pointer_cast<OSG::Window>(TheWindow));
+            return (self)->open(ThePath, OSG::dynamic_pointer_cast<OSG::Window>(TheWindow));
         }
 SWIGINTERN void OSG_VideoWrapper_attachUpdateProducer(OSG::VideoWrapper *self,OSG::FieldContainerRefPtr producer){
             (self)->attachUpdateProducer(producer);

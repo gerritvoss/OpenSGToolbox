@@ -1600,25 +1600,26 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_VectorType3f swig_types[74]
 #define SWIGTYPE_p_VolumeType swig_types[75]
 #define SWIGTYPE_p_boost__signals2__connection swig_types[76]
-#define SWIGTYPE_p_char swig_types[77]
-#define SWIGTYPE_p_difference_type swig_types[78]
-#define SWIGTYPE_p_double swig_types[79]
-#define SWIGTYPE_p_float swig_types[80]
-#define SWIGTYPE_p_int swig_types[81]
-#define SWIGTYPE_p_key_type swig_types[82]
-#define SWIGTYPE_p_long swig_types[83]
-#define SWIGTYPE_p_long_double swig_types[84]
-#define SWIGTYPE_p_mapped_type swig_types[85]
-#define SWIGTYPE_p_signed_char swig_types[86]
-#define SWIGTYPE_p_size_type swig_types[87]
-#define SWIGTYPE_p_std__mapT_int_std__string_t swig_types[88]
-#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[89]
-#define SWIGTYPE_p_std__string swig_types[90]
-#define SWIGTYPE_p_unsigned_char swig_types[91]
-#define SWIGTYPE_p_unsigned_int swig_types[92]
-#define SWIGTYPE_p_unsigned_long swig_types[93]
-static swig_type_info *swig_types[95];
-static swig_module_info swig_module = {swig_types, 94, 0, 0, 0, 0};
+#define SWIGTYPE_p_boost__signals2__scoped_connection swig_types[77]
+#define SWIGTYPE_p_char swig_types[78]
+#define SWIGTYPE_p_difference_type swig_types[79]
+#define SWIGTYPE_p_double swig_types[80]
+#define SWIGTYPE_p_float swig_types[81]
+#define SWIGTYPE_p_int swig_types[82]
+#define SWIGTYPE_p_key_type swig_types[83]
+#define SWIGTYPE_p_long swig_types[84]
+#define SWIGTYPE_p_long_double swig_types[85]
+#define SWIGTYPE_p_mapped_type swig_types[86]
+#define SWIGTYPE_p_signed_char swig_types[87]
+#define SWIGTYPE_p_size_type swig_types[88]
+#define SWIGTYPE_p_std__mapT_int_std__string_t swig_types[89]
+#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[90]
+#define SWIGTYPE_p_std__string swig_types[91]
+#define SWIGTYPE_p_unsigned_char swig_types[92]
+#define SWIGTYPE_p_unsigned_int swig_types[93]
+#define SWIGTYPE_p_unsigned_long swig_types[94]
+static swig_type_info *swig_types[96];
+static swig_module_info swig_module = {swig_types, 95, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2718,32 +2719,34 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
-              OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
-              if(lua_isnil(L,3))
+              OSG::FieldContainerRefPtr ValueToSet(NULL);
+              if(!lua_isnil(L, 3))
               {
-                  static_cast<OSG::SFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->setValue(NULL);
-              }
-              else if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
-              {
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
-                  return SWIG_arg;
-              }
-              else
-              {
-                  switch(TheFieldHandle->getType().getClass())
+                  OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
+                  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
                   {
-                      case OSG::FieldType::ChildPtrField:
-                           static_cast<OSG::ChildPointerSField <OSG::FieldContainer *,
-                                       OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->setValue(*arg3);
-                           break;
-                      case OSG::FieldType::ParentPtrField:
-                           lua_pushfstring(L,"Error in setFieldValue the FieldContainer given is of the ParentPtr class.  Cannot set the value of this field directly");
-                           lua_error(L);
-                           break;
-                      case OSG::FieldType::PtrField:
-                           static_cast<OSG::SFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->setValue(*arg3);
-                           break;
+                      LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+                      return SWIG_arg;
                   }
+
+                  if(arg3 != NULL)
+                  {
+                      ValueToSet = *arg3;
+                  }
+              }
+              switch(TheFieldHandle->getType().getClass())
+              {
+                  case OSG::FieldType::ChildPtrField:
+                       static_cast<OSG::ChildPointerSField <OSG::FieldContainer *,
+                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->setValue(ValueToSet);
+                       break;
+                  case OSG::FieldType::ParentPtrField:
+                       lua_pushfstring(L,"Error in setFieldValue the FieldContainer given is of the ParentPtr class.  Cannot set the value of this field directly");
+                       lua_error(L);
+                       break;
+                  case OSG::FieldType::PtrField:
+                       static_cast<OSG::SFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->setValue(ValueToSet);
+                       break;
               }
           }
           //bool
@@ -3129,25 +3132,33 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
-              OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+              OSG::FieldContainerRefPtr ValueToSet(NULL);
+              if(!lua_isnil(L, 3))
               {
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
-                  return SWIG_arg;
+                  OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
+                  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+                  {
+                      LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+                      return SWIG_arg;
+                  }
+
+                  if(arg3 != NULL)
+                  {
+                      ValueToSet = *arg3;
+                  }
               }
-              //TODO
               switch(TheFieldHandle->getType().getClass())
               {
                   case OSG::FieldType::ChildPtrField:
                        static_cast<OSG::ChildPointerMField <OSG::FieldContainer *,
-                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->replace(arg4,*arg3);
+                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->replace(arg4,ValueToSet);
                        break;
                   case OSG::FieldType::ParentPtrField:
                        lua_pushfstring(L,"Error in setFieldValue the FieldContainer given is of the ParentPtr class.  Cannot set the value of this field directly");
                        lua_error(L);
                        break;
                   case OSG::FieldType::PtrField:
-                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->replace(arg4,*arg3);
+                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->replace(arg4,ValueToSet);
                        break;
               }
           }
@@ -3517,25 +3528,33 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
-              OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+              OSG::FieldContainerRefPtr ValueToSet(NULL);
+              if(!lua_isnil(L, 3))
               {
-                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
-                  return SWIG_arg;
+                  OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
+                  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+                  {
+                      LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+                      return SWIG_arg;
+                  }
+
+                  if(arg3 != NULL)
+                  {
+                      ValueToSet = *arg3;
+                  }
               }
-              //TODO
               switch(TheFieldHandle->getType().getClass())
               {
                   case OSG::FieldType::ChildPtrField:
                        static_cast<OSG::ChildPointerMField <OSG::FieldContainer *,
-                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->push_back(*arg3);
+                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->push_back(ValueToSet);
                        break;
                   case OSG::FieldType::ParentPtrField:
                        lua_pushfstring(L,"Error in pushFieldValue the FieldContainer given is of the ParentPtr class.  Cannot set the value of this field directly");
                        lua_error(L);
                        break;
                   case OSG::FieldType::PtrField:
-                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->push_back(*arg3);
+                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->push_back(ValueToSet);
                        break;
               }
           }
@@ -3972,13 +3991,21 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
-              OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+              OSG::FieldContainerRefPtr ValueToSet(NULL);
+              if(!lua_isnil(L, 3))
               {
-                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
-                  return SWIG_arg;
+                  OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
+                  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+                  {
+                      LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+                      return SWIG_arg;
+                  }
+
+                  if(arg3 != NULL)
+                  {
+                      ValueToSet = *arg3;
+                  }
               }
-              //TODO
               switch(TheFieldHandle->getType().getClass())
               {
                   case OSG::FieldType::ChildPtrField:
@@ -3988,7 +4015,7 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
                                    OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->begin());
                        InsertItor += arg4;
                        static_cast<OSG::ChildPointerMField <OSG::FieldContainer *,
-                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->insert(InsertItor, *arg3);
+                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->insert(InsertItor, ValueToSet);
                   }
                        break;
                   case OSG::FieldType::ParentPtrField:
@@ -3999,7 +4026,7 @@ SWIGINTERN OSG::FieldType *OSG_FieldType_dcast(OSG::TypeBase *val){
                   {
                        OSG::MFUnrecFieldContainerPtr::iterator InsertItor(static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->begin());
                        InsertItor += arg4;
-                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->insert(InsertItor, *arg3);
+                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->insert(InsertItor, ValueToSet);
                   }
                        break;
               }
@@ -26093,6 +26120,93 @@ static swig_lua_attribute swig_boost_signals2_connection_attributes[] = {
 static swig_lua_class *swig_boost_signals2_connection_bases[] = {0};
 static const char *swig_boost_signals2_connection_base_names[] = {0};
 static swig_lua_class _wrap_class_boost_signals2_connection = { "connection", &SWIGTYPE_p_boost__signals2__connection,_wrap_new_connection, swig_delete_connection, swig_boost_signals2_connection_methods, swig_boost_signals2_connection_attributes, swig_boost_signals2_connection_bases, swig_boost_signals2_connection_base_names };
+
+static int _wrap_new_scoped_connection(lua_State* L) {
+  int SWIG_arg = 0;
+  boost::signals2::connection *arg1 = 0 ;
+  boost::signals2::scoped_connection *result = 0 ;
+  
+  SWIG_check_num_args("boost::signals2::scoped_connection",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("boost::signals2::scoped_connection",1,"boost::signals2::connection const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_boost__signals2__connection,0))){
+    SWIG_fail_ptr("new_scoped_connection",1,SWIGTYPE_p_boost__signals2__connection);
+  }
+  
+  result = (boost::signals2::scoped_connection *)new boost::signals2::scoped_connection((boost::signals2::connection const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_boost__signals2__scoped_connection,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_scoped_connection_disconnect(lua_State* L) {
+  int SWIG_arg = 0;
+  boost::signals2::scoped_connection *arg1 = (boost::signals2::scoped_connection *) 0 ;
+  
+  SWIG_check_num_args("disconnect",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("disconnect",1,"boost::signals2::scoped_connection const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_boost__signals2__scoped_connection,0))){
+    SWIG_fail_ptr("scoped_connection_disconnect",1,SWIGTYPE_p_boost__signals2__scoped_connection);
+  }
+  
+  ((boost::signals2::scoped_connection const *)arg1)->disconnect();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_scoped_connection_connected(lua_State* L) {
+  int SWIG_arg = 0;
+  boost::signals2::scoped_connection *arg1 = (boost::signals2::scoped_connection *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("connected",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("connected",1,"boost::signals2::scoped_connection const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_boost__signals2__scoped_connection,0))){
+    SWIG_fail_ptr("scoped_connection_connected",1,SWIGTYPE_p_boost__signals2__scoped_connection);
+  }
+  
+  result = (bool)((boost::signals2::scoped_connection const *)arg1)->connected();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_scoped_connection(void *obj) {
+boost::signals2::scoped_connection *arg1 = (boost::signals2::scoped_connection *) obj;
+delete arg1;
+}
+static swig_lua_method swig_boost_signals2_scoped_connection_methods[] = {
+    {"disconnect", _wrap_scoped_connection_disconnect}, 
+    {"connected", _wrap_scoped_connection_connected}, 
+    {0,0}
+};
+static swig_lua_attribute swig_boost_signals2_scoped_connection_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_boost_signals2_scoped_connection_bases[] = {0};
+static const char *swig_boost_signals2_scoped_connection_base_names[] = {0};
+static swig_lua_class _wrap_class_boost_signals2_scoped_connection = { "scoped_connection", &SWIGTYPE_p_boost__signals2__scoped_connection,_wrap_new_scoped_connection, swig_delete_scoped_connection, swig_boost_signals2_scoped_connection_methods, swig_boost_signals2_scoped_connection_attributes, swig_boost_signals2_scoped_connection_bases, swig_boost_signals2_scoped_connection_base_names };
 
 static int _wrap_FieldDescriptionBase_getName(lua_State* L) {
   int SWIG_arg = 0;
@@ -52473,6 +52587,134 @@ static int _wrap_LuaActivity_addLuaCallback(lua_State* L) {
 }
 
 
+static int _wrap_LuaActivity_removeLuaCallback__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::FieldContainerRefPtr arg1 ;
+  std::string arg2 ;
+  OSG::UInt32 arg3 ;
+  OSG::FieldContainerRefPtr *argp1 ;
+  
+  SWIG_check_num_args("OSG::LuaActivity::removeLuaCallback",3,3)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::LuaActivity::removeLuaCallback",1,"OSG::FieldContainerRefPtr");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("OSG::LuaActivity::removeLuaCallback",2,"std::string");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("OSG::LuaActivity::removeLuaCallback",3,"OSG::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_OSG__FieldContainerRefPtr,0))){
+    SWIG_fail_ptr("LuaActivity_removeLuaCallback",1,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+  }
+  arg1 = *argp1;
+  
+  (&arg2)->assign(lua_tostring(L,2),lua_strlen(L,2));
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (OSG::UInt32)lua_tonumber(L, 3);
+  OSG::LuaActivity::removeLuaCallback(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaActivity_removeLuaCallback__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::FieldContainerRefPtr arg1 ;
+  std::string arg2 ;
+  std::string *arg3 = 0 ;
+  OSG::FieldContainerRefPtr *argp1 ;
+  std::string temp3 ;
+  
+  SWIG_check_num_args("OSG::LuaActivity::removeLuaCallback",3,3)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::LuaActivity::removeLuaCallback",1,"OSG::FieldContainerRefPtr");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("OSG::LuaActivity::removeLuaCallback",2,"std::string");
+  if(!lua_isstring(L,3)) SWIG_fail_arg("OSG::LuaActivity::removeLuaCallback",3,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_OSG__FieldContainerRefPtr,0))){
+    SWIG_fail_ptr("LuaActivity_removeLuaCallback",1,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+  }
+  arg1 = *argp1;
+  
+  (&arg2)->assign(lua_tostring(L,2),lua_strlen(L,2));
+  temp3.assign(lua_tostring(L,3),lua_strlen(L,3)); arg3=&temp3;
+  OSG::LuaActivity::removeLuaCallback(arg1,arg2,(std::string const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_LuaActivity_removeLuaCallback(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__FieldContainerRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_LuaActivity_removeLuaCallback__SWIG_0(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_OSG__FieldContainerRefPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isstring(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_LuaActivity_removeLuaCallback__SWIG_1(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'LuaActivity_removeLuaCallback'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    removeLuaCallback(OSG::FieldContainerRefPtr,std::string,OSG::UInt32)\n"
+    "    OSG::LuaActivity::removeLuaCallback(OSG::FieldContainerRefPtr,std::string,std::string const &)\n");
+  lua_error(L);return 0;
+}
+
+
 static swig_lua_method swig_OSG_LuaActivity_methods[] = {
     {0,0}
 };
@@ -54453,6 +54695,7 @@ static const struct luaL_reg swig_commands[] = {
     { "ActivityRefPtr_dcast", _wrap_ActivityRefPtr_dcast},
     { "LuaActivityRefPtr_dcast", _wrap_LuaActivityRefPtr_dcast},
     { "LuaActivity_addLuaCallback",_wrap_LuaActivity_addLuaCallback},
+    { "LuaActivity_removeLuaCallback",_wrap_LuaActivity_removeLuaCallback},
     { "Action_create", _wrap_Action_create},
     { "IntersectAction_create",_wrap_IntersectAction_create},
     { "makePlaneGeo", _wrap_makePlaneGeo},
@@ -54867,6 +55110,7 @@ static swig_type_info _swigt__p_VectorType = {"_p_VectorType", "VectorType *", 0
 static swig_type_info _swigt__p_VectorType3f = {"_p_VectorType3f", "VectorType3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_VolumeType = {"_p_VolumeType", "VolumeType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__signals2__connection = {"_p_boost__signals2__connection", "boost::signals2::connection *", 0, 0, (void*)&_wrap_class_boost_signals2_connection, 0};
+static swig_type_info _swigt__p_boost__signals2__scoped_connection = {"_p_boost__signals2__scoped_connection", "boost::signals2::scoped_connection *", 0, 0, (void*)&_wrap_class_boost_signals2_scoped_connection, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *|OSG::Char8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "OSG::Time *|double *|OSG::Real64 *", 0, 0, (void*)0, 0};
@@ -54963,6 +55207,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_VectorType3f,
   &_swigt__p_VolumeType,
   &_swigt__p_boost__signals2__connection,
+  &_swigt__p_boost__signals2__scoped_connection,
   &_swigt__p_char,
   &_swigt__p_difference_type,
   &_swigt__p_double,
@@ -55059,6 +55304,7 @@ static swig_cast_info _swigc__p_VectorType[] = {  {&_swigt__p_VectorType, 0, 0, 
 static swig_cast_info _swigc__p_VectorType3f[] = {  {&_swigt__p_VectorType3f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_VolumeType[] = {  {&_swigt__p_VolumeType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__signals2__connection[] = {  {&_swigt__p_boost__signals2__connection, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__signals2__scoped_connection[] = {  {&_swigt__p_boost__signals2__scoped_connection, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
@@ -55155,6 +55401,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_VectorType3f,
   _swigc__p_VolumeType,
   _swigc__p_boost__signals2__connection,
+  _swigc__p_boost__signals2__scoped_connection,
   _swigc__p_char,
   _swigc__p_difference_type,
   _swigc__p_double,
