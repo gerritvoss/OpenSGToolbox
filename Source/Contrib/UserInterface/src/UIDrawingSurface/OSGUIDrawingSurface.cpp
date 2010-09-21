@@ -701,7 +701,8 @@ void UIDrawingSurface::changed(ConstFieldMaskArg whichField,
     Inherited::changed(whichField, origin, details);
 
     if( (whichField & EventProducerFieldMask) ||
-        (whichField & ActiveFieldMask))
+        (whichField & ActiveFieldMask) ||
+        (whichField & MouseTransformFunctorFieldMask))
     {
         _MouseClickedConnection.disconnect();
         _MouseEnteredConnection.disconnect();
@@ -719,7 +720,8 @@ void UIDrawingSurface::changed(ConstFieldMaskArg whichField,
         _KeyTypedConnection.disconnect();
 
         if(getEventProducer() != NULL &&
-           getActive())
+           getActive() &&
+           getMouseTransformFunctor() != NULL)
         {           
             _MouseClickedConnection = getEventProducer()->connectMouseClicked(boost::bind(&UIDrawingSurface::handleMouseClicked, this, _1));
             _MouseEnteredConnection = getEventProducer()->connectMouseEntered(boost::bind(&UIDrawingSurface::handleMouseEntered, this, _1));
