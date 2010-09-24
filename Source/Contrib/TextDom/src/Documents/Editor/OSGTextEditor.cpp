@@ -132,15 +132,32 @@ void TextEditor::keyTyped(const KeyEventUnrecPtr e)
 
 void TextEditor::mouseClicked(const MouseEventUnrecPtr e)
 {
+
+	std::cout<<"mouse clicked"<<std::endl;
+
+	if(getParentWindow()->getFocusedComponent()->getType().isDerivedFrom(TextDomArea::getClassType()))
+	{
+		setFocusedDomArea(dynamic_cast<TextDomArea*>(this->getParentWindow()->getFocusedComponent()));
+		std::cout<<"Selected a Dom Area"<<std::endl;
+	}
+
 	if(e->getButton() == e->BUTTON1)
 	{
 		if(e->getClickCount() == 2)
 		{
-			std::cout<<"double clicked\n";
-			if(e->getSource()== _TheClipboardList)
+			std::cout<<"double clicked"<<std::endl;
+			if(_TheClipboardList->isContained(e->getLocation(), true))
 			{
-				std::cout<<"on the clipboard list\n";
+				std::cout<<"on the clipboard list";
+				std::string stringToBeInserted = boost::any_cast<std::string>(_TheClipboardList->getSelectedItem());
+				std::cout<<"string to be inserted = "<<stringToBeInserted;
+				//this->addMouseListener();
 			}
+			std::cout<<"\n";
+		}
+		if(_TheClipboardList->isContained(e->getLocation(), true))
+		{
+			std::cout<<"clicked on clipboard\n";
 		}
 	}
 	Inherited::mouseClicked(e);
@@ -153,10 +170,28 @@ TextEditor::TheMouseListener::TheMouseListener(TextEditorRefPtr TheTextEditor)
 
 void TextEditor::TheMouseListener::mouseClicked(const MouseEventUnrecPtr e)
 {
+	if(e->getClickCount() == 2)
+	{
+		std::cout<<"double cliked from listener"<<std::endl;
+	}
 	_TextEditor->mouseClicked(e);
+	//Inherited::mouseClicked(e);
 }
-*/
 
+void TextEditor::TheMouseListener::mouseEntered(const MouseEventUnrecPtr e)
+{
+}
+void TextEditor::TheMouseListener::mouseExited(const MouseEventUnrecPtr e)
+{
+}
+void TextEditor::TheMouseListener::mousePressed(const MouseEventUnrecPtr e)
+{
+}
+void TextEditor::TheMouseListener::mouseReleased(const MouseEventUnrecPtr e)
+{
+}
+
+*/
 TextEditor::TheSearchWindowListener::TheSearchWindowListener(TextEditorRefPtr TheTextEditor)
 {
 	_TheTextEditor = TheTextEditor;
@@ -234,26 +269,39 @@ void TextEditor::bookmarkAllButtonClicked(const SearchWindowEventUnrecPtr e)
 
 void TextEditor::saveFile(BoostPath file)
 {
-    ScrollPanelRefPtr _ToBeSavedScrollPanel = dynamic_cast<ScrollPanel*>(_LeftTabPanel->getTabContents(_LeftTabPanel->getSelectedIndex()));
-    TextDomAreaRefPtr _ToBeSavedTextDomArea = dynamic_cast<TextDomArea*>(_ToBeSavedScrollPanel->getViewComponent());
-    _ToBeSavedTextDomArea->saveFile(file);
+    //ScrollPanelRefPtr _ToBeSavedScrollPanel = dynamic_cast<ScrollPanel*>(_LeftTabPanel->getTabContents(_LeftTabPanel->getSelectedIndex()));
+    //AdvancedTextDomAreaRefPtr _ToBeSavedTextDomArea = dynamic_cast<AdvancedTextDomArea*>(_ToBeSavedScrollPanel->getViewComponent());
+    //_ToBeSavedTextDomArea->saveFile(file);
+}
+
+void TextEditor::closeButtonActionPerformed(const OSG::ActionEventUnrecPtr e)
+{
+		ButtonRefPtr _TempCloseButton = dynamic_cast<Button*>(e->getSource());
+		PanelRefPtr _TempPanel = dynamic_cast<Panel*>(_TempCloseButton->getParentContainer());
+		TabPanelRefPtr _TempTabPanel = dynamic_cast<TabPanel*>(_TempPanel->getParentContainer());
+		UInt32 _ChildIndex = (_TempTabPanel->getChildIndex(_TempPanel))/2;
+
+		_LeftTabPanel->removeTab(_ChildIndex);
+
+		_RightTabPanel->removeTab(_ChildIndex);
+	
 }
 
 void TextEditor::actionPerformed(const OSG::ActionEventUnrecPtr e)
 {
-    ButtonRefPtr _TempCloseButton = dynamic_cast<Button*>(e->getSource());
-    PanelRefPtr _TempPanel = dynamic_cast<Panel*>(_TempCloseButton->getParentContainer());
-    TabPanelRefPtr _TempTabPanel = dynamic_cast<TabPanel*>(_TempPanel->getParentContainer());
-    UInt32 _ChildIndex = (_TempTabPanel->getChildIndex(_TempPanel))/2;
-
-    _LeftTabPanel->removeTab(_ChildIndex);
-
-    _RightTabPanel->removeTab(_ChildIndex);
-
+	if(e->getSource() == _TheClipboardButton)
+	{
+		TextDomAreaRefPtr tempDomArea = getFocusedDomArea();
+		if(tempDomArea == NULL) return;
+		std::string stringToBeInserted = boost::any_cast<std::string>(_TheClipboardList->getSelectedItem());
+		std::cout<<"string to be inserted = "<<stringToBeInserted;
+		tempDomArea->handlePastingAString(stringToBeInserted);
+	}
 }
+
 void TextEditor::CloseButtonListener::actionPerformed(const OSG::ActionEventUnrecPtr e)
 {
-    _TextEditor->actionPerformed(e);
+    _TextEditor->closeButtonActionPerformed(e);
 }
 
 TextEditor::CloseButtonListener::CloseButtonListener(TextEditorRefPtr TheTextEditor)
@@ -262,6 +310,20 @@ TextEditor::CloseButtonListener::CloseButtonListener(TextEditorRefPtr TheTextEdi
 }
 
 TextEditor::CloseButtonListener::~CloseButtonListener()
+{
+}
+
+void TextEditor::ClipboardButtonListener::actionPerformed(const OSG::ActionEventUnrecPtr e)
+{
+    _TextEditor->actionPerformed(e);
+}
+
+TextEditor::ClipboardButtonListener::ClipboardButtonListener(TextEditorRefPtr TheTextEditor)
+{
+	_TextEditor = TheTextEditor;
+}
+
+TextEditor::ClipboardButtonListener::~ClipboardButtonListener()
 {
 }
 
@@ -501,11 +563,13 @@ void TextEditor::clipboardInitialization()
 {
 	BorderLayoutRefPtr MainInternalWindowLayout = OSG::BorderLayout::create();
 
-	BorderLayoutConstraintsRefPtr ExampleButton4Constraints = OSG::BorderLayoutConstraints::create();
-    BorderLayoutConstraintsRefPtr ExampleButton5Constraints = OSG::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsRefPtr ClipboardLabelConstraints = OSG::BorderLayoutConstraints::create();
+    BorderLayoutConstraintsRefPtr ClipboardPanelConstraints = OSG::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsRefPtr ClipboardButtonConstraints = OSG::BorderLayoutConstraints::create();
 
-	ExampleButton4Constraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
-    ExampleButton5Constraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	ClipboardLabelConstraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
+    ClipboardPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	ClipboardButtonConstraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
 
 	_TheClipboardPanel = Panel::create();
 	
@@ -516,9 +580,15 @@ void TextEditor::clipboardInitialization()
     _TheClipboardLabel->setAlignment(Vec2f(0.5,0.5));
     _TheClipboardLabel->setPreferredSize(Vec2f(200, 20));
     _TheClipboardLabel->setTextSelectable(false);
-	_TheClipboardLabel->setConstraints(ExampleButton4Constraints);
+	_TheClipboardLabel->setConstraints(ClipboardLabelConstraints);
 
-	
+	_TheClipboardButton = Button::create();
+	_TheClipboardButton->setText("Insert Into Document");
+	_TheClipboardButton->setMinSize(_TheClipboardButton->getPreferredSize());
+    _TheClipboardButton->setPreferredSize(_TheClipboardButton->getRequestedSize());
+	_TheClipboardButton->addActionListener(&_ClipboardButtonListener);
+	_TheClipboardButton->setConstraints(ClipboardButtonConstraints);
+
 	// the Clipboard list
 	_TheClipboardListSelectionModel=ListSelectionModelPtr(new DefaultListSelectionModel());
 	_TheClipboardListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
@@ -537,7 +607,7 @@ void TextEditor::clipboardInitialization()
 	_TheClipboardScrollPanel->setPreferredSize(Vec2f(200,400));
 	_TheClipboardScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 	_TheClipboardScrollPanel->setViewComponent(_TheClipboardList);
-	_TheClipboardScrollPanel->setConstraints(ExampleButton5Constraints);
+	_TheClipboardScrollPanel->setConstraints(ClipboardPanelConstraints);
 
 	    
     
@@ -556,6 +626,7 @@ void TextEditor::clipboardInitialization()
 
 	_TheClipboardPanel->pushToChildren(_TheClipboardLabel);
 	_TheClipboardPanel->pushToChildren(_TheClipboardScrollPanel);
+	_TheClipboardPanel->pushToChildren(_TheClipboardButton);
 	_TheClipboardPanel->setLayout(/*LayoutRefPtr(FlowLayout::create())*/MainInternalWindowLayout/*_TheClipboardPanelLayout*/);
 	_TheClipboardPanel->setPreferredSize(Vec2f(200, 400));
 }
@@ -590,10 +661,17 @@ void TextEditor::onCreate(const TextEditor *source)
 	pushToChildren(_DomAreaAndClipboard);
 	setLayout(MainInternalWindowLayout);
 
+/*	if(getParentWindow() != NULL && getParentWindow()->getDrawingSurface()!=NULL&& getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+    {
+		getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseListener);
+	}*/
+
 }
 
 TextEditor::TextEditor(void) :
 	_CloseButtonListener(this),
+	//_MouseListener(this),
+	_ClipboardButtonListener(this),
 	_TheSearchWindowListener(this),
     Inherited()
 {
@@ -601,6 +679,8 @@ TextEditor::TextEditor(void) :
 
 TextEditor::TextEditor(const TextEditor &source) :
 	_CloseButtonListener(this),
+	_ClipboardButtonListener(this),
+	//_MouseListener(this),
 	_TheSearchWindowListener(this),
     Inherited(source)
 {
@@ -624,6 +704,7 @@ void TextEditor::changed(ConstFieldMaskArg whichField,
 	{
 		updateDomLayout(getIsSplit());
 	}
+	
 
     Inherited::changed(whichField, origin, details);
 }

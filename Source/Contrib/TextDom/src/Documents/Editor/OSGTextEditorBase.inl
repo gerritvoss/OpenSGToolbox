@@ -124,6 +124,22 @@ void TextEditorBase::setIsSplit(const bool value)
     _sfIsSplit.setValue(value);
 }
 
+//! Get the value of the TextEditor::_sfFocusedDomArea field.
+inline
+TextDomArea * TextEditorBase::getFocusedDomArea(void) const
+{
+    return _sfFocusedDomArea.getValue();
+}
+
+//! Set the value of the TextEditor::_sfFocusedDomArea field.
+inline
+void TextEditorBase::setFocusedDomArea(TextDomArea * const value)
+{
+    editSField(FocusedDomAreaFieldMask);
+
+    _sfFocusedDomArea.setValue(value);
+}
+
 //! Get the value of the \a index element the TextEditor::_mfAdvancedTextDomAreas field.
 inline
 AdvancedTextDomArea * TextEditorBase::getAdvancedTextDomAreas(const UInt32 index) const
@@ -153,6 +169,9 @@ void TextEditorBase::execSync (      TextEditorBase *pFrom,
 
     if(FieldBits::NoField != (IsSplitFieldMask & whichField))
         _sfIsSplit.syncWith(pFrom->_sfIsSplit);
+
+    if(FieldBits::NoField != (FocusedDomAreaFieldMask & whichField))
+        _sfFocusedDomArea.syncWith(pFrom->_sfFocusedDomArea);
 }
 #endif
 

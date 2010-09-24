@@ -126,6 +126,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
   	virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 
 	void handleDocumentModelChanged();
+	void handlePastingAString(std::string theClipboard);
 
 	UInt32 getTopmostVisibleLineNumber(void);
 	UInt32 getLinesToBeDisplayed(void);

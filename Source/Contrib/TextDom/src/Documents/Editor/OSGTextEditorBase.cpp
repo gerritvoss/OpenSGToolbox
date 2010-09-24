@@ -59,6 +59,7 @@
 
 
 #include "OSGAdvancedTextDomArea.h" // AdvancedTextDomAreas Class
+#include "OSGTextDomArea.h"      // FocusedDomArea Class
 
 #include "OSGTextEditorBase.h"
 #include "OSGTextEditor.h"
@@ -101,6 +102,10 @@ OSG_BEGIN_NAMESPACE
 */
 
 /*! \var bool            TextEditorBase::_sfIsSplit
+    
+*/
+
+/*! \var TextDomArea *   TextEditorBase::_sfFocusedDomArea
     
 */
 
@@ -165,6 +170,18 @@ void TextEditorBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&TextEditor::editHandleIsSplit),
         static_cast<FieldGetMethodSig >(&TextEditor::getHandleIsSplit));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTextDomAreaPtr::Description(
+        SFUnrecTextDomAreaPtr::getClassType(),
+        "FocusedDomArea",
+        "",
+        FocusedDomAreaFieldId, FocusedDomAreaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextEditor::editHandleFocusedDomArea),
+        static_cast<FieldGetMethodSig >(&TextEditor::getHandleFocusedDomArea));
 
     oType.addInitialDesc(pDesc);
 }
@@ -241,7 +258,17 @@ TextEditorBase::TypeObject TextEditorBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\n"
+    "\t\n"
+    "\t<Field\n"
+    "           \tname=\"FocusedDomArea\"\n"
+    "            \ttype=\"TextDomArea\"\n"
+    "    \t\tcategory=\"pointer\"\n"
+    " \t\tcardinality=\"single\"\n"
+    "    \t\tvisibility=\"external\"\n"
+    "    \t\taccess=\"protected\"\n"
+    "    \t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "    \t</Field>\n"
     "\n"
     "\n"
     "</FieldContainer>\n",
@@ -315,6 +342,19 @@ const SFBool *TextEditorBase::getSFIsSplit(void) const
     return &_sfIsSplit;
 }
 
+
+//! Get the TextEditor::_sfFocusedDomArea field.
+const SFUnrecTextDomAreaPtr *TextEditorBase::getSFFocusedDomArea(void) const
+{
+    return &_sfFocusedDomArea;
+}
+
+SFUnrecTextDomAreaPtr *TextEditorBase::editSFFocusedDomArea (void)
+{
+    editSField(FocusedDomAreaFieldMask);
+
+    return &_sfFocusedDomArea;
+}
 
 
 
@@ -391,6 +431,10 @@ UInt32 TextEditorBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfIsSplit.getBinSize();
     }
+    if(FieldBits::NoField != (FocusedDomAreaFieldMask & whichField))
+    {
+        returnValue += _sfFocusedDomArea.getBinSize();
+    }
 
     return returnValue;
 }
@@ -412,6 +456,10 @@ void TextEditorBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfIsSplit.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (FocusedDomAreaFieldMask & whichField))
+    {
+        _sfFocusedDomArea.copyToBin(pMem);
+    }
 }
 
 void TextEditorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -430,6 +478,10 @@ void TextEditorBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (IsSplitFieldMask & whichField))
     {
         _sfIsSplit.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (FocusedDomAreaFieldMask & whichField))
+    {
+        _sfFocusedDomArea.copyFromBin(pMem);
     }
 }
 
@@ -558,7 +610,8 @@ TextEditorBase::TextEditorBase(void) :
     Inherited(),
     _mfAdvancedTextDomAreas   (),
     _sfClipboardVisible       (bool(true)),
-    _sfIsSplit                (bool(true))
+    _sfIsSplit                (bool(true)),
+    _sfFocusedDomArea         (NULL)
 {
 }
 
@@ -566,7 +619,8 @@ TextEditorBase::TextEditorBase(const TextEditorBase &source) :
     Inherited(source),
     _mfAdvancedTextDomAreas   (),
     _sfClipboardVisible       (source._sfClipboardVisible       ),
-    _sfIsSplit                (source._sfIsSplit                )
+    _sfIsSplit                (source._sfIsSplit                ),
+    _sfFocusedDomArea         (NULL)
 {
 }
 
@@ -596,6 +650,8 @@ void TextEditorBase::onCreate(const TextEditor *source)
 
             ++AdvancedTextDomAreasIt;
         }
+
+        pThis->setFocusedDomArea(source->getFocusedDomArea());
     }
 }
 
@@ -686,6 +742,34 @@ EditFieldHandlePtr TextEditorBase::editHandleIsSplit        (void)
     return returnValue;
 }
 
+GetFieldHandlePtr TextEditorBase::getHandleFocusedDomArea  (void) const
+{
+    SFUnrecTextDomAreaPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextDomAreaPtr::GetHandle(
+             &_sfFocusedDomArea,
+             this->getType().getFieldDesc(FocusedDomAreaFieldId),
+             const_cast<TextEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextEditorBase::editHandleFocusedDomArea (void)
+{
+    SFUnrecTextDomAreaPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextDomAreaPtr::EditHandle(
+             &_sfFocusedDomArea,
+             this->getType().getFieldDesc(FocusedDomAreaFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TextEditor::setFocusedDomArea,
+                    static_cast<TextEditor *>(this), _1));
+
+    editSField(FocusedDomAreaFieldMask);
+
+    return returnValue;
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void TextEditorBase::execSyncV(      FieldContainer    &oFrom,
@@ -724,6 +808,8 @@ void TextEditorBase::resolveLinks(void)
     Inherited::resolveLinks();
 
     static_cast<TextEditor *>(this)->clearAdvancedTextDomAreas();
+
+    static_cast<TextEditor *>(this)->setFocusedDomArea(NULL);
 
 
 }

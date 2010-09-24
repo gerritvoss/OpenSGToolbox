@@ -89,8 +89,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 		LabelRefPtr _TheClipboardLabel;
 		PanelRefPtr _TheClipboardPanel;
 		SpringLayoutRefPtr _TheClipboardPanelLayout;
+		ButtonRefPtr _TheClipboardButton;
 
-			
 		virtual void mouseClicked(MouseEventUnrecPtr e);
 
 		void clipboardInitialization(void);
@@ -114,6 +114,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 		void createDefaultTabs(void);
 
 		void actionPerformed(const ActionEventUnrecPtr e);
+		void closeButtonActionPerformed(const OSG::ActionEventUnrecPtr e);
 
 		SearchWindowRefPtr TheSearchDialog;
 		class TheSearchWindowListener: public SearchWindowListener 
@@ -144,6 +145,16 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 		void replaceAllButtonClicked(const SearchWindowEventUnrecPtr e);
 		void bookmarkAllButtonClicked(const SearchWindowEventUnrecPtr e);
 
+		class ClipboardButtonListener : public ActionListener
+		{
+		  public :
+			ClipboardButtonListener(TextEditorRefPtr TheTextEditor);
+			virtual void actionPerformed(const ActionEventUnrecPtr e);
+			~ClipboardButtonListener(void);
+		  protected :
+			TextEditorRefPtr _TextEditor;
+		};
+		ClipboardButtonListener _ClipboardButtonListener;
 
 		class CloseButtonListener:public ActionListener
 		{
@@ -170,9 +181,13 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 			TheMouseListener(TextEditorRefPtr TheTextEditor);
 			
 			virtual void mouseClicked(const MouseEventUnrecPtr e);
+	        virtual void mouseEntered(const MouseEventUnrecPtr e);
+			virtual void mouseExited(const MouseEventUnrecPtr e);
+			virtual void mousePressed(const MouseEventUnrecPtr e);
+			virtual void mouseReleased(const MouseEventUnrecPtr e);
 
 		protected :
-			TextEditor _TextEditor;
+			TextEditorRefPtr _TextEditor;
 		};
 
 		TheMouseListener _MouseListener;

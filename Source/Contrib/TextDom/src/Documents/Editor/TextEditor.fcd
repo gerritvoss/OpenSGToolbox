@@ -58,7 +58,17 @@ goto line window
 		access="public"
 	>
 	</Field>
-
+	
+	<Field
+           	name="FocusedDomArea"
+            	type="TextDomArea"
+    		category="pointer"
+ 		cardinality="single"
+    		visibility="external"
+    		access="protected"
+    		defaultValue="NULL"
+	>
+    	</Field>
 
 
 </FieldContainer>

@@ -426,15 +426,8 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 				}
 				if(e->getKey() == KeyEvent::KEY_V)
 				{
-					if(Manager->isSomethingSelected())
-					{
-						Manager->deleteSelected();
-					}
 					std::string theClipboard = getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard();
-					getDocumentModel()->insertString(getCaretPosition(),theClipboard,temp);
-					Manager->updateViews();
-					Manager->updateSize();
-					updatePreferredSize();
+					handlePastingAString(theClipboard);
 				}
 			}
 			else
@@ -458,6 +451,20 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 	}
 }
 
+void TextDomArea::handlePastingAString(std::string theClipboard)
+{
+	
+	TextWithProps temp;
+	if(Manager->isSomethingSelected())
+	{
+		Manager->deleteSelected();
+	}
+	
+	getDocumentModel()->insertString(getCaretPosition(),theClipboard,temp);
+	Manager->updateViews();
+	Manager->updateSize();
+	updatePreferredSize();
+}
 
 std::string TextDomArea::getHighlightedString(void)
 {

@@ -67,6 +67,7 @@
 
 #include "OSGAdvancedTextDomAreaFields.h" // AdvancedTextDomAreas type
 #include "OSGSysFields.h"        // ClipboardVisible type
+#include "OSGTextDomAreaFields.h" // FocusedDomArea type
 
 #include "OSGTextEditorFields.h"
 
@@ -97,7 +98,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
         AdvancedTextDomAreasFieldId = Inherited::NextFieldId,
         ClipboardVisibleFieldId = AdvancedTextDomAreasFieldId + 1,
         IsSplitFieldId = ClipboardVisibleFieldId + 1,
-        NextFieldId = IsSplitFieldId + 1
+        FocusedDomAreaFieldId = IsSplitFieldId + 1,
+        NextFieldId = FocusedDomAreaFieldId + 1
     };
 
     static const OSG::BitVector AdvancedTextDomAreasFieldMask =
@@ -106,12 +108,15 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
         (TypeTraits<BitVector>::One << ClipboardVisibleFieldId);
     static const OSG::BitVector IsSplitFieldMask =
         (TypeTraits<BitVector>::One << IsSplitFieldId);
+    static const OSG::BitVector FocusedDomAreaFieldMask =
+        (TypeTraits<BitVector>::One << FocusedDomAreaFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef MFUnrecAdvancedTextDomAreaPtr MFAdvancedTextDomAreasType;
     typedef SFBool            SFClipboardVisibleType;
     typedef SFBool            SFIsSplitType;
+    typedef SFUnrecTextDomAreaPtr SFFocusedDomAreaType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -234,6 +239,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
     MFUnrecAdvancedTextDomAreaPtr _mfAdvancedTextDomAreas;
     SFBool            _sfClipboardVisible;
     SFBool            _sfIsSplit;
+    SFUnrecTextDomAreaPtr _sfFocusedDomArea;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -268,6 +274,31 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
     EditFieldHandlePtr editHandleClipboardVisible(void);
     GetFieldHandlePtr  getHandleIsSplit         (void) const;
     EditFieldHandlePtr editHandleIsSplit        (void);
+    GetFieldHandlePtr  getHandleFocusedDomArea  (void) const;
+    EditFieldHandlePtr editHandleFocusedDomArea (void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+            const SFUnrecTextDomAreaPtr *getSFFocusedDomArea  (void) const;
+                  SFUnrecTextDomAreaPtr *editSFFocusedDomArea (void);
+
+
+                  TextDomArea * getFocusedDomArea (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setFocusedDomArea (TextDomArea * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
