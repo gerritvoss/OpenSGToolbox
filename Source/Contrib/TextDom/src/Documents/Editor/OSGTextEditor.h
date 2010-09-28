@@ -95,6 +95,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 
 		void clipboardInitialization(void);
 		void createDomArea(void);
+		AdvancedTextDomAreaRefPtr makeADuplicate(AdvancedTextDomAreaRefPtr TheAdvancedTextDomArea);
+
 
 
 		void updateLayout(bool isClipboardVisible);	// to update the layout of the editor(to show/hide the copy clipboard)

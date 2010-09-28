@@ -91,6 +91,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 	bool isDocumentModelChangedListenerAttached(DocumentModelChangedListenerPtr Listener) const;
     void removeDocumentModelChangedListener(DocumentModelChangedListenerPtr Listener);
 	
+	TextDomAreaRefPtr getDuplicatedTextDomArea(void);
+
 	std::string getHighlightedString(void);
 	FixedHeightLayoutManagerRefPtr getTheManager(void);
 	void setupCursor(void);

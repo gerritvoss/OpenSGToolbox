@@ -423,6 +423,11 @@ void TextEditor::updateLayout(bool isClipboardVisible)
 	}
 }
 
+AdvancedTextDomAreaRefPtr TextEditor::makeADuplicate(AdvancedTextDomAreaRefPtr TheAdvancedTextDomArea)
+{
+	return TheAdvancedTextDomArea->makeADuplicate();
+}
+
 void TextEditor::loadNewFile(BoostPath file)
 {
 	if(boost::filesystem::exists(file))
@@ -517,9 +522,9 @@ void TextEditor::loadNewFile(BoostPath file)
 		_NewRightTabLabelPanel->setLayout(/*LayoutRefPtr(FlowLayout::create())*/_NewRightTabLabelPanelSpringLayout);
 
 
-		AdvancedTextDomAreaRefPtr ExampleTextDomArea2 =  /*dynamic_pointer_cast<AdvancedTextDomArea>(deepClone(ExampleTextDomArea));*/AdvancedTextDomArea::create();
-		ExampleTextDomArea2->setPreferredSize(Vec2f(400, 400));
-		ExampleTextDomArea2->loadFile(file);
+		AdvancedTextDomAreaRefPtr ExampleTextDomArea2 =  makeADuplicate(ExampleTextDomArea);///*dynamic_pointer_cast<AdvancedTextDomArea>(deepClone(ExampleTextDomArea));*/AdvancedTextDomArea::create();
+		//ExampleTextDomArea2->setPreferredSize(Vec2f(400, 400));
+		//ExampleTextDomArea2->loadFile(file);
 		
 
 		ScrollPanelRefPtr _NewRightTabContent = ScrollPanel::create();

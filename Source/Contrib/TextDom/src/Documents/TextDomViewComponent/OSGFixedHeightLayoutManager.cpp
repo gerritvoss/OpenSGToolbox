@@ -1153,15 +1153,21 @@ void FixedHeightLayoutManager::recalculateCaretPositions(void)
 Pnt2f FixedHeightLayoutManager::getXYPosition(UInt32 lineNumber,UInt32 index,bool isBeginning) const
 {
 	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(lineNumber));
+	if(theElement)
+	{
+		std::string substring = theElement->getText();
+		substring = substring.substr(0,index);
 
-	std::string substring = theElement->getText();
-	substring = substring.substr(0,index);
+		Pnt2f topLeft,bottomRight;
+		getTextDomArea()->getFont()->getBounds(substring,topLeft,bottomRight);
 
-	Pnt2f topLeft,bottomRight;
-	getTextDomArea()->getFont()->getBounds(substring,topLeft,bottomRight);
-
-	if(isBeginning)return Pnt2f( _GutterSpace + _GutterSeparation + bottomRight.x(),lineNumber*heightOfLine);
-	return Pnt2f(_GutterSpace + _GutterSeparation + bottomRight.x(),(lineNumber+1)*heightOfLine);
+		if(isBeginning)return Pnt2f( _GutterSpace + _GutterSeparation + bottomRight.x(),lineNumber*heightOfLine);
+		return Pnt2f(_GutterSpace + _GutterSeparation + bottomRight.x(),(lineNumber+1)*heightOfLine);
+	}
+	else
+	{
+		return Pnt2f(0,0);
+	}
 
 }
 
@@ -1173,9 +1179,16 @@ Pnt2f FixedHeightLayoutManager::getStartXYPosition(UInt32 lineNumber) const
 Pnt2f FixedHeightLayoutManager::getEndXYPosition(UInt32 lineNumber) const
 {
 	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(lineNumber));
-	Pnt2f topLeft,bottomRight;
-	getTextDomArea()->getFont()->getBounds(theElement->getText(),topLeft,bottomRight);
-	return Pnt2f(_GutterSpace + _GutterSeparation + bottomRight.x(),(lineNumber+1)*heightOfLine);
+	if(theElement)
+	{
+		Pnt2f topLeft,bottomRight;
+		getTextDomArea()->getFont()->getBounds(theElement->getText(),topLeft,bottomRight);
+		return Pnt2f(_GutterSpace + _GutterSeparation + bottomRight.x(),(lineNumber+1)*heightOfLine);
+	}
+	else
+	{
+		return Pnt2f(0,0);
+	}
 }
 
 

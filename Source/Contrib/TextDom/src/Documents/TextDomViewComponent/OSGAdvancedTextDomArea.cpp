@@ -94,6 +94,7 @@ void AdvancedTextDomArea::loadFile(BoostPath path)
 		clearChildren();
 		pushToChildren(_TheTextDomArea);
 		setPreferredSize(_TheTextDomArea->getContentRequestedSize());
+		_TheTextDomArea->addDocumentModelChangedListener(&_PreferredSizeChangedListener);
 }
 
 void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
@@ -118,6 +119,8 @@ void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
 	_TheTextDomArea->loadFile(BoostPath("D:\\Work_Office_RA\\OpenSGToolBox\\Examples\\Tutorial\\TextDom\\Data\\SampleText3.txt"));
 
 	setPreferredSize(_TheTextDomArea->getContentRequestedSize());
+
+	_TheTextDomArea->addDocumentModelChangedListener(&_PreferredSizeChangedListener);
 
 	pushToChildren(_TheTextDomArea);
 	
@@ -214,6 +217,42 @@ void AdvancedTextDomArea::drawInternal(const GraphicsWeakPtr Graphics, Real32 Op
 	drawGutter(Graphics,Opacity);
 }
 
+void AdvancedTextDomArea::setTheTextDomArea(TextDomAreaRefPtr duplicatedTextDom)
+{
+	this->_TheTextDomArea = duplicatedTextDom;
+	duplicatedTextDom->addDocumentModelChangedListener(&_PreferredSizeChangedListener);
+}
+
+AdvancedTextDomAreaRefPtr AdvancedTextDomArea::makeADuplicate()
+{
+	AdvancedTextDomAreaRefPtr newPtr = AdvancedTextDomArea::create();
+	newPtr->setPreferredSize(Vec2f(400,400));
+	TextDomAreaRefPtr duplicatedTextDom = dynamic_cast<TextDomArea*>(getChildren(0))->getDuplicatedTextDomArea();
+	newPtr->setTheTextDomArea(duplicatedTextDom);
+	newPtr->clearChildren();
+	newPtr->pushToChildren(duplicatedTextDom);
+	newPtr->setPreferredSize(duplicatedTextDom->getContentRequestedSize());
+	return newPtr;
+}
+
+void AdvancedTextDomArea::PreferredSizeChangedListener::changedUpdate(const DocumentModelChangedEventUnrecPtr e)
+{
+	_AdvancedTextDomArea->changedUpdate(e);
+}
+
+AdvancedTextDomArea::PreferredSizeChangedListener::PreferredSizeChangedListener(AdvancedTextDomAreaRefPtr _TheAdvancedTextDomArea)
+{
+	_AdvancedTextDomArea = _TheAdvancedTextDomArea;
+}
+
+void AdvancedTextDomArea::changedUpdate(const DocumentModelChangedEventUnrecPtr e)
+{
+	std::cout<<"child has been updated.";
+	if(getMFChildren()->size()>0)
+		setPreferredSize(dynamic_cast<TextDomArea*>(getChildren(0))->getPreferredSize());
+}
+
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -226,12 +265,14 @@ void AdvancedTextDomArea::drawInternal(const GraphicsWeakPtr Graphics, Real32 Op
 /*----------------------- constructors & destructors ----------------------*/
 
 AdvancedTextDomArea::AdvancedTextDomArea(void) :
-    Inherited()
+    Inherited(),
+	_PreferredSizeChangedListener(this)
 {
 }
 
 AdvancedTextDomArea::AdvancedTextDomArea(const AdvancedTextDomArea &source) :
-    Inherited(source)
+    Inherited(source),
+	_PreferredSizeChangedListener(this)
 {
 }
 
@@ -245,7 +286,10 @@ void AdvancedTextDomArea::changed(ConstFieldMaskArg whichField,
                             UInt32            origin,
                             BitVector         details)
 {
+
+	
     Inherited::changed(whichField, origin, details);
+	
 }
 
 void AdvancedTextDomArea::dump(      UInt32    ,

@@ -46,6 +46,7 @@
 #include "OSGScrollPanel.h"
 #include "OSGTextDomArea.h"
 #include "OSGUIFont.h"
+#include "OSGDocumentModelChangedListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,10 +70,13 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
 
   public:
 
+	void setTheTextDomArea(TextDomAreaRefPtr duplicatedTextDom);
+
 	std::string getHighlightedString(void);
 	virtual void updateLayout(void);
     void loadFile(BoostPath path);
 	void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
+	AdvancedTextDomAreaRefPtr makeADuplicate();
 
     typedef AdvancedTextDomAreaBase Inherited;
     typedef AdvancedTextDomArea     Self;
@@ -104,7 +108,21 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
 
   protected:
 
+	  void changedUpdate(const DocumentModelChangedEventUnrecPtr e);
 
+	  class PreferredSizeChangedListener:public DocumentModelChangedListener
+	  {
+
+	  public:
+			PreferredSizeChangedListener(AdvancedTextDomAreaRefPtr theAdvancedTextDomArea);
+
+			virtual void changedUpdate(const DocumentModelChangedEventUnrecPtr e);
+	  protected:
+		  AdvancedTextDomAreaRefPtr _AdvancedTextDomArea;
+
+	  };
+
+	  PreferredSizeChangedListener _PreferredSizeChangedListener;
 	/*! \}                                                                 */
 
     // Variables should all be in AdvancedTextDomAreaBase.

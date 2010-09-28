@@ -282,12 +282,17 @@ void TextDomArea::changedUpdate(const DocumentEventUnrecPtr e)
 
 void TextDomArea::insertUpdate(const DocumentEventUnrecPtr e)
 {
+	Manager->updateViews();
+	Manager->updateSize();
+	Manager->calculatePreferredSize();
+	updatePreferredSize();
 }
 
 void TextDomArea::removeUpdate(const DocumentEventUnrecPtr e)
 {
 	Manager->updateViews();
 	Manager->updateSize();
+	Manager->calculatePreferredSize();
 	updatePreferredSize();
 }
 
@@ -383,9 +388,9 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 		for(i = Manager->getCaretIndex()+2,count=0;count<numberOfLeadingSpaces;count++,i++)
 			getDocumentModel()->insertCharacter(count,Manager->getCaretLine()+1,' ',temp);
 
-		Manager->updateViews();
-		Manager->updateSize();
-		updatePreferredSize();
+		//Manager->updateViews();
+		//Manager->updateSize();
+		//updatePreferredSize();
 
 		Manager->moveTheCaret(HOMEOFNEXTLINE,false,false);
 
@@ -464,6 +469,18 @@ void TextDomArea::handlePastingAString(std::string theClipboard)
 	Manager->updateViews();
 	Manager->updateSize();
 	updatePreferredSize();
+}
+
+TextDomAreaRefPtr TextDomArea::getDuplicatedTextDomArea(void)
+{
+	TextDomAreaRefPtr newPtr = TextDomArea::create();
+	newPtr->setWrapStyleWord(this->getWrapStyleWord());
+    newPtr->setPreferredSize(this->getPreferredSize());
+    newPtr->setMinSize(this->getMinSize());
+	newPtr->setFont(this->getFont());
+	newPtr->setDocumentModel(this->getDocumentModel());
+	newPtr->handleDocumentModelChanged();
+	return newPtr;
 }
 
 std::string TextDomArea::getHighlightedString(void)
@@ -764,12 +781,7 @@ void TextDomArea::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
-	if(whichField & TextDomArea::DocumentModelFieldMask)
-	{
-		handleDocumentModelChanged();
-	
-	}
-	else if(whichField & TextDomArea::ClipBoundsFieldMask)
+	if(whichField & TextDomArea::ClipBoundsFieldMask)
 	{
 		if(Manager)Manager->updateViews();
 	}
