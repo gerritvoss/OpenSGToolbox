@@ -16,7 +16,7 @@
 >
 	<Field
 		name="Selected"
-		type="Int32"
+		type="UInt32"
         category="data"
 		cardinality="multi"
 		visibility="external"
@@ -26,7 +26,7 @@
 	</Field>
 	<Field
 		name="PreviouslySelected"
-		type="Int32"
+		type="UInt32"
         category="data"
 		cardinality="multi"
 		visibility="external"

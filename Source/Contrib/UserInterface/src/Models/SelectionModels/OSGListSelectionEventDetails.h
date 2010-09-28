@@ -79,11 +79,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionEventDetails : public Lis
 
     /*! \}                                                                 */
 
-    static  ListSelectionEventDetailsTransitPtr      create(  FieldContainer* const Source,
-                                                       Time TimeStamp,
-                                                       Int32 FirstIndex,
-                                                       Int32 LastIndex,
-                                                       bool ValueIsAdjusting); 
+    static  ListSelectionEventDetailsTransitPtr create(  FieldContainer* const Source,
+                                                         Time TimeStamp,
+                                                         Int32 FirstIndex,
+                                                         Int32 LastIndex,
+                                                         const std::vector<UInt32>& Selected,
+                                                         const std::vector<UInt32>& PreviouslySelected,
+                                                         bool ValueIsAdjusting); 
 
     /*=========================  PROTECTED  ===============================*/
 

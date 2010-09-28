@@ -110,8 +110,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SelectionEventDetailsBase : public Eve
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef MFInt32           MFSelectedType;
-    typedef MFInt32           MFPreviouslySelectedType;
+    typedef MFUInt32          MFSelectedType;
+    typedef MFUInt32          MFPreviouslySelectedType;
     typedef SFBool            SFValueIsAdjustingType;
 
     /*---------------------------------------------------------------------*/
@@ -138,16 +138,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SelectionEventDetailsBase : public Eve
     /*! \{                                                                 */
 
 
-            const MFInt32             *getMFSelected        (void) const;
+            const MFUInt32            *getMFSelected        (void) const;
 
-            const MFInt32             *getMFPreviouslySelected (void) const;
+            const MFUInt32            *getMFPreviouslySelected (void) const;
 
             const SFBool              *getSFValueIsAdjusting (void) const;
 
 
-                  Int32                getSelected        (const UInt32 index) const;
+                  UInt32               getSelected        (const UInt32 index) const;
 
-                  Int32                getPreviouslySelected (const UInt32 index) const;
+                  UInt32               getPreviouslySelected (const UInt32 index) const;
 
                   bool                 getValueIsAdjusting (void) const;
 
@@ -217,8 +217,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SelectionEventDetailsBase : public Eve
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFInt32           _mfSelected;
-    MFInt32           _mfPreviouslySelected;
+    MFUInt32          _mfSelected;
+    MFUInt32          _mfPreviouslySelected;
     SFBool            _sfValueIsAdjusting;
 
     /*! \}                                                                 */
@@ -260,16 +260,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SelectionEventDetailsBase : public Eve
     /*! \{                                                                 */
 
 
-                  MFInt32             *editMFSelected       (void);
+                  MFUInt32            *editMFSelected       (void);
 
-                  MFInt32             *editMFPreviouslySelected(void);
+                  MFUInt32            *editMFPreviouslySelected(void);
 
                   SFBool              *editSFValueIsAdjusting(void);
 
 
-                  Int32               &editSelected       (const UInt32 index);
+                  UInt32              &editSelected       (const UInt32 index);
 
-                  Int32               &editPreviouslySelected(const UInt32 index);
+                  UInt32              &editPreviouslySelected(const UInt32 index);
 
                   bool                &editValueIsAdjusting(void);
 

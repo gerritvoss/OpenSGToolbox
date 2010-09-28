@@ -82,11 +82,11 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var Int32           SelectionEventDetailsBase::_mfSelected
+/*! \var UInt32          SelectionEventDetailsBase::_mfSelected
     
 */
 
-/*! \var Int32           SelectionEventDetailsBase::_mfPreviouslySelected
+/*! \var UInt32          SelectionEventDetailsBase::_mfPreviouslySelected
     
 */
 
@@ -122,8 +122,8 @@ void SelectionEventDetailsBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new MFInt32::Description(
-        MFInt32::getClassType(),
+    pDesc = new MFUInt32::Description(
+        MFUInt32::getClassType(),
         "Selected",
         "",
         SelectedFieldId, SelectedFieldMask,
@@ -134,8 +134,8 @@ void SelectionEventDetailsBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new MFInt32::Description(
-        MFInt32::getClassType(),
+    pDesc = new MFUInt32::Description(
+        MFUInt32::getClassType(),
         "PreviouslySelected",
         "",
         PreviouslySelectedFieldId, PreviouslySelectedFieldMask,
@@ -189,7 +189,7 @@ SelectionEventDetailsBase::TypeObject SelectionEventDetailsBase::_type(
     ">\n"
     "\t<Field\n"
     "\t\tname=\"Selected\"\n"
-    "\t\ttype=\"Int32\"\n"
+    "\t\ttype=\"UInt32\"\n"
     "        category=\"data\"\n"
     "\t\tcardinality=\"multi\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -199,7 +199,7 @@ SelectionEventDetailsBase::TypeObject SelectionEventDetailsBase::_type(
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"PreviouslySelected\"\n"
-    "\t\ttype=\"Int32\"\n"
+    "\t\ttype=\"UInt32\"\n"
     "        category=\"data\"\n"
     "\t\tcardinality=\"multi\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -242,27 +242,27 @@ UInt32 SelectionEventDetailsBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-MFInt32 *SelectionEventDetailsBase::editMFSelected(void)
+MFUInt32 *SelectionEventDetailsBase::editMFSelected(void)
 {
     editMField(SelectedFieldMask, _mfSelected);
 
     return &_mfSelected;
 }
 
-const MFInt32 *SelectionEventDetailsBase::getMFSelected(void) const
+const MFUInt32 *SelectionEventDetailsBase::getMFSelected(void) const
 {
     return &_mfSelected;
 }
 
 
-MFInt32 *SelectionEventDetailsBase::editMFPreviouslySelected(void)
+MFUInt32 *SelectionEventDetailsBase::editMFPreviouslySelected(void)
 {
     editMField(PreviouslySelectedFieldMask, _mfPreviouslySelected);
 
     return &_mfPreviouslySelected;
 }
 
-const MFInt32 *SelectionEventDetailsBase::getMFPreviouslySelected(void) const
+const MFUInt32 *SelectionEventDetailsBase::getMFPreviouslySelected(void) const
 {
     return &_mfPreviouslySelected;
 }
@@ -508,8 +508,8 @@ SelectionEventDetailsBase::~SelectionEventDetailsBase(void)
 
 GetFieldHandlePtr SelectionEventDetailsBase::getHandleSelected        (void) const
 {
-    MFInt32::GetHandlePtr returnValue(
-        new  MFInt32::GetHandle(
+    MFUInt32::GetHandlePtr returnValue(
+        new  MFUInt32::GetHandle(
              &_mfSelected,
              this->getType().getFieldDesc(SelectedFieldId),
              const_cast<SelectionEventDetailsBase *>(this)));
@@ -519,8 +519,8 @@ GetFieldHandlePtr SelectionEventDetailsBase::getHandleSelected        (void) con
 
 EditFieldHandlePtr SelectionEventDetailsBase::editHandleSelected       (void)
 {
-    MFInt32::EditHandlePtr returnValue(
-        new  MFInt32::EditHandle(
+    MFUInt32::EditHandlePtr returnValue(
+        new  MFUInt32::EditHandle(
              &_mfSelected,
              this->getType().getFieldDesc(SelectedFieldId),
              this));
@@ -533,8 +533,8 @@ EditFieldHandlePtr SelectionEventDetailsBase::editHandleSelected       (void)
 
 GetFieldHandlePtr SelectionEventDetailsBase::getHandlePreviouslySelected (void) const
 {
-    MFInt32::GetHandlePtr returnValue(
-        new  MFInt32::GetHandle(
+    MFUInt32::GetHandlePtr returnValue(
+        new  MFUInt32::GetHandle(
              &_mfPreviouslySelected,
              this->getType().getFieldDesc(PreviouslySelectedFieldId),
              const_cast<SelectionEventDetailsBase *>(this)));
@@ -544,8 +544,8 @@ GetFieldHandlePtr SelectionEventDetailsBase::getHandlePreviouslySelected (void) 
 
 EditFieldHandlePtr SelectionEventDetailsBase::editHandlePreviouslySelected(void)
 {
-    MFInt32::EditHandlePtr returnValue(
-        new  MFInt32::EditHandle(
+    MFUInt32::EditHandlePtr returnValue(
+        new  MFUInt32::EditHandle(
              &_mfPreviouslySelected,
              this->getType().getFieldDesc(PreviouslySelectedFieldId),
              this));

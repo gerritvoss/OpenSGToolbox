@@ -135,6 +135,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionModel : public ListSelect
 
    virtual void incrementValuesAboveIndex(const UInt32& index, const UInt32& NumberToIncrement) = 0;
    virtual void decrementValuesAboveIndex(const UInt32& index, const UInt32& NumberToDecrement) = 0;
+
+   std::vector<UInt32> getSelectedIndexes(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

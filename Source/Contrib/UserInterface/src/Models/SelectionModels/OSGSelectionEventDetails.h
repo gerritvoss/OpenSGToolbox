@@ -81,8 +81,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SelectionEventDetails : public Selecti
 
     static  SelectionEventDetailsTransitPtr      create(  FieldContainer* const Source,
                                                    Time TimeStamp,
-                                                   const std::vector<Int32>& Selected,
-                                                   const std::vector<Int32>& PreviouslySelected,
+                                                   const std::vector<UInt32>& Selected,
+                                                   const std::vector<UInt32>& PreviouslySelected,
                                                    bool ValueIsAdjusting); 
 
     /*=========================  PROTECTED  ===============================*/
