@@ -84,11 +84,14 @@ class OSG_SYSTEM_DLLMAPPING FilePathAttachment : public FilePathAttachmentBase
     /*! \}                                                                 */
     static const BoostPath* getFilePath(const AttachmentContainer*  container);
     static FieldContainerUnrecPtr loadFromFilePath(BoostPath &LoadFilePath, const FieldContainerType &FCType);
+    static bool shouldUseOnlyFileHandler(const FieldContainerType &FCType);
 
     static void   setFilePath(      AttachmentContainer*  container, 
                                     const BoostPath            &ThePath     );
 
-     static bool registerHandler(const FieldContainerType& TheType, FileAttachmentHandler TheHandler);
+     static bool registerHandler(const FieldContainerType& TheType,
+                                 FileAttachmentHandler TheHandler,
+                                 bool UseOnlyFileHandler = false);
      static bool unregisterHandler(const FieldContainerType& TheType);
     /*=========================  PROTECTED  ===============================*/
 
@@ -118,7 +121,8 @@ class OSG_SYSTEM_DLLMAPPING FilePathAttachment : public FilePathAttachmentBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-     typedef std::map<std::string, FileAttachmentHandler> FileAttachmentHandlerMap;
+    typedef std::pair<FileAttachmentHandler, bool> HandlerPair;
+    typedef std::map<std::string, HandlerPair > FileAttachmentHandlerMap;
      static FileAttachmentHandlerMap  _HandlerMap;
     /*==========================  PRIVATE  ================================*/
 
