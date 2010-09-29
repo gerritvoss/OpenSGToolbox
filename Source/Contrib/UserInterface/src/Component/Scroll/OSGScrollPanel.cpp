@@ -99,29 +99,33 @@ void ScrollPanel::setViewComponent(Component* const TheComponent)
 
 void ScrollPanel::updateRangeModels(void)
 {
-    getVerticalRangeModel()->setRangeProperties(
-        getView()->getViewPosition().y(),
-        getView()->getSize().y(),
-        0,
-        getView()->getViewComponent()->getSize().y(),
-        false);
-    
-    getHorizontalRangeModel()->setRangeProperties(
-        getView()->getViewPosition().x(),
-        getView()->getSize().x(),
-        0,
-        getView()->getViewComponent()->getSize().x(),
-        false);
+    if(getView() != NULL &&
+       getView()->getViewComponent() != NULL )
+    {
+        getVerticalRangeModel()->setRangeProperties(
+            getView()->getViewPosition().y(),
+            getView()->getSize().y(),
+            0,
+            getView()->getViewComponent()->getSize().y(),
+            false);
+        
+        getHorizontalRangeModel()->setRangeProperties(
+            getView()->getViewPosition().x(),
+            getView()->getSize().x(),
+            0,
+            getView()->getViewComponent()->getSize().x(),
+            false);
 
-        //getVerticalScrollBar()->setBlockIncrement(getVerticalRangeModel()->getExtent());
-        getVerticalScrollBar()->setBlockIncrement(getView()->getViewComponent()->getScrollableBlockIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::VERTICAL_ORIENTATION, 1));
+            //getVerticalScrollBar()->setBlockIncrement(getVerticalRangeModel()->getExtent());
+            getVerticalScrollBar()->setBlockIncrement(getView()->getViewComponent()->getScrollableBlockIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::VERTICAL_ORIENTATION, 1));
+            
+            getVerticalScrollBar()->setUnitIncrement(getView()->getViewComponent()->getScrollableUnitIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::VERTICAL_ORIENTATION, 1));
         
-        getVerticalScrollBar()->setUnitIncrement(getView()->getViewComponent()->getScrollableUnitIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::VERTICAL_ORIENTATION, 1));
-    
-        //getHorizontalScrollBar()->setBlockIncrement(getHorizontalRangeModel()->getExtent());
-        getHorizontalScrollBar()->setBlockIncrement(getView()->getViewComponent()->getScrollableBlockIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::HORIZONTAL_ORIENTATION, 1));
-        
-        getHorizontalScrollBar()->setUnitIncrement(getView()->getViewComponent()->getScrollableUnitIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::HORIZONTAL_ORIENTATION, 1));
+            //getHorizontalScrollBar()->setBlockIncrement(getHorizontalRangeModel()->getExtent());
+            getHorizontalScrollBar()->setBlockIncrement(getView()->getViewComponent()->getScrollableBlockIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::HORIZONTAL_ORIENTATION, 1));
+            
+            getHorizontalScrollBar()->setUnitIncrement(getView()->getViewComponent()->getScrollableUnitIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), ScrollBar::HORIZONTAL_ORIENTATION, 1));
+    }
 }
 
 ScrollBar* ScrollPanel::getVerticalScrollBar(void)
@@ -335,7 +339,9 @@ void ScrollPanel::updateLayout(void)
         getHorizontalResizePolicy() == RESIZE_TO_VIEW)
     {
         Vec2f Size(getPreferredSize());
-        if(getView() != NULL && getVerticalResizePolicy() == RESIZE_TO_VIEW)
+        if(getView() != NULL && 
+           getView()->getViewComponent() != NULL && 
+           getVerticalResizePolicy() == RESIZE_TO_VIEW)
         {
             Size[1] = getView()->getViewComponent()->getPreferredSize()[1];
             if(HorizontalScrollbarShown)
@@ -343,7 +349,9 @@ void ScrollPanel::updateLayout(void)
                Size[1] += getHorizontalScrollBar()->getSize()[1];
             }
         }
-        if(getView() != NULL && getHorizontalResizePolicy() == RESIZE_TO_VIEW)
+        if(getView() != NULL && 
+           getView()->getViewComponent() != NULL && 
+           getHorizontalResizePolicy() == RESIZE_TO_VIEW)
         {
             Size[0] = getView()->getViewComponent()->getPreferredSize()[0];
             if(VerticalScrollbarShown)
@@ -423,14 +431,6 @@ void ScrollPanel::onCreate(const ScrollPanel * Id)
 
     setVerticalRangeModel(VertModel);
     setHorizontalRangeModel(HorModel);
-    if(getVerticalRangeModel() != NULL)
-    {
-        _VertRangeModelStateChangedConnection = getVerticalRangeModel()->connectStateChanged(boost::bind(&ScrollPanel::handleRangeModelStateChanged, this, _1));
-    }
-    if(getHorizontalRangeModel() != NULL)
-    {
-        _HorzRangeModelStateChangedConnection = getHorizontalRangeModel()->connectStateChanged(boost::bind(&ScrollPanel::handleRangeModelStateChanged, this, _1));
-    }
 }
 
 void ScrollPanel::onDestroy()
@@ -482,6 +482,22 @@ void ScrollPanel::changed(ConstFieldMaskArg whichField,
         if(getInternalHorizontalScrollBar() != NULL)
         {
             pushToChildren(getInternalHorizontalScrollBar());
+        }
+    }
+    if(whichField & VerticalRangeModelFieldMask)
+    {
+        _VertRangeModelStateChangedConnection.disconnect();
+        if(getVerticalRangeModel() != NULL)
+        {
+            _VertRangeModelStateChangedConnection = getVerticalRangeModel()->connectStateChanged(boost::bind(&ScrollPanel::handleRangeModelStateChanged, this, _1));
+        }
+    }
+    if(whichField & HorizontalRangeModelFieldMask)
+    {
+        _HorzRangeModelStateChangedConnection.disconnect();
+        if(getHorizontalRangeModel() != NULL)
+        {
+            _HorzRangeModelStateChangedConnection = getHorizontalRangeModel()->connectStateChanged(boost::bind(&ScrollPanel::handleRangeModelStateChanged, this, _1));
         }
     }
 
