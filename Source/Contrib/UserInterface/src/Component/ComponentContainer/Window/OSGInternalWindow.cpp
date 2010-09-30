@@ -231,16 +231,6 @@ void InternalWindow::keyPressed(KeyEventDetails* const e)
 {
     if(!getLockInput())
     {
-        //Check for Accelerator Keys
-        /*UInt32 RelevantModifiers = (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_ALT) |
-            (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL) |
-            (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT) |
-            (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_META);
-        KeyAcceleratorMapItor MapItor = _KeyAcceleratorMap.find(KeyEventDetails::getHashable(e->getKey(), RelevantModifiers));
-        if(MapItor != _KeyAcceleratorMap.end())
-        {
-            (*MapItor).second->acceleratorTyped(KeyAcceleratorEventDetails::create(this, e->getTimeStamp(), e->getKey(), e->getModifiers()));
-        }*/
         //Send Key event to Component that has Focus
         //If there is not Focused Component then do nothing
         if(getFocusedComponent() != NULL &&
@@ -925,7 +915,7 @@ bool InternalWindow::doKeyDetailsMatch(KeyEventDetails* const Details,
                                        KeyEventDetails::Key   Key,
                                        UInt32                 Modifires)
 {
-    return (Details->getKey() == Key) && (Details->getModifiers() & Modifires);
+    return (Details->getKey() == Key) && ((Details->getModifiers() & Modifires) == Modifires);
 }
 
 /*-------------------------------------------------------------------------*\
