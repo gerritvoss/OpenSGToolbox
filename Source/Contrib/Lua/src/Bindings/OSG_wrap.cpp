@@ -54650,6 +54650,64 @@ fail:
 }
 
 
+static int _wrap_cloneTree(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::NodeRefPtr arg1 ;
+  OSG::NodeRefPtr *argp1 ;
+  OSG::NodeRefPtr result;
+  
+  SWIG_check_num_args("OSG::cloneTree",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::cloneTree",1,"OSG::NodeRefPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_OSG__NodeRefPtr,0))){
+    SWIG_fail_ptr("cloneTree",1,SWIGTYPE_p_OSG__NodeRefPtr);
+  }
+  arg1 = *argp1;
+  
+  result = OSG::cloneTree(arg1);
+  {
+    OSG::NodeRefPtr * resultptr = new OSG::NodeRefPtr((const OSG::NodeRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__NodeRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_deepCloneTree(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::NodeRefPtr arg1 ;
+  OSG::NodeRefPtr *argp1 ;
+  OSG::NodeRefPtr result;
+  
+  SWIG_check_num_args("OSG::deepCloneTree",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("OSG::deepCloneTree",1,"OSG::NodeRefPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_OSG__NodeRefPtr,0))){
+    SWIG_fail_ptr("deepCloneTree",1,SWIGTYPE_p_OSG__NodeRefPtr);
+  }
+  arg1 = *argp1;
+  
+  result = OSG::deepCloneTree(arg1);
+  {
+    OSG::NodeRefPtr * resultptr = new OSG::NodeRefPtr((const OSG::NodeRefPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__NodeRefPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 #ifdef __cplusplus
 }
 #endif
@@ -54726,6 +54784,8 @@ static const struct luaL_reg swig_commands[] = {
     { "calcVertexNormalsGeo", _wrap_calcVertexNormalsGeo},
     { "calcFaceNormalsGeo", _wrap_calcFaceNormalsGeo},
     { "separateProperties", _wrap_separateProperties},
+    { "cloneTree", _wrap_cloneTree},
+    { "deepCloneTree", _wrap_deepCloneTree},
     {0,0}
 };
 

@@ -4149,6 +4149,20 @@ namespace OSG
     
     void                        separateProperties(GeometryRefPtr geo);
 
+    
+    /******************************************************/
+    /*                   Node Functions                   */
+    /******************************************************/
+    
+    NodeRefPtr cloneTree(NodeRefPtr rootNode)
+    {
+        return cloneTree(rootNode);
+    }
+    
+    NodeRefPtr deepCloneTree(NodeRefPtr rootNode)
+    {
+        return deepCloneTree(rootNode);
+    }
 
 }
 
