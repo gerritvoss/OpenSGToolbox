@@ -84,4 +84,14 @@ A UI Rectangle.
 		access="protected"
 	>
 	</Field>
+	<Field
+		name="SortKey"
+		type="Int32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
 </FieldContainer>

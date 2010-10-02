@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -212,6 +213,31 @@ void UIRectangleBase::setMouseTransformFunctor(UIRectangleMouseTransformFunctor 
 
     _sfMouseTransformFunctor.setValue(value);
 }
+//! Get the value of the UIRectangle::_sfSortKey field.
+
+inline
+Int32 &UIRectangleBase::editSortKey(void)
+{
+    editSField(SortKeyFieldMask);
+
+    return _sfSortKey.getValue();
+}
+
+//! Get the value of the UIRectangle::_sfSortKey field.
+inline
+      Int32  UIRectangleBase::getSortKey(void) const
+{
+    return _sfSortKey.getValue();
+}
+
+//! Set the value of the UIRectangle::_sfSortKey field.
+inline
+void UIRectangleBase::setSortKey(const Int32 value)
+{
+    editSField(SortKeyFieldMask);
+
+    _sfSortKey.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -244,6 +270,9 @@ void UIRectangleBase::execSync (      UIRectangleBase *pFrom,
 
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
         _sfMouseTransformFunctor.syncWith(pFrom->_sfMouseTransformFunctor);
+
+    if(FieldBits::NoField != (SortKeyFieldMask & whichField))
+        _sfSortKey.syncWith(pFrom->_sfSortKey);
 }
 #endif
 

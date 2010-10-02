@@ -91,6 +91,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(UIRectangle);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -105,7 +107,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
         RectColorMaskFieldId = DrawingSurfaceFieldId + 1,
         RectPolygonFieldId = RectColorMaskFieldId + 1,
         MouseTransformFunctorFieldId = RectPolygonFieldId + 1,
-        NextFieldId = MouseTransformFunctorFieldId + 1
+        SortKeyFieldId = MouseTransformFunctorFieldId + 1,
+        NextFieldId = SortKeyFieldId + 1
     };
 
     static const OSG::BitVector PointFieldMask =
@@ -122,6 +125,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
         (TypeTraits<BitVector>::One << RectPolygonFieldId);
     static const OSG::BitVector MouseTransformFunctorFieldMask =
         (TypeTraits<BitVector>::One << MouseTransformFunctorFieldId);
+    static const OSG::BitVector SortKeyFieldMask =
+        (TypeTraits<BitVector>::One << SortKeyFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -132,6 +137,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
     typedef SFUnrecColorMaskChunkPtr SFRectColorMaskType;
     typedef SFUnrecPolygonChunkPtr SFRectPolygonType;
     typedef SFUnrecUIRectangleMouseTransformFunctorPtr SFMouseTransformFunctorType;
+    typedef SFInt32           SFSortKeyType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -168,6 +174,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
             const SFUnrecUIDrawingSurfacePtr *getSFDrawingSurface (void) const;
                   SFUnrecUIDrawingSurfacePtr *editSFDrawingSurface (void);
 
+                  SFInt32             *editSFSortKey        (void);
+            const SFInt32             *getSFSortKey         (void) const;
+
 
                   Pnt3f               &editPoint          (void);
             const Pnt3f               &getPoint           (void) const;
@@ -180,6 +189,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
 
                   UIDrawingSurface * getDrawingSurface (void) const;
 
+                  Int32               &editSortKey        (void);
+                  Int32                getSortKey         (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -189,6 +201,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
             void setWidth          (const Real32 value);
             void setHeight         (const Real32 value);
             void setDrawingSurface (UIDrawingSurface * const value);
+            void setSortKey        (const Int32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -260,6 +273,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
     SFUnrecColorMaskChunkPtr _sfRectColorMask;
     SFUnrecPolygonChunkPtr _sfRectPolygon;
     SFUnrecUIRectangleMouseTransformFunctorPtr _sfMouseTransformFunctor;
+    SFInt32           _sfSortKey;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -302,6 +316,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
     EditFieldHandlePtr editHandleRectPolygon    (void);
     GetFieldHandlePtr  getHandleMouseTransformFunctor (void) const;
     EditFieldHandlePtr editHandleMouseTransformFunctor(void);
+    GetFieldHandlePtr  getHandleSortKey         (void) const;
+    EditFieldHandlePtr editHandleSortKey        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
