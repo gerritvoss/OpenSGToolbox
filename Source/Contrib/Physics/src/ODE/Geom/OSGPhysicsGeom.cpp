@@ -295,7 +295,8 @@ void PhysicsGeom::changed(ConstFieldMaskArg whichField,
     {
 	    dGeomSetCollideBits(_GeomID, getCollideBits());
     }
-    if(whichField & SpaceFieldMask)
+    if((whichField & SpaceFieldMask) && 
+        getSpace() != NULL)
     {
 	    dSpaceAdd(getSpace()->getSpaceID(), _GeomID);
     }

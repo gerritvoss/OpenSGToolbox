@@ -163,6 +163,16 @@ void AttachColGeomGraphOp::setMatchCurrentTravMask(bool MatchCurMask)
 	mMatchCurTravMask = MatchCurMask;
 }
 
+void AttachColGeomGraphOp::setCollideMask(UInt32 CollideMask)
+{
+	mCollideMask = CollideMask;
+}
+
+void AttachColGeomGraphOp::setCategoryMask(UInt32 CategoryMask)
+{
+	mCategoryMask = CategoryMask;
+}
+
 void AttachColGeomGraphOp::setParams(const std::string params)
 {
     ParamSet ps(params);   
@@ -304,6 +314,8 @@ Action::ResultE AttachColGeomGraphOp::traverseEnter(Node * const node)
         }
         if(NewGeom != NULL && AttachNode != NULL)
         {
+            NewGeom->setCollideBits(mCollideMask);
+            NewGeom->setCategoryBits(mCategoryMask);
             AttachNode->addAttachment(NewGeom);
 	        ++mNumChanged;
 
