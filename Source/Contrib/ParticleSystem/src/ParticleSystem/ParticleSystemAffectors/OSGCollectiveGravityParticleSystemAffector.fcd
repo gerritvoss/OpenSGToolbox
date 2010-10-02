@@ -43,4 +43,24 @@
 		defaultValue="CollectiveGravityParticleSystemAffector::MASS_STATIC"
 	>
 	</Field>
+	<Field
+		name="MinDistance"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="-1.0"
+	>
+	</Field>
+	<Field
+		name="MaxDistance"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="-1.0"
+	>
+	</Field>
 </FieldContainer>

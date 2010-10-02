@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -114,6 +115,31 @@ void ParticleGeneratorBase::setGenerateInWorldSpace(const bool value)
 
     _sfGenerateInWorldSpace.setValue(value);
 }
+//! Get the value of the ParticleGenerator::_sfActive field.
+
+inline
+bool &ParticleGeneratorBase::editActive(void)
+{
+    editSField(ActiveFieldMask);
+
+    return _sfActive.getValue();
+}
+
+//! Get the value of the ParticleGenerator::_sfActive field.
+inline
+      bool  ParticleGeneratorBase::getActive(void) const
+{
+    return _sfActive.getValue();
+}
+
+//! Set the value of the ParticleGenerator::_sfActive field.
+inline
+void ParticleGeneratorBase::setActive(const bool value)
+{
+    editSField(ActiveFieldMask);
+
+    _sfActive.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -131,6 +157,9 @@ void ParticleGeneratorBase::execSync (      ParticleGeneratorBase *pFrom,
 
     if(FieldBits::NoField != (GenerateInWorldSpaceFieldMask & whichField))
         _sfGenerateInWorldSpace.syncWith(pFrom->_sfGenerateInWorldSpace);
+
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+        _sfActive.syncWith(pFrom->_sfActive);
 }
 #endif
 

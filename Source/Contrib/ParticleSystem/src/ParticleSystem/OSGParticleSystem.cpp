@@ -1595,12 +1595,27 @@ void ParticleSystem::update(const Time& elps)
         //Apply Acceleration and Velocity
         setPosition(getPosition(i) + getVelocity(i)*elps + getAcceleration(i)*elps*elps, i);
 
+
+        //Clear Velocities
+        if(getClearVelocities())
+        {
+            setVelocity(Vec3f(0.0f,0.0f,0.0f),i);
+        }
+
         setVelocity(getVelocity(i) + getAcceleration(i)*elps,i);
+
+
+        //Clear Accelerations
+        if(getClearAccelerations())
+        {
+            setAcceleration(Vec3f(0.0f,0.0f,0.0f),i);
+        }
 
         //Affect Particles with Affectors
         for(UInt32 j(0) ; j<getMFAffectors()->size(); ++j)
         {
-            if(getAffectors(j)->affect(this, i, elps))
+            if(getAffectors(j)->getActive() &&
+               getAffectors(j)->affect(this, i, elps))
             {
                 killParticle(i);
                 continue;
@@ -1619,7 +1634,8 @@ void ParticleSystem::update(const Time& elps)
     UInt32 NumGenerators(getMFGenerators()->size());
     for(UInt32 j(0) ; j<NumGenerators; )
     {
-        if(getGenerators(j)->generate(this, elps))
+        if(getGenerators(j)->getActive() &&
+           getGenerators(j)->generate(this, elps))
         {
             removeFromGenerators(j); 
             --NumGenerators;
@@ -1634,7 +1650,10 @@ void ParticleSystem::update(const Time& elps)
     //Affect Particles with System Affectors
     for(UInt32 j(0) ; j<getMFSystemAffectors()->size(); ++j)
     {
-        getSystemAffectors(j)->affect(this, elps);
+        if(getSystemAffectors(j)->getActive())
+        {
+            getSystemAffectors(j)->affect(this, elps);
+        }
     }
 
     _isUpdating = false;

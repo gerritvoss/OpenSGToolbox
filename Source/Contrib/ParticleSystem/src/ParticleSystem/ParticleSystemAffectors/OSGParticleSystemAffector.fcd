@@ -13,4 +13,15 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
+	<Field
+		name="Active"
+		type="bool"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="true"
+	>
+	If true then this Affector will be applied.
+	</Field>
 </FieldContainer>

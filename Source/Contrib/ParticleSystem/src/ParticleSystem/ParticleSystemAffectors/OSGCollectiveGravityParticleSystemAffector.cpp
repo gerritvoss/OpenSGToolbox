@@ -78,7 +78,7 @@ void CollectiveGravityParticleSystemAffector::initMethod(InitPhase ePhase)
 
 void CollectiveGravityParticleSystemAffector::affect(ParticleSystemRefPtr System, const Time& elps)
 {
-	Vec3f Force,Ftotal,LineSegment,Acceleration;
+	Vec3f Force,Ftotal,LineSegment;
 	Real32 DistanceSquared;
 	Pnt3f CenterMass, TempCenterMass;
 
@@ -89,25 +89,24 @@ void CollectiveGravityParticleSystemAffector::affect(ParticleSystemRefPtr System
 	}
 
 	CenterMass*=1.0f/System->getNumParticles();
+    Real32 MinDistSqr(getMinDistance()*getMinDistance()),
+           MaxDistSqr(getMaxDistance()*getMaxDistance());
 	
 	for(UInt32 i(0); i < System->getNumParticles(); ++i)
 	{
 		TempCenterMass = CenterMass - Vec3f(System->getPosition(i) * (1.0/System->getNumParticles()));
 		DistanceSquared = System->getPosition(i).dist2(TempCenterMass);
-		if(DistanceSquared > 0)
+		if(DistanceSquared > 0 &&
+           (getMinDistance() < 0.0f || DistanceSquared >= MinDistSqr) &&
+           (getMaxDistance() < 0.0f || DistanceSquared <= MaxDistSqr))
 		{
 			Force = (getGravitationalConstant() * getParticleMass()* getParticleMass() * (System->getNumParticles()-1)* (TempCenterMass - System->getPosition(i)))* (1.0/DistanceSquared);
-			
+            if(getParticleMass() != 0.0f)
+            {
+		        System->setAcceleration(System->getAcceleration(i) + Force/getParticleMass(),i);
+            }
 		}
-		else
-		{
-			Force.setValues(0.0f,0.0f,0.0f);
-		}
-		Acceleration = 1.0f/getParticleMass() * Force;
-		System->setAcceleration(Acceleration,i);
 	}
-	//subtract 
-
 }
 
 /*-------------------------------------------------------------------------*\

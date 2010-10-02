@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -148,6 +149,56 @@ void CollectiveGravityParticleSystemAffectorBase::setParticleMassSource(const UI
 
     _sfParticleMassSource.setValue(value);
 }
+//! Get the value of the CollectiveGravityParticleSystemAffector::_sfMinDistance field.
+
+inline
+Real32 &CollectiveGravityParticleSystemAffectorBase::editMinDistance(void)
+{
+    editSField(MinDistanceFieldMask);
+
+    return _sfMinDistance.getValue();
+}
+
+//! Get the value of the CollectiveGravityParticleSystemAffector::_sfMinDistance field.
+inline
+      Real32  CollectiveGravityParticleSystemAffectorBase::getMinDistance(void) const
+{
+    return _sfMinDistance.getValue();
+}
+
+//! Set the value of the CollectiveGravityParticleSystemAffector::_sfMinDistance field.
+inline
+void CollectiveGravityParticleSystemAffectorBase::setMinDistance(const Real32 value)
+{
+    editSField(MinDistanceFieldMask);
+
+    _sfMinDistance.setValue(value);
+}
+//! Get the value of the CollectiveGravityParticleSystemAffector::_sfMaxDistance field.
+
+inline
+Real32 &CollectiveGravityParticleSystemAffectorBase::editMaxDistance(void)
+{
+    editSField(MaxDistanceFieldMask);
+
+    return _sfMaxDistance.getValue();
+}
+
+//! Get the value of the CollectiveGravityParticleSystemAffector::_sfMaxDistance field.
+inline
+      Real32  CollectiveGravityParticleSystemAffectorBase::getMaxDistance(void) const
+{
+    return _sfMaxDistance.getValue();
+}
+
+//! Set the value of the CollectiveGravityParticleSystemAffector::_sfMaxDistance field.
+inline
+void CollectiveGravityParticleSystemAffectorBase::setMaxDistance(const Real32 value)
+{
+    editSField(MaxDistanceFieldMask);
+
+    _sfMaxDistance.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -168,6 +219,12 @@ void CollectiveGravityParticleSystemAffectorBase::execSync (      CollectiveGrav
 
     if(FieldBits::NoField != (ParticleMassSourceFieldMask & whichField))
         _sfParticleMassSource.syncWith(pFrom->_sfParticleMassSource);
+
+    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
+        _sfMinDistance.syncWith(pFrom->_sfMinDistance);
+
+    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
+        _sfMaxDistance.syncWith(pFrom->_sfMaxDistance);
 }
 #endif
 

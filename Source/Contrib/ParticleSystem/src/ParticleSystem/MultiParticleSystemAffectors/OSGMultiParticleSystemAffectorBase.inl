@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -73,6 +74,31 @@ OSG::UInt16 MultiParticleSystemAffectorBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the value of the MultiParticleSystemAffector::_sfActive field.
+
+inline
+bool &MultiParticleSystemAffectorBase::editActive(void)
+{
+    editSField(ActiveFieldMask);
+
+    return _sfActive.getValue();
+}
+
+//! Get the value of the MultiParticleSystemAffector::_sfActive field.
+inline
+      bool  MultiParticleSystemAffectorBase::getActive(void) const
+{
+    return _sfActive.getValue();
+}
+
+//! Set the value of the MultiParticleSystemAffector::_sfActive field.
+inline
+void MultiParticleSystemAffectorBase::setActive(const bool value)
+{
+    editSField(ActiveFieldMask);
+
+    _sfActive.setValue(value);
+}
 
 //! Get the value of the \a index element the MultiParticleSystemAffector::_mfSystems field.
 inline
@@ -97,6 +123,9 @@ void MultiParticleSystemAffectorBase::execSync (      MultiParticleSystemAffecto
                                 syncMode,
                                 uiSyncInfo,
                                 oOffsets);
+
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+        _sfActive.syncWith(pFrom->_sfActive);
 }
 #endif
 
@@ -106,8 +135,6 @@ const Char8 *MultiParticleSystemAffectorBase::getClassname(void)
 {
     return "MultiParticleSystemAffector";
 }
-
-
 OSG_GEN_CONTAINERPTR(MultiParticleSystemAffector);
 
 OSG_END_NAMESPACE

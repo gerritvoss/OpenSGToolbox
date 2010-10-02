@@ -48,6 +48,9 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGParticleSystemEventDetails.h"
+#include "OSGParticleEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -176,6 +179,56 @@ void ParticleSystemBase::setUpdateSecAttribs(const bool value)
     editSField(UpdateSecAttribsFieldMask);
 
     _sfUpdateSecAttribs.setValue(value);
+}
+//! Get the value of the ParticleSystem::_sfClearVelocities field.
+
+inline
+bool &ParticleSystemBase::editClearVelocities(void)
+{
+    editSField(ClearVelocitiesFieldMask);
+
+    return _sfClearVelocities.getValue();
+}
+
+//! Get the value of the ParticleSystem::_sfClearVelocities field.
+inline
+      bool  ParticleSystemBase::getClearVelocities(void) const
+{
+    return _sfClearVelocities.getValue();
+}
+
+//! Set the value of the ParticleSystem::_sfClearVelocities field.
+inline
+void ParticleSystemBase::setClearVelocities(const bool value)
+{
+    editSField(ClearVelocitiesFieldMask);
+
+    _sfClearVelocities.setValue(value);
+}
+//! Get the value of the ParticleSystem::_sfClearAccelerations field.
+
+inline
+bool &ParticleSystemBase::editClearAccelerations(void)
+{
+    editSField(ClearAccelerationsFieldMask);
+
+    return _sfClearAccelerations.getValue();
+}
+
+//! Get the value of the ParticleSystem::_sfClearAccelerations field.
+inline
+      bool  ParticleSystemBase::getClearAccelerations(void) const
+{
+    return _sfClearAccelerations.getValue();
+}
+
+//! Set the value of the ParticleSystem::_sfClearAccelerations field.
+inline
+void ParticleSystemBase::setClearAccelerations(const bool value)
+{
+    editSField(ClearAccelerationsFieldMask);
+
+    _sfClearAccelerations.setValue(value);
 }
 //! Get the value of the ParticleSystem::_sfLastElapsedTime field.
 
@@ -560,6 +613,12 @@ void ParticleSystemBase::execSync (      ParticleSystemBase *pFrom,
 
     if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
         _sfUpdateSecAttribs.syncWith(pFrom->_sfUpdateSecAttribs);
+
+    if(FieldBits::NoField != (ClearVelocitiesFieldMask & whichField))
+        _sfClearVelocities.syncWith(pFrom->_sfClearVelocities);
+
+    if(FieldBits::NoField != (ClearAccelerationsFieldMask & whichField))
+        _sfClearAccelerations.syncWith(pFrom->_sfClearAccelerations);
 
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
         _sfLastElapsedTime.syncWith(pFrom->_sfLastElapsedTime);
