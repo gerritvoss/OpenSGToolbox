@@ -92,7 +92,9 @@ void EditableTextComponent::keyReleased(KeyEventDetails* const e)
 void EditableTextComponent::keyTyped(KeyEventDetails* const e)
 {
 	
-    if(getEnabled() && getEditable() && !(e->getModifiers() &( KeyEventDetails::KEY_MODIFIER_ALT | KeyEventDetails::KEY_MODIFIER_CONTROL | KeyEventDetails::KEY_MODIFIER_META )))
+    if(getEnabled() && 
+       getEditable() && 
+       !(e->getModifiers() &( KeyEventDetails::KEY_MODIFIER_ALT | KeyEventDetails::KEY_MODIFIER_CONTROL | KeyEventDetails::KEY_MODIFIER_META )))
 	{
 		if(e->getKeyChar()>31 && e->getKeyChar() < 127)
 		{
@@ -149,7 +151,7 @@ void EditableTextComponent::keyTyped(KeyEventDetails* const e)
         moveCaret(-1);
         break;
     case KeyEventDetails::KEY_V:
-        if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+        if(getEditable() && (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND))
         {
             paste();
         }
@@ -161,7 +163,7 @@ void EditableTextComponent::keyTyped(KeyEventDetails* const e)
         }
         break;
     case KeyEventDetails::KEY_X:
-        if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+        if(getEditable() && (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND))
         {
             cut();
         }
