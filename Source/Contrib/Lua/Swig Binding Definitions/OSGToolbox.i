@@ -16,6 +16,8 @@
 #include "OSGAnimation.h"
 
 #include "OSGComponent.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
 
 #include "OSGParticleSystem.h"
 #include "OSGDistribution1D.h"
@@ -75,6 +77,8 @@ namespace OSG {
     class Sound;
     class Animation;
     class Component;
+    class InternalWindow;
+    class UIDrawingSurface;
     class ParticleSystem;
     class PhysicsBody;
     class PhysicsHandler;
@@ -904,6 +908,137 @@ namespace OSG {
             Component(const Component &source);
     
             virtual ~Component(void);
+    };
+    
+    /******************************************************/
+    /*                 InternalWindowRefPtr                       */
+    /******************************************************/
+    class InternalWindowRefPtr : public ComponentRefPtr
+    {
+      public:
+         InternalWindowRefPtr(void);
+         InternalWindowRefPtr(const InternalWindowRefPtr               &source);
+         
+        ~InternalWindowRefPtr(void); 
+        InternalWindow *operator->(void);
+    };
+    %extend InternalWindowRefPtr
+    {
+        static InternalWindowRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            return OSG::dynamic_pointer_cast<OSG::InternalWindow>(oIn);
+        }
+    };
+    
+    /******************************************************/
+    /*                 InternalWindow                              */
+    /******************************************************/
+    class InternalWindow : public Component
+    {
+      public:
+    
+        //bool giveFocus(Component* const NewFocusedComponent, bool Temporary = false);
+        bool takeFocus(bool Temporary = false);
+    
+        // boost::signals2::connection connectKeyAccelerator(KeyEventDetails::Key TheKey, 
+                                                          // UInt32 Modifiers,
+                                                          // const KeyPressedEventType::slot_type &listener,
+                                                          // boost::signals2::connect_position at= boost::signals2::at_front);
+    // 
+        // boost::signals2::connection connectKeyAccelerator(KeyEventDetails::Key TheKey, 
+                                                          // UInt32 Modifiers,
+                                                          // const KeyPressedEventType::group_type &group,
+                                                          // const KeyPressedEventType::slot_type &listener,
+                                                          // boost::signals2::connect_position at= boost::signals2::at_front);
+    // 
+        virtual void open(void);
+    
+        virtual void close(void);
+    
+        void detachFromEventProducer(void);
+    
+        // virtual InternalWindow* getParentWindow(void) const;
+    // 
+        // virtual void setParentWindow(InternalWindow* const parent);
+    // 
+        // virtual void updateContainerLayout(void);
+      private:
+        InternalWindow(void);
+        InternalWindow(const InternalWindow &source);
+
+        virtual ~InternalWindow(void);
+    
+    };
+    %extend InternalWindow
+    {
+        virtual void giveFocus(ComponentRefPtr const NewFocusedComponent, bool Temporary = false)
+        {
+            ($self)->giveFocus(NewFocusedComponent, Temporary);
+        }
+    };
+    
+    /******************************************************/
+    /*                 UIDrawingSurfaceRefPtr                       */
+    /******************************************************/
+    class UIDrawingSurfaceRefPtr : public AttachmentContainerRefPtr
+    {
+      public:
+         UIDrawingSurfaceRefPtr(void);
+         UIDrawingSurfaceRefPtr(const UIDrawingSurfaceRefPtr               &source);
+         
+        ~UIDrawingSurfaceRefPtr(void); 
+        UIDrawingSurface *operator->(void);
+    };
+    %extend UIDrawingSurfaceRefPtr
+    {
+        static UIDrawingSurfaceRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            return OSG::dynamic_pointer_cast<OSG::UIDrawingSurface>(oIn);
+        }
+    };
+    
+    /******************************************************/
+    /*                 UIDrawingSurface                              */
+    /******************************************************/
+    class UIDrawingSurface : public AttachmentContainer
+    {
+      public:
+        void detachFromEventProducer(void);
+    
+        virtual Pnt2f getMousePosition(void) const;
+    
+        virtual UInt32 getNumWindowLayers(void) const;
+        /* virtual Int32 getWindowLayer(InternalWindow* const TheWindow) const;
+        virtual InternalWindow* getWindowAtLayer(const UInt32& Layer) const;
+        virtual void setWindowToLayer(InternalWindow* const TheWindow, const UInt32& Layer);
+        virtual void moveWindowUp(InternalWindow* const TheWindow);
+        virtual void moveWindowDown(InternalWindow* const TheWindow);
+        virtual void moveWindowToTop(InternalWindow* const TheWindow);
+        virtual void moveWindowToBottom(InternalWindow* const TheWindow);
+    
+        virtual void openWindow(InternalWindow* const TheWindow, const Int32 Layer = -1);
+        virtual void closeWindow(InternalWindow* const TheWindow);
+    
+        void updateWindowLayouts(void);
+        void updateWindowLayout(InternalWindow* const TheWindow); */
+      private:
+        UIDrawingSurface(void);
+        UIDrawingSurface(const UIDrawingSurface &source);
+
+        virtual ~UIDrawingSurface(void);
+    
+    };
+    %extend UIDrawingSurface
+    {
+        virtual void openWindow(InternalWindowRefPtr const TheWindow, const Int32 Layer = -1)
+        {
+            ($self)->openWindow(TheWindow, Layer);
+        }
+        
+        virtual void closeWindow(InternalWindowRefPtr const TheWindow)
+        {
+            ($self)->closeWindow(TheWindow);
+        }
     };
     
     /******************************************************/
