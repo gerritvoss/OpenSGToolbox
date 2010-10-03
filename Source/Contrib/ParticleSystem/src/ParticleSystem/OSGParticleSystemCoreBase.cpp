@@ -108,18 +108,6 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var UInt32          ParticleSystemCoreBase::_mfHistogram
-    
-*/
-
-/*! \var UInt32          ParticleSystemCoreBase::_mfOffset
-    
-*/
-
-/*! \var UInt32          ParticleSystemCoreBase::_sfPreviousSize
-    
-*/
-
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -193,7 +181,7 @@ void ParticleSystemCoreBase::classDescInserter(TypeObject &oType)
         "Sort is used to keep track of indices used to draw particles from \n"
         "nearest to farthest.\n",
         SortFieldId, SortFieldMask,
-        false,
+        true,
         (Field::MFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleSort),
         static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleSort));
@@ -209,42 +197,6 @@ void ParticleSystemCoreBase::classDescInserter(TypeObject &oType)
         (Field::MFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleDistances),
         static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleDistances));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new MFUInt32::Description(
-        MFUInt32::getClassType(),
-        "Histogram",
-        "",
-        HistogramFieldId, HistogramFieldMask,
-        true,
-        (Field::MFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleHistogram),
-        static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleHistogram));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new MFUInt32::Description(
-        MFUInt32::getClassType(),
-        "Offset",
-        "",
-        OffsetFieldId, OffsetFieldMask,
-        true,
-        (Field::MFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleOffset),
-        static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleOffset));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new SFUInt32::Description(
-        SFUInt32::getClassType(),
-        "PreviousSize",
-        "",
-        PreviousSizeFieldId, PreviousSizeFieldMask,
-        true,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandlePreviousSize),
-        static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandlePreviousSize));
 
     oType.addInitialDesc(pDesc);
 }
@@ -315,7 +267,7 @@ ParticleSystemCoreBase::TypeObject ParticleSystemCoreBase::_type(
     "\t\ttype=\"UInt32\"\n"
     "        category=\"data\"\n"
     "\t\tcardinality=\"multi\"\n"
-    "\t\tvisibility=\"external\"\n"
+    "\t\tvisibility=\"internal\"\n"
     "\t\taccess=\"protected\"\n"
     "\t>\n"
     "\tSort is used to keep track of indices used to draw particles from \n"
@@ -326,33 +278,6 @@ ParticleSystemCoreBase::TypeObject ParticleSystemCoreBase::_type(
     "\t\ttype=\"Real32\"\n"
     "        category=\"data\"\n"
     "\t\tcardinality=\"multi\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Histogram\"\n"
-    "\t\ttype=\"UInt32\"\n"
-    "        category=\"data\"\n"
-    "\t\tcardinality=\"multi\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Offset\"\n"
-    "\t\ttype=\"UInt32\"\n"
-    "        category=\"data\"\n"
-    "\t\tcardinality=\"multi\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"PreviousSize\"\n"
-    "\t\ttype=\"UInt32\"\n"
-    "        category=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"internal\"\n"
     "\t\taccess=\"protected\"\n"
     "\t>\n"
@@ -432,6 +357,7 @@ const MFUInt32 *ParticleSystemCoreBase::getMFSort(void) const
     return &_mfSort;
 }
 
+
 MFReal32 *ParticleSystemCoreBase::editMFDistances(void)
 {
     editMField(DistancesFieldMask, _mfDistances);
@@ -442,45 +368,6 @@ MFReal32 *ParticleSystemCoreBase::editMFDistances(void)
 const MFReal32 *ParticleSystemCoreBase::getMFDistances(void) const
 {
     return &_mfDistances;
-}
-
-
-MFUInt32 *ParticleSystemCoreBase::editMFHistogram(void)
-{
-    editMField(HistogramFieldMask, _mfHistogram);
-
-    return &_mfHistogram;
-}
-
-const MFUInt32 *ParticleSystemCoreBase::getMFHistogram(void) const
-{
-    return &_mfHistogram;
-}
-
-
-MFUInt32 *ParticleSystemCoreBase::editMFOffset(void)
-{
-    editMField(OffsetFieldMask, _mfOffset);
-
-    return &_mfOffset;
-}
-
-const MFUInt32 *ParticleSystemCoreBase::getMFOffset(void) const
-{
-    return &_mfOffset;
-}
-
-
-SFUInt32 *ParticleSystemCoreBase::editSFPreviousSize(void)
-{
-    editSField(PreviousSizeFieldMask);
-
-    return &_sfPreviousSize;
-}
-
-const SFUInt32 *ParticleSystemCoreBase::getSFPreviousSize(void) const
-{
-    return &_sfPreviousSize;
 }
 
 
@@ -514,18 +401,6 @@ UInt32 ParticleSystemCoreBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _mfDistances.getBinSize();
     }
-    if(FieldBits::NoField != (HistogramFieldMask & whichField))
-    {
-        returnValue += _mfHistogram.getBinSize();
-    }
-    if(FieldBits::NoField != (OffsetFieldMask & whichField))
-    {
-        returnValue += _mfOffset.getBinSize();
-    }
-    if(FieldBits::NoField != (PreviousSizeFieldMask & whichField))
-    {
-        returnValue += _sfPreviousSize.getBinSize();
-    }
 
     return returnValue;
 }
@@ -555,18 +430,6 @@ void ParticleSystemCoreBase::copyToBin(BinaryDataHandler &pMem,
     {
         _mfDistances.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (HistogramFieldMask & whichField))
-    {
-        _mfHistogram.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (OffsetFieldMask & whichField))
-    {
-        _mfOffset.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (PreviousSizeFieldMask & whichField))
-    {
-        _sfPreviousSize.copyToBin(pMem);
-    }
 }
 
 void ParticleSystemCoreBase::copyFromBin(BinaryDataHandler &pMem,
@@ -593,18 +456,6 @@ void ParticleSystemCoreBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DistancesFieldMask & whichField))
     {
         _mfDistances.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (HistogramFieldMask & whichField))
-    {
-        _mfHistogram.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (OffsetFieldMask & whichField))
-    {
-        _mfOffset.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (PreviousSizeFieldMask & whichField))
-    {
-        _sfPreviousSize.copyFromBin(pMem);
     }
 }
 
@@ -680,7 +531,6 @@ ParticleSystemCore *ParticleSystemCoreBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr ParticleSystemCoreBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -726,7 +576,6 @@ FieldContainerTransitPtr ParticleSystemCoreBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 ParticleSystemCoreBase::ParticleSystemCoreBase(void) :
@@ -735,10 +584,7 @@ ParticleSystemCoreBase::ParticleSystemCoreBase(void) :
     _sfDrawer                 (NULL),
     _sfSortingMode            (UInt32(ParticleSystemCore::NONE)),
     _mfSort                   (),
-    _mfDistances              (),
-    _mfHistogram              (),
-    _mfOffset                 (),
-    _sfPreviousSize           ()
+    _mfDistances              ()
 {
 }
 
@@ -748,10 +594,7 @@ ParticleSystemCoreBase::ParticleSystemCoreBase(const ParticleSystemCoreBase &sou
     _sfDrawer                 (NULL),
     _sfSortingMode            (source._sfSortingMode            ),
     _mfSort                   (source._mfSort                   ),
-    _mfDistances              (source._mfDistances              ),
-    _mfHistogram              (source._mfHistogram              ),
-    _mfOffset                 (source._mfOffset                 ),
-    _sfPreviousSize           (source._sfPreviousSize           )
+    _mfDistances              (source._mfDistances              )
 {
 }
 
@@ -907,80 +750,6 @@ EditFieldHandlePtr ParticleSystemCoreBase::editHandleDistances      (void)
     return returnValue;
 }
 
-GetFieldHandlePtr ParticleSystemCoreBase::getHandleHistogram       (void) const
-{
-    MFUInt32::GetHandlePtr returnValue(
-        new  MFUInt32::GetHandle(
-             &_mfHistogram,
-             this->getType().getFieldDesc(HistogramFieldId),
-             const_cast<ParticleSystemCoreBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ParticleSystemCoreBase::editHandleHistogram      (void)
-{
-    MFUInt32::EditHandlePtr returnValue(
-        new  MFUInt32::EditHandle(
-             &_mfHistogram,
-             this->getType().getFieldDesc(HistogramFieldId),
-             this));
-
-
-    editMField(HistogramFieldMask, _mfHistogram);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ParticleSystemCoreBase::getHandleOffset          (void) const
-{
-    MFUInt32::GetHandlePtr returnValue(
-        new  MFUInt32::GetHandle(
-             &_mfOffset,
-             this->getType().getFieldDesc(OffsetFieldId),
-             const_cast<ParticleSystemCoreBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ParticleSystemCoreBase::editHandleOffset         (void)
-{
-    MFUInt32::EditHandlePtr returnValue(
-        new  MFUInt32::EditHandle(
-             &_mfOffset,
-             this->getType().getFieldDesc(OffsetFieldId),
-             this));
-
-
-    editMField(OffsetFieldMask, _mfOffset);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ParticleSystemCoreBase::getHandlePreviousSize    (void) const
-{
-    SFUInt32::GetHandlePtr returnValue(
-        new  SFUInt32::GetHandle(
-             &_sfPreviousSize,
-             this->getType().getFieldDesc(PreviousSizeFieldId),
-             const_cast<ParticleSystemCoreBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ParticleSystemCoreBase::editHandlePreviousSize   (void)
-{
-    SFUInt32::EditHandlePtr returnValue(
-        new  SFUInt32::EditHandle(
-             &_sfPreviousSize,
-             this->getType().getFieldDesc(PreviousSizeFieldId),
-             this));
-
-
-    editSField(PreviousSizeFieldMask);
-
-    return returnValue;
-}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -1035,14 +804,6 @@ void ParticleSystemCoreBase::resolveLinks(void)
 #endif
 #ifdef OSG_MT_CPTR_ASPECT
     _mfDistances.terminateShare(Thread::getCurrentAspect(),
-                                      oOffsets);
-#endif
-#ifdef OSG_MT_CPTR_ASPECT
-    _mfHistogram.terminateShare(Thread::getCurrentAspect(),
-                                      oOffsets);
-#endif
-#ifdef OSG_MT_CPTR_ASPECT
-    _mfOffset.terminateShare(Thread::getCurrentAspect(),
                                       oOffsets);
 #endif
 }

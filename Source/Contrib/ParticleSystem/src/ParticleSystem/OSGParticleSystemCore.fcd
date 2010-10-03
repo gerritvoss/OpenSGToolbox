@@ -52,53 +52,17 @@
 		type="UInt32"
         category="data"
 		cardinality="multi"
-		visibility="external"
-		access="protected"
-	>
-	Sort and Sort2 are used to keep track of indices used to draw particles from 
-	nearest to farthest.
-	</Field>
-	<Field
-		name="Sort2"
-		type="UInt32"
-        category="data"
-		cardinality="multi"
 		visibility="internal"
 		access="protected"
 	>
+	Sort is used to keep track of indices used to draw particles from 
+	nearest to farthest.
 	</Field>
 	<Field
 		name="Distances"
 		type="Real32"
         category="data"
 		cardinality="multi"
-		visibility="internal"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="Histogram"
-		type="UInt32"
-        category="data"
-		cardinality="multi"
-		visibility="internal"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="Offset"
-		type="UInt32"
-        category="data"
-		cardinality="multi"
-		visibility="internal"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="PreviousSize"
-		type="UInt32"
-        category="data"
-		cardinality="single"
 		visibility="internal"
 		access="protected"
 	>

@@ -149,7 +149,7 @@ std::vector<UInt32> ParticleSystemCore::intersectLine(const Line& Ray, Real32 In
 void ParticleSystemCore::checkAndInitializeSort(void)
 {
 
-	if(getMFSort()->size() != getSystem()->getNumParticles() && getSortingMode() != NONE)
+	if(getMFSort()->size() != getSystem()->getNumParticles())
 	{	// re-init _mfSort if there is a discrepency between number of particles in each
 		editMFSort()->resize(getSystem()->getNumParticles(),1);
 		editMFDistances()->resize(getSystem()->getNumParticles(), 0.0f);
@@ -213,7 +213,9 @@ void ParticleSystemCore::sortParticles(DrawEnv *pEnv)
     //This should be called if the ParticleSystem has just finished an update
 
 	UInt32 numParticles = getSystem()->getNumParticles();
-	if(getSystem() != NULL && getSortingMode() != NONE && getMFSort()->size() > 0)
+	if(getSystem()         != NULL && 
+       getSortingMode()    != NONE && 
+       getMFSort()->size() >  0)
     {
 		//extract camera position
 		Pnt3f CameraLocation(0.0,0.0,0.0);
@@ -268,11 +270,8 @@ void ParticleSystemCore::handleVolumeChanged(ParticleSystemEventDetails* const d
 void ParticleSystemCore::handleParticleGenerated(ParticleEventDetails* const details)
 {
     //add particle to _mfSort
-    if(getSortingMode() != NONE)
-    {
-        editMFSort()->push_back(getMFSort()->size());
-		editMFDistances()->push_back(0.0f);
-    }
+    editMFSort()->push_back(getMFSort()->size());
+	editMFDistances()->push_back(0.0f);
 }
 
 void ParticleSystemCore::handleParticleKilled(ParticleEventDetails* const details)
