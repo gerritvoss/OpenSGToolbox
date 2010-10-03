@@ -295,10 +295,21 @@ void PhysicsGeom::changed(ConstFieldMaskArg whichField,
     {
 	    dGeomSetCollideBits(_GeomID, getCollideBits());
     }
-    if((whichField & SpaceFieldMask) && 
-        getSpace() != NULL)
+    if(whichField & SpaceFieldMask)
     {
-	    dSpaceAdd(getSpace()->getSpaceID(), _GeomID);
+        dSpaceID CurSpace(dGeomGetSpace(_GeomID));
+     
+        if(CurSpace != 0 &&
+           (getSpace() == NULL ||
+            CurSpace != getSpace()->getSpaceID()))
+        {
+            dSpaceRemove(CurSpace,_GeomID);
+        }
+
+        if(getSpace() != NULL)
+        {
+	        dSpaceAdd(getSpace()->getSpaceID(), _GeomID);
+        }
     }
     if(whichField & EnableFieldMask)
     {
