@@ -97,7 +97,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<RadioButtonGroup *>::_type("RadioButtonGroupPtr", "FieldContainerPtr");
+DataType FieldTraits<RadioButtonGroup *>::_type("RadioButtonGroupPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(RadioButtonGroup *)
@@ -160,7 +160,7 @@ RadioButtonGroupBase::TypeObject RadioButtonGroupBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"RadioButtonGroup\"\n"
-    "\tparent=\"FieldContainer\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
     "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
@@ -418,7 +418,6 @@ RadioButtonGroup *RadioButtonGroupBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr RadioButtonGroupBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -461,7 +460,6 @@ FieldContainerTransitPtr RadioButtonGroupBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -576,6 +574,7 @@ EditFieldHandlePtr RadioButtonGroupBase::editHandleGroupButtons   (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT
