@@ -142,8 +142,11 @@ void Animation::start(const Time& StartTime)
 
     _CurrentTime = _PrevTime = StartTime;
     setCycles(0);
-    commitChanges();
+    //commitChanges();
     _IsPlaying = true;
+
+    update(0.0);
+
     produceAnimationStarted();
 }
 
@@ -208,7 +211,7 @@ bool Animation::update(const Time& ElapsedTime)
 		{
 			//Update the number of cycles completed
             setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osgFloor( _CurrentTime / CycleLength ) )) );
-            commitChanges();
+            //commitChanges();
 		}
         Real32 t(_CurrentTime);
 

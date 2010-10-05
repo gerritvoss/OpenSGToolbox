@@ -87,12 +87,71 @@ bool AnimationGroup::update(const Time& ElapsedTime)
     }
     _CurrentTime += getScale()*ElapsedTime;
 
-    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
-    {
-        getAnimations(i)->update(ElapsedTime * getScale());
-    }
+    UInt32 PreUpdateCycleCount(getCycles());
+	if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
+	{
+		Real32 CycleLength(getCycleLength() * getScale());
+        
+		//Check if the Animation Time is past the end
+		if(_CurrentTime >= CycleLength)
+		{
+			//Update the number of cycles completed
+            setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osgFloor( _CurrentTime / CycleLength ) )) );
+            //commitChanges();
+		}
+        Real32 t(_CurrentTime);
+
+		if(getCycling() > 0 && getCycles() >= getCycling())
+		{
+            if(getSpan() > 0.0f)
+            {
+                t = getSpan();
+            }
+            else
+            {
+                t = CycleLength;
+            }
+            t -= 0.0001f;
+		}
+		else
+		{
+            if(getSpan() > 0.0f)
+            {
+                t -= osgFloor(_CurrentTime/getSpan())*getSpan();
+            }
+		}
+        t += getOffset();
+
+		//Internal Update
+        for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
+        {
+            getAnimations(i)->internalUpdate(t, _PrevTime);
+        }
+
+		//If the number of cycles has changed
+		if(getCycles() != PreUpdateCycleCount)
+		{
+			if(getCycling() > 0 && getCycles() >= getCycling())
+			{
+                //Animation has reached the end
+                //Remove the Animation from it's update producer
+                _UpdateEventConnection.disconnect();
+                _IsPlaying = false;
+
+                //Produce the Ended event
+				produceAnimationEnded();
+			}
+			else
+			{
+                //Animation hasn't finished yet
+                //Produce the Cycled event
+				produceAnimationCycled();
+			}
+		}
+	}
 
     _PrevTime = _CurrentTime;
+
 	//Return true if the animation has completed its number of cycles, false otherwise
 	return (getCycling() > 0 && getCycles() >= getCycling());
 }
@@ -100,46 +159,21 @@ bool AnimationGroup::update(const Time& ElapsedTime)
 void AnimationGroup::start(const Time& StartTime)
 {
     Inherited::start(StartTime);
-
-    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
-    {
-        getAnimations(i)->start(StartTime);
-    }
 }
 
 void AnimationGroup::seek(const Time& SeekTime)
 {
     Inherited::seek(SeekTime);
-
-    if(_IsPlaying)
-    {
-        for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
-        {
-            getAnimations(i)->seek(SeekTime);
-        }
-    }
 }
 
 void AnimationGroup::pause(bool ShouldPause)
 {
-    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
-    {
-        getAnimations(i)->pause(ShouldPause);
-    }
-
     Inherited::pause(ShouldPause);
 }
 
 void AnimationGroup::stop(bool DisconnectFromEventProducer)
 {
-    if(_IsPlaying)
-    {
-        for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
-        {
-            getAnimations(i)->stop(true);
-        }
-    }
-    Inherited::stop();
+    Inherited::stop(DisconnectFromEventProducer);
 }
 
 void AnimationGroup::internalUpdate(Real32 t, const Real32 prev_t)
