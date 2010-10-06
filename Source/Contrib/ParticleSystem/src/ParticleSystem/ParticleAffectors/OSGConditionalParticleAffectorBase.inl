@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -101,7 +102,7 @@ void ConditionalParticleAffectorBase::setConditionalAttribute(const std::string 
 //! Get the value of the ConditionalParticleAffector::_sfConditionalOperator field.
 
 inline
-UInt8 &ConditionalParticleAffectorBase::editConditionalOperator(void)
+UInt16 &ConditionalParticleAffectorBase::editConditionalOperator(void)
 {
     editSField(ConditionalOperatorFieldMask);
 
@@ -110,14 +111,14 @@ UInt8 &ConditionalParticleAffectorBase::editConditionalOperator(void)
 
 //! Get the value of the ConditionalParticleAffector::_sfConditionalOperator field.
 inline
-      UInt8  ConditionalParticleAffectorBase::getConditionalOperator(void) const
+      UInt16  ConditionalParticleAffectorBase::getConditionalOperator(void) const
 {
     return _sfConditionalOperator.getValue();
 }
 
 //! Set the value of the ConditionalParticleAffector::_sfConditionalOperator field.
 inline
-void ConditionalParticleAffectorBase::setConditionalOperator(const UInt8 value)
+void ConditionalParticleAffectorBase::setConditionalOperator(const UInt16 value)
 {
     editSField(ConditionalOperatorFieldMask);
 

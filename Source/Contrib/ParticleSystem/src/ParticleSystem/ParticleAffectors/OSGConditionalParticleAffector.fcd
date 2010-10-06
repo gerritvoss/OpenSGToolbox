@@ -25,7 +25,7 @@
 	</Field>
     <Field
 		name="ConditionalOperator"
-		type="UInt8"
+		type="UInt16"
         category="data"
 		cardinality="single"
 		visibility="external"

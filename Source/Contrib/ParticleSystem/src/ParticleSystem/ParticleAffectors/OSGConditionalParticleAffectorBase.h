@@ -88,6 +88,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffectorBase : pub
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ConditionalParticleAffector);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -114,7 +116,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffectorBase : pub
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFString          SFConditionalAttributeType;
-    typedef SFUInt8           SFConditionalOperatorType;
+    typedef SFUInt16          SFConditionalOperatorType;
     typedef SFUInt32          SFConditionalValueType;
     typedef MFUnrecParticleAffectorPtr MFAffectorsType;
 
@@ -145,8 +147,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffectorBase : pub
                   SFString            *editSFConditionalAttribute(void);
             const SFString            *getSFConditionalAttribute (void) const;
 
-                  SFUInt8             *editSFConditionalOperator(void);
-            const SFUInt8             *getSFConditionalOperator (void) const;
+                  SFUInt16            *editSFConditionalOperator(void);
+            const SFUInt16            *getSFConditionalOperator (void) const;
 
                   SFUInt32            *editSFConditionalValue(void);
             const SFUInt32            *getSFConditionalValue (void) const;
@@ -157,8 +159,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffectorBase : pub
                   std::string         &editConditionalAttribute(void);
             const std::string         &getConditionalAttribute (void) const;
 
-                  UInt8               &editConditionalOperator(void);
-                  UInt8                getConditionalOperator (void) const;
+                  UInt16              &editConditionalOperator(void);
+                  UInt16               getConditionalOperator (void) const;
 
                   UInt32              &editConditionalValue(void);
                   UInt32               getConditionalValue (void) const;
@@ -171,7 +173,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffectorBase : pub
     /*! \{                                                                 */
 
             void setConditionalAttribute(const std::string &value);
-            void setConditionalOperator(const UInt8 value);
+            void setConditionalOperator(const UInt16 value);
             void setConditionalValue(const UInt32 value);
 
     /*! \}                                                                 */
@@ -244,7 +246,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffectorBase : pub
     /*! \{                                                                 */
 
     SFString          _sfConditionalAttribute;
-    SFUInt8           _sfConditionalOperator;
+    SFUInt16          _sfConditionalOperator;
     SFUInt32          _sfConditionalValue;
     MFUnrecParticleAffectorPtr _mfAffectors;
 
