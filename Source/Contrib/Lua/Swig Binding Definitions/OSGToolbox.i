@@ -18,6 +18,7 @@
 #include "OSGComponent.h"
 #include "OSGInternalWindow.h"
 #include "OSGUIDrawingSurface.h"
+#include "OSGScrollPanel.h"
 
 #include "OSGParticleSystem.h"
 #include "OSGDistribution1D.h"
@@ -77,6 +78,7 @@ namespace OSG {
     class Sound;
     class Animation;
     class Component;
+    class ScrollPanel;
     class InternalWindow;
     class UIDrawingSurface;
     class ParticleSystem;
@@ -1039,6 +1041,78 @@ namespace OSG {
         {
             ($self)->closeWindow(TheWindow);
         }
+    };
+    
+    /******************************************************/
+    /*                 ScrollPanelRefPtr                       */
+    /******************************************************/
+    class ScrollPanelRefPtr : public ComponentRefPtr
+    {
+      public:
+         ScrollPanelRefPtr(void);
+         ScrollPanelRefPtr(const ScrollPanelRefPtr               &source);
+         
+        ~ScrollPanelRefPtr(void); 
+        ScrollPanel *operator->(void);
+    };
+    %extend ScrollPanelRefPtr
+    {
+        static ScrollPanelRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            return OSG::dynamic_pointer_cast<OSG::ScrollPanel>(oIn);
+        }
+    };
+    
+    /******************************************************/
+    /*                 ScrollPanel                              */
+    /******************************************************/
+    class ScrollPanel : public Component
+    {
+      public:
+        enum ScrollBarDisplayPolicy
+        {
+            SCROLLBAR_AS_NEEDED = 0,
+            SCROLLBAR_AS_ALWAYS = 1,
+            SCROLLBAR_AS_NEVER  = 2
+        };
+    
+        enum ResizePolicy
+        {
+            NO_RESIZE      = 0,
+            RESIZE_TO_VIEW = 1
+        };
+    
+        enum HorizontalAlign
+        {
+            SCROLLBAR_ALIGN_TOP    = 0,
+            SCROLLBAR_ALIGN_BOTTOM = 1
+        };
+    
+        enum VerticalAlign
+        {
+            SCROLLBAR_ALIGN_LEFT  = 0,
+            SCROLLBAR_ALIGN_RIGHT = 1
+        };
+        
+        virtual void updateLayout(void);
+    
+        //void setViewComponent(Component* const TheComponent);
+        //Component * getViewComponent  (void) const;
+    
+        //Mouse Wheel Events
+        //virtual void mouseWheelMoved(MouseWheelEventDetails* const e);
+    
+        //Scrolling
+        void scrollHorizontalUnit(Int32 Units);
+        void scrollHorizontalBlock(Int32 Blocks);
+        void scrollVerticalUnit(Int32 Units);
+        void scrollVerticalBlock(Int32 Blocks);
+      private:
+        ScrollPanel(void);
+        ScrollPanel(const ScrollPanel &source);
+
+        virtual ~ScrollPanel(void);
+    
     };
     
     /******************************************************/
