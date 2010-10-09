@@ -54,6 +54,9 @@
 #include "OSGKeyEvent.h"
 #include "OSGUpdateListener.h"
 #include "OSGColorLayer.h"
+#include "OSGUndoManager.h"
+#include "OSGCommandManager.h"
+ 
 
 OSG_BEGIN_NAMESPACE
 
@@ -67,6 +70,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 
 	  enum {LEFT,RIGHT,UP,DOWN,HOME,END,HOMEOFNEXTLINE,PAGEUP,PAGEDOWN};
 
+
 	  FixedHeightLayoutManagerRefPtr Manager;
 	  UIFontRefPtr _Font;
 	  ColorLayerRefPtr tempBackground;
@@ -79,7 +83,13 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 	  void drawTheCaret(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
 	  void drawHighlightBGInternal(const GraphicsWeakPtr Graphics, Real32 Opacity,UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex) const;
 	  std::string getHighlightedStringInternal(UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex);
-	  
+	  void insertCharacterUsingCommandManager(char theCharacter,UInt32 line,UInt32 index);
+	  void deleteSelectedUsingCommandManager(void);
+	  void deleteCharacterUsingCommandManager(void);
+	  void setTextUsingCommandManager(PlainDocumentLeafElementRefPtr theElement,std::string theString);
+
+	  CommandManagerPtr	_TheCommandManager;
+	  UndoManagerPtr	_TheUndoManager;
 
   public:
 
@@ -133,6 +143,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 	UInt32 getTopmostVisibleLineNumber(void);
 	UInt32 getLinesToBeDisplayed(void);
 	Real32 getHeightOfLine(void);
+	void tabHandler(bool isShiftPressed);
 
 	void disconnect(void);
 

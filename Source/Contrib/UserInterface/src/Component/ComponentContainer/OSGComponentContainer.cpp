@@ -200,6 +200,10 @@ void ComponentContainer::drawInternal(Graphics* const TheGraphics, Real32 Opacit
     {
         getChildren(i)->draw(TheGraphics, Opacity*getOpacity());
     }
+	
+    //Make sure the clipping is reset
+	//Because child components may have changed it when they were drawn
+    setupClipping(TheGraphics);
 }
 void ComponentContainer::mouseClicked(MouseEventDetails* const e)
 {

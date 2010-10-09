@@ -115,10 +115,10 @@ void TextEditor::keyTyped(const KeyEventUnrecPtr e)
 					}
 					else
 					{
-						getParentWindow()->setFocused(false);
-						TheSearchDialog->setFocused(true);
-						TheSearchDialog->takeFocus();
-						getParentWindow()->giveFocus(TheSearchDialog);
+						//getParentWindow()->setFocused(false);
+						//TheSearchDialog->setFocused(true);
+						//TheSearchDialog->takeFocus();
+						//getParentWindow()->giveFocus(TheSearchDialog);
 					}
 				}
 			}

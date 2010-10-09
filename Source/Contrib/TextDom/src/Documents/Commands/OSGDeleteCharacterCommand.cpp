@@ -44,108 +44,125 @@
 
 #include "OSGConfig.h"
 
-#include "OSGSyntaxHighlighter.h"
+#include "OSGDeleteCharacterCommand.h"
+
+#include "OSGNameAttachment.h"
 
 
-#include "OSGSingletonHolder.ins"
-
-OSG_BEGIN_NAMESPACE
+OSG_USING_NAMESPACE
 
 /***************************************************************************\
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::SyntaxHighlighterBase
-A SyntaxHighlighterBase. 
+/*! \class OSG::DeleteCharacterCommand
+A DeleteCharacterCommand. 
 */
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-OSG_SINGLETON_INST(SyntaxHighlighterBase, addPostFactoryExitFunction)
-
-template class SingletonHolder<SyntaxHighlighterBase>;
+CommandType DeleteCharacterCommand::_Type("DeleteCharacterCommand", "UndoableCommand");
 
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-
-std::vector<UInt32> SyntaxHighlighterBase::processInput(std::string inputString)
+DeleteCharacterCommandPtr DeleteCharacterCommand::create(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel)
 {
-	std::vector<UInt32> indices;
-	UInt32 index = 0;
-	std::istringstream iss(inputString);
-	std::string theString;
-	while(iss>>theString)
+	return RefPtr(new DeleteCharacterCommand(Manager,DocumentModel));
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+void DeleteCharacterCommand::execute(void)
+{
+	TextWithProps temp;
+	_theOriginalCaretIndex = _Manager->getCaretIndex();
+	_theOriginalCaretLine = _Manager->getCaretLine();
+
+	if(_theOriginalCaretLine+1 < _Manager->getRootElement()->getElementCount() || (_theOriginalCaretLine+1 == _Manager->getRootElement()->getElementCount() && !_Manager->isLastCharacterOfLine(_theOriginalCaretIndex,_theOriginalCaretLine)))
 	{
-		if(dictionary[theString])
+		_TheCharacter = _Manager->getNextCharacter(_theOriginalCaretIndex,_theOriginalCaretLine);
+		if(_Manager->isLastCharacterOfLine(_theOriginalCaretIndex,_theOriginalCaretLine))
 		{
-			UInt32 loc = inputString.find( theString, index );
-			indices.push_back(loc);
-			index = loc + theString.size();
-			indices.push_back(index);
+			_isLastCharacter = true;
 		}
-	};
-	return indices;
-}
 
-void SyntaxHighlighterBase::loadDictionary(void)
-{
-	std::ifstream input("dictionary.txt");
-	if(!input)
-	{
-		SWARNING << "void SyntaxHighlighterBase::loadDictionary(void) : error loading dictionary" <<std::endl;
-		return;
+		_TheDocumentModel->deleteCharacter(_theOriginalCaretLine,_theOriginalCaretIndex);
 	}
-	std::string keyword;
-	while(input>>keyword)dictionary[keyword] = 1;
-
-	//displayDictionary();
+		
+	_HasBeenDone = true;
 }
 
-void SyntaxHighlighterBase::displayDictionary(void)
+std::string DeleteCharacterCommand::getCommandDescription(void) const
 {
-	std::cout<<"Displaying dictionary..."<<std::endl;
-
-	for(dictionary_it=dictionary.begin();dictionary_it!=dictionary.end();dictionary_it++)
-		std::cout<<dictionary_it->first<<std::endl;
+	return std::string("Delete Character ");
 }
+
+std::string DeleteCharacterCommand::getPresentationName(void) const
+{
+	return getCommandDescription();
+}
+
+void DeleteCharacterCommand::redo(void)
+{
+
+	_TheDocumentModel->deleteCharacter(_theOriginalCaretLine,_theOriginalCaretIndex);
+
+	Inherited::redo();
+}
+
+void DeleteCharacterCommand::undo(void)
+{
+	if(_theOriginalCaretLine+1 < _Manager->getRootElement()->getElementCount() || (_theOriginalCaretLine+1 == _Manager->getRootElement()->getElementCount() && !_Manager->isLastCharacterOfLine(_theOriginalCaretIndex,_theOriginalCaretLine)))
+	{
+		TextWithProps temp;
+		_Manager->setCaretIndexAndLine(_theOriginalCaretIndex,_theOriginalCaretLine);
+	    
+		if(_isLastCharacter)
+		{
+			_TheDocumentModel->insertCharacter(_theOriginalCaretIndex,_theOriginalCaretLine,'\r',temp);
+			_TheDocumentModel->insertCharacter(_theOriginalCaretIndex+1,_theOriginalCaretLine,'\n',temp);
+			_TheDocumentModel->insertCharacter(_theOriginalCaretIndex,_theOriginalCaretLine,_TheCharacter,temp);
+
+			/*Manager->moveTheCaret(HOMEOFNEXTLINE,false,false);
+			Manager->moveTheCaret(RIGHT,false,false);*/
+		}
+		else
+		{
+			_TheDocumentModel->insertCharacter(_theOriginalCaretIndex,_theOriginalCaretLine,_TheCharacter,temp);
+		}
+
+		_Manager->DoIfLineLongerThanPreferredSize();
+	}
+	Inherited::undo();
+}
+
+const CommandType &DeleteCharacterCommand::getType(void) const
+{
+	return _Type;
+}
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
 /*----------------------- constructors & destructors ----------------------*/
 
-SyntaxHighlighterBase::SyntaxHighlighterBase(void) :
-inputFile(NULL),
-outputFile(NULL)
-{
-	loadDictionary();
-}
-
-SyntaxHighlighterBase::SyntaxHighlighterBase(const SyntaxHighlighterBase &obj)
-{
-	SWARNING << "In SyntaxHighlighterBase copy constructor" << std::endl;
-}
-
-SyntaxHighlighterBase::~SyntaxHighlighterBase(void)
+DeleteCharacterCommand::~DeleteCharacterCommand(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
-OSG_END_NAMESPACE
+void DeleteCharacterCommand::operator =(const DeleteCharacterCommand& source)
+{
+    if(this != &source)
+    {
+	    Inherited::operator=(source);
+    }
+}
 

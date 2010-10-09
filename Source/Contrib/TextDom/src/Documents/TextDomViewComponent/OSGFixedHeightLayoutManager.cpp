@@ -92,8 +92,78 @@ void FixedHeightLayoutManager::setTheClipBounds(Pnt2f topLeft,Pnt2f bottomRight)
 	updateViews();
 }
 
+void FixedHeightLayoutManager::setCaretIndexAndLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine)
+{
+	_CaretIndex = _theOriginalCaretIndex;
+	_CaretLine = _theOriginalCaretLine;
+	recalculateCaretPositions();
+}
+
+char FixedHeightLayoutManager::getNextCharacter(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine)
+{
+	PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_theOriginalCaretLine));
+	if(temp->getTextLength()-2 == _theOriginalCaretIndex)
+	{
+		temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_theOriginalCaretLine+1));
+		std::string tempstring = temp->getText();
+		return tempstring[0];
+	}
+	else
+	{
+		std::string tempstring = temp->getText();
+		return tempstring[_theOriginalCaretIndex];
+	}
+	
+}
+
+
+bool FixedHeightLayoutManager::isLastCharacterOfLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine)
+{
+	if(rootElement)
+	{
+		PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_theOriginalCaretLine));
+		if(temp->getTextLength()-2 == _theOriginalCaretIndex)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else 
+	{
+		return true;
+	}
+}
+
+UInt32 FixedHeightLayoutManager::CaretLineAndIndexToCaretOffsetInDOM(UInt32 CaretLine,UInt32 CaretIndex)
+{
+	UInt32 offset = 0;
+	if(rootElement)
+	{
+		for(UInt32 i=0;i<CaretLine;i++)
+		{
+			PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+			offset += temp->getTextLength();
+		}
+		offset += CaretIndex;
+	}
+	return offset;
+}
+
 void FixedHeightLayoutManager::deleteCharacters(UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex)
 {
+	std::string theHighlightedString = getTextDomArea()->getHighlightedString();
+	//if(_CaretIndex == greaterIndex && _CaretLine == greaterLine)
+	//{
+	//	// caret position should be shifted back by length of theHighlightedString
+	//	getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()-theHighlightedString.length());
+	//}
+	//else
+	//{
+	//	//do nothing
+	//}
 	getTextDomArea()->getDocumentModel()->deleteCharacters(lesserLine,lesserIndex,greaterLine,greaterIndex);
 	HSL = HEL = _CaretLine = lesserLine;
 	HSI = HEI = _CaretIndex = lesserIndex;
@@ -121,8 +191,6 @@ void FixedHeightLayoutManager::deleteSelected(void)
 	else
 		deleteCharacters(HEL,HEI,HSL,HSI);
 }
-
-
 
 bool FixedHeightLayoutManager::isLastCharacterOfDocument() const
 {
@@ -957,94 +1025,6 @@ UInt32 FixedHeightLayoutManager::getNumberOfLeadingSpaces(UInt32 line)
 void FixedHeightLayoutManager::checkCaretVisibility(UInt32 dir)
 {
 	if(!isCaretVisible())makeCaretVisible(dir);
-}
-
-void FixedHeightLayoutManager::tabHandler(bool isShiftPressed)
-{
-	UInt32 lesserLine,greaterLine,lesserIndex;
-	TextWithProps temp;
-	UInt32 oldHSI = HSI;
-	UInt32 oldHSL = HSL;
-	UInt32 oldHEI = HEI;
-	UInt32 oldHEL = HEL;
-
-	PlainDocumentLeafElementRefPtr theElement;
-	if(HSL<=HEL)
-	{
-		lesserLine = HSL;
-		lesserIndex = HSI;
-		greaterLine = HEL;
-	}
-	else
-	{
-		lesserLine = HEL;
-		lesserIndex = HEI;
-		greaterLine = HSL;
-	}
-
-	UInt32 count=0;
-	if(isSomethingSelected())
-	{
-		if(!isShiftPressed)
-		{
-			for(UInt32 caretLine = lesserLine;caretLine<=greaterLine;caretLine++)
-			{
-				for(UInt32 i=0;i<getTextDomArea()->getTabSize();i++)
-				{
-					getTextDomArea()->getDocumentModel()->insertCharacter(0,caretLine,' ',temp);
-				}
-				DoIfLineLongerThanPreferredSize();
-			}
-			
-		}
-		else
-		{
-			for(UInt32 caretLine = lesserLine;caretLine<=greaterLine;caretLine++)
-			{
-				theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(caretLine));
-				std::string theString = theElement->getText();
-				Int32 i;
-				for(i=0;i<theElement->getTextLength()-2,i<getTextDomArea()->getTabSize();i++)
-				{
-					if(theString[i]!=' ')break;
-					if(caretLine == _CaretLine)moveTheCaret(LEFT,false,false);
-					if(caretLine == lesserLine)count--;
-				}
-				theString = theString.substr(i);
-				theElement->setText(theString);
-			}
-			HSI = 0;
-			HSL = lesserLine;
-			HEI = 0;
-			HEL = greaterLine;
-		}
-	}
-	else
-	{
-		if(!isShiftPressed)
-		{
-			for(UInt32 i=0;i<getTextDomArea()->getTabSize();i++)
-			{
-				getTextDomArea()->getDocumentModel()->insertCharacter(getCaretIndex(),getCaretLine(),' ',temp);
-				moveTheCaret(RIGHT,false,false);
-			}
-			DoIfLineLongerThanPreferredSize();	
-		}
-		else
-		{
-			theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
-			std::string theString = theElement->getText();
-			Int32 i,count=0;
-			Int32 initIndex = _CaretIndex;
-			for(i=_CaretIndex-1;i>=0,count<getTextDomArea()->getTabSize();i--,count++)
-			{
-				if(i<0 || theString[i]!=' ')break;
-				moveTheCaret(LEFT,false,false);
-			}
-			theString = theString.substr(0,_CaretIndex)+theString.substr(initIndex);
-			theElement->setText(theString);
-		}
-	}
 }
 
 bool FixedHeightLayoutManager::isCaretInWidthRange()

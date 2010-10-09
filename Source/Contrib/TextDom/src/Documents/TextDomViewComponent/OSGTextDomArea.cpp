@@ -59,6 +59,11 @@
 #include "OSGUIViewport.h"
 #include "OSGSearchWindow.h"
 #include "OSGAdvancedTextDomArea.h"
+#include "OSGInsertCharacterCommand.h"
+#include "OSGDeleteSelectedCommand.h"
+#include "OSGDeleteCharacterCommand.h"
+#include "OSGSetTextCommand.h"
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -349,14 +354,14 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 	{
 		if(Manager->isSomethingSelected())
 		{
-			Manager->deleteSelected();
+			deleteSelectedUsingCommandManager();//Manager->deleteSelected();
 		}
 		else
 		{
 			if(Manager->getCaretLine()!=0 || Manager->getCaretIndex()!=0)
 			{
 				Manager->moveTheCaret(LEFT,false,false);
-				getDocumentModel()->deleteCharacter(Manager->getCaretLine(),Manager->getCaretIndex());
+				deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(Manager->getCaretLine(),Manager->getCaretIndex());
 			}
 		}
 	}
@@ -364,46 +369,24 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 	{
 		if(Manager->isSomethingSelected())
 		{
-			Manager->deleteSelected();
+			deleteSelectedUsingCommandManager();//Manager->deleteSelected();
 		}
 		else
 		{
-			if(!Manager->isLastCharacterOfDocument())
-			{
-				getDocumentModel()->deleteCharacter(Manager->getCaretLine(),Manager->getCaretIndex());
-			} 
+			deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(Manager->getCaretLine(),Manager->getCaretIndex());
 		}
 	}
 	else if(e->getKey() == KeyEvent::KEY_ENTER)
 	{
 		if(Manager->isSomethingSelected())
 		{
-			Manager->deleteSelected();
+			deleteSelectedUsingCommandManager();//Manager->deleteSelected();
 		}
-		UInt32 numberOfLeadingSpaces = Manager->getNumberOfLeadingSpaces(Manager->getCaretLine());
-		getDocumentModel()->insertCharacter(Manager->getCaretIndex(),Manager->getCaretLine(),'\r',temp);
-		getDocumentModel()->insertCharacter(Manager->getCaretIndex()+1,Manager->getCaretLine(),'\n',temp);
-
-		Int32 i,count;
-		for(i = Manager->getCaretIndex()+2,count=0;count<numberOfLeadingSpaces;count++,i++)
-			getDocumentModel()->insertCharacter(count,Manager->getCaretLine()+1,' ',temp);
-
-		//Manager->updateViews();
-		//Manager->updateSize();
-		//updatePreferredSize();
-
-		Manager->moveTheCaret(HOMEOFNEXTLINE,false,false);
-
-
-
-		for(count=0;count<numberOfLeadingSpaces;count++)
-			Manager->moveTheCaret(RIGHT,false,false);
-
+		insertCharacterUsingCommandManager('\n',-1,-1);
 	}
 	else if(e->getKey() == KeyEvent::KEY_HOME)
 	{
 		Manager->moveTheCaret(HOME,(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT),(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL));
-
 	}
 	else if(e->getKey() == KeyEvent::KEY_END)
 	{
@@ -412,7 +395,7 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 	}
 	else if(e->getKey() == KeyEvent::KEY_TAB)
 	{
-			Manager->tabHandler(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT);
+		tabHandler(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT);
 	}
 	else
 	{
@@ -434,10 +417,27 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 					std::string theClipboard = getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard();
 					handlePastingAString(theClipboard);
 				}
+				if(e->getKey() == KeyEvent::KEY_Z)
+				{
+					if(_TheUndoManager->canUndo())
+					{
+						_TheUndoManager->undo();
+					}
+				}
+				if(e->getKey() == KeyEvent::KEY_Y)
+				{
+					if(_TheUndoManager->canRedo())
+					{
+						_TheUndoManager->redo();
+					}
+				}
 			}
 			else
 			{
-				if(Manager->isSomethingSelected())Manager->deleteSelected();
+				if(Manager->isSomethingSelected())
+				{
+					deleteSelectedUsingCommandManager();//Manager->deleteSelected();
+				}
 				if(Manager->isStartingBraces(e->getKeyChar()))
 				{
 					Manager->removeBracesHighlightIndices();
@@ -448,13 +448,109 @@ void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
 					Manager->removeBracesHighlightIndices();
 					Manager->setEndingBraces(e->getKeyChar(),Manager->getCaretIndex(),Manager->getCaretLine());
 				}
-				getDocumentModel()->insertCharacter(Manager->getCaretIndex(),Manager->getCaretLine(),e->getKeyChar(),temp);
+				insertCharacterUsingCommandManager(e->getKeyChar(),-1,-1);
+
+				/*getDocumentModel()->insertCharacter(Manager->getCaretIndex(),Manager->getCaretLine(),e->getKeyChar(),temp);
 				Manager->moveTheCaret(RIGHT,false,false);
-				Manager->DoIfLineLongerThanPreferredSize();
+				Manager->DoIfLineLongerThanPreferredSize();*/
 			}
 		}
 	}
 }
+
+void TextDomArea::tabHandler(bool isShiftPressed)
+{
+	UInt32 lesserLine,greaterLine,lesserIndex;
+	TextWithProps temp;
+	UInt32 oldHSI = Manager->getHSI();
+	UInt32 oldHSL = Manager->getHSL();
+	UInt32 oldHEI = Manager->getHEI();
+	UInt32 oldHEL = Manager->getHEL();
+
+	PlainDocumentLeafElementRefPtr theElement;
+	if(Manager->getHSL() <= Manager->getHEL())
+	{
+		lesserLine = Manager->getHSL();
+		lesserIndex = Manager->getHSI();
+		greaterLine = Manager->getHEL();
+	}
+	else
+	{
+		lesserLine = Manager->getHEL();
+		lesserIndex = Manager->getHEI();
+		greaterLine = Manager->getHSL();
+	}
+
+	UInt32 count=0;
+	if(Manager->isSomethingSelected())
+	{
+		if(!isShiftPressed)
+		{
+			for(UInt32 caretLine = lesserLine;caretLine<=greaterLine;caretLine++)
+			{
+				for(UInt32 i=0;i<getTabSize();i++)
+				{
+					//getDocumentModel()->insertCharacter(0,caretLine,' ',temp);
+					insertCharacterUsingCommandManager(' ',caretLine,0);
+				}
+				//Manager->DoIfLineLongerThanPreferredSize();
+			}
+		
+		}
+		else
+		{
+			for(UInt32 caretLine = lesserLine;caretLine<=greaterLine;caretLine++)
+			{
+				theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(caretLine));
+				std::string theString = theElement->getText();
+				Int32 i;
+				for(i=0;i<theElement->getTextLength()-2,i<getTabSize();i++)
+				{
+					if(theString[i]!=' ')break;
+					if(caretLine == Manager->getCaretLine())Manager->moveTheCaret(LEFT,false,false);
+					if(caretLine == lesserLine)count--;
+				}
+				theString = theString.substr(i);
+				setTextUsingCommandManager(theElement,theString);
+				//theElement->setText(theString);
+				
+			}
+			Manager->setHSI(0);
+			Manager->setHSL(lesserLine);
+			Manager->setHEI(0);
+			Manager->setHEL(greaterLine);
+		}
+	}
+	else
+	{
+		if(!isShiftPressed)
+		{
+			for(UInt32 i=0;i<getTabSize();i++)
+			{
+				//getDocumentModel()->insertCharacter(Manager->getCaretIndex(),Manager->getCaretLine(),' ',temp);
+				insertCharacterUsingCommandManager(' ',-1,-1);
+				//Manager->moveTheCaret(RIGHT,false,false);
+			}
+			//Manager->DoIfLineLongerThanPreferredSize();	
+		}
+		else
+		{
+			theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(Manager->getCaretLine()));
+			std::string theString = theElement->getText();
+			Int32 i,count=0;
+			Int32 initIndex = Manager->getCaretIndex();
+			for(i=Manager->getCaretIndex()-1;i>=0,count<getTabSize();i--,count++)
+			{
+				if(i<0 || theString[i]!=' ')break;
+				Manager->moveTheCaret(LEFT,false,false);
+			}
+			theString = theString.substr(0,Manager->getCaretIndex())+theString.substr(initIndex);
+			setTextUsingCommandManager(theElement,theString);
+			//theElement->setText(theString);
+		}
+	}
+}
+
 
 void TextDomArea::handlePastingAString(std::string theClipboard)
 {
@@ -462,13 +558,37 @@ void TextDomArea::handlePastingAString(std::string theClipboard)
 	TextWithProps temp;
 	if(Manager->isSomethingSelected())
 	{
-		Manager->deleteSelected();
+		deleteSelectedUsingCommandManager();//Manager->deleteSelected();
 	}
 	
-	getDocumentModel()->insertString(getCaretPosition(),theClipboard,temp);
+	getDocumentModel()->insertString(getCaretPosition(),theClipboard,temp);/// need to deal with this......
 	Manager->updateViews();
 	Manager->updateSize();
 	updatePreferredSize();
+}
+
+void TextDomArea::insertCharacterUsingCommandManager(char theCharacter,UInt32 line,UInt32 index)
+{
+	CommandPtr theCommand = InsertCharacterCommand::create(Manager,dynamic_cast<PlainDocument*>(getDocumentModel()),theCharacter,line,index);
+	_TheCommandManager->executeCommand(theCommand);
+}
+
+void TextDomArea::deleteCharacterUsingCommandManager()
+{
+	CommandPtr theCommand = DeleteCharacterCommand::create(Manager,dynamic_cast<PlainDocument*>(getDocumentModel()));
+	_TheCommandManager->executeCommand(theCommand);
+}
+
+void TextDomArea::deleteSelectedUsingCommandManager(void)
+{
+	CommandPtr theCommand = DeleteSelectedCommand::create(Manager,this);
+	_TheCommandManager->executeCommand(theCommand);
+}
+
+void TextDomArea::setTextUsingCommandManager(PlainDocumentLeafElementRefPtr theElement,std::string theString)
+{
+	CommandPtr theCommand = SetTextCommand::create(theElement,theString);
+	_TheCommandManager->executeCommand(theCommand);
 }
 
 TextDomAreaRefPtr TextDomArea::getDuplicatedTextDomArea(void)
@@ -757,7 +877,11 @@ TextDomArea::TextDomArea(void) :
 	createDefaultFont();
 	createDefaultLayer();
 	setupCursor();
+	_TheUndoManager = UndoManager::create();
+	_TheCommandManager = CommandManager::create(_TheUndoManager);
 }
+
+
 
 TextDomArea::TextDomArea(const TextDomArea &source) :
 	_DocumentModifiedListener(this),
@@ -768,6 +892,8 @@ TextDomArea::TextDomArea(const TextDomArea &source) :
 	Manager = source.Manager;
 	_Font = source._Font;
 	setupCursor();
+	_TheUndoManager = UndoManager::create();
+	_TheCommandManager = CommandManager::create(_TheUndoManager);
 }
 
 TextDomArea::~TextDomArea(void)

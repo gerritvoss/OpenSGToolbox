@@ -44,108 +44,115 @@
 
 #include "OSGConfig.h"
 
-#include "OSGSyntaxHighlighter.h"
+#include "OSGDeleteSelectedCommand.h"
+
+#include "OSGNameAttachment.h"
 
 
-#include "OSGSingletonHolder.ins"
-
-OSG_BEGIN_NAMESPACE
+OSG_USING_NAMESPACE
 
 /***************************************************************************\
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::SyntaxHighlighterBase
-A SyntaxHighlighterBase. 
+/*! \class OSG::DeleteSelectedCommand
+A DeleteSelectedCommand. 
 */
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-OSG_SINGLETON_INST(SyntaxHighlighterBase, addPostFactoryExitFunction)
-
-template class SingletonHolder<SyntaxHighlighterBase>;
+CommandType DeleteSelectedCommand::_Type("DeleteSelectedCommand", "UndoableCommand");
 
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-
-std::vector<UInt32> SyntaxHighlighterBase::processInput(std::string inputString)
+DeleteSelectedCommandPtr DeleteSelectedCommand::create(FixedHeightLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea)
 {
-	std::vector<UInt32> indices;
-	UInt32 index = 0;
-	std::istringstream iss(inputString);
-	std::string theString;
-	while(iss>>theString)
-	{
-		if(dictionary[theString])
-		{
-			UInt32 loc = inputString.find( theString, index );
-			indices.push_back(loc);
-			index = loc + theString.size();
-			indices.push_back(index);
-		}
-	};
-	return indices;
+	return RefPtr(new DeleteSelectedCommand(Manager,TheTextDomArea));
 }
 
-void SyntaxHighlighterBase::loadDictionary(void)
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+void DeleteSelectedCommand::execute(void)
 {
-	std::ifstream input("dictionary.txt");
-	if(!input)
+	if(Manager->isStartLocationBeforeEndLocation())
 	{
-		SWARNING << "void SyntaxHighlighterBase::loadDictionary(void) : error loading dictionary" <<std::endl;
-		return;
+		old_HSI = Manager->getHSI();
+		old_HSL = Manager->getHSL();
+		old_HEI = Manager->getHEI();
+		old_HEL = Manager->getHEL();
 	}
-	std::string keyword;
-	while(input>>keyword)dictionary[keyword] = 1;
+	else 
+	{
+		old_HEI = Manager->getHSI();
+		old_HEL = Manager->getHSL();
+		old_HSI = Manager->getHEI();
+		old_HSL = Manager->getHEL();
+	}
+	
 
-	//displayDictionary();
+	deletedString = _TextDomArea->getHighlightedString();
+	Manager->deleteSelected();
+
+	_HasBeenDone = true;
 }
 
-void SyntaxHighlighterBase::displayDictionary(void)
+std::string DeleteSelectedCommand::getCommandDescription(void) const
 {
-	std::cout<<"Displaying dictionary..."<<std::endl;
-
-	for(dictionary_it=dictionary.begin();dictionary_it!=dictionary.end();dictionary_it++)
-		std::cout<<dictionary_it->first<<std::endl;
+	return std::string("Insert Character ");
 }
+
+std::string DeleteSelectedCommand::getPresentationName(void) const
+{
+	return getCommandDescription();
+}
+
+void DeleteSelectedCommand::redo(void)
+{
+	Manager->deleteSelected();
+	Inherited::redo();
+}
+
+void DeleteSelectedCommand::undo(void)
+{
+	TextWithProps temp;
+
+	Manager->setHSI(old_HSI);
+	Manager->setHSL(old_HSL);
+	Manager->setHEI(old_HEI);
+	Manager->setHEL(old_HEL);
+	
+	_TextDomArea->getDocumentModel()->insertString(Manager->CaretLineAndIndexToCaretOffsetInDOM(old_HSL,old_HSI),deletedString,temp);
+
+	Inherited::undo();
+}
+
+const CommandType &DeleteSelectedCommand::getType(void) const
+{
+	return _Type;
+}
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
 /*----------------------- constructors & destructors ----------------------*/
 
-SyntaxHighlighterBase::SyntaxHighlighterBase(void) :
-inputFile(NULL),
-outputFile(NULL)
-{
-	loadDictionary();
-}
-
-SyntaxHighlighterBase::SyntaxHighlighterBase(const SyntaxHighlighterBase &obj)
-{
-	SWARNING << "In SyntaxHighlighterBase copy constructor" << std::endl;
-}
-
-SyntaxHighlighterBase::~SyntaxHighlighterBase(void)
+DeleteSelectedCommand::~DeleteSelectedCommand(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
-OSG_END_NAMESPACE
+void DeleteSelectedCommand::operator =(const DeleteSelectedCommand& source)
+{
+    if(this != &source)
+    {
+	    Inherited::operator=(source);
+    }
+}
 

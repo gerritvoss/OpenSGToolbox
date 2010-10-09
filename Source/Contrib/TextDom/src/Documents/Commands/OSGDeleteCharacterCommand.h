@@ -4,7 +4,9 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                            www.opensg.org                                 *
+ *                                                                           *
+ *   contact:  David Kabala (djkabala@gmail.com)*
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -34,137 +36,71 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGDELETECHARACTER_COMMAND_H_
+#define _OSGDELETECHARACTER_COMMAND_H_
+#ifdef __sgi
+#pragma once
+#endif
 
-#define HSL _HighlightStartLine
-#define HSI _HighlightStartIndex
-#define HEL _HighlightEndLine
-#define HEI _HighlightEndIndex
+#include "OSGConfig.h"
+#include "OSGContribTextDomDef.h"
+
+
+#include "OSGUndoableCommand.h"
+
+#include "OSGFixedHeightLayoutManager.h"
+#include "OSGPlainDocument.h"
 
 
 OSG_BEGIN_NAMESPACE
 
+class DeleteCharacterCommand;
+typedef boost::shared_ptr<DeleteCharacterCommand> DeleteCharacterCommandPtr;
 
-inline	UInt32 FixedHeightLayoutManager::getCaretIndex(void) const
+class OSG_CONTRIBTEXTDOM_DLLMAPPING DeleteCharacterCommand: public UndoableCommand
 {
-	return _CaretIndex;
-}
-inline UInt32 FixedHeightLayoutManager::getCaretLine(void) const
-{
-	return _CaretLine;
-}
-inline bool FixedHeightLayoutManager::isSomethingSelected(void)
-{
-	 return (HSL != HEL ||  HSI != HEI);
-}
+protected:
 
-inline void FixedHeightLayoutManager::setHighlight(UInt32 startline,UInt32 startindex,UInt32 endline,UInt32 endindex)
-{
-	HSL = startline;
-	HSI= startindex;
-	HEL= endline;
-	HEI= endindex;
-}
-inline Real32 FixedHeightLayoutManager::getHeightOfLine(void)
-{
-	return heightOfLine;
-}
+	enum {LEFT,RIGHT,UP,DOWN,HOME,END,HOMEOFNEXTLINE,PAGEUP,PAGEDOWN};
 
-inline Real32 FixedHeightLayoutManager::getCaretXPosition(void)
-{
-	return _CaretXPosition;
-}
+	typedef UndoableCommand Inherited;
+	typedef DeleteCharacterCommand Self;
+	typedef DeleteCharacterCommandPtr RefPtr;
 
-inline Real32 FixedHeightLayoutManager::getCaretYPosition(void)
-{
-	return _CaretYPosition;
-}
+    DeleteCharacterCommand(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel);// here
+	DeleteCharacterCommand(const DeleteCharacterCommand& source);
 
-inline PlainDocumentBranchElementRefPtr FixedHeightLayoutManager::getRootElement(void)
-{
-	return rootElement;
-}
+	void operator =(const DeleteCharacterCommand& source);
 
-inline UInt32 FixedHeightLayoutManager::getHEI(void)
-{
-	return HEI;
-}
+	static CommandType _Type;
+	
+	virtual void execute(void);
+	virtual std::string getPresentationName(void) const;
+	virtual void redo(void);
+	virtual void undo(void);
 
-inline UInt32 FixedHeightLayoutManager::getHEL(void)
-{
-	return HEL;
-}
+	FixedHeightLayoutManagerRefPtr _Manager;
+	PlainDocumentRefPtr _TheDocumentModel;
+	char _TheCharacter;
+	UInt32 _theOriginalCaretIndex;
+	UInt32 _theOriginalCaretLine;
+	bool _isLastCharacter;
 
-inline UInt32 FixedHeightLayoutManager::getHSI(void)
-{
-	return HSI;
-}
+public:
 
-inline UInt32 FixedHeightLayoutManager::getHSL(void)
-{
-	return HSL;
-}
+	virtual std::string getCommandDescription(void) const;
 
-inline void FixedHeightLayoutManager::setHSL(UInt32 val)
-{
-	HSL = val;
-}
+    virtual const CommandType &getType(void) const;
+	
+    static const CommandType &getClassType(void);
 
-inline void FixedHeightLayoutManager::setHSI(UInt32 val)
-{
-	HSI = val;
-}
-
-inline void FixedHeightLayoutManager::setHEL(UInt32 val)
-{
-	HEL = val;
-}
-
-inline void FixedHeightLayoutManager::setHEI(UInt32 val)
-{
-	HEI = val;
-}
-
-inline Real32 FixedHeightLayoutManager::getPreferredWidth(void)
-{
-	return _preferredWidth;
-}
-
-inline bool FixedHeightLayoutManager::getBracesHighlightFlag(void)
-{
-	return _BracesHighlightFlag;
-}
-
-inline UInt32 FixedHeightLayoutManager::getStartingBraceLine(void)
-{
-	return _StartingBraceLine;
-}
-
-inline UInt32 FixedHeightLayoutManager::getStartingBraceIndex(void)
-{
-	return _StartingBraceIndex;
-}
-
-inline UInt32 FixedHeightLayoutManager::getEndingBraceLine(void)
-{
-	return _EndingBraceLine;
-}
-
-inline UInt32 FixedHeightLayoutManager::getEndingBraceIndex(void)
-{
-	return _EndingBraceIndex;
-}
-
-inline Real32 FixedHeightLayoutManager::getGutterSpace(void)
-{
-	return _GutterSpace;
-}
-
-inline Real32 FixedHeightLayoutManager::getGutterSeparation(void)
-{
-	return _GutterSeparation;
-}
+	virtual ~DeleteCharacterCommand(void);
+	
+    static DeleteCharacterCommandPtr create(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel);// here
+};
 
 OSG_END_NAMESPACE
+
+#include "OSGDeleteCharacterCommand.inl"
+
+#endif /* _OSGDELETECHARACTER_COMMAND_H_ */

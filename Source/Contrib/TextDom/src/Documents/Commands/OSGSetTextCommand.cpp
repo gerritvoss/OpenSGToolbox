@@ -4,7 +4,9 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                            www.opensg.org                                 *
+ *                                                                           *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,133 +40,103 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#define HSL _HighlightStartLine
-#define HSI _HighlightStartIndex
-#define HEL _HighlightEndLine
-#define HEI _HighlightEndIndex
+#define OSG_COMPILETEXTDOMLIB
+
+#include "OSGConfig.h"
+
+#include "OSGSetTextCommand.h"
+
+#include "OSGNameAttachment.h"
 
 
-OSG_BEGIN_NAMESPACE
+OSG_USING_NAMESPACE
 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-inline	UInt32 FixedHeightLayoutManager::getCaretIndex(void) const
-{
-	return _CaretIndex;
-}
-inline UInt32 FixedHeightLayoutManager::getCaretLine(void) const
-{
-	return _CaretLine;
-}
-inline bool FixedHeightLayoutManager::isSomethingSelected(void)
-{
-	 return (HSL != HEL ||  HSI != HEI);
-}
+/*! \class OSG::SetTextCommand
+A SetTextCommand. 
+*/
 
-inline void FixedHeightLayoutManager::setHighlight(UInt32 startline,UInt32 startindex,UInt32 endline,UInt32 endindex)
-{
-	HSL = startline;
-	HSI= startindex;
-	HEL= endline;
-	HEI= endindex;
-}
-inline Real32 FixedHeightLayoutManager::getHeightOfLine(void)
-{
-	return heightOfLine;
-}
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
 
-inline Real32 FixedHeightLayoutManager::getCaretXPosition(void)
+CommandType SetTextCommand::_Type("SetTextCommand", "UndoableCommand");
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+SetTextCommandPtr SetTextCommand::create(PlainDocumentLeafElementRefPtr element,std::string newString)
 {
-	return _CaretXPosition;
+	return RefPtr(new SetTextCommand(element,newString));
 }
 
-inline Real32 FixedHeightLayoutManager::getCaretYPosition(void)
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+void SetTextCommand::execute(void)
 {
-	return _CaretYPosition;
+	if(_TheElement)
+	{
+		_TheOriginalString = _TheElement->getText();
+		_TheElement->setText(_TheNewString);
+	}
+	_HasBeenDone = true;
 }
 
-inline PlainDocumentBranchElementRefPtr FixedHeightLayoutManager::getRootElement(void)
+std::string SetTextCommand::getCommandDescription(void) const
 {
-	return rootElement;
+	return std::string("Set Text");
 }
 
-inline UInt32 FixedHeightLayoutManager::getHEI(void)
+std::string SetTextCommand::getPresentationName(void) const
 {
-	return HEI;
+	return getCommandDescription();
 }
 
-inline UInt32 FixedHeightLayoutManager::getHEL(void)
+void SetTextCommand::redo(void)
 {
-	return HEL;
+	if(_TheElement)
+	{
+		_TheElement->setText(_TheNewString);
+	}
+	Inherited::redo();
 }
 
-inline UInt32 FixedHeightLayoutManager::getHSI(void)
+void SetTextCommand::undo(void)
 {
-	return HSI;
+	if(_TheElement)
+	{
+		_TheElement->setText(_TheOriginalString);
+	}
+	Inherited::undo();
 }
 
-inline UInt32 FixedHeightLayoutManager::getHSL(void)
+const CommandType &SetTextCommand::getType(void) const
 {
-	return HSL;
+	return _Type;
+}
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+SetTextCommand::~SetTextCommand(void)
+{
 }
 
-inline void FixedHeightLayoutManager::setHSL(UInt32 val)
+/*----------------------------- class specific ----------------------------*/
+
+void SetTextCommand::operator =(const SetTextCommand& source)
 {
-	HSL = val;
+    if(this != &source)
+    {
+	    Inherited::operator=(source);
+    }
 }
 
-inline void FixedHeightLayoutManager::setHSI(UInt32 val)
-{
-	HSI = val;
-}
-
-inline void FixedHeightLayoutManager::setHEL(UInt32 val)
-{
-	HEL = val;
-}
-
-inline void FixedHeightLayoutManager::setHEI(UInt32 val)
-{
-	HEI = val;
-}
-
-inline Real32 FixedHeightLayoutManager::getPreferredWidth(void)
-{
-	return _preferredWidth;
-}
-
-inline bool FixedHeightLayoutManager::getBracesHighlightFlag(void)
-{
-	return _BracesHighlightFlag;
-}
-
-inline UInt32 FixedHeightLayoutManager::getStartingBraceLine(void)
-{
-	return _StartingBraceLine;
-}
-
-inline UInt32 FixedHeightLayoutManager::getStartingBraceIndex(void)
-{
-	return _StartingBraceIndex;
-}
-
-inline UInt32 FixedHeightLayoutManager::getEndingBraceLine(void)
-{
-	return _EndingBraceLine;
-}
-
-inline UInt32 FixedHeightLayoutManager::getEndingBraceIndex(void)
-{
-	return _EndingBraceIndex;
-}
-
-inline Real32 FixedHeightLayoutManager::getGutterSpace(void)
-{
-	return _GutterSpace;
-}
-
-inline Real32 FixedHeightLayoutManager::getGutterSeparation(void)
-{
-	return _GutterSeparation;
-}
-
-OSG_END_NAMESPACE

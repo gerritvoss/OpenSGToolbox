@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,26 +26,28 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
+#include "OSGConfig.h"
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
-
-<<<<<<< HEAD
-=======
-#include <OSGConfig.h>
-
->>>>>>> 97c77ab... Feature Addition: Undo Manager functioning
 OSG_BEGIN_NAMESPACE
 
-OSG_END_NAMESPACE
+inline
+DeleteCharacterCommand::DeleteCharacterCommand(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel) : Inherited(),
+_Manager(Manager),
+_TheDocumentModel(DocumentModel)
+{
+}
 
+inline
+DeleteCharacterCommand::DeleteCharacterCommand(const DeleteCharacterCommand& source) : Inherited(source),
+_Manager(source._Manager),
+_TheDocumentModel(source._TheDocumentModel)
+{
+}
+
+inline 
+const CommandType &DeleteCharacterCommand::getClassType(void)
+{
+	return _Type;
+}
+
+OSG_END_NAMESPACE

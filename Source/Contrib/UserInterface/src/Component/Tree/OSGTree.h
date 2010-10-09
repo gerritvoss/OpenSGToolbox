@@ -92,8 +92,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
 	virtual void keyTyped(KeyEventDetails* const e);
 	virtual void focusLost(FocusEventDetails* const e);
 
-	virtual Vec2f getContentRequestedSize(void) const;
-
     //Adds the paths between index0 and index1, inclusive, to the selection.
     void addSelectionInterval(const UInt32& index0, const UInt32& index1);
 
@@ -445,12 +443,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
 
     void updateRows(const UInt32& Begining, const UInt32& NumRows);
 
-    void updateExpandedPath (const TreePath& Path);
+    void updateExpandedPath(const TreePath& Path);
     void updateCollapsedPath(const TreePath& Path);
-    void updateChangedNode  (const TreePath& Path);
-    
-    void updateChildren (void);
-    void clearRowsDrawn (void);
+    void updateChildren(void);
+
     void updateRowsDrawn(void);
 
     struct TreeRowComponents

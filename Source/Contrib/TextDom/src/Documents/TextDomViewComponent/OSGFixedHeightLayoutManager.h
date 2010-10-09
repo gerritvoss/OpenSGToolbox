@@ -150,7 +150,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	Real32 getHeightOfLine(void);
 	void doubleClickHandler(void);
 	void selectAll(void);
-	void tabHandler(bool isShiftPressed);
 	bool isLastCharacter(void);
 	void setTheClipBounds(Pnt2f topLeft,Pnt2f bottomRight);
 	void setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
@@ -168,6 +167,10 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	UInt32 getHEL(void);
 	UInt32 getHSI(void);
 	UInt32 getHSL(void);
+	void setHEI(UInt32);
+	void setHEL(UInt32);
+	void setHSI(UInt32);
+	void setHSL(UInt32);
 	Real32 getPreferredWidth(void);
 	bool getBracesHighlightFlag(void);
 	UInt32 getStartingBraceLine(void);
@@ -179,7 +182,10 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	Pnt2f getXYPosition(UInt32 lineNumber,UInt32 index,bool isBeginning) const;
 	Real32 getGutterSpace(void);
 	Real32 getGutterSeparation(void);
-
+	UInt32 CaretLineAndIndexToCaretOffsetInDOM(UInt32 CaretLine,UInt32 CaretIndex);
+	void setCaretIndexAndLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
+	char getNextCharacter(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
+	bool isLastCharacterOfLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
 
 	/*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
