@@ -57,6 +57,7 @@
 #include "OSGMouseEventDetails.h"
 #include "OSGMouseWheelEventDetails.h"
 #include "OSGUpdateEventDetails.h"
+#include "OSGStatTimeStampElem.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -116,6 +117,8 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
 
     typedef boost::function<void (void)> DisplayCallbackFunc;
     typedef boost::function<void (Vec2f)> ReshapeCallbackFunc;
+
+    static StatElemDesc<StatTimeStampElem    > statWindowLoopTime;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
