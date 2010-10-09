@@ -155,6 +155,13 @@ ScrollBar* ScrollPanel::getHorizontalScrollBar(void)
 
 void ScrollPanel::updateLayout(void)
 {
+
+	Pnt2f TopLeft, BottomRight;
+	getInsideInsetsBounds(TopLeft, BottomRight);
+
+    Vec2f ViewportSize(BottomRight - TopLeft);
+    Pnt2f ViewportPosition(TopLeft);
+
     bool VerticalScrollbarShown;
     //Determine if Vertical Scrollbar is shown
     if(getVerticalScrollBarDisplayPolicy() == SCROLLBAR_AS_ALWAYS ||
@@ -167,16 +174,11 @@ void ScrollPanel::updateLayout(void)
     else
     {
         VerticalScrollbarShown = false;
-        getVerticalScrollBar()->setVisible(false);
-
-		if(getView() != NULL)
-		{
-            Pnt2f NewViewPos(getView()->getViewPosition().x(), 0.0f);
-            if(NewViewPos != getView()->getViewPosition())
-            {
-                getView()->setViewPosition(NewViewPos);
-            }
-		}
+        if(getVerticalScrollBar()->getVisible())
+        {
+            getVerticalScrollBar()->setVisible(false);
+            getVerticalScrollBar()->setValue(getVerticalScrollBar()->getMinimum());
+        }
     }
 
     bool HorizontalScrollbarShown;
@@ -191,22 +193,12 @@ void ScrollPanel::updateLayout(void)
     else
     {
         HorizontalScrollbarShown = false;
-        getHorizontalScrollBar()->setVisible(false);
-		if(getView() != NULL)
-		{
-            Pnt2f NewViewPos(0.0f, getView()->getViewPosition().y());
-            if(NewViewPos != getView()->getViewPosition())
-            {
-                getView()->setViewPosition(NewViewPos);
-            }
-		}
+		if(getHorizontalScrollBar()->getVisible())
+        {
+            getHorizontalScrollBar()->setVisible(false);
+            getHorizontalRangeModel()->setValue(getHorizontalRangeModel()->getMinimum());
+        }
     }
-
-	Pnt2f TopLeft, BottomRight;
-	getInsideInsetsBounds(TopLeft, BottomRight);
-
-    Vec2f ViewportSize(BottomRight - TopLeft);
-    Pnt2f ViewportPosition(TopLeft);
 
     //Set the ScrollBar Position and Sizes
     if(VerticalScrollbarShown && HorizontalScrollbarShown)
