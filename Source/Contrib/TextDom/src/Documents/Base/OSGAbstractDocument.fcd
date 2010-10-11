@@ -15,12 +15,11 @@
 >
 UI AbstractDocument.
 	<Field
-		name="RootElement"
+		name="RootElements"
 		type="Element"
 		category="pointer"
-		cardinality="single"
+		cardinality="multi"
 		visibility="external"
-		defaultValue="NULL"
 		access="protected"
 	>
 	</Field>

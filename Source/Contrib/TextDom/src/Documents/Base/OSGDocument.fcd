@@ -14,25 +14,28 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Document.
- <ProducedMethod
-name="ChangedUpdate"
-type="DocumentEventPtr"
->
-</ProducedMethod>
-<ProducedMethod
-name="InsertUpdate"
-type="DocumentEventPtr"
->
-</ProducedMethod>
-<ProducedMethod
-name="RemoveUpdate"
-type="DocumentEventPtr"
->
-</ProducedMethod>
-<ProducedMethod
-name="UndoableEditHappened"
-type="UndoableEditEventPtr"
->
-</ProducedMethod> 
-
+	<ProducedEvent
+		name="Changed"
+		detailsType="DocumentEventDetails"
+		consumable="true"
+	>
+	</ProducedEvent>
+	<ProducedEvent
+		name="Insert"
+		detailsType="DocumentEventDetails"
+		consumable="true"
+	>
+	</ProducedEvent>
+	<ProducedEvent
+		name="Remove"
+		detailsType="DocumentEventDetails"
+		consumable="true"
+	>
+	</ProducedEvent>
+	<ProducedEvent
+		name="UndoableEditHappened"
+		detailsType="UndoableEditEventDetails"
+		consumable="true"
+	>
+	</ProducedEvent>
 </FieldContainer>

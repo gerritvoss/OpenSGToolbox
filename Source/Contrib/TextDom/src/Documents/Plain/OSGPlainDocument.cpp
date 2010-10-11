@@ -75,12 +75,31 @@ void PlainDocument::initMethod(InitPhase ePhase)
 }
 
 
-bool PlainDocument::isA(std::string name)
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+UInt32 PlainDocument::getEndPosition(void) const
 {
-	if(name == "PlainDocument")return true;
-	return false;
+	return this->getLength();
 }
 
+std::vector<Element*> PlainDocument::getRootElements(void)
+{
+    std::vector<Element*> Result;
+
+    for(UInt32 i(0) ; i<getMFRootElements()->size() ; ++i)
+    {
+        Result.push_back(PlainDocumentBase::getRootElements(i));
+    }
+
+	return Result;
+}
+
+UInt64 PlainDocument::getStartPosition(void) const		/// whats the idea?!
+{
+	return 0;
+}
 
 // assuming the document starts off form index 0 and document size is the number of characters in the document.
 
@@ -111,13 +130,11 @@ UInt32 PlainDocument::createPosition(Int32 offs)
 
 }
 
-
-
-ElementRefPtr PlainDocument::getDefaultRootElement(void) const
+Element* PlainDocument::getDefaultRootElement(void) const
 {
-	if(_RootElements.size()!=0)
+	if(getMFRootElements()->size()!=0)
 	{
-		return _RootElements[0];
+		return PlainDocumentBase::getRootElements(0);
 	}
 	else	// root element does not exist
 	{
@@ -158,7 +175,7 @@ std::string PlainDocument::getText(Int32 offset, Int32 length) const
 		for(UInt32 i=0;i<rootElement->getElementCount();i++)
 		{
 
-			PlainDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+			PlainDocumentLeafElementRefPtr	leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(i));
 			if((count+leafElement->getTextLength())<=offset) // 
 			{
 				count+=leafElement->getTextLength();
@@ -174,7 +191,7 @@ std::string PlainDocument::getText(Int32 offset, Int32 length) const
 		UInt32 howManyMoreCharactersToRead = length;
 		while(howManyMoreCharactersToRead>0 && theLeafElementIndex < rootElement->getElementCount())
 		{
-			PlainDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(theLeafElementIndex));
+			PlainDocumentLeafElementRefPtr	leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex));
 			std::string textOfCurrentLeaf = leafElement->getText();
 			if(textOfCurrentLeaf.size()-locationToReadFrom >= howManyMoreCharactersToRead) // this leaf element would be the last to be accessed
 			{	
@@ -200,7 +217,7 @@ void PlainDocument::getText(Int32 offset, Int32 length, std::string& txt) const
 }
 
 
-void PlainDocument::replace(Int32 offset, Int32 length, const std::string& str, TextWithProps& properties)
+void PlainDocument::replace(Int32 offset, Int32 length, const std::string& str, DocumentElementAttribute& properties)
 {
 	remove(offset, length);
 	insertString(offset,str,properties);
@@ -220,7 +237,7 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 		return;
 	}
 	
-	PlainDocumentBranchElementRefPtr rootElement = dynamic_pointer_cast<PlainDocumentBranchElement>(getDefaultRootElement());
+	PlainDocumentBranchElementRefPtr rootElement = dynamic_cast<PlainDocumentBranchElement*>(getDefaultRootElement());
 	UInt32 count=0;
 	UInt32 locationToRemoveFrom=0; 
 	UInt32 theLeafElementIndex=-1; // theLeafElement is the leaf element that holds the beginning offset value
@@ -229,7 +246,7 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 
 	for(UInt32 i=0;i<rootElement->getElementCount();i++)
 	{
-		PlainDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+		PlainDocumentLeafElementRefPtr	leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(i));
 		if((count+leafElement->getTextLength())<=offset) // 
 		{
 			count+=leafElement->getTextLength();
@@ -263,7 +280,7 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 			{
 				if(theCharactersBefore!="")
 				{
-					PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(theLeafElementIndex));
+					PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex));
 					temp->setText(theCharactersBefore);
 				}
 				else
@@ -273,7 +290,7 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 		}
 		while(len>0 && theLeafElementIndex<rootElement->getElementCount())
 		{
-			PlainDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(theLeafElementIndex));
+			PlainDocumentLeafElementRefPtr	leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex));
 
 			if(locationToRemoveFrom + len >= leafElement->getTextLength()) // if all the remaining characters in the current leaf needs to be removed
 			{
@@ -292,7 +309,7 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 						len -= (leafElement->getTextLength() - locationToRemoveFrom); // decrease len by the number of characters deleted
 						if(theCharactersBefore!="" && len == 0) // special case : when no more characters need to be deleted.
 						{
-							leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(theLeafElementIndex));
+							leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex));
 							leafElement->setText(theCharactersBefore+leafElement->getText());
 								
 						}
@@ -321,8 +338,9 @@ void PlainDocument::remove(Int32 offset, Int32 len)
 			
 		}
 	}
-	this->produceRemoveUpdate(NULL);
-	return;
+    //TODO: SEND THE CORRECT DETAILS
+    DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
+	produceRemove(DocEventDetails);
 }
 
 void PlainDocument::tokenize(std::string sentence,std::vector<std::string> & setOfWords)
@@ -356,16 +374,16 @@ void PlainDocument::tokenize(std::string sentence,std::vector<std::string> & set
 	}
 }
 
-void PlainDocument::insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, TextWithProps& properties)
+void PlainDocument::insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, DocumentElementAttribute& properties)
 {
 
 	// for faster access, the element index and offset are assumed to be valid
 
 	PlainDocumentBranchElementRefPtr rootElement;
 
-	rootElement =dynamic_pointer_cast<PlainDocumentBranchElement>(getDefaultRootElement());
+	rootElement =dynamic_cast<PlainDocumentBranchElement*>(getDefaultRootElement());
 
-	PlainDocumentLeafElementRefPtr leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(elementIndex));
+	PlainDocumentLeafElementRefPtr leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(elementIndex));
 
 	std::string theCharactersAfter="";
 	std::string theCharactersBefore="";
@@ -380,19 +398,21 @@ void PlainDocument::insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, 
 		newPtr->setText(theCharactersAfter);
 		rootElement->addChildElement(elementIndex+1,newPtr);
 		
-		produceInsertUpdate(NULL);
+        //TODO: SEND THE CORRECT DETAILS
+        DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
+		produceInsert(DocEventDetails);
 	}
 	else
 	{
 		leafElement->setText(theCharactersBefore+character+ theCharactersAfter);
 
-		produceChangedUpdate(NULL);
+        //TODO: SEND THE CORRECT DETAILS
+        DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
+		produceChanged(DocEventDetails);
 	}
-	return;
-
 }
 
-void PlainDocument::insertCharacter(UInt32 offset, const char character, TextWithProps& properties)
+void PlainDocument::insertCharacter(UInt32 offset, const char character, DocumentElementAttribute& properties)
 {
 
 	UInt32 endPos=getEndPosition();
@@ -403,12 +423,12 @@ void PlainDocument::insertCharacter(UInt32 offset, const char character, TextWit
 
 	if(getDefaultRootElement()!=NULL)
 	{
-		defaultRoot=dynamic_pointer_cast<PlainDocumentBranchElement>(getDefaultRootElement());
+		defaultRoot=dynamic_cast<PlainDocumentBranchElement*>(getDefaultRootElement());
 	}
 	else
 	{
 		defaultRoot = PlainDocumentBranchElement::create();	// problem here.. defaultroot is a badptr. check y!
-		_RootElements.push_back(defaultRoot);
+		pushToRootElements(defaultRoot);
 	}
 	
 	rootElement = defaultRoot;
@@ -423,7 +443,7 @@ void PlainDocument::insertCharacter(UInt32 offset, const char character, TextWit
 
 	for(UInt32 i=0;i<rootElement->getElementCount();i++)
 	{
-		leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+		leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(i));
 		if((count+leafElement->getTextLength())<=offset) 
 		{
 			count+=leafElement->getTextLength();
@@ -453,23 +473,26 @@ void PlainDocument::insertCharacter(UInt32 offset, const char character, TextWit
 		newPtr->setText(theCharactersAfter);
 		rootElement->addChildElement(theLeafElementIndex+1,newPtr);
 		
-		produceInsertUpdate(NULL);
+        //TODO: SEND THE CORRECT DETAILS
+        DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
+		produceInsert(DocEventDetails);
 	}
 	else
 	{
 		leafElement->setText(theCharactersBefore+character+ theCharactersAfter);
 
-		produceChangedUpdate(NULL);
+        //TODO: SEND THE CORRECT DETAILS
+        DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
+		produceChanged(DocEventDetails);
 	}
-	return;
 }
 void PlainDocument::deleteCharacter(UInt32 elementIndex,UInt32 offsetInChild)
 {
 	PlainDocumentBranchElementRefPtr rootElement;
 
-	rootElement =dynamic_pointer_cast<PlainDocumentBranchElement>(getDefaultRootElement());
+	rootElement =dynamic_cast<PlainDocumentBranchElement*>(getDefaultRootElement());
 
-	PlainDocumentLeafElementRefPtr leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(elementIndex));
+	PlainDocumentLeafElementRefPtr leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(elementIndex));
 	PlainDocumentLeafElementRefPtr leafElement2;
 	std::string charactersBefore = "";
 	charactersBefore += leafElement->getText().substr(0,offsetInChild);
@@ -480,27 +503,30 @@ void PlainDocument::deleteCharacter(UInt32 elementIndex,UInt32 offsetInChild)
 	{
 		if(elementIndex+1<rootElement->getElementCount())
 		{
-			leafElement2 = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(elementIndex+1));
+			leafElement2 = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(elementIndex+1));
 			charactersAfter = leafElement2->getText();
 			removeElement(elementIndex+1,rootElement);
 			leafElement->setText(charactersBefore + charactersAfter);
-			this->produceRemoveUpdate(NULL);
-			return;
+            //TODO: SEND THE CORRECT DETAILS
+            DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
+			produceRemove(DocEventDetails);
 		}
 	}
 	else
 	{
 		charactersAfter = charactersAfter.substr(1);
 		leafElement->setText(charactersBefore + charactersAfter);
-		return;
+        //TODO: SEND THE CORRECT DETAILS
+        DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
+		produceRemove(DocEventDetails);
 	}
 }
 
 void PlainDocument::deleteCharacters(UInt32 lesserIndex,UInt32 lesserOffset,UInt32 greaterIndex,UInt32 greaterOffset)
 {
 
-	PlainDocumentBranchElementRefPtr rootElement=dynamic_pointer_cast<PlainDocumentBranchElement>(getDefaultRootElement());
-	PlainDocumentLeafElementRefPtr leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(lesserIndex));
+	PlainDocumentBranchElementRefPtr rootElement=dynamic_cast<PlainDocumentBranchElement*>(getDefaultRootElement());
+	PlainDocumentLeafElementRefPtr leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(lesserIndex));
 	PlainDocumentLeafElementRefPtr leafElement2;
 
 	if(lesserIndex == greaterIndex)
@@ -510,39 +536,42 @@ void PlainDocument::deleteCharacters(UInt32 lesserIndex,UInt32 lesserOffset,UInt
 		std::string charactersAfter = "";
 		charactersAfter += leafElement->getText().substr(greaterOffset);
 		leafElement->setText(charactersBefore+charactersAfter);
-		return;
 	}
-	
-	for(UInt32 i=lesserIndex+1;i<greaterIndex;i++)
-	{
-		removeElement(lesserIndex+1,rootElement);	// delete intermediate elements
-	}
+    else
+    {
+	    for(UInt32 i=lesserIndex+1;i<greaterIndex;i++)
+	    {
+		    removeElement(lesserIndex+1,rootElement);	// delete intermediate elements
+	    }
 
-	std::string temp = "";
-	temp += leafElement->getText().substr(0,lesserOffset);	// modify the first element
-	
-	leafElement2 = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(lesserIndex+1)); // get the last element
+	    std::string temp = "";
+	    temp += leafElement->getText().substr(0,lesserOffset);	// modify the first element
+    	
+	    leafElement2 = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(lesserIndex+1)); // get the last element
 
-	leafElement->setText(temp + leafElement2->getText().substr(greaterOffset));		// modify the last element
+	    leafElement->setText(temp + leafElement2->getText().substr(greaterOffset));		// modify the last element
 
-	removeElement(lesserIndex+1,rootElement);
+	    removeElement(lesserIndex+1,rootElement);
+    }
 
-	produceRemoveUpdate(NULL);
+    //TODO: SEND THE CORRECT DETAILS
+    DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
+	produceRemove(DocEventDetails);
 }
 
-void PlainDocument::addTextAsNewElementToDocument(const std::string& str, TextWithProps& properties,bool createFreshDocument)
+void PlainDocument::addTextAsNewElementToDocument(const std::string& str, DocumentElementAttribute& properties,bool createFreshDocument)
 {
 
 	PlainDocumentBranchElementRefPtr rootElement;
 
 	if(getDefaultRootElement()!=NULL)
 	{
-		rootElement=dynamic_pointer_cast<PlainDocumentBranchElement>(getDefaultRootElement());
+		rootElement=dynamic_cast<PlainDocumentBranchElement*>(getDefaultRootElement());
 	}
 	else
 	{
 		rootElement = PlainDocumentBranchElement::create();	
-		_RootElements.push_back(rootElement);
+		pushToRootElements(rootElement);
 	}
 
 	PlainDocumentLeafElementRefPtr newPtr = PlainDocumentLeafElement::create();
@@ -550,7 +579,7 @@ void PlainDocument::addTextAsNewElementToDocument(const std::string& str, TextWi
 	rootElement->addChildElement(rootElement->getElementCount(),newPtr);
 }
 
-void PlainDocument::insertString(UInt32 offset, const std::string& str, TextWithProps& properties)
+void PlainDocument::insertString(UInt32 offset, const std::string& str, DocumentElementAttribute& properties)
 {
 
 	UInt32 endPos=getEndPosition();
@@ -565,12 +594,12 @@ void PlainDocument::insertString(UInt32 offset, const std::string& str, TextWith
 
 	if(getDefaultRootElement()!=NULL)
 	{
-		defaultRoot=dynamic_pointer_cast<PlainDocumentBranchElement>(getDefaultRootElement());
+		defaultRoot=dynamic_cast<PlainDocumentBranchElement*>(getDefaultRootElement());
 	}
 	else
 	{
 		defaultRoot = PlainDocumentBranchElement::create();	// problem here.. defaultroot is a badptr. check y!
-		_RootElements.push_back(defaultRoot);
+		pushToRootElements(defaultRoot);
 	}
 	
 	rootElement = defaultRoot;
@@ -583,7 +612,7 @@ void PlainDocument::insertString(UInt32 offset, const std::string& str, TextWith
 
 	for(UInt32 i=0;i<rootElement->getElementCount();i++)
 	{
-		PlainDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+		PlainDocumentLeafElementRefPtr	leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(i));
 		if((count+leafElement->getTextLength())<=offset) 
 		{
 			count+=leafElement->getTextLength();
@@ -613,12 +642,15 @@ void PlainDocument::insertString(UInt32 offset, const std::string& str, TextWith
 
 	addElements(theLeafElementIndex,theCharactersBefore,theCharactersAfter,setOfWords,rootElement);
 	
-	this->produceInsertUpdate(NULL);
+
+    //TODO: SEND THE CORRECT DETAILS
+    DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
+	produceInsert(DocEventDetails);
 
 	return;
 }
 
-void PlainDocument::removeElement(UInt32 theLeafElementIndex,PlainDocumentBranchElementRefPtr rootElement)
+void PlainDocument::removeElement(UInt32 theLeafElementIndex,PlainDocumentBranchElement* const rootElement)
 {
 
 	rootElement->removeChildElement(theLeafElementIndex);
@@ -631,7 +663,7 @@ UInt32 PlainDocument::getLength(void) const
 {
 	UInt32 length=0;
 
-	ElementRefPtr rootElement = dynamic_pointer_cast<PlainDocumentBranchElement>(this->getDefaultRootElement());
+	ElementRefPtr rootElement = dynamic_cast<PlainDocumentBranchElement*>(this->getDefaultRootElement());
 
 	if(rootElement==NULL) return 0;
 
@@ -639,14 +671,14 @@ UInt32 PlainDocument::getLength(void) const
 
 	for(int i=0;i<elementCount;i++)
 	{
-		PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+		PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(i));
 		length+= temp->getTextLength();
 	}
 
 	return length;
 }
 
-void PlainDocument::addElements(Int32 theLeafElementIndex,std::string theCharactersBefore,std::string theCharactersAfter,std::vector<std::string> &setOfWords,PlainDocumentBranchElementRefPtr rootElement)
+void PlainDocument::addElements(Int32 theLeafElementIndex,std::string theCharactersBefore,std::string theCharactersAfter,std::vector<std::string> &setOfWords,PlainDocumentBranchElement* const rootElement)
 {
 	if(theLeafElementIndex<0)theLeafElementIndex=0;
 	setOfWords[0]=theCharactersBefore+ setOfWords[0];
@@ -674,11 +706,6 @@ void PlainDocument::addElements(Int32 theLeafElementIndex,std::string theCharact
 				
 	return;
 }
-
-
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

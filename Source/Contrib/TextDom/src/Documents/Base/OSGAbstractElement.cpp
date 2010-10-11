@@ -146,7 +146,7 @@ std::map<std::string,UInt32>& AbstractElement::getAttributes() const
 }
    
 //   Returns the child TreeNode at index childIndex.
-ElementRefPtr 	AbstractElement::getChildAt(UInt32 childIndex) const
+Element* 	AbstractElement::getChildAt(UInt32 childIndex) const
 {
 	//REALLY NEED TO DO!!!
 	return NULL;
@@ -160,14 +160,14 @@ UInt32	AbstractElement::getChildCount(void) const
 }
    
 //  Retrieves the underlying model.
-DocumentRefPtr	AbstractElement::getDocument(void) const
+Document*	AbstractElement::getDocument(void) const
 {
 	//TODO:
 	return NULL;
 }
     
 // Returns the index of node in the receivers children.
-UInt32 AbstractElement::getIndex(ElementRefPtr node) const
+UInt32 AbstractElement::getIndex(Element* const node) const
 {
 	//REALLY NEED TO DO!!!
 	//MFRecElementPtr::iterator temp = getChildElements().find(getChildElements().begin(),getChildElements().end(),node);
@@ -181,14 +181,14 @@ std::string	AbstractElement::getName(void) const
 }
 
 //Returns the parent TreeNode of the receiver.
-ElementRefPtr AbstractElement::getParent(void) const
+Element* AbstractElement::getParent(void) const
 {
 	//TODO:
 	return NULL;
 }
       
 //Gets the parent of the element.
-ElementRefPtr 	AbstractElement::getParentElement(void) const
+Element* 	AbstractElement::getParentElement(void) const
 {
 	//TODO:
 	return NULL;

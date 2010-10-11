@@ -76,11 +76,11 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextFileType : public IOFileTypeBase
           //  UInt32                  getOverridePriority(void);
      
      /*---------------------------------------------------------------------*/
-     virtual DocumentRefPtr read(std::istream &is,
+     virtual DocumentTransitPtr read(std::istream &is,
 		                     const std::string& fileNameOrExtension);
  
      /*---------------------------------------------------------------------*/
-     virtual bool write(DocumentRefPtr Doc, std::ostream &os,
+     virtual bool write(Document* const Doc, std::ostream &os,
                         const std::string& fileNameOrExtension);
  
      virtual void print(void);

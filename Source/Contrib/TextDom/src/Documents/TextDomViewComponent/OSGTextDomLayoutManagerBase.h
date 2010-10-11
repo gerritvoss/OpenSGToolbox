@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,8 +65,8 @@
 
 #include "OSGFieldContainer.h" // Parent
 
-#include "OSGGlyphViewFields.h"  // VisibleViews type
-#include "OSGTextDomAreaFields.h" // TextDomArea type
+#include "OSGGlyphViewFields.h"         // VisibleViews type
+#include "OSGFieldContainerFields.h"    // ParentTextDomArea type
 
 #include "OSGTextDomLayoutManagerFields.h"
 
@@ -87,6 +87,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomLayoutManagerBase : public FieldConta
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(TextDomLayoutManager);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -95,19 +97,19 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomLayoutManagerBase : public FieldConta
     enum
     {
         VisibleViewsFieldId = Inherited::NextFieldId,
-        TextDomAreaFieldId = VisibleViewsFieldId + 1,
-        NextFieldId = TextDomAreaFieldId + 1
+        ParentTextDomAreaFieldId = VisibleViewsFieldId + 1,
+        NextFieldId = ParentTextDomAreaFieldId + 1
     };
 
     static const OSG::BitVector VisibleViewsFieldMask =
         (TypeTraits<BitVector>::One << VisibleViewsFieldId);
-    static const OSG::BitVector TextDomAreaFieldMask =
-        (TypeTraits<BitVector>::One << TextDomAreaFieldId);
+    static const OSG::BitVector ParentTextDomAreaFieldMask =
+        (TypeTraits<BitVector>::One << ParentTextDomAreaFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef MFUnrecGlyphViewPtr MFVisibleViewsType;
-    typedef SFUnrecTextDomAreaPtr SFTextDomAreaType;
+    typedef SFParentFieldContainerPtr SFParentTextDomAreaType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -134,20 +136,15 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomLayoutManagerBase : public FieldConta
 
             const MFUnrecGlyphViewPtr *getMFVisibleViews   (void) const;
                   MFUnrecGlyphViewPtr *editMFVisibleViews   (void);
-            const SFUnrecTextDomAreaPtr *getSFTextDomArea    (void) const;
-                  SFUnrecTextDomAreaPtr *editSFTextDomArea    (void);
 
 
                   GlyphView * getVisibleViews   (const UInt32 index) const;
-
-                  TextDomArea * getTextDomArea    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setTextDomArea    (TextDomArea * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,7 +189,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomLayoutManagerBase : public FieldConta
     /*! \{                                                                 */
 
     MFUnrecGlyphViewPtr _mfVisibleViews;
-    SFUnrecTextDomAreaPtr _sfTextDomArea;
+    SFParentFieldContainerPtr _sfParentTextDomArea;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -218,13 +215,24 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomLayoutManagerBase : public FieldConta
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name Parent linking                                               */
+    /*! \{                                                                 */
+
+    virtual bool linkParent  (FieldContainer * const pParent,
+                              UInt16           const childFieldId,
+                              UInt16           const parentFieldId);
+    virtual bool unlinkParent(FieldContainer * const pParent,
+                              UInt16           const parentFieldId);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
     GetFieldHandlePtr  getHandleVisibleViews    (void) const;
     EditFieldHandlePtr editHandleVisibleViews   (void);
-    GetFieldHandlePtr  getHandleTextDomArea     (void) const;
-    EditFieldHandlePtr editHandleTextDomArea    (void);
+    GetFieldHandlePtr  getHandleParentTextDomArea (void) const;
+    EditFieldHandlePtr editHandleParentTextDomArea(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

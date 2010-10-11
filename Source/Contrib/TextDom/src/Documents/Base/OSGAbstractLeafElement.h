@@ -69,25 +69,25 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractLeafElement : public AbstractLeafEle
 	bool getAllowsChildren() const;
 
 	//Gets a child element.
-	ElementRefPtr 	getElement(UInt32 index) const;
+	virtual	Element* 	getElement(UInt32 index) const;
 
 	//Returns the number of child elements.    
-	UInt32 getElementCount(void) const;
+	virtual	UInt32 getElementCount(void) const;
   
 	//Gets the child element index closest to the given model offset.
-	UInt32 getElementIndex(UInt32 pos) const;
+	virtual	UInt32 getElementIndex(UInt32 pos) const;
       
 	//Gets the ending offset in the model for the element.
-	UInt32 getEndOffset(void) const;
+	virtual	UInt32 getEndOffset(void) const;
       
 	//Gets the element name.
-	std::string	getName(void) const;
+	virtual	std::string	getName(void) const;
       
 	//Gets the starting offset in the model for the element.
-	UInt32 getStartOffset(void) const;
+	virtual	UInt32 getStartOffset(void) const;
       
 	//Checks whether the element is a leaf.
-	bool	isLeaf(void) const;
+	virtual	bool	isLeaf(void) const;
       
 	//Converts the element to a string.
 	std::string toString(void) const;

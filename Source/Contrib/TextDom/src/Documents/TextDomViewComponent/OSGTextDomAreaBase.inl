@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -63,19 +64,6 @@ inline
 OSG::UInt32 TextDomAreaBase::getClassTypeId(void)
 {
     return _type.getId();
-}
-//! access the producer type of the class
-inline
-const EventProducerType &TextDomAreaBase::getProducerClassType(void)
-{
-    return _producerType;
-}
-
-//! access the producer type id of the class
-inline
-UInt32 TextDomAreaBase::getProducerClassTypeId(void)
-{
-    return _producerType.getId();
 }
 
 inline
@@ -244,6 +232,22 @@ void TextDomAreaBase::setLineSpacing(const Int32 value)
     _sfLineSpacing.setValue(value);
 }
 
+//! Get the value of the TextDomArea::_sfLayoutManager field.
+inline
+TextDomLayoutManager * TextDomAreaBase::getLayoutManager(void) const
+{
+    return _sfLayoutManager.getValue();
+}
+
+//! Set the value of the TextDomArea::_sfLayoutManager field.
+inline
+void TextDomAreaBase::setLayoutManager(TextDomLayoutManager * const value)
+{
+    editSField(LayoutManagerFieldMask);
+
+    _sfLayoutManager.setValue(value);
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -275,6 +279,9 @@ void TextDomAreaBase::execSync (      TextDomAreaBase *pFrom,
 
     if(FieldBits::NoField != (LineSpacingFieldMask & whichField))
         _sfLineSpacing.syncWith(pFrom->_sfLineSpacing);
+
+    if(FieldBits::NoField != (LayoutManagerFieldMask & whichField))
+        _sfLayoutManager.syncWith(pFrom->_sfLayoutManager);
 }
 #endif
 

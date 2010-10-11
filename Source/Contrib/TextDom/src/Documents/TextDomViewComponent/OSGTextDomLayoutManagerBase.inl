@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -74,22 +75,6 @@ OSG::UInt16 TextDomLayoutManagerBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
-//! Get the value of the TextDomLayoutManager::_sfTextDomArea field.
-inline
-TextDomArea * TextDomLayoutManagerBase::getTextDomArea(void) const
-{
-    return _sfTextDomArea.getValue();
-}
-
-//! Set the value of the TextDomLayoutManager::_sfTextDomArea field.
-inline
-void TextDomLayoutManagerBase::setTextDomArea(TextDomArea * const value)
-{
-    editSField(TextDomAreaFieldMask);
-
-    _sfTextDomArea.setValue(value);
-}
-
 //! Get the value of the \a index element the TextDomLayoutManager::_mfVisibleViews field.
 inline
 GlyphView * TextDomLayoutManagerBase::getVisibleViews(const UInt32 index) const
@@ -114,8 +99,8 @@ void TextDomLayoutManagerBase::execSync (      TextDomLayoutManagerBase *pFrom,
                                 uiSyncInfo,
                                 oOffsets);
 
-    if(FieldBits::NoField != (TextDomAreaFieldMask & whichField))
-        _sfTextDomArea.syncWith(pFrom->_sfTextDomArea);
+    if(FieldBits::NoField != (ParentTextDomAreaFieldMask & whichField))
+        _sfParentTextDomArea.syncWith(pFrom->_sfParentTextDomArea);
 }
 #endif
 

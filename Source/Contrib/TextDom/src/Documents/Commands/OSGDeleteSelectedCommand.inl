@@ -31,7 +31,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-DeleteSelectedCommand::DeleteSelectedCommand(FixedHeightLayoutManagerRefPtr TheManager,TextDomAreaRefPtr TheTextDomArea) : Inherited(),
+DeleteSelectedCommand::DeleteSelectedCommand(TextDomLayoutManagerRefPtr TheManager,TextDomAreaRefPtr TheTextDomArea) : Inherited(),
 Manager(TheManager),
 _TextDomArea(TheTextDomArea)
 {

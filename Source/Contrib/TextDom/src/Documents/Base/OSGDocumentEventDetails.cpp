@@ -45,13 +45,13 @@
 
 #include <OSGConfig.h>
 
-#include "OSGDocumentEvent.h"
+#include "OSGDocumentEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
-// OSGDocumentEventBase.cpp file.
-// To modify it, please change the .fcd file (OSGDocumentEvent.fcd) and
+// OSGDocumentEventDetailsBase.cpp file.
+// To modify it, please change the .fcd file (OSGDocumentEventDetails.fcd) and
 // regenerate the base file.
 
 /***************************************************************************\
@@ -62,7 +62,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DocumentEvent::initMethod(InitPhase ePhase)
+void DocumentEventDetails::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
@@ -71,6 +71,23 @@ void DocumentEvent::initMethod(InitPhase ePhase)
     }
 }
 
+
+DocumentEventDetailsTransitPtr DocumentEventDetails::create(FieldContainer* const Source,
+                                                  Time TimeStamp,
+                                                  Document* const TheDocument,
+                                                  Int32 Offset,
+                                                  UInt32 Length)
+{
+    DocumentEventDetails* TheEventDetails = DocumentEventDetails::createUnregistered();
+
+    TheEventDetails->setSource(Source);
+    TheEventDetails->setTimeStamp(TimeStamp);
+    TheEventDetails->setDocument(TheDocument);
+    TheEventDetails->setOffset(Offset);
+    TheEventDetails->setLength(Length);
+
+    return DocumentEventDetailsTransitPtr(TheEventDetails);
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -82,33 +99,33 @@ void DocumentEvent::initMethod(InitPhase ePhase)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DocumentEvent::DocumentEvent(void) :
+DocumentEventDetails::DocumentEventDetails(void) :
     Inherited()
 {
 }
 
-DocumentEvent::DocumentEvent(const DocumentEvent &source) :
+DocumentEventDetails::DocumentEventDetails(const DocumentEventDetails &source) :
     Inherited(source)
 {
 }
 
-DocumentEvent::~DocumentEvent(void)
+DocumentEventDetails::~DocumentEventDetails(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DocumentEvent::changed(ConstFieldMaskArg whichField, 
+void DocumentEventDetails::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
 }
 
-void DocumentEvent::dump(      UInt32    ,
+void DocumentEventDetails::dump(      UInt32    ,
                          const BitVector ) const
 {
-    SLOG << "Dump DocumentEvent NI" << std::endl;
+    SLOG << "Dump DocumentEventDetails NI" << std::endl;
 }
 
 OSG_END_NAMESPACE

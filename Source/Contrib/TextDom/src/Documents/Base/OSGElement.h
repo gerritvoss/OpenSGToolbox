@@ -66,10 +66,10 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING Element : public ElementBase
 	virtual	 const std::map<std::string,UInt32>& getAttributes(void) const = 0;
 
 	//Fetches the document associated with this element.
-	virtual DocumentRefPtr	getDocument(void) const = 0;
+	virtual Document*	getDocument(void) const = 0;
 
 	//Fetches the child element at the given index.  
-	virtual ElementRefPtr	getElement(UInt32 index) const = 0;
+	virtual Element*	getElement(UInt32 index) const = 0;
 
 	//Gets the number of child elements contained by this element.  
 	virtual UInt32	getElementCount(void) const = 0;
@@ -84,7 +84,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING Element : public ElementBase
 	virtual std::string	getName(void) const = 0;
 
 	//Fetches the parent element.  
-	virtual ElementRefPtr getParentElement(void) const = 0;
+	virtual Element* getParentElement(void) const = 0;
 
 	//Fetches the offset from the beginning of the document that this element begins at.  
 	virtual UInt32	getStartOffset(void) const = 0;

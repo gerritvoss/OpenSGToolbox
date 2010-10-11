@@ -48,8 +48,8 @@
 
 #include "OSGUndoableCommand.h"
 
-#include "OSGFixedHeightLayoutManager.h"
-#include "OSGPlainDocument.h"
+#include "OSGTextDomLayoutManagerFields.h"
+#include "OSGPlainDocumentFields.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -61,13 +61,24 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING InsertCharacterCommand: public UndoableComma
 {
 protected:
 
-	enum {LEFT,RIGHT,UP,DOWN,HOME,END,HOMEOFNEXTLINE,PAGEUP,PAGEDOWN};
+	enum 
+    {
+        LEFT           = 0,
+        RIGHT          = 1,
+        UP             = 2,
+        DOWN           = 3,
+        HOME           = 4,
+        END            = 5,
+        HOMEOFNEXTLINE = 6,
+        PAGEUP         = 7,
+        PAGEDOWN       = 8
+    };
 
 	typedef UndoableCommand Inherited;
 	typedef InsertCharacterCommand Self;
 	typedef InsertCharacterCommandPtr RefPtr;
 
-    InsertCharacterCommand(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,char theCharacter,UInt32 line,UInt32 index);// here
+    InsertCharacterCommand(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,char theCharacter,UInt32 line,UInt32 index);// here
 	InsertCharacterCommand(const InsertCharacterCommand& source);
 
 	void operator =(const InsertCharacterCommand& source);
@@ -79,7 +90,7 @@ protected:
 	virtual void redo(void);
 	virtual void undo(void);
 
-	FixedHeightLayoutManagerRefPtr _Manager;
+	TextDomLayoutManagerRefPtr _Manager;
 	PlainDocumentRefPtr _TheDocumentModel;
 	char _TheCharacter;
 	UInt32 _theOriginalCaretIndex;
@@ -97,7 +108,7 @@ public:
 
 	virtual ~InsertCharacterCommand(void);
 	
-    static InsertCharacterCommandPtr create(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,char theCharacter,UInt32 line,UInt32 index);// here
+    static InsertCharacterCommandPtr create(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,char theCharacter,UInt32 line,UInt32 index);// here
 };
 
 OSG_END_NAMESPACE

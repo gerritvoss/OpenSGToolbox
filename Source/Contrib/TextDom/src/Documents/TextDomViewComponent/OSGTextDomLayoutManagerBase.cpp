@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,8 +58,8 @@
 
 
 
-#include "OSGGlyphView.h"        // VisibleViews Class
-#include "OSGTextDomArea.h"      // TextDomArea Class
+#include "OSGGlyphView.h"               // VisibleViews Class
+#include "OSGFieldContainer.h"          // ParentTextDomArea Class
 
 #include "OSGTextDomLayoutManagerBase.h"
 #include "OSGTextDomLayoutManager.h"
@@ -88,8 +88,8 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var TextDomArea *   TextDomLayoutManagerBase::_sfTextDomArea
-    
+/*! \var FieldContainer * TextDomLayoutManagerBase::_sfParentTextDomArea
+    The TextDomArea this TextDomLayoutManager is contained in.
 */
 
 
@@ -110,6 +110,18 @@ OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
 OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
                            TextDomLayoutManager *,
                            0);
+
+DataType &FieldTraits< TextDomLayoutManager *, 1 >::getType(void)
+{
+    return FieldTraits<TextDomLayoutManager *, 0>::getType();
+}
+
+
+OSG_EXPORT_PTR_SFIELD(ChildPointerSField,
+                      TextDomLayoutManager *,
+                      UnrecordedRefCountPolicy,
+                      1);
+
 
 /***************************************************************************\
  *                         Field Description                               *
@@ -132,15 +144,15 @@ void TextDomLayoutManagerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecTextDomAreaPtr::Description(
-        SFUnrecTextDomAreaPtr::getClassType(),
-        "TextDomArea",
-        "",
-        TextDomAreaFieldId, TextDomAreaFieldMask,
+    pDesc = new SFParentFieldContainerPtr::Description(
+        SFParentFieldContainerPtr::getClassType(),
+        "ParentTextDomArea",
+        "The TextDomArea this TextDomLayoutManager is contained in.\n",
+        ParentTextDomAreaFieldId, ParentTextDomAreaFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&TextDomLayoutManager::editHandleTextDomArea),
-        static_cast<FieldGetMethodSig >(&TextDomLayoutManager::getHandleTextDomArea));
+        static_cast     <FieldEditMethodSig>(&TextDomLayoutManager::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&TextDomLayoutManager::invalidGetField));
 
     oType.addInitialDesc(pDesc);
 }
@@ -165,12 +177,13 @@ TextDomLayoutManagerBase::TypeObject TextDomLayoutManagerBase::_type(
     "\tlibrary=\"ContribTextDom\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
-    "\tsystemcomponent=\"false\"\n"
-    "\tparentsystemcomponent=\"false\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"true\"\n"
     "\tisNodeCore=\"false\"\n"
-    "    \tauthors=\"David Kabala\"\n"
+    "    childFields=\"single\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "\n"
     "A UI TextDomLayoutManager\n"
@@ -187,14 +200,16 @@ TextDomLayoutManagerBase::TypeObject TextDomLayoutManagerBase::_type(
     "\t</Field>\n"
     "\n"
     "\t<Field\n"
-    "\t\tname=\"TextDomArea\"\n"
-    "\t\ttype=\"TextDomArea\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
+    "\t   name=\"ParentTextDomArea\"\n"
+    "\t   type=\"FieldContainer\"\n"
+    "\t   cardinality=\"single\"\n"
+    "\t   visibility=\"external\"\n"
+    "\t   access=\"none\"\n"
+    "       doRefCount=\"false\"\n"
+    "       passFieldMask=\"true\"\n"
+    "       category=\"parentpointer\"\n"
+    "\t   >\n"
+    "\t  The TextDomArea this TextDomLayoutManager is contained in.\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
     "A UI TextDomLayoutManager\n"
@@ -233,18 +248,6 @@ MFUnrecGlyphViewPtr *TextDomLayoutManagerBase::editMFVisibleViews   (void)
     return &_mfVisibleViews;
 }
 
-//! Get the TextDomLayoutManager::_sfTextDomArea field.
-const SFUnrecTextDomAreaPtr *TextDomLayoutManagerBase::getSFTextDomArea(void) const
-{
-    return &_sfTextDomArea;
-}
-
-SFUnrecTextDomAreaPtr *TextDomLayoutManagerBase::editSFTextDomArea    (void)
-{
-    editSField(TextDomAreaFieldMask);
-
-    return &_sfTextDomArea;
-}
 
 
 
@@ -313,9 +316,9 @@ UInt32 TextDomLayoutManagerBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _mfVisibleViews.getBinSize();
     }
-    if(FieldBits::NoField != (TextDomAreaFieldMask & whichField))
+    if(FieldBits::NoField != (ParentTextDomAreaFieldMask & whichField))
     {
-        returnValue += _sfTextDomArea.getBinSize();
+        returnValue += _sfParentTextDomArea.getBinSize();
     }
 
     return returnValue;
@@ -330,9 +333,9 @@ void TextDomLayoutManagerBase::copyToBin(BinaryDataHandler &pMem,
     {
         _mfVisibleViews.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (TextDomAreaFieldMask & whichField))
+    if(FieldBits::NoField != (ParentTextDomAreaFieldMask & whichField))
     {
-        _sfTextDomArea.copyToBin(pMem);
+        _sfParentTextDomArea.copyToBin(pMem);
     }
 }
 
@@ -345,12 +348,11 @@ void TextDomLayoutManagerBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _mfVisibleViews.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (TextDomAreaFieldMask & whichField))
+    if(FieldBits::NoField != (ParentTextDomAreaFieldMask & whichField))
     {
-        _sfTextDomArea.copyFromBin(pMem);
+        _sfParentTextDomArea.copyFromBin(pMem);
     }
 }
-
 
 
 
@@ -359,14 +361,14 @@ void TextDomLayoutManagerBase::copyFromBin(BinaryDataHandler &pMem,
 TextDomLayoutManagerBase::TextDomLayoutManagerBase(void) :
     Inherited(),
     _mfVisibleViews           (),
-    _sfTextDomArea            (NULL)
+    _sfParentTextDomArea      (NULL)
 {
 }
 
 TextDomLayoutManagerBase::TextDomLayoutManagerBase(const TextDomLayoutManagerBase &source) :
     Inherited(source),
     _mfVisibleViews           (),
-    _sfTextDomArea            (NULL)
+    _sfParentTextDomArea      (NULL)
 {
 }
 
@@ -376,6 +378,77 @@ TextDomLayoutManagerBase::TextDomLayoutManagerBase(const TextDomLayoutManagerBas
 TextDomLayoutManagerBase::~TextDomLayoutManagerBase(void)
 {
 }
+/*-------------------------------------------------------------------------*/
+/* Parent linking                                                          */
+
+bool TextDomLayoutManagerBase::linkParent(
+    FieldContainer * const pParent,
+    UInt16           const childFieldId,
+    UInt16           const parentFieldId )
+{
+    if(parentFieldId == ParentTextDomAreaFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            FieldContainer *pOldParent =
+                _sfParentTextDomArea.getValue         ();
+
+            UInt16 oldChildFieldId =
+                _sfParentTextDomArea.getParentFieldPos();
+
+            if(pOldParent != NULL)
+            {
+                pOldParent->unlinkChild(this, oldChildFieldId);
+            }
+
+            editSField(ParentTextDomAreaFieldMask);
+
+            _sfParentTextDomArea.setValue(static_cast<FieldContainer *>(pParent), childFieldId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    return Inherited::linkParent(pParent, childFieldId, parentFieldId);
+}
+
+bool TextDomLayoutManagerBase::unlinkParent(
+    FieldContainer * const pParent,
+    UInt16           const parentFieldId)
+{
+    if(parentFieldId == ParentTextDomAreaFieldId)
+    {
+        FieldContainer * pTypedParent =
+            dynamic_cast< FieldContainer * >(pParent);
+
+        if(pTypedParent != NULL)
+        {
+            if(_sfParentTextDomArea.getValue() == pParent)
+            {
+                editSField(ParentTextDomAreaFieldMask);
+
+                _sfParentTextDomArea.setValue(NULL, 0xFFFF);
+
+                return true;
+            }
+
+            FWARNING(("TextDomLayoutManagerBase::unlinkParent: "
+                      "Child <-> Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+    return Inherited::unlinkParent(pParent, parentFieldId);
+}
+
 
 void TextDomLayoutManagerBase::onCreate(const TextDomLayoutManager *source)
 {
@@ -396,8 +469,6 @@ void TextDomLayoutManagerBase::onCreate(const TextDomLayoutManager *source)
 
             ++VisibleViewsIt;
         }
-
-        pThis->setTextDomArea(source->getTextDomArea());
     }
 }
 
@@ -438,33 +509,20 @@ EditFieldHandlePtr TextDomLayoutManagerBase::editHandleVisibleViews   (void)
     return returnValue;
 }
 
-GetFieldHandlePtr TextDomLayoutManagerBase::getHandleTextDomArea     (void) const
+GetFieldHandlePtr TextDomLayoutManagerBase::getHandleParentTextDomArea (void) const
 {
-    SFUnrecTextDomAreaPtr::GetHandlePtr returnValue(
-        new  SFUnrecTextDomAreaPtr::GetHandle(
-             &_sfTextDomArea,
-             this->getType().getFieldDesc(TextDomAreaFieldId),
-             const_cast<TextDomLayoutManagerBase *>(this)));
+    SFParentFieldContainerPtr::GetHandlePtr returnValue;
 
     return returnValue;
 }
 
-EditFieldHandlePtr TextDomLayoutManagerBase::editHandleTextDomArea    (void)
+EditFieldHandlePtr TextDomLayoutManagerBase::editHandleParentTextDomArea(void)
 {
-    SFUnrecTextDomAreaPtr::EditHandlePtr returnValue(
-        new  SFUnrecTextDomAreaPtr::EditHandle(
-             &_sfTextDomArea,
-             this->getType().getFieldDesc(TextDomAreaFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&TextDomLayoutManager::setTextDomArea,
-                    static_cast<TextDomLayoutManager *>(this), _1));
-
-    editSField(TextDomAreaFieldMask);
+    EditFieldHandlePtr returnValue;
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -491,8 +549,6 @@ void TextDomLayoutManagerBase::resolveLinks(void)
     Inherited::resolveLinks();
 
     static_cast<TextDomLayoutManager *>(this)->clearVisibleViews();
-
-    static_cast<TextDomLayoutManager *>(this)->setTextDomArea(NULL);
 
 
 }

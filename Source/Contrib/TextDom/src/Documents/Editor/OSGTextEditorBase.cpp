@@ -58,11 +58,14 @@
 
 
 
+#include "OSGDocument.h"
 #include "OSGAdvancedTextDomArea.h" // AdvancedTextDomAreas Class
 #include "OSGTextDomArea.h"      // FocusedDomArea Class
 
 #include "OSGTextEditorBase.h"
 #include "OSGTextEditor.h"
+#include "OSGTextDomLayoutManager.h"
+#include "OSGGlyphView.h"
 
 #include <boost/bind.hpp>
 

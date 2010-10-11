@@ -71,4 +71,10 @@ bool AbstractWindow::operator<(const AbstractWindow& right) const
            (!getAllwaysOnTop() && right.getAllwaysOnTop());
 }
 
+inline
+bool AbstractWindow::isOpen(void) const
+{
+    return getParentDrawingSurface() != NULL;
+}
+
 OSG_END_NAMESPACE

@@ -45,15 +45,11 @@
 #include "OSGFixedHeightLayoutManagerBase.h"
 #include "OSGUIFont.h"
 
-#include "OSGDocument.h"
-#include "OSGTextDomView.h"
-#include "OSGGlyphView.h"
-#include "OSGPlainDocumentBranchElement.h"
-#include "OSGPlainDocumentLeafElement.h"
-#include "OSGPlainDocument.h"
-#include "OSGTextDomArea.h"
-#include "OSGTextDomLayoutManager.h"
-#include "OSGGraphics.h"
+#include "OSGDocumentFields.h"
+#include "OSGElementFields.h"
+#include "OSGTextDomViewFields.h"
+#include "OSGGlyphViewFields.h"
+#include "OSGTextDomAreaFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,12 +77,12 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	UInt32 getNumberOfLines(UInt32 lineNumber);
 	////
 
-	ElementRefPtr defaultRoot;
-	PlainDocumentBranchElementRefPtr rootElement;
+	Element* defaultRoot;
+	Element* rootElement;
 	Real32 _preferredHeight;
 	Real32 _preferredWidth; 
 	Real32 heightOfLine;
-	Real32 calculateWidthOfLongestLine(PlainDocumentBranchElementRefPtr rootElement) const;
+	Real32 calculateWidthOfLongestLine(Element* const rootElement) const;
 	bool insideGutterRegion(Real32 PointOnComponentX)const;
 	bool isCaretInWidthRange(void);
 	UInt32 _CaretLine;
@@ -112,80 +108,80 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	
 	
 	virtual void printDebugInformation(void) const;
-	void populateCache(void);
+	virtual void populateCache(void);
 
 	//used - related to DOM
-	void initializeRootElement();
-	void deleteSelected(void);
-	void deleteCharacters(UInt32 HSL,UInt32 HSI,UInt32 HEL,UInt32 HEI);
+	virtual void initializeRootElement();
+	virtual void deleteSelected(void);
+	virtual void deleteCharacters(UInt32 HSL,UInt32 HSI,UInt32 HEL,UInt32 HEI);
 
 	//used - related to Layout
-	UInt32 getTopmostVisibleLineNumber() const;
-	UInt32 getLinesToBeDisplayed() const;
-	void calculatePreferredSize(void);
-	void updateSize(void);
-	virtual void updateViews(void);
-	bool isLastCharacterOfDocument() const;
-	virtual Vec2f getContentRequestedSize(void) const;
-	void calculateLineHeight(void);
-	UInt32 calculateCaretPosition(Pnt2f PointOnComponent,bool isDragging);
-	void checkCaretVisibility(UInt32 dir);
-	bool isCaretVisible(void);
-	void makeCaretVisible(UInt32 dir);
-	bool isSomethingSelected(void);
-	bool isStartLocationBeforeEndLocation(void) const;
-	void moveCaretEnd(bool isControlPressed);
-	void moveCaretHome(bool isControlPressed);
-	void moveCaretUp(void);
-	void moveCaretDown(void);
-	void moveCaretLeft(void);
-	void moveCaretRight(void);
-	void moveTheCaret(UInt32 dir,bool isShiftPressed,bool isControlPressed);
-	void moveAndHighlightWord(UInt32 dir);
-	void recalculateCaretPositions(void);
-	void DoIfLineLongerThanPreferredSize() const;
-	UInt32 getCaretIndex(void) const;
-	UInt32 getCaretLine(void) const;
-	void setHighlight(UInt32 startline,UInt32 startindex,UInt32 endline,UInt32 endindex);
-	Real32 getHeightOfLine(void);
-	void doubleClickHandler(void);
-	void selectAll(void);
-	bool isLastCharacter(void);
-	void setTheClipBounds(Pnt2f topLeft,Pnt2f bottomRight);
-	void setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
-	void setEndingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
-	char oppositeBrace(char val);
-	void findBrace(char theChar,UInt32 direction);
-	void removeBracesHighlightIndices(void);
-	bool isStartingBraces(char value);
-	bool isEndingBraces(char value);
-	UInt32 getNumberOfLeadingSpaces(UInt32 line);
-	Real32 getCaretXPosition(void);
-	Real32 getCaretYPosition(void);
-	PlainDocumentBranchElementRefPtr getRootElement(void);
-	UInt32 getHEI(void);
-	UInt32 getHEL(void);
-	UInt32 getHSI(void);
-	UInt32 getHSL(void);
-	void setHEI(UInt32);
-	void setHEL(UInt32);
-	void setHSI(UInt32);
-	void setHSL(UInt32);
-	Real32 getPreferredWidth(void);
-	bool getBracesHighlightFlag(void);
-	UInt32 getStartingBraceLine(void);
-	UInt32 getStartingBraceIndex(void);
-	UInt32 getEndingBraceLine(void);
-	UInt32 getEndingBraceIndex(void);
-	Pnt2f getEndXYPosition(UInt32 lineNumber) const;
-	Pnt2f getStartXYPosition(UInt32 lineNumber) const;
-	Pnt2f getXYPosition(UInt32 lineNumber,UInt32 index,bool isBeginning) const;
-	Real32 getGutterSpace(void);
-	Real32 getGutterSeparation(void);
-	UInt32 CaretLineAndIndexToCaretOffsetInDOM(UInt32 CaretLine,UInt32 CaretIndex);
-	void setCaretIndexAndLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
-	char getNextCharacter(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
-	bool isLastCharacterOfLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
+	virtual UInt32 getTopmostVisibleLineNumber(void) const;
+	virtual UInt32 getLinesToBeDisplayed(void) const;
+	virtual void calculatePreferredSize(void);
+	virtual void updateSize(void);
+	virtual virtual void updateViews(void);
+	virtual bool isLastCharacterOfDocument(void) const;
+	virtual virtual Vec2f getContentRequestedSize(void) const;
+	virtual void calculateLineHeight(void);
+	virtual UInt32 calculateCaretPosition(Pnt2f PointOnComponent,bool isDragging);
+	virtual void checkCaretVisibility(UInt32 dir);
+	virtual bool isCaretVisible(void);
+	virtual void makeCaretVisible(UInt32 dir);
+	virtual bool isSomethingSelected(void);
+	virtual bool isStartLocationBeforeEndLocation(void) const;
+	virtual void moveCaretEnd(bool isControlPressed);
+	virtual void moveCaretHome(bool isControlPressed);
+	virtual void moveCaretUp(void);
+	virtual void moveCaretDown(void);
+	virtual void moveCaretLeft(void);
+	virtual void moveCaretRight(void);
+	virtual void moveTheCaret(UInt32 dir,bool isShiftPressed,bool isControlPressed);
+	virtual void moveAndHighlightWord(UInt32 dir);
+	virtual void recalculateCaretPositions(void);
+	virtual void DoIfLineLongerThanPreferredSize(void) const;
+	virtual UInt32 getCaretIndex(void) const;
+	virtual UInt32 getCaretLine(void) const;
+	virtual void setHighlight(UInt32 startline,UInt32 startindex,UInt32 endline,UInt32 endindex);
+	virtual Real32 getHeightOfLine(void);
+	virtual void doubleClickHandler(void);
+	virtual void selectAll(void);
+	virtual bool isLastCharacter(void);
+	virtual void setTheClipBounds(Pnt2f topLeft,Pnt2f bottomRight);
+	virtual void setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
+	virtual void setEndingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
+	virtual char oppositeBrace(char val);
+	virtual void findBrace(char theChar,UInt32 direction);
+	virtual void removeBracesHighlightIndices(void);
+	virtual bool isStartingBraces(char value);
+	virtual bool isEndingBraces(char value);
+	virtual UInt32 getNumberOfLeadingSpaces(UInt32 line);
+	virtual Real32 getCaretXPosition(void);
+	virtual Real32 getCaretYPosition(void);
+	virtual Element* getRootElement(void);
+	virtual UInt32 getHEI(void);
+	virtual UInt32 getHEL(void);
+	virtual UInt32 getHSI(void);
+	virtual UInt32 getHSL(void);
+	virtual void setHEI(UInt32);
+	virtual void setHEL(UInt32);
+	virtual void setHSI(UInt32);
+	virtual void setHSL(UInt32);
+	virtual Real32 getPreferredWidth(void);
+	virtual bool getBracesHighlightFlag(void);
+	virtual UInt32 getStartingBraceLine(void);
+	virtual UInt32 getStartingBraceIndex(void);
+	virtual UInt32 getEndingBraceLine(void);
+	virtual UInt32 getEndingBraceIndex(void);
+	virtual Pnt2f getEndXYPosition(UInt32 lineNumber) const;
+	virtual Pnt2f getStartXYPosition(UInt32 lineNumber) const;
+	virtual Pnt2f getXYPosition(UInt32 lineNumber,UInt32 index,bool isBeginning) const;
+	virtual Real32 getGutterSpace(void);
+	virtual Real32 getGutterSeparation(void);
+	virtual UInt32 CaretLineAndIndexToCaretOffsetInDOM(UInt32 CaretLine,UInt32 CaretIndex);
+	virtual void setCaretIndexAndLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
+	virtual char getNextCharacter(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
+	virtual bool isLastCharacterOfLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
 
 	/*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

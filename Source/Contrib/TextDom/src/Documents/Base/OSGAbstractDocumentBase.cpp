@@ -58,7 +58,7 @@
 
 
 
-#include "OSGElement.h"                 // RootElement Class
+#include "OSGElement.h"                 // RootElements Class
 
 #include "OSGAbstractDocumentBase.h"
 #include "OSGAbstractDocument.h"
@@ -83,7 +83,7 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var Element *       AbstractDocumentBase::_sfRootElement
+/*! \var Element *       AbstractDocumentBase::_mfRootElements
     
 */
 
@@ -115,15 +115,15 @@ void AbstractDocumentBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFUnrecElementPtr::Description(
-        SFUnrecElementPtr::getClassType(),
-        "RootElement",
+    pDesc = new MFUnrecElementPtr::Description(
+        MFUnrecElementPtr::getClassType(),
+        "RootElements",
         "",
-        RootElementFieldId, RootElementFieldMask,
+        RootElementsFieldId, RootElementsFieldMask,
         false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&AbstractDocument::editHandleRootElement),
-        static_cast<FieldGetMethodSig >(&AbstractDocument::getHandleRootElement));
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractDocument::editHandleRootElements),
+        static_cast<FieldGetMethodSig >(&AbstractDocument::getHandleRootElements));
 
     oType.addInitialDesc(pDesc);
 }
@@ -157,12 +157,11 @@ AbstractDocumentBase::TypeObject AbstractDocumentBase::_type(
     ">\n"
     "UI AbstractDocument.\n"
     "\t<Field\n"
-    "\t\tname=\"RootElement\"\n"
+    "\t\tname=\"RootElements\"\n"
     "\t\ttype=\"Element\"\n"
     "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
+    "\t\tcardinality=\"multi\"\n"
     "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
     "\t\taccess=\"protected\"\n"
     "\t>\n"
     "\t</Field>\n"
@@ -190,20 +189,73 @@ UInt32 AbstractDocumentBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-//! Get the AbstractDocument::_sfRootElement field.
-const SFUnrecElementPtr *AbstractDocumentBase::getSFRootElement(void) const
+//! Get the AbstractDocument::_mfRootElements field.
+const MFUnrecElementPtr *AbstractDocumentBase::getMFRootElements(void) const
 {
-    return &_sfRootElement;
+    return &_mfRootElements;
 }
 
-SFUnrecElementPtr   *AbstractDocumentBase::editSFRootElement    (void)
+MFUnrecElementPtr   *AbstractDocumentBase::editMFRootElements   (void)
 {
-    editSField(RootElementFieldMask);
+    editMField(RootElementsFieldMask, _mfRootElements);
 
-    return &_sfRootElement;
+    return &_mfRootElements;
 }
 
 
+
+void AbstractDocumentBase::pushToRootElements(Element * const value)
+{
+    editMField(RootElementsFieldMask, _mfRootElements);
+
+    _mfRootElements.push_back(value);
+}
+
+void AbstractDocumentBase::assignRootElements(const MFUnrecElementPtr &value)
+{
+    MFUnrecElementPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecElementPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<AbstractDocument *>(this)->clearRootElements();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToRootElements(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void AbstractDocumentBase::removeFromRootElements(UInt32 uiIndex)
+{
+    if(uiIndex < _mfRootElements.size())
+    {
+        editMField(RootElementsFieldMask, _mfRootElements);
+
+        _mfRootElements.erase(uiIndex);
+    }
+}
+
+void AbstractDocumentBase::removeObjFromRootElements(Element * const value)
+{
+    Int32 iElemIdx = _mfRootElements.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(RootElementsFieldMask, _mfRootElements);
+
+        _mfRootElements.erase(iElemIdx);
+    }
+}
+void AbstractDocumentBase::clearRootElements(void)
+{
+    editMField(RootElementsFieldMask, _mfRootElements);
+
+
+    _mfRootElements.clear();
+}
 
 
 
@@ -213,9 +265,9 @@ UInt32 AbstractDocumentBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (RootElementFieldMask & whichField))
+    if(FieldBits::NoField != (RootElementsFieldMask & whichField))
     {
-        returnValue += _sfRootElement.getBinSize();
+        returnValue += _mfRootElements.getBinSize();
     }
 
     return returnValue;
@@ -226,9 +278,9 @@ void AbstractDocumentBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootElementFieldMask & whichField))
+    if(FieldBits::NoField != (RootElementsFieldMask & whichField))
     {
-        _sfRootElement.copyToBin(pMem);
+        _mfRootElements.copyToBin(pMem);
     }
 }
 
@@ -237,12 +289,11 @@ void AbstractDocumentBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootElementFieldMask & whichField))
+    if(FieldBits::NoField != (RootElementsFieldMask & whichField))
     {
-        _sfRootElement.copyFromBin(pMem);
+        _mfRootElements.copyFromBin(pMem);
     }
 }
-
 
 
 
@@ -250,13 +301,13 @@ void AbstractDocumentBase::copyFromBin(BinaryDataHandler &pMem,
 
 AbstractDocumentBase::AbstractDocumentBase(void) :
     Inherited(),
-    _sfRootElement            (NULL)
+    _mfRootElements           ()
 {
 }
 
 AbstractDocumentBase::AbstractDocumentBase(const AbstractDocumentBase &source) :
     Inherited(source),
-    _sfRootElement            (NULL)
+    _mfRootElements           ()
 {
 }
 
@@ -275,37 +326,57 @@ void AbstractDocumentBase::onCreate(const AbstractDocument *source)
     {
         AbstractDocument *pThis = static_cast<AbstractDocument *>(this);
 
-        pThis->setRootElement(source->getRootElement());
+        MFUnrecElementPtr::const_iterator RootElementsIt  =
+            source->_mfRootElements.begin();
+        MFUnrecElementPtr::const_iterator RootElementsEnd =
+            source->_mfRootElements.end  ();
+
+        while(RootElementsIt != RootElementsEnd)
+        {
+            pThis->pushToRootElements(*RootElementsIt);
+
+            ++RootElementsIt;
+        }
     }
 }
 
-GetFieldHandlePtr AbstractDocumentBase::getHandleRootElement     (void) const
+GetFieldHandlePtr AbstractDocumentBase::getHandleRootElements    (void) const
 {
-    SFUnrecElementPtr::GetHandlePtr returnValue(
-        new  SFUnrecElementPtr::GetHandle(
-             &_sfRootElement,
-             this->getType().getFieldDesc(RootElementFieldId),
+    MFUnrecElementPtr::GetHandlePtr returnValue(
+        new  MFUnrecElementPtr::GetHandle(
+             &_mfRootElements,
+             this->getType().getFieldDesc(RootElementsFieldId),
              const_cast<AbstractDocumentBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr AbstractDocumentBase::editHandleRootElement    (void)
+EditFieldHandlePtr AbstractDocumentBase::editHandleRootElements   (void)
 {
-    SFUnrecElementPtr::EditHandlePtr returnValue(
-        new  SFUnrecElementPtr::EditHandle(
-             &_sfRootElement,
-             this->getType().getFieldDesc(RootElementFieldId),
+    MFUnrecElementPtr::EditHandlePtr returnValue(
+        new  MFUnrecElementPtr::EditHandle(
+             &_mfRootElements,
+             this->getType().getFieldDesc(RootElementsFieldId),
              this));
 
-    returnValue->setSetMethod(
-        boost::bind(&AbstractDocument::setRootElement,
+    returnValue->setAddMethod(
+        boost::bind(&AbstractDocument::pushToRootElements,
                     static_cast<AbstractDocument *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&AbstractDocument::removeFromRootElements,
+                    static_cast<AbstractDocument *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&AbstractDocument::removeObjFromRootElements,
+                    static_cast<AbstractDocument *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&AbstractDocument::clearRootElements,
+                    static_cast<AbstractDocument *>(this)));
 
-    editSField(RootElementFieldMask);
+    editMField(RootElementsFieldMask, _mfRootElements);
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -331,7 +402,7 @@ void AbstractDocumentBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
 
-    static_cast<AbstractDocument *>(this)->setRootElement(NULL);
+    static_cast<AbstractDocument *>(this)->clearRootElements();
 
 
 }

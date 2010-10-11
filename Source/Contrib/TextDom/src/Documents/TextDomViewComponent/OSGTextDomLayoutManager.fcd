@@ -6,12 +6,13 @@
 	library="ContribTextDom"
 	pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
 	useLocalIncludes="true"
 	isNodeCore="false"
-    	authors="David Kabala"
+    childFields="single"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 
 A UI TextDomLayoutManager
@@ -28,13 +29,15 @@ A UI TextDomLayoutManager
 	</Field>
 
 	<Field
-		name="TextDomArea"
-		type="TextDomArea"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
+	   name="ParentTextDomArea"
+	   type="FieldContainer"
+	   cardinality="single"
+	   visibility="external"
+	   access="none"
+       doRefCount="false"
+       passFieldMask="true"
+       category="parentpointer"
+	   >
+	  The TextDomArea this TextDomLayoutManager is contained in.
 	</Field>
 </FieldContainer>

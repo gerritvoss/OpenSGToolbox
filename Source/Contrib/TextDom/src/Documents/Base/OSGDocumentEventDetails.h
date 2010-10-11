@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,21 +36,21 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDOCUMENTMODELCHANGEDEVENT_H_
-#define _OSGDOCUMENTMODELCHANGEDEVENT_H_
+#ifndef _OSGDOCUMENTEVENTDETAILS_H_
+#define _OSGDOCUMENTEVENTDETAILS_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGDocumentModelChangedEventBase.h"
+#include "OSGDocumentEventDetailsBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DocumentModelChangedEvent class. See \ref
-           PageContribTextDomDocumentModelChangedEvent for a description.
+/*! \brief DocumentEventDetails class. See \ref
+           PageContribTextDomDocumentEventDetails for a description.
 */
 
-class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentModelChangedEvent : public DocumentModelChangedEventBase
+class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentEventDetails : public DocumentEventDetailsBase
 {
   protected:
 
@@ -58,8 +58,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentModelChangedEvent : public DocumentM
 
   public:
 
-    typedef DocumentModelChangedEventBase Inherited;
-    typedef DocumentModelChangedEvent     Self;
+    typedef DocumentEventDetailsBase Inherited;
+    typedef DocumentEventDetails     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -78,25 +78,30 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentModelChangedEvent : public DocumentM
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    static  DocumentEventDetailsTransitPtr create(FieldContainer* const Source,
+                                                  Time TimeStamp,
+                                                  Document* const TheDocument,
+                                                  Int32 Offset,
+                                                  UInt32 Length); 
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in DocumentModelChangedEventBase.
+    // Variables should all be in DocumentEventDetailsBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DocumentModelChangedEvent(void);
-    DocumentModelChangedEvent(const DocumentModelChangedEvent &source);
+    DocumentEventDetails(void);
+    DocumentEventDetails(const DocumentEventDetails &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DocumentModelChangedEvent(void);
+    virtual ~DocumentEventDetails(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -111,17 +116,18 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentModelChangedEvent : public DocumentM
   private:
 
     friend class FieldContainer;
-    friend class DocumentModelChangedEventBase;
+    friend class DocumentEventDetailsBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const DocumentModelChangedEvent &source);
+    void operator =(const DocumentEventDetails &source);
 };
 
-typedef DocumentModelChangedEvent *DocumentModelChangedEventP;
+typedef DocumentEventDetails *DocumentEventDetailsP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDocumentModelChangedEventBase.inl"
-#include "OSGDocumentModelChangedEvent.inl"
+#include "OSGDocument.h"
+#include "OSGDocumentEventDetailsBase.inl"
+#include "OSGDocumentEventDetails.inl"
 
-#endif /* _OSGDOCUMENTMODELCHANGEDEVENT_H_ */
+#endif /* _OSGDOCUMENTEVENTDETAILS_H_ */

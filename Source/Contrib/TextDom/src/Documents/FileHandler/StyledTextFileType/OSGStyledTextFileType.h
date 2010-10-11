@@ -37,19 +37,13 @@
 
 #include <boost/function.hpp>
 #include <utility>
+
 #include "OSGTextFileType.h"
 #include "OSGTextFileHandler.h"
-#include "OSGEventProducer.h"
-#include "OSGEventListener.h"
-#include "OSGContainerIdMapper.h"
-#include "OSGFieldContainer.h"
 
-
-#include "OSGStyledDocument.h"
-#include "OSGStyledDocumentBranchElement.h"
-#include "OSGStyledDocumentLeafElement.h"
-
-#include "StyledDocumentAttributes.h"
+#include "OSGStyledDocumentFields.h"
+#include "OSGStyledDocumentBranchElementFields.h"
+#include "OSGStyledDocumentLeafElementFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,11 +63,11 @@ public:
     virtual ~StyledTextFileType(void);
 
     /*---------------------------------------------------------------------*/
-     virtual DocumentRefPtr read(std::istream &is,
+     virtual DocumentTransitPtr read(std::istream &is,
 		                     const std::string& FileNameOrExtension);
 
     /*---------------------------------------------------------------------*/
-     virtual bool write(DocumentRefPtr Doc, std::ostream &os,
+     virtual bool write(Document* const Doc, std::ostream &os,
                         const std::string& FileNameOrExtension);
 
     
@@ -93,8 +87,8 @@ protected:
 private:
 
 	 std::vector<std::string> _FontFaces;
-	 std::vector<Color> _Colors;
-	 std::vector<TextWithProps> _TextWithProps;  
+	 std::vector<Color3f> _Colors;
+	 std::vector<DocumentElementAttribute> _DocumentElementAttribute;  
 
 	  //function declarations
 	 void rtfreader(std::istream &InputStream,StyledDocumentRefPtr &Result);
@@ -102,8 +96,11 @@ private:
 	 Int32 findNextGreen(Int32 index,std::string& sentence);
 	 Int32 findNextBlue(Int32 index,std::string& sentence);
 	 Int32 findNextSem(Int32 index,std::string& sentence);
-	 void processSentence(std::string &sentence,TextWithProps& textStructure);
-	 void rtfwriter(std::ostream &ofs,std::vector<TextWithProps>& _TextWithProperties,std::vector<std::string>& _FontFaces,std::vector<Color> &_Colors);
+	 void processSentence(std::string &sentence,DocumentElementAttribute& textStructure);
+	 void rtfwriter(std::ostream &ofs,
+                    std::vector<DocumentElementAttribute>& _TextWithProperties,
+                    std::vector<std::string>& _FontFaces,
+                    std::vector<Color3f> &_Colors);
 
 
     void operator =(const StyledTextFileType &source);

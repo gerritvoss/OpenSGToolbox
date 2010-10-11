@@ -46,9 +46,8 @@
 
 #include "OSGStyledDocumentBase.h"
 
-#include "styleddocumentattributes.h"
-#include "OSGStyledDocumentBranchElement.h"
-#include "OSGStyledDocumentLeafElement.h"
+#include "OSGStyledDocumentBranchElementFields.h"
+#include "OSGStyledDocumentLeafElementFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -65,10 +64,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING StyledDocument : public StyledDocumentBase
   private:
 	
 	UInt32 _DocumentSize;
-	std::vector<ElementRefPtr> _RootElements;
 
 	void tokenize(std::string sentence,std::vector<std::string> & setOfWords);
-	bool equals(TextWithProps &oldProps,TextWithProps &newProps);
+	bool equals(DocumentElementAttribute &oldProps,DocumentElementAttribute &newProps);
 	void removeTheSlashN(std::string& stringWithSlashN);
 
   public:
@@ -76,15 +74,12 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING StyledDocument : public StyledDocumentBase
     typedef StyledDocumentBase Inherited;
     typedef StyledDocument     Self;
 
-
-	virtual bool isA(std::string);
-
 	void  displayDebugInfo(void);
 	//This method allows an application to mark a place in a sequence of character content.
     UInt32 createPosition(Int32 offs);
 
     //Returns the root element that views should be based upon, unless some other mechanism for assigning views to element structures is provided.
-    ElementRefPtr getDefaultRootElement(void) const;
+    Element* getDefaultRootElement(void) const;
 
     //Returns a position that represents the end of the document.
     UInt32 getEndPosition(void) const;
@@ -92,19 +87,19 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING StyledDocument : public StyledDocumentBase
     //Returns number of characters of content currently in the document.(including endlines)
     UInt32 getLength(void) const;
 
-	ElementRefPtr getRootElement(UInt32 index);
+	//Element* getRootElement(UInt32 index);
 
     //Returns all of the root elements that are defined.
-    std::vector<ElementRefPtr> getRootElements(void);
+    std::vector<Element*> getRootElements(void);
 
     //Returns a position that represents the start of the document.
     UInt64 getStartPosition(void) const;
 
     //Fetches the text with properties contained within the given portion of the document.
-    std::vector<TextWithProps>& getTextWithProps(Int32 offset, Int32 length) const;
+    std::vector<DocumentElementAttribute>& getDocumentElementAttribute(Int32 offset, Int32 length) const;
 
     //Fetches the text with properties contained within the given portion of the document.
-    void getTextWithProps(Int32 offset, Int32 length, std::vector<TextWithProps>& txt) const;
+    void getDocumentElementAttribute(Int32 offset, Int32 length, std::vector<DocumentElementAttribute>& txt) const;
 
 	//Fetches the text contained within the given portion of the document.
     std::string getText(Int32 offset, Int32 length) const;
@@ -113,9 +108,16 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING StyledDocument : public StyledDocumentBase
     void getText(Int32 offset, Int32 length, std::string& txt) const;
 
 
-	void removeElement(UInt32 leafElementIndex,StyledDocumentBranchElementRefPtr rootElement);
+	void removeElement(UInt32 leafElementIndex,
+                       StyledDocumentBranchElement* const rootElement);
 
-	void addElements(Int32 theLeafElementIndex,std::string theCharactersBefore,std::string theCharactersAfter,std::vector<std::string> &setOfWords,StyledDocumentBranchElementRefPtr rootElement,TextWithProps &oldProps,TextWithProps &newProps);
+	void addElements(Int32 theLeafElementIndex,
+                     const std::string& theCharactersBefore,
+                     const std::string& theCharactersAfter,
+                     std::vector<std::string> &setOfWords,
+                     StyledDocumentBranchElement* const rootElement,
+                     DocumentElementAttribute &oldProps,
+                     DocumentElementAttribute &newProps);
 
 	
     //Removes a portion of the content of the document.
@@ -123,21 +125,21 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING StyledDocument : public StyledDocumentBase
 
 
     //Deletes the region of text from offset to offset + length, and replaces it with text.
-    void replace(Int32 offset, Int32 length, const std::string& str, TextWithProps& properties);
+    void replace(Int32 offset, Int32 length, const std::string& str, DocumentElementAttribute& properties);
 
 
-	void setFonts(std::vector<std::string>& fontArray);
-	void setColors(std::vector<Color>& colorArray);
-	std::vector<Color>& getColors(void);
-	std::vector<std::string>& getFonts(void);
+	void setFonts(const std::vector<std::string>& fontArray);
+	void setColors(const std::vector<Color3f>& colorArray);
+	const std::vector<Color3f>& getColors(void) const;
+	const std::vector<std::string>& getFonts(void) const;
 
-	void addTextAsNewElementToDocument(const std::string& str, TextWithProps& properties,bool createFreshDocument);
+	void addTextAsNewElementToDocument(const std::string& str, DocumentElementAttribute& properties,bool createFreshDocument);
 
-	void insertString(UInt32 offset, const std::string& str, TextWithProps& properties);
+	void insertString(UInt32 offset, const std::string& str, DocumentElementAttribute& properties);
 
-	void insertCharacter(UInt32 offset, const char character, TextWithProps& properties);
+	void insertCharacter(UInt32 offset, const char character, DocumentElementAttribute& properties);
 
-	void insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, TextWithProps& properties);
+	void insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, DocumentElementAttribute& properties);
 
 	void deleteCharacter(UInt32 elementIndex,UInt32 offsetInChild);
 
@@ -167,7 +169,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING StyledDocument : public StyledDocumentBase
 	  
 	
 	std::vector<std::string> _Fonts;
-	std::vector<Color> _Colors;
+	std::vector<Color3f> _Colors;
 
 	
 

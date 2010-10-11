@@ -53,19 +53,19 @@ std::string StyledDocumentLeafElement::getText(void)
 }
 
 inline 
-void StyledDocumentLeafElement::setText(std::string _Text)
+void StyledDocumentLeafElement::setText(const std::string& text)
 {
-	_Properties.text = _Text;
+	_Properties.text = text;
 }
 
 inline 
-TextWithProps& StyledDocumentLeafElement::getProperties(void)
+DocumentElementAttribute& StyledDocumentLeafElement::getProperties(void)
 {
 	return _Properties;
 }
 
 inline
-void StyledDocumentLeafElement::setProperties(TextWithProps& props)
+void StyledDocumentLeafElement::setProperties(DocumentElementAttribute& props)
 {
 	_Properties = props;
 }

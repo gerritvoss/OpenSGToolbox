@@ -36,21 +36,21 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSEARCHWINDOWEVENT_H_
-#define _OSGSEARCHWINDOWEVENT_H_
+#ifndef _OSGSearchWindowEventDetails_H_
+#define _OSGSearchWindowEventDetails_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGSearchWindowEventBase.h"
+#include "OSGSearchWindowEventDetailsBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SearchWindowEvent class. See \ref
-           PageContribTextDomSearchWindowEvent for a description.
+/*! \brief SearchWindowEventDetails class. See \ref
+           PageContribTextDomSearchWindowEventDetails for a description.
 */
 
-class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowEvent : public SearchWindowEventBase
+class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowEventDetails : public SearchWindowEventDetailsBase
 {
   protected:
 
@@ -64,8 +64,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowEvent : public SearchWindowEvent
         DIALOG_OPTION_CANCEL = 1
     };
 
-    typedef SearchWindowEventBase Inherited;
-    typedef SearchWindowEvent     Self;
+    typedef SearchWindowEventDetailsBase Inherited;
+    typedef SearchWindowEventDetails     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -84,7 +84,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowEvent : public SearchWindowEvent
                       const BitVector  bvFlags  = 0) const;
 
 
-	static  SearchWindowEventTransitPtr      create( FieldContainerRefPtr Source,
+	static  SearchWindowEventDetailsTransitPtr      create( FieldContainerRefPtr Source,
                                                      Time TimeStamp); 
 
 
@@ -93,21 +93,21 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowEvent : public SearchWindowEvent
 
   protected:
 
-    // Variables should all be in SearchWindowEventBase.
+    // Variables should all be in SearchWindowEventDetailsBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    SearchWindowEvent(void);
-    SearchWindowEvent(const SearchWindowEvent &source);
+    SearchWindowEventDetails(void);
+    SearchWindowEventDetails(const SearchWindowEventDetails &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SearchWindowEvent(void);
+    virtual ~SearchWindowEventDetails(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -122,17 +122,17 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowEvent : public SearchWindowEvent
   private:
 
     friend class FieldContainer;
-    friend class SearchWindowEventBase;
+    friend class SearchWindowEventDetailsBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const SearchWindowEvent &source);
+    void operator =(const SearchWindowEventDetails &source);
 };
 
-typedef SearchWindowEvent *SearchWindowEventP;
+typedef SearchWindowEventDetails *SearchWindowEventDetailsP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSearchWindowEventBase.inl"
-#include "OSGSearchWindowEvent.inl"
+#include "OSGSearchWindowEventDetailsBase.inl"
+#include "OSGSearchWindowEventDetails.inl"
 
-#endif /* _OSGSEARCHWINDOWEVENT_H_ */
+#endif /* _OSGSearchWindowEventDetails_H_ */

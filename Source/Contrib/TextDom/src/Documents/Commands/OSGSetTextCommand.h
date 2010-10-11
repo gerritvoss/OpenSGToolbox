@@ -48,8 +48,8 @@
 
 #include "OSGUndoableCommand.h"
 
-#include "OSGFixedHeightLayoutManager.h"
-#include "OSGPlainDocument.h"
+#include "OSGTextDomLayoutManagerFields.h"
+#include "OSGPlainDocumentFields.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -65,7 +65,7 @@ protected:
 	typedef SetTextCommand Self;
 	typedef SetTextCommandPtr RefPtr;
 
-	SetTextCommand(PlainDocumentLeafElementRefPtr element,std::string newString);// here
+	SetTextCommand(ElementRefPtr element,std::string newString);// here
 	SetTextCommand(const SetTextCommand& source);
 
 	void operator =(const SetTextCommand& source);
@@ -77,7 +77,7 @@ protected:
 	virtual void redo(void);
 	virtual void undo(void);
 
-	PlainDocumentLeafElementRefPtr _TheElement;
+	ElementRefPtr _TheElement;
 	std::string _TheOriginalString;
 	std::string _TheNewString;
 
@@ -91,7 +91,7 @@ public:
 
 	virtual ~SetTextCommand(void);
 	
-    static SetTextCommandPtr create(PlainDocumentLeafElementRefPtr element,std::string newString);// here
+    static SetTextCommandPtr create(ElementRefPtr element,std::string newString);// here
 };
 
 OSG_END_NAMESPACE

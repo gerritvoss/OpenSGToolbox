@@ -10,7 +10,7 @@
 	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
-     	isNodeCore="false"
+    isNodeCore="false"
 	parentProducer="Component"
 	authors="David Kabala (djkabala@gmail.com)"
 >
@@ -60,15 +60,15 @@ goto line window
 	</Field>
 	
 	<Field
-           	name="FocusedDomArea"
-            	type="TextDomArea"
-    		category="pointer"
- 		cardinality="single"
-    		visibility="external"
-    		access="protected"
-    		defaultValue="NULL"
-	>
-    	</Field>
+        name="FocusedDomArea"
+        type="TextDomArea"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        access="protected"
+        defaultValue="NULL"
+    >
+    </Field>
 
 
 </FieldContainer>

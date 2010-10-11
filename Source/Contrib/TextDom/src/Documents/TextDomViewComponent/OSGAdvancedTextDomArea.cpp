@@ -56,6 +56,10 @@
 #include "OSGSpringLayoutConstraints.h";
 #include "OSGSplitPanel.h"
 #include "OSGUIFont.h"
+#include "OSGDocument.h"
+#include "OSGUIDrawObjectCanvas.h"
+#include "OSGTextDomLayoutManager.h"
+#include "OSGGlyphView.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,19 +86,18 @@ void AdvancedTextDomArea::initMethod(InitPhase ePhase)
 }
 
 
-void AdvancedTextDomArea::loadFile(BoostPath path)
+void AdvancedTextDomArea::loadFile(const BoostPath& path)
 {
-		// Create a TextDomArea component
-		_TheTextDomArea = OSG::TextDomArea::create();
-		_TheTextDomArea->setWrapStyleWord(false);
-        _TheTextDomArea->setPreferredSize(Vec2f(600, 400));
-        _TheTextDomArea->setMinSize(Vec2f(600,400));
-		_TheTextDomArea->setFont(_Font);
-		_TheTextDomArea->loadFile(path);
-		clearChildren();
-		pushToChildren(_TheTextDomArea);
-		setPreferredSize(_TheTextDomArea->getContentRequestedSize());
-		_TheTextDomArea->addDocumentModelChangedListener(&_PreferredSizeChangedListener);
+	// Create a TextDomArea component
+	_TheTextDomArea = OSG::TextDomArea::create();
+	_TheTextDomArea->setWrapStyleWord(false);
+    _TheTextDomArea->setPreferredSize(Vec2f(600, 400));
+    _TheTextDomArea->setMinSize(Vec2f(600,400));
+	_TheTextDomArea->setFont(_Font);
+	_TheTextDomArea->loadFile(path);
+	clearChildren();
+	pushToChildren(_TheTextDomArea);
+	setPreferredSize(_TheTextDomArea->getContentRequestedSize());
 }
 
 void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
@@ -116,11 +119,8 @@ void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
     _TheTextDomArea->setPreferredSize(Vec2f(600, 400));
     _TheTextDomArea->setMinSize(Vec2f(600,400));
 	_TheTextDomArea->setFont(_Font);
-	_TheTextDomArea->loadFile(BoostPath("D:\\Work_Office_RA\\OpenSGToolBox\\Examples\\Tutorial\\TextDom\\Data\\SampleText3.txt"));
 
 	setPreferredSize(_TheTextDomArea->getContentRequestedSize());
-
-	_TheTextDomArea->addDocumentModelChangedListener(&_PreferredSizeChangedListener);
 
 	pushToChildren(_TheTextDomArea);
 	
@@ -139,7 +139,7 @@ std::string AdvancedTextDomArea::getHighlightedString(void)
 	}
 }
 
-void AdvancedTextDomArea::updateLayout()
+void AdvancedTextDomArea::updateLayout(void)
 {
     Pnt2f TopLeft, BottomRight;
     getInsideInsetsBounds(TopLeft, BottomRight);
@@ -152,27 +152,60 @@ void AdvancedTextDomArea::updateLayout()
 	}
 }
 
-void AdvancedTextDomArea::drawGutter(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void AdvancedTextDomArea::drawGutter(Graphics * const TheGraphics, Real32 Opacity) const
 {
 	if(getMFChildren()->size())
 	{
 		TextDomAreaRefPtr textDomArea = dynamic_cast<TextDomArea*>(getChildren(0));
 
-		Pnt2f topLeft,bottomRight;
-		getClipBounds(topLeft,bottomRight);
-		
-		Graphics->drawRect(topLeft,Pnt2f(topLeft.x()+getGutterWidth(),bottomRight.y()),Color4f(1,1,0,1),Opacity);
+		Pnt2f ClipTopLeft,ClipBottomRight;
+		getClipBounds(ClipTopLeft,ClipBottomRight);
+        ClipBottomRight.setValues(ClipTopLeft.x() + getGutterWidth(),ClipBottomRight.y());
 
-		UInt32 topMostVisibleLine = textDomArea->getTopmostVisibleLineNumber();
-		UInt32 linesToBeDisplayed = textDomArea->getLinesToBeDisplayed();
+        //Setup clipping
+        Vec4d LeftPlaneEquation(1.0,0.0,0.0,-ClipTopLeft.x()+ TheGraphics->getClipPlaneOffset()),
+              RightPlaneEquation(-1.0,0.0,0.0,ClipBottomRight.x() + TheGraphics->getClipPlaneOffset()),
+              TopPlaneEquation(0.0,1.0,0.0,-ClipTopLeft.y() + TheGraphics->getClipPlaneOffset()),
+              BottomPlaneEquation(0.0,-1.0,0.0,ClipBottomRight.y() + TheGraphics->getClipPlaneOffset());
 
-		std::ostringstream o;
-		for(UInt32 i=topMostVisibleLine ; i<topMostVisibleLine + linesToBeDisplayed;i++)
+        //glClipPlane
+        //Clip with the Intersection of this components RenderingSurface bounds
+        //and its parents RenderingSurface bounds
+        if(ClipBottomRight.x()-ClipTopLeft.x() <= 0 || ClipBottomRight.y()-ClipTopLeft.y()<= 0)
+        {
+            return;
+        }
+
+        if(!glIsEnabled(GL_CLIP_PLANE0)) { glEnable(GL_CLIP_PLANE0); }
+        if(!glIsEnabled(GL_CLIP_PLANE1)) { glEnable(GL_CLIP_PLANE1); }
+        if(!glIsEnabled(GL_CLIP_PLANE2)) { glEnable(GL_CLIP_PLANE2); }
+        if(!glIsEnabled(GL_CLIP_PLANE3)) { glEnable(GL_CLIP_PLANE3); }
+
+        //Clip Plane Equations
+        //Clip Planes get transformed by the ModelViewMatrix when set
+        //So we can rely on the fact that our current coordinate space
+        //is relative to the this components position
+
+        glClipPlane(GL_CLIP_PLANE0,LeftPlaneEquation.getValues());
+        glClipPlane(GL_CLIP_PLANE1,RightPlaneEquation.getValues());
+        glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
+        glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
+
+		TheGraphics->drawRect(ClipTopLeft,
+                              ClipBottomRight,
+                              getGutterColor(),
+                              Opacity);
+
+		UInt32 topVisibleLine = textDomArea->getTopmostVisibleLineNumber();
+		UInt32 bottomVisibleLine = topVisibleLine + textDomArea->getLinesToBeDisplayed();
+
+		for(UInt32 i(topVisibleLine) ; i<bottomVisibleLine ; ++i)
 		{
-			o<<(i+1);
-			Graphics->drawText(Pnt2f(topLeft.x(),i* textDomArea->getHeightOfLine()),o.str(),textDomArea->getFont(),Color4f(0.2,0.2,0.2,1.0),Opacity);
-			o.str("");
-			o.clear();
+            TheGraphics->drawText(Pnt2f(ClipTopLeft.x(),i* textDomArea->getHeightOfLine()),
+                                  boost::lexical_cast<std::string>(i+1),
+                                  textDomArea->getFont(),
+                                  getGutterTextColor(),
+                                  Opacity);
 		}
 		
 	}
@@ -211,46 +244,34 @@ Vec2f AdvancedTextDomArea::getContentRequestedSize(void) const
 	}
 }
 
-void AdvancedTextDomArea::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void AdvancedTextDomArea::drawInternal(Graphics * const TheGraphics, Real32 Opacity) const
 {
-	Inherited::drawInternal(Graphics,Opacity);
-	drawGutter(Graphics,Opacity);
+	Inherited::drawInternal(TheGraphics,Opacity);
+	drawGutter(TheGraphics,Opacity);
 }
 
-void AdvancedTextDomArea::setTheTextDomArea(TextDomAreaRefPtr duplicatedTextDom)
+void AdvancedTextDomArea::setTheTextDomArea(TextDomArea* const duplicatedTextDom)
 {
 	this->_TheTextDomArea = duplicatedTextDom;
-	duplicatedTextDom->addDocumentModelChangedListener(&_PreferredSizeChangedListener);
 }
 
-AdvancedTextDomAreaRefPtr AdvancedTextDomArea::makeADuplicate()
+AdvancedTextDomAreaTransitPtr AdvancedTextDomArea::createDuplicate()
 {
 	AdvancedTextDomAreaRefPtr newPtr = AdvancedTextDomArea::create();
 	newPtr->setPreferredSize(Vec2f(400,400));
-	TextDomAreaRefPtr duplicatedTextDom = dynamic_cast<TextDomArea*>(getChildren(0))->getDuplicatedTextDomArea();
+	TextDomAreaRefPtr duplicatedTextDom = dynamic_cast<TextDomArea*>(getChildren(0))->createDuplicate();
 	newPtr->setTheTextDomArea(duplicatedTextDom);
 	newPtr->clearChildren();
 	newPtr->pushToChildren(duplicatedTextDom);
 	newPtr->setPreferredSize(duplicatedTextDom->getContentRequestedSize());
-	return newPtr;
+	return AdvancedTextDomAreaTransitPtr(newPtr);
 }
 
-void AdvancedTextDomArea::PreferredSizeChangedListener::changedUpdate(const DocumentModelChangedEventUnrecPtr e)
-{
-	_AdvancedTextDomArea->changedUpdate(e);
-}
-
-AdvancedTextDomArea::PreferredSizeChangedListener::PreferredSizeChangedListener(AdvancedTextDomAreaRefPtr _TheAdvancedTextDomArea)
-{
-	_AdvancedTextDomArea = _TheAdvancedTextDomArea;
-}
-
-void AdvancedTextDomArea::changedUpdate(const DocumentModelChangedEventUnrecPtr e)
-{
-	std::cout<<"child has been updated.";
-	if(getMFChildren()->size()>0)
-		setPreferredSize(dynamic_cast<TextDomArea*>(getChildren(0))->getPreferredSize());
-}
+//void AdvancedTextDomArea::changedUpdate(const DocumentModelChangedEventUnrecPtr e)
+//{
+//	if(getMFChildren()->size()>0)
+//		setPreferredSize(dynamic_cast<TextDomArea*>(getChildren(0))->getPreferredSize());
+//}
 
 
 
@@ -262,17 +283,23 @@ void AdvancedTextDomArea::changedUpdate(const DocumentModelChangedEventUnrecPtr 
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void AdvancedTextDomArea::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _TheTextDomArea = NULL;
+    _Font = NULL;
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 AdvancedTextDomArea::AdvancedTextDomArea(void) :
-    Inherited(),
-	_PreferredSizeChangedListener(this)
+    Inherited()
 {
 }
 
 AdvancedTextDomArea::AdvancedTextDomArea(const AdvancedTextDomArea &source) :
-    Inherited(source),
-	_PreferredSizeChangedListener(this)
+    Inherited(source)
 {
 }
 

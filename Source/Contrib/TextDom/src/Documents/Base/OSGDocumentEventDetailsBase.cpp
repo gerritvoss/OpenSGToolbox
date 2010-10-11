@@ -45,7 +45,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DocumentEvent!
+ **     class DocumentEventDetails!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -60,8 +60,8 @@
 
 #include "OSGDocument.h"                // Document Class
 
-#include "OSGDocumentEventBase.h"
-#include "OSGDocumentEvent.h"
+#include "OSGDocumentEventDetailsBase.h"
+#include "OSGDocumentEventDetails.h"
 
 #include <boost/bind.hpp>
 
@@ -75,7 +75,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class OSG::DocumentEvent
+/*! \class OSG::DocumentEventDetails
     
  */
 
@@ -83,15 +83,15 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var Document *      DocumentEventBase::_sfDocument
+/*! \var Document *      DocumentEventDetailsBase::_sfDocument
     
 */
 
-/*! \var Int32           DocumentEventBase::_sfOffset
+/*! \var Int32           DocumentEventDetailsBase::_sfOffset
     
 */
 
-/*! \var UInt32          DocumentEventBase::_sfLength
+/*! \var UInt32          DocumentEventDetailsBase::_sfLength
     
 */
 
@@ -101,24 +101,24 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<DocumentEvent *>::_type("DocumentEventP", "EventPtr");
+DataType FieldTraits<DocumentEventDetails *>::_type("DocumentEventDetailsPtr", "EventDetailsPtr");
 #endif
 
-OSG_FIELDTRAITS_GETTYPE(DocumentEvent *)
+OSG_FIELDTRAITS_GETTYPE(DocumentEventDetails *)
 
 OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
-                           DocumentEvent *,
+                           DocumentEventDetails *,
                            0);
 
 OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
-                           DocumentEvent *,
+                           DocumentEventDetails *,
                            0);
 
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
 
-void DocumentEventBase::classDescInserter(TypeObject &oType)
+void DocumentEventDetailsBase::classDescInserter(TypeObject &oType)
 {
     FieldDescriptionBase *pDesc = NULL;
 
@@ -130,8 +130,8 @@ void DocumentEventBase::classDescInserter(TypeObject &oType)
         DocumentFieldId, DocumentFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&DocumentEvent::editHandleDocument),
-        static_cast<FieldGetMethodSig >(&DocumentEvent::getHandleDocument));
+        static_cast<FieldEditMethodSig>(&DocumentEventDetails::editHandleDocument),
+        static_cast<FieldGetMethodSig >(&DocumentEventDetails::getHandleDocument));
 
     oType.addInitialDesc(pDesc);
 
@@ -142,8 +142,8 @@ void DocumentEventBase::classDescInserter(TypeObject &oType)
         OffsetFieldId, OffsetFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&DocumentEvent::editHandleOffset),
-        static_cast<FieldGetMethodSig >(&DocumentEvent::getHandleOffset));
+        static_cast<FieldEditMethodSig>(&DocumentEventDetails::editHandleOffset),
+        static_cast<FieldGetMethodSig >(&DocumentEventDetails::getHandleOffset));
 
     oType.addInitialDesc(pDesc);
 
@@ -154,29 +154,29 @@ void DocumentEventBase::classDescInserter(TypeObject &oType)
         LengthFieldId, LengthFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&DocumentEvent::editHandleLength),
-        static_cast<FieldGetMethodSig >(&DocumentEvent::getHandleLength));
+        static_cast<FieldEditMethodSig>(&DocumentEventDetails::editHandleLength),
+        static_cast<FieldGetMethodSig >(&DocumentEventDetails::getHandleLength));
 
     oType.addInitialDesc(pDesc);
 }
 
 
-DocumentEventBase::TypeObject DocumentEventBase::_type(
-    DocumentEventBase::getClassname(),
+DocumentEventDetailsBase::TypeObject DocumentEventDetailsBase::_type(
+    DocumentEventDetailsBase::getClassname(),
     Inherited::getClassname(),
     "NULL",
     0,
-    reinterpret_cast<PrototypeCreateF>(&DocumentEventBase::createEmptyLocal),
-    DocumentEvent::initMethod,
-    DocumentEvent::exitMethod,
-    reinterpret_cast<InitalInsertDescFunc>(&DocumentEvent::classDescInserter),
+    reinterpret_cast<PrototypeCreateF>(&DocumentEventDetailsBase::createEmptyLocal),
+    DocumentEventDetails::initMethod,
+    DocumentEventDetails::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DocumentEventDetails::classDescInserter),
     false,
     0,
     "<?xml version=\"1.0\"?>\n"
     "\n"
     "<FieldContainer\n"
-    "\tname=\"DocumentEvent\"\n"
-    "\tparent=\"Event\"\n"
+    "\tname=\"DocumentEventDetails\"\n"
+    "\tparent=\"EventDetails\"\n"
     "    library=\"ContribTextDom\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
@@ -185,6 +185,8 @@ DocumentEventBase::TypeObject DocumentEventBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    isBundle=\"true\"\n"
+    "\tsupportUnregisteredCreate=\"true\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "\t<Field\n"
@@ -226,58 +228,58 @@ DocumentEventBase::TypeObject DocumentEventBase::_type(
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DocumentEventBase::getType(void)
+FieldContainerType &DocumentEventDetailsBase::getType(void)
 {
     return _type;
 }
 
-const FieldContainerType &DocumentEventBase::getType(void) const
+const FieldContainerType &DocumentEventDetailsBase::getType(void) const
 {
     return _type;
 }
 
-UInt32 DocumentEventBase::getContainerSize(void) const
+UInt32 DocumentEventDetailsBase::getContainerSize(void) const
 {
-    return sizeof(DocumentEvent);
+    return sizeof(DocumentEventDetails);
 }
 
 /*------------------------- decorator get ------------------------------*/
 
 
-//! Get the DocumentEvent::_sfDocument field.
-const SFUnrecDocumentPtr *DocumentEventBase::getSFDocument(void) const
+//! Get the DocumentEventDetails::_sfDocument field.
+const SFUnrecDocumentPtr *DocumentEventDetailsBase::getSFDocument(void) const
 {
     return &_sfDocument;
 }
 
-SFUnrecDocumentPtr  *DocumentEventBase::editSFDocument       (void)
+SFUnrecDocumentPtr  *DocumentEventDetailsBase::editSFDocument       (void)
 {
     editSField(DocumentFieldMask);
 
     return &_sfDocument;
 }
 
-SFInt32 *DocumentEventBase::editSFOffset(void)
+SFInt32 *DocumentEventDetailsBase::editSFOffset(void)
 {
     editSField(OffsetFieldMask);
 
     return &_sfOffset;
 }
 
-const SFInt32 *DocumentEventBase::getSFOffset(void) const
+const SFInt32 *DocumentEventDetailsBase::getSFOffset(void) const
 {
     return &_sfOffset;
 }
 
 
-SFUInt32 *DocumentEventBase::editSFLength(void)
+SFUInt32 *DocumentEventDetailsBase::editSFLength(void)
 {
     editSField(LengthFieldMask);
 
     return &_sfLength;
 }
 
-const SFUInt32 *DocumentEventBase::getSFLength(void) const
+const SFUInt32 *DocumentEventDetailsBase::getSFLength(void) const
 {
     return &_sfLength;
 }
@@ -289,7 +291,7 @@ const SFUInt32 *DocumentEventBase::getSFLength(void) const
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DocumentEventBase::getBinSize(ConstFieldMaskArg whichField)
+UInt32 DocumentEventDetailsBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -309,7 +311,7 @@ UInt32 DocumentEventBase::getBinSize(ConstFieldMaskArg whichField)
     return returnValue;
 }
 
-void DocumentEventBase::copyToBin(BinaryDataHandler &pMem,
+void DocumentEventDetailsBase::copyToBin(BinaryDataHandler &pMem,
                                   ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -328,7 +330,7 @@ void DocumentEventBase::copyToBin(BinaryDataHandler &pMem,
     }
 }
 
-void DocumentEventBase::copyFromBin(BinaryDataHandler &pMem,
+void DocumentEventDetailsBase::copyFromBin(BinaryDataHandler &pMem,
                                     ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -348,58 +350,48 @@ void DocumentEventBase::copyFromBin(BinaryDataHandler &pMem,
 }
 
 //! create a new instance of the class
-DocumentEventTransitPtr DocumentEventBase::createLocal(BitVector bFlags)
+DocumentEventDetailsTransitPtr DocumentEventDetailsBase::createLocal(BitVector bFlags)
 {
-    DocumentEventTransitPtr fc;
+    DocumentEventDetailsTransitPtr fc;
 
     if(getClassType().getPrototype() != NULL)
     {
         FieldContainerTransitPtr tmpPtr =
             getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-        fc = dynamic_pointer_cast<DocumentEvent>(tmpPtr);
+        fc = dynamic_pointer_cast<DocumentEventDetails>(tmpPtr);
     }
 
     return fc;
 }
 
 //! create a new instance of the class, copy the container flags
-DocumentEventTransitPtr DocumentEventBase::createDependent(BitVector bFlags)
+DocumentEventDetailsTransitPtr DocumentEventDetailsBase::createDependent(BitVector bFlags)
 {
-    DocumentEventTransitPtr fc;
+    DocumentEventDetailsTransitPtr fc;
 
     if(getClassType().getPrototype() != NULL)
     {
         FieldContainerTransitPtr tmpPtr =
             getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-        fc = dynamic_pointer_cast<DocumentEvent>(tmpPtr);
+        fc = dynamic_pointer_cast<DocumentEventDetails>(tmpPtr);
     }
 
     return fc;
 }
 
 //! create a new instance of the class
-DocumentEventTransitPtr DocumentEventBase::create(void)
+DocumentEventDetailsTransitPtr DocumentEventDetailsBase::create(void)
 {
-    DocumentEventTransitPtr fc;
-
-    if(getClassType().getPrototype() != NULL)
-    {
-        FieldContainerTransitPtr tmpPtr =
-            getClassType().getPrototype()-> shallowCopy();
-
-        fc = dynamic_pointer_cast<DocumentEvent>(tmpPtr);
-    }
-
-    return fc;
+    return createLocal();
 }
 
-DocumentEvent *DocumentEventBase::createEmptyLocal(BitVector bFlags)
+DocumentEventDetails *DocumentEventDetailsBase::createEmptyLocal(BitVector bFlags)
 {
-    DocumentEvent *returnValue;
+    DocumentEventDetails *returnValue;
 
-    newPtr<DocumentEvent>(returnValue, bFlags);
+    newPtr<DocumentEventDetails>(returnValue, bFlags);
 
     returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
 
@@ -407,25 +399,35 @@ DocumentEvent *DocumentEventBase::createEmptyLocal(BitVector bFlags)
 }
 
 //! create an empty new instance of the class, do not copy the prototype
-DocumentEvent *DocumentEventBase::createEmpty(void)
+DocumentEventDetails *DocumentEventDetailsBase::createEmpty(void)
 {
-    DocumentEvent *returnValue;
+    return createEmptyLocal();
+}
 
-    newPtr<DocumentEvent>(returnValue, Thread::getCurrentLocalFlags());
+DocumentEventDetails *DocumentEventDetailsBase::createUnregistered(void)
+{
+    DocumentEventDetails *returnValue = new DocumentEventDetails;
 
+#ifdef OSG_MT_CPTR_ASPECT
+    returnValue->setupAspectStore();
+#endif
+    //Do not register with the FieldContainer Factory
+
+    returnValue->onCreate      (      );
+    returnValue->onCreateAspect(returnValue);
+    
     returnValue->_pFieldFlags->_bNamespaceMask &=
         ~Thread::getCurrentLocalFlags();
-
+    
     return returnValue;
 }
 
-
-FieldContainerTransitPtr DocumentEventBase::shallowCopyLocal(
+FieldContainerTransitPtr DocumentEventDetailsBase::shallowCopyLocal(
     BitVector bFlags) const
 {
-    DocumentEvent *tmpPtr;
+    DocumentEventDetails *tmpPtr;
 
-    newPtr(tmpPtr, dynamic_cast<const DocumentEvent *>(this), bFlags);
+    newPtr(tmpPtr, dynamic_cast<const DocumentEventDetails *>(this), bFlags);
 
     FieldContainerTransitPtr returnValue(tmpPtr);
 
@@ -434,12 +436,12 @@ FieldContainerTransitPtr DocumentEventBase::shallowCopyLocal(
     return returnValue;
 }
 
-FieldContainerTransitPtr DocumentEventBase::shallowCopyDependent(
+FieldContainerTransitPtr DocumentEventDetailsBase::shallowCopyDependent(
     BitVector bFlags) const
 {
-    DocumentEvent *tmpPtr;
+    DocumentEventDetails *tmpPtr;
 
-    newPtr(tmpPtr, dynamic_cast<const DocumentEvent *>(this), ~bFlags);
+    newPtr(tmpPtr, dynamic_cast<const DocumentEventDetails *>(this), ~bFlags);
 
     FieldContainerTransitPtr returnValue(tmpPtr);
 
@@ -448,27 +450,16 @@ FieldContainerTransitPtr DocumentEventBase::shallowCopyDependent(
     return returnValue;
 }
 
-FieldContainerTransitPtr DocumentEventBase::shallowCopy(void) const
+FieldContainerTransitPtr DocumentEventDetailsBase::shallowCopy(void) const
 {
-    DocumentEvent *tmpPtr;
-
-    newPtr(tmpPtr,
-           dynamic_cast<const DocumentEvent *>(this),
-           Thread::getCurrentLocalFlags());
-
-    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
-
-    FieldContainerTransitPtr returnValue(tmpPtr);
-
-    return returnValue;
+    return shallowCopyLocal();
 }
-
 
 
 
 /*------------------------- constructors ----------------------------------*/
 
-DocumentEventBase::DocumentEventBase(void) :
+DocumentEventDetailsBase::DocumentEventDetailsBase(void) :
     Inherited(),
     _sfDocument               (NULL),
     _sfOffset                 (Int32(-1)),
@@ -476,7 +467,7 @@ DocumentEventBase::DocumentEventBase(void) :
 {
 }
 
-DocumentEventBase::DocumentEventBase(const DocumentEventBase &source) :
+DocumentEventDetailsBase::DocumentEventDetailsBase(const DocumentEventDetailsBase &source) :
     Inherited(source),
     _sfDocument               (NULL),
     _sfOffset                 (source._sfOffset                 ),
@@ -487,34 +478,34 @@ DocumentEventBase::DocumentEventBase(const DocumentEventBase &source) :
 
 /*-------------------------- destructors ----------------------------------*/
 
-DocumentEventBase::~DocumentEventBase(void)
+DocumentEventDetailsBase::~DocumentEventDetailsBase(void)
 {
 }
 
-void DocumentEventBase::onCreate(const DocumentEvent *source)
+void DocumentEventDetailsBase::onCreate(const DocumentEventDetails *source)
 {
     Inherited::onCreate(source);
 
     if(source != NULL)
     {
-        DocumentEvent *pThis = static_cast<DocumentEvent *>(this);
+        DocumentEventDetails *pThis = static_cast<DocumentEventDetails *>(this);
 
         pThis->setDocument(source->getDocument());
     }
 }
 
-GetFieldHandlePtr DocumentEventBase::getHandleDocument        (void) const
+GetFieldHandlePtr DocumentEventDetailsBase::getHandleDocument        (void) const
 {
     SFUnrecDocumentPtr::GetHandlePtr returnValue(
         new  SFUnrecDocumentPtr::GetHandle(
              &_sfDocument,
              this->getType().getFieldDesc(DocumentFieldId),
-             const_cast<DocumentEventBase *>(this)));
+             const_cast<DocumentEventDetailsBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr DocumentEventBase::editHandleDocument       (void)
+EditFieldHandlePtr DocumentEventDetailsBase::editHandleDocument       (void)
 {
     SFUnrecDocumentPtr::EditHandlePtr returnValue(
         new  SFUnrecDocumentPtr::EditHandle(
@@ -523,26 +514,26 @@ EditFieldHandlePtr DocumentEventBase::editHandleDocument       (void)
              this));
 
     returnValue->setSetMethod(
-        boost::bind(&DocumentEvent::setDocument,
-                    static_cast<DocumentEvent *>(this), _1));
+        boost::bind(&DocumentEventDetails::setDocument,
+                    static_cast<DocumentEventDetails *>(this), _1));
 
     editSField(DocumentFieldMask);
 
     return returnValue;
 }
 
-GetFieldHandlePtr DocumentEventBase::getHandleOffset          (void) const
+GetFieldHandlePtr DocumentEventDetailsBase::getHandleOffset          (void) const
 {
     SFInt32::GetHandlePtr returnValue(
         new  SFInt32::GetHandle(
              &_sfOffset,
              this->getType().getFieldDesc(OffsetFieldId),
-             const_cast<DocumentEventBase *>(this)));
+             const_cast<DocumentEventDetailsBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr DocumentEventBase::editHandleOffset         (void)
+EditFieldHandlePtr DocumentEventDetailsBase::editHandleOffset         (void)
 {
     SFInt32::EditHandlePtr returnValue(
         new  SFInt32::EditHandle(
@@ -556,18 +547,18 @@ EditFieldHandlePtr DocumentEventBase::editHandleOffset         (void)
     return returnValue;
 }
 
-GetFieldHandlePtr DocumentEventBase::getHandleLength          (void) const
+GetFieldHandlePtr DocumentEventDetailsBase::getHandleLength          (void) const
 {
     SFUInt32::GetHandlePtr returnValue(
         new  SFUInt32::GetHandle(
              &_sfLength,
              this->getType().getFieldDesc(LengthFieldId),
-             const_cast<DocumentEventBase *>(this)));
+             const_cast<DocumentEventDetailsBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr DocumentEventBase::editHandleLength         (void)
+EditFieldHandlePtr DocumentEventDetailsBase::editHandleLength         (void)
 {
     SFUInt32::EditHandlePtr returnValue(
         new  SFUInt32::EditHandle(
@@ -582,16 +573,17 @@ EditFieldHandlePtr DocumentEventBase::editHandleLength         (void)
 }
 
 
+
 #ifdef OSG_MT_CPTR_ASPECT
-void DocumentEventBase::execSyncV(      FieldContainer    &oFrom,
+void DocumentEventDetailsBase::execSyncV(      FieldContainer    &oFrom,
                                         ConstFieldMaskArg  whichField,
                                         AspectOffsetStore &oOffsets,
                                         ConstFieldMaskArg  syncMode,
                                   const UInt32             uiSyncInfo)
 {
-    DocumentEvent *pThis = static_cast<DocumentEvent *>(this);
+    DocumentEventDetails *pThis = static_cast<DocumentEventDetails *>(this);
 
-    pThis->execSync(static_cast<DocumentEvent *>(&oFrom),
+    pThis->execSync(static_cast<DocumentEventDetails *>(&oFrom),
                     whichField,
                     oOffsets,
                     syncMode,
@@ -601,24 +593,24 @@ void DocumentEventBase::execSyncV(      FieldContainer    &oFrom,
 
 
 #ifdef OSG_MT_CPTR_ASPECT
-FieldContainer *DocumentEventBase::createAspectCopy(
+FieldContainer *DocumentEventDetailsBase::createAspectCopy(
     const FieldContainer *pRefAspect) const
 {
-    DocumentEvent *returnValue;
+    DocumentEventDetails *returnValue;
 
     newAspectCopy(returnValue,
-                  dynamic_cast<const DocumentEvent *>(pRefAspect),
-                  dynamic_cast<const DocumentEvent *>(this));
+                  dynamic_cast<const DocumentEventDetails *>(pRefAspect),
+                  dynamic_cast<const DocumentEventDetails *>(this));
 
     return returnValue;
 }
 #endif
 
-void DocumentEventBase::resolveLinks(void)
+void DocumentEventDetailsBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
 
-    static_cast<DocumentEvent *>(this)->setDocument(NULL);
+    static_cast<DocumentEventDetails *>(this)->setDocument(NULL);
 
 
 }

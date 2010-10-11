@@ -71,18 +71,18 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextFileHandlerBase
      progresscbfp getReadProgressCB(void);
  
      /*---------------------------------------------------------------------*/
-     virtual DocumentRefPtr		read(std::istream &InputStream, const std::string& Extension);
+     virtual DocumentTransitPtr		read(std::istream &InputStream, const std::string& Extension);
   
-	 virtual DocumentRefPtr		read(const  BoostPath& FilePath);
+	 virtual DocumentTransitPtr		read(const  BoostPath& FilePath);
 	
-	 virtual DocumentRefPtr		forceRead(const  BoostPath& FilePath);
+	 virtual DocumentTransitPtr		forceRead(const  BoostPath& FilePath);
 	 
 
   
      /*---------------------------------------------------------------------*/
-	 virtual bool write(DocumentRefPtr Doc, std::ostream &OutputStream, const std::string& Extension,bool Compress = false);
-     virtual bool write(DocumentRefPtr Doc, const BoostPath& FilePath, bool Compress = false);
-	 virtual bool forceWrite(DocumentRefPtr Doc, const BoostPath& FilePath, bool Compress = false);
+	 virtual bool write(Document* const Doc, std::ostream &OutputStream, const std::string& Extension,bool Compress = false);
+     virtual bool write(Document* const Doc, const BoostPath& FilePath, bool Compress = false);
+	 virtual bool forceWrite(Document* const Doc, const BoostPath& FilePath, bool Compress = false);
  
      /*---------------------------------------------------------------------*/
      //virtual bool               setOptions(const Char8 *suffix, const Char8 *options);

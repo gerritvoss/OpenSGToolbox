@@ -4,48 +4,54 @@
     name="SearchWindow"
     parent="InternalWindow"
     library="ContribTextDom"
-    pointerfieldtypes="both"
+    pointerfielddetailsTypes="both"
     structure="concrete"
     systemcomponent="true"
     parentsystemcomponent="true"
     decoratable="false"
-    useLocalIncludes="true"
+    useLocalIncludes="false"
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)"
     parentProducer="AbstractWindow"
 >
 A TextDom Search And Replace Dialog Window.
 
-	<ProducedMethod
+	<ProducedEvent
 		name="SearchWindowClosing"
-		type="SearchWindowEventPtr"
+		detailsType="SearchWindowEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="SearchWindowClosed"
-		type="SearchWindowEventPtr"
+		detailsType="SearchWindowEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="SearchButtonClicked"
-		type="SearchWindowEventPtr"
+		detailsType="SearchWindowEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ReplaceButtonClicked"
-		type="SearchWindowEventPtr"
+		detailsType="SearchWindowEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="ReplaceAllButtonClicked"
-		type="SearchWindowEventPtr"
+		detailsType="SearchWindowEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="BookmarkAllButtonClicked"
-		type="SearchWindowEventPtr"
+		detailsType="SearchWindowEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 
 </FieldContainer>
 

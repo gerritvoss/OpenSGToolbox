@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGDOCUMENTEVENTFIELDS_H_
-#define _OSGDOCUMENTEVENTFIELDS_H_
+#ifndef _OSGDOCUMENTEVENTDETAILSFIELDS_H_
+#define _OSGDOCUMENTEVENTDETAILSFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,16 +64,16 @@
 
 OSG_BEGIN_NAMESPACE
 
-class DocumentEvent;
+class DocumentEventDetails;
 
-OSG_GEN_CONTAINERPTR(DocumentEvent);
+OSG_GEN_CONTAINERPTR(DocumentEventDetails);
 
 /*! \ingroup GrpContribTextDomFieldTraits
     \ingroup GrpLibOSGContribTextDom
  */
 template <>
-struct FieldTraits<DocumentEvent *> :
-    public FieldTraitsFCPtrBase<DocumentEvent *>
+struct FieldTraits<DocumentEventDetails *> :
+    public FieldTraitsFCPtrBase<DocumentEventDetails *>
 {
   private:
 
@@ -81,7 +81,7 @@ struct FieldTraits<DocumentEvent *> :
 
   public:
 
-    typedef FieldTraits<DocumentEvent *>  Self;
+    typedef FieldTraits<DocumentEventDetails *>  Self;
 
     enum                        { Convertible = NotConvertible };
 
@@ -90,89 +90,89 @@ struct FieldTraits<DocumentEvent *> :
     template<typename RefCountPolicy> inline
     static const Char8    *getSName     (void);
 
-//    static const char *getSName(void) { return "SFDocumentEventPtr"; }
+//    static const char *getSName(void) { return "SFDocumentEventDetailsPtr"; }
     template<typename RefCountPolicy> inline
     static const Char8    *getMName     (void);
 
-//    static const char *getMName(void) { return "MFDocumentEventPtr"; }
+//    static const char *getMName(void) { return "MFDocumentEventDetailsPtr"; }
 };
 
 template<> inline
-const Char8 *FieldTraits<DocumentEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<DocumentEventDetails *, 0>::getSName<RecordedRefCountPolicy>(void)
 {
-    return "SFRecDocumentEventPtr"; 
+    return "SFRecDocumentEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<DocumentEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<DocumentEventDetails *, 0>::getSName<UnrecordedRefCountPolicy>(void)
 {
-    return "SFUnrecDocumentEventPtr"; 
+    return "SFUnrecDocumentEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<DocumentEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+const Char8 *FieldTraits<DocumentEventDetails *, 0>::getSName<WeakRefCountPolicy>(void)
 {
-    return "SFWeakDocumentEventPtr"; 
+    return "SFWeakDocumentEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<DocumentEvent *, 0>::getSName<NoRefCountPolicy>(void)
+const Char8 *FieldTraits<DocumentEventDetails *, 0>::getSName<NoRefCountPolicy>(void)
 {
-    return "SFUnrefdDocumentEventPtr"; 
+    return "SFUnrefdDocumentEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<DocumentEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<DocumentEventDetails *, 0>::getMName<RecordedRefCountPolicy>(void)
 {
-    return "MFRecDocumentEventPtr"; 
+    return "MFRecDocumentEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<DocumentEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<DocumentEventDetails *, 0>::getMName<UnrecordedRefCountPolicy>(void)
 {
-    return "MFUnrecDocumentEventPtr"; 
+    return "MFUnrecDocumentEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<DocumentEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+const Char8 *FieldTraits<DocumentEventDetails *, 0>::getMName<WeakRefCountPolicy>(void)
 {
-    return "MFWeakDocumentEventPtr"; 
+    return "MFWeakDocumentEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<DocumentEvent *, 0>::getMName<NoRefCountPolicy>(void)
+const Char8 *FieldTraits<DocumentEventDetails *, 0>::getMName<NoRefCountPolicy>(void)
 {
-    return "MFUnrefdDocumentEventPtr"; 
+    return "MFUnrefdDocumentEventDetailsPtr"; 
 }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<DocumentEvent *,
-                      RecordedRefCountPolicy  > SFRecDocumentEventPtr;
+typedef PointerSField<DocumentEventDetails *,
+                      RecordedRefCountPolicy  > SFRecDocumentEventDetailsPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<DocumentEvent *,
-                      UnrecordedRefCountPolicy> SFUnrecDocumentEventPtr;
+typedef PointerSField<DocumentEventDetails *,
+                      UnrecordedRefCountPolicy> SFUnrecDocumentEventDetailsPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<DocumentEvent *,
-                      WeakRefCountPolicy      > SFWeakDocumentEventPtr;
+typedef PointerSField<DocumentEventDetails *,
+                      WeakRefCountPolicy      > SFWeakDocumentEventDetailsPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<DocumentEvent *,
-                      NoRefCountPolicy        > SFUncountedDocumentEventPtr;
+typedef PointerSField<DocumentEventDetails *,
+                      NoRefCountPolicy        > SFUncountedDocumentEventDetailsPtr;
 
 
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<DocumentEvent *,
-                      RecordedRefCountPolicy  > MFRecDocumentEventPtr;
+typedef PointerMField<DocumentEventDetails *,
+                      RecordedRefCountPolicy  > MFRecDocumentEventDetailsPtr;
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<DocumentEvent *,
-                      UnrecordedRefCountPolicy> MFUnrecDocumentEventPtr;
+typedef PointerMField<DocumentEventDetails *,
+                      UnrecordedRefCountPolicy> MFUnrecDocumentEventDetailsPtr;
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<DocumentEvent *,
-                      WeakRefCountPolicy      > MFWeakDocumentEventPtr;
+typedef PointerMField<DocumentEventDetails *,
+                      WeakRefCountPolicy      > MFWeakDocumentEventDetailsPtr;
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<DocumentEvent *,
-                      NoRefCountPolicy        > MFUncountedDocumentEventPtr;
+typedef PointerMField<DocumentEventDetails *,
+                      NoRefCountPolicy        > MFUncountedDocumentEventDetailsPtr;
 
 
 
@@ -180,38 +180,38 @@ typedef PointerMField<DocumentEvent *,
 #else // these are the doxygen hacks
 
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFRecDocumentEventPtr : 
-    public PointerSField<DocumentEvent *,
+struct SFRecDocumentEventDetailsPtr : 
+    public PointerSField<DocumentEventDetails *,
                          RecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUnrecDocumentEventPtr : 
-    public PointerSField<DocumentEvent *,
+struct SFUnrecDocumentEventDetailsPtr : 
+    public PointerSField<DocumentEventDetails *,
                          UnrecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFWeakDocumentEventPtr :
-    public PointerSField<DocumentEvent *,
+struct SFWeakDocumentEventDetailsPtr :
+    public PointerSField<DocumentEventDetails *,
                          WeakRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUncountedDocumentEventPtr :
-    public PointerSField<DocumentEvent *,
+struct SFUncountedDocumentEventDetailsPtr :
+    public PointerSField<DocumentEventDetails *,
                          NoRefCountPolicy> {};
 
 
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFRecDocumentEventPtr :
-    public PointerMField<DocumentEvent *,
+struct MFRecDocumentEventDetailsPtr :
+    public PointerMField<DocumentEventDetails *,
                          RecordedRefCountPolicy  > {};
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUnrecDocumentEventPtr :
-    public PointerMField<DocumentEvent *,
+struct MFUnrecDocumentEventDetailsPtr :
+    public PointerMField<DocumentEventDetails *,
                          UnrecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFWeakDocumentEventPtr :
-    public PointerMField<DocumentEvent *,
+struct MFWeakDocumentEventDetailsPtr :
+    public PointerMField<DocumentEventDetails *,
                          WeakRefCountPolicy      > {};
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUncountedDocumentEventPtr :
-    public PointerMField<DocumentEvent *,
+struct MFUncountedDocumentEventDetailsPtr :
+    public PointerMField<DocumentEventDetails *,
                          NoRefCountPolicy        > {};
 
 
@@ -220,4 +220,4 @@ struct MFUncountedDocumentEventPtr :
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGDOCUMENTEVENTFIELDS_H_ */
+#endif /* _OSGDOCUMENTEVENTDETAILSFIELDS_H_ */

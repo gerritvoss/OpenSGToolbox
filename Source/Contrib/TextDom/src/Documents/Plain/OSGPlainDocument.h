@@ -45,7 +45,7 @@
 #include "OSGPlainDocumentBase.h"
 #include "OSGPlainDocumentBranchElementFields.h"
 #include "OSGPlainDocumentLeafElementFields.h"
-#include "styleddocumentattributes.h"
+#include "OSGDocumentElementAttributes.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -64,8 +64,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocument : public PlainDocumentBase
     typedef PlainDocumentBase Inherited;
     typedef PlainDocument     Self;
 
-
-	virtual bool isA(std::string);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -89,7 +87,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocument : public PlainDocumentBase
     UInt32 createPosition(Int32 offs);
 
     //Returns the root element that views should be based upon, unless some other mechanism for assigning views to element structures is provided.
-    ElementRefPtr getDefaultRootElement(void) const;
+    Element* getDefaultRootElement(void) const;
 
     //Returns a position that represents the end of the document.
     UInt32 getEndPosition(void) const;
@@ -101,7 +99,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocument : public PlainDocumentBase
     //UInt32 getProperty(const std::string& key) const;
 
     //Returns all of the root elements that are defined.
-    std::vector<ElementRefPtr> getRootElements(void);
+    std::vector<Element*> getRootElements(void);
 
     //Returns a position that represents the start of the document.
     UInt64 getStartPosition(void) const;
@@ -114,18 +112,18 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocument : public PlainDocumentBase
 
 	void deleteCharacter(UInt32 elementIndex,UInt32 offsetInChild);
 
-	void addTextAsNewElementToDocument(const std::string& str, TextWithProps& properties,bool createFreshDocument);
+	void addTextAsNewElementToDocument(const std::string& str, DocumentElementAttribute& properties,bool createFreshDocument);
     //Inserts a string of content.
-    void insertString(UInt32 offset, const std::string& str, TextWithProps& properties);
+    void insertString(UInt32 offset, const std::string& str, DocumentElementAttribute& properties);
 
-	void insertCharacter(UInt32 offset, const char character, TextWithProps& properties);
+	void insertCharacter(UInt32 offset, const char character, DocumentElementAttribute& properties);
 
-	void insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, TextWithProps& properties);
+	void insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, DocumentElementAttribute& properties);
 
 
-	void removeElement(UInt32 leafElementIndex,PlainDocumentBranchElementRefPtr rootElement);
+	void removeElement(UInt32 leafElementIndex,PlainDocumentBranchElement* const rootElement);
 
-	void addElements(Int32 theLeafElementIndex,std::string theCharactersBefore,std::string theCharactersAfter,std::vector<std::string> &setOfWords,PlainDocumentBranchElementRefPtr rootElement);
+	void addElements(Int32 theLeafElementIndex,std::string theCharactersBefore,std::string theCharactersAfter,std::vector<std::string> &setOfWords,PlainDocumentBranchElement* const rootElement);
 
 	void deleteCharacters(UInt32 lesserIndex,UInt32 lesserOffset,UInt32 greaterIndex,UInt32 greaterOffset);
     //Associates a property with the document.
@@ -148,7 +146,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocument : public PlainDocumentBase
     //const std::map<std::string,UInt32>& getDocumentProperties(void) const;
 
     //Get the paragraph element containing the given position.
-    //ElementRefPtr getParagraphElement(UInt32 pos) const;
+    //Element* getParagraphElement(UInt32 pos) const;
 
     //Acquires a lock to begin reading some state from the document.
     //void readLock(void);
@@ -157,7 +155,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocument : public PlainDocumentBase
     //void readUnlock(void);
 
     //Deletes the region of text from offset to offset + length, and replaces it with text.
-    void replace(Int32 offset, Int32 length, const std::string& str, TextWithProps& properties);
+    void replace(Int32 offset, Int32 length, const std::string& str, DocumentElementAttribute& properties);
 
     //Sets the asynchronous loading priority.
     //void setAsynchronousLoadPriority(int p);
@@ -177,10 +175,10 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocument : public PlainDocumentBase
 	void tokenize(std::string sentence,std::vector<std::string> & setOfWords);
 
     //Creates a document branch element, that can contain other elements.
-    //ElementRefPtr createBranchElement(ElementRefPtr parent, const std::map<std::string,UInt32>& a) const;
+    //Element* createBranchElement(Element* const parent, const std::map<std::string,UInt32>& a) const;
 
     //Creates a document leaf element.
-    //ElementRefPtr createLeafElement(ElementRefPtr parent, const std::map<std::string,UInt32>& a, Int32 p0, Int32 p1) const;
+    //Element* createLeafElement(Element* const parent, const std::map<std::string,UInt32>& a, Int32 p0, Int32 p1) const;
 
 
     // Variables should all be in PlainDocumentBase.
@@ -212,7 +210,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocument : public PlainDocumentBase
   private:
 
   	UInt32 _DocumentSize;
-	std::vector<ElementRefPtr> _RootElements;
 
     friend class FieldContainer;
     friend class PlainDocumentBase;

@@ -82,7 +82,7 @@ inline Real32 FixedHeightLayoutManager::getCaretYPosition(void)
 	return _CaretYPosition;
 }
 
-inline PlainDocumentBranchElementRefPtr FixedHeightLayoutManager::getRootElement(void)
+inline Element* FixedHeightLayoutManager::getRootElement(void)
 {
 	return rootElement;
 }

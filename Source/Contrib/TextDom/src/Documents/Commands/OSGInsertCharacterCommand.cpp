@@ -46,7 +46,11 @@
 
 #include "OSGInsertCharacterCommand.h"
 
-#include "OSGNameAttachment.h"
+#include "OSGElement.h"
+#include "OSGGlyphView.h"
+#include "OSGTextDomArea.h"
+#include "OSGTextDomLayoutManager.h"
+#include "OSGPlainDocument.h"
 
 
 OSG_USING_NAMESPACE
@@ -69,7 +73,7 @@ CommandType InsertCharacterCommand::_Type("InsertCharacterCommand", "UndoableCom
  *                           Class methods                                 *
 \***************************************************************************/
 
-InsertCharacterCommandPtr InsertCharacterCommand::create(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,char theCharacter,UInt32 line,UInt32 index)
+InsertCharacterCommandPtr InsertCharacterCommand::create(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,char theCharacter,UInt32 line,UInt32 index)
 {
 	return RefPtr(new InsertCharacterCommand(Manager,DocumentModel,theCharacter,line,index));
 }
@@ -80,7 +84,7 @@ InsertCharacterCommandPtr InsertCharacterCommand::create(FixedHeightLayoutManage
 
 void InsertCharacterCommand::execute(void)
 {
-	TextWithProps temp;
+	DocumentElementAttribute temp;
 	if(_theOriginalCaretLine == -1 || _theOriginalCaretIndex == -1)
 	{
 		_theOriginalCaretIndex = _Manager->getCaretIndex();
@@ -124,7 +128,7 @@ std::string InsertCharacterCommand::getPresentationName(void) const
 
 void InsertCharacterCommand::redo(void)
 {
-	TextWithProps temp;
+	DocumentElementAttribute temp;
 	_Manager->setCaretIndexAndLine(_theOriginalCaretIndex,_theOriginalCaretLine);
 
     if(_TheCharacter == '\n')

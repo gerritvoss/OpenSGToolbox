@@ -44,9 +44,14 @@
 
 #include "OSGConfig.h"
 
-#include "OSGSetTextCommand.h"
 
-#include "OSGNameAttachment.h"
+#include "OSGPlainDocumentLeafElement.h"
+#include "OSGElement.h"
+#include "OSGGlyphView.h"
+#include "OSGTextDomArea.h"
+#include "OSGTextDomLayoutManager.h"
+#include "OSGPlainDocument.h"
+#include "OSGSetTextCommand.h"
 
 
 OSG_USING_NAMESPACE
@@ -69,7 +74,7 @@ CommandType SetTextCommand::_Type("SetTextCommand", "UndoableCommand");
  *                           Class methods                                 *
 \***************************************************************************/
 
-SetTextCommandPtr SetTextCommand::create(PlainDocumentLeafElementRefPtr element,std::string newString)
+SetTextCommandPtr SetTextCommand::create(ElementRefPtr element,std::string newString)
 {
 	return RefPtr(new SetTextCommand(element,newString));
 }
@@ -82,8 +87,8 @@ void SetTextCommand::execute(void)
 {
 	if(_TheElement)
 	{
-		_TheOriginalString = _TheElement->getText();
-		_TheElement->setText(_TheNewString);
+		_TheOriginalString = dynamic_pointer_cast<PlainDocumentLeafElement>(_TheElement)->getText();
+		dynamic_pointer_cast<PlainDocumentLeafElement>(_TheElement)->setText(_TheNewString);
 	}
 	_HasBeenDone = true;
 }
@@ -102,7 +107,7 @@ void SetTextCommand::redo(void)
 {
 	if(_TheElement)
 	{
-		_TheElement->setText(_TheNewString);
+		dynamic_pointer_cast<PlainDocumentLeafElement>(_TheElement)->setText(_TheNewString);
 	}
 	Inherited::redo();
 }
@@ -111,7 +116,7 @@ void SetTextCommand::undo(void)
 {
 	if(_TheElement)
 	{
-		_TheElement->setText(_TheOriginalString);
+		dynamic_pointer_cast<PlainDocumentLeafElement>(_TheElement)->setText(_TheOriginalString);
 	}
 	Inherited::undo();
 }

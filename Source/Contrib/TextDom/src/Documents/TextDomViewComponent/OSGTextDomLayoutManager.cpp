@@ -47,8 +47,9 @@
 
 #include <OSGConfig.h>
 
-#include "OSGTextDomLayoutManager.h"
+#include "OSGGlyphView.h"
 #include "OSGTextDomArea.h"
+#include "OSGTextDomLayoutManager.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +79,11 @@ void TextDomLayoutManager::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+TextDomArea* TextDomLayoutManager::getParentTextDomArea(void) const
+{
+    return dynamic_cast<TextDomArea*>(_sfParentTextDomArea.getValue());
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

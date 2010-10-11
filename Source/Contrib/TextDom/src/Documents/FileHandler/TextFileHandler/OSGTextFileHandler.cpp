@@ -200,7 +200,7 @@ std::vector<std::string> TextFileHandlerBase::getSuffixList(UInt32 flags) const
  }
 
 
- DocumentRefPtr TextFileHandlerBase::read(std::istream &InputStream, const std::string& Extension)
+ DocumentTransitPtr TextFileHandlerBase::read(std::istream &InputStream, const std::string& Extension)
  {
 	 DocumentRefPtr Result;
 	 //Get the FileType for this extension
@@ -210,7 +210,7 @@ std::vector<std::string> TextFileHandlerBase::getSuffixList(UInt32 flags) const
 	 if(TheFileType == NULL)
 	 {
 		SWARNING << "TextFileHandlerBase::read(): Cannot read Field Container stream, because no File types support " << Extension <<  " extension." << std::endl;
-		return Result;
+		return DocumentTransitPtr(NULL);
 	 }
 	 else
 	 {
@@ -219,17 +219,17 @@ std::vector<std::string> TextFileHandlerBase::getSuffixList(UInt32 flags) const
 		 Result = TheFileType->read(InputStream, Extension);
 		 stopReadProgressThread();
 	 }
-	 return Result;
+	 return DocumentTransitPtr(Result);
  }
 
- DocumentRefPtr TextFileHandlerBase::read(const BoostPath& FilePath)
+ DocumentTransitPtr TextFileHandlerBase::read(const BoostPath& FilePath)
  {
 	 DocumentRefPtr Result;
 	 //Determine if the file exists
 	 if(!boost::filesystem::exists(FilePath))
 	 {
 		SWARNING << "TextFileHandlerBase::read(): " << FilePath.string() << " does not exists." << std::endl;
-		return Result;
+		return DocumentTransitPtr(NULL);
 	 }
 
 	 //Determine the file extension
@@ -247,7 +247,7 @@ std::vector<std::string> TextFileHandlerBase::getSuffixList(UInt32 flags) const
 	 if(TheFileType == NULL)
 	 {
 		SWARNING << "TextFileHandlerBase::read(): Cannot read Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
-		return Result;
+		return DocumentTransitPtr(NULL);
 	 }
 	 else
 	 {
@@ -257,7 +257,7 @@ std::vector<std::string> TextFileHandlerBase::getSuffixList(UInt32 flags) const
 		 if(!InputStream)
 		 {
 			SWARNING << "TextFileHandlerBase::read(): Couldn't open input stream for file " << FilePath.string() << std::endl;
-			return Result;
+			return DocumentTransitPtr(NULL);
 		 }
 		 else
 		 {
@@ -270,18 +270,18 @@ std::vector<std::string> TextFileHandlerBase::getSuffixList(UInt32 flags) const
 		 }
 	 }
 
-	 return Result;
+	 return DocumentTransitPtr(Result);
  }
 
  
- DocumentRefPtr TextFileHandlerBase::forceRead(const BoostPath& FilePath)
+ DocumentTransitPtr TextFileHandlerBase::forceRead(const BoostPath& FilePath)
  {
 	 DocumentRefPtr Result;
 	 //Determine if the file exists
 	 if(!boost::filesystem::exists(FilePath))
 	 {
 		SWARNING << "TextFileHandlerBase::read(): " << FilePath.string() << " does not exists." << std::endl;
-		return Result;
+		return DocumentTransitPtr(NULL);
 	 }
 
 	 //Determine the file extension
@@ -299,7 +299,7 @@ std::vector<std::string> TextFileHandlerBase::getSuffixList(UInt32 flags) const
 	 if(TheFileType == NULL)
 	 {
 		SWARNING << "TextFileHandlerBase::read(): Cannot read Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
-		return Result;
+		return DocumentTransitPtr(NULL);
 	 }
 	 else
 	 {
@@ -309,7 +309,7 @@ std::vector<std::string> TextFileHandlerBase::getSuffixList(UInt32 flags) const
 		 if(!InputStream)
 		 {
 			SWARNING << "TextFileHandlerBase::read(): Couldn't open input stream for file " << FilePath.string() << std::endl;
-			return Result;
+			return DocumentTransitPtr(NULL);
 		 }
 		 else
 		 {
@@ -322,10 +322,10 @@ std::vector<std::string> TextFileHandlerBase::getSuffixList(UInt32 flags) const
 		 }
 	 }
 
-	 return Result;
+	return DocumentTransitPtr(Result);
  }
 
-bool TextFileHandlerBase::write(DocumentRefPtr Doc, std::ostream &OutputStream, const std::string& Extension,bool Compress)
+bool TextFileHandlerBase::write(Document* const Doc, std::ostream &OutputStream, const std::string& Extension,bool Compress)
 {
 	 //Get the FileType for this extension
 	 TextFileTypeP TheFileType(getFileType(Extension, TextFileType::OSG_WRITE_SUPPORTED));
@@ -348,7 +348,7 @@ bool TextFileHandlerBase::write(DocumentRefPtr Doc, std::ostream &OutputStream, 
 	 }
 }
 
-bool TextFileHandlerBase::write(DocumentRefPtr Doc, const BoostPath& FilePath, bool Compress)
+bool TextFileHandlerBase::write(Document* const Doc, const BoostPath& FilePath, bool Compress)
 {
 	 //Determine the file extension
 	 std::string Extension(boost::filesystem::extension(FilePath));
@@ -387,7 +387,7 @@ bool TextFileHandlerBase::write(DocumentRefPtr Doc, const BoostPath& FilePath, b
 }
 
 
-bool TextFileHandlerBase::forceWrite(DocumentRefPtr Doc, const BoostPath& FilePath, bool Compress)
+bool TextFileHandlerBase::forceWrite(Document* const Doc, const BoostPath& FilePath, bool Compress)
 {
 	 //Determine the file extension
 	 std::string Extension(boost::filesystem::extension(FilePath));

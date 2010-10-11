@@ -45,7 +45,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class SearchWindowEvent!
+ **     class SearchWindowEventDetails!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -59,8 +59,8 @@
 
 
 
-#include "OSGSearchWindowEventBase.h"
-#include "OSGSearchWindowEvent.h"
+#include "OSGSearchWindowEventDetailsBase.h"
+#include "OSGSearchWindowEventDetails.h"
 
 #include <boost/bind.hpp>
 
@@ -74,7 +74,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class OSG::SearchWindowEvent
+/*! \class OSG::SearchWindowEventDetails
     
  */
 
@@ -82,15 +82,15 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var UInt8           SearchWindowEventBase::_sfOption
+/*! \var UInt8           SearchWindowEventDetailsBase::_sfOption
     
 */
 
-/*! \var std::string     SearchWindowEventBase::_sfSearchText
+/*! \var std::string     SearchWindowEventDetailsBase::_sfSearchText
     
 */
 
-/*! \var std::string     SearchWindowEventBase::_sfReplaceText
+/*! \var std::string     SearchWindowEventDetailsBase::_sfReplaceText
     
 */
 
@@ -100,24 +100,21 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<SearchWindowEvent *>::_type("SearchWindowEventPtr", "EventPtr");
+DataType FieldTraits<SearchWindowEventDetails *>::_type("SearchWindowEventDetailsPtr", "EventDetailsPtr");
 #endif
 
-OSG_FIELDTRAITS_GETTYPE(SearchWindowEvent *)
+OSG_FIELDTRAITS_GETTYPE(SearchWindowEventDetails *)
 
 OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
-                           SearchWindowEvent *,
+                           SearchWindowEventDetails *,
                            0);
 
-OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
-                           SearchWindowEvent *,
-                           0);
 
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
 
-void SearchWindowEventBase::classDescInserter(TypeObject &oType)
+void SearchWindowEventDetailsBase::classDescInserter(TypeObject &oType)
 {
     FieldDescriptionBase *pDesc = NULL;
 
@@ -129,8 +126,8 @@ void SearchWindowEventBase::classDescInserter(TypeObject &oType)
         OptionFieldId, OptionFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&SearchWindowEvent::editHandleOption),
-        static_cast<FieldGetMethodSig >(&SearchWindowEvent::getHandleOption));
+        static_cast<FieldEditMethodSig>(&SearchWindowEventDetails::editHandleOption),
+        static_cast<FieldGetMethodSig >(&SearchWindowEventDetails::getHandleOption));
 
     oType.addInitialDesc(pDesc);
 
@@ -141,8 +138,8 @@ void SearchWindowEventBase::classDescInserter(TypeObject &oType)
         SearchTextFieldId, SearchTextFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&SearchWindowEvent::editHandleSearchText),
-        static_cast<FieldGetMethodSig >(&SearchWindowEvent::getHandleSearchText));
+        static_cast<FieldEditMethodSig>(&SearchWindowEventDetails::editHandleSearchText),
+        static_cast<FieldGetMethodSig >(&SearchWindowEventDetails::getHandleSearchText));
 
     oType.addInitialDesc(pDesc);
 
@@ -153,38 +150,40 @@ void SearchWindowEventBase::classDescInserter(TypeObject &oType)
         ReplaceTextFieldId, ReplaceTextFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&SearchWindowEvent::editHandleReplaceText),
-        static_cast<FieldGetMethodSig >(&SearchWindowEvent::getHandleReplaceText));
+        static_cast<FieldEditMethodSig>(&SearchWindowEventDetails::editHandleReplaceText),
+        static_cast<FieldGetMethodSig >(&SearchWindowEventDetails::getHandleReplaceText));
 
     oType.addInitialDesc(pDesc);
 }
 
 
-SearchWindowEventBase::TypeObject SearchWindowEventBase::_type(
-    SearchWindowEventBase::getClassname(),
+SearchWindowEventDetailsBase::TypeObject SearchWindowEventDetailsBase::_type(
+    SearchWindowEventDetailsBase::getClassname(),
     Inherited::getClassname(),
     "NULL",
     0,
-    reinterpret_cast<PrototypeCreateF>(&SearchWindowEventBase::createEmptyLocal),
-    SearchWindowEvent::initMethod,
-    SearchWindowEvent::exitMethod,
-    reinterpret_cast<InitalInsertDescFunc>(&SearchWindowEvent::classDescInserter),
+    reinterpret_cast<PrototypeCreateF>(&SearchWindowEventDetailsBase::createEmptyLocal),
+    SearchWindowEventDetails::initMethod,
+    SearchWindowEventDetails::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SearchWindowEventDetails::classDescInserter),
     false,
     0,
     "<?xml version=\"1.0\"?>\n"
     "\n"
     "<FieldContainer\n"
-    "\tname=\"SearchWindowEvent\"\n"
-    "\tparent=\"Event\"\n"
+    "\tname=\"SearchWindowEventDetails\"\n"
+    "\tparent=\"EventDetails\"\n"
     "\tlibrary=\"ContribTextDom\"\n"
-    "\tpointerfieldtypes=\"both\"\n"
+    "\tpointerfieldtypes=\"single\"\n"
     "\tstructure=\"concrete\"\n"
-    "    \tsystemcomponent=\"true\"\n"
-    "    \tparentsystemcomponent=\"true\"\n"
-    "    \tdecoratable=\"false\"\n"
-    "    \tuseLocalIncludes=\"false\"\n"
-    "    \tisNodeCore=\"false\"\n"
-    "    \tauthors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    isBundle=\"true\"\n"
+    "\tsupportUnregisteredCreate=\"true\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "\t<Field\n"
     "\t\tname=\"Option\"\n"
@@ -194,7 +193,7 @@ SearchWindowEventBase::TypeObject SearchWindowEventBase::_type(
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"protected\"\n"
     "\t\tdefaultValue=\"SearchWindowEvent::DIALOG_OPTION_SEARCH\"\n"
-    "        \tpublicRead=\"true\"\n"
+    "        publicRead=\"true\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\n"
@@ -206,7 +205,7 @@ SearchWindowEventBase::TypeObject SearchWindowEventBase::_type(
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"protected\"\n"
     "\t\tdefaultValue=\"\"\n"
-    "\t        publicRead=\"true\"\n"
+    "\t    publicRead=\"true\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
@@ -217,7 +216,7 @@ SearchWindowEventBase::TypeObject SearchWindowEventBase::_type(
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"protected\"\n"
     "\t\tdefaultValue=\"\"\n"
-    "\t        publicRead=\"true\"\n"
+    "\t    publicRead=\"true\"\n"
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
@@ -226,58 +225,58 @@ SearchWindowEventBase::TypeObject SearchWindowEventBase::_type(
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SearchWindowEventBase::getType(void)
+FieldContainerType &SearchWindowEventDetailsBase::getType(void)
 {
     return _type;
 }
 
-const FieldContainerType &SearchWindowEventBase::getType(void) const
+const FieldContainerType &SearchWindowEventDetailsBase::getType(void) const
 {
     return _type;
 }
 
-UInt32 SearchWindowEventBase::getContainerSize(void) const
+UInt32 SearchWindowEventDetailsBase::getContainerSize(void) const
 {
-    return sizeof(SearchWindowEvent);
+    return sizeof(SearchWindowEventDetails);
 }
 
 /*------------------------- decorator get ------------------------------*/
 
 
-SFUInt8 *SearchWindowEventBase::editSFOption(void)
+SFUInt8 *SearchWindowEventDetailsBase::editSFOption(void)
 {
     editSField(OptionFieldMask);
 
     return &_sfOption;
 }
 
-const SFUInt8 *SearchWindowEventBase::getSFOption(void) const
+const SFUInt8 *SearchWindowEventDetailsBase::getSFOption(void) const
 {
     return &_sfOption;
 }
 
 
-SFString *SearchWindowEventBase::editSFSearchText(void)
+SFString *SearchWindowEventDetailsBase::editSFSearchText(void)
 {
     editSField(SearchTextFieldMask);
 
     return &_sfSearchText;
 }
 
-const SFString *SearchWindowEventBase::getSFSearchText(void) const
+const SFString *SearchWindowEventDetailsBase::getSFSearchText(void) const
 {
     return &_sfSearchText;
 }
 
 
-SFString *SearchWindowEventBase::editSFReplaceText(void)
+SFString *SearchWindowEventDetailsBase::editSFReplaceText(void)
 {
     editSField(ReplaceTextFieldMask);
 
     return &_sfReplaceText;
 }
 
-const SFString *SearchWindowEventBase::getSFReplaceText(void) const
+const SFString *SearchWindowEventDetailsBase::getSFReplaceText(void) const
 {
     return &_sfReplaceText;
 }
@@ -289,7 +288,7 @@ const SFString *SearchWindowEventBase::getSFReplaceText(void) const
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SearchWindowEventBase::getBinSize(ConstFieldMaskArg whichField)
+UInt32 SearchWindowEventDetailsBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -309,7 +308,7 @@ UInt32 SearchWindowEventBase::getBinSize(ConstFieldMaskArg whichField)
     return returnValue;
 }
 
-void SearchWindowEventBase::copyToBin(BinaryDataHandler &pMem,
+void SearchWindowEventDetailsBase::copyToBin(BinaryDataHandler &pMem,
                                   ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -328,7 +327,7 @@ void SearchWindowEventBase::copyToBin(BinaryDataHandler &pMem,
     }
 }
 
-void SearchWindowEventBase::copyFromBin(BinaryDataHandler &pMem,
+void SearchWindowEventDetailsBase::copyFromBin(BinaryDataHandler &pMem,
                                     ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -348,58 +347,48 @@ void SearchWindowEventBase::copyFromBin(BinaryDataHandler &pMem,
 }
 
 //! create a new instance of the class
-SearchWindowEventTransitPtr SearchWindowEventBase::createLocal(BitVector bFlags)
+SearchWindowEventDetailsTransitPtr SearchWindowEventDetailsBase::createLocal(BitVector bFlags)
 {
-    SearchWindowEventTransitPtr fc;
+    SearchWindowEventDetailsTransitPtr fc;
 
     if(getClassType().getPrototype() != NULL)
     {
         FieldContainerTransitPtr tmpPtr =
             getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-        fc = dynamic_pointer_cast<SearchWindowEvent>(tmpPtr);
+        fc = dynamic_pointer_cast<SearchWindowEventDetails>(tmpPtr);
     }
 
     return fc;
 }
 
 //! create a new instance of the class, copy the container flags
-SearchWindowEventTransitPtr SearchWindowEventBase::createDependent(BitVector bFlags)
+SearchWindowEventDetailsTransitPtr SearchWindowEventDetailsBase::createDependent(BitVector bFlags)
 {
-    SearchWindowEventTransitPtr fc;
+    SearchWindowEventDetailsTransitPtr fc;
 
     if(getClassType().getPrototype() != NULL)
     {
         FieldContainerTransitPtr tmpPtr =
             getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-        fc = dynamic_pointer_cast<SearchWindowEvent>(tmpPtr);
+        fc = dynamic_pointer_cast<SearchWindowEventDetails>(tmpPtr);
     }
 
     return fc;
 }
 
 //! create a new instance of the class
-SearchWindowEventTransitPtr SearchWindowEventBase::create(void)
+SearchWindowEventDetailsTransitPtr SearchWindowEventDetailsBase::create(void)
 {
-    SearchWindowEventTransitPtr fc;
-
-    if(getClassType().getPrototype() != NULL)
-    {
-        FieldContainerTransitPtr tmpPtr =
-            getClassType().getPrototype()-> shallowCopy();
-
-        fc = dynamic_pointer_cast<SearchWindowEvent>(tmpPtr);
-    }
-
-    return fc;
+    return createLocal();
 }
 
-SearchWindowEvent *SearchWindowEventBase::createEmptyLocal(BitVector bFlags)
+SearchWindowEventDetails *SearchWindowEventDetailsBase::createEmptyLocal(BitVector bFlags)
 {
-    SearchWindowEvent *returnValue;
+    SearchWindowEventDetails *returnValue;
 
-    newPtr<SearchWindowEvent>(returnValue, bFlags);
+    newPtr<SearchWindowEventDetails>(returnValue, bFlags);
 
     returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
 
@@ -407,25 +396,35 @@ SearchWindowEvent *SearchWindowEventBase::createEmptyLocal(BitVector bFlags)
 }
 
 //! create an empty new instance of the class, do not copy the prototype
-SearchWindowEvent *SearchWindowEventBase::createEmpty(void)
+SearchWindowEventDetails *SearchWindowEventDetailsBase::createEmpty(void)
 {
-    SearchWindowEvent *returnValue;
+    return createEmptyLocal();
+}
 
-    newPtr<SearchWindowEvent>(returnValue, Thread::getCurrentLocalFlags());
+SearchWindowEventDetails *SearchWindowEventDetailsBase::createUnregistered(void)
+{
+    SearchWindowEventDetails *returnValue = new SearchWindowEventDetails;
 
+#ifdef OSG_MT_CPTR_ASPECT
+    returnValue->setupAspectStore();
+#endif
+    //Do not register with the FieldContainer Factory
+
+    returnValue->onCreate      (      );
+    returnValue->onCreateAspect(returnValue);
+    
     returnValue->_pFieldFlags->_bNamespaceMask &=
         ~Thread::getCurrentLocalFlags();
-
+    
     return returnValue;
 }
 
-
-FieldContainerTransitPtr SearchWindowEventBase::shallowCopyLocal(
+FieldContainerTransitPtr SearchWindowEventDetailsBase::shallowCopyLocal(
     BitVector bFlags) const
 {
-    SearchWindowEvent *tmpPtr;
+    SearchWindowEventDetails *tmpPtr;
 
-    newPtr(tmpPtr, dynamic_cast<const SearchWindowEvent *>(this), bFlags);
+    newPtr(tmpPtr, dynamic_cast<const SearchWindowEventDetails *>(this), bFlags);
 
     FieldContainerTransitPtr returnValue(tmpPtr);
 
@@ -434,12 +433,12 @@ FieldContainerTransitPtr SearchWindowEventBase::shallowCopyLocal(
     return returnValue;
 }
 
-FieldContainerTransitPtr SearchWindowEventBase::shallowCopyDependent(
+FieldContainerTransitPtr SearchWindowEventDetailsBase::shallowCopyDependent(
     BitVector bFlags) const
 {
-    SearchWindowEvent *tmpPtr;
+    SearchWindowEventDetails *tmpPtr;
 
-    newPtr(tmpPtr, dynamic_cast<const SearchWindowEvent *>(this), ~bFlags);
+    newPtr(tmpPtr, dynamic_cast<const SearchWindowEventDetails *>(this), ~bFlags);
 
     FieldContainerTransitPtr returnValue(tmpPtr);
 
@@ -448,35 +447,24 @@ FieldContainerTransitPtr SearchWindowEventBase::shallowCopyDependent(
     return returnValue;
 }
 
-FieldContainerTransitPtr SearchWindowEventBase::shallowCopy(void) const
+FieldContainerTransitPtr SearchWindowEventDetailsBase::shallowCopy(void) const
 {
-    SearchWindowEvent *tmpPtr;
-
-    newPtr(tmpPtr,
-           dynamic_cast<const SearchWindowEvent *>(this),
-           Thread::getCurrentLocalFlags());
-
-    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
-
-    FieldContainerTransitPtr returnValue(tmpPtr);
-
-    return returnValue;
+    return shallowCopyLocal();
 }
-
 
 
 
 /*------------------------- constructors ----------------------------------*/
 
-SearchWindowEventBase::SearchWindowEventBase(void) :
+SearchWindowEventDetailsBase::SearchWindowEventDetailsBase(void) :
     Inherited(),
-    _sfOption                 (UInt8(SearchWindowEvent::DIALOG_OPTION_SEARCH)),
+    _sfOption                 (),
     _sfSearchText             (),
     _sfReplaceText            ()
 {
 }
 
-SearchWindowEventBase::SearchWindowEventBase(const SearchWindowEventBase &source) :
+SearchWindowEventDetailsBase::SearchWindowEventDetailsBase(const SearchWindowEventDetailsBase &source) :
     Inherited(source),
     _sfOption                 (source._sfOption                 ),
     _sfSearchText             (source._sfSearchText             ),
@@ -487,23 +475,23 @@ SearchWindowEventBase::SearchWindowEventBase(const SearchWindowEventBase &source
 
 /*-------------------------- destructors ----------------------------------*/
 
-SearchWindowEventBase::~SearchWindowEventBase(void)
+SearchWindowEventDetailsBase::~SearchWindowEventDetailsBase(void)
 {
 }
 
 
-GetFieldHandlePtr SearchWindowEventBase::getHandleOption          (void) const
+GetFieldHandlePtr SearchWindowEventDetailsBase::getHandleOption          (void) const
 {
     SFUInt8::GetHandlePtr returnValue(
         new  SFUInt8::GetHandle(
              &_sfOption,
              this->getType().getFieldDesc(OptionFieldId),
-             const_cast<SearchWindowEventBase *>(this)));
+             const_cast<SearchWindowEventDetailsBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr SearchWindowEventBase::editHandleOption         (void)
+EditFieldHandlePtr SearchWindowEventDetailsBase::editHandleOption         (void)
 {
     SFUInt8::EditHandlePtr returnValue(
         new  SFUInt8::EditHandle(
@@ -517,18 +505,18 @@ EditFieldHandlePtr SearchWindowEventBase::editHandleOption         (void)
     return returnValue;
 }
 
-GetFieldHandlePtr SearchWindowEventBase::getHandleSearchText      (void) const
+GetFieldHandlePtr SearchWindowEventDetailsBase::getHandleSearchText      (void) const
 {
     SFString::GetHandlePtr returnValue(
         new  SFString::GetHandle(
              &_sfSearchText,
              this->getType().getFieldDesc(SearchTextFieldId),
-             const_cast<SearchWindowEventBase *>(this)));
+             const_cast<SearchWindowEventDetailsBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr SearchWindowEventBase::editHandleSearchText     (void)
+EditFieldHandlePtr SearchWindowEventDetailsBase::editHandleSearchText     (void)
 {
     SFString::EditHandlePtr returnValue(
         new  SFString::EditHandle(
@@ -542,18 +530,18 @@ EditFieldHandlePtr SearchWindowEventBase::editHandleSearchText     (void)
     return returnValue;
 }
 
-GetFieldHandlePtr SearchWindowEventBase::getHandleReplaceText     (void) const
+GetFieldHandlePtr SearchWindowEventDetailsBase::getHandleReplaceText     (void) const
 {
     SFString::GetHandlePtr returnValue(
         new  SFString::GetHandle(
              &_sfReplaceText,
              this->getType().getFieldDesc(ReplaceTextFieldId),
-             const_cast<SearchWindowEventBase *>(this)));
+             const_cast<SearchWindowEventDetailsBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr SearchWindowEventBase::editHandleReplaceText    (void)
+EditFieldHandlePtr SearchWindowEventDetailsBase::editHandleReplaceText    (void)
 {
     SFString::EditHandlePtr returnValue(
         new  SFString::EditHandle(
@@ -568,16 +556,17 @@ EditFieldHandlePtr SearchWindowEventBase::editHandleReplaceText    (void)
 }
 
 
+
 #ifdef OSG_MT_CPTR_ASPECT
-void SearchWindowEventBase::execSyncV(      FieldContainer    &oFrom,
+void SearchWindowEventDetailsBase::execSyncV(      FieldContainer    &oFrom,
                                         ConstFieldMaskArg  whichField,
                                         AspectOffsetStore &oOffsets,
                                         ConstFieldMaskArg  syncMode,
                                   const UInt32             uiSyncInfo)
 {
-    SearchWindowEvent *pThis = static_cast<SearchWindowEvent *>(this);
+    SearchWindowEventDetails *pThis = static_cast<SearchWindowEventDetails *>(this);
 
-    pThis->execSync(static_cast<SearchWindowEvent *>(&oFrom),
+    pThis->execSync(static_cast<SearchWindowEventDetails *>(&oFrom),
                     whichField,
                     oOffsets,
                     syncMode,
@@ -587,20 +576,20 @@ void SearchWindowEventBase::execSyncV(      FieldContainer    &oFrom,
 
 
 #ifdef OSG_MT_CPTR_ASPECT
-FieldContainer *SearchWindowEventBase::createAspectCopy(
+FieldContainer *SearchWindowEventDetailsBase::createAspectCopy(
     const FieldContainer *pRefAspect) const
 {
-    SearchWindowEvent *returnValue;
+    SearchWindowEventDetails *returnValue;
 
     newAspectCopy(returnValue,
-                  dynamic_cast<const SearchWindowEvent *>(pRefAspect),
-                  dynamic_cast<const SearchWindowEvent *>(this));
+                  dynamic_cast<const SearchWindowEventDetails *>(pRefAspect),
+                  dynamic_cast<const SearchWindowEventDetails *>(this));
 
     return returnValue;
 }
 #endif
 
-void SearchWindowEventBase::resolveLinks(void)
+void SearchWindowEventDetailsBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
 

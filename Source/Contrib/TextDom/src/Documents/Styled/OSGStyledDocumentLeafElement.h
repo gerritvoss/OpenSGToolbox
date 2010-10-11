@@ -43,7 +43,7 @@
 #endif
 
 #include "OSGStyledDocumentLeafElementBase.h"
-#include "styleddocumentattributes.h"
+#include "OSGDocumentElementAttributes.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -65,9 +65,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING StyledDocumentLeafElement : public StyledDoc
 	
   	UInt32 getTextLength(void);
 	std::string getText(void);
-	void setText(std::string);
-	TextWithProps& getProperties(void);
-	void setProperties(TextWithProps&);
+	void setText(const std::string& text);
+	DocumentElementAttribute& getProperties(void);
+	void setProperties(DocumentElementAttribute&);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -92,7 +92,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING StyledDocumentLeafElement : public StyledDoc
 
     // Variables should all be in StyledDocumentLeafElementBase.
 
-	  TextWithProps _Properties;
+	  DocumentElementAttribute _Properties;
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

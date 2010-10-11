@@ -88,7 +88,7 @@ bool AbstractLeafElement::getAllowsChildren()  const
 }
 
 //Gets a child element.
-ElementRefPtr 	AbstractLeafElement::getElement(UInt32 index) const
+Element* 	AbstractLeafElement::getElement(UInt32 index) const
 {
 	//REALLY NEED TO DO!!!:
 	return NULL;

@@ -68,10 +68,7 @@
 
 #include "OSGSearchWindowFields.h"
 
-//Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
+#include "OSGSearchWindowEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -90,6 +87,21 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowBase : public InternalWindow
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(SearchWindow);
+    
+    
+    typedef SearchWindowEventDetails SearchWindowClosingEventDetailsType;
+    typedef SearchWindowEventDetails SearchWindowClosedEventDetailsType;
+    typedef SearchWindowEventDetails SearchButtonClickedEventDetailsType;
+    typedef SearchWindowEventDetails ReplaceButtonClickedEventDetailsType;
+    typedef SearchWindowEventDetails ReplaceAllButtonClickedEventDetailsType;
+    typedef SearchWindowEventDetails BookmarkAllButtonClickedEventDetailsType;
+
+    typedef boost::signals2::signal<void (SearchWindowEventDetails* const, UInt32), ConsumableEventCombiner> SearchWindowClosingEventType;
+    typedef boost::signals2::signal<void (SearchWindowEventDetails* const, UInt32), ConsumableEventCombiner> SearchWindowClosedEventType;
+    typedef boost::signals2::signal<void (SearchWindowEventDetails* const, UInt32), ConsumableEventCombiner> SearchButtonClickedEventType;
+    typedef boost::signals2::signal<void (SearchWindowEventDetails* const, UInt32), ConsumableEventCombiner> ReplaceButtonClickedEventType;
+    typedef boost::signals2::signal<void (SearchWindowEventDetails* const, UInt32), ConsumableEventCombiner> ReplaceAllButtonClickedEventType;
+    typedef boost::signals2::signal<void (SearchWindowEventDetails* const, UInt32), ConsumableEventCombiner> BookmarkAllButtonClickedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -98,13 +110,13 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowBase : public InternalWindow
 
     enum
     {
-        SearchWindowClosingMethodId = Inherited::NextProducedMethodId,
-        SearchWindowClosedMethodId = SearchWindowClosingMethodId + 1,
-        SearchButtonClickedMethodId = SearchWindowClosedMethodId + 1,
-        ReplaceButtonClickedMethodId = SearchButtonClickedMethodId + 1,
-        ReplaceAllButtonClickedMethodId = ReplaceButtonClickedMethodId + 1,
-        BookmarkAllButtonClickedMethodId = ReplaceAllButtonClickedMethodId + 1,
-        NextProducedMethodId = BookmarkAllButtonClickedMethodId + 1
+        SearchWindowClosingEventId = Inherited::NextProducedEventId,
+        SearchWindowClosedEventId = SearchWindowClosingEventId + 1,
+        SearchButtonClickedEventId = SearchWindowClosedEventId + 1,
+        ReplaceButtonClickedEventId = SearchButtonClickedEventId + 1,
+        ReplaceAllButtonClickedEventId = ReplaceButtonClickedEventId + 1,
+        BookmarkAllButtonClickedEventId = ReplaceAllButtonClickedEventId + 1,
+        NextProducedEventId = BookmarkAllButtonClickedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -141,12 +153,97 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowBase : public InternalWindow
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //SearchWindowClosing
+    boost::signals2::connection connectSearchWindowClosing(const SearchWindowClosingEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSearchWindowClosing(const SearchWindowClosingEventType::group_type &group,
+                                                       const SearchWindowClosingEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSearchWindowClosing    (const SearchWindowClosingEventType::group_type &group);
+    void   disconnectAllSlotsSearchWindowClosing(void);
+    bool   isEmptySearchWindowClosing       (void) const;
+    UInt32 numSlotsSearchWindowClosing      (void) const;
+    
+    //SearchWindowClosed
+    boost::signals2::connection connectSearchWindowClosed(const SearchWindowClosedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSearchWindowClosed(const SearchWindowClosedEventType::group_type &group,
+                                                       const SearchWindowClosedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSearchWindowClosed     (const SearchWindowClosedEventType::group_type &group);
+    void   disconnectAllSlotsSearchWindowClosed(void);
+    bool   isEmptySearchWindowClosed        (void) const;
+    UInt32 numSlotsSearchWindowClosed       (void) const;
+    
+    //SearchButtonClicked
+    boost::signals2::connection connectSearchButtonClicked(const SearchButtonClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSearchButtonClicked(const SearchButtonClickedEventType::group_type &group,
+                                                       const SearchButtonClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSearchButtonClicked    (const SearchButtonClickedEventType::group_type &group);
+    void   disconnectAllSlotsSearchButtonClicked(void);
+    bool   isEmptySearchButtonClicked       (void) const;
+    UInt32 numSlotsSearchButtonClicked      (void) const;
+    
+    //ReplaceButtonClicked
+    boost::signals2::connection connectReplaceButtonClicked(const ReplaceButtonClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectReplaceButtonClicked(const ReplaceButtonClickedEventType::group_type &group,
+                                                       const ReplaceButtonClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectReplaceButtonClicked   (const ReplaceButtonClickedEventType::group_type &group);
+    void   disconnectAllSlotsReplaceButtonClicked(void);
+    bool   isEmptyReplaceButtonClicked      (void) const;
+    UInt32 numSlotsReplaceButtonClicked     (void) const;
+    
+    //ReplaceAllButtonClicked
+    boost::signals2::connection connectReplaceAllButtonClicked(const ReplaceAllButtonClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectReplaceAllButtonClicked(const ReplaceAllButtonClickedEventType::group_type &group,
+                                                       const ReplaceAllButtonClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectReplaceAllButtonClicked(const ReplaceAllButtonClickedEventType::group_type &group);
+    void   disconnectAllSlotsReplaceAllButtonClicked(void);
+    bool   isEmptyReplaceAllButtonClicked   (void) const;
+    UInt32 numSlotsReplaceAllButtonClicked  (void) const;
+    
+    //BookmarkAllButtonClicked
+    boost::signals2::connection connectBookmarkAllButtonClicked(const BookmarkAllButtonClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectBookmarkAllButtonClicked(const BookmarkAllButtonClickedEventType::group_type &group,
+                                                       const BookmarkAllButtonClickedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectBookmarkAllButtonClicked(const BookmarkAllButtonClickedEventType::group_type &group);
+    void   disconnectAllSlotsBookmarkAllButtonClicked(void);
+    bool   isEmptyBookmarkAllButtonClicked  (void) const;
+    UInt32 numSlotsBookmarkAllButtonClicked (void) const;
+    
+    
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
@@ -178,6 +275,18 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowBase : public InternalWindow
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Produced Event Signals                   */
+    /*! \{                                                                 */
+
+    //Event Event producers
+    SearchWindowClosingEventType _SearchWindowClosingEvent;
+    SearchWindowClosedEventType _SearchWindowClosedEvent;
+    SearchButtonClickedEventType _SearchButtonClickedEvent;
+    ReplaceButtonClickedEventType _ReplaceButtonClickedEvent;
+    ReplaceAllButtonClickedEventType _ReplaceAllButtonClickedEvent;
+    BookmarkAllButtonClickedEventType _BookmarkAllButtonClickedEvent;
+    /*! \}                                                                 */
 
     static TypeObject _type;
 
@@ -210,6 +319,30 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowBase : public InternalWindow
     /*! \{                                                                 */
 
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleSearchWindowClosingSignal(void) const;
+    GetEventHandlePtr getHandleSearchWindowClosedSignal(void) const;
+    GetEventHandlePtr getHandleSearchButtonClickedSignal(void) const;
+    GetEventHandlePtr getHandleReplaceButtonClickedSignal(void) const;
+    GetEventHandlePtr getHandleReplaceAllButtonClickedSignal(void) const;
+    GetEventHandlePtr getHandleBookmarkAllButtonClickedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceSearchWindowClosing  (SearchWindowClosingEventDetailsType* const e);
+    void produceSearchWindowClosed  (SearchWindowClosedEventDetailsType* const e);
+    void produceSearchButtonClicked  (SearchButtonClickedEventDetailsType* const e);
+    void produceReplaceButtonClicked  (ReplaceButtonClickedEventDetailsType* const e);
+    void produceReplaceAllButtonClicked  (ReplaceAllButtonClickedEventDetailsType* const e);
+    void produceBookmarkAllButtonClicked  (BookmarkAllButtonClickedEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -260,7 +393,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindowBase : public InternalWindow
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

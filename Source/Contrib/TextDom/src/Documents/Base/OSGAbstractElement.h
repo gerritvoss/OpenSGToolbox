@@ -99,37 +99,25 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractElement : public AbstractElementBase
 	std::map<std::string,UInt32>& getAttributes() const;
        
 	//   Returns the child TreeNode at index childIndex.
-	ElementRefPtr 	getChildAt(UInt32 childIndex) const;
+	Element* 	getChildAt(UInt32 childIndex) const;
        
 	//   Returns the number of children TreeNode's receiver contains.
 	UInt32	getChildCount(void) const;
        
 	//  Retrieves the underlying model.
-	DocumentRefPtr	getDocument(void) const;
-        
-	//  Gets a child element.
-	virtual ElementRefPtr getElement(UInt32 index) const =0;
-        
-	//  Gets the number of children for the element.
-	virtual UInt32	getElementCount(void) const =0;
-        
-	//  Gets the child element index closest to the given model offset.
-	virtual UInt32	getElementIndex(UInt32 offset) const=0;
-        
-	//  Gets the ending offset in the model for the element.
-	virtual UInt32	getEndOffset(void) const=0;
+	Document*	getDocument(void) const;
         
 	// Returns the index of node in the receivers children.
-	UInt32 getIndex(ElementRefPtr node) const;
+	UInt32 getIndex(Element* const node) const;
          
 	// Gets the name of the element.
 	std::string	getName(void) const;
          
 	//Returns the parent TreeNode of the receiver.
-	ElementRefPtr getParent(void) const;
+	Element* getParent(void) const;
           
 	//Gets the parent of the element.
-	ElementRefPtr 	getParentElement(void) const;
+	Element* 	getParentElement(void) const;
           
 	 //Gets the resolving parent.
 	//std::map<std::string,UInt32>& getResolveParent();

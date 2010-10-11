@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -95,14 +95,6 @@ DataType FieldTraits<SearchWindow *>::_type("SearchWindowPtr", "InternalWindowPt
 
 OSG_FIELDTRAITS_GETTYPE(SearchWindow *)
 
-OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
-                           SearchWindow *,
-                           0);
-
-OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
-                           SearchWindow *,
-                           0);
-
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
@@ -129,7 +121,7 @@ SearchWindowBase::TypeObject SearchWindowBase::_type(
     "    name=\"SearchWindow\"\n"
     "    parent=\"InternalWindow\"\n"
     "    library=\"ContribTextDom\"\n"
-    "    pointerfieldtypes=\"both\"\n"
+    "    pointerfielddetailsTypes=\"both\"\n"
     "    structure=\"concrete\"\n"
     "    systemcomponent=\"true\"\n"
     "    parentsystemcomponent=\"true\"\n"
@@ -141,76 +133,94 @@ SearchWindowBase::TypeObject SearchWindowBase::_type(
     ">\n"
     "A TextDom Search And Replace Dialog Window.\n"
     "\n"
-    "\t<ProducedMethod\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SearchWindowClosing\"\n"
-    "\t\ttype=\"SearchWindowEventPtr\"\n"
+    "\t\tdetailsType=\"SearchWindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SearchWindowClosed\"\n"
-    "\t\ttype=\"SearchWindowEventPtr\"\n"
+    "\t\tdetailsType=\"SearchWindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"SearchButtonClicked\"\n"
-    "\t\ttype=\"SearchWindowEventPtr\"\n"
+    "\t\tdetailsType=\"SearchWindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ReplaceButtonClicked\"\n"
-    "\t\ttype=\"SearchWindowEventPtr\"\n"
+    "\t\tdetailsType=\"SearchWindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"ReplaceAllButtonClicked\"\n"
-    "\t\ttype=\"SearchWindowEventPtr\"\n"
+    "\t\tdetailsType=\"SearchWindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"BookmarkAllButtonClicked\"\n"
-    "\t\ttype=\"SearchWindowEventPtr\"\n"
+    "\t\tdetailsType=\"SearchWindowEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "\n"
     "</FieldContainer>\n"
     "\n",
     "A TextDom Search And Replace Dialog Window.\n"
     );
 
-//! SearchWindow Produced Methods
+//! SearchWindow Produced Events
 
-MethodDescription *SearchWindowBase::_methodDesc[] =
+EventDescription *SearchWindowBase::_eventDesc[] =
 {
-    new MethodDescription("SearchWindowClosing", 
-                    "",
-                     SearchWindowClosingMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("SearchWindowClosed", 
-                    "",
-                     SearchWindowClosedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("SearchButtonClicked", 
-                    "",
-                     SearchButtonClickedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("ReplaceButtonClicked", 
-                    "",
-                     ReplaceButtonClickedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("ReplaceAllButtonClicked", 
-                    "",
-                     ReplaceAllButtonClickedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("BookmarkAllButtonClicked", 
-                    "",
-                     BookmarkAllButtonClickedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("SearchWindowClosing", 
+                          "",
+                          SearchWindowClosingEventId, 
+                          FieldTraits<SearchWindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SearchWindowBase::getHandleSearchWindowClosingSignal)),
+
+    new EventDescription("SearchWindowClosed", 
+                          "",
+                          SearchWindowClosedEventId, 
+                          FieldTraits<SearchWindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SearchWindowBase::getHandleSearchWindowClosedSignal)),
+
+    new EventDescription("SearchButtonClicked", 
+                          "",
+                          SearchButtonClickedEventId, 
+                          FieldTraits<SearchWindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SearchWindowBase::getHandleSearchButtonClickedSignal)),
+
+    new EventDescription("ReplaceButtonClicked", 
+                          "",
+                          ReplaceButtonClickedEventId, 
+                          FieldTraits<SearchWindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SearchWindowBase::getHandleReplaceButtonClickedSignal)),
+
+    new EventDescription("ReplaceAllButtonClicked", 
+                          "",
+                          ReplaceAllButtonClickedEventId, 
+                          FieldTraits<SearchWindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SearchWindowBase::getHandleReplaceAllButtonClickedSignal)),
+
+    new EventDescription("BookmarkAllButtonClicked", 
+                          "",
+                          BookmarkAllButtonClickedEventId, 
+                          FieldTraits<SearchWindowEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SearchWindowBase::getHandleBookmarkAllButtonClickedSignal))
+
 };
 
 EventProducerType SearchWindowBase::_producerType(
@@ -218,8 +228,8 @@ EventProducerType SearchWindowBase::_producerType(
     "AbstractWindowProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -346,7 +356,6 @@ SearchWindow *SearchWindowBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr SearchWindowBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -392,13 +401,236 @@ FieldContainerTransitPtr SearchWindowBase::shallowCopy(void) const
 
 
 
+/*------------------------- event producers ----------------------------------*/
+void SearchWindowBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case SearchWindowClosingEventId:
+        OSG_ASSERT(dynamic_cast<SearchWindowClosingEventDetailsType* const>(e));
+
+        _SearchWindowClosingEvent.set_combiner(ConsumableEventCombiner(e));
+        _SearchWindowClosingEvent(dynamic_cast<SearchWindowClosingEventDetailsType* const>(e), SearchWindowClosingEventId);
+        break;
+    case SearchWindowClosedEventId:
+        OSG_ASSERT(dynamic_cast<SearchWindowClosedEventDetailsType* const>(e));
+
+        _SearchWindowClosedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SearchWindowClosedEvent(dynamic_cast<SearchWindowClosedEventDetailsType* const>(e), SearchWindowClosedEventId);
+        break;
+    case SearchButtonClickedEventId:
+        OSG_ASSERT(dynamic_cast<SearchButtonClickedEventDetailsType* const>(e));
+
+        _SearchButtonClickedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SearchButtonClickedEvent(dynamic_cast<SearchButtonClickedEventDetailsType* const>(e), SearchButtonClickedEventId);
+        break;
+    case ReplaceButtonClickedEventId:
+        OSG_ASSERT(dynamic_cast<ReplaceButtonClickedEventDetailsType* const>(e));
+
+        _ReplaceButtonClickedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ReplaceButtonClickedEvent(dynamic_cast<ReplaceButtonClickedEventDetailsType* const>(e), ReplaceButtonClickedEventId);
+        break;
+    case ReplaceAllButtonClickedEventId:
+        OSG_ASSERT(dynamic_cast<ReplaceAllButtonClickedEventDetailsType* const>(e));
+
+        _ReplaceAllButtonClickedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ReplaceAllButtonClickedEvent(dynamic_cast<ReplaceAllButtonClickedEventDetailsType* const>(e), ReplaceAllButtonClickedEventId);
+        break;
+    case BookmarkAllButtonClickedEventId:
+        OSG_ASSERT(dynamic_cast<BookmarkAllButtonClickedEventDetailsType* const>(e));
+
+        _BookmarkAllButtonClickedEvent.set_combiner(ConsumableEventCombiner(e));
+        _BookmarkAllButtonClickedEvent(dynamic_cast<BookmarkAllButtonClickedEventDetailsType* const>(e), BookmarkAllButtonClickedEventId);
+        break;
+    default:
+        Inherited::produceEvent(eventId, e);
+        break;
+    }
+}
+
+boost::signals2::connection SearchWindowBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case SearchWindowClosingEventId:
+        return _SearchWindowClosingEvent.connect(listener, at);
+        break;
+    case SearchWindowClosedEventId:
+        return _SearchWindowClosedEvent.connect(listener, at);
+        break;
+    case SearchButtonClickedEventId:
+        return _SearchButtonClickedEvent.connect(listener, at);
+        break;
+    case ReplaceButtonClickedEventId:
+        return _ReplaceButtonClickedEvent.connect(listener, at);
+        break;
+    case ReplaceAllButtonClickedEventId:
+        return _ReplaceAllButtonClickedEvent.connect(listener, at);
+        break;
+    case BookmarkAllButtonClickedEventId:
+        return _BookmarkAllButtonClickedEvent.connect(listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  SearchWindowBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case SearchWindowClosingEventId:
+        return _SearchWindowClosingEvent.connect(group, listener, at);
+        break;
+    case SearchWindowClosedEventId:
+        return _SearchWindowClosedEvent.connect(group, listener, at);
+        break;
+    case SearchButtonClickedEventId:
+        return _SearchButtonClickedEvent.connect(group, listener, at);
+        break;
+    case ReplaceButtonClickedEventId:
+        return _ReplaceButtonClickedEvent.connect(group, listener, at);
+        break;
+    case ReplaceAllButtonClickedEventId:
+        return _ReplaceAllButtonClickedEvent.connect(group, listener, at);
+        break;
+    case BookmarkAllButtonClickedEventId:
+        return _BookmarkAllButtonClickedEvent.connect(group, listener, at);
+        break;
+    default:
+        return Inherited::connectEvent(eventId, group, listener, at);
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  SearchWindowBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case SearchWindowClosingEventId:
+        _SearchWindowClosingEvent.disconnect(group);
+        break;
+    case SearchWindowClosedEventId:
+        _SearchWindowClosedEvent.disconnect(group);
+        break;
+    case SearchButtonClickedEventId:
+        _SearchButtonClickedEvent.disconnect(group);
+        break;
+    case ReplaceButtonClickedEventId:
+        _ReplaceButtonClickedEvent.disconnect(group);
+        break;
+    case ReplaceAllButtonClickedEventId:
+        _ReplaceAllButtonClickedEvent.disconnect(group);
+        break;
+    case BookmarkAllButtonClickedEventId:
+        _BookmarkAllButtonClickedEvent.disconnect(group);
+        break;
+    default:
+        return Inherited::disconnectEvent(eventId, group);
+        break;
+    }
+}
+
+void  SearchWindowBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case SearchWindowClosingEventId:
+        _SearchWindowClosingEvent.disconnect_all_slots();
+        break;
+    case SearchWindowClosedEventId:
+        _SearchWindowClosedEvent.disconnect_all_slots();
+        break;
+    case SearchButtonClickedEventId:
+        _SearchButtonClickedEvent.disconnect_all_slots();
+        break;
+    case ReplaceButtonClickedEventId:
+        _ReplaceButtonClickedEvent.disconnect_all_slots();
+        break;
+    case ReplaceAllButtonClickedEventId:
+        _ReplaceAllButtonClickedEvent.disconnect_all_slots();
+        break;
+    case BookmarkAllButtonClickedEventId:
+        _BookmarkAllButtonClickedEvent.disconnect_all_slots();
+        break;
+    default:
+        Inherited::disconnectAllSlotsEvent(eventId);
+        break;
+    }
+}
+
+bool  SearchWindowBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case SearchWindowClosingEventId:
+        return _SearchWindowClosingEvent.empty();
+        break;
+    case SearchWindowClosedEventId:
+        return _SearchWindowClosedEvent.empty();
+        break;
+    case SearchButtonClickedEventId:
+        return _SearchButtonClickedEvent.empty();
+        break;
+    case ReplaceButtonClickedEventId:
+        return _ReplaceButtonClickedEvent.empty();
+        break;
+    case ReplaceAllButtonClickedEventId:
+        return _ReplaceAllButtonClickedEvent.empty();
+        break;
+    case BookmarkAllButtonClickedEventId:
+        return _BookmarkAllButtonClickedEvent.empty();
+        break;
+    default:
+        return Inherited::isEmptyEvent(eventId);
+        break;
+    }
+}
+
+UInt32  SearchWindowBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case SearchWindowClosingEventId:
+        return _SearchWindowClosingEvent.num_slots();
+        break;
+    case SearchWindowClosedEventId:
+        return _SearchWindowClosedEvent.num_slots();
+        break;
+    case SearchButtonClickedEventId:
+        return _SearchButtonClickedEvent.num_slots();
+        break;
+    case ReplaceButtonClickedEventId:
+        return _ReplaceButtonClickedEvent.num_slots();
+        break;
+    case ReplaceAllButtonClickedEventId:
+        return _ReplaceAllButtonClickedEvent.num_slots();
+        break;
+    case BookmarkAllButtonClickedEventId:
+        return _BookmarkAllButtonClickedEvent.num_slots();
+        break;
+    default:
+        return Inherited::numSlotsEvent(eventId);
+        break;
+    }
+}
+
 
 /*------------------------- constructors ----------------------------------*/
 
 SearchWindowBase::SearchWindowBase(void) :
     Inherited()
 {
-    _Producer.setType(&_producerType);
 }
 
 SearchWindowBase::SearchWindowBase(const SearchWindowBase &source) :
@@ -413,6 +645,73 @@ SearchWindowBase::~SearchWindowBase(void)
 {
 }
 
+
+
+GetEventHandlePtr SearchWindowBase::getHandleSearchWindowClosingSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SearchWindowClosingEventType>(
+             const_cast<SearchWindowClosingEventType *>(&_SearchWindowClosingEvent),
+             _producerType.getEventDescription(SearchWindowClosingEventId),
+             const_cast<SearchWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr SearchWindowBase::getHandleSearchWindowClosedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SearchWindowClosedEventType>(
+             const_cast<SearchWindowClosedEventType *>(&_SearchWindowClosedEvent),
+             _producerType.getEventDescription(SearchWindowClosedEventId),
+             const_cast<SearchWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr SearchWindowBase::getHandleSearchButtonClickedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SearchButtonClickedEventType>(
+             const_cast<SearchButtonClickedEventType *>(&_SearchButtonClickedEvent),
+             _producerType.getEventDescription(SearchButtonClickedEventId),
+             const_cast<SearchWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr SearchWindowBase::getHandleReplaceButtonClickedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ReplaceButtonClickedEventType>(
+             const_cast<ReplaceButtonClickedEventType *>(&_ReplaceButtonClickedEvent),
+             _producerType.getEventDescription(ReplaceButtonClickedEventId),
+             const_cast<SearchWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr SearchWindowBase::getHandleReplaceAllButtonClickedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ReplaceAllButtonClickedEventType>(
+             const_cast<ReplaceAllButtonClickedEventType *>(&_ReplaceAllButtonClickedEvent),
+             _producerType.getEventDescription(ReplaceAllButtonClickedEventId),
+             const_cast<SearchWindowBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr SearchWindowBase::getHandleBookmarkAllButtonClickedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<BookmarkAllButtonClickedEventType>(
+             const_cast<BookmarkAllButtonClickedEventType *>(&_BookmarkAllButtonClickedEvent),
+             _producerType.getEventDescription(BookmarkAllButtonClickedEventId),
+             const_cast<SearchWindowBase *>(this)));
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

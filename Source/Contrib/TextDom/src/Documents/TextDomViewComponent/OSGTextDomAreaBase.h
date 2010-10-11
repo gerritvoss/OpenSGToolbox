@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,16 +65,12 @@
 
 #include "OSGComponent.h" // Parent
 
-#include "OSGDocumentFields.h"   // DocumentModel type
-#include "OSGUIFontFields.h"     // Font type
-#include "OSGSysFields.h"        // CaretPosition type
+#include "OSGDocumentFields.h"          // DocumentModel type
+#include "OSGUIFontFields.h"            // Font type
+#include "OSGSysFields.h"               // CaretPosition type
+#include "OSGTextDomLayoutManagerFields.h" // LayoutManager type
 
 #include "OSGTextDomAreaFields.h"
-
-//Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -93,6 +89,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(TextDomArea);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -107,7 +105,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
         WrapStyleWordFieldId = LineWrapFieldId + 1,
         TabSizeFieldId = WrapStyleWordFieldId + 1,
         LineSpacingFieldId = TabSizeFieldId + 1,
-        NextFieldId = LineSpacingFieldId + 1
+        LayoutManagerFieldId = LineSpacingFieldId + 1,
+        NextFieldId = LayoutManagerFieldId + 1
     };
 
     static const OSG::BitVector DocumentModelFieldMask =
@@ -124,6 +123,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
         (TypeTraits<BitVector>::One << TabSizeFieldId);
     static const OSG::BitVector LineSpacingFieldMask =
         (TypeTraits<BitVector>::One << LineSpacingFieldId);
+    static const OSG::BitVector LayoutManagerFieldMask =
+        (TypeTraits<BitVector>::One << LayoutManagerFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -134,12 +135,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
     typedef SFBool            SFWrapStyleWordType;
     typedef SFUInt32          SFTabSizeType;
     typedef SFInt32           SFLineSpacingType;
-
-    enum
-    {
-        DocumentModelChangedMethodId = Inherited::NextProducedMethodId,
-        NextProducedMethodId = DocumentModelChangedMethodId + 1
-    };
+    typedef SFUnrecChildTextDomLayoutManagerPtr SFLayoutManagerType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -148,8 +144,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
     static FieldContainerType &getClassType   (void);
     static UInt32              getClassTypeId (void);
     static UInt16              getClassGroupId(void);
-    static const  EventProducerType  &getProducerClassType  (void);
-    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -185,6 +179,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
 
                   SFInt32             *editSFLineSpacing    (void);
             const SFInt32             *getSFLineSpacing     (void) const;
+            const SFUnrecChildTextDomLayoutManagerPtr *getSFLayoutManager  (void) const;
+                  SFUnrecChildTextDomLayoutManagerPtr *editSFLayoutManager  (void);
 
 
                   Document * getDocumentModel  (void) const;
@@ -206,6 +202,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
                   Int32               &editLineSpacing    (void);
                   Int32                getLineSpacing     (void) const;
 
+                  TextDomLayoutManager * getLayoutManager  (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -218,6 +216,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
             void setWrapStyleWord  (const bool value);
             void setTabSize        (const UInt32 value);
             void setLineSpacing    (const Int32 value);
+            void setLayoutManager  (TextDomLayoutManager * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -239,14 +238,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
                                ConstFieldMaskArg  whichField);
     virtual void   copyFromBin(BinaryDataHandler &pMem,
                                ConstFieldMaskArg  whichField);
-
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
-    /*! \{                                                                 */
-
-    virtual const EventProducerType &getProducerType(void) const; 
 
 
     /*! \}                                                                 */
@@ -297,6 +288,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
     SFBool            _sfWrapStyleWord;
     SFUInt32          _sfTabSize;
     SFInt32           _sfLineSpacing;
+    SFUnrecChildTextDomLayoutManagerPtr _sfLayoutManager;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -322,6 +314,14 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name Child linking                                                */
+    /*! \{                                                                 */
+
+    virtual bool unlinkChild(FieldContainer * const pChild,
+                             UInt16           const childFieldId);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
@@ -339,6 +339,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
     EditFieldHandlePtr editHandleTabSize        (void);
     GetFieldHandlePtr  getHandleLineSpacing     (void) const;
     EditFieldHandlePtr editHandleLineSpacing    (void);
+    GetFieldHandlePtr  getHandleLayoutManager   (void) const;
+    EditFieldHandlePtr editHandleLayoutManager  (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -390,9 +392,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
-    static EventProducerType _producerType;
-
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const TextDomAreaBase &source);

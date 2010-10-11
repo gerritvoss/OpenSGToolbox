@@ -48,8 +48,8 @@
 
 #include "OSGUndoableCommand.h"
 
-#include "OSGFixedHeightLayoutManager.h"
-#include "OSGPlainDocument.h"
+#include "OSGTextDomLayoutManagerFields.h"
+#include "OSGPlainDocumentFields.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -61,13 +61,11 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DeleteCharacterCommand: public UndoableComma
 {
 protected:
 
-	enum {LEFT,RIGHT,UP,DOWN,HOME,END,HOMEOFNEXTLINE,PAGEUP,PAGEDOWN};
-
 	typedef UndoableCommand Inherited;
 	typedef DeleteCharacterCommand Self;
 	typedef DeleteCharacterCommandPtr RefPtr;
 
-    DeleteCharacterCommand(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel);// here
+    DeleteCharacterCommand(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel);// here
 	DeleteCharacterCommand(const DeleteCharacterCommand& source);
 
 	void operator =(const DeleteCharacterCommand& source);
@@ -79,7 +77,7 @@ protected:
 	virtual void redo(void);
 	virtual void undo(void);
 
-	FixedHeightLayoutManagerRefPtr _Manager;
+	TextDomLayoutManagerRefPtr _Manager;
 	PlainDocumentRefPtr _TheDocumentModel;
 	char _TheCharacter;
 	UInt32 _theOriginalCaretIndex;
@@ -96,7 +94,7 @@ public:
 
 	virtual ~DeleteCharacterCommand(void);
 	
-    static DeleteCharacterCommandPtr create(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel);// here
+    static DeleteCharacterCommandPtr create(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel);// here
 };
 
 OSG_END_NAMESPACE

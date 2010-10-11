@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,15 +58,15 @@
 
 
 
-#include "OSGDocument.h"         // DocumentModel Class
-#include "OSGUIFont.h"           // Font Class
+#include "OSGDocument.h"                // DocumentModel Class
+#include "OSGUIFont.h"                  // Font Class
+#include "OSGTextDomLayoutManager.h"    // LayoutManager Class
 
 #include "OSGTextDomAreaBase.h"
 #include "OSGTextDomArea.h"
+#include "OSGGlyphView.h"
 
 #include <boost/bind.hpp>
-
-#include "OSGEvent.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -111,6 +111,10 @@ OSG_BEGIN_NAMESPACE
 */
 
 /*! \var Int32           TextDomAreaBase::_sfLineSpacing
+    
+*/
+
+/*! \var TextDomLayoutManager * TextDomAreaBase::_sfLayoutManager
     
 */
 
@@ -225,6 +229,18 @@ void TextDomAreaBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&TextDomArea::getHandleLineSpacing));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecChildTextDomLayoutManagerPtr::Description(
+        SFUnrecChildTextDomLayoutManagerPtr::getClassType(),
+        "LayoutManager",
+        "",
+        LayoutManagerFieldId, LayoutManagerFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FNullCheckAccess),
+        static_cast<FieldEditMethodSig>(&TextDomArea::editHandleLayoutManager),
+        static_cast<FieldGetMethodSig >(&TextDomArea::getHandleLayoutManager));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -247,13 +263,13 @@ TextDomAreaBase::TypeObject TextDomAreaBase::_type(
     "\tlibrary=\"ContribTextDom\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
-    "\tsystemcomponent=\"false\"\n"
-    "\tparentsystemcomponent=\"false\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
-    "\tuseLocalIncludes=\"true\"\n"
-    "     \tisNodeCore=\"false\"\n"
+    "\tuseLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
     "\tparentProducer=\"Component\"\n"
-    "\tauthors=\"David Kabala (djkabala@gmail.com)\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "A UI TextDomArea\n"
     "\t<Field\n"
@@ -327,35 +343,21 @@ TextDomAreaBase::TypeObject TextDomAreaBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"DocumentModelChanged\"\n"
-    "\t\ttype=\"DocumentModelChangedEventPtr\"\n"
+    "\t<Field\n"
+    "\t\tname=\"LayoutManager\"\n"
+    "\t\ttype=\"TextDomLayoutManager\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "        category=\"childpointer\"\n"
+    "        childParentType=\"FieldContainer\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        ptrFieldAccess = \"nullCheck\"\n"
+    "        linkParentField=\"ParentTextDomArea\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\t\n"
-    "\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     "A UI TextDomArea\n"
     );
-
-//! TextDomArea Produced Methods
-
-MethodDescription *TextDomAreaBase::_methodDesc[] =
-{
-    new MethodDescription("DocumentModelChanged", 
-                    "",
-                     DocumentModelChangedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
-};
-
-EventProducerType TextDomAreaBase::_producerType(
-    "TextDomAreaProducerType",
-    "ComponentProducerType",
-    "",
-    InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -367,11 +369,6 @@ FieldContainerType &TextDomAreaBase::getType(void)
 const FieldContainerType &TextDomAreaBase::getType(void) const
 {
     return _type;
-}
-
-const EventProducerType &TextDomAreaBase::getProducerType(void) const
-{
-    return _producerType;
 }
 
 UInt32 TextDomAreaBase::getContainerSize(void) const
@@ -473,6 +470,19 @@ const SFInt32 *TextDomAreaBase::getSFLineSpacing(void) const
 }
 
 
+//! Get the TextDomArea::_sfLayoutManager field.
+const SFUnrecChildTextDomLayoutManagerPtr *TextDomAreaBase::getSFLayoutManager(void) const
+{
+    return &_sfLayoutManager;
+}
+
+SFUnrecChildTextDomLayoutManagerPtr *TextDomAreaBase::editSFLayoutManager  (void)
+{
+    editSField(LayoutManagerFieldMask);
+
+    return &_sfLayoutManager;
+}
+
 
 
 
@@ -511,6 +521,10 @@ UInt32 TextDomAreaBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfLineSpacing.getBinSize();
     }
+    if(FieldBits::NoField != (LayoutManagerFieldMask & whichField))
+    {
+        returnValue += _sfLayoutManager.getBinSize();
+    }
 
     return returnValue;
 }
@@ -548,6 +562,10 @@ void TextDomAreaBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfLineSpacing.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (LayoutManagerFieldMask & whichField))
+    {
+        _sfLayoutManager.copyToBin(pMem);
+    }
 }
 
 void TextDomAreaBase::copyFromBin(BinaryDataHandler &pMem,
@@ -582,6 +600,10 @@ void TextDomAreaBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (LineSpacingFieldMask & whichField))
     {
         _sfLineSpacing.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (LayoutManagerFieldMask & whichField))
+    {
+        _sfLayoutManager.copyFromBin(pMem);
     }
 }
 
@@ -657,7 +679,6 @@ TextDomArea *TextDomAreaBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr TextDomAreaBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -703,7 +724,6 @@ FieldContainerTransitPtr TextDomAreaBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 TextDomAreaBase::TextDomAreaBase(void) :
@@ -714,9 +734,11 @@ TextDomAreaBase::TextDomAreaBase(void) :
     _sfLineWrap               (bool(true)),
     _sfWrapStyleWord          (bool(true)),
     _sfTabSize                (UInt32(3)),
-    _sfLineSpacing            (Int32(5))
+    _sfLineSpacing            (Int32(5)),
+    _sfLayoutManager          (this,
+                          LayoutManagerFieldId,
+                          TextDomLayoutManager::ParentTextDomAreaFieldId)
 {
-    _Producer.setType(&_producerType);
 }
 
 TextDomAreaBase::TextDomAreaBase(const TextDomAreaBase &source) :
@@ -727,7 +749,10 @@ TextDomAreaBase::TextDomAreaBase(const TextDomAreaBase &source) :
     _sfLineWrap               (source._sfLineWrap               ),
     _sfWrapStyleWord          (source._sfWrapStyleWord          ),
     _sfTabSize                (source._sfTabSize                ),
-    _sfLineSpacing            (source._sfLineSpacing            )
+    _sfLineSpacing            (source._sfLineSpacing            ),
+    _sfLayoutManager          (this,
+                          LayoutManagerFieldId,
+                          TextDomLayoutManager::ParentTextDomAreaFieldId)
 {
 }
 
@@ -736,6 +761,42 @@ TextDomAreaBase::TextDomAreaBase(const TextDomAreaBase &source) :
 
 TextDomAreaBase::~TextDomAreaBase(void)
 {
+}
+
+/*-------------------------------------------------------------------------*/
+/* Child linking                                                           */
+
+bool TextDomAreaBase::unlinkChild(
+    FieldContainer * const pChild,
+    UInt16           const childFieldId)
+{
+    if(childFieldId == LayoutManagerFieldId)
+    {
+        TextDomLayoutManager * pTypedChild =
+            dynamic_cast<TextDomLayoutManager *>(pChild);
+
+        if(pTypedChild != NULL)
+        {
+            if(pTypedChild == _sfLayoutManager.getValue())
+            {
+                editSField(LayoutManagerFieldMask);
+
+                _sfLayoutManager.setValue(NULL);
+
+                return true;
+            }
+
+            FWARNING(("TextDomAreaBase::unlinkParent: Child <-> "
+                      "Parent link inconsistent.\n"));
+
+            return false;
+        }
+
+        return false;
+    }
+
+
+    return Inherited::unlinkChild(pChild, childFieldId);
 }
 
 void TextDomAreaBase::onCreate(const TextDomArea *source)
@@ -749,6 +810,8 @@ void TextDomAreaBase::onCreate(const TextDomArea *source)
         pThis->setDocumentModel(source->getDocumentModel());
 
         pThis->setFont(source->getFont());
+
+        pThis->setLayoutManager(source->getLayoutManager());
     }
 }
 
@@ -933,6 +996,35 @@ EditFieldHandlePtr TextDomAreaBase::editHandleLineSpacing    (void)
     return returnValue;
 }
 
+GetFieldHandlePtr TextDomAreaBase::getHandleLayoutManager   (void) const
+{
+    SFUnrecChildTextDomLayoutManagerPtr::GetHandlePtr returnValue(
+        new  SFUnrecChildTextDomLayoutManagerPtr::GetHandle(
+             &_sfLayoutManager,
+             this->getType().getFieldDesc(LayoutManagerFieldId),
+             const_cast<TextDomAreaBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextDomAreaBase::editHandleLayoutManager  (void)
+{
+    SFUnrecChildTextDomLayoutManagerPtr::EditHandlePtr returnValue(
+        new  SFUnrecChildTextDomLayoutManagerPtr::EditHandle(
+             &_sfLayoutManager,
+             this->getType().getFieldDesc(LayoutManagerFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TextDomArea::setLayoutManager,
+                    static_cast<TextDomArea *>(this), _1));
+
+    editSField(LayoutManagerFieldMask);
+
+    return returnValue;
+}
+
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void TextDomAreaBase::execSyncV(      FieldContainer    &oFrom,
@@ -973,6 +1065,8 @@ void TextDomAreaBase::resolveLinks(void)
     static_cast<TextDomArea *>(this)->setDocumentModel(NULL);
 
     static_cast<TextDomArea *>(this)->setFont(NULL);
+
+    static_cast<TextDomArea *>(this)->setLayoutManager(NULL);
 
 
 }

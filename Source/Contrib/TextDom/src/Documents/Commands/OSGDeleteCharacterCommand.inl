@@ -31,7 +31,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-DeleteCharacterCommand::DeleteCharacterCommand(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel) : Inherited(),
+DeleteCharacterCommand::DeleteCharacterCommand(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel) : Inherited(),
 _Manager(Manager),
 _TheDocumentModel(DocumentModel)
 {

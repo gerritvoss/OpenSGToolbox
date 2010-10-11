@@ -40,10 +40,4 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-FixedHeightLayoutManagerRefPtr TextDomArea::getTheManager(void)
-{
-	return Manager;
-}
-
 OSG_END_NAMESPACE

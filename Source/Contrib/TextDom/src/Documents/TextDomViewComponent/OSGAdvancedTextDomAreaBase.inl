@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -123,6 +124,72 @@ void AdvancedTextDomAreaBase::setGutterWidth(const Real32 value)
 
     _sfGutterWidth.setValue(value);
 }
+//! Get the value of the AdvancedTextDomArea::_sfGutterColor field.
+
+inline
+Color4f &AdvancedTextDomAreaBase::editGutterColor(void)
+{
+    editSField(GutterColorFieldMask);
+
+    return _sfGutterColor.getValue();
+}
+
+//! Get the value of the AdvancedTextDomArea::_sfGutterColor field.
+inline
+const Color4f &AdvancedTextDomAreaBase::getGutterColor(void) const
+{
+    return _sfGutterColor.getValue();
+}
+
+//! Set the value of the AdvancedTextDomArea::_sfGutterColor field.
+inline
+void AdvancedTextDomAreaBase::setGutterColor(const Color4f &value)
+{
+    editSField(GutterColorFieldMask);
+
+    _sfGutterColor.setValue(value);
+}
+//! Get the value of the AdvancedTextDomArea::_sfGutterTextColor field.
+
+inline
+Color4f &AdvancedTextDomAreaBase::editGutterTextColor(void)
+{
+    editSField(GutterTextColorFieldMask);
+
+    return _sfGutterTextColor.getValue();
+}
+
+//! Get the value of the AdvancedTextDomArea::_sfGutterTextColor field.
+inline
+const Color4f &AdvancedTextDomAreaBase::getGutterTextColor(void) const
+{
+    return _sfGutterTextColor.getValue();
+}
+
+//! Set the value of the AdvancedTextDomArea::_sfGutterTextColor field.
+inline
+void AdvancedTextDomAreaBase::setGutterTextColor(const Color4f &value)
+{
+    editSField(GutterTextColorFieldMask);
+
+    _sfGutterTextColor.setValue(value);
+}
+
+//! Get the value of the AdvancedTextDomArea::_sfGutterFont field.
+inline
+UIFont * AdvancedTextDomAreaBase::getGutterFont(void) const
+{
+    return _sfGutterFont.getValue();
+}
+
+//! Set the value of the AdvancedTextDomArea::_sfGutterFont field.
+inline
+void AdvancedTextDomAreaBase::setGutterFont(UIFont * const value)
+{
+    editSField(GutterFontFieldMask);
+
+    _sfGutterFont.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -140,6 +207,15 @@ void AdvancedTextDomAreaBase::execSync (      AdvancedTextDomAreaBase *pFrom,
 
     if(FieldBits::NoField != (GutterWidthFieldMask & whichField))
         _sfGutterWidth.syncWith(pFrom->_sfGutterWidth);
+
+    if(FieldBits::NoField != (GutterColorFieldMask & whichField))
+        _sfGutterColor.syncWith(pFrom->_sfGutterColor);
+
+    if(FieldBits::NoField != (GutterTextColorFieldMask & whichField))
+        _sfGutterTextColor.syncWith(pFrom->_sfGutterTextColor);
+
+    if(FieldBits::NoField != (GutterFontFieldMask & whichField))
+        _sfGutterFont.syncWith(pFrom->_sfGutterFont);
 }
 #endif
 

@@ -39,29 +39,5 @@
 //---------------------------------------------------------------------------
 
 OSG_BEGIN_NAMESPACE
-inline
-UInt32 PlainDocument::getEndPosition(void) const
-{
-	return this->getLength();
-}
-
-//inline 
-//UInt32 PlainDocument::getProperty(const std::string& key) const
-//{
-//	return 0;
-//}
-
-inline 
-std::vector<ElementRefPtr> PlainDocument::getRootElements(void)
-{
-	return _RootElements;
-}
-
-inline 
-UInt64 PlainDocument::getStartPosition(void) const		/// whats the idea?!
-{
-	return 0;
-}
-
 
 OSG_END_NAMESPACE

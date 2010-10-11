@@ -102,11 +102,11 @@ void PlainTextFileType::removeSlashRandSlashN(std::string &word)
 	word = Temp;
 }
 
-DocumentRefPtr PlainTextFileType::read(std::istream &InputStream,
+DocumentTransitPtr PlainTextFileType::read(std::istream &InputStream,
 	                     const std::string& FileNameOrExtension)
 {
 	PlainDocumentRefPtr Result = PlainDocument::create();
-	TextWithProps Props;
+	DocumentElementAttribute Props;
 	std::string Word;
 	bool FirstTime = true;
 	
@@ -125,28 +125,28 @@ DocumentRefPtr PlainTextFileType::read(std::istream &InputStream,
 
 //	std::cout<<"\nduration for reading:"<<t2-t1<<std::endl;		// end time in milliseconds
 
-	return Result;
+	return DocumentTransitPtr(Result);
 }
 
-bool PlainTextFileType::write(DocumentRefPtr Doc, std::ostream &OutputStream,
+bool PlainTextFileType::write(Document* const Doc, std::ostream &OutputStream,
                     const std::string& FileNameOrExtension)
 {
-	PlainDocumentRefPtr TheDocument = dynamic_pointer_cast<PlainDocument>(Doc);
-	std::vector<ElementRefPtr> GenericRoots;
+	PlainDocumentRefPtr TheDocument = dynamic_cast<PlainDocument*>(Doc);
+	std::vector<Element*> GenericRoots;
 	GenericRoots = TheDocument->getRootElements();
 	for(UInt32 i=0;i<GenericRoots.size();i++)
 	{
 		PlainDocumentBranchElementRefPtr RootElement;
-		RootElement = dynamic_pointer_cast<PlainDocumentBranchElement>(GenericRoots[i]);	
+		RootElement = dynamic_cast<PlainDocumentBranchElement*>(GenericRoots[i]);	
 		
 		for(UInt32 j=0;j<RootElement->getElementCount()-1;j++)
 		{	
 			PlainDocumentLeafElementRefPtr LeafElement;
-			LeafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(RootElement->getElement(j));
+			LeafElement = dynamic_cast<PlainDocumentLeafElement*>(RootElement->getElement(j));
 			OutputStream<<LeafElement->getText();
 		}
 		PlainDocumentLeafElementRefPtr LeafElement;
-		LeafElement = dynamic_pointer_cast<PlainDocumentLeafElement>(RootElement->getElement(RootElement->getElementCount()-1));
+		LeafElement = dynamic_cast<PlainDocumentLeafElement*>(RootElement->getElement(RootElement->getElementCount()-1));
 		OutputStream<<LeafElement->getText().substr(0,LeafElement->getTextLength()-2);
 
 	}

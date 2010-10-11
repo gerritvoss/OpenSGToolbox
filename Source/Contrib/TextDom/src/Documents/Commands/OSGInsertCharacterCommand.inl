@@ -31,7 +31,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-InsertCharacterCommand::InsertCharacterCommand(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,char theCharacter,UInt32 line,UInt32 index) : Inherited(),
+InsertCharacterCommand::InsertCharacterCommand(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,char theCharacter,UInt32 line,UInt32 index) : Inherited(),
 _Manager(Manager),
 _TheDocumentModel(DocumentModel),
 _TheCharacter(theCharacter),

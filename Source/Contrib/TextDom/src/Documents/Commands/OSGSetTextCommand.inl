@@ -31,7 +31,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-SetTextCommand::SetTextCommand(PlainDocumentLeafElementRefPtr element,std::string newString) : Inherited(),
+SetTextCommand::SetTextCommand(ElementRefPtr element,std::string newString) : Inherited(),
 _TheElement(element),
 _TheNewString(newString)
 {

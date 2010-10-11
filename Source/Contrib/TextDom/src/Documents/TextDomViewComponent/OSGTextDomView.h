@@ -65,7 +65,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomView : public TextDomViewBase
     typedef TextDomView     Self;
 
 	
-	virtual void drawView(const GraphicsWeakPtr Graphics, Real32 Opacity) = 0;
+	virtual void drawView(Graphics * const TheGraphics, Real32 Opacity) = 0;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

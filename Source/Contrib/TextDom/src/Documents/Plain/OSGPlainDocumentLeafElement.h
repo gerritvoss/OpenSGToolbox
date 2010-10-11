@@ -64,7 +64,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocumentLeafElement : public PlainDocum
 		  
 	UInt32 getTextLength(void);
 	std::string& getText(void);
-	void setText(std::string);
+	void setText(const std::string& value);
 
 
     /*---------------------------------------------------------------------*/

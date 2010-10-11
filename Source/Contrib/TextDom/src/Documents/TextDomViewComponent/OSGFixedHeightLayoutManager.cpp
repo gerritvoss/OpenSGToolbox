@@ -47,13 +47,17 @@
 
 #include <OSGConfig.h>
 
+#include "OSGDocument.h"
+#include "OSGElement.h"
+#include "OSGTextDomArea.h"
+#include "OSGGlyphView.h"
+#include "OSGPlainDocumentBranchElement.h"
+#include "OSGPlainDocumentLeafElement.h"
 #include "OSGFixedHeightLayoutManager.h"
 #include "OSGUIViewport.h"
 #include "OSGStringUtils.h"
-#include "OSGAdvancedTextDomArea.h"
 
 #define LINEHEIGHT 15.0;
-#define CHARACTERWIDTH 3.0;
 
 #define HSL _HighlightStartLine
 #define HSI _HighlightStartIndex
@@ -101,10 +105,10 @@ void FixedHeightLayoutManager::setCaretIndexAndLine(UInt32 _theOriginalCaretInde
 
 char FixedHeightLayoutManager::getNextCharacter(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine)
 {
-	PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_theOriginalCaretLine));
+	PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_theOriginalCaretLine));
 	if(temp->getTextLength()-2 == _theOriginalCaretIndex)
 	{
-		temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_theOriginalCaretLine+1));
+		temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_theOriginalCaretLine+1));
 		std::string tempstring = temp->getText();
 		return tempstring[0];
 	}
@@ -121,7 +125,7 @@ bool FixedHeightLayoutManager::isLastCharacterOfLine(UInt32 _theOriginalCaretInd
 {
 	if(rootElement)
 	{
-		PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_theOriginalCaretLine));
+		PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_theOriginalCaretLine));
 		if(temp->getTextLength()-2 == _theOriginalCaretIndex)
 		{
 			return true;
@@ -144,7 +148,7 @@ UInt32 FixedHeightLayoutManager::CaretLineAndIndexToCaretOffsetInDOM(UInt32 Care
 	{
 		for(UInt32 i=0;i<CaretLine;i++)
 		{
-			PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+			PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(i));
 			offset += temp->getTextLength();
 		}
 		offset += CaretIndex;
@@ -154,17 +158,17 @@ UInt32 FixedHeightLayoutManager::CaretLineAndIndexToCaretOffsetInDOM(UInt32 Care
 
 void FixedHeightLayoutManager::deleteCharacters(UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex)
 {
-	std::string theHighlightedString = getTextDomArea()->getHighlightedString();
+	std::string theHighlightedString = getParentTextDomArea()->getHighlightedString();
 	//if(_CaretIndex == greaterIndex && _CaretLine == greaterLine)
 	//{
 	//	// caret position should be shifted back by length of theHighlightedString
-	//	getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()-theHighlightedString.length());
+	//	getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()-theHighlightedString.length());
 	//}
 	//else
 	//{
 	//	//do nothing
 	//}
-	getTextDomArea()->getDocumentModel()->deleteCharacters(lesserLine,lesserIndex,greaterLine,greaterIndex);
+	getParentTextDomArea()->getDocumentModel()->deleteCharacters(lesserLine,lesserIndex,greaterLine,greaterIndex);
 	HSL = HEL = _CaretLine = lesserLine;
 	HSI = HEI = _CaretIndex = lesserIndex;
 	recalculateCaretPositions();
@@ -175,7 +179,7 @@ void FixedHeightLayoutManager::selectAll(void)
 	HSL = 0;
 	HSI = 0;
 	HEL = rootElement->getElementCount()-1;
-	PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(HEL));
+	PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(HEL));
 	HEI = temp->getTextLength()-2;
 
 	_CaretLine = HEL;
@@ -196,7 +200,7 @@ bool FixedHeightLayoutManager::isLastCharacterOfDocument() const
 {
 	if(_CaretLine == rootElement->getElementCount()-1)
 	{
-		PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+		PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 		if(_CaretIndex >= temp->getTextLength()-2) return true;
 	}
 	return  false;
@@ -206,7 +210,7 @@ bool FixedHeightLayoutManager::isLastCharacterOfDocument() const
 UInt32 FixedHeightLayoutManager::getTopmostVisibleLineNumber() const
 {
 	Pnt2f topLeft,bottomRight;
-	getTextDomArea()->getClipBounds(topLeft,bottomRight);
+	getParentTextDomArea()->getClipBounds(topLeft,bottomRight);
 	UInt32 topmostVisibleLineNumber = UInt32(floor((topLeft.y()) / heightOfLine));
 	return topmostVisibleLineNumber; 
 }
@@ -214,11 +218,11 @@ UInt32 FixedHeightLayoutManager::getTopmostVisibleLineNumber() const
 UInt32 FixedHeightLayoutManager::getLinesToBeDisplayed() const
 {
 	Pnt2f topLeft,bottomRight;
-	getTextDomArea()->getClipBounds(topLeft,bottomRight);
+	getParentTextDomArea()->getClipBounds(topLeft,bottomRight);
 	
 	UInt32 linesToBeDisplayed = 0;
 	if(bottomRight.x() == 0 && bottomRight.y() == 0 )
-		linesToBeDisplayed = (UInt32(ceil(getTextDomArea()->getPreferredSize().y()/ heightOfLine)));
+		linesToBeDisplayed = (UInt32(ceil(getParentTextDomArea()->getPreferredSize().y()/ heightOfLine)));
 	else
 		linesToBeDisplayed = (UInt32(ceil((bottomRight.y() - topLeft.y())/heightOfLine)));
 
@@ -233,10 +237,10 @@ void FixedHeightLayoutManager::updateSize()
 
 void FixedHeightLayoutManager::initializeRootElement() 
 {
-	if(getTextDomArea()->getDocumentModel())
+	if(getParentTextDomArea()->getDocumentModel())
 	{
-		defaultRoot=getTextDomArea()->getDocumentModel()->getDefaultRootElement();
-		rootElement = dynamic_pointer_cast<PlainDocumentBranchElement>(defaultRoot);
+		defaultRoot=getParentTextDomArea()->getDocumentModel()->getDefaultRootElement();
+		rootElement = dynamic_cast<PlainDocumentBranchElement*>(defaultRoot);
 	}
 }
 
@@ -244,14 +248,14 @@ void FixedHeightLayoutManager::updateViews(void)
 {
 	if(rootElement)
 	{
-		Pnt2f init = getTextDomArea()->getPosition();
+		Pnt2f init = getParentTextDomArea()->getPosition();
 
 		UInt32 lineNumber = getTopmostVisibleLineNumber();
 		UInt32 linesToBeDisplayed = getLinesToBeDisplayed();
 
 		clearVisibleViews();
 		
-		if(getTextDomArea()->getWrapStyleWord())
+		if(getParentTextDomArea()->getWrapStyleWord())
 		{
 			if(linesToElements.size()==0)
 			{
@@ -270,8 +274,8 @@ void FixedHeightLayoutManager::updateViews(void)
 						view->setElement(rootElement->getElement(linesToElements[lineNumber]));
 						view->setLines(getNumberOfLines(getFirstLineOfElement(lineNumber)));
 						view->setLineHeight(heightOfLine);
-						view->setLineWidth(/*init.x()+*/getTextDomArea()->getPreferredSize().x());
-						view->setFont(getTextDomArea()->getFont());
+						view->setLineWidth(/*init.x()+*/getParentTextDomArea()->getPreferredSize().x());
+						view->setFont(getParentTextDomArea()->getFont());
 					
 
 						if(lineNumber == initLineNumber)	// get the linenumber where the element corresponding to this line was first drawn
@@ -296,7 +300,7 @@ void FixedHeightLayoutManager::updateViews(void)
 					GlyphViewRefPtr view = GlyphView::create();
 					view->setElement(rootElement->getElement(lineNumber));
 					view->setInitialPosition(Pnt2f(/*init.x()+*/_GutterSpace+_GutterSeparation,/*init.y()+*/lineNumber*heightOfLine));
-					view->setFont(getTextDomArea()->getFont());
+					view->setFont(getParentTextDomArea()->getFont());
 					view->setLineNumber(lineNumber+1);
 					pushToVisibleViews(view);
 					lineNumber++;
@@ -319,10 +323,10 @@ UInt32 FixedHeightLayoutManager::getFirstLineOfElement(UInt32 lineNumber)
 
 UInt32 FixedHeightLayoutManager::totalNumberOfLines(void)
 {
-	if(getTextDomArea()->getWrapStyleWord()) return linesToElements.size();
+	if(getParentTextDomArea()->getWrapStyleWord()) return linesToElements.size();
 	else 
 	{
-		ElementRefPtr defaultRoot=getTextDomArea()->getDocumentModel()->getDefaultRootElement();
+		ElementRefPtr defaultRoot=getParentTextDomArea()->getDocumentModel()->getDefaultRootElement();
 		PlainDocumentBranchElementRefPtr rootElement = dynamic_pointer_cast<PlainDocumentBranchElement>(defaultRoot);
 		return rootElement->getElementCount();
 	}
@@ -341,14 +345,14 @@ UInt32 FixedHeightLayoutManager::getNumberOfLines(UInt32 lineNumber)
 
 void FixedHeightLayoutManager::calculatePreferredSize(void)
 {
-	if(getTextDomArea()->getWrapStyleWord())
+	if(getParentTextDomArea()->getWrapStyleWord())
 	{
 		Pnt2f topLeft,bottomRight;
-		getTextDomArea()->getClipBounds(topLeft,bottomRight);
+		getParentTextDomArea()->getClipBounds(topLeft,bottomRight);
 
 		if(topLeft.x() == 0 && topLeft.y() == 0)
 		{
-			_preferredWidth = getTextDomArea()->getPreferredSize().x();
+			_preferredWidth = getParentTextDomArea()->getPreferredSize().x();
 		}
 		else
 		{
@@ -359,18 +363,18 @@ void FixedHeightLayoutManager::calculatePreferredSize(void)
 	}
 	else
 	{	
-		if(getTextDomArea()->getDocumentModel())
+		if(getParentTextDomArea()->getDocumentModel())
 		{
-			ElementRefPtr defaultRoot=getTextDomArea()->getDocumentModel()->getDefaultRootElement();
+			ElementRefPtr defaultRoot=getParentTextDomArea()->getDocumentModel()->getDefaultRootElement();
 			PlainDocumentBranchElementRefPtr rootElement = dynamic_pointer_cast<PlainDocumentBranchElement>(defaultRoot);
 
-			_preferredWidth = osgMax(getTextDomArea()->getSize().x(),calculateWidthOfLongestLine(rootElement));
+			_preferredWidth = osgMax(getParentTextDomArea()->getSize().x(),calculateWidthOfLongestLine(rootElement));
 			_preferredHeight =  rootElement->getElementCount() * heightOfLine;
 		}
 		else 
 		{
-			_preferredWidth = getTextDomArea()->getSize().x();
-			_preferredHeight =  getTextDomArea()->getSize().y();
+			_preferredWidth = getParentTextDomArea()->getSize().x();
+			_preferredHeight =  getParentTextDomArea()->getSize().y();
 		}
 	}
 }
@@ -390,28 +394,28 @@ void FixedHeightLayoutManager::calculateLineHeight(void)
 		// calculating the character height using 'A' as the standard character
 		heightOfLine = LINEHEIGHT;
 		
-		UInt32 lineSpacing = getTextDomArea()->getLineSpacing();
+		UInt32 lineSpacing = getParentTextDomArea()->getLineSpacing();
 
 		Vec2f topLeft(0,0),bottomRight(0,0);
 
-		if(getTextDomArea()->getFont())
+		if(getParentTextDomArea()->getFont())
 		{
-			getTextDomArea()->getFont()->getBounds("A",topLeft,bottomRight);
+			getParentTextDomArea()->getFont()->getBounds("A",topLeft,bottomRight);
 			heightOfLine = bottomRight.y() - topLeft.y();
 		}
 }
 
-Real32 FixedHeightLayoutManager::calculateWidthOfLongestLine(PlainDocumentBranchElementRefPtr rootElement) const
+Real32 FixedHeightLayoutManager::calculateWidthOfLongestLine(Element* const rootElement) const
 {
 	Real32 finalWidth=0.0;
 	Real32 currentWidth;
 
 	for(UInt32 i=0;i<rootElement->getElementCount();i++)
 	{
-		PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+		PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(i));
 
 		Pnt2f TopLeft, BottomRight;
-		getTextDomArea()->getFont()->getBounds(temp->getText(), TopLeft, BottomRight);
+		getParentTextDomArea()->getFont()->getBounds(temp->getText(), TopLeft, BottomRight);
 		
 		currentWidth = BottomRight.x() - TopLeft.x();
 
@@ -423,7 +427,7 @@ Real32 FixedHeightLayoutManager::calculateWidthOfLongestLine(PlainDocumentBranch
 bool FixedHeightLayoutManager::insideGutterRegion(Real32 PointOnComponentX)const
 {
 	Pnt2f topLeft,bottomRight;
-	getTextDomArea()->getClipBounds(topLeft,bottomRight);
+	getParentTextDomArea()->getClipBounds(topLeft,bottomRight);
 	return ((PointOnComponentX - topLeft.x())<=(_GutterSpace + _GutterSeparation));
 }
 
@@ -433,7 +437,7 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 	{
 
 		UInt32 pos = 0, noOfCharacters =0;
-		UInt32 row = (UInt32(floor((PointOnComponent.y()/* - getTextDomArea()->getPosition().y() */) / heightOfLine)));
+		UInt32 row = (UInt32(floor((PointOnComponent.y()/* - getParentTextDomArea()->getPosition().y() */) / heightOfLine)));
 
 		_CaretLine = row;
 		// calculating the caret line and caret y position
@@ -444,7 +448,7 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 		if(row>=rootElement->getElementCount())
 		{
 			_CaretLine = rootElement->getElementCount()-1;
-			PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+			PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 			_CaretIndex = temp->getTextLength()-2;
 
 			recalculateCaretPositions();
@@ -460,16 +464,16 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 
 			printDebugInformation();
 
-			getTextDomArea()->setCaretPosition(getTextDomArea()->getDocumentModel()->getEndPosition()-2);
+			getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getDocumentModel()->getEndPosition()-2);
 			return 0;	
 		}
 		for(UInt32 i=0;i<_CaretLine;i++)
 		{
-			PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+			PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(i));
 			noOfCharacters= temp->getTextLength();
 			pos += noOfCharacters;
 		}
-		PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(row));
+		PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(row));
 
 		noOfCharacters = 0;
 
@@ -484,7 +488,7 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 		for(UInt32 i=0;i<temp->getTextLength()-2;i++)
 		{
 			ttemp = temptext[i];
-			getTextDomArea()->getFont()->getBounds(ttemp,topLeft,bottomRight);
+			getParentTextDomArea()->getFont()->getBounds(ttemp,topLeft,bottomRight);
 
 			if(widthSoFar + bottomRight.x() <= xpos) 
 			{
@@ -513,7 +517,7 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 
 		printDebugInformation();
 
-		getTextDomArea()->setCaretPosition(pos);
+		getParentTextDomArea()->setCaretPosition(pos);
 		return pos;
 	}
 }
@@ -521,16 +525,16 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 
 void FixedHeightLayoutManager::DoIfLineLongerThanPreferredSize() const
 {
-	PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+	PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 
 	Pnt2f topLeft,bottomRight;
-	getTextDomArea()->getFont()->getBounds(temp->getText(),topLeft,bottomRight);
+	getParentTextDomArea()->getFont()->getBounds(temp->getText(),topLeft,bottomRight);
 	
-	Vec2f preferredSize = getTextDomArea()->getPreferredSize(); 
+	Vec2f preferredSize = getParentTextDomArea()->getPreferredSize(); 
 
 	if(bottomRight.x() > preferredSize.x())preferredSize.setValues(bottomRight.x(),preferredSize.y());
 	
-	getTextDomArea()->setPreferredSize(preferredSize);
+	getParentTextDomArea()->setPreferredSize(preferredSize);
 
 }
 
@@ -548,18 +552,18 @@ void FixedHeightLayoutManager::moveCaretLeft(void)
 		// set caret x,y position
 		recalculateCaretPositions();
 		// set the caret position wrt DOM
-		getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()-1);
+		getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()-1);
 	}
 	else
 	{
 		if(_CaretLine>0)
 		{
 			_CaretLine--;
-			theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+			theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 			_CaretIndex = theElement->getTextLength()-2;
 			if(_CaretIndex<0)_CaretIndex = 0;
 			recalculateCaretPositions();
-			getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()-2);
+			getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()-2);
 		}
 	}
 }
@@ -567,7 +571,7 @@ void FixedHeightLayoutManager::moveCaretLeft(void)
 void FixedHeightLayoutManager::moveCaretRight(void)
 {
 	PlainDocumentLeafElementRefPtr theElement; 
-	theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+	theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 	if(_CaretIndex>=theElement->getTextLength()-2) 
 	{
 		if(_CaretLine<rootElement->getElementCount()-1)
@@ -575,14 +579,14 @@ void FixedHeightLayoutManager::moveCaretRight(void)
 			_CaretLine++;
 			_CaretIndex = 0;
 			recalculateCaretPositions();
-			getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()+2);
+			getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()+2);
 		}
 	}
 	else 
 	{
 		_CaretIndex++;
 		recalculateCaretPositions();
-		getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()+1);
+		getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()+1);
 	}
 }
 
@@ -599,19 +603,19 @@ void FixedHeightLayoutManager::moveAndHighlightWord(UInt32 dir)
 
 	case LEFT:
 		
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(prevLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(prevLine));
 
 		if(prevIndex == 0)
 		{
 			if(prevLine>0)
 			{
 				prevLine--;
-				theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(prevLine));
+				theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(prevLine));
 				prevIndex = theElement->getTextLength()-2;
 				_CaretLine = prevLine;
 				_CaretIndex = prevIndex;
 				fromPrevElement = true;
-				getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()-2);
+				getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()-2);
 			}
 			else break;
 		}
@@ -626,7 +630,7 @@ void FixedHeightLayoutManager::moveAndHighlightWord(UInt32 dir)
 			{
 				_CaretLine = prevLine;
 				_CaretIndex = i;	
-				getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()-1);
+				getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()-1);
 				i--;
 			}
 			else
@@ -639,7 +643,7 @@ void FixedHeightLayoutManager::moveAndHighlightWord(UInt32 dir)
 
 	case RIGHT:
 		
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(prevLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(prevLine));
 
 		if(prevIndex >=theElement->getTextLength()-2)
 		{
@@ -650,8 +654,8 @@ void FixedHeightLayoutManager::moveAndHighlightWord(UInt32 dir)
 				_CaretLine = prevLine;
 				_CaretIndex = prevIndex;
 				fromPrevElement = true;
-				theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(prevLine));
-				getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()+2);
+				theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(prevLine));
+				getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()+2);
 			}
 			else break;
 		}
@@ -667,7 +671,7 @@ void FixedHeightLayoutManager::moveAndHighlightWord(UInt32 dir)
 				i++;
 				_CaretLine = prevLine;
 				_CaretIndex = i;	
-				getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()+1);
+				getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()+1);
 			}
 			else
 			{
@@ -688,14 +692,14 @@ void FixedHeightLayoutManager::moveCaretUp(void)
 		UInt32 prevIndex = _CaretIndex;
 		UInt32 prevLine = _CaretLine;
 		_CaretLine--;
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 		if(_CaretIndex> theElement->getTextLength()-2)_CaretIndex = theElement->getTextLength()-2;
 		if(_CaretIndex<0)_CaretIndex=0;
 		recalculateCaretPositions();
 		UInt32 charactersToBeRewinded=0;
 		charactersToBeRewinded += prevIndex;
 		charactersToBeRewinded += (theElement->getTextLength() - _CaretIndex);
-		getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()-charactersToBeRewinded);
+		getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()-charactersToBeRewinded);
 	}
 }
 
@@ -704,18 +708,18 @@ void FixedHeightLayoutManager::moveCaretDown(void)
 	PlainDocumentLeafElementRefPtr theElement;
 	if(_CaretLine < rootElement->getElementCount()-1)
 	{
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 		UInt32 prevIndex = _CaretIndex;
 		UInt32 prevLineLength = theElement->getTextLength();
 		_CaretLine++;
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 		if(_CaretIndex> theElement->getTextLength()-2)_CaretIndex = theElement->getTextLength()-2;
 		if(_CaretIndex<0)_CaretIndex=0;
 		recalculateCaretPositions();
 		UInt32 charactersToBeForwarded=0;
 		charactersToBeForwarded += _CaretIndex;
 		charactersToBeForwarded += (prevLineLength - prevIndex);
-		getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()+charactersToBeForwarded);
+		getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()+charactersToBeForwarded);
 	}
 }
 
@@ -725,14 +729,14 @@ void FixedHeightLayoutManager::moveCaretHome(bool isControlPressed)
 	{
 		_CaretLine = 0;
 		_CaretIndex = 0;
-		getTextDomArea()->setCaretPosition(0);
+		getParentTextDomArea()->setCaretPosition(0);
 	}
 	else
 	{
 		PlainDocumentLeafElementRefPtr theElement;
 		UInt32 prevIndex = _CaretIndex;
 		_CaretIndex = 0;
-		getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()-(prevIndex - _CaretIndex));
+		getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()-(prevIndex - _CaretIndex));
 	}
 	recalculateCaretPositions();
 }
@@ -744,15 +748,15 @@ void FixedHeightLayoutManager::moveCaretEnd(bool isControlPressed)
 	if(isControlPressed)
 	{
 		_CaretLine = rootElement->getElementCount()-1;
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 		_CaretIndex = theElement->getTextLength()-2;
-		getTextDomArea()->setCaretPosition(getTextDomArea()->getDocumentModel()->getEndPosition()-2);
+		getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getDocumentModel()->getEndPosition()-2);
 		recalculateCaretPositions();
 	}
 	else
 	{
 		UInt32 prevIndex = _CaretIndex;
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 		_CaretIndex = theElement->getTextLength()-2;
 		if(_CaretIndex<0)
 		{
@@ -761,7 +765,7 @@ void FixedHeightLayoutManager::moveCaretEnd(bool isControlPressed)
 		}
 		if(_CaretIndex>prevIndex)
 			recalculateCaretPositions();
-		getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()+ (_CaretIndex - prevIndex));
+		getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()+ (_CaretIndex - prevIndex));
 	}
 }
 
@@ -945,12 +949,12 @@ void FixedHeightLayoutManager::moveTheCaret(UInt32 dir,bool isShiftPressed,bool 
 
 	case HOMEOFNEXTLINE:
 		
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 		 charactersToBeForwarded = theElement->getTextLength()-_CaretIndex;
 		_CaretIndex = 0;
 		_CaretLine++;
 		recalculateCaretPositions();
-		getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()+ charactersToBeForwarded);
+		getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()+ charactersToBeForwarded);
 
 		break;
 
@@ -970,7 +974,7 @@ void FixedHeightLayoutManager::moveTheCaret(UInt32 dir,bool isShiftPressed,bool 
 		tempLine = _CaretLine;
 		tempLine -= getLinesToBeDisplayed();
 		if(tempLine<0)tempLine = 0;
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(tempLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(tempLine));
 		if(tempIndex > theElement->getTextLength()-2)tempIndex = theElement->getTextLength()-2;
 
 		HEI = tempIndex;
@@ -991,7 +995,7 @@ void FixedHeightLayoutManager::moveTheCaret(UInt32 dir,bool isShiftPressed,bool 
 		tempLine = _CaretLine;
 		tempLine += getLinesToBeDisplayed();
 		if(tempLine>=rootElement->getElementCount())tempLine = rootElement->getElementCount()-1;
-		theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(tempLine));
+		theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(tempLine));
 		if(tempIndex > theElement->getTextLength()-2)tempIndex = theElement->getTextLength()-2;
 
 		HEI = tempIndex;
@@ -1014,7 +1018,7 @@ UInt32 FixedHeightLayoutManager::getNumberOfLeadingSpaces(UInt32 line)
 {
 	if(line>=rootElement->getElementCount())return 0;
 	UInt32 count = 0;
-	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(line));
+	PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(line));
 	std::string theString = theElement->getText();
 	
 	for(UInt32 i=0;i<theString.size(),theString[i]==' ';i++)count++;
@@ -1031,7 +1035,7 @@ bool FixedHeightLayoutManager::isCaretInWidthRange()
 {
 
 	Pnt2f topLeft,bottomRight;
-	getTextDomArea()->getClipBounds(topLeft,bottomRight);
+	getParentTextDomArea()->getClipBounds(topLeft,bottomRight);
 	return (_CaretXPosition>=topLeft.x() && _CaretXPosition<=bottomRight.x());
 }
 
@@ -1043,7 +1047,7 @@ bool FixedHeightLayoutManager::isCaretVisible(void)
 void FixedHeightLayoutManager::doubleClickHandler(void)
 {
 	UInt32 initIndex = _CaretIndex;
-	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+	PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 	std::string theString = theElement->getText();
 
 	Int32 BeginWord = 0;
@@ -1082,7 +1086,7 @@ void FixedHeightLayoutManager::doubleClickHandler(void)
 
 	recalculateCaretPositions();
 
-	getTextDomArea()->setCaretPosition(getTextDomArea()->getCaretPosition()+ (EndWord - initIndex));
+	getParentTextDomArea()->setCaretPosition(getParentTextDomArea()->getCaretPosition()+ (EndWord - initIndex));
 
 }
 
@@ -1090,23 +1094,21 @@ void FixedHeightLayoutManager::doubleClickHandler(void)
 
 void FixedHeightLayoutManager::makeCaretVisible(UInt32 dir)
 {
-
-	
 	Pnt2f TempTopLeft, TempBottomRight;
 	
 	TempTopLeft = Pnt2f(_CaretXPosition,_CaretYPosition);//TempTopLeft + Offset;
 	TempBottomRight = Pnt2f(_CaretXPosition + 25 + 2,_CaretYPosition+heightOfLine);//25 here denotes the gutterwidth .. should not hardcode here
 
-	if(getTextDomArea()->getParentContainer() != NULL && getTextDomArea()->getParentContainer()->getType().isDerivedFrom(UIViewport::getClassType()))
+	if(getParentTextDomArea()->getParentContainer() != NULL && getParentTextDomArea()->getParentContainer()->getType().isDerivedFrom(UIViewport::getClassType()))
 	{
 		//Get the bounds of this line
-		dynamic_cast<UIViewport*>(getTextDomArea()->getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
+		dynamic_cast<UIViewport*>(getParentTextDomArea()->getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
 	}
-	else if(getTextDomArea()->getParentContainer() != NULL && 
-		getTextDomArea()->getParentContainer()->getParentContainer() != NULL && 
-		getTextDomArea()->getParentContainer()->getParentContainer()->getType().isDerivedFrom(UIViewport::getClassType()))
+	else if(getParentTextDomArea()->getParentContainer() != NULL && 
+		getParentTextDomArea()->getParentContainer()->getParentContainer() != NULL && 
+		getParentTextDomArea()->getParentContainer()->getParentContainer()->getType().isDerivedFrom(UIViewport::getClassType()))
 	{
-		dynamic_cast<UIViewport*>(getTextDomArea()->getParentContainer()->getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
+		dynamic_cast<UIViewport*>(getParentTextDomArea()->getParentContainer()->getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
 	}
 	updateViews();
 	
@@ -1114,32 +1116,32 @@ void FixedHeightLayoutManager::makeCaretVisible(UInt32 dir)
 
 bool FixedHeightLayoutManager::isLastCharacter(void)
 {
-	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+	PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 	return (_CaretIndex == theElement->getTextLength()-2);
 }
 
 void FixedHeightLayoutManager::recalculateCaretPositions(void)
 {
 	// this function assumes that the caret index and line values are valid and computes the caret x and y positions directly
-	_CaretYPosition = /*getTextDomArea()->getPosition().y() + */_CaretLine * heightOfLine;
-	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(_CaretLine));
+	_CaretYPosition = /*getParentTextDomArea()->getPosition().y() + */_CaretLine * heightOfLine;
+	PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 	Pnt2f topLeft,bottomRight;
 	std::string theSubstring = theElement->getText();
 	theSubstring = theSubstring.substr(0,_CaretIndex);
-	getTextDomArea()->getFont()->getBounds(theSubstring,topLeft,bottomRight);
+	getParentTextDomArea()->getFont()->getBounds(theSubstring,topLeft,bottomRight);
 	_CaretXPosition = _GutterSpace + _GutterSeparation + bottomRight.x();
 }
 
 Pnt2f FixedHeightLayoutManager::getXYPosition(UInt32 lineNumber,UInt32 index,bool isBeginning) const
 {
-	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(lineNumber));
+	PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(lineNumber));
 	if(theElement)
 	{
 		std::string substring = theElement->getText();
 		substring = substring.substr(0,index);
 
 		Pnt2f topLeft,bottomRight;
-		getTextDomArea()->getFont()->getBounds(substring,topLeft,bottomRight);
+		getParentTextDomArea()->getFont()->getBounds(substring,topLeft,bottomRight);
 
 		if(isBeginning)return Pnt2f( _GutterSpace + _GutterSeparation + bottomRight.x(),lineNumber*heightOfLine);
 		return Pnt2f(_GutterSpace + _GutterSeparation + bottomRight.x(),(lineNumber+1)*heightOfLine);
@@ -1158,11 +1160,11 @@ Pnt2f FixedHeightLayoutManager::getStartXYPosition(UInt32 lineNumber) const
 
 Pnt2f FixedHeightLayoutManager::getEndXYPosition(UInt32 lineNumber) const
 {
-	PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(lineNumber));
+	PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(lineNumber));
 	if(theElement)
 	{
 		Pnt2f topLeft,bottomRight;
-		getTextDomArea()->getFont()->getBounds(theElement->getText(),topLeft,bottomRight);
+		getParentTextDomArea()->getFont()->getBounds(theElement->getText(),topLeft,bottomRight);
 		return Pnt2f(_GutterSpace + _GutterSeparation + bottomRight.x(),(lineNumber+1)*heightOfLine);
 	}
 	else
@@ -1220,7 +1222,7 @@ void FixedHeightLayoutManager::findBrace(char theChar,UInt32 direction)
 			UInt32 val = 1;
 			while(currentLine<rootElement->getElementCount())
 			{
-				PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(currentLine));
+				PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(currentLine));
 				std::string theString = temp->getText();
 				if(currentLine == _StartingBraceLine)
 				{
@@ -1261,7 +1263,7 @@ void FixedHeightLayoutManager::findBrace(char theChar,UInt32 direction)
 			UInt32 val = 1;
 			while(currentLine>=0)
 			{
-				PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(currentLine));
+				PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(currentLine));
 				std::string theString = temp->getText();
 				if(currentLine == _EndingBraceLine)
 				{
@@ -1320,25 +1322,25 @@ bool FixedHeightLayoutManager::isEndingBraces(char value)
 void FixedHeightLayoutManager::populateCache(void)
 {
 	// cache exists only when the word wrap is enabled
-	if(getTextDomArea()->getWrapStyleWord()) 
+	if(getParentTextDomArea()->getWrapStyleWord()) 
 	{
 		linesToElements.clear();
 
-		if(getTextDomArea()->getDocumentModel())
+		if(getParentTextDomArea()->getDocumentModel())
 		{
-			ElementRefPtr defaultRoot=getTextDomArea()->getDocumentModel()->getDefaultRootElement();
+			ElementRefPtr defaultRoot=getParentTextDomArea()->getDocumentModel()->getDefaultRootElement();
 			if(defaultRoot)
 			{
 				PlainDocumentBranchElementRefPtr rootElement = dynamic_pointer_cast<PlainDocumentBranchElement>(defaultRoot);
 
-				Pnt2f init = getTextDomArea()->getPosition();
-				Vec2f dimensions = getTextDomArea()->getPreferredSize();
+				Pnt2f init = getParentTextDomArea()->getPosition();
+				Vec2f dimensions = getParentTextDomArea()->getPreferredSize();
 				
 			
 				for(UInt32 i=0;i<rootElement->getElementCount();i++)
 				{
 					//GlyphViewRefPtr view = GlyphView::create();
-					PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(rootElement->getElement(i));
+					PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(i));
 					//view->setElement(ElementRefPtr(temp));
 					UInt32 noOfCharacters= temp->getTextLength();
 
@@ -1370,6 +1372,9 @@ void FixedHeightLayoutManager::populateCache(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 FixedHeightLayoutManager::FixedHeightLayoutManager(void) :
+    Inherited(),
+    defaultRoot(NULL),
+    rootElement(NULL),
 	_CaretLine(0),
 	_CaretIndex(0),
 	_CaretXPosition(0),
@@ -1386,13 +1391,14 @@ FixedHeightLayoutManager::FixedHeightLayoutManager(void) :
 	_StartingBraceIndex(-1),
 	_EndingBraceLine(-1),
 	_EndingBraceIndex(-1),
-	_BracesHighlightFlag(false),
-    Inherited()
+	_BracesHighlightFlag(false)
 {
 }
 
 FixedHeightLayoutManager::FixedHeightLayoutManager(const FixedHeightLayoutManager &source) :
-    Inherited(source)
+    Inherited(source),
+    defaultRoot(NULL),
+    rootElement(NULL)
 {
 	_CaretLine = source._CaretLine;
 	_CaretIndex = source._CaretIndex;
@@ -1423,7 +1429,7 @@ void FixedHeightLayoutManager::changed(ConstFieldMaskArg whichField,
                             UInt32            origin,
                             BitVector         details)
 {
-	if(whichField & FixedHeightLayoutManager::TextDomAreaFieldMask)
+	if(whichField & FixedHeightLayoutManager::ParentTextDomAreaFieldMask)
 	{
 		initializeRootElement();
 	}

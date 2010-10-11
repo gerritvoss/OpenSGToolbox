@@ -69,7 +69,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractBranchElement : public AbstractBranc
 	bool getAllowsChildren(void) const;
 	
 	//  Gets a child element.
-	ElementRefPtr	getElement(UInt32 index) const;
+	Element*	getElement(UInt32 index) const;
     
 	//  Gets the number of children for the element.
 	UInt32 getElementCount(void) const;
@@ -90,7 +90,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractBranchElement : public AbstractBranc
 	bool	isLeaf(void) const;
      
 	//Gets the child element that contains the given model position.
-	ElementRefPtr positionToElement(UInt32 pos) const;
+	Element* positionToElement(UInt32 pos) const;
       
 	//Replaces content with a new set of elements.
 	void replace(int offset, int length, MFRecElementPtr elems);
@@ -100,7 +100,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractBranchElement : public AbstractBranc
       
 	void removeChildElement(UInt32 index);
 
-	void addChildElement(UInt32 index,ElementRefPtr newPtr);
+	void addChildElement(UInt32 index,Element* const newPtr);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

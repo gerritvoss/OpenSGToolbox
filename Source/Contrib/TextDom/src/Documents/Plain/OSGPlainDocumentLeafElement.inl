@@ -53,9 +53,9 @@ std::string& PlainDocumentLeafElement::getText(void)
 }
 
 inline 
-void PlainDocumentLeafElement::setText(std::string _Text)
+void PlainDocumentLeafElement::setText(const std::string& value)
 {
-	_Content = _Text;
+	_Content = value;
 }
 
 

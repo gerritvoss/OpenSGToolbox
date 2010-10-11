@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGAbstractDocumentBase.h"
-#include "styleddocumentattributes.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -62,103 +61,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractDocument : public AbstractDocumentBa
 
     typedef AbstractDocumentBase Inherited;
     typedef AbstractDocument     Self;
-
-	virtual bool isA(std::string) = 0;
-
-	    //Registers the given observer to begin receiving notifications when changes are made to the document.
-    virtual EventConnection addDocumentListener(DocumentListenerPtr Listener);
-
-	virtual bool isDocumentListenerAttached(DocumentListenerPtr Listener) const;
-
-    //Unregisters the given observer from the notification list so it will no longer receive change updates.
-    virtual void removeDocumentListener(DocumentListenerPtr Listener);
-
-    //Registers the given observer to begin receiving notifications when undoable edits are made to the document.
-    virtual EventConnection addUndoableEditListener(UndoableEditListenerPtr Listener);
-
-	virtual bool isUndoableEditListenerAttached(UndoableEditListenerPtr Listener) const;
-
-    //Unregisters the given observer from the notification list so it will no longer receive updates.
-    virtual void removeUndoableEditListener(UndoableEditListenerPtr Listener);
-
-
-    //This method allows an application to mark a place in a sequence of character content.
-    virtual UInt32 createPosition(Int32 offs) = 0 ;
-
-    //Returns the root element that views should be based upon, unless some other mechanism for assigning views to element structures is provided.
-    virtual ElementRefPtr getDefaultRootElement(void) const = 0;
-
-    //Returns a position that represents the end of the document.
-    virtual UInt32 getEndPosition(void) const = 0;
-
-    //Returns number of characters of content currently in the document.
-    virtual UInt32 getLength(void) const = 0;
-
-    //Gets the properties associated with the document.
-    //virtual UInt32 getProperty(const std::string& key) const;
-
-    //Returns all of the root elements that are defined.
-    virtual std::vector<ElementRefPtr> getRootElements(void) = 0;
-
-    //Returns a position that represents the start of the document.
-    virtual UInt64 getStartPosition(void) const = 0;
-
-    //Fetches the text contained within the given portion of the document.
-    virtual std::string getText(Int32 offset, Int32 length) const = 0;
-
-    //Fetches the text contained within the given portion of the document.
-    virtual void getText(Int32 offset, Int32 length, std::string& txt) const = 0;
-
-	virtual void deleteCharacter(UInt32 elementIndex,UInt32 offsetInChild) = 0;
-
-	virtual void addTextAsNewElementToDocument(const std::string& str, TextWithProps& properties,bool createFreshDocument) = 0;
-
-    //Inserts a string of content.
-    virtual void insertString(UInt32 offset, const std::string& str, TextWithProps& properties) = 0;
-
-	virtual void insertCharacter(UInt32 offset, const char character, TextWithProps& properties) = 0;
-
-	virtual void insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, TextWithProps& properties) = 0;
-
-	virtual void deleteCharacters(UInt32 lesserIndex,UInt32 lesserOffset,UInt32 greaterIndex,UInt32 greaterOffset)=0;
-    //Associates a property with the document.
-    //virtual void putProperty(const std::string& key, UInt32 value);
-
-    //Removes a portion of the content of the document.
-    virtual void remove(Int32 offs, Int32 len) = 0;
-
-    //Gets the asynchronous loading priority.
-    //int getAsynchronousLoadPriority(void);
-
-    //Returns the root element of the bidirectional structure for this document.
-    //Element getBidiRootElement(void);
-
-    //Returns the DocumentFilter that is responsible for filtering of insertion/removal.
-    //DocumentFilter getDocumentFilter(void);
-
-    //Supports managing a set of properties.
-    //const std::map<std::string,UInt32>& getDocumentProperties(void) const;
-
-    //Get the paragraph element containing the given position.
-    //virtual  ElementRefPtr getParagraphElement(UInt32 pos) const;
-
-    //Acquires a lock to begin reading some state from the document.
-    //void readLock(void);
-
-    //Does a read unlock.
-    //void readUnlock(void);
-
-    //Deletes the region of text from offset to offset + length, and replaces it with text.
-    virtual void replace(Int32 offset, Int32 length, const std::string& str, TextWithProps& properties) = 0;
-
-    //Sets the asynchronous loading priority.
-    //void setAsynchronousLoadPriority(int p);
-
-    //Sets the DocumentFilter.
-    //void setDocumentFilter(DocumentFilter filter);
-
-    //Replaces the document properties dictionary for this document.
-    //void setDocumentProperties(const std::map<std::string,UInt32>& properties);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -204,61 +106,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractDocument : public AbstractDocumentBa
 
     static void initMethod(InitPhase ePhase);
 
-	    //Creates a document branch element, that can contain other elements.
-    //ElementRefPtr createBranchElement(ElementRefPtr parent, const std::map<std::string,UInt32>& a) const;
-
-    //Creates a document leaf element.
-    //ElementRefPtr createLeafElement(ElementRefPtr parent, const std::map<std::string,UInt32>& a, Int32 p0, Int32 p1) const;
-
-    //Notifies all listeners that have registered interest for notification on this event type.
-    virtual void produceChangedUpdate(const DocumentEventP e);
-
-    //Notifies all listeners that have registered interest for notification on this event type.
-    virtual void produceInsertUpdate(const DocumentEventP e);
-
-    //Notifies all listeners that have registered interest for notification on this event type.
-    virtual void produceRemoveUpdate(const DocumentEventP e);
-
-    //Notifies all listeners that have registered interest for notification on this event type.
-    virtual void produceUndoableEditHappened(const UndoableEditEventUnrecPtr e);
-
-    //Fetches the context for managing attributes.
-    //AbstractDocument.AttributeContext getAttributeContext(void) const;
-
-    //Gets the content for the document.
-    //AbstractDocument.Content getContent(void) const;
-
-    //Fetches the current writing thread if there is one.
-    //Thread getCurrentWriter(void);
-
-    //Updates document structure as a result of text insertion.
-    //void insertUpdate(AbstractDocument.DefaultDocumentEvent chng, AttributeSet attr);
-
-    //Updates any document structure as a result of text removal.
-    //void postRemoveUpdate(AbstractDocument.DefaultDocumentEvent chng);
-
-    //Updates any document structure as a result of text removal.
-    //void removeUpdate(AbstractDocument.DefaultDocumentEvent chng);
-
-    //Acquires a lock to begin mutating the document this lock protects.
-    //void writeLock(void);
-
-    //Releases a write lock previously obtained via writeLock.
-    //void writeUnlock(void);
-    
-	typedef std::set<DocumentListenerPtr> DocumentListenerSet;
-    typedef DocumentListenerSet::iterator DocumentListenerSetItor;
-    typedef DocumentListenerSet::const_iterator DocumentListenerSetConstItor;
-	
-    DocumentListenerSet       _DocumentListeners;
-
-	typedef std::set<UndoableEditListenerPtr> UndoableEditListenerSet;
-    typedef UndoableEditListenerSet::iterator UndoableEditListenerSetItor;
-    typedef UndoableEditListenerSet::const_iterator UndoableEditListenerSetConstItor;
-	
-    UndoableEditListenerSet       _UndoableEditListeners;
-    
     /*! \}                                                                 */
+    
     /*==========================  PRIVATE  ================================*/
 
   private:

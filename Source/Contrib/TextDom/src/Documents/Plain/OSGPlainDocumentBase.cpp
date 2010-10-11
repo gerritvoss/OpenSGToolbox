@@ -59,6 +59,7 @@
 
 
 
+#include "OSGElement.h"
 #include "OSGPlainDocumentBase.h"
 #include "OSGPlainDocument.h"
 

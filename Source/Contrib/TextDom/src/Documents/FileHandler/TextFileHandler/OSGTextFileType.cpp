@@ -75,16 +75,15 @@ A TextFileType.
  *                           Instance methods                              *
 \***************************************************************************/
 
- DocumentRefPtr TextFileType::read(std::istream &is,
+ DocumentTransitPtr TextFileType::read(std::istream &is,
 	                     const std::string& fileNameOrExtension)
 {
 	FWARNING (("STREAM INTERFACE NOT IMPLEMENTED!\n"));
-	DocumentRefPtr Result;
 
-	return Result;
+	return DocumentTransitPtr(NULL);
 }
 
-bool TextFileType::write(DocumentRefPtr Doc, std::ostream &os,
+bool TextFileType::write(Document* const Doc, std::ostream &os,
         const std::string& fileNameOrExtension)
 {
     FWARNING (("STREAM INTERFACE NOT IMPLEMENTED!\n"));

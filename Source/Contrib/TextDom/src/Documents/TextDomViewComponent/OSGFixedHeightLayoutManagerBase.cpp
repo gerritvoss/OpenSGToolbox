@@ -59,8 +59,11 @@
 
 
 
+#include "OSGGlyphView.h"
+#include "OSGDocument.h"
 #include "OSGFixedHeightLayoutManagerBase.h"
 #include "OSGFixedHeightLayoutManager.h"
+#include "OSGTextDomArea.h"
 
 #include <boost/bind.hpp>
 

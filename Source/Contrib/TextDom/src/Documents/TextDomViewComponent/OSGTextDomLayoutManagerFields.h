@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -146,6 +146,77 @@ const Char8 *FieldTraits<TextDomLayoutManager *, 0>::getMName<NoRefCountPolicy>(
 }
 
 
+/*! \ingroup GrpContribTextDomFieldTraits
+ */
+template <>
+struct FieldTraits<TextDomLayoutManager *, 1> :
+    public FieldTraitsFCPtrBase<TextDomLayoutManager *, 1>
+{
+  private:
+
+  public:
+    typedef FieldTraits<TextDomLayoutManager *, 1>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBTEXTDOM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+};
+
+template<> inline
+const Char8 *FieldTraits<TextDomLayoutManager *, 1>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecChildTextDomLayoutManagerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextDomLayoutManager *, 1>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecChildTextDomLayoutManagerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextDomLayoutManager *, 1>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakChildTextDomLayoutManagerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextDomLayoutManager *, 1>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdChildTextDomLayoutManagerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextDomLayoutManager *, 1>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecChildTextDomLayoutManagerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextDomLayoutManager *, 1>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecChildTextDomLayoutManagerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextDomLayoutManager *, 1>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakChildTextDomLayoutManagerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextDomLayoutManager *, 1>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdChildTextDomLayoutManagerPtr"; 
+}
+
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribTextDomFieldSFields */
 typedef PointerSField<TextDomLayoutManager *,
@@ -174,6 +245,13 @@ typedef PointerMField<TextDomLayoutManager *,
 typedef PointerMField<TextDomLayoutManager *,
                       NoRefCountPolicy        > MFUncountedTextDomLayoutManagerPtr;
 
+
+
+/*! \ingroup GrpContribTextDomFieldSFields */
+typedef ChildPointerSField<
+          TextDomLayoutManager *, 
+          UnrecordedRefCountPolicy,
+          1             > SFUnrecChildTextDomLayoutManagerPtr;
 
 
 
@@ -214,6 +292,14 @@ struct MFUncountedTextDomLayoutManagerPtr :
     public PointerMField<TextDomLayoutManager *,
                          NoRefCountPolicy        > {};
 
+
+
+/*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
+struct SFUnrecChildTextDomLayoutManagerPtr :
+    public ChildPointerSField<
+        TextDomLayoutManager *, 
+        UnrecordedRefCountPolicy,
+        1             > {};
 
 
 #endif // these are the doxygen hacks

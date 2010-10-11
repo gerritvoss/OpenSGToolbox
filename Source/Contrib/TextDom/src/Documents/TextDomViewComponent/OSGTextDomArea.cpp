@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*------------------------- --------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,11 +58,15 @@
 #include "OSGScrollBar.h"
 #include "OSGUIViewport.h"
 #include "OSGSearchWindow.h"
-#include "OSGAdvancedTextDomArea.h"
+#include "OSGGlyphView.h"
+#include "OSGColorLayer.h"
+#include "OSGPlainDocumentLeafElement.h"
+#include "OSGFixedHeightLayoutManager.h"
 #include "OSGInsertCharacterCommand.h"
 #include "OSGDeleteSelectedCommand.h"
 #include "OSGDeleteCharacterCommand.h"
 #include "OSGSetTextCommand.h"
+#include "OSGPlainDocument.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -89,41 +93,7 @@ void TextDomArea::initMethod(InitPhase ePhase)
     }
 }
 
-EventConnection TextDomArea::addDocumentModelChangedListener(DocumentModelChangedListenerPtr Listener)
-{
-   _DocumentModelChangedListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&TextDomArea::isDocumentModelChangedListenerAttached, this, Listener),
-       boost::bind(&TextDomArea::removeDocumentModelChangedListener, this, Listener));
-   
-}
-
-bool TextDomArea::isDocumentModelChangedListenerAttached(DocumentModelChangedListenerPtr Listener) const
-{
-    return _DocumentModelChangedListeners.find(Listener) != _DocumentModelChangedListeners.end();
-}
-
-void TextDomArea::removeDocumentModelChangedListener(DocumentModelChangedListenerPtr Listener)
-{
-   DocumentModelChangedListenerSetItor EraseIter(_DocumentModelChangedListeners.find(Listener));
-   if(EraseIter != _DocumentModelChangedListeners.end())
-   {
-      _DocumentModelChangedListeners.erase(EraseIter);
-   }
-}
-
-
-void TextDomArea::produceDocumentModelChanged(const DocumentModelChangedEventP e)
-{
-	DocumentModelChangedListenerSet Listeners(_DocumentModelChangedListeners);
-    for(DocumentModelChangedListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
-    {
-	    (*SetItor)->changedUpdate(e);
-    }
-    _Producer.produceEvent(DocumentModelChangedMethodId,e);
-}
-
-void TextDomArea::loadFile(BoostPath pathOfFile)
+void TextDomArea::loadFile(const BoostPath& pathOfFile)
 {
 	PlainDocumentRefPtr temp=dynamic_pointer_cast<PlainDocument>(TextFileHandler::the()->forceRead(pathOfFile));
 	if(temp)
@@ -133,121 +103,121 @@ void TextDomArea::loadFile(BoostPath pathOfFile)
 	}
 }
 
-void TextDomArea::saveFile(BoostPath pathOfFile)
+void TextDomArea::saveFile(const BoostPath& pathOfFile)
 {
 	TextFileHandler::the()->forceWrite(getDocumentModel(),pathOfFile);
 }
 
 UInt32 TextDomArea::getTopmostVisibleLineNumber(void)
 {
-	return Manager->getTopmostVisibleLineNumber();
+	return getLayoutManager()->getTopmostVisibleLineNumber();
 }
 
 UInt32 TextDomArea::getLinesToBeDisplayed(void)
 {
-	return Manager->getLinesToBeDisplayed();
+	return getLayoutManager()->getLinesToBeDisplayed();
 }
 
 Real32 TextDomArea::getHeightOfLine(void)
 {
-	return Manager->getHeightOfLine();
+	return getLayoutManager()->getHeightOfLine();
 }
 
-void TextDomArea::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void TextDomArea::drawInternal(Graphics * const TheGraphics, Real32 Opacity) const
 {
-	if(Manager)
+	if(getLayoutManager())
 	{
-		drawHighlightBG(Graphics,Opacity);
-		drawLineHighlight(Graphics,Opacity);
-		drawBraceHighlight(Graphics,Opacity);
+		drawHighlightBG(TheGraphics,Opacity);
+		drawLineHighlight(TheGraphics,Opacity);
+		drawBraceHighlight(TheGraphics,Opacity);
 	}
 	
 	// ask manager to draw visible views
 	
-	if(Manager && Manager->getMFVisibleViews()->size()>0)	// draw the view by calling the view's draw function
+	if(getLayoutManager() && getLayoutManager()->getMFVisibleViews()->size()>0)	// draw the view by calling the view's draw function
 	{
 		
-		for(UInt32 i=0;i<Manager->getMFVisibleViews()->size();i++)
+		for(UInt32 i=0;i<getLayoutManager()->getMFVisibleViews()->size();i++)
 		{
-			Manager->getVisibleViews(i)->drawView(Graphics,Opacity);
+			getLayoutManager()->getVisibleViews(i)->drawView(TheGraphics,Opacity);
 		}
 	}
 	
-	if(Manager && _CaretUpdateListener.DrawCaret())
-		drawTheCaret(Graphics,Opacity);
+	if(getLayoutManager() && _DrawCaret)
+		drawTheCaret(TheGraphics,Opacity);
 }
 
-void TextDomArea::drawHighlightBG(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void TextDomArea::drawHighlightBG(Graphics * const TheGraphics, Real32 Opacity) const
 {
-	if(Manager->getRootElement())
+	if(getLayoutManager()->getRootElement())
 	{
-		if(Manager->getHSL() != Manager->getHEL() ||  Manager->getHSI() != Manager->getHEI() )
+		if(getLayoutManager()->getHSL() != getLayoutManager()->getHEL() ||  getLayoutManager()->getHSI() != getLayoutManager()->getHEI() )
 		{
-			if(Manager->isStartLocationBeforeEndLocation())
+			if(getLayoutManager()->isStartLocationBeforeEndLocation())
 			{
-				drawHighlightBGInternal(Graphics,Opacity,Manager->getHSL(),Manager->getHSI(),Manager->getHEL(),Manager->getHEI());
+				drawHighlightBGInternal(TheGraphics,Opacity,getLayoutManager()->getHSL(),getLayoutManager()->getHSI(),getLayoutManager()->getHEL(),getLayoutManager()->getHEI());
 			}
 			else
 			{
-				drawHighlightBGInternal(Graphics,Opacity,Manager->getHEL(),Manager->getHEI(),Manager->getHSL(),Manager->getHSI());
+				drawHighlightBGInternal(TheGraphics,Opacity,getLayoutManager()->getHEL(),getLayoutManager()->getHEI(),getLayoutManager()->getHSL(),getLayoutManager()->getHSI());
 			}
 		}
 	}
 }
-void TextDomArea::drawHighlightBGInternal(const GraphicsWeakPtr Graphics, Real32 Opacity,UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex) const
+void TextDomArea::drawHighlightBGInternal(Graphics * const TheGraphics, Real32 Opacity,UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex) const
 {
 	for(UInt32 i=lesserLine+1;i<greaterLine;i++)
 	{
-		PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(i));
+		PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(i));
 		
 		if(theElement)
 		{
 			Pnt2f topLeft,bottomRight;
 			getFont()->getBounds(theElement->getText(),topLeft,bottomRight);
 
-			Graphics->drawRect(Pnt2f(Manager->getGutterSpace() + Manager->getGutterSeparation(),i*Manager->getHeightOfLine()),Pnt2f(Manager->getGutterSpace() + Manager->getGutterSeparation()+ bottomRight.x(),(i+1)*Manager->getHeightOfLine()),Color4f(0.7,0.7,0.95,1),Opacity);
+			TheGraphics->drawRect(Pnt2f(getLayoutManager()->getGutterSpace() + getLayoutManager()->getGutterSeparation(),i*getLayoutManager()->getHeightOfLine()),Pnt2f(getLayoutManager()->getGutterSpace() + getLayoutManager()->getGutterSeparation()+ bottomRight.x(),(i+1)*getLayoutManager()->getHeightOfLine()),Color4f(0.7,0.7,0.95,1),Opacity);
 		}
 	}
 
 	if(lesserLine== greaterLine)
 	{
-		Graphics->drawRect(Manager->getXYPosition(lesserLine,lesserIndex,true),Manager->getXYPosition(greaterLine,greaterIndex,false),Color4f(0.7,0.7,0.95,1),Opacity);
+		TheGraphics->drawRect(getLayoutManager()->getXYPosition(lesserLine,lesserIndex,true),getLayoutManager()->getXYPosition(greaterLine,greaterIndex,false),Color4f(0.7,0.7,0.95,1),Opacity);
 	}
 	else
 	{
 		// draw the first line
-		Graphics->drawRect(Manager->getXYPosition(lesserLine,lesserIndex,true),Manager->getEndXYPosition(lesserLine),Color4f(0.7,0.7,0.95,1),Opacity);
+		TheGraphics->drawRect(getLayoutManager()->getXYPosition(lesserLine,lesserIndex,true),getLayoutManager()->getEndXYPosition(lesserLine),Color4f(0.7,0.7,0.95,1),Opacity);
 
 		// draw the last line
-		Graphics->drawRect(Manager->getStartXYPosition(greaterLine),Manager->getXYPosition(greaterLine,greaterIndex,false),Color4f(0.7,0.7,0.95,1),Opacity);
+		TheGraphics->drawRect(getLayoutManager()->getStartXYPosition(greaterLine),getLayoutManager()->getXYPosition(greaterLine,greaterIndex,false),Color4f(0.7,0.7,0.95,1),Opacity);
 	}
 
 }
 
 
-void TextDomArea::drawLineHighlight(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void TextDomArea::drawLineHighlight(Graphics * const TheGraphics, Real32 Opacity) const
 {
-	Graphics->drawRect(Pnt2f(0,Manager->getCaretYPosition()),Pnt2f(Manager->getPreferredWidth(),Manager->getCaretYPosition()+Manager->getHeightOfLine()),Color4f(0.7,0.7,0.7,0.5),Opacity);
+	TheGraphics->drawRect(Pnt2f(0,getLayoutManager()->getCaretYPosition()),Pnt2f(getLayoutManager()->getPreferredWidth(),getLayoutManager()->getCaretYPosition()+getLayoutManager()->getHeightOfLine()),Color4f(0.7,0.7,0.7,0.5),Opacity);
 }
 
-void TextDomArea::drawBraceHighlight(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void TextDomArea::drawBraceHighlight(Graphics * const TheGraphics, Real32 Opacity) const
 {
-	if(Manager->getBracesHighlightFlag())
+	if(getLayoutManager()->getBracesHighlightFlag())
 	{
-		if(Manager->getStartingBraceLine() != -1 && Manager->getStartingBraceIndex() != -1)
+		if(getLayoutManager()->getStartingBraceLine() != -1 && getLayoutManager()->getStartingBraceIndex() != -1)
 		{
-			Pnt2f thePosition = Manager->getXYPosition(Manager->getStartingBraceLine(),Manager->getStartingBraceIndex(),true);
-			Graphics->drawRect(thePosition,Pnt2f(thePosition.x()+5,thePosition.y()+Manager->getHeightOfLine()),Color4f(0.7,0.7,0.0,1.0),Opacity);
+			Pnt2f thePosition = getLayoutManager()->getXYPosition(getLayoutManager()->getStartingBraceLine(),getLayoutManager()->getStartingBraceIndex(),true);
+			TheGraphics->drawRect(thePosition,Pnt2f(thePosition.x()+5,thePosition.y()+getLayoutManager()->getHeightOfLine()),Color4f(0.7,0.7,0.0,1.0),Opacity);
 		}
-		if(Manager->getEndingBraceLine() != -1 && Manager->getEndingBraceIndex() != -1)
+		if(getLayoutManager()->getEndingBraceLine() != -1 && getLayoutManager()->getEndingBraceIndex() != -1)
 		{
-			if(Manager->getEndingBraceLine()<Manager->getRootElement()->getElementCount())
+			if(getLayoutManager()->getEndingBraceLine()<getLayoutManager()->getRootElement()->getElementCount())
 			{
-				PlainDocumentLeafElementRefPtr temp = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(Manager->getEndingBraceLine()));
-				if(Manager->getEndingBraceIndex() < temp->getTextLength())
+				PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(getLayoutManager()->getEndingBraceLine()));
+				if(getLayoutManager()->getEndingBraceIndex() < temp->getTextLength())
 				{
-					Pnt2f thePosition = Manager->getXYPosition(Manager->getEndingBraceLine(),Manager->getEndingBraceIndex(),true);
-					Graphics->drawRect(thePosition,Pnt2f(thePosition.x()+5,thePosition.y()+Manager->getHeightOfLine()),Color4f(0.7,0.7,0.0,1.0),Opacity);
+					Pnt2f thePosition = getLayoutManager()->getXYPosition(getLayoutManager()->getEndingBraceLine(),getLayoutManager()->getEndingBraceIndex(),true);
+					TheGraphics->drawRect(thePosition,Pnt2f(thePosition.x()+5,thePosition.y()+getLayoutManager()->getHeightOfLine()),Color4f(0.7,0.7,0.0,1.0),Opacity);
 				}
 			}
 		}
@@ -255,234 +225,195 @@ void TextDomArea::drawBraceHighlight(const GraphicsWeakPtr Graphics, Real32 Opac
 }
 
 
-void TextDomArea::drawTheCaret(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+void TextDomArea::drawTheCaret(Graphics * const TheGraphics, Real32 Opacity) const
 {
-	Graphics->drawRect(Pnt2f(Manager->getCaretXPosition(),Manager->getCaretYPosition()),Pnt2f(Manager->getCaretXPosition()+2,Manager->getCaretYPosition()+Manager->getHeightOfLine()),Color4f(0,0,0,1),Opacity);
+	TheGraphics->drawRect(Pnt2f(getLayoutManager()->getCaretXPosition(),getLayoutManager()->getCaretYPosition()),Pnt2f(getLayoutManager()->getCaretXPosition()+2,getLayoutManager()->getCaretYPosition()+getLayoutManager()->getHeightOfLine()),Color4f(0,0,0,1),Opacity);
 }
 
-
-TextDomArea::DocumentModifiedListener::DocumentModifiedListener(TextDomAreaRefPtr TheTextDomArea)
+void TextDomArea::handleDocumentChanged(DocumentEventDetails* const details)
 {
-	_TextDomArea = TheTextDomArea;
-}
-
-void TextDomArea::DocumentModifiedListener::changedUpdate(const DocumentEventUnrecPtr e)
-{
-	_TextDomArea->changedUpdate(e);
-}
-
-void TextDomArea::DocumentModifiedListener::insertUpdate(const DocumentEventUnrecPtr e)
-{
-	_TextDomArea->insertUpdate(e);
-}
-
-void TextDomArea::DocumentModifiedListener::removeUpdate(const DocumentEventUnrecPtr e)
-{
-	_TextDomArea->removeUpdate(e);
-}
-
-void TextDomArea::changedUpdate(const DocumentEventUnrecPtr e)
-{
-}
-
-void TextDomArea::insertUpdate(const DocumentEventUnrecPtr e)
-{
-	Manager->updateViews();
-	Manager->updateSize();
-	Manager->calculatePreferredSize();
 	updatePreferredSize();
 }
 
-void TextDomArea::removeUpdate(const DocumentEventUnrecPtr e)
+void TextDomArea::handleDocumentInsert(DocumentEventDetails* const details)
 {
-	Manager->updateViews();
-	Manager->updateSize();
-	Manager->calculatePreferredSize();
+	getLayoutManager()->updateViews();
+	getLayoutManager()->updateSize();
+	getLayoutManager()->calculatePreferredSize();
 	updatePreferredSize();
 }
 
-void TextDomArea::mouseDragged(const MouseEventUnrecPtr e)
+void TextDomArea::handleDocumentRemove(DocumentEventDetails* const details)
 {
-   if(_IsMousePressed && e->getButton() == e->BUTTON1)
+	getLayoutManager()->updateViews();
+	getLayoutManager()->updateSize();
+	getLayoutManager()->calculatePreferredSize();
+	updatePreferredSize();
+}
+
+void TextDomArea::mouseDragged(MouseEventDetails* const details)
+{
+    if(_IsMousePressed && details->getButton() == MouseEventDetails::BUTTON1)
 	{
-		Manager->calculateCaretPosition(DrawingSurfaceToComponent(e->getLocation(), TextDomAreaRefPtr(this)) , true);	
+		getLayoutManager()->calculateCaretPosition(DrawingSurfaceToComponent(details->getLocation(), TextDomAreaRefPtr(this)) , true);	
 	}
 }
 
-void TextDomArea::keyTyped(const KeyEventUnrecPtr e)
+void TextDomArea::keyTyped(KeyEventDetails* const details)
 {
-	TextWithProps temp;
+	DocumentElementAttribute temp;
 	_CurrentCaretBlinkElps=0;
-	_CaretUpdateListener.setDrawCaret(true);
+	_DrawCaret = true;
 
-	if(e->getKey() == KeyEvent::KEY_ESCAPE)
+    switch(details->getKey())
     {
-	    if(this->getParentWindow() != NULL && this->getParentWindow()->getDrawingSurface()!=NULL&& this->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+    case KeyEventDetails::KEY_UP:
+        getLayoutManager()->moveTheCaret(UP,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+        break;
+	case KeyEventDetails::KEY_DOWN:
+        getLayoutManager()->moveTheCaret(DOWN,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+        break;
+	case KeyEventDetails::KEY_LEFT:
+	    getLayoutManager()->moveTheCaret(LEFT,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+        break;
+	case KeyEventDetails::KEY_RIGHT:
+        getLayoutManager()->moveTheCaret(RIGHT,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+        break;
+	case KeyEventDetails::KEY_PAGE_UP:
+        getLayoutManager()->moveTheCaret(PAGEUP,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+        break;
+	case KeyEventDetails::KEY_PAGE_DOWN:
+        getLayoutManager()->moveTheCaret(PAGEDOWN,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+        break;
+	case KeyEventDetails::KEY_BACK_SPACE:
+	    if(getLayoutManager()->isSomethingSelected())
 	    {
-            disconnect();
-        }
-    }
-	else if(e->getKey() == KeyEvent::KEY_UP)
-    {
-	    Manager->moveTheCaret(UP,(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT),(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL));
-		Manager->printDebugInformation();
-    }
-	else if(e->getKey() == KeyEvent::KEY_DOWN)
-    {
-	    Manager->moveTheCaret(DOWN,(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT),(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL));
-		Manager->printDebugInformation();
-    }
-	else if(e->getKey() == KeyEvent::KEY_LEFT)
-    {
-		Manager->moveTheCaret(LEFT,(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT),(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL));
-		Manager->printDebugInformation();
-    }
-	else if(e->getKey() == KeyEvent::KEY_RIGHT)
-    {
-	    Manager->moveTheCaret(RIGHT,(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT),(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL));
-		Manager->printDebugInformation();
-    }
-	else if(e->getKey() == KeyEvent::KEY_PAGE_UP)
-    {
-	    Manager->moveTheCaret(PAGEUP,(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT),(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL));
-	}
-	else if(e->getKey() == KeyEvent::KEY_PAGE_DOWN)
-    {
-	    Manager->moveTheCaret(PAGEDOWN,(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT),(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL));
-	}
-	else if(e->getKey() == KeyEvent::KEY_BACK_SPACE)
-	{
-		if(Manager->isSomethingSelected())
-		{
-			deleteSelectedUsingCommandManager();//Manager->deleteSelected();
-		}
-		else
-		{
-			if(Manager->getCaretLine()!=0 || Manager->getCaretIndex()!=0)
-			{
-				Manager->moveTheCaret(LEFT,false,false);
-				deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(Manager->getCaretLine(),Manager->getCaretIndex());
-			}
-		}
-	}
-	else if(e->getKey() == KeyEvent::KEY_DELETE)
-	{
-		if(Manager->isSomethingSelected())
-		{
-			deleteSelectedUsingCommandManager();//Manager->deleteSelected();
-		}
-		else
-		{
-			deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(Manager->getCaretLine(),Manager->getCaretIndex());
-		}
-	}
-	else if(e->getKey() == KeyEvent::KEY_ENTER)
-	{
-		if(Manager->isSomethingSelected())
-		{
-			deleteSelectedUsingCommandManager();//Manager->deleteSelected();
-		}
-		insertCharacterUsingCommandManager('\n',-1,-1);
-	}
-	else if(e->getKey() == KeyEvent::KEY_HOME)
-	{
-		Manager->moveTheCaret(HOME,(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT),(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL));
-	}
-	else if(e->getKey() == KeyEvent::KEY_END)
-	{
-		Manager->moveTheCaret(END,(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT),(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL));
+		    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+	    }
+	    else
+	    {
+		    if(getLayoutManager()->getCaretLine()!=0 || getLayoutManager()->getCaretIndex()!=0)
+		    {
+			    getLayoutManager()->moveTheCaret(LEFT,false,false);
+			    deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex());
+		    }
+	    }
+        break;
+	case KeyEventDetails::KEY_DELETE:
+	    if(getLayoutManager()->isSomethingSelected())
+	    {
+		    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+	    }
+	    else
+	    {
+		    deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex());
+	    }
+        break;
+	case KeyEventDetails::KEY_ENTER:
+	    if(getLayoutManager()->isSomethingSelected())
+	    {
+		    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+	    }
+	    insertCharacterUsingCommandManager('\n',-1,-1);
+        break;
+	case KeyEventDetails::KEY_HOME:
+	    getLayoutManager()->moveTheCaret(HOME,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+        break;
+	case KeyEventDetails::KEY_END:
+	    getLayoutManager()->moveTheCaret(END,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+        break;
+	case KeyEventDetails::KEY_TAB:
+	    tabHandler(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT);
+        break;
+    default:
+	    if(isPrintableChar(details->getKeyChar()) || details->getKey() == KeyEventDetails::KEY_SPACE)
+	    {
+		    if(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL)
+		    {
+                switch(details->getKey())
+                {
 
-	}
-	else if(e->getKey() == KeyEvent::KEY_TAB)
-	{
-		tabHandler(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT);
-	}
-	else
-	{
-		if(isPrintableChar(e->getKeyChar()) || e->getKey() == KeyEvent::KEY_SPACE)
-		{
-			if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-			{
+                case KeyEventDetails::KEY_A:
+				    getLayoutManager()->selectAll();
+                    break;
+			    case KeyEventDetails::KEY_C:
+			        {
+				        std::string stringToTheClipboard = getHighlightedString();
+				        getParentWindow()->getParentDrawingSurface()->getEventProducer()->putClipboard(stringToTheClipboard);
+                        break;
+			        }
+			    case KeyEventDetails::KEY_V:
+			        {
+				        std::string theClipboard = getParentWindow()->getParentDrawingSurface()->getEventProducer()->getClipboard();
+				        handlePastingAString(theClipboard);
+                        break;
+			        }
+			    case KeyEventDetails::KEY_Z:
+				    if(_TheUndoManager->canUndo())
+				    {
+					    _TheUndoManager->undo();
+				    }
+                    break;
+			    case KeyEventDetails::KEY_Y:
+				    if(_TheUndoManager->canRedo())
+				    {
+					    _TheUndoManager->redo();
+				    }
+                    break;
+			    }
+		    }
+		    else
+		    {
+			    if(getLayoutManager()->isSomethingSelected())
+			    {
+				    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+			    }
+			    if(getLayoutManager()->isStartingBraces(details->getKeyChar()))
+			    {
+				    getLayoutManager()->removeBracesHighlightIndices();
+				    getLayoutManager()->setStartingBraces(details->getKeyChar(),getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine());
+			    }
+			    else if(getLayoutManager()->isEndingBraces(details->getKeyChar()))
+			    {
+				    getLayoutManager()->removeBracesHighlightIndices();
+				    getLayoutManager()->setEndingBraces(details->getKeyChar(),getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine());
+			    }
+			    insertCharacterUsingCommandManager(details->getKeyChar(),-1,-1);
 
-				if(e->getKey() == KeyEvent::KEY_A)
-					Manager->selectAll();
-
-				if(e->getKey() == KeyEvent::KEY_C)
-				{
-					std::string stringToTheClipboard = getHighlightedString();
-					getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard(stringToTheClipboard);
-				}
-				if(e->getKey() == KeyEvent::KEY_V)
-				{
-					std::string theClipboard = getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard();
-					handlePastingAString(theClipboard);
-				}
-				if(e->getKey() == KeyEvent::KEY_Z)
-				{
-					if(_TheUndoManager->canUndo())
-					{
-						_TheUndoManager->undo();
-					}
-				}
-				if(e->getKey() == KeyEvent::KEY_Y)
-				{
-					if(_TheUndoManager->canRedo())
-					{
-						_TheUndoManager->redo();
-					}
-				}
-			}
-			else
-			{
-				if(Manager->isSomethingSelected())
-				{
-					deleteSelectedUsingCommandManager();//Manager->deleteSelected();
-				}
-				if(Manager->isStartingBraces(e->getKeyChar()))
-				{
-					Manager->removeBracesHighlightIndices();
-					Manager->setStartingBraces(e->getKeyChar(),Manager->getCaretIndex(),Manager->getCaretLine());
-				}
-				else if(Manager->isEndingBraces(e->getKeyChar()))
-				{
-					Manager->removeBracesHighlightIndices();
-					Manager->setEndingBraces(e->getKeyChar(),Manager->getCaretIndex(),Manager->getCaretLine());
-				}
-				insertCharacterUsingCommandManager(e->getKeyChar(),-1,-1);
-
-				/*getDocumentModel()->insertCharacter(Manager->getCaretIndex(),Manager->getCaretLine(),e->getKeyChar(),temp);
-				Manager->moveTheCaret(RIGHT,false,false);
-				Manager->DoIfLineLongerThanPreferredSize();*/
-			}
-		}
-	}
+			    /*getDocumentModel()->insertCharacter(getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine(),details->getKeyChar(),temp);
+			    getLayoutManager()->moveTheCaret(RIGHT,false,false);
+			    getLayoutManager()->DoIfLineLongerThanPreferredSize();*/
+		    }
+	    }
+        break;
+    }
 }
 
 void TextDomArea::tabHandler(bool isShiftPressed)
 {
 	UInt32 lesserLine,greaterLine,lesserIndex;
-	TextWithProps temp;
-	UInt32 oldHSI = Manager->getHSI();
-	UInt32 oldHSL = Manager->getHSL();
-	UInt32 oldHEI = Manager->getHEI();
-	UInt32 oldHEL = Manager->getHEL();
+	DocumentElementAttribute temp;
+	UInt32 oldHSI = getLayoutManager()->getHSI();
+	UInt32 oldHSL = getLayoutManager()->getHSL();
+	UInt32 oldHEI = getLayoutManager()->getHEI();
+	UInt32 oldHEL = getLayoutManager()->getHEL();
 
 	PlainDocumentLeafElementRefPtr theElement;
-	if(Manager->getHSL() <= Manager->getHEL())
+	if(getLayoutManager()->getHSL() <= getLayoutManager()->getHEL())
 	{
-		lesserLine = Manager->getHSL();
-		lesserIndex = Manager->getHSI();
-		greaterLine = Manager->getHEL();
+		lesserLine = getLayoutManager()->getHSL();
+		lesserIndex = getLayoutManager()->getHSI();
+		greaterLine = getLayoutManager()->getHEL();
 	}
 	else
 	{
-		lesserLine = Manager->getHEL();
-		lesserIndex = Manager->getHEI();
-		greaterLine = Manager->getHSL();
+		lesserLine = getLayoutManager()->getHEL();
+		lesserIndex = getLayoutManager()->getHEI();
+		greaterLine = getLayoutManager()->getHSL();
 	}
 
 	UInt32 count=0;
-	if(Manager->isSomethingSelected())
+	if(getLayoutManager()->isSomethingSelected())
 	{
 		if(!isShiftPressed)
 		{
@@ -493,7 +424,7 @@ void TextDomArea::tabHandler(bool isShiftPressed)
 					//getDocumentModel()->insertCharacter(0,caretLine,' ',temp);
 					insertCharacterUsingCommandManager(' ',caretLine,0);
 				}
-				//Manager->DoIfLineLongerThanPreferredSize();
+				//getLayoutManager()->DoIfLineLongerThanPreferredSize();
 			}
 		
 		}
@@ -501,13 +432,13 @@ void TextDomArea::tabHandler(bool isShiftPressed)
 		{
 			for(UInt32 caretLine = lesserLine;caretLine<=greaterLine;caretLine++)
 			{
-				theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(caretLine));
+				theElement = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(caretLine));
 				std::string theString = theElement->getText();
 				Int32 i;
 				for(i=0;i<theElement->getTextLength()-2,i<getTabSize();i++)
 				{
 					if(theString[i]!=' ')break;
-					if(caretLine == Manager->getCaretLine())Manager->moveTheCaret(LEFT,false,false);
+					if(caretLine == getLayoutManager()->getCaretLine())getLayoutManager()->moveTheCaret(LEFT,false,false);
 					if(caretLine == lesserLine)count--;
 				}
 				theString = theString.substr(i);
@@ -515,10 +446,10 @@ void TextDomArea::tabHandler(bool isShiftPressed)
 				//theElement->setText(theString);
 				
 			}
-			Manager->setHSI(0);
-			Manager->setHSL(lesserLine);
-			Manager->setHEI(0);
-			Manager->setHEL(greaterLine);
+			getLayoutManager()->setHSI(0);
+			getLayoutManager()->setHSL(lesserLine);
+			getLayoutManager()->setHEI(0);
+			getLayoutManager()->setHEL(greaterLine);
 		}
 	}
 	else
@@ -527,24 +458,24 @@ void TextDomArea::tabHandler(bool isShiftPressed)
 		{
 			for(UInt32 i=0;i<getTabSize();i++)
 			{
-				//getDocumentModel()->insertCharacter(Manager->getCaretIndex(),Manager->getCaretLine(),' ',temp);
+				//getDocumentModel()->insertCharacter(getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine(),' ',temp);
 				insertCharacterUsingCommandManager(' ',-1,-1);
-				//Manager->moveTheCaret(RIGHT,false,false);
+				//getLayoutManager()->moveTheCaret(RIGHT,false,false);
 			}
-			//Manager->DoIfLineLongerThanPreferredSize();	
+			//getLayoutManager()->DoIfLineLongerThanPreferredSize();	
 		}
 		else
 		{
-			theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(Manager->getCaretLine()));
+			theElement = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(getLayoutManager()->getCaretLine()));
 			std::string theString = theElement->getText();
 			Int32 i,count=0;
-			Int32 initIndex = Manager->getCaretIndex();
-			for(i=Manager->getCaretIndex()-1;i>=0,count<getTabSize();i--,count++)
+			Int32 initIndex = getLayoutManager()->getCaretIndex();
+			for(i=getLayoutManager()->getCaretIndex()-1;i>=0,count<getTabSize();i--,count++)
 			{
 				if(i<0 || theString[i]!=' ')break;
-				Manager->moveTheCaret(LEFT,false,false);
+				getLayoutManager()->moveTheCaret(LEFT,false,false);
 			}
-			theString = theString.substr(0,Manager->getCaretIndex())+theString.substr(initIndex);
+			theString = theString.substr(0,getLayoutManager()->getCaretIndex())+theString.substr(initIndex);
 			setTextUsingCommandManager(theElement,theString);
 			//theElement->setText(theString);
 		}
@@ -552,46 +483,46 @@ void TextDomArea::tabHandler(bool isShiftPressed)
 }
 
 
-void TextDomArea::handlePastingAString(std::string theClipboard)
+void TextDomArea::handlePastingAString(const std::string& theClipboard)
 {
 	
-	TextWithProps temp;
-	if(Manager->isSomethingSelected())
+	DocumentElementAttribute temp;
+	if(getLayoutManager()->isSomethingSelected())
 	{
-		deleteSelectedUsingCommandManager();//Manager->deleteSelected();
+		deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
 	}
 	
 	getDocumentModel()->insertString(getCaretPosition(),theClipboard,temp);/// need to deal with this......
-	Manager->updateViews();
-	Manager->updateSize();
+	getLayoutManager()->updateViews();
+	getLayoutManager()->updateSize();
 	updatePreferredSize();
 }
 
 void TextDomArea::insertCharacterUsingCommandManager(char theCharacter,UInt32 line,UInt32 index)
 {
-	CommandPtr theCommand = InsertCharacterCommand::create(Manager,dynamic_cast<PlainDocument*>(getDocumentModel()),theCharacter,line,index);
+	CommandPtr theCommand = InsertCharacterCommand::create(getLayoutManager(),dynamic_cast<PlainDocument*>(getDocumentModel()),theCharacter,line,index);
 	_TheCommandManager->executeCommand(theCommand);
 }
 
 void TextDomArea::deleteCharacterUsingCommandManager()
 {
-	CommandPtr theCommand = DeleteCharacterCommand::create(Manager,dynamic_cast<PlainDocument*>(getDocumentModel()));
+	CommandPtr theCommand = DeleteCharacterCommand::create(getLayoutManager(),dynamic_cast<PlainDocument*>(getDocumentModel()));
 	_TheCommandManager->executeCommand(theCommand);
 }
 
 void TextDomArea::deleteSelectedUsingCommandManager(void)
 {
-	CommandPtr theCommand = DeleteSelectedCommand::create(Manager,this);
+	CommandPtr theCommand = DeleteSelectedCommand::create(getLayoutManager(),this);
 	_TheCommandManager->executeCommand(theCommand);
 }
 
-void TextDomArea::setTextUsingCommandManager(PlainDocumentLeafElementRefPtr theElement,std::string theString)
+void TextDomArea::setTextUsingCommandManager(PlainDocumentLeafElement* theElement,std::string theString)
 {
 	CommandPtr theCommand = SetTextCommand::create(theElement,theString);
 	_TheCommandManager->executeCommand(theCommand);
 }
 
-TextDomAreaRefPtr TextDomArea::getDuplicatedTextDomArea(void)
+TextDomAreaTransitPtr TextDomArea::createDuplicate(void)
 {
 	TextDomAreaRefPtr newPtr = TextDomArea::create();
 	newPtr->setWrapStyleWord(this->getWrapStyleWord());
@@ -600,20 +531,20 @@ TextDomAreaRefPtr TextDomArea::getDuplicatedTextDomArea(void)
 	newPtr->setFont(this->getFont());
 	newPtr->setDocumentModel(this->getDocumentModel());
 	newPtr->handleDocumentModelChanged();
-	return newPtr;
+	return TextDomAreaTransitPtr(newPtr);
 }
 
 std::string TextDomArea::getHighlightedString(void)
 {
-	if(Manager->getHSL() != Manager->getHEL() ||  Manager->getHSI() != Manager->getHEI() )
+	if(getLayoutManager()->getHSL() != getLayoutManager()->getHEL() ||  getLayoutManager()->getHSI() != getLayoutManager()->getHEI() )
 	{
-		if(Manager->isStartLocationBeforeEndLocation())
+		if(getLayoutManager()->isStartLocationBeforeEndLocation())
 		{
-			return(getHighlightedStringInternal(Manager->getHSL(),Manager->getHSI(),Manager->getHEL(),Manager->getHEI()));
+			return(getHighlightedStringInternal(getLayoutManager()->getHSL(),getLayoutManager()->getHSI(),getLayoutManager()->getHEL(),getLayoutManager()->getHEI()));
 		}
 		else
 		{
-			return(getHighlightedStringInternal(Manager->getHEL(),Manager->getHEI(),Manager->getHSL(),Manager->getHSI()));
+			return(getHighlightedStringInternal(getLayoutManager()->getHEL(),getLayoutManager()->getHEI(),getLayoutManager()->getHSL(),getLayoutManager()->getHSI()));
 		}
 	}
 	else 
@@ -627,7 +558,7 @@ std::string TextDomArea::getHighlightedStringInternal(UInt32 lesserLine,UInt32 l
 	std::string firstLine="";
 	std::string lastLine="";
 	std::string intermediateLines="";
-	PlainDocumentLeafElementRefPtr temp1 = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(lesserLine));
+	PlainDocumentLeafElementRefPtr temp1 = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(lesserLine));
 	std::string temp2 = temp1->getText();
 	if(lesserLine== greaterLine)
 	{
@@ -639,14 +570,14 @@ std::string TextDomArea::getHighlightedStringInternal(UInt32 lesserLine,UInt32 l
 		firstLine = temp2.substr(lesserIndex);
 
 		// get the last line
-		temp1 = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(greaterLine));
+		temp1 = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(greaterLine));
 		temp2 = temp1->getText();
 		lastLine = temp2.substr(0,greaterIndex);
 	}
 
 	for(UInt32 i=lesserLine+1;i<greaterLine;i++)
 	{
-		PlainDocumentLeafElementRefPtr theElement = dynamic_pointer_cast<PlainDocumentLeafElement>(Manager->getRootElement()->getElement(i));
+		PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(i));
 		intermediateLines+=theElement->getText();
 	}
 
@@ -672,101 +603,69 @@ void TextDomArea::setupCursor(void)
 
 Vec2f TextDomArea::getPreferredScrollableViewportSize(void)
 {
-	return Manager->getContentRequestedSize();
+	return getLayoutManager()->getContentRequestedSize();
 }
 
-void TextDomArea::disconnect(void)
+void TextDomArea::focusGained(FocusEventDetails* const details)
 {
-  /*  this->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-    this->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
-    this->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);*/
+    _CaretUpdateConnection.disconnect();
+    _CaretUpdateConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectUpdate(boost::bind(&TextDomArea::handleCaretUpdate, this, _1));
+
+    Inherited::focusGained(details);
 }
 
-void TextDomArea::focusGained(const FocusEventUnrecPtr e)
+void TextDomArea::focusLost(FocusEventDetails* const details)
 {
-	if( getParentWindow() != NULL &&
-		getParentWindow()->getDrawingSurface() != NULL &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
-    {
-		getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
-	}
-	Inherited::focusGained(e);
-}
+    _CaretUpdateConnection.disconnect();
 
-void TextDomArea::focusLost(const FocusEventUnrecPtr e)
-{
-	if( getParentWindow() != NULL &&
-		getParentWindow()->getDrawingSurface() != NULL &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
-    {
-        _CaretUpdateListener.disconnect();
-	}
-	Inherited::focusLost(e);
+	Inherited::focusLost(details);
 }
 
 
-void TextDomArea::mouseClicked(const MouseEventUnrecPtr e)
+void TextDomArea::mouseClicked(MouseEventDetails* const details)
 {
 
-	Manager->calculateCaretPosition(DrawingSurfaceToComponent(e->getLocation(), TextDomAreaRefPtr(this)),false);
+	getLayoutManager()->calculateCaretPosition(DrawingSurfaceToComponent(details->getLocation(), TextDomAreaRefPtr(this)),false);
 
-	if(e->getButton() == e->BUTTON1)
+	if(details->getButton() == details->BUTTON1)
 	{
-		if(e->getClickCount() == 2)
+		if(details->getClickCount() >= 2)
 		{
-			Manager->doubleClickHandler();
+			getLayoutManager()->doubleClickHandler();
 		}
 	}
 
-	Inherited::mouseClicked(e);
+	Inherited::mouseClicked(details);
 
 }
 
-void TextDomArea::mouseReleased(const MouseEventUnrecPtr e)
+void TextDomArea::mouseReleased(MouseEventDetails* const details)
 {
 	_IsMousePressed = false;
-	Inherited::mouseReleased(e);
+	Inherited::mouseReleased(details);
 }
 
-void TextDomArea::mousePressed(const MouseEventUnrecPtr e)
+void TextDomArea::mousePressed(MouseEventDetails* const details)
 {
 	_IsMousePressed = true;
-	if(e->getButton() == e->BUTTON1)
+	if(details->getButton() == details->BUTTON1)
 	{
 		//set caret position to proper place
-		Manager->calculateCaretPosition(DrawingSurfaceToComponent(e->getLocation(), TextDomAreaRefPtr(this)),false);
+		getLayoutManager()->calculateCaretPosition(DrawingSurfaceToComponent(details->getLocation(), TextDomAreaRefPtr(this)),false);
 	}
 
-	Inherited::mousePressed(e);
+	Inherited::mousePressed(details);
 }
 
-
-bool TextDomArea::CaretUpdateListener::DrawCaret(void) const
+void TextDomArea::handleCaretUpdate(UpdateEventDetails* const details)
 {
-	return _DrawCaret;
-}
-
-void TextDomArea::CaretUpdateListener::setDrawCaret(bool val)
-{
-	_DrawCaret = val;
-}
-
-
-void TextDomArea::CaretUpdateListener::update(const UpdateEventUnrecPtr e)
-{
-   _TextDomArea->_CurrentCaretBlinkElps += e->getElapsedTime();
-   if(_TextDomArea->_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
+   _CurrentCaretBlinkElps += details->getElapsedTime();
+   if(_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
    {
-       Int32 Div = _TextDomArea->_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
-	   _TextDomArea->_CurrentCaretBlinkElps -= static_cast<OSG::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+       Int32 Div = _CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+	   _CurrentCaretBlinkElps -= static_cast<OSG::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
 	   _DrawCaret = !_DrawCaret;
    }
-	
-}
-
-void TextDomArea::CaretUpdateListener::disconnect(void)
-{
-    _TextDomArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
 }
 
 void TextDomArea::createDefaultFont(void)
@@ -778,7 +677,6 @@ void TextDomArea::createDefaultFont(void)
     _Font->setSize(12);
     _Font->setTextureWidth(0);
     _Font->setStyle(TextFace::STYLE_PLAIN);
-	
 }
 
 void TextDomArea::createDefaultLayer(void)
@@ -792,7 +690,6 @@ void TextDomArea::createDefaultLayer(void)
 void TextDomArea::updatePreferredSize(void)
 {
 	setPreferredSize(getRequestedSize());
-	produceDocumentModelChanged(NULL);
 }
 
 Int32 TextDomArea::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
@@ -826,9 +723,9 @@ Int32 TextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, c
 
 Vec2f TextDomArea::getContentRequestedSize(void) const
 {
-	if(Manager)
+	if(getLayoutManager())
 	{
-		return Manager->getContentRequestedSize();
+		return getLayoutManager()->getContentRequestedSize();
 	}
 	else
 	{
@@ -839,40 +736,54 @@ Vec2f TextDomArea::getContentRequestedSize(void) const
 void TextDomArea::handleDocumentModelChanged(void)
 {
 	setPosition(Pnt2f(0,0));
-	SLOG<<"DocumentModel changed"<<std::endl;
-	if(Manager == NULL)
-	{
-		Manager = FixedHeightLayoutManager::create();
-		Manager->setTextDomArea(this);
-		Manager->calculateLineHeight();
-	}
-	Manager->initializeRootElement();
-	Manager->calculatePreferredSize();
-	if(getDocumentModel())getDocumentModel()->addDocumentListener(&_DocumentModifiedListener);
-	Manager->setHighlight(0,0,0,0);
-	Manager->populateCache();
+	getLayoutManager()->initializeRootElement();
+	getLayoutManager()->calculatePreferredSize();
+
+    _DocumentChangedConnection.disconnect();
+    _DocumentInsertConnection.disconnect();
+    _DocumentRemoveConnection.disconnect();
+    _DocumentChangedConnection = getDocumentModel()->connectChanged(boost::bind(&TextDomArea::handleDocumentChanged, this, _1));
+    _DocumentInsertConnection = getDocumentModel()->connectInsert(boost::bind(&TextDomArea::handleDocumentInsert, this, _1));
+    _DocumentRemoveConnection = getDocumentModel()->connectRemove(boost::bind(&TextDomArea::handleDocumentRemove, this, _1));
+
+    getLayoutManager()->setHighlight(0,0,0,0);
+	getLayoutManager()->populateCache();
 	updatePreferredSize();
-	Manager->updateViews();
+	getLayoutManager()->updateViews();
 }
 
-
-TextDomArea::CaretUpdateListener::CaretUpdateListener(TextDomAreaRefPtr TheTextDomArea):_DrawCaret(true)
-{
-	_TextDomArea=TheTextDomArea;
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+void TextDomArea::onCreate(const TextDomArea *source)
+{
+	if(source == NULL) return;
+		
+    FixedHeightLayoutManagerRefPtr Manager= FixedHeightLayoutManager::create();
+	setLayoutManager(Manager);
+	getLayoutManager()->calculateLineHeight();
+}
+
+void TextDomArea::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _Font = NULL;
+    tempBackground = NULL;
+
+    _DocumentChangedConnection.disconnect();
+    _DocumentInsertConnection.disconnect();
+    _DocumentRemoveConnection.disconnect();
+    _CaretUpdateConnection.disconnect();
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
 TextDomArea::TextDomArea(void) :
-	_DocumentModifiedListener(this),
-	Manager(NULL),
+    Inherited(),
 	_CurrentCaretBlinkElps(0.0),
-	_CaretUpdateListener(this),
 	_Font(NULL),
-    Inherited()
+    _DrawCaret(false)
 {
 	createDefaultFont();
 	createDefaultLayer();
@@ -884,16 +795,14 @@ TextDomArea::TextDomArea(void) :
 
 
 TextDomArea::TextDomArea(const TextDomArea &source) :
-	_DocumentModifiedListener(this),
+	Inherited(source),
 	_CurrentCaretBlinkElps(0.0),
-    _CaretUpdateListener(this),
-	Inherited(source)
+	_Font(source._Font),
+    _DrawCaret(false),
+    _TheUndoManager(source._TheUndoManager),
+    _TheCommandManager(source._TheCommandManager)
 {
-	Manager = source.Manager;
-	_Font = source._Font;
 	setupCursor();
-	_TheUndoManager = UndoManager::create();
-	_TheCommandManager = CommandManager::create(_TheUndoManager);
 }
 
 TextDomArea::~TextDomArea(void)
@@ -909,15 +818,15 @@ void TextDomArea::changed(ConstFieldMaskArg whichField,
     Inherited::changed(whichField, origin, details);
 	if(whichField & TextDomArea::ClipBoundsFieldMask)
 	{
-		if(Manager)Manager->updateViews();
+		if(getLayoutManager())getLayoutManager()->updateViews();
 	}
 	else if(whichField & TextDomArea::FontFieldMask)
 	{
-		if(Manager)
+		if(getLayoutManager())
 		{
-			Manager->calculateLineHeight();
-			Manager->populateCache();
-			Manager->updateViews();
+			getLayoutManager()->calculateLineHeight();
+			getLayoutManager()->populateCache();
+			getLayoutManager()->updateViews();
 			updatePreferredSize();
 		}
 	}

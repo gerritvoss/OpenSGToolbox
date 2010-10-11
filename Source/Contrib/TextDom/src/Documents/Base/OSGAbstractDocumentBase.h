@@ -62,16 +62,12 @@
 #include "OSGContribTextDomDef.h"
 
 //#include "OSGBaseTypes.h"
-#include <OSGBaseTypes.h>
-#include <OSGCoredNodePtr.h>
-
 
 #include "OSGDocument.h" // Parent
 
-#include "OSGElementFields.h"           // RootElement type
+#include "OSGElementFields.h"           // RootElements type
 
 #include "OSGAbstractDocumentFields.h"
-
 
 OSG_BEGIN_NAMESPACE
 
@@ -90,6 +86,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractDocumentBase : public Document
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(AbstractDocument);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -97,16 +95,16 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractDocumentBase : public Document
 
     enum
     {
-        RootElementFieldId = Inherited::NextFieldId,
-        NextFieldId = RootElementFieldId + 1
+        RootElementsFieldId = Inherited::NextFieldId,
+        NextFieldId = RootElementsFieldId + 1
     };
 
-    static const OSG::BitVector RootElementFieldMask =
-        (TypeTraits<BitVector>::One << RootElementFieldId);
+    static const OSG::BitVector RootElementsFieldMask =
+        (TypeTraits<BitVector>::One << RootElementsFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFUnrecElementPtr SFRootElementType;
+    typedef MFUnrecElementPtr MFRootElementsType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -152,7 +150,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractDocumentBase : public Document
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUnrecElementPtr _sfRootElement;
+    MFUnrecElementPtr _mfRootElements;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -181,31 +179,36 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractDocumentBase : public Document
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleRootElement     (void) const;
-    EditFieldHandlePtr editHandleRootElement    (void);
+    GetFieldHandlePtr  getHandleRootElements    (void) const;
+    EditFieldHandlePtr editHandleRootElements   (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const SFUnrecElementPtr   *getSFRootElement     (void) const;
-                  SFUnrecElementPtr   *editSFRootElement    (void);
+            const MFUnrecElementPtr   *getMFRootElements    (void) const;
+                  MFUnrecElementPtr   *editMFRootElements   (void);
 
 
-                  Element * getRootElement    (void) const;
+                  Element * getRootElements   (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setRootElement    (Element * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
+
+    void pushToRootElements           (Element * const value   );
+    void assignRootElements           (const MFUnrecElementPtr &value);
+    void removeFromRootElements (UInt32                uiIndex );
+    void removeObjFromRootElements(Element * const value   );
+    void clearRootElements            (void                          );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

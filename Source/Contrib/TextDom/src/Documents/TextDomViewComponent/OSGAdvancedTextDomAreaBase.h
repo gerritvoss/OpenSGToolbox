@@ -65,7 +65,9 @@
 
 #include "OSGComponentContainer.h" // Parent
 
-#include "OSGSysFields.h"        // GutterVisible type
+#include "OSGSysFields.h"               // GutterVisible type
+#include "OSGBaseFields.h"              // GutterColor type
+#include "OSGUIFontFields.h"            // GutterFont type
 
 #include "OSGAdvancedTextDomAreaFields.h"
 
@@ -86,6 +88,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomAreaBase : public ComponentCo
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(AdvancedTextDomArea);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -95,18 +99,30 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomAreaBase : public ComponentCo
     {
         GutterVisibleFieldId = Inherited::NextFieldId,
         GutterWidthFieldId = GutterVisibleFieldId + 1,
-        NextFieldId = GutterWidthFieldId + 1
+        GutterColorFieldId = GutterWidthFieldId + 1,
+        GutterTextColorFieldId = GutterColorFieldId + 1,
+        GutterFontFieldId = GutterTextColorFieldId + 1,
+        NextFieldId = GutterFontFieldId + 1
     };
 
     static const OSG::BitVector GutterVisibleFieldMask =
         (TypeTraits<BitVector>::One << GutterVisibleFieldId);
     static const OSG::BitVector GutterWidthFieldMask =
         (TypeTraits<BitVector>::One << GutterWidthFieldId);
+    static const OSG::BitVector GutterColorFieldMask =
+        (TypeTraits<BitVector>::One << GutterColorFieldId);
+    static const OSG::BitVector GutterTextColorFieldMask =
+        (TypeTraits<BitVector>::One << GutterTextColorFieldId);
+    static const OSG::BitVector GutterFontFieldMask =
+        (TypeTraits<BitVector>::One << GutterFontFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFBool            SFGutterVisibleType;
     typedef SFReal32          SFGutterWidthType;
+    typedef SFColor4f         SFGutterColorType;
+    typedef SFColor4f         SFGutterTextColorType;
+    typedef SFUnrecUIFontPtr  SFGutterFontType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -138,12 +154,28 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomAreaBase : public ComponentCo
                   SFReal32            *editSFGutterWidth    (void);
             const SFReal32            *getSFGutterWidth     (void) const;
 
+                  SFColor4f           *editSFGutterColor    (void);
+            const SFColor4f           *getSFGutterColor     (void) const;
+
+                  SFColor4f           *editSFGutterTextColor(void);
+            const SFColor4f           *getSFGutterTextColor (void) const;
+            const SFUnrecUIFontPtr    *getSFGutterFont     (void) const;
+                  SFUnrecUIFontPtr    *editSFGutterFont     (void);
+
 
                   bool                &editGutterVisible  (void);
                   bool                 getGutterVisible   (void) const;
 
                   Real32              &editGutterWidth    (void);
                   Real32               getGutterWidth     (void) const;
+
+                  Color4f             &editGutterColor    (void);
+            const Color4f             &getGutterColor     (void) const;
+
+                  Color4f             &editGutterTextColor(void);
+            const Color4f             &getGutterTextColor (void) const;
+
+                  UIFont * getGutterFont     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -152,6 +184,14 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomAreaBase : public ComponentCo
 
             void setGutterVisible  (const bool value);
             void setGutterWidth    (const Real32 value);
+            void setGutterColor    (const Color4f &value);
+            void setGutterTextColor(const Color4f &value);
+            void setGutterFont     (UIFont * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -213,6 +253,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomAreaBase : public ComponentCo
 
     SFBool            _sfGutterVisible;
     SFReal32          _sfGutterWidth;
+    SFColor4f         _sfGutterColor;
+    SFColor4f         _sfGutterTextColor;
+    SFUnrecUIFontPtr  _sfGutterFont;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -234,6 +277,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomAreaBase : public ComponentCo
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
+    void onCreate(const AdvancedTextDomArea *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -244,6 +288,12 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomAreaBase : public ComponentCo
     EditFieldHandlePtr editHandleGutterVisible  (void);
     GetFieldHandlePtr  getHandleGutterWidth     (void) const;
     EditFieldHandlePtr editHandleGutterWidth    (void);
+    GetFieldHandlePtr  getHandleGutterColor     (void) const;
+    EditFieldHandlePtr editHandleGutterColor    (void);
+    GetFieldHandlePtr  getHandleGutterTextColor (void) const;
+    EditFieldHandlePtr editHandleGutterTextColor(void);
+    GetFieldHandlePtr  getHandleGutterFont      (void) const;
+    EditFieldHandlePtr editHandleGutterFont     (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

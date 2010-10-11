@@ -6,13 +6,13 @@
 	library="ContribTextDom"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
-     	isNodeCore="false"
+	useLocalIncludes="false"
+    isNodeCore="false"
 	parentProducer="Component"
-	authors="David Kabala (djkabala@gmail.com)"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI TextDomArea
 	<Field
@@ -86,11 +86,16 @@ A UI TextDomArea
 		access="public"
 	>
 	</Field>
-
-	<ProducedMethod
-		name="DocumentModelChanged"
-		type="DocumentModelChangedEventPtr"
+	<Field
+		name="LayoutManager"
+		type="TextDomLayoutManager"
+		cardinality="single"
+        category="childpointer"
+        childParentType="FieldContainer"
+		visibility="external"
+		access="public"
+        ptrFieldAccess = "nullCheck"
+        linkParentField="ParentTextDomArea"
 	>
-	</ProducedMethod>	
-
+	</Field>
 </FieldContainer>

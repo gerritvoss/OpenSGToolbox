@@ -43,10 +43,8 @@
 #endif
 
 #include "OSGAdvancedTextDomAreaBase.h"
-#include "OSGScrollPanel.h"
-#include "OSGTextDomArea.h"
-#include "OSGUIFont.h"
-#include "OSGDocumentModelChangedListener.h"
+#include "OSGTextDomAreaFields.h"
+#include "OSGUIFontFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -62,7 +60,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
   	virtual Vec2f getPreferredScrollableViewportSize(void);
     virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 	virtual Vec2f getContentRequestedSize(void) const;
-	void drawGutter(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
+	void drawGutter(Graphics * const TheGraphics, Real32 Opacity) const;
 
 	TextDomAreaRefPtr _TheTextDomArea;
 	UIFontRefPtr _Font;
@@ -70,13 +68,13 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
 
   public:
 
-	void setTheTextDomArea(TextDomAreaRefPtr duplicatedTextDom);
+	void setTheTextDomArea(TextDomArea* const duplicatedTextDom);
 
 	std::string getHighlightedString(void);
 	virtual void updateLayout(void);
-    void loadFile(BoostPath path);
-	void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
-	AdvancedTextDomAreaRefPtr makeADuplicate();
+    void loadFile(const BoostPath& path);
+	void drawInternal(Graphics * const TheGraphics, Real32 Opacity) const;
+	AdvancedTextDomAreaTransitPtr createDuplicate(void);
 
     typedef AdvancedTextDomAreaBase Inherited;
     typedef AdvancedTextDomArea     Self;
@@ -107,22 +105,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
     /*=========================  PROTECTED  ===============================*/
 
   protected:
-
-	  void changedUpdate(const DocumentModelChangedEventUnrecPtr e);
-
-	  class PreferredSizeChangedListener:public DocumentModelChangedListener
-	  {
-
-	  public:
-			PreferredSizeChangedListener(AdvancedTextDomAreaRefPtr theAdvancedTextDomArea);
-
-			virtual void changedUpdate(const DocumentModelChangedEventUnrecPtr e);
-	  protected:
-		  AdvancedTextDomAreaRefPtr _AdvancedTextDomArea;
-
-	  };
-
-	  PreferredSizeChangedListener _PreferredSizeChangedListener;
 	/*! \}                                                                 */
 
     // Variables should all be in AdvancedTextDomAreaBase.
@@ -147,6 +129,12 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
     /*! \{                                                                 */
 
     static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/

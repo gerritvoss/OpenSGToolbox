@@ -43,10 +43,8 @@
 #endif
 
 #include "OSGDocumentBase.h"
-#include "OSGDocumentListener.h"
-#include "OSGUndoableEditListener.h"
-#include "OSGElement.h"
-#include "styleddocumentattributes.h"
+#include "OSGElementFields.h"
+#include "OSGDocumentElementAttributes.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -65,68 +63,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING Document : public DocumentBase
     typedef DocumentBase Inherited;
     typedef Document     Self;
 
-	virtual bool isA(std::string) = 0;
-		   //Registers the given observer to begin receiving notifications when changes are made to the document.
-    virtual EventConnection addDocumentListener(DocumentListenerPtr Listener) = 0;
-
-	virtual bool isDocumentListenerAttached(DocumentListenerPtr Listener) const = 0;
-
-    //Unregisters the given observer from the notification list so it will no longer receive change updates.
-    virtual void removeDocumentListener(DocumentListenerPtr Listener) = 0;
-
-    //Registers the given observer to begin receiving notifications when undoable edits are made to the document.
-    virtual EventConnection addUndoableEditListener(UndoableEditListenerPtr Listener) = 0;
-
-	virtual bool isUndoableEditListenerAttached(UndoableEditListenerPtr Listener) const = 0;
-
-    //Unregisters the given observer from the notification list so it will no longer receive updates.
-    virtual void removeUndoableEditListener(UndoableEditListenerPtr Listener) = 0;
-
-    //This method allows an application to mark a place in a sequence of character content.
-    virtual UInt32 createPosition(Int32 offs) = 0;
-
-    //Returns the root element that views should be based upon, unless some other mechanism for assigning views to element structures is provided.
-    virtual ElementRefPtr getDefaultRootElement(void) const = 0;
-
-    //Returns a position that represents the end of the document.
-    virtual UInt32 getEndPosition(void) const = 0;
-
-    //Returns number of characters of content currently in the document.
-    virtual UInt32 getLength(void) const = 0;
-
-    //Gets the properties associated with the document.
-    //virtual UInt32 getProperty(const std::string& key) const = 0;
-
-    //Returns all of the root elements that are defined.
-    virtual std::vector<ElementRefPtr> getRootElements(void) = 0;
-
-    //Returns a position that represents the start of the document.
-    virtual UInt64 getStartPosition(void) const = 0;
-
-    //Fetches the text contained within the given portion of the document.
-    virtual std::string getText(Int32 offset, Int32 length) const = 0;
-
-    //Fetches the text contained within the given portion of the document.
-    virtual void getText(Int32 offset, Int32 length, std::string& txt) const = 0;
-
-	virtual void deleteCharacter(UInt32 elementIndex,UInt32 offsetInChild) = 0;
-
-	virtual void addTextAsNewElementToDocument(const std::string& str, TextWithProps& properties,bool createFreshDocument) = 0;
-
-    //Inserts a string of content.
-    virtual void insertString(UInt32 offset, const std::string& str, TextWithProps& properties) = 0;
-
-	virtual void insertCharacter(UInt32 offset, const char character, TextWithProps& properties) = 0;
-
-	virtual void insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, TextWithProps& properties) = 0;
-
-	virtual void deleteCharacters(UInt32 lesserIndex,UInt32 lesserOffset,UInt32 greaterIndex,UInt32 greaterOffset)=0;
-    //Associates a property with the document.
-    //virtual void putProperty(const std::string& key, UInt32 value) = 0;
-
-    //Removes a portion of the content of the document.
-    virtual void remove(Int32 offs, Int32 len) = 0;
-
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -144,6 +80,51 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING Document : public DocumentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    //This method allows an application to mark a place in a sequence of character content.
+    virtual UInt32 createPosition(Int32 offs) = 0;
+
+    //Returns the root element that views should be based upon, unless some other mechanism for assigning views to element structures is provided.
+    virtual Element* getDefaultRootElement(void) const = 0;
+
+    //Returns a position that represents the end of the document.
+    virtual UInt32 getEndPosition(void) const = 0;
+
+    //Returns number of characters of content currently in the document.
+    virtual UInt32 getLength(void) const = 0;
+
+    //Gets the properties associated with the document.
+    //virtual UInt32 getProperty(const std::string& key) const = 0;
+
+    //Returns all of the root elements that are defined.
+    virtual std::vector<Element*> getRootElements(void) = 0;
+
+    //Returns a position that represents the start of the document.
+    virtual UInt64 getStartPosition(void) const = 0;
+
+    //Fetches the text contained within the given portion of the document.
+    virtual std::string getText(Int32 offset, Int32 length) const = 0;
+
+    //Fetches the text contained within the given portion of the document.
+    virtual void getText(Int32 offset, Int32 length, std::string& txt) const = 0;
+
+	virtual void deleteCharacter(UInt32 elementIndex,UInt32 offsetInChild) = 0;
+
+	virtual void addTextAsNewElementToDocument(const std::string& str, DocumentElementAttribute& properties,bool createFreshDocument) = 0;
+
+    //Inserts a string of content.
+    virtual void insertString(UInt32 offset, const std::string& str, DocumentElementAttribute& properties) = 0;
+
+	virtual void insertCharacter(UInt32 offset, const char character, DocumentElementAttribute& properties) = 0;
+
+	virtual void insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, DocumentElementAttribute& properties) = 0;
+
+	virtual void deleteCharacters(UInt32 lesserIndex,UInt32 lesserOffset,UInt32 greaterIndex,UInt32 greaterOffset)=0;
+    //Associates a property with the document.
+    //virtual void putProperty(const std::string& key, UInt32 value) = 0;
+
+    //Removes a portion of the content of the document.
+    virtual void remove(Int32 offs, Int32 len) = 0;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

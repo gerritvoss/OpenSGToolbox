@@ -87,132 +87,16 @@ struct FieldTraits<SearchWindow *> :
 
     static OSG_CONTRIBTEXTDOM_DLLMAPPING DataType &getType(void);
 
-    template<typename RefCountPolicy> inline
-    static const Char8    *getSName     (void);
-
-//    static const char *getSName(void) { return "SFSearchWindowPtr"; }
-    template<typename RefCountPolicy> inline
-    static const Char8    *getMName     (void);
-
-//    static const char *getMName(void) { return "MFSearchWindowPtr"; }
 };
 
-template<> inline
-const Char8 *FieldTraits<SearchWindow *, 0>::getSName<RecordedRefCountPolicy>(void)
-{
-    return "SFRecSearchWindowPtr"; 
-}
 
-template<> inline
-const Char8 *FieldTraits<SearchWindow *, 0>::getSName<UnrecordedRefCountPolicy>(void)
-{
-    return "SFUnrecSearchWindowPtr"; 
-}
-
-template<> inline
-const Char8 *FieldTraits<SearchWindow *, 0>::getSName<WeakRefCountPolicy>(void)
-{
-    return "SFWeakSearchWindowPtr"; 
-}
-
-template<> inline
-const Char8 *FieldTraits<SearchWindow *, 0>::getSName<NoRefCountPolicy>(void)
-{
-    return "SFUnrefdSearchWindowPtr"; 
-}
-
-template<> inline
-const Char8 *FieldTraits<SearchWindow *, 0>::getMName<RecordedRefCountPolicy>(void)
-{
-    return "MFRecSearchWindowPtr"; 
-}
-
-template<> inline
-const Char8 *FieldTraits<SearchWindow *, 0>::getMName<UnrecordedRefCountPolicy>(void)
-{
-    return "MFUnrecSearchWindowPtr"; 
-}
-
-template<> inline
-const Char8 *FieldTraits<SearchWindow *, 0>::getMName<WeakRefCountPolicy>(void)
-{
-    return "MFWeakSearchWindowPtr"; 
-}
-
-template<> inline
-const Char8 *FieldTraits<SearchWindow *, 0>::getMName<NoRefCountPolicy>(void)
-{
-    return "MFUnrefdSearchWindowPtr"; 
-}
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-/*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<SearchWindow *,
-                      RecordedRefCountPolicy  > SFRecSearchWindowPtr;
-/*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<SearchWindow *,
-                      UnrecordedRefCountPolicy> SFUnrecSearchWindowPtr;
-/*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<SearchWindow *,
-                      WeakRefCountPolicy      > SFWeakSearchWindowPtr;
-/*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<SearchWindow *,
-                      NoRefCountPolicy        > SFUncountedSearchWindowPtr;
-
-
-/*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<SearchWindow *,
-                      RecordedRefCountPolicy  > MFRecSearchWindowPtr;
-/*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<SearchWindow *,
-                      UnrecordedRefCountPolicy> MFUnrecSearchWindowPtr;
-/*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<SearchWindow *,
-                      WeakRefCountPolicy      > MFWeakSearchWindowPtr;
-/*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<SearchWindow *,
-                      NoRefCountPolicy        > MFUncountedSearchWindowPtr;
-
 
 
 
 #else // these are the doxygen hacks
-
-/*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFRecSearchWindowPtr : 
-    public PointerSField<SearchWindow *,
-                         RecordedRefCountPolicy> {};
-/*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUnrecSearchWindowPtr : 
-    public PointerSField<SearchWindow *,
-                         UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFWeakSearchWindowPtr :
-    public PointerSField<SearchWindow *,
-                         WeakRefCountPolicy> {};
-/*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUncountedSearchWindowPtr :
-    public PointerSField<SearchWindow *,
-                         NoRefCountPolicy> {};
-
-
-/*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFRecSearchWindowPtr :
-    public PointerMField<SearchWindow *,
-                         RecordedRefCountPolicy  > {};
-/*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUnrecSearchWindowPtr :
-    public PointerMField<SearchWindow *,
-                         UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFWeakSearchWindowPtr :
-    public PointerMField<SearchWindow *,
-                         WeakRefCountPolicy      > {};
-/*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUncountedSearchWindowPtr :
-    public PointerMField<SearchWindow *,
-                         NoRefCountPolicy        > {};
 
 
 

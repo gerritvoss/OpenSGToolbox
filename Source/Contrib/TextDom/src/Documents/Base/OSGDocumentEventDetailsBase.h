@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DocumentEvent
+ **     class DocumentEventDetails
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGDOCUMENTEVENTBASE_H_
-#define _OSGDOCUMENTEVENTBASE_H_
+#ifndef _OSGDOCUMENTEVENTDETAILSBASE_H_
+#define _OSGDOCUMENTEVENTDETAILSBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -63,30 +63,32 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGEvent.h" // Parent
+#include "OSGEventDetails.h" // Parent
 
 #include "OSGDocumentFields.h"          // Document type
 #include "OSGSysFields.h"               // Offset type
 
-#include "OSGDocumentEventFields.h"
+#include "OSGDocumentEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class DocumentEvent;
+class DocumentEventDetails;
 
-//! \brief DocumentEvent Base Class.
+//! \brief DocumentEventDetails Base Class.
 
-class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentEventBase : public Event
+class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentEventDetailsBase : public EventDetails
 {
   public:
 
-    typedef Event Inherited;
-    typedef Event ParentContainer;
+    typedef EventDetails Inherited;
+    typedef EventDetails ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
 
-    OSG_GEN_INTERNALPTR(DocumentEvent);
+    OSG_GEN_INTERNALPTR(DocumentEventDetails);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -182,16 +184,18 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentEventBase : public Event
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DocumentEventTransitPtr  create          (void);
-    static  DocumentEvent           *createEmpty     (void);
+    static  DocumentEventDetailsTransitPtr  create          (void);
+    static  DocumentEventDetails           *createEmpty     (void);
 
-    static  DocumentEventTransitPtr  createLocal     (
+    static  DocumentEventDetailsTransitPtr  createLocal     (
                                                BitVector bFlags = FCLocal::All);
 
-    static  DocumentEvent            *createEmptyLocal(
+    static  DocumentEventDetails            *createEmptyLocal(
                                               BitVector bFlags = FCLocal::All);
 
-    static  DocumentEventTransitPtr  createDependent  (BitVector bFlags);
+    static  DocumentEventDetailsTransitPtr  createDependent  (BitVector bFlags);
+
+    static  DocumentEventDetails           *createUnregistered(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -227,22 +231,22 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentEventBase : public Event
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    DocumentEventBase(void);
-    DocumentEventBase(const DocumentEventBase &source);
+    DocumentEventDetailsBase(void);
+    DocumentEventDetailsBase(const DocumentEventDetailsBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DocumentEventBase(void);
+    virtual ~DocumentEventDetailsBase(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
-    void onCreate(const DocumentEvent *source = NULL);
+    void onCreate(const DocumentEventDetails *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -299,7 +303,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentEventBase : public Event
                                  ConstFieldMaskArg  syncMode  ,
                            const UInt32             uiSyncInfo);
 
-            void execSync (      DocumentEventBase *pFrom,
+            void execSync (      DocumentEventDetailsBase *pFrom,
                                  ConstFieldMaskArg  whichField,
                                  AspectOffsetStore &oOffsets,
                                  ConstFieldMaskArg  syncMode  ,
@@ -339,11 +343,11 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentEventBase : public Event
     /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const DocumentEventBase &source);
+    void operator =(const DocumentEventDetailsBase &source);
 };
 
-typedef DocumentEventBase *DocumentEventBaseP;
+typedef DocumentEventDetailsBase *DocumentEventDetailsBaseP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGDOCUMENTEVENTBASE_H_ */
+#endif /* _OSGDOCUMENTEVENTDETAILSBASE_H_ */

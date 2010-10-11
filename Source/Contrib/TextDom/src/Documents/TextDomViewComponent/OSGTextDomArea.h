@@ -42,20 +42,15 @@
 #pragma once
 #endif
 
-#include "OSGDocumentModelChangedListener.h"
 #include "OSGTextDomAreaBase.h"
-#include "OSGDocument.h"
-#include "OSGTextDomView.h"
-#include "OSGFixedHeightLayoutManager.h"
+#include "OSGDocumentFields.h"
+#include "OSGTextDomViewFields.h"
 #include "OSGTextDomLayoutManagerFields.h"
-#include "OSGKeyAdapter.h"
-#include "OSGMouseAdapter.h"
-#include "OSGMouseMotionAdapter.h"
-#include "OSGKeyEvent.h"
-#include "OSGUpdateListener.h"
-#include "OSGColorLayer.h"
+#include "OSGColorLayerFields.h"
 #include "OSGUndoManager.h"
 #include "OSGCommandManager.h"
+#include "OSGDocumentEventDetailsFields.h"
+#include "OSGPlainDocumentLeafElementFields.h"
  
 
 OSG_BEGIN_NAMESPACE
@@ -70,23 +65,31 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 
 	  enum {LEFT,RIGHT,UP,DOWN,HOME,END,HOMEOFNEXTLINE,PAGEUP,PAGEDOWN};
 
-
-	  FixedHeightLayoutManagerRefPtr Manager;
 	  UIFontRefPtr _Font;
 	  ColorLayerRefPtr tempBackground;
 	  void createDefaultLayer(void);
-	  void produceDocumentModelChanged(const DocumentModelChangedEventP e);
 	  bool _IsMousePressed;
-	  void drawHighlightBG(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
-	  void drawLineHighlight(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
-	  void drawBraceHighlight(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
-	  void drawTheCaret(const GraphicsWeakPtr Graphics, Real32 Opacity) const;
-	  void drawHighlightBGInternal(const GraphicsWeakPtr Graphics, Real32 Opacity,UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex) const;
-	  std::string getHighlightedStringInternal(UInt32 lesserLine,UInt32 lesserIndex,UInt32 greaterLine,UInt32 greaterIndex);
+	  void drawHighlightBG(Graphics * const TheGraphics, Real32 Opacity) const;
+	  void drawLineHighlight(Graphics * const TheGraphics, Real32 Opacity) const;
+	  void drawBraceHighlight(Graphics * const TheGraphics, Real32 Opacity) const;
+	  void drawTheCaret(Graphics * const TheGraphics, Real32 Opacity) const;
+
+	  void drawHighlightBGInternal(Graphics * const TheGraphics,
+                                   Real32 Opacity,
+                                   UInt32 lesserLine,
+                                   UInt32 lesserIndex,
+                                   UInt32 greaterLine,
+                                   UInt32 greaterIndex) const;
+
+	  std::string getHighlightedStringInternal(UInt32 lesserLine,
+                                               UInt32 lesserIndex,
+                                               UInt32 greaterLine,
+                                               UInt32 greaterIndex);
+
 	  void insertCharacterUsingCommandManager(char theCharacter,UInt32 line,UInt32 index);
 	  void deleteSelectedUsingCommandManager(void);
 	  void deleteCharacterUsingCommandManager(void);
-	  void setTextUsingCommandManager(PlainDocumentLeafElementRefPtr theElement,std::string theString);
+	  void setTextUsingCommandManager(PlainDocumentLeafElement* const theElement,std::string theString);
 
 	  CommandManagerPtr	_TheCommandManager;
 	  UndoManagerPtr	_TheUndoManager;
@@ -95,58 +98,50 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 
     typedef TextDomAreaBase Inherited;
     typedef TextDomArea     Self;
-
-
-    EventConnection addDocumentModelChangedListener(DocumentModelChangedListenerPtr Listener);
-	bool isDocumentModelChangedListenerAttached(DocumentModelChangedListenerPtr Listener) const;
-    void removeDocumentModelChangedListener(DocumentModelChangedListenerPtr Listener);
 	
-	TextDomAreaRefPtr getDuplicatedTextDomArea(void);
+	TextDomAreaTransitPtr createDuplicate(void);
 
 	std::string getHighlightedString(void);
-	FixedHeightLayoutManagerRefPtr getTheManager(void);
+	TextDomLayoutManager* getTheManager(void);
 	void setupCursor(void);
 
 	void  createDefaultFont(void);
-	void changedUpdate(const DocumentEventUnrecPtr e);
 
-	//Gives notification that there was an insert into the document.
-	void insertUpdate(const DocumentEventUnrecPtr e);
+	virtual void mouseReleased(MouseEventDetails* const details);
+    void mouseDragged(MouseEventDetails* const details);
+	void mouseDraggedAfterArming(MouseEventDetails* const details);
+	void keyTyped(KeyEventDetails* const details);
+	virtual void mouseClicked(MouseEventDetails* const details);
+	virtual void mousePressed(MouseEventDetails* const details);
 
-	//Gives notification that a portion of the document has been removed.
-	void removeUpdate(const DocumentEventUnrecPtr e);
+	virtual void focusGained(FocusEventDetails* const details);
+	virtual void focusLost(FocusEventDetails* const details);
 
-	virtual void mouseReleased(const MouseEventUnrecPtr e);
-    void mouseDragged(const MouseEventUnrecPtr e);
-	void mouseDraggedAfterArming(const MouseEventUnrecPtr e);
-	void keyTyped(const KeyEventUnrecPtr e);
-	virtual void mouseClicked(const MouseEventUnrecPtr e);
-	virtual void mousePressed(const MouseEventUnrecPtr e);
-
-	virtual void focusGained(const FocusEventUnrecPtr e);
-	virtual void focusLost(const FocusEventUnrecPtr e);
-
-	void loadFile(BoostPath pathOfFile);
-	void saveFile(BoostPath pathOfFile);
-	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+	void loadFile(const BoostPath& pathOfFile);
+	void saveFile(const BoostPath& pathOfFile);
+	virtual void drawInternal(Graphics * const TheGraphics, Real32 Opacity = 1.0f) const;
 
 	void updatePreferredSize(void);
 	virtual Vec2f getContentRequestedSize(void) const;
 
 	virtual Vec2f getPreferredScrollableViewportSize(void);
-    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-  	virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft,
+                                             const Pnt2f& VisibleRectBottomRight, 
+                                             const UInt32& orientation, 
+                                             const Int32& direction);
+
+  	virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, 
+                                              const Pnt2f& VisibleRectBottomRight, 
+                                              const UInt32& orientation, 
+                                              const Int32& direction);
 
 	void handleDocumentModelChanged();
-	void handlePastingAString(std::string theClipboard);
+	void handlePastingAString(const std::string& theClipboard);
 
 	UInt32 getTopmostVisibleLineNumber(void);
 	UInt32 getLinesToBeDisplayed(void);
 	Real32 getHeightOfLine(void);
 	void tabHandler(bool isShiftPressed);
-
-	void disconnect(void);
-
 	/*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -164,52 +159,37 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-	class DocumentModifiedListener : public DocumentListener
-	{
-	public:
-		DocumentModifiedListener(TextDomAreaRefPtr TheTextDomArea);
-		    //Gives notification that an attribute or set of attributes changed.
-	    virtual void changedUpdate(const DocumentEventUnrecPtr e);
-
-		//Gives notification that there was an insert into the document.
-		virtual void insertUpdate(const DocumentEventUnrecPtr e);
-
-		//Gives notification that a portion of the document has been removed.
-		virtual void removeUpdate(const DocumentEventUnrecPtr e);
-
-	private:
-		bool _DrawCaret;
-		TextDomAreaRefPtr _TextDomArea;
-	};
-
-	DocumentModifiedListener _DocumentModifiedListener;
-
-
 	mutable Time _CurrentCaretBlinkElps;
 
-	class CaretUpdateListener : public UpdateListener
-	{
-	public:
-		CaretUpdateListener(TextDomAreaRefPtr TheTextDomArea);
-        virtual void update(const UpdateEventUnrecPtr e);
+	//Gives notification that an attribute or set of attributes changed.
+    void handleDocumentChanged(DocumentEventDetails* const details);
 
-		bool DrawCaret(void) const;
-		void setDrawCaret(bool);
+	//Gives notification that there was an insert into the document.
+	void handleDocumentInsert(DocumentEventDetails* const details);
 
-        void disconnect(void);
-	private:
-		TextDomAreaRefPtr _TextDomArea;
-		bool _DrawCaret;
-	};
+	//Gives notification that a portion of the document has been removed.
+	void handleDocumentRemove(DocumentEventDetails* const details);
 
-	friend class CaretUpdateListener;
+    boost::signals2::connection _DocumentChangedConnection,
+                                _DocumentInsertConnection,
+                                _DocumentRemoveConnection;
 
-	CaretUpdateListener _CaretUpdateListener;
 
+
+    void handleCaretUpdate(UpdateEventDetails* const details);
+
+    boost::signals2::connection _CaretUpdateConnection;
+    bool _DrawCaret;
 
     // Variables should all be in TextDomAreaBase.
 
@@ -234,13 +214,12 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 
     static void initMethod(InitPhase ePhase);
 
-    typedef std::set<DocumentModelChangedListenerPtr> DocumentModelChangedListenerSet;
-    typedef DocumentModelChangedListenerSet::iterator DocumentModelChangedListenerSetItor;
-    typedef DocumentModelChangedListenerSet::const_iterator DocumentModelChangedListenerSetConstItor;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
 
-	DocumentModelChangedListenerSet       _DocumentModelChangedListeners;
-
-
+    void onCreate(const TextDomArea *source = NULL);
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
 

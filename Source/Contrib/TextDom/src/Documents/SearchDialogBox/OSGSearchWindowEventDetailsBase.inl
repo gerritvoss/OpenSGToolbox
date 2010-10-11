@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,57 +43,142 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DocumentModelChangedEvent!
+ **     class SearchWindowEventDetails!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
+
 
 OSG_BEGIN_NAMESPACE
 
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &DocumentModelChangedEventBase::getClassType(void)
+OSG::FieldContainerType &SearchWindowEventDetailsBase::getClassType(void)
 {
     return _type;
 }
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DocumentModelChangedEventBase::getClassTypeId(void)
+OSG::UInt32 SearchWindowEventDetailsBase::getClassTypeId(void)
 {
     return _type.getId();
 }
 
 inline
-OSG::UInt16 DocumentModelChangedEventBase::getClassGroupId(void)
+OSG::UInt16 SearchWindowEventDetailsBase::getClassGroupId(void)
 {
     return _type.getGroupId();
 }
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the value of the SearchWindowEventDetails::_sfOption field.
+
+inline
+UInt8 &SearchWindowEventDetailsBase::editOption(void)
+{
+    editSField(OptionFieldMask);
+
+    return _sfOption.getValue();
+}
+
+//! Get the value of the SearchWindowEventDetails::_sfOption field.
+inline
+      UInt8  SearchWindowEventDetailsBase::getOption(void) const
+{
+    return _sfOption.getValue();
+}
+
+//! Set the value of the SearchWindowEventDetails::_sfOption field.
+inline
+void SearchWindowEventDetailsBase::setOption(const UInt8 value)
+{
+    editSField(OptionFieldMask);
+
+    _sfOption.setValue(value);
+}
+//! Get the value of the SearchWindowEventDetails::_sfSearchText field.
+
+inline
+std::string &SearchWindowEventDetailsBase::editSearchText(void)
+{
+    editSField(SearchTextFieldMask);
+
+    return _sfSearchText.getValue();
+}
+
+//! Get the value of the SearchWindowEventDetails::_sfSearchText field.
+inline
+const std::string &SearchWindowEventDetailsBase::getSearchText(void) const
+{
+    return _sfSearchText.getValue();
+}
+
+//! Set the value of the SearchWindowEventDetails::_sfSearchText field.
+inline
+void SearchWindowEventDetailsBase::setSearchText(const std::string &value)
+{
+    editSField(SearchTextFieldMask);
+
+    _sfSearchText.setValue(value);
+}
+//! Get the value of the SearchWindowEventDetails::_sfReplaceText field.
+
+inline
+std::string &SearchWindowEventDetailsBase::editReplaceText(void)
+{
+    editSField(ReplaceTextFieldMask);
+
+    return _sfReplaceText.getValue();
+}
+
+//! Get the value of the SearchWindowEventDetails::_sfReplaceText field.
+inline
+const std::string &SearchWindowEventDetailsBase::getReplaceText(void) const
+{
+    return _sfReplaceText.getValue();
+}
+
+//! Set the value of the SearchWindowEventDetails::_sfReplaceText field.
+inline
+void SearchWindowEventDetailsBase::setReplaceText(const std::string &value)
+{
+    editSField(ReplaceTextFieldMask);
+
+    _sfReplaceText.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
-void DocumentModelChangedEventBase::execSync (      DocumentModelChangedEventBase *pFrom,
+void SearchWindowEventDetailsBase::execSync (      SearchWindowEventDetailsBase *pFrom,
                                         ConstFieldMaskArg  whichField,
                                         AspectOffsetStore &oOffsets,
                                         ConstFieldMaskArg  syncMode,
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (OptionFieldMask & whichField))
+        _sfOption.syncWith(pFrom->_sfOption);
+
+    if(FieldBits::NoField != (SearchTextFieldMask & whichField))
+        _sfSearchText.syncWith(pFrom->_sfSearchText);
+
+    if(FieldBits::NoField != (ReplaceTextFieldMask & whichField))
+        _sfReplaceText.syncWith(pFrom->_sfReplaceText);
 }
 #endif
 
 
 inline
-const Char8 *DocumentModelChangedEventBase::getClassname(void)
+const Char8 *SearchWindowEventDetailsBase::getClassname(void)
 {
-    return "DocumentModelChangedEvent";
+    return "SearchWindowEventDetails";
 }
-OSG_GEN_CONTAINERPTR(DocumentModelChangedEvent);
+OSG_GEN_CONTAINERPTR(SearchWindowEventDetails);
 
 OSG_END_NAMESPACE
 

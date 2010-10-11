@@ -39,11 +39,8 @@
 #include <utility>
 #include "OSGTextFileType.h"
 #include "OSGTextFileHandler.h"
-#include "OSGEventProducer.h"
-#include "OSGEventListener.h"
 #include "OSGContainerIdMapper.h"
 #include "OSGFieldContainer.h"
-
 
 #include "OSGPlainDocument.h"
 #include "OSGPlainDocumentBranchElement.h"
@@ -69,11 +66,11 @@ public:
     virtual ~PlainTextFileType(void);
 
     /*---------------------------------------------------------------------*/
-     virtual DocumentRefPtr read(std::istream &is,
+     virtual DocumentTransitPtr read(std::istream &is,
 		                     const std::string& FileNameOrExtension);
 
     /*---------------------------------------------------------------------*/
-     virtual bool write(DocumentRefPtr Doc, std::ostream &os,
+     virtual bool write(Document* const Doc, std::ostream &os,
                         const std::string& FileNameOrExtension);
 
     

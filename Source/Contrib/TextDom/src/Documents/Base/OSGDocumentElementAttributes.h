@@ -36,90 +36,58 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGDOCUMENTELEMENTATTRIBUTE_H_
+#define _OSGDOCUMENTELEMENTATTRIBUTE_H_
+#ifdef __sgi
+#pragma once
+#endif
 
-#include <cstdlib>
-#include <cstdio>
-
-#include <OSGConfig.h>
-
-#include "OSGSearchWindowEvent.h"
+#include "OSGConfig.h"
+#include "OSGContribTextDomDef.h"
+#include "OSGBaseTypes.h"
+#include "OSGColor.h"
 
 OSG_BEGIN_NAMESPACE
 
-// Documentation for this class is emitted in the
-// OSGSearchWindowEventBase.cpp file.
-// To modify it, please change the .fcd file (OSGSearchWindowEvent.fcd) and
-// regenerate the base file.
-
-/***************************************************************************\
- *                           Class variables                               *
-\***************************************************************************/
-
-/***************************************************************************\
- *                           Class methods                                 *
-\***************************************************************************/
-
-void SearchWindowEvent::initMethod(InitPhase ePhase)
+class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentElementAttribute
 {
-    Inherited::initMethod(ePhase);
+public:
+	// the actual text
+	std::string text;
 
-    if(ePhase == TypeObject::SystemPost)
-    {
-    }
-}
+	// properties
+	UInt32 fontsize;
+	bool bold;
+	bool italics;
+	bool underlined;
+	std::string fontface;
+	Int32 fontfaceindex;
+	Color3f foreground;
+	Int32 foregroundindex;
+	Color3f background;
+	int backgroundindex;
+	bool ends;	// is true if after this text a new paragraph begins
+	bool processed;
 
-SearchWindowEventTransitPtr SearchWindowEvent::create( FieldContainerRefPtr Source,
-                                                       Time TimeStamp)
-{
-    SearchWindowEvent* TheEvent = SearchWindowEvent::createEmpty();
+public:
+	DocumentElementAttribute(UInt32 fs=22,
+                  bool b=false,
+                  bool i=false,
+                  bool u=false,
+                  const std::string& fface="Arial",
+                  Int32 ffaceindex=0,
+                  const Color3f& fg=Color3f(1.0f,1.0f,1.0f),
+                  Int32 fgindex=0,
+                  const Color3f& bg=Color3f(1.0f,1.0f,1.0f),
+                  Int32 bgindex=0,
+                  bool e=false,
+                  bool p=false);
 
-    TheEvent->setSource(Source);
-    TheEvent->setTimeStamp(TimeStamp);
-
-    return SearchWindowEventTransitPtr(TheEvent);
-}
-
-
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
-/*----------------------- constructors & destructors ----------------------*/
-
-SearchWindowEvent::SearchWindowEvent(void) :
-    Inherited()
-{
-}
-
-SearchWindowEvent::SearchWindowEvent(const SearchWindowEvent &source) :
-    Inherited(source)
-{
-}
-
-SearchWindowEvent::~SearchWindowEvent(void)
-{
-}
-
-/*----------------------------- class specific ----------------------------*/
-
-void SearchWindowEvent::changed(ConstFieldMaskArg whichField, 
-                            UInt32            origin,
-                            BitVector         details)
-{
-    Inherited::changed(whichField, origin, details);
-}
-
-void SearchWindowEvent::dump(      UInt32    ,
-                         const BitVector ) const
-{
-    SLOG << "Dump SearchWindowEvent NI" << std::endl;
-}
+    DocumentElementAttribute(const DocumentElementAttribute &source);
+    
+    ~DocumentElementAttribute(void);
+};
 
 OSG_END_NAMESPACE
+
+#endif //_OSGDOCUMENTELEMENTATTRIBUTE_H_

@@ -46,7 +46,11 @@
 
 #include "OSGDeleteSelectedCommand.h"
 
-#include "OSGNameAttachment.h"
+#include "OSGElement.h"
+#include "OSGGlyphView.h"
+#include "OSGTextDomArea.h"
+#include "OSGTextDomLayoutManager.h"
+#include "OSGPlainDocument.h"
 
 
 OSG_USING_NAMESPACE
@@ -69,7 +73,7 @@ CommandType DeleteSelectedCommand::_Type("DeleteSelectedCommand", "UndoableComma
  *                           Class methods                                 *
 \***************************************************************************/
 
-DeleteSelectedCommandPtr DeleteSelectedCommand::create(FixedHeightLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea)
+DeleteSelectedCommandPtr DeleteSelectedCommand::create(TextDomLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea)
 {
 	return RefPtr(new DeleteSelectedCommand(Manager,TheTextDomArea));
 }
@@ -120,7 +124,7 @@ void DeleteSelectedCommand::redo(void)
 
 void DeleteSelectedCommand::undo(void)
 {
-	TextWithProps temp;
+	DocumentElementAttribute temp;
 
 	Manager->setHSI(old_HSI);
 	Manager->setHSL(old_HSL);

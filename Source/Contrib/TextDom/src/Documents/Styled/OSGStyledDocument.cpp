@@ -46,6 +46,8 @@
 #include <OSGConfig.h>
 
 #include "OSGStyledDocument.h"
+#include "OSGStyledDocumentBranchElement.h"
+#include "OSGStyledDocumentLeafElement.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,26 +73,20 @@ void StyledDocument::initMethod(InitPhase ePhase)
     }
 }
 
-bool StyledDocument::isA(std::string name)
-{
-	if(name == "StyledDocument")return true;
-	return false;
-}
-
 // assuming the document starts off form index 0 and document size is the number of characters in the document.
 void  StyledDocument::displayDebugInfo(void)
 {
-	StyledDocumentBranchElementRefPtr rootElement = dynamic_pointer_cast<StyledDocumentBranchElement>(getDefaultRootElement());
+	StyledDocumentBranchElementRefPtr rootElement = dynamic_cast<StyledDocumentBranchElement*>(getDefaultRootElement());
 	if(rootElement==NULL) {
 		std::cout<<"displayDebugInfo(void):rootElement is NullFC";
 		return;
 	}
 	for(UInt32 i=0;i<rootElement->getElementCount();i++)
 	{
-		StyledDocumentLeafElementRefPtr leafElement = dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(i));
+		StyledDocumentLeafElementRefPtr leafElement = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i));
 		if(leafElement!=NULL)
 		{
-			TextWithProps temp = leafElement->getProperties();
+			DocumentElementAttribute temp = leafElement->getProperties();
 			std::cout<<"LE "<<i<<":"<<temp.text<<"::"<<" b:"<<temp.bold<<" i:"<<temp.italics<<" u:"<<temp.underlined<<" ends:"<<temp.ends<<" fsize:"<<temp.fontsize<<std::endl;
 		}
 
@@ -98,12 +94,12 @@ void  StyledDocument::displayDebugInfo(void)
 	
 }
 
-void StyledDocument::addTextAsNewElementToDocument(const std::string& str, TextWithProps& properties,bool createFreshDocument)
+void StyledDocument::addTextAsNewElementToDocument(const std::string& str, DocumentElementAttribute& properties,bool createFreshDocument)
 {
 
 }
 
-void StyledDocument::insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, TextWithProps& properties)
+void StyledDocument::insertCharacter(UInt32 offsetInElement,UInt32 elementIndex, const char character, DocumentElementAttribute& properties)
 {
 
 }
@@ -145,13 +141,11 @@ UInt32 StyledDocument::createPosition(Int32 offs)
 
 }
 
-
-
-ElementRefPtr StyledDocument::getDefaultRootElement(void) const
+Element* StyledDocument::getDefaultRootElement(void) const
 {
-	if(_RootElements.size()!=0)
+	if(getMFRootElements()->size()!=0)
 	{
-		return _RootElements[0];
+		return StyledDocumentBase::getRootElements(0);
 	}
 	else	// root element does not exist
 	{
@@ -159,7 +153,6 @@ ElementRefPtr StyledDocument::getDefaultRootElement(void) const
 	}
 }
 
-inline
 UInt32 StyledDocument::getEndPosition(void) const
 {
 	return this->getLength();
@@ -171,39 +164,33 @@ UInt32 StyledDocument::getLength(void) const
 
 //	for(UInt32 i=0;i<_RootElements.size();i++)
 //	{
-		ElementRefPtr rootElement = dynamic_pointer_cast<StyledDocumentBranchElement>(this->getDefaultRootElement());
+		ElementRefPtr rootElement = dynamic_cast<StyledDocumentBranchElement*>(this->getDefaultRootElement());
 		if(rootElement==NULL)return 0;//continue;	
 		UInt32 elementCount = rootElement->getElementCount();
 		for(UInt32 i=0;i<elementCount;i++)
 		{
-			length+=dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(i))->getTextLength();
+			length+=dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i))->getTextLength();
 		}
 	//}
 	return length;
 }
 
-inline 
-ElementRefPtr StyledDocument::getRootElement(UInt32 index)
+std::vector<Element*> StyledDocument::getRootElements(void)
 {
-	if(index<_RootElements.size())
-		return _RootElements[index];
-	else return NULL;
+    std::vector<Element*> Result;
+
+    for(UInt32 i(0) ; i<getMFRootElements()->size() ; ++i)
+    {
+        Result.push_back(StyledDocumentBase::getRootElements(i));
+    }
+
+	return Result;
 }
 
-inline 
-std::vector<ElementRefPtr> StyledDocument::getRootElements(void)
-{
-	return _RootElements;
-}
-
-inline 
 UInt64 StyledDocument::getStartPosition(void) const		/// whats the idea?!
 {
 	return 0;
 }
-
-
-
 
 std::string StyledDocument::getText(Int32 offset, Int32 length) const
 {
@@ -238,7 +225,7 @@ std::string StyledDocument::getText(Int32 offset, Int32 length) const
 //
 //		for(UInt32 i=0;i<elementCount;i++)
 //		{
-//			names.push_back(dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(i))->getText());	
+//			names.push_back(dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i))->getText());	
 ///*			std::cout<<"----------------"<<std::endl;
 //			std::cout<<"Element:"<<StyledDocumentLeafElementPtr::dcast(rootElement->getElement(i))->getText()<<"Length:"<<StyledDocumentLeafElementPtr::dcast(rootElement->getElement(i))->getTextLength()<<std::endl;
 //			std::cout<<"----------------"<<std::endl;
@@ -246,7 +233,7 @@ std::string StyledDocument::getText(Int32 offset, Int32 length) const
 
 		for(UInt32 i=0;i<rootElement->getElementCount();i++)
 		{
-			StyledDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(i));
+			StyledDocumentLeafElementRefPtr	leafElement = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i));
 			if((count+leafElement->getTextLength())<=offset) // 
 			{
 				count+=leafElement->getTextLength();
@@ -263,7 +250,7 @@ std::string StyledDocument::getText(Int32 offset, Int32 length) const
 		std::string subString="";
 		while(howManyMoreCharactersToRead>0 && theLeafElementIndex < rootElement->getElementCount())
 		{
-			StyledDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(theLeafElementIndex));
+			StyledDocumentLeafElementRefPtr	leafElement = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex));
 			std::string textOfCurrentLeaf = leafElement->getText();
 			if(textOfCurrentLeaf.size()-locationToReadFrom >= howManyMoreCharactersToRead) // this leaf element would be the last to be accessed
 			{	
@@ -289,14 +276,14 @@ void StyledDocument::getText(Int32 offset, Int32 length, std::string& txt) const
 	txt = getText(offset, length);
 }
 
-void StyledDocument::getTextWithProps(Int32 offset, Int32 length, std::vector<TextWithProps>& txt) const
+void StyledDocument::getDocumentElementAttribute(Int32 offset, Int32 length, std::vector<DocumentElementAttribute>& txt) const
 {
-	txt = getTextWithProps(offset, length);
+	txt = getDocumentElementAttribute(offset, length);
 }
 
-std::vector<TextWithProps>& StyledDocument::getTextWithProps(Int32 offset, Int32 length) const
+std::vector<DocumentElementAttribute>& StyledDocument::getDocumentElementAttribute(Int32 offset, Int32 length) const
 {
-	std::vector<TextWithProps> result;
+	std::vector<DocumentElementAttribute> result;
 	std::string stringToReturn="";
 
 	if(offset<0 || offset > getEndPosition() || length == 0)
@@ -327,7 +314,7 @@ std::vector<TextWithProps>& StyledDocument::getTextWithProps(Int32 offset, Int32
 //
 //		for(UInt32 i=0;i<elementCount;i++)
 //		{
-//			names.push_back(dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(i))->getText());	
+//			names.push_back(dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i))->getText());	
 ///*			std::cout<<"----------------"<<std::endl;
 //			std::cout<<"Element:"<<StyledDocumentLeafElementPtr::dcast(rootElement->getElement(i))->getText()<<"Length:"<<StyledDocumentLeafElementPtr::dcast(rootElement->getElement(i))->getTextLength()<<std::endl;
 //			std::cout<<"----------------"<<std::endl;
@@ -335,7 +322,7 @@ std::vector<TextWithProps>& StyledDocument::getTextWithProps(Int32 offset, Int32
 
 		for(UInt32 i=0;i<rootElement->getElementCount();i++)
 		{
-			StyledDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(i));
+			StyledDocumentLeafElementRefPtr	leafElement = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i));
 			if((count+leafElement->getTextLength())<=offset) // 
 			{
 				count+=leafElement->getTextLength();
@@ -354,12 +341,12 @@ std::vector<TextWithProps>& StyledDocument::getTextWithProps(Int32 offset, Int32
 		UInt32 howManyMoreCharactersToRead = length;
 		while(howManyMoreCharactersToRead>0 && theLeafElementIndex < rootElement->getElementCount())
 		{
-			StyledDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(theLeafElementIndex));
+			StyledDocumentLeafElementRefPtr	leafElement = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex));
 			std::string textOfCurrentLeaf = leafElement->getText();
 			if(textOfCurrentLeaf.size()-locationToReadFrom >= howManyMoreCharactersToRead) // this leaf element would be the last to be accessed
 			{	
 				stringToReturn= textOfCurrentLeaf.substr(locationToReadFrom,howManyMoreCharactersToRead);
-				TextWithProps theString;
+				DocumentElementAttribute theString;
 				theString = leafElement->getProperties();
 				theString.text = stringToReturn;
 				result.push_back(theString);
@@ -368,7 +355,7 @@ std::vector<TextWithProps>& StyledDocument::getTextWithProps(Int32 offset, Int32
 			else	// this leaf element would NOT be the last to be accessed
 			{
 				stringToReturn= textOfCurrentLeaf.substr(locationToReadFrom);
-				TextWithProps theString;
+				DocumentElementAttribute theString;
 				theString = leafElement->getProperties();
 				theString.text = stringToReturn;
 				result.push_back(theString);
@@ -408,12 +395,12 @@ void StyledDocument::tokenize(std::string sentence,std::vector<std::string> & se
 	}
 }
 
-void StyledDocument::insertCharacter(UInt32 offset, const char character, TextWithProps& properties)
+void StyledDocument::insertCharacter(UInt32 offset, const char character, DocumentElementAttribute& properties)
 {
 	insertString(offset,std::string(1,character),properties);
 }
 
-void StyledDocument::insertString(UInt32 offset, const std::string& str, TextWithProps& properties)
+void StyledDocument::insertString(UInt32 offset, const std::string& str, DocumentElementAttribute& properties)
 {
 
 	UInt32 endPos=getEndPosition();
@@ -429,12 +416,12 @@ void StyledDocument::insertString(UInt32 offset, const std::string& str, TextWit
 
 	if(getDefaultRootElement()!=NULL)
 	{
-		defaultRoot=dynamic_pointer_cast<StyledDocumentBranchElement>(getDefaultRootElement());
+		defaultRoot=dynamic_cast<StyledDocumentBranchElement*>(getDefaultRootElement());
 	}
 	else
 	{
 		defaultRoot = StyledDocumentBranchElement::create();	
-		_RootElements.push_back(defaultRoot);
+		pushToRootElements(defaultRoot);
 	}
 	
 	rootElement = defaultRoot;
@@ -444,11 +431,11 @@ void StyledDocument::insertString(UInt32 offset, const std::string& str, TextWit
 	Int32 theLeafElementIndex=-1; // theLeafElement is the leaf element that holds the beginning offset value
 	std::string theCharactersAfter="";
 	std::string theCharactersBefore="";
-	TextWithProps oldProps = properties;
+	DocumentElementAttribute oldProps = properties;
 
 	for(UInt32 i=0;i<rootElement->getElementCount();i++)
 	{
-		StyledDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(i));
+		StyledDocumentLeafElementRefPtr	leafElement = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i));
 		if((count+leafElement->getTextLength())<=offset) 
 		{
 			count+=leafElement->getTextLength();
@@ -483,13 +470,14 @@ void StyledDocument::insertString(UInt32 offset, const std::string& str, TextWit
 }
 
 
-void StyledDocument::removeElement(UInt32 theLeafElementIndex,StyledDocumentBranchElementRefPtr rootElement)
+void StyledDocument::removeElement(UInt32 theLeafElementIndex,
+                                   StyledDocumentBranchElement* const rootElement)
 {
 	rootElement->removeChildElement(theLeafElementIndex);
 }
 
 
-bool StyledDocument::equals(TextWithProps &oldProps,TextWithProps &operand)
+bool StyledDocument::equals(DocumentElementAttribute &oldProps,DocumentElementAttribute &operand)
 {
 	if(oldProps.fontsize != operand.fontsize)return false;
 	if(oldProps.bold != operand.bold)return false;
@@ -504,7 +492,13 @@ bool StyledDocument::equals(TextWithProps &oldProps,TextWithProps &operand)
 	return true;
 }
 
-void StyledDocument::addElements(Int32 theLeafElementIndex,std::string theCharactersBefore,std::string theCharactersAfter,std::vector<std::string> &setOfWords,StyledDocumentBranchElementRefPtr rootElement,TextWithProps& oldProps,TextWithProps& newProps)
+void StyledDocument::addElements(Int32 theLeafElementIndex,
+                                 const std::string& theCharactersBefore,
+                                 const std::string& theCharactersAfter,
+                                 std::vector<std::string> &setOfWords,
+                                 StyledDocumentBranchElement* const rootElement,
+                                 DocumentElementAttribute &oldProps,
+                                 DocumentElementAttribute &newProps)
 {
 
 	if(theLeafElementIndex<0)theLeafElementIndex=0;
@@ -617,7 +611,7 @@ void StyledDocument::removeTheSlashN(std::string& stringWithSlashN)
 	stringWithSlashN = t;
 }
 
-void StyledDocument::replace(Int32 offset, Int32 length, const std::string& str, TextWithProps& properties)
+void StyledDocument::replace(Int32 offset, Int32 length, const std::string& str, DocumentElementAttribute& properties)
 {
 	remove(offset, length);
 	insertString(offset,str,properties);
@@ -637,7 +631,7 @@ void StyledDocument::remove(Int32 offset, Int32 len)
 		return;
 	}
 	
-	StyledDocumentBranchElementRefPtr rootElement = dynamic_pointer_cast<StyledDocumentBranchElement>(getDefaultRootElement());
+	StyledDocumentBranchElementRefPtr rootElement = dynamic_cast<StyledDocumentBranchElement*>(getDefaultRootElement());
 	UInt32 count=0;
 	UInt32 locationToRemoveFrom=0; 
 	UInt32 theLeafElementIndex=-1; // theLeafElement is the leaf element that holds the beginning offset value
@@ -646,7 +640,7 @@ void StyledDocument::remove(Int32 offset, Int32 len)
 
 	for(UInt32 i=0;i<rootElement->getElementCount();i++)
 	{
-		StyledDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(i));
+		StyledDocumentLeafElementRefPtr	leafElement = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i));
 		if((count+leafElement->getTextLength())<=offset) // 
 		{
 			count+=leafElement->getTextLength();
@@ -680,11 +674,11 @@ void StyledDocument::remove(Int32 offset, Int32 len)
 			{
 				if(theCharactersBefore!="")
 				{
-					(dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(theLeafElementIndex)))->setText(theCharactersBefore);
-					TextWithProps temp;
-					temp = (dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(theLeafElementIndex)))->getProperties();
+					(dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex)))->setText(theCharactersBefore);
+					DocumentElementAttribute temp;
+					temp = (dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex)))->getProperties();
 					temp.ends = false;
-					(dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(theLeafElementIndex)))->setProperties(temp);
+					(dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex)))->setProperties(temp);
 				}
 
 				else
@@ -693,13 +687,13 @@ void StyledDocument::remove(Int32 offset, Int32 len)
 			return;
 		}
 		//UInt32 theStartLeafElementIndex = theLeafElementIndex;
-		TextWithProps startProps,endProps;
-		startProps = dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(theLeafElementIndex))->getProperties();
+		DocumentElementAttribute startProps,endProps;
+		startProps = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex))->getProperties();
 
 		while(len>0 && theLeafElementIndex<rootElement->getElementCount())
 		{
 		
-			StyledDocumentLeafElementRefPtr	leafElement = dynamic_pointer_cast<StyledDocumentLeafElement>(rootElement->getElement(theLeafElementIndex));
+			StyledDocumentLeafElementRefPtr	leafElement = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(theLeafElementIndex));
 
 			if(locationToRemoveFrom + len >= leafElement->getTextLength()) // if all the remaining characters in the current leaf needs to be removed
 			{

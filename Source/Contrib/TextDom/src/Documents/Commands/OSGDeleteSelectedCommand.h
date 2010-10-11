@@ -48,9 +48,9 @@
 
 #include "OSGUndoableCommand.h"
 
-#include "OSGFixedHeightLayoutManager.h"
-#include "OSGPlainDocument.h"
-#include "OSGTextDomArea.h"
+#include "OSGTextDomLayoutManagerFields.h"
+#include "OSGPlainDocumentFields.h"
+#include "OSGTextDomAreaFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -60,14 +60,11 @@ typedef boost::shared_ptr<DeleteSelectedCommand> DeleteSelectedCommandPtr;
 class OSG_CONTRIBTEXTDOM_DLLMAPPING DeleteSelectedCommand: public UndoableCommand
 {
 protected:
-
-	enum {LEFT,RIGHT,UP,DOWN,HOME,END,HOMEOFNEXTLINE,PAGEUP,PAGEDOWN};
-
 	typedef UndoableCommand Inherited;
 	typedef DeleteSelectedCommand Self;
 	typedef DeleteSelectedCommandPtr RefPtr;
 
-    DeleteSelectedCommand(FixedHeightLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea);// here
+    DeleteSelectedCommand(TextDomLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea);// here
 	DeleteSelectedCommand(const DeleteSelectedCommand& source);
 
 	void operator =(const DeleteSelectedCommand& source);
@@ -79,7 +76,7 @@ protected:
 	virtual void redo(void);
 	virtual void undo(void);
 
-	FixedHeightLayoutManagerRefPtr Manager;
+	TextDomLayoutManagerRefPtr Manager;
 	UInt32 old_HSI;
 	UInt32 old_HSL;
 	UInt32 old_HEI;
@@ -97,7 +94,7 @@ public:
 
 	virtual ~DeleteSelectedCommand(void);
 	
-    static DeleteSelectedCommandPtr create(FixedHeightLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea);// here
+    static DeleteSelectedCommandPtr create(TextDomLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea);// here
 };
 
 OSG_END_NAMESPACE

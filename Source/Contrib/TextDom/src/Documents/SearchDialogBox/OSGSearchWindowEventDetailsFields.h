@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGSEARCHWINDOWEVENTFIELDS_H_
-#define _OSGSEARCHWINDOWEVENTFIELDS_H_
+#ifndef _OSGSEARCHWINDOWEVENTDETAILSFIELDS_H_
+#define _OSGSEARCHWINDOWEVENTDETAILSFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,16 +64,16 @@
 
 OSG_BEGIN_NAMESPACE
 
-class SearchWindowEvent;
+class SearchWindowEventDetails;
 
-OSG_GEN_CONTAINERPTR(SearchWindowEvent);
+OSG_GEN_CONTAINERPTR(SearchWindowEventDetails);
 
 /*! \ingroup GrpContribTextDomFieldTraits
     \ingroup GrpLibOSGContribTextDom
  */
 template <>
-struct FieldTraits<SearchWindowEvent *> :
-    public FieldTraitsFCPtrBase<SearchWindowEvent *>
+struct FieldTraits<SearchWindowEventDetails *> :
+    public FieldTraitsFCPtrBase<SearchWindowEventDetails *>
 {
   private:
 
@@ -81,7 +81,7 @@ struct FieldTraits<SearchWindowEvent *> :
 
   public:
 
-    typedef FieldTraits<SearchWindowEvent *>  Self;
+    typedef FieldTraits<SearchWindowEventDetails *>  Self;
 
     enum                        { Convertible = NotConvertible };
 
@@ -90,89 +90,48 @@ struct FieldTraits<SearchWindowEvent *> :
     template<typename RefCountPolicy> inline
     static const Char8    *getSName     (void);
 
-//    static const char *getSName(void) { return "SFSearchWindowEventPtr"; }
-    template<typename RefCountPolicy> inline
-    static const Char8    *getMName     (void);
-
-//    static const char *getMName(void) { return "MFSearchWindowEventPtr"; }
+//    static const char *getSName(void) { return "SFSearchWindowEventDetailsPtr"; }
 };
 
 template<> inline
-const Char8 *FieldTraits<SearchWindowEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<SearchWindowEventDetails *, 0>::getSName<RecordedRefCountPolicy>(void)
 {
-    return "SFRecSearchWindowEventPtr"; 
+    return "SFRecSearchWindowEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<SearchWindowEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<SearchWindowEventDetails *, 0>::getSName<UnrecordedRefCountPolicy>(void)
 {
-    return "SFUnrecSearchWindowEventPtr"; 
+    return "SFUnrecSearchWindowEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<SearchWindowEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+const Char8 *FieldTraits<SearchWindowEventDetails *, 0>::getSName<WeakRefCountPolicy>(void)
 {
-    return "SFWeakSearchWindowEventPtr"; 
+    return "SFWeakSearchWindowEventDetailsPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<SearchWindowEvent *, 0>::getSName<NoRefCountPolicy>(void)
+const Char8 *FieldTraits<SearchWindowEventDetails *, 0>::getSName<NoRefCountPolicy>(void)
 {
-    return "SFUnrefdSearchWindowEventPtr"; 
+    return "SFUnrefdSearchWindowEventDetailsPtr"; 
 }
 
-template<> inline
-const Char8 *FieldTraits<SearchWindowEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
-{
-    return "MFRecSearchWindowEventPtr"; 
-}
-
-template<> inline
-const Char8 *FieldTraits<SearchWindowEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
-{
-    return "MFUnrecSearchWindowEventPtr"; 
-}
-
-template<> inline
-const Char8 *FieldTraits<SearchWindowEvent *, 0>::getMName<WeakRefCountPolicy>(void)
-{
-    return "MFWeakSearchWindowEventPtr"; 
-}
-
-template<> inline
-const Char8 *FieldTraits<SearchWindowEvent *, 0>::getMName<NoRefCountPolicy>(void)
-{
-    return "MFUnrefdSearchWindowEventPtr"; 
-}
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<SearchWindowEvent *,
-                      RecordedRefCountPolicy  > SFRecSearchWindowEventPtr;
+typedef PointerSField<SearchWindowEventDetails *,
+                      RecordedRefCountPolicy  > SFRecSearchWindowEventDetailsPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<SearchWindowEvent *,
-                      UnrecordedRefCountPolicy> SFUnrecSearchWindowEventPtr;
+typedef PointerSField<SearchWindowEventDetails *,
+                      UnrecordedRefCountPolicy> SFUnrecSearchWindowEventDetailsPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<SearchWindowEvent *,
-                      WeakRefCountPolicy      > SFWeakSearchWindowEventPtr;
+typedef PointerSField<SearchWindowEventDetails *,
+                      WeakRefCountPolicy      > SFWeakSearchWindowEventDetailsPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<SearchWindowEvent *,
-                      NoRefCountPolicy        > SFUncountedSearchWindowEventPtr;
-
-
-/*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<SearchWindowEvent *,
-                      RecordedRefCountPolicy  > MFRecSearchWindowEventPtr;
-/*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<SearchWindowEvent *,
-                      UnrecordedRefCountPolicy> MFUnrecSearchWindowEventPtr;
-/*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<SearchWindowEvent *,
-                      WeakRefCountPolicy      > MFWeakSearchWindowEventPtr;
-/*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<SearchWindowEvent *,
-                      NoRefCountPolicy        > MFUncountedSearchWindowEventPtr;
+typedef PointerSField<SearchWindowEventDetails *,
+                      NoRefCountPolicy        > SFUncountedSearchWindowEventDetailsPtr;
 
 
 
@@ -180,39 +139,21 @@ typedef PointerMField<SearchWindowEvent *,
 #else // these are the doxygen hacks
 
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFRecSearchWindowEventPtr : 
-    public PointerSField<SearchWindowEvent *,
+struct SFRecSearchWindowEventDetailsPtr : 
+    public PointerSField<SearchWindowEventDetails *,
                          RecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUnrecSearchWindowEventPtr : 
-    public PointerSField<SearchWindowEvent *,
+struct SFUnrecSearchWindowEventDetailsPtr : 
+    public PointerSField<SearchWindowEventDetails *,
                          UnrecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFWeakSearchWindowEventPtr :
-    public PointerSField<SearchWindowEvent *,
+struct SFWeakSearchWindowEventDetailsPtr :
+    public PointerSField<SearchWindowEventDetails *,
                          WeakRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUncountedSearchWindowEventPtr :
-    public PointerSField<SearchWindowEvent *,
+struct SFUncountedSearchWindowEventDetailsPtr :
+    public PointerSField<SearchWindowEventDetails *,
                          NoRefCountPolicy> {};
-
-
-/*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFRecSearchWindowEventPtr :
-    public PointerMField<SearchWindowEvent *,
-                         RecordedRefCountPolicy  > {};
-/*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUnrecSearchWindowEventPtr :
-    public PointerMField<SearchWindowEvent *,
-                         UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFWeakSearchWindowEventPtr :
-    public PointerMField<SearchWindowEvent *,
-                         WeakRefCountPolicy      > {};
-/*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUncountedSearchWindowEventPtr :
-    public PointerMField<SearchWindowEvent *,
-                         NoRefCountPolicy        > {};
 
 
 
@@ -220,4 +161,4 @@ struct MFUncountedSearchWindowEventPtr :
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGSEARCHWINDOWEVENTFIELDS_H_ */
+#endif /* _OSGSEARCHWINDOWEVENTDETAILSFIELDS_H_ */

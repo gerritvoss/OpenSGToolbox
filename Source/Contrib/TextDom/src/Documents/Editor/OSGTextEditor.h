@@ -43,29 +43,23 @@
 #endif
 
 #include "OSGTextEditorBase.h"
-#include "OSGAdvancedTextDomArea.h"
+#include "OSGAdvancedTextDomAreaFields.h"
 
-#include "OSGScrollPanel.h"
-#include "OSGLabel.h"
-#include "OSGTextDomArea.h"
-#include "OSGFixedHeightLayoutManager.h"
-#include "OSGPanel.h"
-#include "OSGColorLayer.h"
-#include "OSGLineBorder.h"
-#include "OSGList.h"
-#include "OSGListSelectionModel.h"
-#include "OSGDefaultListSelectionModel.h"
-#include "OSGDefaultListModel.h"
-#include "OSGSpringLayout.h"
-#include "OSGSpringLayoutConstraints.h"
-#include "OSGSplitPanel.h"
-#include "OSGBorderLayout.h"
-#include "OSGTabPanel.h"
-#include "OSGInternalWindow.h"
-#include "OSGSearchWindow.h"
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/convenience.hpp>
-#include <boost/algorithm/string.hpp>
+#include "OSGLabelFields.h"
+#include "OSGTextDomAreaFields.h"
+#include "OSGListFields.h"
+#include "OSGListSelectionModelFields.h"
+#include "OSGDefaultListModelFields.h"
+#include "OSGSplitPanelFields.h"
+#include "OSGTabPanelFields.h"
+#include "OSGSearchWindowFields.h"
+#include "OSGScrollPanelFields.h"
+#include "OSGActionEventDetailsFields.h"
+#include "OSGSearchWindowEventDetailsFields.h"
+#include "OSGTextAreaFields.h"
+#include "OSGButtonFields.h"
+#include "OSGPanelFields.h"
+#include "OSGSpringLayoutFields.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -91,11 +85,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 		SpringLayoutRefPtr _TheClipboardPanelLayout;
 		ButtonRefPtr _TheClipboardButton;
 
-		virtual void mouseClicked(MouseEventUnrecPtr e);
-
 		void clipboardInitialization(void);
 		void createDomArea(void);
-		AdvancedTextDomAreaRefPtr makeADuplicate(AdvancedTextDomAreaRefPtr TheAdvancedTextDomArea);
+		AdvancedTextDomAreaTransitPtr createDuplicate(AdvancedTextDomArea* const TheAdvancedTextDomArea);
 
 
 
@@ -115,91 +107,37 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 		void createRightTabPanel(void);
 		void createDefaultTabs(void);
 
-		void actionPerformed(const ActionEventUnrecPtr e);
-		void closeButtonActionPerformed(const OSG::ActionEventUnrecPtr e);
+		void actionPerformed(ActionEventDetails* const details);
 
-		SearchWindowRefPtr TheSearchDialog;
-		class TheSearchWindowListener: public SearchWindowListener 
-		{
-		public:
+		SearchWindowRefPtr _SearchDialog;
 
-			TheSearchWindowListener(TextEditorRefPtr _TheTextEditor);
-			~TheSearchWindowListener();
-			
-			virtual void dialogClosing(const SearchWindowEventUnrecPtr e);
-			virtual void dialogClosed(const SearchWindowEventUnrecPtr e);
-			virtual void searchButtonClicked(const SearchWindowEventUnrecPtr e);
-			virtual void replaceButtonClicked(const SearchWindowEventUnrecPtr e);
-			virtual void replaceAllButtonClicked(const SearchWindowEventUnrecPtr e);
-			virtual void bookmarkAllButtonClicked(const SearchWindowEventUnrecPtr e);
-   
-		protected:
+		void handleSearchButtonClicked(SearchWindowEventDetails* const details);
+		void handleReplaceButtonClicked(SearchWindowEventDetails* const details);
+		void handleReplaceAllButtonClicked(SearchWindowEventDetails* const details);
+		void handleBookmarkAllButtonClicked(SearchWindowEventDetails* const details);
 
-			TextEditorRefPtr _TheTextEditor;
-		};
+        boost::signals2::connection _SearchButtonClickedConnection,
+                                    _ReplaceButtonClickedConnection,
+                                    _ReplaceAllButtonClickedConnection,
+                                    _BookmarkAllButtonClickedConnection;
 
-		TheSearchWindowListener _TheSearchWindowListener;
-		bool _IsDialogClosed;
-		void dialogClosed(const SearchWindowEventUnrecPtr e);
-		void dialogClosing(const SearchWindowEventUnrecPtr e);
-		void searchButtonClicked(const SearchWindowEventUnrecPtr e);
-		void replaceButtonClicked(const SearchWindowEventUnrecPtr e);
-		void replaceAllButtonClicked(const SearchWindowEventUnrecPtr e);
-		void bookmarkAllButtonClicked(const SearchWindowEventUnrecPtr e);
+	    void handleClipboardButtonAction(ActionEventDetails* const details);
+        boost::signals2::connection _ClipboardButtonActionConnection;
 
-		class ClipboardButtonListener : public ActionListener
-		{
-		  public :
-			ClipboardButtonListener(TextEditorRefPtr TheTextEditor);
-			virtual void actionPerformed(const ActionEventUnrecPtr e);
-			~ClipboardButtonListener(void);
-		  protected :
-			TextEditorRefPtr _TextEditor;
-		};
-		ClipboardButtonListener _ClipboardButtonListener;
+		void handleCloseButtonAction(ActionEventDetails* const details);
+        boost::signals2::connection _CloseButtonActionConnection;
 
-		class CloseButtonListener:public ActionListener
-		{
-		  public:
-			CloseButtonListener(TextEditorRefPtr TheTextEditor);
-			~CloseButtonListener(void);
+        void saveFile(const BoostPath& file);
 
-			virtual void actionPerformed(const ActionEventUnrecPtr e);
-		  protected :
-			TextEditorRefPtr _TextEditor;
-		};
+		virtual void keyTyped(KeyEventDetails* const details);
 
-		CloseButtonListener _CloseButtonListener;
-
-		void saveFile(BoostPath file);
-
-		virtual void keyTyped(const KeyEventUnrecPtr e);
-
-		/*void mouseClicked(const MouseEventUnrecPtr e);
-
-		class TheMouseListener : public MouseListener
-		{
-		public :
-			TheMouseListener(TextEditorRefPtr TheTextEditor);
-			
-			virtual void mouseClicked(const MouseEventUnrecPtr e);
-	        virtual void mouseEntered(const MouseEventUnrecPtr e);
-			virtual void mouseExited(const MouseEventUnrecPtr e);
-			virtual void mousePressed(const MouseEventUnrecPtr e);
-			virtual void mouseReleased(const MouseEventUnrecPtr e);
-
-		protected :
-			TextEditorRefPtr _TextEditor;
-		};
-
-		TheMouseListener _MouseListener;
-		*/
+		virtual void mouseClicked(MouseEventDetails* const details);
 
     /*==========================  PUBLIC  =================================*/
 
   public:
 
-	void loadNewFile(BoostPath file);
+	void loadFile(const BoostPath& file);
 
     typedef TextEditorBase Inherited;
     typedef TextEditor     Self;
@@ -219,6 +157,12 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 
     virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

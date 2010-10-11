@@ -45,6 +45,9 @@
 #include "OSGConfig.h"
 
 #include "OSGStyledTextFileType.h"
+#include "OSGStyledDocument.h"
+#include "OSGStyledDocumentBranchElement.h"
+#include "OSGStyledDocumentLeafElement.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,7 +84,7 @@ std::string StyledTextFileType::getName(void) const
 }
 
 
-DocumentRefPtr StyledTextFileType::read(std::istream &InputStream,
+DocumentTransitPtr StyledTextFileType::read(std::istream &InputStream,
 	                     const std::string& FileNameOrExtension)
 {
 	//PlainDocumentRefPtr Result = PlainDocument::create();
@@ -110,14 +113,14 @@ DocumentRefPtr StyledTextFileType::read(std::istream &InputStream,
 
 	rtfreader(InputStream,Result);
 
-	for(Int32 i=_TextWithProps.size()-1;i>=0;i--)
+	for(Int32 i=_DocumentElementAttribute.size()-1;i>=0;i--)
 	{
-		_TextWithProps[i].processed = true;
-		Result->insertString(0,_TextWithProps[i].text,_TextWithProps[i]);
+		_DocumentElementAttribute[i].processed = true;
+		Result->insertString(0,_DocumentElementAttribute[i].text,_DocumentElementAttribute[i]);
 	}
 
 
-	return Result;
+	return DocumentTransitPtr(Result);
 }
 
 
@@ -130,12 +133,10 @@ void StyledTextFileType::rtfreader(std::istream &ifs,StyledDocumentRefPtr &Resul
 	{
 		if(sentence.find("rtf")!= std::string::npos)
 		{
-			std::cout << "first line:" << sentence <<std::endl;
 			continue;
 		}
 		if(sentence.find("fonttbl")!= std::string::npos)
 		{
-			std::cout << "font table line:"<<sentence << std::endl;
 			std::string slashf = "\\f";
 			Int32 count = -1;
 			while(1)
@@ -166,35 +167,32 @@ void StyledTextFileType::rtfreader(std::istream &ifs,StyledDocumentRefPtr &Resul
 		}
 		if(sentence.find("colortbl")!= std::string::npos)
 		{
-			std::cout << "color table line:"<<sentence << std::endl;
 			
-			Color _DefaultColor;
-			_DefaultColor.r = 0;
-			_DefaultColor.g = 0;
-			_DefaultColor.b = 0;
+			Color3f _DefaultColor(0.0f,0.0f,0.0f);
 			_Colors.push_back(_DefaultColor);
 
 			Int32 index = findNextSem(0,sentence);
 			while(index < sentence.size())
 			{
-				Color col;
-				col.r		= findNextRed(index,sentence);
-				col.g		= findNextGreen(index,sentence);
-				col.b		= findNextBlue(index,sentence);
+				Color3f col(static_cast<Real32>(findNextRed(index,sentence))/255.0f,
+                            static_cast<Real32>(findNextGreen(index,sentence))/255.0f,
+                            static_cast<Real32>(findNextBlue(index,sentence))/255.0f);
 				index		= findNextSem(index,sentence);
-				if(col.r!=-1 && col.g!=-1 && col.b!=-1)_Colors.push_back(col);
+				if(col.red()>=0.0f && col.green()>=0.0f && col.blue()>=0.0f)
+                {
+                    _Colors.push_back(col);
+                }
 			}
 			Result->setColors(_Colors);
 			continue;
 		}
 		if(sentence[0]=='}')
 		{
-			std::cout << "Reading complete."<<std::endl;
 			break; 
 		}
-		TextWithProps _TextStructure;
+		DocumentElementAttribute _TextStructure;
 		processSentence(sentence,_TextStructure);
-		_TextWithProps.push_back(_TextStructure);
+		_DocumentElementAttribute.push_back(_TextStructure);
 		count++;
 	}
 
@@ -261,7 +259,7 @@ Int32 StyledTextFileType::findNextSem(Int32 index,std::string& sentence)
 	return sentence.size();
 }
 
-void StyledTextFileType::processSentence(std::string &sentence,TextWithProps& textStructure)
+void StyledTextFileType::processSentence(std::string &sentence,DocumentElementAttribute& textStructure)
 {
 	textStructure.ends = (sentence.find("\\par")!= std::string::npos)?true:false;
 
@@ -334,7 +332,7 @@ void StyledTextFileType::processSentence(std::string &sentence,TextWithProps& te
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool StyledTextFileType::write(DocumentRefPtr Doc, std::ostream &OutputStream,
+bool StyledTextFileType::write(Document* const Doc, std::ostream &OutputStream,
                     const std::string& FileNameOrExtension)
 {
 	//PlainDocumentRefPtr pdoc = dynamic_pointer_cast<PlainDocument>(Doc);
@@ -365,47 +363,51 @@ bool StyledTextFileType::write(DocumentRefPtr Doc, std::ostream &OutputStream,
 	//	}
 	//}
 	
-	StyledDocumentRefPtr pdoc = dynamic_pointer_cast<StyledDocument>(Doc);
+	StyledDocumentRefPtr pdoc = dynamic_cast<StyledDocument* const>(Doc);
 	
-	if(pdoc==NULL){
-		std::cout<<"StyledTextFileType::write():Document pointer is NullFC\n";
+	if(pdoc==NULL)
+    {
+		SWARNING << "Document pointer is NULL" << std::endl;
 		return false;
 	}
 	
 	_FontFaces = pdoc->getFonts();
 	_Colors = pdoc->getColors();
-	_TextWithProps.clear();
+	_DocumentElementAttribute.clear();
 
-	std::vector<ElementRefPtr> genericRoots;
+	std::vector<Element*> genericRoots;
 	genericRoots = pdoc->getRootElements();
 	for(UInt32 i=0;i<genericRoots.size();i++)
 	{
 		StyledDocumentBranchElementRefPtr RootElement;
-		RootElement = dynamic_pointer_cast<StyledDocumentBranchElement>(genericRoots[i]);	
+		RootElement = dynamic_cast<StyledDocumentBranchElement*>(genericRoots[i]);	
 		
 		for(UInt32 j=0;j<RootElement->getElementCount();j++)
 		{	
 			StyledDocumentLeafElementRefPtr LeafElement;
-			LeafElement = dynamic_pointer_cast<StyledDocumentLeafElement>(RootElement->getElement(j));
+			LeafElement = dynamic_cast<StyledDocumentLeafElement*>(RootElement->getElement(j));
 			
-			TextWithProps propTable = LeafElement->getProperties();
+			DocumentElementAttribute propTable = LeafElement->getProperties();
 
-			_TextWithProps.push_back(propTable);		
+			_DocumentElementAttribute.push_back(propTable);		
 
 		}
 	}
-	rtfwriter(OutputStream,_TextWithProps,_FontFaces,_Colors);
+	rtfwriter(OutputStream,_DocumentElementAttribute,_FontFaces,_Colors);
 	return false;
 }
 
 
-void StyledTextFileType::rtfwriter(std::ostream &ofs,std::vector<TextWithProps>& _TextWithProperties,std::vector<std::string>& _FontFaces,std::vector<Color>& _Colors)
+void StyledTextFileType::rtfwriter(std::ostream &ofs,
+                                   std::vector<DocumentElementAttribute>& _TextWithProperties,
+                                   std::vector<std::string>& _FontFaces,
+                                   std::vector<Color3f>& _Colors)
 {
 	/*std::ofstream ofs;
 	ofs.open("sample_output.rtf");*/
 	if(!ofs)
 	{
-		std::cout<<"rtfwriter() : Error opening output file";
+        SWARNING << "Error opening output file" << std::endl;
 		return;
 	}
 
@@ -435,7 +437,9 @@ void StyledTextFileType::rtfwriter(std::ostream &ofs,std::vector<TextWithProps>&
 		ofs<<"{\\colortbl ;";
 		for(Int32 i = 1; i<_Colors.size();i++)
 		{
-			ofs<<"\\red"<<_Colors[i].r<<"\\green"<<_Colors[i].g<<"\\blue"<<_Colors[i].b<<";";
+			ofs << "\\red"   << static_cast<Int32>(_Colors[i].red()  *255.0f)
+                << "\\green" << static_cast<Int32>(_Colors[i].green()*255.0f)
+                << "\\blue"  << static_cast<Int32>(_Colors[i].blue() *255.0f) << ";";
 		}
 		ofs<<"}";
 		ofs<<'\r';

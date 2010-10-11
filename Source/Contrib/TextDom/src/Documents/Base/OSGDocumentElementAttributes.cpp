@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,14 +45,10 @@
 
 #include <OSGConfig.h>
 
-#include "OSGDocumentModelChangedEvent.h"
+#include "OSGDocumentElementAttributes.h"
 
 OSG_BEGIN_NAMESPACE
 
-// Documentation for this class is emitted in the
-// OSGDocumentModelChangedEventBase.cpp file.
-// To modify it, please change the .fcd file (OSGDocumentModelChangedEvent.fcd) and
-// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -61,15 +57,6 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
-
-void DocumentModelChangedEvent::initMethod(InitPhase ePhase)
-{
-    Inherited::initMethod(ePhase);
-
-    if(ePhase == TypeObject::SystemPost)
-    {
-    }
-}
 
 
 /***************************************************************************\
@@ -82,33 +69,53 @@ void DocumentModelChangedEvent::initMethod(InitPhase ePhase)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DocumentModelChangedEvent::DocumentModelChangedEvent(void) :
-    Inherited()
+DocumentElementAttribute::DocumentElementAttribute(UInt32 fs,
+                                                   bool b,
+                                                   bool i,
+                                                   bool u,
+                                                   const std::string& fface,
+                                                   Int32 ffaceindex,
+                                                   const Color3f& fg,
+                                                   Int32 fgindex,
+                                                   const Color3f& bg,
+                                                   Int32 bgindex,
+                                                   bool e,
+                                                   bool p)
+{
+	fontsize = fs;
+	bold = b;
+	italics =i;
+	underlined = u;
+	fontface = fface;
+	fontfaceindex=ffaceindex;
+	foreground=fg;
+	foregroundindex=fgindex;
+	background=bg;
+	backgroundindex=bgindex;
+	ends=e;
+	processed=p;
+}
+
+DocumentElementAttribute::DocumentElementAttribute(const DocumentElementAttribute &source) :
+    fontsize(source.fontsize),
+    bold(source.bold),
+    italics(source.italics),
+    underlined(source.underlined),
+    fontfaceindex(source.fontfaceindex),
+    foreground(source.foreground),
+    foregroundindex(source.foregroundindex),
+    background(source.background),
+    backgroundindex(source.backgroundindex),
+    ends(source.ends),
+    processed(source.processed)
 {
 }
 
-DocumentModelChangedEvent::DocumentModelChangedEvent(const DocumentModelChangedEvent &source) :
-    Inherited(source)
-{
-}
-
-DocumentModelChangedEvent::~DocumentModelChangedEvent(void)
+DocumentElementAttribute::~DocumentElementAttribute(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DocumentModelChangedEvent::changed(ConstFieldMaskArg whichField, 
-                            UInt32            origin,
-                            BitVector         details)
-{
-    Inherited::changed(whichField, origin, details);
-}
-
-void DocumentModelChangedEvent::dump(      UInt32    ,
-                         const BitVector ) const
-{
-    SLOG << "Dump DocumentModelChangedEvent NI" << std::endl;
-}
 
 OSG_END_NAMESPACE

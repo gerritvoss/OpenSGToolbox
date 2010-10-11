@@ -18,7 +18,6 @@
 #include "OSGNode.h"
 #include "OSGGroup.h"
 #include "OSGViewport.h"
-#include "styleddocumentattributes.h"
 #include "OSGSimpleStatisticsForeground.h"
 
 // The general scene file loading handler
@@ -35,18 +34,8 @@
 #include "OSGLookAndFeelManager.h"
 
 #include <OSGPlainDocument.h>
+#include <OSGElement.h>
 #include <OSGTextFileHandler.h>
-
-// Activate the OpenSG namespace
-OSG_USING_NAMESPACE
-
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
-// Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
 
 // 03TextDomArea Headers
 #include "OSGLayers.h"
@@ -57,97 +46,61 @@ void reshape(Vec2f Size);
 #include "OSGScrollPanel.h"
 #include "OSGTextDomArea.h"
 #include "OSGAdvancedTextDomArea.h"
+#include "OSGTextDomLayoutManager.h"
+#include "OSGGlyphView.h"
 #include "OSGButton.h"
-#include "windows.h"
- 
-SYSTEMTIME now;
-AdvancedTextDomAreaRefPtr ExampleTextDomArea;
-PlainDocumentRefPtr TheDocument;
-ButtonRefPtr LoadButton;
-ButtonRefPtr SaveButton;
+
+// Activate the OpenSG namespace
+OSG_USING_NAMESPACE
+
+// Forward declaration so we can have the interesting stuff upfront
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 // Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyTyped(KeyEventDetails* const details)
 {
-public:
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() &
+       KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
 
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
-
-class TutorialMouseListener : public ActionListener
+void handleLoadButtonAction(ActionEventDetails* const details,
+                            WindowEventProducer* const TutorialWindow,
+                            AdvancedTextDomArea* const ExampleTextDomArea)
 {
-public:
-
-   virtual void actionPerformed(const ActionEventUnrecPtr e)
-   {
-	    if(e->getSource() == LoadButton)
-		{	
-			std::cout<<"Loading a file"<<std::endl;
-			std::vector<WindowEventProducer::FileDialogFilter> Filters;
-			Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
-			Filters.push_back(WindowEventProducer::FileDialogFilter("Lua Files","lua"));
+	std::vector<WindowEventProducer::FileDialogFilter> Filters;
+	Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
+	Filters.push_back(WindowEventProducer::FileDialogFilter("Lua Files","lua"));
 
 
-			std::vector<BoostPath> FilesToOpen;
-			FilesToOpen = TutorialWindow->openFileDialog("Open File Window",
-																							   Filters,
-																							   BoostPath(".."),
-																							   false);
+	std::vector<BoostPath> FilesToOpen;
+	FilesToOpen = TutorialWindow->openFileDialog("Open File Window",
+												Filters,
+												BoostPath(".."),
+												false);
 
-			/*for(std::vector<BoostPath>::iterator Itor(FilesToOpen.begin()) ; Itor != FilesToOpen.end(); ++Itor)
-			{
-			
-			_ContentPanel->addTabWithText(*Itor);
-			}*/
-			
+    if(FilesToOpen.size() > 0)
+    {
+	    ExampleTextDomArea->loadFile(FilesToOpen[0]);
+    }
+}
 
-			GetSystemTime(&now);
-			unsigned int t1 = now.wSecond * 1000 + now.wMilliseconds;
+void handleSaveButtonAction(ActionEventDetails* const details,
+                            WindowEventProducer* const TutorialWindow)
+{
+	std::vector<WindowEventProducer::FileDialogFilter> Filters;
+	Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
+	Filters.push_back(WindowEventProducer::FileDialogFilter("Lua Files","lua"));
 
-			ExampleTextDomArea->loadFile(FilesToOpen[0]);
-
-			GetSystemTime(&now);
-			unsigned int t2 = now.wSecond * 1000 + now.wMilliseconds;
-
-			//std::cout<<"\nstart time in milliseconds:"<<t1<<std::endl;	// start time in milliseconds
-			std::cout<<"\nduration in milliseconds:"<<t2-t1<<std::endl;		// end time in milliseconds
-
-			
-			//if(TheDocument) 
-			//	ExampleTextDomArea->setDocumentModel(TheDocument);
-			//else std::cout<<"Failed Loading the Document"<<std::endl;
-		}
-		else if(e->getSource() == SaveButton)
-		{
-			std::cout<<"Saving a file"<<std::endl;
-			std::vector<WindowEventProducer::FileDialogFilter> Filters;
-			Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
-			Filters.push_back(WindowEventProducer::FileDialogFilter("Lua Files","lua"));
-
-			BoostPath SavePath = TutorialWindow->saveFileDialog("Save File Window",
-																									  Filters,
-																									  std::string("newFile.lua"),
-																									  BoostPath(".."),
-																									  true);
-//			ExampleTextDomArea->saveFile(SavePath);
-		}
-   }
-
-};
+	BoostPath SavePath = TutorialWindow->saveFileDialog("Save File Window",
+														Filters,
+														std::string("newFile.lua"),
+														BoostPath(".."),
+														true);
+}
 
 
 
@@ -155,155 +108,127 @@ int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1));
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
+        // Make Main Scene Node and add the Torus
+        NodeRefPtr scene = Node::create();
+        scene->setCore(Group::create());
         scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRefPtr TutorialGraphics = Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //// Create a simple Font to be used with the ExampleTextArea
-    //UIFontRefPtr ExampleFont = OSG::UIFont::create();
-    //     ExampleFont->setSize(16);
-
-	TutorialMouseListener BasicListener;
-
-  
-	LoadButton = Button::create();
-
-	LoadButton->setMinSize(Vec2f(50, 25));
-    LoadButton->setMaxSize(Vec2f(200, 100));
-    LoadButton->setPreferredSize(Vec2f(100, 50));
-    LoadButton->setToolTipText("Click to open a file browser window");
-    LoadButton->setText("Load File");
-
-	LoadButton->addActionListener(&BasicListener);
-
-	  
-	SaveButton = Button::create();
-
-	SaveButton->setMinSize(Vec2f(50, 25));
-    SaveButton->setMaxSize(Vec2f(200, 100));
-    SaveButton->setPreferredSize(Vec2f(100, 50));
-    SaveButton->setToolTipText("Click to save the currently opened file");
-    SaveButton->setText("Save File");
-
-	SaveButton->addActionListener(&BasicListener);
-
-
-	//Load Document
-	//TheDocument = dynamic_pointer_cast<PlainDocument>(TextFileHandler::the()->read());
-
-
-	UIFontRefPtr _Font = UIFont::create();
-    _Font->setFamily("SANS");
-    _Font->setGap(3);
-    _Font->setGlyphPixelSize(46);
-    _Font->setSize(15);
-    _Font->setTextureWidth(0);
-    _Font->setStyle(TextFace::STYLE_PLAIN);
-
-	/*if(TheDocument == NULL )
-	{
-		SWARNING<<"Error reading document.Exiting..."<<std::endl;
-		return -1;
-	}*/
-
-		// Create a TextDomArea component
-		ExampleTextDomArea = OSG::AdvancedTextDomArea::create();
-//		ExampleTextDomArea->setWrapStyleWord(false);
+	    // Create a TextDomArea component
+	    AdvancedTextDomAreaRefPtr ExampleTextDomArea = AdvancedTextDomArea::create();
+        //ExampleTextDomArea->setWrapStyleWord(false);
         //ExampleTextDomArea->setPreferredSize(Vec2f(600, 400));
         ExampleTextDomArea->setMinSize(Vec2f(600,400));
-//		ExampleTextDomArea->setFont(_Font);
-		//ExampleTextDomArea->loadFile(BoostPath("D:\\Work_Office_RA\\OpenSGToolBox\\Examples\\Tutorial\\TextDom\\Data\\SampleText3.txt"));
- 		
-		
-				
+        ColorLayerRefPtr TextDomBg = ColorLayer::create();
+        TextDomBg->setColor(Color4f(0.95f,0.95f,0.95f,1.0f));
+        ExampleTextDomArea->setBackgrounds(TextDomBg);
+	    //ExampleTextDomArea->loadFile(BoostPath("D:\\Work_Office_RA\\OpenSGToolBox\\Examples\\Tutorial\\TextDom\\Data\\SampleText3.txt"));
 
-    ScrollPanelRefPtr TextAreaScrollPanel = ScrollPanel::create();
+
+	    ButtonRefPtr LoadButton = Button::create();
+
+	    LoadButton->setMinSize(Vec2f(50, 25));
+        LoadButton->setMaxSize(Vec2f(200, 100));
+        LoadButton->setPreferredSize(Vec2f(100, 50));
+        LoadButton->setToolTipText("Click to open a file browser window");
+        LoadButton->setText("Load File");
+        LoadButton->connectActionPerformed(boost::bind(handleLoadButtonAction, _1, TutorialWindow.get(), ExampleTextDomArea.get()));
+
+    	  
+	    ButtonRefPtr SaveButton = Button::create();
+
+	    SaveButton->setMinSize(Vec2f(50, 25));
+        SaveButton->setMaxSize(Vec2f(200, 100));
+        SaveButton->setPreferredSize(Vec2f(100, 50));
+        SaveButton->setToolTipText("Click to save the currently opened file");
+        SaveButton->setText("Save File");
+        SaveButton->connectActionPerformed(boost::bind(handleSaveButtonAction, _1, TutorialWindow.get()));
+
+        ScrollPanelRefPtr TextAreaScrollPanel = ScrollPanel::create();
         TextAreaScrollPanel->setPreferredSize(Vec2f(600,400));
-		TextAreaScrollPanel->setMinSize(Vec2f(600,400));
+	    TextAreaScrollPanel->setMinSize(Vec2f(600,400));
         //TextAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    // Add the TextArea to the ScrollPanel so it is displayed
-	TextAreaScrollPanel->setViewComponent(ExampleTextDomArea);
+        // Add the TextArea to the ScrollPanel so it is displayed
+	    TextAreaScrollPanel->setViewComponent(ExampleTextDomArea);
 
 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRefPtr MainInternalWindowBackground = ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+        LayoutRefPtr MainInternalWindowLayout = FlowLayout::create();
 
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-       MainInternalWindow->pushToChildren(TextAreaScrollPanel);
-	   MainInternalWindow->pushToChildren(LoadButton);
-	   MainInternalWindow->pushToChildren(SaveButton);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
-	   MainInternalWindow->setDrawTitlebar(true);
-	   MainInternalWindow->setResizable(false);
+        InternalWindowRefPtr MainInternalWindow = InternalWindow::create();
+        MainInternalWindow->pushToChildren(TextAreaScrollPanel);
+	    MainInternalWindow->pushToChildren(LoadButton);
+	    MainInternalWindow->pushToChildren(SaveButton);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+	    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+	    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
+	    MainInternalWindow->setDrawTitlebar(true);
+	    MainInternalWindow->setResizable(false);
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        // Create the Drawing Surface
+        UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
-	
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+    	
+	    TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        // Create the UI Foreground Object
+        UIForegroundRefPtr TutorialUIForeground = UIForeground::create();
 
-    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        sceneManager.setRoot(scene);
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
-
-	//mgr->setStatistics(true);
-
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        // Add the UI Foreground Object to the Scene
+        ViewportRefPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
         TutorialViewport->addForeground(TutorialUIForeground);
-		
+    		
 
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
-	
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "03TextDomArea");
+    	
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "03TextDomArea");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        commitChanges();
+
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -314,13 +239,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

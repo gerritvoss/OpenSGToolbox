@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="DocumentEvent"
-	parent="Event"
+	name="DocumentEventDetails"
+	parent="EventDetails"
     library="ContribTextDom"
     pointerfieldtypes="both"
 	structure="concrete"
@@ -11,6 +11,8 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
+    isBundle="true"
+	supportUnregisteredCreate="true"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field

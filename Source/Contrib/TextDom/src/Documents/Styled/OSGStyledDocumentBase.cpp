@@ -59,6 +59,7 @@
 
 
 
+#include "OSGElement.h"
 #include "OSGStyledDocumentBase.h"
 #include "OSGStyledDocument.h"
 

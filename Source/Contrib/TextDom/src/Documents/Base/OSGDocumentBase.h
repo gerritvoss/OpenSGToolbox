@@ -69,10 +69,11 @@
 #include "OSGDocumentFields.h"
 
 //Event Producer Headers
-#include "OSGEventProducer.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
-#include "OSGEventProducerPtrType.h"
+#include "OSGActivity.h"
+#include "OSGConsumableEventCombiner.h"
+
+#include "OSGDocumentEventDetailsFields.h"
+#include "OSGUndoableEditEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -91,31 +92,31 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentBase : public AttachmentContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(Document);
+    
+    
+    typedef DocumentEventDetails ChangedEventDetailsType;
+    typedef DocumentEventDetails InsertEventDetailsType;
+    typedef DocumentEventDetails RemoveEventDetailsType;
+    typedef UndoableEditEventDetails UndoableEditHappenedEventDetailsType;
+
+    typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
+    typedef boost::signals2::signal<void (DocumentEventDetails* const, UInt32), ConsumableEventCombiner> ChangedEventType;
+    typedef boost::signals2::signal<void (DocumentEventDetails* const, UInt32), ConsumableEventCombiner> InsertEventType;
+    typedef boost::signals2::signal<void (DocumentEventDetails* const, UInt32), ConsumableEventCombiner> RemoveEventType;
+    typedef boost::signals2::signal<void (UndoableEditEventDetails* const, UInt32), ConsumableEventCombiner> UndoableEditHappenedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
   public:
 
-    enum
-    {
-        EventProducerFieldId = Inherited::NextFieldId,
-        NextFieldId = EventProducerFieldId + 1
-    };
-
-    static const OSG::BitVector EventProducerFieldMask =
-        (TypeTraits<BitVector>::One << EventProducerFieldId);
-    static const OSG::BitVector NextFieldMask =
-        (TypeTraits<BitVector>::One << NextFieldId);
-        
-    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        ChangedUpdateMethodId = 1,
-        InsertUpdateMethodId = ChangedUpdateMethodId + 1,
-        RemoveUpdateMethodId = InsertUpdateMethodId + 1,
-        UndoableEditHappenedMethodId = RemoveUpdateMethodId + 1,
-        NextProducedMethodId = UndoableEditHappenedMethodId + 1
+        ChangedEventId = 1,
+        InsertEventId = ChangedEventId + 1,
+        RemoveEventId = InsertEventId + 1,
+        UndoableEditHappenedEventId = RemoveEventId + 1,
+        NextProducedEventId = UndoableEditHappenedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -152,37 +153,92 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Event Produced Get                           */
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId) const;
-    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
-    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
-                                                         UInt32 ActivityIndex) const;
-    void                     detachActivity             (ActivityRefPtr TheActivity,
-                                                         UInt32 ProducedEventId);
-    UInt32                   getNumProducedEvents       (void) const;
-    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    virtual UInt32                   getNumProducedEvents       (void                                ) const;
+    virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
+    virtual UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+    
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+                                              
+    virtual boost::signals2::connection connectEvent(UInt32 eventId, 
+                                              const BaseEventType::group_type &group,
+                                              const BaseEventType::slot_type &listener,
+                                              boost::signals2::connect_position at= boost::signals2::at_back);
+    
+    virtual void   disconnectEvent        (UInt32 eventId, const BaseEventType::group_type &group);
+    virtual void   disconnectAllSlotsEvent(UInt32 eventId);
+    virtual bool   isEmptyEvent           (UInt32 eventId) const;
+    virtual UInt32 numSlotsEvent          (UInt32 eventId) const;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr   &editEventProducer  (void);
-
+    /*! \}                                                                 */
+    /*! \name                Event Access                                 */
+    /*! \{                                                                 */
+    
+    //Changed
+    boost::signals2::connection connectChanged        (const ChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectChanged        (const ChangedEventType::group_type &group,
+                                                       const ChangedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectChanged                (const ChangedEventType::group_type &group);
+    void   disconnectAllSlotsChanged        (void);
+    bool   isEmptyChanged                   (void) const;
+    UInt32 numSlotsChanged                  (void) const;
+    
+    //Insert
+    boost::signals2::connection connectInsert         (const InsertEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectInsert         (const InsertEventType::group_type &group,
+                                                       const InsertEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectInsert                 (const InsertEventType::group_type &group);
+    void   disconnectAllSlotsInsert         (void);
+    bool   isEmptyInsert                    (void) const;
+    UInt32 numSlotsInsert                   (void) const;
+    
+    //Remove
+    boost::signals2::connection connectRemove         (const RemoveEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectRemove         (const RemoveEventType::group_type &group,
+                                                       const RemoveEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectRemove                 (const RemoveEventType::group_type &group);
+    void   disconnectAllSlotsRemove         (void);
+    bool   isEmptyRemove                    (void) const;
+    UInt32 numSlotsRemove                   (void) const;
+    
+    //UndoableEditHappened
+    boost::signals2::connection connectUndoableEditHappened(const UndoableEditHappenedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectUndoableEditHappened(const UndoableEditHappenedEventType::group_type &group,
+                                                       const UndoableEditHappenedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectUndoableEditHappened   (const UndoableEditHappenedEventType::group_type &group);
+    void   disconnectAllSlotsUndoableEditHappened(void);
+    bool   isEmptyUndoableEditHappened      (void) const;
+    UInt32 numSlotsUndoableEditHappened     (void) const;
+    
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
     /*---------------------------------------------------------------------*/
-    /*! \name                    Event Producer                            */
+    /*! \name                    Produced Event Signals                   */
     /*! \{                                                                 */
-    EventProducer _Producer;
 
+    //Event Event producers
+    ChangedEventType _ChangedEvent;
+    InsertEventType _InsertEvent;
+    RemoveEventType _RemoveEvent;
+    UndoableEditHappenedEventType _UndoableEditHappenedEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -190,13 +246,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentBase : public AttachmentContainer
     static       void   classDescInserter(TypeObject &oType);
     static const Char8 *getClassname     (void             );
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFEventProducerPtr _sfEventProducer;
-
-    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -223,6 +272,26 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentBase : public AttachmentContainer
     /*! \{                                                                 */
 
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Event Access                     */
+    /*! \{                                                                 */
+
+    GetEventHandlePtr getHandleChangedSignal(void) const;
+    GetEventHandlePtr getHandleInsertSignal(void) const;
+    GetEventHandlePtr getHandleRemoveSignal(void) const;
+    GetEventHandlePtr getHandleUndoableEditHappenedSignal(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Event Producer Firing                    */
+    /*! \{                                                                 */
+
+    virtual void produceEvent       (UInt32 eventId, EventDetails* const e);
+    
+    void produceChanged             (ChangedEventDetailsType* const e);
+    void produceInsert              (InsertEventDetailsType* const e);
+    void produceRemove              (RemoveEventDetailsType* const e);
+    void produceUndoableEditHappened  (UndoableEditHappenedEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -268,7 +337,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING DocumentBase : public AttachmentContainer
 
   private:
     /*---------------------------------------------------------------------*/
-    static MethodDescription   *_methodDesc[];
+    static EventDescription   *_eventDesc[];
     static EventProducerType _producerType;
 
 

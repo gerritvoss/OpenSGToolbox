@@ -58,6 +58,7 @@
 
 
 
+#include "OSGUIFont.h"                  // GutterFont Class
 
 #include "OSGAdvancedTextDomAreaBase.h"
 #include "OSGAdvancedTextDomArea.h"
@@ -91,6 +92,18 @@ OSG_BEGIN_NAMESPACE
 */
 
 /*! \var Real32          AdvancedTextDomAreaBase::_sfGutterWidth
+    
+*/
+
+/*! \var Color4f         AdvancedTextDomAreaBase::_sfGutterColor
+    
+*/
+
+/*! \var Color4f         AdvancedTextDomAreaBase::_sfGutterTextColor
+    
+*/
+
+/*! \var UIFont *        AdvancedTextDomAreaBase::_sfGutterFont
     
 */
 
@@ -145,6 +158,42 @@ void AdvancedTextDomAreaBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AdvancedTextDomArea::getHandleGutterWidth));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "GutterColor",
+        "",
+        GutterColorFieldId, GutterColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AdvancedTextDomArea::editHandleGutterColor),
+        static_cast<FieldGetMethodSig >(&AdvancedTextDomArea::getHandleGutterColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "GutterTextColor",
+        "",
+        GutterTextColorFieldId, GutterTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AdvancedTextDomArea::editHandleGutterTextColor),
+        static_cast<FieldGetMethodSig >(&AdvancedTextDomArea::getHandleGutterTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIFontPtr::Description(
+        SFUnrecUIFontPtr::getClassType(),
+        "GutterFont",
+        "",
+        GutterFontFieldId, GutterFontFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AdvancedTextDomArea::editHandleGutterFont),
+        static_cast<FieldGetMethodSig >(&AdvancedTextDomArea::getHandleGutterFont));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -167,11 +216,11 @@ AdvancedTextDomAreaBase::TypeObject AdvancedTextDomAreaBase::_type(
     "\tlibrary=\"ContribTextDom\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
-    "\tsystemcomponent=\"false\"\n"
-    "\tparentsystemcomponent=\"false\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"true\"\n"
-    "     \tisNodeCore=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
     "\tparentProducer=\"Component\"\n"
     "\tauthors=\"David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
@@ -198,7 +247,37 @@ AdvancedTextDomAreaBase::TypeObject AdvancedTextDomAreaBase::_type(
     "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"25\"\n"
+    "\t\tdefaultValue=\"25.0f\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"GutterColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.75f,0.75f,0.75f,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"GutterTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"GutterFont\"\n"
+    "\t\ttype=\"UIFont\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
@@ -258,6 +337,45 @@ const SFReal32 *AdvancedTextDomAreaBase::getSFGutterWidth(void) const
 }
 
 
+SFColor4f *AdvancedTextDomAreaBase::editSFGutterColor(void)
+{
+    editSField(GutterColorFieldMask);
+
+    return &_sfGutterColor;
+}
+
+const SFColor4f *AdvancedTextDomAreaBase::getSFGutterColor(void) const
+{
+    return &_sfGutterColor;
+}
+
+
+SFColor4f *AdvancedTextDomAreaBase::editSFGutterTextColor(void)
+{
+    editSField(GutterTextColorFieldMask);
+
+    return &_sfGutterTextColor;
+}
+
+const SFColor4f *AdvancedTextDomAreaBase::getSFGutterTextColor(void) const
+{
+    return &_sfGutterTextColor;
+}
+
+
+//! Get the AdvancedTextDomArea::_sfGutterFont field.
+const SFUnrecUIFontPtr *AdvancedTextDomAreaBase::getSFGutterFont(void) const
+{
+    return &_sfGutterFont;
+}
+
+SFUnrecUIFontPtr    *AdvancedTextDomAreaBase::editSFGutterFont     (void)
+{
+    editSField(GutterFontFieldMask);
+
+    return &_sfGutterFont;
+}
+
 
 
 
@@ -276,6 +394,18 @@ UInt32 AdvancedTextDomAreaBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfGutterWidth.getBinSize();
     }
+    if(FieldBits::NoField != (GutterColorFieldMask & whichField))
+    {
+        returnValue += _sfGutterColor.getBinSize();
+    }
+    if(FieldBits::NoField != (GutterTextColorFieldMask & whichField))
+    {
+        returnValue += _sfGutterTextColor.getBinSize();
+    }
+    if(FieldBits::NoField != (GutterFontFieldMask & whichField))
+    {
+        returnValue += _sfGutterFont.getBinSize();
+    }
 
     return returnValue;
 }
@@ -293,6 +423,18 @@ void AdvancedTextDomAreaBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfGutterWidth.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (GutterColorFieldMask & whichField))
+    {
+        _sfGutterColor.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (GutterTextColorFieldMask & whichField))
+    {
+        _sfGutterTextColor.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (GutterFontFieldMask & whichField))
+    {
+        _sfGutterFont.copyToBin(pMem);
+    }
 }
 
 void AdvancedTextDomAreaBase::copyFromBin(BinaryDataHandler &pMem,
@@ -307,6 +449,18 @@ void AdvancedTextDomAreaBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (GutterWidthFieldMask & whichField))
     {
         _sfGutterWidth.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (GutterColorFieldMask & whichField))
+    {
+        _sfGutterColor.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (GutterTextColorFieldMask & whichField))
+    {
+        _sfGutterTextColor.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (GutterFontFieldMask & whichField))
+    {
+        _sfGutterFont.copyFromBin(pMem);
     }
 }
 
@@ -382,7 +536,6 @@ AdvancedTextDomArea *AdvancedTextDomAreaBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr AdvancedTextDomAreaBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -428,20 +581,25 @@ FieldContainerTransitPtr AdvancedTextDomAreaBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 AdvancedTextDomAreaBase::AdvancedTextDomAreaBase(void) :
     Inherited(),
     _sfGutterVisible          (bool(true)),
-    _sfGutterWidth            (Real32(25))
+    _sfGutterWidth            (Real32(25.0f)),
+    _sfGutterColor            (Color4f(0.75f,0.75f,0.75f,1.0)),
+    _sfGutterTextColor        (Color4f(0.0,0.0,0.0,1.0)),
+    _sfGutterFont             (NULL)
 {
 }
 
 AdvancedTextDomAreaBase::AdvancedTextDomAreaBase(const AdvancedTextDomAreaBase &source) :
     Inherited(source),
     _sfGutterVisible          (source._sfGutterVisible          ),
-    _sfGutterWidth            (source._sfGutterWidth            )
+    _sfGutterWidth            (source._sfGutterWidth            ),
+    _sfGutterColor            (source._sfGutterColor            ),
+    _sfGutterTextColor        (source._sfGutterTextColor        ),
+    _sfGutterFont             (NULL)
 {
 }
 
@@ -452,6 +610,17 @@ AdvancedTextDomAreaBase::~AdvancedTextDomAreaBase(void)
 {
 }
 
+void AdvancedTextDomAreaBase::onCreate(const AdvancedTextDomArea *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        AdvancedTextDomArea *pThis = static_cast<AdvancedTextDomArea *>(this);
+
+        pThis->setGutterFont(source->getGutterFont());
+    }
+}
 
 GetFieldHandlePtr AdvancedTextDomAreaBase::getHandleGutterVisible   (void) const
 {
@@ -503,6 +672,85 @@ EditFieldHandlePtr AdvancedTextDomAreaBase::editHandleGutterWidth    (void)
     return returnValue;
 }
 
+GetFieldHandlePtr AdvancedTextDomAreaBase::getHandleGutterColor     (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfGutterColor,
+             this->getType().getFieldDesc(GutterColorFieldId),
+             const_cast<AdvancedTextDomAreaBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AdvancedTextDomAreaBase::editHandleGutterColor    (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfGutterColor,
+             this->getType().getFieldDesc(GutterColorFieldId),
+             this));
+
+
+    editSField(GutterColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AdvancedTextDomAreaBase::getHandleGutterTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfGutterTextColor,
+             this->getType().getFieldDesc(GutterTextColorFieldId),
+             const_cast<AdvancedTextDomAreaBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AdvancedTextDomAreaBase::editHandleGutterTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfGutterTextColor,
+             this->getType().getFieldDesc(GutterTextColorFieldId),
+             this));
+
+
+    editSField(GutterTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AdvancedTextDomAreaBase::getHandleGutterFont      (void) const
+{
+    SFUnrecUIFontPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::GetHandle(
+             &_sfGutterFont,
+             this->getType().getFieldDesc(GutterFontFieldId),
+             const_cast<AdvancedTextDomAreaBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AdvancedTextDomAreaBase::editHandleGutterFont     (void)
+{
+    SFUnrecUIFontPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::EditHandle(
+             &_sfGutterFont,
+             this->getType().getFieldDesc(GutterFontFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&AdvancedTextDomArea::setGutterFont,
+                    static_cast<AdvancedTextDomArea *>(this), _1));
+
+    editSField(GutterFontFieldMask);
+
+    return returnValue;
+}
+
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void AdvancedTextDomAreaBase::execSyncV(      FieldContainer    &oFrom,
@@ -539,6 +787,8 @@ FieldContainer *AdvancedTextDomAreaBase::createAspectCopy(
 void AdvancedTextDomAreaBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
+
+    static_cast<AdvancedTextDomArea *>(this)->setGutterFont(NULL);
 
 
 }

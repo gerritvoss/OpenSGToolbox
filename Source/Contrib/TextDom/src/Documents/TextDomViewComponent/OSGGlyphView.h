@@ -44,7 +44,7 @@
 
 #include "OSGGlyphViewBase.h"
 #include "OSGGraphics.h"
-#include "styleddocumentattributes.h"
+#include "OSGDocumentElementAttributes.h"
 #include "OSGPlainDocumentLeafElement.h"
 
 OSG_BEGIN_NAMESPACE
@@ -57,14 +57,13 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING GlyphView : public GlyphViewBase
 {
   protected:
 
-	ElementRefPtr _Element;
+	Element* _Element;
 	Pnt2f _InitialPosition;
 	Real32 _LineHeight;
 	Real32 _LineWidth;
 	UInt32 _Lines;
 	bool _IsWordWrapEnabled;
 	UInt32 _Location;
-	PlainDocumentLeafElementRefPtr temp;
 	UIFontRefPtr _Font;
 	UInt32 _LineNumber;
 	
@@ -76,18 +75,17 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING GlyphView : public GlyphViewBase
     typedef GlyphViewBase Inherited;
     typedef GlyphView     Self;
 
-	void setElement(ElementRefPtr& theElement);
-	void setInitialPosition(Pnt2f init);
+	void setElement(Element* const theElement);
+	void setInitialPosition(const Pnt2f& init);
 	void setLines(UInt32 lines);
 	void setLineHeight(Real32 lineheight);
 	void setLineWidth(Real32 lineWidth);
-	bool canFitIn(std::string sentence);
 	void setCaretLocation(Int32 loc);
-	void setFont(UIFontRefPtr font);
+	void setFont(UIFont* const font);
 	void setLineNumber(UInt32 lineNumber);
 
 
-	virtual void drawView(const GraphicsWeakPtr Graphics, Real32 Opacity);
+	virtual void drawView(Graphics * const TheGraphics, Real32 Opacity);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -110,7 +108,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING GlyphView : public GlyphViewBase
 
   protected:
 
-	  void init();
     // Variables should all be in GlyphViewBase.
 
     /*---------------------------------------------------------------------*/

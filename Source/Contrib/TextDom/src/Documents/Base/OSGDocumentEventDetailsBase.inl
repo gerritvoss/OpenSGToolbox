@@ -43,30 +43,31 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DocumentEvent!
+ **     class DocumentEventDetails!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
+
 
 OSG_BEGIN_NAMESPACE
 
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &DocumentEventBase::getClassType(void)
+OSG::FieldContainerType &DocumentEventDetailsBase::getClassType(void)
 {
     return _type;
 }
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DocumentEventBase::getClassTypeId(void)
+OSG::UInt32 DocumentEventDetailsBase::getClassTypeId(void)
 {
     return _type.getId();
 }
 
 inline
-OSG::UInt16 DocumentEventBase::getClassGroupId(void)
+OSG::UInt16 DocumentEventDetailsBase::getClassGroupId(void)
 {
     return _type.getGroupId();
 }
@@ -74,66 +75,66 @@ OSG::UInt16 DocumentEventBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
-//! Get the value of the DocumentEvent::_sfDocument field.
+//! Get the value of the DocumentEventDetails::_sfDocument field.
 inline
-Document * DocumentEventBase::getDocument(void) const
+Document * DocumentEventDetailsBase::getDocument(void) const
 {
     return _sfDocument.getValue();
 }
 
-//! Set the value of the DocumentEvent::_sfDocument field.
+//! Set the value of the DocumentEventDetails::_sfDocument field.
 inline
-void DocumentEventBase::setDocument(Document * const value)
+void DocumentEventDetailsBase::setDocument(Document * const value)
 {
     editSField(DocumentFieldMask);
 
     _sfDocument.setValue(value);
 }
-//! Get the value of the DocumentEvent::_sfOffset field.
+//! Get the value of the DocumentEventDetails::_sfOffset field.
 
 inline
-Int32 &DocumentEventBase::editOffset(void)
+Int32 &DocumentEventDetailsBase::editOffset(void)
 {
     editSField(OffsetFieldMask);
 
     return _sfOffset.getValue();
 }
 
-//! Get the value of the DocumentEvent::_sfOffset field.
+//! Get the value of the DocumentEventDetails::_sfOffset field.
 inline
-      Int32  DocumentEventBase::getOffset(void) const
+      Int32  DocumentEventDetailsBase::getOffset(void) const
 {
     return _sfOffset.getValue();
 }
 
-//! Set the value of the DocumentEvent::_sfOffset field.
+//! Set the value of the DocumentEventDetails::_sfOffset field.
 inline
-void DocumentEventBase::setOffset(const Int32 value)
+void DocumentEventDetailsBase::setOffset(const Int32 value)
 {
     editSField(OffsetFieldMask);
 
     _sfOffset.setValue(value);
 }
-//! Get the value of the DocumentEvent::_sfLength field.
+//! Get the value of the DocumentEventDetails::_sfLength field.
 
 inline
-UInt32 &DocumentEventBase::editLength(void)
+UInt32 &DocumentEventDetailsBase::editLength(void)
 {
     editSField(LengthFieldMask);
 
     return _sfLength.getValue();
 }
 
-//! Get the value of the DocumentEvent::_sfLength field.
+//! Get the value of the DocumentEventDetails::_sfLength field.
 inline
-      UInt32  DocumentEventBase::getLength(void) const
+      UInt32  DocumentEventDetailsBase::getLength(void) const
 {
     return _sfLength.getValue();
 }
 
-//! Set the value of the DocumentEvent::_sfLength field.
+//! Set the value of the DocumentEventDetails::_sfLength field.
 inline
-void DocumentEventBase::setLength(const UInt32 value)
+void DocumentEventDetailsBase::setLength(const UInt32 value)
 {
     editSField(LengthFieldMask);
 
@@ -143,7 +144,7 @@ void DocumentEventBase::setLength(const UInt32 value)
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
-void DocumentEventBase::execSync (      DocumentEventBase *pFrom,
+void DocumentEventDetailsBase::execSync (      DocumentEventDetailsBase *pFrom,
                                         ConstFieldMaskArg  whichField,
                                         AspectOffsetStore &oOffsets,
                                         ConstFieldMaskArg  syncMode,
@@ -164,11 +165,11 @@ void DocumentEventBase::execSync (      DocumentEventBase *pFrom,
 
 
 inline
-const Char8 *DocumentEventBase::getClassname(void)
+const Char8 *DocumentEventDetailsBase::getClassname(void)
 {
-    return "DocumentEvent";
+    return "DocumentEventDetails";
 }
-OSG_GEN_CONTAINERPTR(DocumentEvent);
+OSG_GEN_CONTAINERPTR(DocumentEventDetails);
 
 OSG_END_NAMESPACE
 

@@ -79,7 +79,7 @@ bool AbstractBranchElement::getAllowsChildren(void) const
 }
 
 //  Gets a child element.
-ElementRefPtr	AbstractBranchElement::getElement(UInt32 index) const
+Element*	AbstractBranchElement::getElement(UInt32 index) const
 {
 	if(index < getElementCount())
 		return getChildElements(index);
@@ -126,7 +126,7 @@ bool	AbstractBranchElement::isLeaf(void) const
 }
  
 //Gets the child element that contains the given model position.
-ElementRefPtr AbstractBranchElement::positionToElement(UInt32 pos) const
+Element* AbstractBranchElement::positionToElement(UInt32 pos) const
 {
 	//TODO:
 	return NULL;
@@ -154,7 +154,7 @@ void AbstractBranchElement::removeChildElement(UInt32 index)
 	//commitChanges();
 }
 
-void AbstractBranchElement::addChildElement(UInt32 index,ElementRefPtr newPtr)
+void AbstractBranchElement::addChildElement(UInt32 index,Element* const newPtr)
 {
 		MFUnrecElementPtr *temp = this->editMFChildElements();
 		temp->insert(temp->begin()+index,newPtr);

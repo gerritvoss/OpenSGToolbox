@@ -46,7 +46,11 @@
 
 #include "OSGDeleteCharacterCommand.h"
 
-#include "OSGNameAttachment.h"
+#include "OSGElement.h"
+#include "OSGGlyphView.h"
+#include "OSGTextDomArea.h"
+#include "OSGTextDomLayoutManager.h"
+#include "OSGPlainDocument.h"
 
 
 OSG_USING_NAMESPACE
@@ -69,7 +73,7 @@ CommandType DeleteCharacterCommand::_Type("DeleteCharacterCommand", "UndoableCom
  *                           Class methods                                 *
 \***************************************************************************/
 
-DeleteCharacterCommandPtr DeleteCharacterCommand::create(FixedHeightLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel)
+DeleteCharacterCommandPtr DeleteCharacterCommand::create(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel)
 {
 	return RefPtr(new DeleteCharacterCommand(Manager,DocumentModel));
 }
@@ -80,7 +84,7 @@ DeleteCharacterCommandPtr DeleteCharacterCommand::create(FixedHeightLayoutManage
 
 void DeleteCharacterCommand::execute(void)
 {
-	TextWithProps temp;
+	DocumentElementAttribute temp;
 	_theOriginalCaretIndex = _Manager->getCaretIndex();
 	_theOriginalCaretLine = _Manager->getCaretLine();
 
@@ -120,7 +124,7 @@ void DeleteCharacterCommand::undo(void)
 {
 	if(_theOriginalCaretLine+1 < _Manager->getRootElement()->getElementCount() || (_theOriginalCaretLine+1 == _Manager->getRootElement()->getElementCount() && !_Manager->isLastCharacterOfLine(_theOriginalCaretIndex,_theOriginalCaretLine)))
 	{
-		TextWithProps temp;
+		DocumentElementAttribute temp;
 		_Manager->setCaretIndexAndLine(_theOriginalCaretIndex,_theOriginalCaretLine);
 	    
 		if(_isLastCharacter)
