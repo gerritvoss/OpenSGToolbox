@@ -81,6 +81,24 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name               calc the inverse matrix                        */
+    /*! \{                                                                 */
+
+    void initMatrix(const Matrixr        &mToWorld);
+
+    void calcMatrix(const Matrixr        &mToWorld,
+                          Matrixr        &mResult);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Transformation                             */
+    /*! \{                                                                 */
+
+    virtual void accumulateMatrix(Matrixr &result);
+
+    /*! \}                                                                 */
+    
     /**************************************************************************//**
      * @fn	void addJointBlending(const UInt32& PositionIndex,
      * 		const NodeUnrecPtr TheJoint, const Real32& BlendAmount)
@@ -177,6 +195,26 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Volume                                  */
+    /*! \{                                                                 */
+
+    virtual void adjustVolume    (Volume &volume);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name              Draw & Intersect & Render                       */
+    /*! \{                                                                 */
+
+#ifndef OSG_EMBEDDED
+    Action::ResultE intersectEnter(Action *action);
+    Action::ResultE intersectLeave(Action *action);
+#endif
+
+    Action::ResultE renderEnter   (Action *action);
+    Action::ResultE renderLeave   (Action *action);
+
+    /*! \}                                                                 */
 	/**************************************************************************//**
 	 * @fn	void calculatePositions(void)
 	 * 
@@ -199,6 +237,8 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
     /*==========================  PRIVATE  ================================*/
 
   private:
+
+    Matrixr _invWorld;
 
     friend class FieldContainer;
     friend class SkeletonBlendedGeometryBase;

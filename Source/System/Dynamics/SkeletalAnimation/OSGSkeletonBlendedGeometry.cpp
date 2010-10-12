@@ -76,19 +76,25 @@ void SkeletonBlendedGeometry::initMethod(InitPhase ePhase)
 
     if(ePhase == TypeObject::SystemPost)
     {
+#ifndef OSG_EMBEDDED
         IntersectAction::registerEnterDefault(
             getClassType(),
-            reinterpret_cast<Action::Callback>(&Geometry::intersect));
+            reinterpret_cast<Action::Callback>(
+                &SkeletonBlendedGeometry::intersectEnter));
+        
+        IntersectAction::registerLeaveDefault(
+            getClassType(),
+            reinterpret_cast<Action::Callback>(
+                &SkeletonBlendedGeometry::intersectLeave));
+#endif
 
         RenderAction::registerEnterDefault(
-            getClassType(),
-            reinterpret_cast<Action::Callback>(
-                &MaterialDrawable::renderActionEnterHandler));
-                
+            SkeletonBlendedGeometry::getClassType(),
+            reinterpret_cast<Action::Callback>(&SkeletonBlendedGeometry::renderEnter));
+        
         RenderAction::registerLeaveDefault(
-            getClassType(),
-            reinterpret_cast<Action::Callback>(
-                &MaterialDrawable::renderActionLeaveHandler));
+            SkeletonBlendedGeometry::getClassType(),
+            reinterpret_cast<Action::Callback>(&SkeletonBlendedGeometry::renderLeave));
     }
 }
 
@@ -370,6 +376,117 @@ void SkeletonBlendedGeometry::produceSkeletonChanged(void)
     Inherited::produceSkeletonChanged(Details);
 }
 
+/*------------------------- volume update -------------------------------*/
+
+void SkeletonBlendedGeometry::adjustVolume(Volume &volume)
+{
+    Inherited::adjustVolume(volume);
+    volume.transform(_invWorld);
+}
+
+void SkeletonBlendedGeometry::accumulateMatrix(Matrixr &result)
+{
+    Inherited::accumulateMatrix(result);
+    result.mult(_invWorld);
+}
+
+/*------------------------- calc matrix ---------------------------------*/
+
+void SkeletonBlendedGeometry::calcMatrix(const Matrixr        &mToWorld,
+                                        Matrixr        &mResult)
+{
+    mResult.invertFrom(mToWorld);
+
+    _invWorld = mResult; 
+}
+
+void SkeletonBlendedGeometry::initMatrix(const Matrixr &mToWorld)
+{
+    _invWorld.invertFrom(mToWorld);
+}
+/*-------------------------------------------------------------------------*/
+/*                               Draw                                      */
+
+/*-------------------------------------------------------------------------*/
+/*                            Intersect                                    */
+
+#ifndef OSG_EMBEDDED
+Action::ResultE SkeletonBlendedGeometry::intersectEnter(Action *action)
+{
+    IntersectAction *ia = dynamic_cast<IntersectAction *>(action);
+    Matrix           m(_invWorld);
+
+    m.invert();
+
+    Pnt3f pos;
+    Vec3f dir;
+
+    m.multFull(ia->getLine().getPosition (), pos);
+    m.mult    (ia->getLine().getDirection(), dir);
+
+    ia->setLine(Line(pos, dir), ia->getMaxDist());
+    ia->scale(dir.length());
+
+    return Inherited::intersect(action);
+}
+
+Action::ResultE SkeletonBlendedGeometry::intersectLeave(Action *action)
+{
+    IntersectAction *ia = dynamic_cast<IntersectAction *>(action);
+    Matrix           m(_invWorld);
+
+    Pnt3f pos;
+    Vec3f dir;
+
+    m.multFull(ia->getLine().getPosition (), pos);
+    m.mult    (ia->getLine().getDirection(), dir);
+
+    ia->setLine(Line(pos, dir), ia->getMaxDist());
+    ia->scale(dir.length());
+
+    return Action::Continue;
+}
+#endif
+
+/*-------------------------------------------------------------------------*/
+/*                                Render                                   */
+
+Action::ResultE SkeletonBlendedGeometry::renderEnter(Action *action)
+{
+    RenderAction *pAction = 
+        dynamic_cast<RenderAction *>(action);
+
+    Matrixr mMat;    // will be set to World^-1
+
+    calcMatrix(pAction->topMatrix(), mMat);
+
+    pAction->pushVisibility();
+
+    pAction->pushMatrix(mMat);
+
+    Action::ResultE Result(Inherited::renderActionEnterHandler(action));
+    if(Result != Action::Continue)
+    {
+        pAction->popVisibility();
+        pAction->popMatrix();
+    }
+    return Result;
+}
+
+Action::ResultE SkeletonBlendedGeometry::renderLeave(Action *action)
+{
+    Action::ResultE Result(Inherited::renderActionLeaveHandler(action));
+
+    RenderAction *pAction = 
+        dynamic_cast<RenderAction *>(action);
+
+    pAction->popVisibility();
+
+    pAction->popMatrix();
+
+    return Action::Continue;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -377,12 +494,14 @@ void SkeletonBlendedGeometry::produceSkeletonChanged(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 SkeletonBlendedGeometry::SkeletonBlendedGeometry(void) :
-    Inherited()
+    Inherited(),
+    _invWorld ()
 {
 }
 
 SkeletonBlendedGeometry::SkeletonBlendedGeometry(const SkeletonBlendedGeometry &source) :
-    Inherited(source)
+    Inherited(source),
+    _invWorld (source._invWorld)
 {
 }
 
