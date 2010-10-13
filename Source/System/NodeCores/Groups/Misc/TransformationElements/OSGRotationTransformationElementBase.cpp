@@ -82,7 +82,11 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var Quaternion      RotationTransformationElementBase::_sfRotation
+/*! \var Vec3f           RotationTransformationElementBase::_sfAxis
+    
+*/
+
+/*! \var Real32          RotationTransformationElementBase::_sfAngle
     
 */
 
@@ -114,15 +118,27 @@ void RotationTransformationElementBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFQuaternion::Description(
-        SFQuaternion::getClassType(),
-        "Rotation",
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Axis",
         "",
-        RotationFieldId, RotationFieldMask,
+        AxisFieldId, AxisFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&RotationTransformationElement::editHandleRotation),
-        static_cast<FieldGetMethodSig >(&RotationTransformationElement::getHandleRotation));
+        static_cast<FieldEditMethodSig>(&RotationTransformationElement::editHandleAxis),
+        static_cast<FieldGetMethodSig >(&RotationTransformationElement::getHandleAxis));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Angle",
+        "",
+        AngleFieldId, AngleFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RotationTransformationElement::editHandleAngle),
+        static_cast<FieldGetMethodSig >(&RotationTransformationElement::getHandleAngle));
 
     oType.addInitialDesc(pDesc);
 }
@@ -155,13 +171,23 @@ RotationTransformationElementBase::TypeObject RotationTransformationElementBase:
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "\t<Field\n"
-    "\t\tname=\"Rotation\"\n"
-    "\t\ttype=\"Quaternion\"\n"
+    "\t\tname=\"Axis\"\n"
+    "\t\ttype=\"Vec3f\"\n"
     "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
-    "\t\tdefaultValue=\"0.0f,0.0f,0.0f,1.0f\"\n"
+    "\t\tdefaultValue=\"0.0f,1.0f,0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Angle\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0f\"\n"
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
@@ -188,16 +214,29 @@ UInt32 RotationTransformationElementBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-SFQuaternion *RotationTransformationElementBase::editSFRotation(void)
+SFVec3f *RotationTransformationElementBase::editSFAxis(void)
 {
-    editSField(RotationFieldMask);
+    editSField(AxisFieldMask);
 
-    return &_sfRotation;
+    return &_sfAxis;
 }
 
-const SFQuaternion *RotationTransformationElementBase::getSFRotation(void) const
+const SFVec3f *RotationTransformationElementBase::getSFAxis(void) const
 {
-    return &_sfRotation;
+    return &_sfAxis;
+}
+
+
+SFReal32 *RotationTransformationElementBase::editSFAngle(void)
+{
+    editSField(AngleFieldMask);
+
+    return &_sfAngle;
+}
+
+const SFReal32 *RotationTransformationElementBase::getSFAngle(void) const
+{
+    return &_sfAngle;
 }
 
 
@@ -211,9 +250,13 @@ UInt32 RotationTransformationElementBase::getBinSize(ConstFieldMaskArg whichFiel
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (RotationFieldMask & whichField))
+    if(FieldBits::NoField != (AxisFieldMask & whichField))
     {
-        returnValue += _sfRotation.getBinSize();
+        returnValue += _sfAxis.getBinSize();
+    }
+    if(FieldBits::NoField != (AngleFieldMask & whichField))
+    {
+        returnValue += _sfAngle.getBinSize();
     }
 
     return returnValue;
@@ -224,9 +267,13 @@ void RotationTransformationElementBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RotationFieldMask & whichField))
+    if(FieldBits::NoField != (AxisFieldMask & whichField))
     {
-        _sfRotation.copyToBin(pMem);
+        _sfAxis.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (AngleFieldMask & whichField))
+    {
+        _sfAngle.copyToBin(pMem);
     }
 }
 
@@ -235,9 +282,13 @@ void RotationTransformationElementBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RotationFieldMask & whichField))
+    if(FieldBits::NoField != (AxisFieldMask & whichField))
     {
-        _sfRotation.copyFromBin(pMem);
+        _sfAxis.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (AngleFieldMask & whichField))
+    {
+        _sfAngle.copyFromBin(pMem);
     }
 }
 
@@ -362,13 +413,15 @@ FieldContainerTransitPtr RotationTransformationElementBase::shallowCopy(void) co
 
 RotationTransformationElementBase::RotationTransformationElementBase(void) :
     Inherited(),
-    _sfRotation               (Quaternion(0.0f,0.0f,0.0f,1.0f))
+    _sfAxis                   (Vec3f(0.0f,1.0f,0.0f)),
+    _sfAngle                  (Real32(0.0f))
 {
 }
 
 RotationTransformationElementBase::RotationTransformationElementBase(const RotationTransformationElementBase &source) :
     Inherited(source),
-    _sfRotation               (source._sfRotation               )
+    _sfAxis                   (source._sfAxis                   ),
+    _sfAngle                  (source._sfAngle                  )
 {
 }
 
@@ -380,27 +433,52 @@ RotationTransformationElementBase::~RotationTransformationElementBase(void)
 }
 
 
-GetFieldHandlePtr RotationTransformationElementBase::getHandleRotation        (void) const
+GetFieldHandlePtr RotationTransformationElementBase::getHandleAxis            (void) const
 {
-    SFQuaternion::GetHandlePtr returnValue(
-        new  SFQuaternion::GetHandle(
-             &_sfRotation,
-             this->getType().getFieldDesc(RotationFieldId),
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfAxis,
+             this->getType().getFieldDesc(AxisFieldId),
              const_cast<RotationTransformationElementBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr RotationTransformationElementBase::editHandleRotation       (void)
+EditFieldHandlePtr RotationTransformationElementBase::editHandleAxis           (void)
 {
-    SFQuaternion::EditHandlePtr returnValue(
-        new  SFQuaternion::EditHandle(
-             &_sfRotation,
-             this->getType().getFieldDesc(RotationFieldId),
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfAxis,
+             this->getType().getFieldDesc(AxisFieldId),
              this));
 
 
-    editSField(RotationFieldMask);
+    editSField(AxisFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RotationTransformationElementBase::getHandleAngle           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfAngle,
+             this->getType().getFieldDesc(AngleFieldId),
+             const_cast<RotationTransformationElementBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RotationTransformationElementBase::editHandleAngle          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfAngle,
+             this->getType().getFieldDesc(AngleFieldId),
+             this));
+
+
+    editSField(AngleFieldMask);
 
     return returnValue;
 }

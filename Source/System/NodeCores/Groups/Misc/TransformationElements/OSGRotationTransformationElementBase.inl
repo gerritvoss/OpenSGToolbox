@@ -74,30 +74,55 @@ OSG::UInt16 RotationTransformationElementBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the value of the RotationTransformationElement::_sfRotation field.
+//! Get the value of the RotationTransformationElement::_sfAxis field.
 
 inline
-Quaternion &RotationTransformationElementBase::editRotation(void)
+Vec3f &RotationTransformationElementBase::editAxis(void)
 {
-    editSField(RotationFieldMask);
+    editSField(AxisFieldMask);
 
-    return _sfRotation.getValue();
+    return _sfAxis.getValue();
 }
 
-//! Get the value of the RotationTransformationElement::_sfRotation field.
+//! Get the value of the RotationTransformationElement::_sfAxis field.
 inline
-const Quaternion &RotationTransformationElementBase::getRotation(void) const
+const Vec3f &RotationTransformationElementBase::getAxis(void) const
 {
-    return _sfRotation.getValue();
+    return _sfAxis.getValue();
 }
 
-//! Set the value of the RotationTransformationElement::_sfRotation field.
+//! Set the value of the RotationTransformationElement::_sfAxis field.
 inline
-void RotationTransformationElementBase::setRotation(const Quaternion &value)
+void RotationTransformationElementBase::setAxis(const Vec3f &value)
 {
-    editSField(RotationFieldMask);
+    editSField(AxisFieldMask);
 
-    _sfRotation.setValue(value);
+    _sfAxis.setValue(value);
+}
+//! Get the value of the RotationTransformationElement::_sfAngle field.
+
+inline
+Real32 &RotationTransformationElementBase::editAngle(void)
+{
+    editSField(AngleFieldMask);
+
+    return _sfAngle.getValue();
+}
+
+//! Get the value of the RotationTransformationElement::_sfAngle field.
+inline
+      Real32  RotationTransformationElementBase::getAngle(void) const
+{
+    return _sfAngle.getValue();
+}
+
+//! Set the value of the RotationTransformationElement::_sfAngle field.
+inline
+void RotationTransformationElementBase::setAngle(const Real32 value)
+{
+    editSField(AngleFieldMask);
+
+    _sfAngle.setValue(value);
 }
 
 
@@ -111,8 +136,11 @@ void RotationTransformationElementBase::execSync (      RotationTransformationEl
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-    if(FieldBits::NoField != (RotationFieldMask & whichField))
-        _sfRotation.syncWith(pFrom->_sfRotation);
+    if(FieldBits::NoField != (AxisFieldMask & whichField))
+        _sfAxis.syncWith(pFrom->_sfAxis);
+
+    if(FieldBits::NoField != (AngleFieldMask & whichField))
+        _sfAngle.syncWith(pFrom->_sfAngle);
 }
 #endif
 

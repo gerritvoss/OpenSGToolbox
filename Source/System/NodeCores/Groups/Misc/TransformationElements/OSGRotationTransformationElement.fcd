@@ -14,13 +14,23 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
-		name="Rotation"
-		type="Quaternion"
+		name="Axis"
+		type="Vec3f"
 		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0.0f,0.0f,0.0f,1.0f"
+		defaultValue="0.0f,1.0f,0.0f"
+	>
+	</Field>
+	<Field
+		name="Angle"
+		type="Real32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f"
 	>
 	</Field>
 </FieldContainer>

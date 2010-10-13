@@ -78,7 +78,7 @@ void RotationTransformationElement::initMethod(InitPhase ePhase)
 
 void RotationTransformationElement::calcMatrix(Matrixr &result) const
 {
-    result.setTransform(getRotation());
+    result.setTransform(Quaternion(getAxis(),osgDegree2Rad(getAngle())));
 }
 
 /*-------------------------------------------------------------------------*\
@@ -109,7 +109,8 @@ void RotationTransformationElement::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-    if(whichField & RotationFieldMask)
+    if(whichField & (AxisFieldMask |
+                     AngleFieldMask))
     {
         updateParentTransform();
     }

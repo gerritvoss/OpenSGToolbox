@@ -65,7 +65,8 @@
 
 #include "OSGTransformationElement.h" // Parent
 
-#include "OSGMathFields.h"              // Rotation type
+#include "OSGVecFields.h"               // Axis type
+#include "OSGSysFields.h"               // Angle type
 
 #include "OSGRotationTransformationElementFields.h"
 
@@ -95,16 +96,20 @@ class OSG_GROUP_DLLMAPPING RotationTransformationElementBase : public Transforma
 
     enum
     {
-        RotationFieldId = Inherited::NextFieldId,
-        NextFieldId = RotationFieldId + 1
+        AxisFieldId = Inherited::NextFieldId,
+        AngleFieldId = AxisFieldId + 1,
+        NextFieldId = AngleFieldId + 1
     };
 
-    static const OSG::BitVector RotationFieldMask =
-        (TypeTraits<BitVector>::One << RotationFieldId);
+    static const OSG::BitVector AxisFieldMask =
+        (TypeTraits<BitVector>::One << AxisFieldId);
+    static const OSG::BitVector AngleFieldMask =
+        (TypeTraits<BitVector>::One << AngleFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFQuaternion      SFRotationType;
+    typedef SFVec3f           SFAxisType;
+    typedef SFReal32          SFAngleType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -130,19 +135,26 @@ class OSG_GROUP_DLLMAPPING RotationTransformationElementBase : public Transforma
     /*! \{                                                                 */
 
 
-                  SFQuaternion        *editSFRotation       (void);
-            const SFQuaternion        *getSFRotation        (void) const;
+                  SFVec3f             *editSFAxis           (void);
+            const SFVec3f             *getSFAxis            (void) const;
+
+                  SFReal32            *editSFAngle          (void);
+            const SFReal32            *getSFAngle           (void) const;
 
 
-                  Quaternion          &editRotation       (void);
-            const Quaternion          &getRotation        (void) const;
+                  Vec3f               &editAxis           (void);
+            const Vec3f               &getAxis            (void) const;
+
+                  Real32              &editAngle          (void);
+                  Real32               getAngle           (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setRotation       (const Quaternion &value);
+            void setAxis           (const Vec3f &value);
+            void setAngle          (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -202,7 +214,8 @@ class OSG_GROUP_DLLMAPPING RotationTransformationElementBase : public Transforma
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFQuaternion      _sfRotation;
+    SFVec3f           _sfAxis;
+    SFReal32          _sfAngle;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,8 +243,10 @@ class OSG_GROUP_DLLMAPPING RotationTransformationElementBase : public Transforma
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleRotation        (void) const;
-    EditFieldHandlePtr editHandleRotation       (void);
+    GetFieldHandlePtr  getHandleAxis            (void) const;
+    EditFieldHandlePtr editHandleAxis           (void);
+    GetFieldHandlePtr  getHandleAngle           (void) const;
+    EditFieldHandlePtr editHandleAngle          (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
