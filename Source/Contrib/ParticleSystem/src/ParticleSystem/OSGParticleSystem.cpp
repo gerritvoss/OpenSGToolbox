@@ -940,14 +940,18 @@ bool ParticleSystem::addWorldSpaceParticle(const Pnt3f& Position,
                                            const Vec3f& Acceleration,
                                            const StringToUInt32Map& Attributes)
 {
+    Matrix PSBeaconMatrix;
+
     // behavior for this method is undefined if the beacon is not present
     if(getBeacon() == NULL)
     {	// no beacon, so we can't do anything to convert the particle
-        // to local particle system space
-        return false;
+        // to local particle system space, except assume it already is.
+		SWARNING << "Adding a worldspace particle onto a particle system with no beacon." << std::endl;
     }
-
-    Matrix PSBeaconMatrix(getBeacon()->getToWorld());
+	else
+	{
+		getBeacon()->getToWorld(PSBeaconMatrix);
+	}
 
     if(PSBeaconMatrix.invert())
     {

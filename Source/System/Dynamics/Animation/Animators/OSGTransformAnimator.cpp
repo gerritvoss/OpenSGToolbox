@@ -136,8 +136,8 @@ bool TransformAnimator::animate(UInt32 InterpType,
         getYRotationSequence() ||
         getZRotationSequence())
     {
-        Vec3f EulerRot;
-        Rotation.getEulerAngleDeg(EulerRot);
+        Vec3f EulerRot(0.0f,0.0f,0.0f);
+	    Rotation.getEulerAngleDeg(EulerRot);
         if( getXRotationSequence() != NULL)
         {
             getXRotationSequence()->interpolate(InterpType, time, prevTime,
@@ -157,8 +157,9 @@ bool TransformAnimator::animate(UInt32 InterpType,
                                                 EulerRot[2], 1.0f);
         }
         Rotation.setValue(osgDegree2Rad(EulerRot.x()),
-                          osgDegree2Rad(EulerRot.y()),
-                          osgDegree2Rad(EulerRot.z()));
+								  osgDegree2Rad(EulerRot.y()),
+								  osgDegree2Rad(EulerRot.z()));
+
     }
     //Scales
 	if(getScaleSequence() != NULL)
