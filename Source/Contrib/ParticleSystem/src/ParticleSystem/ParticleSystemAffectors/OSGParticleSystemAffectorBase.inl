@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -73,6 +74,31 @@ OSG::UInt16 ParticleSystemAffectorBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the value of the ParticleSystemAffector::_sfActive field.
+
+inline
+bool &ParticleSystemAffectorBase::editActive(void)
+{
+    editSField(ActiveFieldMask);
+
+    return _sfActive.getValue();
+}
+
+//! Get the value of the ParticleSystemAffector::_sfActive field.
+inline
+      bool  ParticleSystemAffectorBase::getActive(void) const
+{
+    return _sfActive.getValue();
+}
+
+//! Set the value of the ParticleSystemAffector::_sfActive field.
+inline
+void ParticleSystemAffectorBase::setActive(const bool value)
+{
+    editSField(ActiveFieldMask);
+
+    _sfActive.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -84,6 +110,9 @@ void ParticleSystemAffectorBase::execSync (      ParticleSystemAffectorBase *pFr
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+        _sfActive.syncWith(pFrom->_sfActive);
 }
 #endif
 

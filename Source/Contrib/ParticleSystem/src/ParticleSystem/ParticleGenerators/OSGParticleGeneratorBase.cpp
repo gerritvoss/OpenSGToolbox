@@ -91,6 +91,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var bool            ParticleGeneratorBase::_sfActive
+    If true then this Generator will be applied.
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -142,6 +146,18 @@ void ParticleGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ParticleGenerator::getHandleGenerateInWorldSpace));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Active",
+        "If true then this Generator will be applied.\n",
+        ActiveFieldId, ActiveFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleGenerator::editHandleActive),
+        static_cast<FieldGetMethodSig >(&ParticleGenerator::getHandleActive));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -191,6 +207,17 @@ ParticleGeneratorBase::TypeObject ParticleGeneratorBase::_type(
     "        access=\"public\"\n"
     "        >\n"
     "    </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Active\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "\t>\n"
+    "\tIf true then this Generator will be applied.\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -241,6 +268,19 @@ const SFBool *ParticleGeneratorBase::getSFGenerateInWorldSpace(void) const
 }
 
 
+SFBool *ParticleGeneratorBase::editSFActive(void)
+{
+    editSField(ActiveFieldMask);
+
+    return &_sfActive;
+}
+
+const SFBool *ParticleGeneratorBase::getSFActive(void) const
+{
+    return &_sfActive;
+}
+
+
 
 
 
@@ -259,6 +299,10 @@ UInt32 ParticleGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfGenerateInWorldSpace.getBinSize();
     }
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        returnValue += _sfActive.getBinSize();
+    }
 
     return returnValue;
 }
@@ -276,6 +320,10 @@ void ParticleGeneratorBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfGenerateInWorldSpace.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyToBin(pMem);
+    }
 }
 
 void ParticleGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -291,8 +339,11 @@ void ParticleGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfGenerateInWorldSpace.copyFromBin(pMem);
     }
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyFromBin(pMem);
+    }
 }
-
 
 
 
@@ -301,14 +352,16 @@ void ParticleGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
 ParticleGeneratorBase::ParticleGeneratorBase(void) :
     Inherited(),
     _sfBeacon                 (NULL),
-    _sfGenerateInWorldSpace   (bool(false))
+    _sfGenerateInWorldSpace   (bool(false)),
+    _sfActive                 (bool(true))
 {
 }
 
 ParticleGeneratorBase::ParticleGeneratorBase(const ParticleGeneratorBase &source) :
     Inherited(source),
     _sfBeacon                 (NULL),
-    _sfGenerateInWorldSpace   (source._sfGenerateInWorldSpace   )
+    _sfGenerateInWorldSpace   (source._sfGenerateInWorldSpace   ),
+    _sfActive                 (source._sfActive                 )
 {
 }
 
@@ -383,6 +436,32 @@ EditFieldHandlePtr ParticleGeneratorBase::editHandleGenerateInWorldSpace(void)
 
     return returnValue;
 }
+
+GetFieldHandlePtr ParticleGeneratorBase::getHandleActive          (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfActive,
+             this->getType().getFieldDesc(ActiveFieldId),
+             const_cast<ParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleGeneratorBase::editHandleActive         (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfActive,
+             this->getType().getFieldDesc(ActiveFieldId),
+             this));
+
+
+    editSField(ActiveFieldMask);
+
+    return returnValue;
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

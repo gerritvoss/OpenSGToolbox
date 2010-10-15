@@ -120,7 +120,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<UIDrawingSurface *>::_type("UIDrawingSurfacePtr", "FieldContainerPtr");
+DataType FieldTraits<UIDrawingSurface *>::_type("UIDrawingSurfacePtr", "AttachmentContainerPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(UIDrawingSurface *)
@@ -243,7 +243,7 @@ UIDrawingSurfaceBase::TypeObject UIDrawingSurfaceBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"UIDrawingSurface\"\n"
-    "\tparent=\"FieldContainer\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
     "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
@@ -719,7 +719,6 @@ UIDrawingSurface *UIDrawingSurfaceBase::createEmpty(void)
 
     return returnValue;
 }
-
 
 FieldContainerTransitPtr UIDrawingSurfaceBase::shallowCopyLocal(
     BitVector bFlags) const

@@ -112,6 +112,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollPanel : public ScrollPanelBase
 
     //Mouse Wheel Events
     virtual void mouseWheelMoved(MouseWheelEventDetails* const e);
+
+    //Scrolling
+    void scrollHorizontalUnit(Int32 Units);
+    void scrollHorizontalBlock(Int32 Blocks);
+    void scrollVerticalUnit(Int32 Units);
+    void scrollVerticalBlock(Int32 Blocks);
     /*=========================  PROTECTED  ===============================*/
 
   protected:

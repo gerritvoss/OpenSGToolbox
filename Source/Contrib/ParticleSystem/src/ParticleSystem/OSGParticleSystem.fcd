@@ -196,6 +196,28 @@
    the previous value of position and velocity respectively.
 	</Field>
 	<Field
+		name="ClearVelocities"
+		type="bool"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+   If true then the velocities of every particle will be set to 0 every update before Affectors are applied.
+	</Field>
+	<Field
+		name="ClearAccelerations"
+		type="bool"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+   If true then the accelerations of every particle will be set to 0 every update before Affectors are applied.
+	</Field>
+	<Field
 		name="LastElapsedTime"
 		type="Time"
         category="data"

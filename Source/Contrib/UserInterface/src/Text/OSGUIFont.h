@@ -92,6 +92,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIFont : public UIFontBase
 	Vec2f getBounds(const std::string& Text);
 
     static FieldContainerTransitPtr createFont( const BoostPath& FilePath );
+
+    static FieldContainerUnrecPtr loadFromFileHandler( const BoostPath& FilePath );
     /*=========================  PROTECTED  ===============================*/
 
   protected:

@@ -86,6 +86,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(CollectiveGravityParticleSystemAffector);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -96,7 +98,9 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
         ParticleMassFieldId = Inherited::NextFieldId,
         GravitationalConstantFieldId = ParticleMassFieldId + 1,
         ParticleMassSourceFieldId = GravitationalConstantFieldId + 1,
-        NextFieldId = ParticleMassSourceFieldId + 1
+        MinDistanceFieldId = ParticleMassSourceFieldId + 1,
+        MaxDistanceFieldId = MinDistanceFieldId + 1,
+        NextFieldId = MaxDistanceFieldId + 1
     };
 
     static const OSG::BitVector ParticleMassFieldMask =
@@ -105,12 +109,18 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
         (TypeTraits<BitVector>::One << GravitationalConstantFieldId);
     static const OSG::BitVector ParticleMassSourceFieldMask =
         (TypeTraits<BitVector>::One << ParticleMassSourceFieldId);
+    static const OSG::BitVector MinDistanceFieldMask =
+        (TypeTraits<BitVector>::One << MinDistanceFieldId);
+    static const OSG::BitVector MaxDistanceFieldMask =
+        (TypeTraits<BitVector>::One << MaxDistanceFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFReal32          SFParticleMassType;
     typedef SFReal32          SFGravitationalConstantType;
     typedef SFUInt32          SFParticleMassSourceType;
+    typedef SFReal32          SFMinDistanceType;
+    typedef SFReal32          SFMaxDistanceType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -145,6 +155,12 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
                   SFUInt32            *editSFParticleMassSource(void);
             const SFUInt32            *getSFParticleMassSource (void) const;
 
+                  SFReal32            *editSFMinDistance    (void);
+            const SFReal32            *getSFMinDistance     (void) const;
+
+                  SFReal32            *editSFMaxDistance    (void);
+            const SFReal32            *getSFMaxDistance     (void) const;
+
 
                   Real32              &editParticleMass   (void);
                   Real32               getParticleMass    (void) const;
@@ -155,6 +171,12 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
                   UInt32              &editParticleMassSource(void);
                   UInt32               getParticleMassSource (void) const;
 
+                  Real32              &editMinDistance    (void);
+                  Real32               getMinDistance     (void) const;
+
+                  Real32              &editMaxDistance    (void);
+                  Real32               getMaxDistance     (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -163,6 +185,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
             void setParticleMass   (const Real32 value);
             void setGravitationalConstant(const Real32 value);
             void setParticleMassSource(const UInt32 value);
+            void setMinDistance    (const Real32 value);
+            void setMaxDistance    (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -225,6 +249,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
     SFReal32          _sfParticleMass;
     SFReal32          _sfGravitationalConstant;
     SFUInt32          _sfParticleMassSource;
+    SFReal32          _sfMinDistance;
+    SFReal32          _sfMaxDistance;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -258,6 +284,10 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollectiveGravityParticleSystemAffect
     EditFieldHandlePtr editHandleGravitationalConstant(void);
     GetFieldHandlePtr  getHandleParticleMassSource (void) const;
     EditFieldHandlePtr editHandleParticleMassSource(void);
+    GetFieldHandlePtr  getHandleMinDistance     (void) const;
+    EditFieldHandlePtr editHandleMinDistance    (void);
+    GetFieldHandlePtr  getHandleMaxDistance     (void) const;
+    EditFieldHandlePtr editHandleMaxDistance    (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

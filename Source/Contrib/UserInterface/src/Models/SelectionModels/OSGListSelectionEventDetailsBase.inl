@@ -124,31 +124,6 @@ void ListSelectionEventDetailsBase::setLastIndex(const Int32 value)
 
     _sfLastIndex.setValue(value);
 }
-//! Get the value of the ListSelectionEventDetails::_sfValueIsAdjusting field.
-
-inline
-bool &ListSelectionEventDetailsBase::editValueIsAdjusting(void)
-{
-    editSField(ValueIsAdjustingFieldMask);
-
-    return _sfValueIsAdjusting.getValue();
-}
-
-//! Get the value of the ListSelectionEventDetails::_sfValueIsAdjusting field.
-inline
-      bool  ListSelectionEventDetailsBase::getValueIsAdjusting(void) const
-{
-    return _sfValueIsAdjusting.getValue();
-}
-
-//! Set the value of the ListSelectionEventDetails::_sfValueIsAdjusting field.
-inline
-void ListSelectionEventDetailsBase::setValueIsAdjusting(const bool value)
-{
-    editSField(ValueIsAdjustingFieldMask);
-
-    _sfValueIsAdjusting.setValue(value);
-}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -166,9 +141,6 @@ void ListSelectionEventDetailsBase::execSync (      ListSelectionEventDetailsBas
 
     if(FieldBits::NoField != (LastIndexFieldMask & whichField))
         _sfLastIndex.syncWith(pFrom->_sfLastIndex);
-
-    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
-        _sfValueIsAdjusting.syncWith(pFrom->_sfValueIsAdjusting);
 }
 #endif
 

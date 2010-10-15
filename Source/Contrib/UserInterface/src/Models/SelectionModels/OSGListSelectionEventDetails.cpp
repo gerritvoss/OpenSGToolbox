@@ -75,6 +75,8 @@ ListSelectionEventDetailsTransitPtr ListSelectionEventDetails::create(  FieldCon
                                                           Time TimeStamp,
                                                           Int32 FirstIndex,
                                                           Int32 LastIndex,
+                                                  const std::vector<UInt32>& Selected,
+                                                  const std::vector<UInt32>& PreviouslySelected,
                                                           bool ValueIsAdjusting)
 {
     ListSelectionEventDetails* TheEventDetails = ListSelectionEventDetails::createUnregistered();
@@ -83,6 +85,8 @@ ListSelectionEventDetailsTransitPtr ListSelectionEventDetails::create(  FieldCon
     TheEventDetails->setTimeStamp(TimeStamp);
     TheEventDetails->setFirstIndex(FirstIndex);
     TheEventDetails->setLastIndex(LastIndex);
+    TheEventDetails->editMFSelected()->setValues(Selected);
+    TheEventDetails->editMFPreviouslySelected()->setValues(PreviouslySelected);
     TheEventDetails->setValueIsAdjusting(ValueIsAdjusting);
 
     return ListSelectionEventDetailsTransitPtr(TheEventDetails);

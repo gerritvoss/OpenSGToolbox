@@ -102,13 +102,13 @@ void SelectionEventDetailsBase::setValueIsAdjusting(const bool value)
 
 //! Get the value of the \a index element the SelectionEventDetails::_mfSelected field.
 inline
-      Int32  SelectionEventDetailsBase::getSelected(const UInt32 index) const
+      UInt32  SelectionEventDetailsBase::getSelected(const UInt32 index) const
 {
     return _mfSelected[index];
 }
 
 inline
-Int32 &SelectionEventDetailsBase::editSelected(const UInt32 index)
+UInt32 &SelectionEventDetailsBase::editSelected(const UInt32 index)
 {
     editMField(SelectedFieldMask, _mfSelected);
 
@@ -118,13 +118,13 @@ Int32 &SelectionEventDetailsBase::editSelected(const UInt32 index)
 
 //! Get the value of the \a index element the SelectionEventDetails::_mfPreviouslySelected field.
 inline
-      Int32  SelectionEventDetailsBase::getPreviouslySelected(const UInt32 index) const
+      UInt32  SelectionEventDetailsBase::getPreviouslySelected(const UInt32 index) const
 {
     return _mfPreviouslySelected[index];
 }
 
 inline
-Int32 &SelectionEventDetailsBase::editPreviouslySelected(const UInt32 index)
+UInt32 &SelectionEventDetailsBase::editPreviouslySelected(const UInt32 index)
 {
     editMField(PreviouslySelectedFieldMask, _mfPreviouslySelected);
 

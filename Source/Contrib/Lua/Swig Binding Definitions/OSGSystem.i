@@ -911,24 +911,33 @@
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
-              OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+              OSG::FieldContainerRefPtr ValueToSet(NULL);
+              if(!lua_isnil(L, 3))
               {
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
-                  return SWIG_arg;
+                  OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
+                  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+                  {
+                      LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+                      return SWIG_arg;
+                  }
+
+                  if(arg3 != NULL)
+                  {
+                      ValueToSet = *arg3;
+                  }
               }
               switch(TheFieldHandle->getType().getClass())
               {
                   case OSG::FieldType::ChildPtrField:
                        static_cast<OSG::ChildPointerSField <OSG::FieldContainer *,
-                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->setValue(*arg3);
+                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->setValue(ValueToSet);
                        break;
                   case OSG::FieldType::ParentPtrField:
                        lua_pushfstring(L,"Error in setFieldValue the FieldContainer given is of the ParentPtr class.  Cannot set the value of this field directly");
                        lua_error(L);
                        break;
                   case OSG::FieldType::PtrField:
-                       static_cast<OSG::SFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->setValue(*arg3);
+                       static_cast<OSG::SFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->setValue(ValueToSet);
                        break;
               }
           }
@@ -1315,25 +1324,33 @@
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
-              OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+              OSG::FieldContainerRefPtr ValueToSet(NULL);
+              if(!lua_isnil(L, 3))
               {
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
-                  return SWIG_arg;
+                  OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
+                  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+                  {
+                      LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+                      return SWIG_arg;
+                  }
+
+                  if(arg3 != NULL)
+                  {
+                      ValueToSet = *arg3;
+                  }
               }
-              //TODO
               switch(TheFieldHandle->getType().getClass())
               {
                   case OSG::FieldType::ChildPtrField:
                        static_cast<OSG::ChildPointerMField <OSG::FieldContainer *,
-                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->replace(arg4,*arg3);
+                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->replace(arg4,ValueToSet);
                        break;
                   case OSG::FieldType::ParentPtrField:
                        lua_pushfstring(L,"Error in setFieldValue the FieldContainer given is of the ParentPtr class.  Cannot set the value of this field directly");
                        lua_error(L);
                        break;
                   case OSG::FieldType::PtrField:
-                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->replace(arg4,*arg3);
+                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->replace(arg4,ValueToSet);
                        break;
               }
           }
@@ -1703,25 +1720,33 @@
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
-              OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+              OSG::FieldContainerRefPtr ValueToSet(NULL);
+              if(!lua_isnil(L, 3))
               {
-                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
-                  return SWIG_arg;
+                  OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
+                  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+                  {
+                      LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+                      return SWIG_arg;
+                  }
+
+                  if(arg3 != NULL)
+                  {
+                      ValueToSet = *arg3;
+                  }
               }
-              //TODO
               switch(TheFieldHandle->getType().getClass())
               {
                   case OSG::FieldType::ChildPtrField:
                        static_cast<OSG::ChildPointerMField <OSG::FieldContainer *,
-                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->push_back(*arg3);
+                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->push_back(ValueToSet);
                        break;
                   case OSG::FieldType::ParentPtrField:
                        lua_pushfstring(L,"Error in pushFieldValue the FieldContainer given is of the ParentPtr class.  Cannot set the value of this field directly");
                        lua_error(L);
                        break;
                   case OSG::FieldType::PtrField:
-                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->push_back(*arg3);
+                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->push_back(ValueToSet);
                        break;
               }
           }
@@ -2158,13 +2183,21 @@
           //FieldContainerRefPtrs
           else if(TheFieldHandle->isPointerField())
           {
-              OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+              OSG::FieldContainerRefPtr ValueToSet(NULL);
+              if(!lua_isnil(L, 3))
               {
-                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
-                  return SWIG_arg;
+                  OSG::FieldContainerRefPtr *arg3 = (OSG::FieldContainerRefPtr *) 0 ;
+                  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_OSG__FieldContainerRefPtr,0)))
+                  {
+                      LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_OSG__FieldContainerRefPtr);
+                      return SWIG_arg;
+                  }
+
+                  if(arg3 != NULL)
+                  {
+                      ValueToSet = *arg3;
+                  }
               }
-              //TODO
               switch(TheFieldHandle->getType().getClass())
               {
                   case OSG::FieldType::ChildPtrField:
@@ -2174,7 +2207,7 @@
                                    OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->begin());
                        InsertItor += arg4;
                        static_cast<OSG::ChildPointerMField <OSG::FieldContainer *,
-                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->insert(InsertItor, *arg3);
+                                   OSG::UnrecordedRefCountPolicy,1>*>(TheFieldHandle->getField())->insert(InsertItor, ValueToSet);
                   }
                        break;
                   case OSG::FieldType::ParentPtrField:
@@ -2185,7 +2218,7 @@
                   {
                        OSG::MFUnrecFieldContainerPtr::iterator InsertItor(static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->begin());
                        InsertItor += arg4;
-                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->insert(InsertItor, *arg3);
+                       static_cast<OSG::MFUnrecFieldContainerPtr*>(TheFieldHandle->getField())->insert(InsertItor, ValueToSet);
                   }
                        break;
               }
@@ -2236,6 +2269,18 @@ namespace boost
           bool operator!=(const connection& other) const;
           bool operator<(const connection& other) const;
           void swap(connection &other);
+        };
+        
+        class scoped_connection
+        {
+        public:
+          scoped_connection(const connection &other);
+          ~scoped_connection();
+          void disconnect() const;
+          bool connected() const;
+        private:
+          scoped_connection();
+          scoped_connection& operator=(const scoped_connection& other);
         };
     }
 }
@@ -3808,6 +3853,8 @@ namespace OSG
 
             static boost::signals2::connection addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, UInt32 producedEventId);
             static boost::signals2::connection addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, const std::string& producedEventName);
+            static void removeLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, UInt32 producedEventId);
+            static void removeLuaCallback(FieldContainerRefPtr producerObject,  std::string funcName, const std::string& producedEventName);
 
         protected:
             LuaActivity(void);
@@ -4102,6 +4149,20 @@ namespace OSG
     
     void                        separateProperties(GeometryRefPtr geo);
 
+    
+    /******************************************************/
+    /*                   Node Functions                   */
+    /******************************************************/
+    
+    NodeRefPtr cloneTree(NodeRefPtr rootNode)
+    {
+        return cloneTree(rootNode);
+    }
+    
+    NodeRefPtr deepCloneTree(NodeRefPtr rootNode)
+    {
+        return deepCloneTree(rootNode);
+    }
 
 }
 

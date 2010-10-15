@@ -65,6 +65,8 @@ OSG_BEGIN_NAMESPACE
  *                           Class variables                               *
 \***************************************************************************/
 
+LuaActivity::FuncMap  LuaActivity::_GlobalLuaActivities = LuaActivity::FuncMap();
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -108,7 +110,7 @@ FieldContainerTransitPtr LuaActivity::createLuaActivity( const BoostPath& FilePa
 
 }
 
-boost::signals2::connection LuaActivity::addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, UInt32 producedMethodId)
+boost::signals2::connection LuaActivity::addLuaCallback(FieldContainerRefPtr producerObject, std::string funcName, UInt32 producedEventId)
 {
     if(producerObject->isEventProducer())
     {
@@ -118,30 +120,28 @@ boost::signals2::connection LuaActivity::addLuaCallback(FieldContainerRefPtr pro
             return boost::signals2::connection();
         }
 
-        //Check if a LuaActivity with this funcName is already attached
-        /*ActivityUnrecPtr CheckActiviy;
-        for(UInt32 i(0) ; i<getEventProducer(producerObject)->getNumAttachedActivities() ; ++i)
+        //Find an attached LuaActivity with the same
+        //       ProducerObject
+        //       Function
+        //       ProducedMethodID
+        LuaFuncGroup TheFuncGroup(producerObject, funcName, producedEventId);
+        FuncMap::iterator SearchItor(_GlobalLuaActivities.find(TheFuncGroup));
+        if(SearchItor != _GlobalLuaActivities.end() &&
+           (*SearchItor).second.second.connected())
         {
-            CheckActiviy = getEventProducer(producerObject)->getAttachedActivity(producedMethodId, i);
-
-            if(CheckActiviy != NULL && CheckActiviy->getType() == LuaActivity::getClassType())
-            {
-                if(dynamic_pointer_cast<LuaActivity>(CheckActiviy)->getEntryFunction().compare(funcName) == 0)
-                {
-                    SWARNING << "Lua function: " << funcName << " is already attached to this produced method." << std::endl;
-                    return dynamic_pointer_cast<LuaActivity>(CheckActiviy);
-                }
-            }
-        }*/
+            SWARNING << "Lua function: " << funcName << " is already attached to this produced method." << std::endl;
+            return (*SearchItor).second.second;
+        }
 
         LuaActivityUnrecPtr TheLuaActivity = LuaActivity::create();
         TheLuaActivity->setEntryFunction(funcName);
         commitChanges();
 
+        boost::signals2::connection TheConnection(producerObject->attachActivity(producedEventId, TheLuaActivity));
         //BUG: Need to add ref count to keep it from being deleted,
         //but who has responsibility for deleting it?
-        TheLuaActivity->addReferenceUnrecorded();
-        return producerObject->attachActivity(producedMethodId, TheLuaActivity);
+        _GlobalLuaActivities[TheFuncGroup] = ActivityConnectionPair(TheLuaActivity, TheConnection);
+        return TheConnection;
     }
     else
     {
@@ -161,6 +161,34 @@ boost::signals2::connection LuaActivity::addLuaCallback(FieldContainerRefPtr pro
         return boost::signals2::connection();
     }
     return addLuaCallback(producerObject, funcName, Desc->getEventId());
+}
+
+void LuaActivity::removeLuaCallback(FieldContainerRefPtr producerObject,
+                       std::string funcName,
+                       UInt32 producedEventId)
+{
+    LuaFuncGroup TheFuncGroup(producerObject, funcName, producedEventId);
+    FuncMap::iterator SearchItor(_GlobalLuaActivities.find(TheFuncGroup));
+    if(SearchItor != _GlobalLuaActivities.end())
+    {
+        (*SearchItor).second.second.disconnect();
+        _GlobalLuaActivities.erase(SearchItor);
+    }
+}
+
+void LuaActivity::removeLuaCallback(FieldContainerRefPtr producerObject,
+                                    std::string funcName,
+                                    const std::string& producedEventName)
+{
+    const EventDescription* Desc(producerObject->getEventDescription(producedEventName.c_str()));
+    if(Desc == NULL)
+    {
+        SWARNING << "No producedEvent named: " << producedEventName << " defined on containers of type: " << producerObject->getType().getName() << "." << std::endl;
+    }
+    else
+    {
+        removeLuaCallback(producerObject, funcName, Desc->getEventId());
+    }
 }
 
 /***************************************************************************\
@@ -281,6 +309,34 @@ void LuaActivity::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LuaActivity NI" << std::endl;
+}
+
+
+LuaActivity::LuaFuncGroup::LuaFuncGroup(FieldContainer* EventProducer, std::string Function, UInt32 ProducedEventID) :
+_EventProducer(EventProducer),
+_Function(Function),
+_ProducedEventID(ProducedEventID)
+{
+}
+
+bool LuaActivity::LuaFuncComp::operator()(const LuaFuncGroup& Left, const LuaFuncGroup& Right) const
+{
+    int StrComp(Left._Function.compare(Right._Function));
+    if(StrComp == 0)
+    {
+        if(Left._ProducedEventID == Right._ProducedEventID)
+        {
+            return Left._EventProducer < Right._EventProducer;
+        }
+        else
+        {
+            return Left._ProducedEventID < Right._ProducedEventID;
+        }
+    }
+    else
+    {
+        return StrComp < 0;
+    }
 }
 
 OSG_END_NAMESPACE

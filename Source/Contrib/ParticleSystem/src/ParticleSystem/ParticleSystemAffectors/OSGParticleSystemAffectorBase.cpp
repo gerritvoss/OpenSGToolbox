@@ -82,6 +82,10 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
+/*! \var bool            ParticleSystemAffectorBase::_sfActive
+    If true then this Affector will be applied.
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -107,6 +111,20 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void ParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
 {
+    FieldDescriptionBase *pDesc = NULL;
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Active",
+        "If true then this Affector will be applied.\n",
+        ActiveFieldId, ActiveFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystemAffector::editHandleActive),
+        static_cast<FieldGetMethodSig >(&ParticleSystemAffector::getHandleActive));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -136,6 +154,17 @@ ParticleSystemAffectorBase::TypeObject ParticleSystemAffectorBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Active\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "\t>\n"
+    "\tIf true then this Affector will be applied.\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -160,6 +189,19 @@ UInt32 ParticleSystemAffectorBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
+SFBool *ParticleSystemAffectorBase::editSFActive(void)
+{
+    editSField(ActiveFieldMask);
+
+    return &_sfActive;
+}
+
+const SFBool *ParticleSystemAffectorBase::getSFActive(void) const
+{
+    return &_sfActive;
+}
+
+
 
 
 
@@ -170,6 +212,10 @@ UInt32 ParticleSystemAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        returnValue += _sfActive.getBinSize();
+    }
 
     return returnValue;
 }
@@ -179,6 +225,10 @@ void ParticleSystemAffectorBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyToBin(pMem);
+    }
 }
 
 void ParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -186,20 +236,25 @@ void ParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyFromBin(pMem);
+    }
 }
-
 
 
 
 /*------------------------- constructors ----------------------------------*/
 
 ParticleSystemAffectorBase::ParticleSystemAffectorBase(void) :
-    Inherited()
+    Inherited(),
+    _sfActive                 (bool(true))
 {
 }
 
 ParticleSystemAffectorBase::ParticleSystemAffectorBase(const ParticleSystemAffectorBase &source) :
-    Inherited(source)
+    Inherited(source),
+    _sfActive                 (source._sfActive                 )
 {
 }
 
@@ -208,6 +263,32 @@ ParticleSystemAffectorBase::ParticleSystemAffectorBase(const ParticleSystemAffec
 
 ParticleSystemAffectorBase::~ParticleSystemAffectorBase(void)
 {
+}
+
+
+GetFieldHandlePtr ParticleSystemAffectorBase::getHandleActive          (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfActive,
+             this->getType().getFieldDesc(ActiveFieldId),
+             const_cast<ParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemAffectorBase::editHandleActive         (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfActive,
+             this->getType().getFieldDesc(ActiveFieldId),
+             this));
+
+
+    editSField(ActiveFieldMask);
+
+    return returnValue;
 }
 
 

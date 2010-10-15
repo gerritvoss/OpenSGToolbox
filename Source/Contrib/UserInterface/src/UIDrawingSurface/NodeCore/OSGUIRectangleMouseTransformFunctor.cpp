@@ -97,7 +97,7 @@ bool UIRectangleMouseTransformFunctor::viewportToRenderingSurface(const Pnt2f& V
 
     //Transform Line to UIRectangle Space
     Matrix m ;
-    getParent()->accumulateMatrix(m);
+    dynamic_cast<Node*>(getParent()->getParents().front())->getToWorld(m);
 
     m.invert();
 

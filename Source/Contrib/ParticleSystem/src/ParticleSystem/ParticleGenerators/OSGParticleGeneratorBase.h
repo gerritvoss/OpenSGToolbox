@@ -87,6 +87,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorBase : public Attach
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ParticleGenerator);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -96,18 +98,22 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorBase : public Attach
     {
         BeaconFieldId = Inherited::NextFieldId,
         GenerateInWorldSpaceFieldId = BeaconFieldId + 1,
-        NextFieldId = GenerateInWorldSpaceFieldId + 1
+        ActiveFieldId = GenerateInWorldSpaceFieldId + 1,
+        NextFieldId = ActiveFieldId + 1
     };
 
     static const OSG::BitVector BeaconFieldMask =
         (TypeTraits<BitVector>::One << BeaconFieldId);
     static const OSG::BitVector GenerateInWorldSpaceFieldMask =
         (TypeTraits<BitVector>::One << GenerateInWorldSpaceFieldId);
+    static const OSG::BitVector ActiveFieldMask =
+        (TypeTraits<BitVector>::One << ActiveFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecNodePtr    SFBeaconType;
     typedef SFBool            SFGenerateInWorldSpaceType;
+    typedef SFBool            SFActiveType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -138,11 +144,17 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorBase : public Attach
                   SFBool              *editSFGenerateInWorldSpace(void);
             const SFBool              *getSFGenerateInWorldSpace (void) const;
 
+                  SFBool              *editSFActive         (void);
+            const SFBool              *getSFActive          (void) const;
+
 
                   Node * getBeacon         (void) const;
 
                   bool                &editGenerateInWorldSpace(void);
                   bool                 getGenerateInWorldSpace (void) const;
+
+                  bool                &editActive         (void);
+                  bool                 getActive          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -151,6 +163,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorBase : public Attach
 
             void setBeacon         (Node * const value);
             void setGenerateInWorldSpace(const bool value);
+            void setActive         (const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -190,6 +203,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorBase : public Attach
 
     SFUnrecNodePtr    _sfBeacon;
     SFBool            _sfGenerateInWorldSpace;
+    SFBool            _sfActive;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,6 +236,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorBase : public Attach
     EditFieldHandlePtr editHandleBeacon         (void);
     GetFieldHandlePtr  getHandleGenerateInWorldSpace (void) const;
     EditFieldHandlePtr editHandleGenerateInWorldSpace(void);
+    GetFieldHandlePtr  getHandleActive          (void) const;
+    EditFieldHandlePtr editHandleActive         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -297,7 +297,19 @@ void PhysicsGeom::changed(ConstFieldMaskArg whichField,
     }
     if(whichField & SpaceFieldMask)
     {
-	    dSpaceAdd(getSpace()->getSpaceID(), _GeomID);
+        dSpaceID CurSpace(dGeomGetSpace(_GeomID));
+     
+        if(CurSpace != 0 &&
+           (getSpace() == NULL ||
+            CurSpace != getSpace()->getSpaceID()))
+        {
+            dSpaceRemove(CurSpace,_GeomID);
+        }
+
+        if(getSpace() != NULL)
+        {
+	        dSpaceAdd(getSpace()->getSpaceID(), _GeomID);
+        }
     }
     if(whichField & EnableFieldMask)
     {

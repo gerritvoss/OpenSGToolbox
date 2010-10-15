@@ -138,6 +138,10 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING AttachColGeomGraphOp : public GraphOp
     void setCurrentTravMaskValue(UInt32 CurrentTraversalMask);
 	void setCreateGeomType(UInt32 TheGeomType);
 
+    
+	void setCollideMask(UInt32 CollideMask);
+	void setCategoryMask(UInt32 CategoryMask);
+
 	/*! Returns the number of nodes whose traversal masks was changed. 
 	 *
 	 *	@return Only accurate after the graph op has been completed.
@@ -171,6 +175,10 @@ private:
 	bool mMatchCurTravMask;
 	UInt32 mMatchCurTravMaskValue;
     UInt8  mMatchMaskCondition;
+
+    
+	UInt32 mCollideMask;
+	UInt32 mCategoryMask;
 
     //Parameters for attaching geom
     UInt32 mCreateGeomType;

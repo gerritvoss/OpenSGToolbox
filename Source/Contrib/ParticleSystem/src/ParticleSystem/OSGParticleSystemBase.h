@@ -137,7 +137,9 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
         MaxParticlesFieldId = InternalIDsFieldId + 1,
         DynamicFieldId = MaxParticlesFieldId + 1,
         UpdateSecAttribsFieldId = DynamicFieldId + 1,
-        LastElapsedTimeFieldId = UpdateSecAttribsFieldId + 1,
+        ClearVelocitiesFieldId = UpdateSecAttribsFieldId + 1,
+        ClearAccelerationsFieldId = ClearVelocitiesFieldId + 1,
+        LastElapsedTimeFieldId = ClearAccelerationsFieldId + 1,
         GeneratorsFieldId = LastElapsedTimeFieldId + 1,
         AffectorsFieldId = GeneratorsFieldId + 1,
         SystemAffectorsFieldId = AffectorsFieldId + 1,
@@ -178,6 +180,10 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
         (TypeTraits<BitVector>::One << DynamicFieldId);
     static const OSG::BitVector UpdateSecAttribsFieldMask =
         (TypeTraits<BitVector>::One << UpdateSecAttribsFieldId);
+    static const OSG::BitVector ClearVelocitiesFieldMask =
+        (TypeTraits<BitVector>::One << ClearVelocitiesFieldId);
+    static const OSG::BitVector ClearAccelerationsFieldMask =
+        (TypeTraits<BitVector>::One << ClearAccelerationsFieldId);
     static const OSG::BitVector LastElapsedTimeFieldMask =
         (TypeTraits<BitVector>::One << LastElapsedTimeFieldId);
     static const OSG::BitVector GeneratorsFieldMask =
@@ -209,6 +215,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     typedef SFUInt32          SFMaxParticlesType;
     typedef SFBool            SFDynamicType;
     typedef SFBool            SFUpdateSecAttribsType;
+    typedef SFBool            SFClearVelocitiesType;
+    typedef SFBool            SFClearAccelerationsType;
     typedef SFTime            SFLastElapsedTimeType;
     typedef MFUnrecParticleGeneratorPtr MFGeneratorsType;
     typedef MFUnrecParticleAffectorPtr MFAffectorsType;
@@ -263,6 +271,12 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
                   SFBool              *editSFUpdateSecAttribs(void);
             const SFBool              *getSFUpdateSecAttribs (void) const;
 
+                  SFBool              *editSFClearVelocities(void);
+            const SFBool              *getSFClearVelocities (void) const;
+
+                  SFBool              *editSFClearAccelerations(void);
+            const SFBool              *getSFClearAccelerations (void) const;
+
                   SFTime              *editSFLastElapsedTime(void);
             const SFTime              *getSFLastElapsedTime (void) const;
             const MFUnrecParticleGeneratorPtr *getMFGenerators     (void) const;
@@ -288,6 +302,12 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
                   bool                &editUpdateSecAttribs(void);
                   bool                 getUpdateSecAttribs (void) const;
 
+                  bool                &editClearVelocities(void);
+                  bool                 getClearVelocities (void) const;
+
+                  bool                &editClearAccelerations(void);
+                  bool                 getClearAccelerations (void) const;
+
                   Time                &editLastElapsedTime(void);
             const Time                &getLastElapsedTime (void) const;
 
@@ -310,6 +330,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
             void setMaxParticles   (const UInt32 value);
             void setDynamic        (const bool value);
             void setUpdateSecAttribs(const bool value);
+            void setClearVelocities(const bool value);
+            void setClearAccelerations(const bool value);
             void setLastElapsedTime(const Time &value);
 
     /*! \}                                                                 */
@@ -358,7 +380,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
-                                                         
+
     virtual UInt32                   getNumProducedEvents       (void                                ) const;
     virtual const EventDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
     virtual const EventDescription *getProducedEventDescription(UInt32 ProducedEventId              ) const;
@@ -506,6 +528,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     SFUInt32          _sfMaxParticles;
     SFBool            _sfDynamic;
     SFBool            _sfUpdateSecAttribs;
+    SFBool            _sfClearVelocities;
+    SFBool            _sfClearAccelerations;
     SFTime            _sfLastElapsedTime;
     MFUnrecParticleGeneratorPtr _mfGenerators;
     MFUnrecParticleAffectorPtr _mfAffectors;
@@ -572,6 +596,10 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public Attachmen
     EditFieldHandlePtr editHandleDynamic        (void);
     GetFieldHandlePtr  getHandleUpdateSecAttribs (void) const;
     EditFieldHandlePtr editHandleUpdateSecAttribs(void);
+    GetFieldHandlePtr  getHandleClearVelocities (void) const;
+    EditFieldHandlePtr editHandleClearVelocities(void);
+    GetFieldHandlePtr  getHandleClearAccelerations (void) const;
+    EditFieldHandlePtr editHandleClearAccelerations(void);
     GetFieldHandlePtr  getHandleLastElapsedTime (void) const;
     EditFieldHandlePtr editHandleLastElapsedTime(void);
     GetFieldHandlePtr  getHandleGenerators      (void) const;

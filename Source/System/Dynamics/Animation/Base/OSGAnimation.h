@@ -153,6 +153,7 @@ class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
 
     friend class FieldContainer;
     friend class AnimationBase;
+    friend class AnimationGroup;
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const Animation &source);

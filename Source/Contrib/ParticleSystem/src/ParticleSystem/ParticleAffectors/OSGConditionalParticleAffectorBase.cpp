@@ -87,7 +87,7 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var UInt8           ConditionalParticleAffectorBase::_sfConditionalOperator
+/*! \var UInt16          ConditionalParticleAffectorBase::_sfConditionalOperator
     
 */
 
@@ -139,8 +139,8 @@ void ConditionalParticleAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUInt8::Description(
-        SFUInt8::getClassType(),
+    pDesc = new SFUInt16::Description(
+        SFUInt16::getClassType(),
         "ConditionalOperator",
         "",
         ConditionalOperatorFieldId, ConditionalOperatorFieldMask,
@@ -215,7 +215,7 @@ ConditionalParticleAffectorBase::TypeObject ConditionalParticleAffectorBase::_ty
     "\t</Field>\n"
     "    <Field\n"
     "\t\tname=\"ConditionalOperator\"\n"
-    "\t\ttype=\"UInt8\"\n"
+    "\t\ttype=\"UInt16\"\n"
     "        category=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -279,14 +279,14 @@ const SFString *ConditionalParticleAffectorBase::getSFConditionalAttribute(void)
 }
 
 
-SFUInt8 *ConditionalParticleAffectorBase::editSFConditionalOperator(void)
+SFUInt16 *ConditionalParticleAffectorBase::editSFConditionalOperator(void)
 {
     editSField(ConditionalOperatorFieldMask);
 
     return &_sfConditionalOperator;
 }
 
-const SFUInt8 *ConditionalParticleAffectorBase::getSFConditionalOperator(void) const
+const SFUInt16 *ConditionalParticleAffectorBase::getSFConditionalOperator(void) const
 {
     return &_sfConditionalOperator;
 }
@@ -519,7 +519,6 @@ ConditionalParticleAffector *ConditionalParticleAffectorBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr ConditionalParticleAffectorBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -565,13 +564,12 @@ FieldContainerTransitPtr ConditionalParticleAffectorBase::shallowCopy(void) cons
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 ConditionalParticleAffectorBase::ConditionalParticleAffectorBase(void) :
     Inherited(),
     _sfConditionalAttribute   (),
-    _sfConditionalOperator    (UInt8(1)),
+    _sfConditionalOperator    (UInt16(1)),
     _sfConditionalValue       (UInt32(0.0)),
     _mfAffectors              ()
 {
@@ -642,8 +640,8 @@ EditFieldHandlePtr ConditionalParticleAffectorBase::editHandleConditionalAttribu
 
 GetFieldHandlePtr ConditionalParticleAffectorBase::getHandleConditionalOperator (void) const
 {
-    SFUInt8::GetHandlePtr returnValue(
-        new  SFUInt8::GetHandle(
+    SFUInt16::GetHandlePtr returnValue(
+        new  SFUInt16::GetHandle(
              &_sfConditionalOperator,
              this->getType().getFieldDesc(ConditionalOperatorFieldId),
              const_cast<ConditionalParticleAffectorBase *>(this)));
@@ -653,8 +651,8 @@ GetFieldHandlePtr ConditionalParticleAffectorBase::getHandleConditionalOperator 
 
 EditFieldHandlePtr ConditionalParticleAffectorBase::editHandleConditionalOperator(void)
 {
-    SFUInt8::EditHandlePtr returnValue(
-        new  SFUInt8::EditHandle(
+    SFUInt16::EditHandlePtr returnValue(
+        new  SFUInt16::EditHandle(
              &_sfConditionalOperator,
              this->getType().getFieldDesc(ConditionalOperatorFieldId),
              this));
@@ -726,6 +724,7 @@ EditFieldHandlePtr ConditionalParticleAffectorBase::editHandleAffectors      (vo
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

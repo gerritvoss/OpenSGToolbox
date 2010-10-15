@@ -63,7 +63,7 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGFieldContainer.h" // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
 
 #include "OSGListModelFields.h"
@@ -80,12 +80,12 @@ class ListModel;
 
 //! \brief ListModel Base Class.
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListModelBase : public FieldContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListModelBase : public AttachmentContainer
 {
   public:
 
-    typedef FieldContainer Inherited;
-    typedef FieldContainer ParentContainer;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;

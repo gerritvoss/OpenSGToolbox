@@ -63,7 +63,7 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGEventDetails.h" // Parent
+#include "OSGSelectionEventDetails.h" // Parent
 
 #include "OSGSysFields.h"               // FirstIndex type
 
@@ -75,12 +75,12 @@ class ListSelectionEventDetails;
 
 //! \brief ListSelectionEventDetails Base Class.
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionEventDetailsBase : public EventDetails
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionEventDetailsBase : public SelectionEventDetails
 {
   public:
 
-    typedef EventDetails Inherited;
-    typedef EventDetails ParentContainer;
+    typedef SelectionEventDetails Inherited;
+    typedef SelectionEventDetails ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
@@ -97,22 +97,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionEventDetailsBase : public
     {
         FirstIndexFieldId = Inherited::NextFieldId,
         LastIndexFieldId = FirstIndexFieldId + 1,
-        ValueIsAdjustingFieldId = LastIndexFieldId + 1,
-        NextFieldId = ValueIsAdjustingFieldId + 1
+        NextFieldId = LastIndexFieldId + 1
     };
 
     static const OSG::BitVector FirstIndexFieldMask =
         (TypeTraits<BitVector>::One << FirstIndexFieldId);
     static const OSG::BitVector LastIndexFieldMask =
         (TypeTraits<BitVector>::One << LastIndexFieldId);
-    static const OSG::BitVector ValueIsAdjustingFieldMask =
-        (TypeTraits<BitVector>::One << ValueIsAdjustingFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFInt32           SFFirstIndexType;
     typedef SFInt32           SFLastIndexType;
-    typedef SFBool            SFValueIsAdjustingType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -142,14 +138,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionEventDetailsBase : public
 
             const SFInt32             *getSFLastIndex       (void) const;
 
-            const SFBool              *getSFValueIsAdjusting (void) const;
-
 
                   Int32                getFirstIndex      (void) const;
 
                   Int32                getLastIndex       (void) const;
-
-                  bool                 getValueIsAdjusting (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -219,7 +211,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionEventDetailsBase : public
 
     SFInt32           _sfFirstIndex;
     SFInt32           _sfLastIndex;
-    SFBool            _sfValueIsAdjusting;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -251,8 +242,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionEventDetailsBase : public
     EditFieldHandlePtr editHandleFirstIndex     (void);
     GetFieldHandlePtr  getHandleLastIndex       (void) const;
     EditFieldHandlePtr editHandleLastIndex      (void);
-    GetFieldHandlePtr  getHandleValueIsAdjusting (void) const;
-    EditFieldHandlePtr editHandleValueIsAdjusting(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -264,14 +253,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionEventDetailsBase : public
 
                   SFInt32             *editSFLastIndex      (void);
 
-                  SFBool              *editSFValueIsAdjusting(void);
-
 
                   Int32               &editFirstIndex     (void);
 
                   Int32               &editLastIndex      (void);
-
-                  bool                &editValueIsAdjusting(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -280,7 +265,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionEventDetailsBase : public
 
             void setFirstIndex     (const Int32 value);
             void setLastIndex      (const Int32 value);
-            void setValueIsAdjusting(const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

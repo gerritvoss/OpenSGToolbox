@@ -51,6 +51,7 @@
 #include "OSGSimpleGeometry.h"
 #include "OSGColorMaskChunk.h"
 #include "OSGPolygonChunk.h"
+#include "OSGBlendChunk.h"
 
 #include "OSGUIDrawingSurface.h"
 
@@ -116,7 +117,7 @@ Action::ResultE UIRectangle::renderActionEnterHandler(Action *action)
 
     func = boost::bind(&UIRectangle::drawPrimitives, this, _1);
 
-    a->dropFunctor(func, _State, 0, false);
+    a->dropFunctor(func, _Mat, true);
 
     if(a->pushVisibility())
     {
@@ -132,9 +133,7 @@ Action::ResultE UIRectangle::renderActionEnterHandler(Action *action)
 
 Action::ResultE UIRectangle::renderActionLeaveHandler(Action *action)
 {
-    RenderAction *a = dynamic_cast<RenderAction *>(action);
-    
-    a->popVisibility();
+    dynamic_cast<RenderAction *>(action)->popVisibility();
     
     return Action::Continue;
 }
@@ -255,7 +254,11 @@ void UIRectangle::onCreate(const UIRectangle * Id)
     }
 
 	
-	_State = State::create();
+	_Mat = ChunkMaterial::create();
+    BlendChunkUnrecPtr BlendForTransparency = BlendChunk::create();
+    BlendForTransparency->setSrcFactor(GL_SRC_ALPHA);
+    BlendForTransparency->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+    _Mat->addChunk(BlendForTransparency);
 }
 
 void UIRectangle::onDestroy()
@@ -305,6 +308,11 @@ void UIRectangle::changed(ConstFieldMaskArg whichField,
     {
         getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
 	}
+
+    if(whichField & SortKeyFieldMask)
+    {
+        _Mat->setSortKey(getSortKey());
+    }
 }
 
 void UIRectangle::dump(      UInt32    ,

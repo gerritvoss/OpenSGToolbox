@@ -90,7 +90,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<ListModel *>::_type("ListModelPtr", "FieldContainerPtr");
+DataType FieldTraits<ListModel *>::_type("ListModelPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(ListModel *)
@@ -127,7 +127,7 @@ ListModelBase::TypeObject ListModelBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"ListModel\"\n"
-    "\tparent=\"FieldContainer\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
     "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
@@ -275,7 +275,7 @@ void ListModelBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _ListDataIntervalRemovedEvent(dynamic_cast<ListDataIntervalRemovedEventDetailsType* const>(e), ListDataIntervalRemovedEventId);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -296,7 +296,7 @@ boost::signals2::connection ListModelBase::connectEvent(UInt32 eventId,
         return _ListDataIntervalRemovedEvent.connect(listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -321,7 +321,7 @@ boost::signals2::connection  ListModelBase::connectEvent(UInt32 eventId,
         return _ListDataIntervalRemovedEvent.connect(group, listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -343,7 +343,7 @@ void  ListModelBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_
         _ListDataIntervalRemovedEvent.disconnect(group);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -362,7 +362,7 @@ void  ListModelBase::disconnectAllSlotsEvent(UInt32 eventId)
         _ListDataIntervalRemovedEvent.disconnect_all_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -381,7 +381,7 @@ bool  ListModelBase::isEmptyEvent(UInt32 eventId) const
         return _ListDataIntervalRemovedEvent.empty();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
         break;
     }
@@ -401,7 +401,7 @@ UInt32  ListModelBase::numSlotsEvent(UInt32 eventId) const
         return _ListDataIntervalRemovedEvent.num_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
         break;
     }

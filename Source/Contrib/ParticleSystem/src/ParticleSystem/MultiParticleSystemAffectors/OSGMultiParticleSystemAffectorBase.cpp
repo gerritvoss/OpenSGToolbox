@@ -87,6 +87,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var bool            MultiParticleSystemAffectorBase::_sfActive
+    If true then this Affector will be applied.
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -127,6 +131,17 @@ void MultiParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Active",
+        "If true then this Affector will be applied.\n",
+        ActiveFieldId, ActiveFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiParticleSystemAffector::editHandleActive),
+        static_cast<FieldGetMethodSig >(&MultiParticleSystemAffector::getHandleActive));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -165,10 +180,20 @@ MultiParticleSystemAffectorBase::TypeObject MultiParticleSystemAffectorBase::_ty
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Active\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "\t>\n"
+    "\tIf true then this Affector will be applied.\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 
@@ -202,6 +227,19 @@ MFUnrecParticleSystemPtr *MultiParticleSystemAffectorBase::editMFSystems        
 
     return &_mfSystems;
 }
+
+SFBool *MultiParticleSystemAffectorBase::editSFActive(void)
+{
+    editSField(ActiveFieldMask);
+
+    return &_sfActive;
+}
+
+const SFBool *MultiParticleSystemAffectorBase::getSFActive(void) const
+{
+    return &_sfActive;
+}
+
 
 
 
@@ -270,6 +308,10 @@ UInt32 MultiParticleSystemAffectorBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _mfSystems.getBinSize();
     }
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        returnValue += _sfActive.getBinSize();
+    }
 
     return returnValue;
 }
@@ -283,6 +325,10 @@ void MultiParticleSystemAffectorBase::copyToBin(BinaryDataHandler &pMem,
     {
         _mfSystems.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyToBin(pMem);
+    }
 }
 
 void MultiParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -294,8 +340,11 @@ void MultiParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _mfSystems.copyFromBin(pMem);
     }
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyFromBin(pMem);
+    }
 }
-
 
 
 
@@ -303,13 +352,15 @@ void MultiParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
 
 MultiParticleSystemAffectorBase::MultiParticleSystemAffectorBase(void) :
     Inherited(),
-    _mfSystems                ()
+    _mfSystems                (),
+    _sfActive                 (bool(true))
 {
 }
 
 MultiParticleSystemAffectorBase::MultiParticleSystemAffectorBase(const MultiParticleSystemAffectorBase &source) :
     Inherited(source),
-    _mfSystems                ()
+    _mfSystems                (),
+    _sfActive                 (source._sfActive                 )
 {
 }
 
@@ -378,6 +429,32 @@ EditFieldHandlePtr MultiParticleSystemAffectorBase::editHandleSystems        (vo
 
     return returnValue;
 }
+
+GetFieldHandlePtr MultiParticleSystemAffectorBase::getHandleActive          (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfActive,
+             this->getType().getFieldDesc(ActiveFieldId),
+             const_cast<MultiParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiParticleSystemAffectorBase::editHandleActive         (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfActive,
+             this->getType().getFieldDesc(ActiveFieldId),
+             this));
+
+
+    editSField(ActiveFieldMask);
+
+    return returnValue;
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

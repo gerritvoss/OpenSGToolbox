@@ -82,31 +82,36 @@ void NewtonParticleAffector::initMethod(InitPhase ePhase)
 
 bool NewtonParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-    // getting affector's translation.  No affect is applied if the beacon cannot be found
+    Vec3f translation(0.0f,0.0f,0.0f);
+
+    // getting affector's translation.
     if(getBeacon() != NULL)
     {
-        Matrix BeaconToWorld(getBeacon()->getToWorld());
-        Vec3f translation, tmp;
+        Vec3f tmp;
         Quaternion tmp2;
+        Matrix BeaconToWorld(getBeacon()->getToWorld());
         BeaconToWorld.getTransform(translation,tmp2,tmp,tmp2);
+    }
 
-        //distance from affector to particle
-        Pnt3f particlePos = System->getPosition(ParticleIndex);
-        Real32 distanceFromAffector = particlePos.dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
+    //distance from affector to particle
+    Pnt3f particlePos = System->getPosition(ParticleIndex);
+    Real32 distanceFromAffector = particlePos.dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
 
-        //only affect the particle if it is in range
-        if((getMaxDistance() < 0.0 && distanceFromAffector >= getMinDistance()) 
-           || (distanceFromAffector <= getMaxDistance() && distanceFromAffector >= getMinDistance())) 
-        {	
-            // get direction from particle to the affector
-            Vec3f newtonianForce(particlePos.x() - translation.x(), particlePos.y() - translation.y(), particlePos.z() - translation.z());
-            newtonianForce.normalize();
-            // computing velocity change due to field
-            newtonianForce = newtonianForce *
-                (((-getMagnitude()/getParticleMass()) *
-                  elps)/OSG::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
-            // set new particle velocity
-            System->setVelocity(newtonianForce + System->getVelocity(ParticleIndex),ParticleIndex);
+    //only affect the particle if it is in range
+    if((getMaxDistance() < 0.0 && distanceFromAffector >= getMinDistance()) 
+       || (distanceFromAffector <= getMaxDistance() && distanceFromAffector >= getMinDistance())) 
+    {	
+        // get direction from particle to the affector
+        Vec3f newtonianForce(particlePos.x() - translation.x(), particlePos.y() - translation.y(), particlePos.z() - translation.z());
+        newtonianForce.normalize();
+        // computing velocity change due to field
+        newtonianForce = newtonianForce *
+            ((-getMagnitude() * elps)/OSG::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
+
+        //add acceleration
+        if(getParticleMass() != 0.0f)
+        {
+		    System->setAcceleration(System->getAcceleration(ParticleIndex) + newtonianForce/getParticleMass(),ParticleIndex);
         }
     }
 

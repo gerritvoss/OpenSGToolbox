@@ -66,9 +66,9 @@
 #include "OSGAttachmentContainer.h" // Parent
 
 #include "OSGParticleSystemFields.h"    // Systems type
+#include "OSGSysFields.h"               // Active type
 
 #include "OSGMultiParticleSystemAffectorFields.h"
-
 
 OSG_BEGIN_NAMESPACE
 
@@ -87,6 +87,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING MultiParticleSystemAffectorBase : pub
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(MultiParticleSystemAffector);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -95,16 +97,19 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING MultiParticleSystemAffectorBase : pub
     enum
     {
         SystemsFieldId = Inherited::NextFieldId,
-        NextFieldId = SystemsFieldId + 1
+        ActiveFieldId = SystemsFieldId + 1,
+        NextFieldId = ActiveFieldId + 1
     };
 
     static const OSG::BitVector SystemsFieldMask =
         (TypeTraits<BitVector>::One << SystemsFieldId);
+    static const OSG::BitVector ActiveFieldMask =
+        (TypeTraits<BitVector>::One << ActiveFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef MFUnrecParticleSystemPtr MFSystemsType;
-
+    typedef SFBool            SFActiveType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -132,14 +137,21 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING MultiParticleSystemAffectorBase : pub
             const MFUnrecParticleSystemPtr *getMFSystems        (void) const;
                   MFUnrecParticleSystemPtr *editMFSystems        (void);
 
+                  SFBool              *editSFActive         (void);
+            const SFBool              *getSFActive          (void) const;
+
 
                   ParticleSystem * getSystems        (const UInt32 index) const;
+
+                  bool                &editActive         (void);
+                  bool                 getActive          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+            void setActive         (const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -170,7 +182,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING MultiParticleSystemAffectorBase : pub
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -185,6 +196,7 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING MultiParticleSystemAffectorBase : pub
     /*! \{                                                                 */
 
     MFUnrecParticleSystemPtr _mfSystems;
+    SFBool            _sfActive;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -215,6 +227,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING MultiParticleSystemAffectorBase : pub
 
     GetFieldHandlePtr  getHandleSystems         (void) const;
     EditFieldHandlePtr editHandleSystems        (void);
+    GetFieldHandlePtr  getHandleActive          (void) const;
+    EditFieldHandlePtr editHandleActive         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

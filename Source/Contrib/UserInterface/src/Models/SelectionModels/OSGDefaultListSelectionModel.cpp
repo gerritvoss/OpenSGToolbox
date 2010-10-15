@@ -86,7 +86,8 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 	if (index0 >= 0 && index1 >= 0)
 	{
         bool ShouldProduceSelectionChangeEvent(false);
-        ListSelectionEventDetailsUnrecPtr TheListSelectionEvent = ListSelectionEventDetails::create(this, 0, 0, 0, false);
+        std::vector<UInt32> PrevSelectedIndexes(getSelectedIndexes());
+	    IndexRange changedRange(index0, index1);
 		switch (getSelectionMode())
 		{
 			case SINGLE_SELECTION:
@@ -97,7 +98,7 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 					_RangeSelectionList.push_back(range);
 					// the only objects changed is in the range itself
                     ShouldProduceSelectionChangeEvent = true;
-				    TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting);
+                    changedRange = range;
 				}
 				else if (_RangeSelectionList.front() != range) // if the new range is the same as the first one, then nothing has to be done
 				{
@@ -106,7 +107,7 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(range);
                     ShouldProduceSelectionChangeEvent = true;
-				    TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting);
+                    changedRange = minMax;
 				}
 				break;
 			case SINGLE_INTERVAL_SELECTION:
@@ -121,7 +122,7 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 					// if it is empty, then the new range merely needs to be pushed onto the list
 					_RangeSelectionList.push_back(newRange);
                     ShouldProduceSelectionChangeEvent = true;
-				    TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), newRange.StartIndex, newRange.EndIndex, _ValueIsAdjusting);
+                    changedRange = newRange;
 				}
 				else if (_RangeSelectionList.front() != newRange)
 				{
@@ -130,7 +131,7 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(newRange);
                     ShouldProduceSelectionChangeEvent = true;
-				    TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting);
+                    changedRange = minMax;
 				}
 				break;
 			case MULTIPLE_INTERVAL_SELECTION:
@@ -139,7 +140,7 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 				//{
 					_RangeSelectionList.push_back(range);
                     ShouldProduceSelectionChangeEvent = true;
-				    TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting);
+                    changedRange = range;
 				//}
 				break;
 			default:
@@ -151,6 +152,8 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 		updateMinMax();
         if(ShouldProduceSelectionChangeEvent)
         {
+            std::vector<UInt32> SelectedIndexes(getSelectedIndexes());
+		    ListSelectionEventDetailsUnrecPtr TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), changedRange.StartIndex, changedRange.EndIndex, SelectedIndexes, PrevSelectedIndexes, _ValueIsAdjusting);
             produceSelectionChanged(TheListSelectionEvent);
         }
 	}
@@ -158,10 +161,12 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 
 void 	DefaultListSelectionModel::clearSelection(void)
 {
+    std::vector<UInt32> PrevSelectedIndexes(getSelectedIndexes());
 	_RangeSelectionList.clear();
     updateMinMax();
     _AnchorSelectionIndex = _LeadSelectionIndex = -1;
-    ListSelectionEventDetailsUnrecPtr Details(ListSelectionEventDetails::create(this, getSystemTime(), _MinSelectionIndex, _MaxSelectionIndex, _ValueIsAdjusting));
+    std::vector<UInt32> SelectedIndexes(getSelectedIndexes());
+    ListSelectionEventDetailsUnrecPtr Details(ListSelectionEventDetails::create(this, getSystemTime(), _MinSelectionIndex, _MaxSelectionIndex, SelectedIndexes, PrevSelectedIndexes, _ValueIsAdjusting));
     produceSelectionChanged(Details);
 }
 
@@ -213,17 +218,21 @@ void 	DefaultListSelectionModel::insertIndexInterval(UInt32 index, UInt32 length
 				range.EndIndex = range.StartIndex;
 			if (_RangeSelectionList.empty())
 			{
+                std::vector<UInt32> PrevSelectedIndexes(getSelectedIndexes());
 				_RangeSelectionList.push_back(range);
-                ListSelectionEventDetailsUnrecPtr Details(ListSelectionEventDetails::create(this, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
+                std::vector<UInt32> SelectedIndexes(getSelectedIndexes());
+                ListSelectionEventDetailsUnrecPtr Details(ListSelectionEventDetails::create(this, getSystemTime(), range.StartIndex, range.EndIndex, SelectedIndexes, PrevSelectedIndexes, _ValueIsAdjusting));
                 produceSelectionChanged(Details);
 			}
 			else if (_RangeSelectionList.front() != range)
 			{
+                std::vector<UInt32> PrevSelectedIndexes(getSelectedIndexes());
 				IndexRange minMax(getMinMaxSelection(_RangeSelectionList.front(), range));
 				_RangeSelectionList.clear();
 				_RangeSelectionList.push_back(range);
 				updateMinMax();
-                ListSelectionEventDetailsUnrecPtr Details(ListSelectionEventDetails::create(this, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting));
+                std::vector<UInt32> SelectedIndexes(getSelectedIndexes());
+                ListSelectionEventDetailsUnrecPtr Details(ListSelectionEventDetails::create(this, getSystemTime(), minMax.StartIndex, minMax.EndIndex, SelectedIndexes, PrevSelectedIndexes, _ValueIsAdjusting));
                 produceSelectionChanged(Details);
 			}
 			break;
@@ -259,7 +268,8 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 	RangeSelectionListItor ListItor;
 	IndexRange range(index0, index1);
     bool ShouldProduceSelectionChangeEvent(false);
-    ListSelectionEventDetailsUnrecPtr TheListSelectionEvent = ListSelectionEventDetails::create(this, 0, 0, 0, false);
+    std::vector<UInt32> PrevSelectedIndexes(getSelectedIndexes());
+    IndexRange changedRange(index0, index1);
 	switch (getSelectionMode())
 	{
 		case SINGLE_INTERVAL_SELECTION:
@@ -270,7 +280,7 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 				range = _RangeSelectionList.front();
 				_RangeSelectionList.clear();
                 ShouldProduceSelectionChangeEvent = true;
-				TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting);
+                changedRange = range;
 			}
 			break;
 		case MULTIPLE_INTERVAL_SELECTION:
@@ -290,7 +300,7 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 						(*ListItor).EndIndex = index1 - 1;
 					}
                     ShouldProduceSelectionChangeEvent = true;
-					TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), index1, index1, _ValueIsAdjusting);
+                    changedRange.StartIndex = changedRange.EndIndex = index1;
 				}
 			}
 			break;
@@ -302,6 +312,8 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 	updateMinMax();
     if(ShouldProduceSelectionChangeEvent)
     {
+        std::vector<UInt32> SelectedIndexes(getSelectedIndexes());
+        ListSelectionEventDetailsUnrecPtr TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), changedRange.StartIndex, changedRange.EndIndex, SelectedIndexes, PrevSelectedIndexes, _ValueIsAdjusting);
         produceSelectionChanged(TheListSelectionEvent);
     }
 }
@@ -315,6 +327,7 @@ void 	DefaultListSelectionModel::removeSelectionInterval(UInt32 index0, UInt32 i
 			// presently, these two options merely removes the existing range if there is something there
 			if (!_RangeSelectionList.empty())
 			{
+                std::vector<UInt32> PrevSelectedIndexes(getSelectedIndexes());
 			    if (index1 < index0)
 			    {
 				    UInt32 temp(index0);
@@ -334,7 +347,8 @@ void 	DefaultListSelectionModel::removeSelectionInterval(UInt32 index0, UInt32 i
                     _RangeSelectionList.push_back(range);
                 }
 				updateMinMax();
-                ListSelectionEventDetailsUnrecPtr Details(ListSelectionEventDetails::create(this, getSystemTime(), osgMin(index0,range.StartIndex), osgMax(index0,range.EndIndex), _ValueIsAdjusting));
+                std::vector<UInt32> SelectedIndexes(getSelectedIndexes());
+                ListSelectionEventDetailsUnrecPtr Details(ListSelectionEventDetails::create(this, getSystemTime(), osgMin(index0,range.StartIndex), osgMax(index0,range.EndIndex), SelectedIndexes, PrevSelectedIndexes, _ValueIsAdjusting));
                 produceSelectionChanged(Details);
 			}
 			else
@@ -402,7 +416,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 	if (index0 >= 0 && index1 >= 0) // anchor and lead are initiated to -1
 	{
         bool ShouldProduceSelectionChangeEvent(false);
-        ListSelectionEventDetailsUnrecPtr TheListSelectionEvent = ListSelectionEventDetails::create(this, 0, 0, 0, false);
+        std::vector<UInt32> PrevSelectedIndexes(getSelectedIndexes());
+        IndexRange changedRange(index0, index1);
 		switch (getSelectionMode())
 		{
 			case SINGLE_SELECTION:
@@ -412,7 +427,7 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 				{
 					_RangeSelectionList.push_back(range);
                     ShouldProduceSelectionChangeEvent = true;
-					TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting);
+                    changedRange = range;
 				}
 				else if (_RangeSelectionList.front() != range)
 				{
@@ -420,7 +435,7 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(range);
                     ShouldProduceSelectionChangeEvent = true;
-					TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting);
+                    changedRange = minMax;
 				}
 				break;
 			case MULTIPLE_INTERVAL_SELECTION:
@@ -436,7 +451,7 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 				{
 					_RangeSelectionList.push_back(newRange);
                     ShouldProduceSelectionChangeEvent = true;
-					TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), newRange.StartIndex, newRange.EndIndex, _ValueIsAdjusting);
+                    changedRange = newRange;
 				}
 				else if (_RangeSelectionList.front() != newRange)
 				{
@@ -448,7 +463,7 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(newRange);
                     ShouldProduceSelectionChangeEvent = true;
-					TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting);
+                    changedRange = minMax;
 				}
 				break;
 			default:
@@ -460,6 +475,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 		updateMinMax();
         if(ShouldProduceSelectionChangeEvent)
         {
+            std::vector<UInt32> SelectedIndexes(getSelectedIndexes());
+            ListSelectionEventDetailsUnrecPtr TheListSelectionEvent = ListSelectionEventDetails::create(this, getSystemTime(), changedRange.StartIndex, changedRange.EndIndex, SelectedIndexes, PrevSelectedIndexes, _ValueIsAdjusting);
             produceSelectionChanged(TheListSelectionEvent);
         }
 	}
@@ -587,10 +604,13 @@ void DefaultListSelectionModel::changed(ConstFieldMaskArg whichField,
         // if there were objects selected, since they might not fit into
 	    // the new mode, just clear them all out
 	    if (!_RangeSelectionList.empty())
-	    {   // only necessary to do anything if it isn't already empty
-		    ListSelectionEventDetailsUnrecPtr Details = ListSelectionEventDetails::create(this, getSystemTime(), _MinSelectionIndex, _MaxSelectionIndex, _ValueIsAdjusting);
+	    {   
+            // only necessary to do anything if it isn't already empty
+            std::vector<UInt32> PrevSelectedIndexes(getSelectedIndexes());
 		    _RangeSelectionList.clear();
 		    updateMinMax();
+            std::vector<UInt32> SelectedIndexes(getSelectedIndexes());
+		    ListSelectionEventDetailsUnrecPtr Details = ListSelectionEventDetails::create(this, getSystemTime(), _MinSelectionIndex, _MaxSelectionIndex, SelectedIndexes, PrevSelectedIndexes, _ValueIsAdjusting);
 		    produceSelectionChanged(Details);
 	    }
     }

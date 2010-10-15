@@ -76,6 +76,21 @@ void ListSelectionModel::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+std::vector<UInt32> ListSelectionModel::getSelectedIndexes(void) const
+{
+    std::vector<UInt32> Result;
+
+    for(Int32 i(getMinSelectionIndex()) ; i>=0 && i<=getMaxSelectionIndex() ; ++i)
+    {
+        if(isSelectedIndex(i))
+        {
+            Result.push_back(i);
+        }
+    }
+
+    return Result;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

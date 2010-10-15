@@ -93,6 +93,14 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaActivity : public LuaActivityBase
                                             std::string funcName,
                                             const std::string& producedEventName);
 
+    static void removeLuaCallback(FieldContainerRefPtr producerObject,
+                                  std::string funcName,
+                                  UInt32 producedEventId);
+    
+    static void removeLuaCallback(FieldContainerRefPtr producerObject,
+                                  std::string funcName,
+                                  const std::string& producedEventName);
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -122,6 +130,24 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaActivity : public LuaActivityBase
 
     /*! \}                                                                 */
     std::vector< std::string > _EntryFunctionPath;
+
+    struct LuaFuncGroup
+    {
+        LuaFuncGroup(FieldContainer* EventProducer, std::string Function, UInt32 ProducedEventID);
+        
+        FieldContainer* _EventProducer;
+        std::string     _Function;
+        UInt32          _ProducedEventID;
+    };
+
+    struct LuaFuncComp
+    {
+        bool operator()(const LuaFuncGroup& Left, const LuaFuncGroup& Right) const;
+    };
+
+    typedef std::pair<LuaActivityUnrecPtr, boost::signals2::connection> ActivityConnectionPair;
+    typedef std::map<LuaFuncGroup, ActivityConnectionPair, LuaFuncComp > FuncMap;
+    static FuncMap _GlobalLuaActivities;
     /*==========================  PRIVATE  ================================*/
 
   private:

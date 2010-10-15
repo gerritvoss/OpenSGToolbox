@@ -94,6 +94,14 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var Real32          CollectiveGravityParticleSystemAffectorBase::_sfMinDistance
+    
+*/
+
+/*! \var Real32          CollectiveGravityParticleSystemAffectorBase::_sfMaxDistance
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -157,6 +165,30 @@ void CollectiveGravityParticleSystemAffectorBase::classDescInserter(TypeObject &
         static_cast<FieldGetMethodSig >(&CollectiveGravityParticleSystemAffector::getHandleParticleMassSource));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MinDistance",
+        "",
+        MinDistanceFieldId, MinDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CollectiveGravityParticleSystemAffector::editHandleMinDistance),
+        static_cast<FieldGetMethodSig >(&CollectiveGravityParticleSystemAffector::getHandleMinDistance));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxDistance",
+        "",
+        MaxDistanceFieldId, MaxDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CollectiveGravityParticleSystemAffector::editHandleMaxDistance),
+        static_cast<FieldGetMethodSig >(&CollectiveGravityParticleSystemAffector::getHandleMaxDistance));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -214,6 +246,26 @@ CollectiveGravityParticleSystemAffectorBase::TypeObject CollectiveGravityParticl
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
     "\t\tdefaultValue=\"CollectiveGravityParticleSystemAffector::MASS_STATIC\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"-1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"-1.0\"\n"
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
@@ -279,6 +331,32 @@ const SFUInt32 *CollectiveGravityParticleSystemAffectorBase::getSFParticleMassSo
 }
 
 
+SFReal32 *CollectiveGravityParticleSystemAffectorBase::editSFMinDistance(void)
+{
+    editSField(MinDistanceFieldMask);
+
+    return &_sfMinDistance;
+}
+
+const SFReal32 *CollectiveGravityParticleSystemAffectorBase::getSFMinDistance(void) const
+{
+    return &_sfMinDistance;
+}
+
+
+SFReal32 *CollectiveGravityParticleSystemAffectorBase::editSFMaxDistance(void)
+{
+    editSField(MaxDistanceFieldMask);
+
+    return &_sfMaxDistance;
+}
+
+const SFReal32 *CollectiveGravityParticleSystemAffectorBase::getSFMaxDistance(void) const
+{
+    return &_sfMaxDistance;
+}
+
+
 
 
 
@@ -301,6 +379,14 @@ UInt32 CollectiveGravityParticleSystemAffectorBase::getBinSize(ConstFieldMaskArg
     {
         returnValue += _sfParticleMassSource.getBinSize();
     }
+    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
+    {
+        returnValue += _sfMinDistance.getBinSize();
+    }
+    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
+    {
+        returnValue += _sfMaxDistance.getBinSize();
+    }
 
     return returnValue;
 }
@@ -322,6 +408,14 @@ void CollectiveGravityParticleSystemAffectorBase::copyToBin(BinaryDataHandler &p
     {
         _sfParticleMassSource.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
+    {
+        _sfMinDistance.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
+    {
+        _sfMaxDistance.copyToBin(pMem);
+    }
 }
 
 void CollectiveGravityParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -340,6 +434,14 @@ void CollectiveGravityParticleSystemAffectorBase::copyFromBin(BinaryDataHandler 
     if(FieldBits::NoField != (ParticleMassSourceFieldMask & whichField))
     {
         _sfParticleMassSource.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
+    {
+        _sfMinDistance.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
+    {
+        _sfMaxDistance.copyFromBin(pMem);
     }
 }
 
@@ -415,7 +517,6 @@ CollectiveGravityParticleSystemAffector *CollectiveGravityParticleSystemAffector
     return returnValue;
 }
 
-
 FieldContainerTransitPtr CollectiveGravityParticleSystemAffectorBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -461,14 +562,15 @@ FieldContainerTransitPtr CollectiveGravityParticleSystemAffectorBase::shallowCop
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 CollectiveGravityParticleSystemAffectorBase::CollectiveGravityParticleSystemAffectorBase(void) :
     Inherited(),
     _sfParticleMass           (Real32(10000.0f)),
     _sfGravitationalConstant  (Real32(0.0000000000667300)),
-    _sfParticleMassSource     (UInt32(CollectiveGravityParticleSystemAffector::MASS_STATIC))
+    _sfParticleMassSource     (UInt32(CollectiveGravityParticleSystemAffector::MASS_STATIC)),
+    _sfMinDistance            (Real32(-1.0)),
+    _sfMaxDistance            (Real32(-1.0))
 {
 }
 
@@ -476,7 +578,9 @@ CollectiveGravityParticleSystemAffectorBase::CollectiveGravityParticleSystemAffe
     Inherited(source),
     _sfParticleMass           (source._sfParticleMass           ),
     _sfGravitationalConstant  (source._sfGravitationalConstant  ),
-    _sfParticleMassSource     (source._sfParticleMassSource     )
+    _sfParticleMassSource     (source._sfParticleMassSource     ),
+    _sfMinDistance            (source._sfMinDistance            ),
+    _sfMaxDistance            (source._sfMaxDistance            )
 {
 }
 
@@ -562,6 +666,57 @@ EditFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::editHandlePartic
 
     return returnValue;
 }
+
+GetFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::getHandleMinDistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinDistance,
+             this->getType().getFieldDesc(MinDistanceFieldId),
+             const_cast<CollectiveGravityParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::editHandleMinDistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinDistance,
+             this->getType().getFieldDesc(MinDistanceFieldId),
+             this));
+
+
+    editSField(MinDistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::getHandleMaxDistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             const_cast<CollectiveGravityParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::editHandleMaxDistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             this));
+
+
+    editSField(MaxDistanceFieldMask);
+
+    return returnValue;
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

@@ -211,6 +211,20 @@ void FCPtrFieldEditor::internalStopEditing  (void)
     {
         FCId = "0";
     }
+    else
+    {
+        //Make sure the Id can be cast to a UInt32
+        try
+        {
+            UInt32 CastTest = boost::lexical_cast<UInt32>(FCId);
+        }
+        catch(boost::bad_lexical_cast &)
+        {
+            //If it can't then cancel editing
+            internalCancelEditing();
+            return;
+        }
+    }
 
     //Call the command to set the Field
     SetFieldValueCommandPtr SetCommand = SetFieldValueCommand::create(getEditingFC(), getEditingFieldId(), FCId, getEditingFieldIndex());

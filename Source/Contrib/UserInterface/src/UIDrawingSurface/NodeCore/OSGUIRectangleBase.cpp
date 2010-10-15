@@ -114,6 +114,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var Int32           UIRectangleBase::_sfSortKey
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -225,6 +229,18 @@ void UIRectangleBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&UIRectangle::getHandleMouseTransformFunctor));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "SortKey",
+        "",
+        SortKeyFieldId, SortKeyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIRectangle::editHandleSortKey),
+        static_cast<FieldGetMethodSig >(&UIRectangle::getHandleSortKey));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -323,6 +339,16 @@ UIRectangleBase::TypeObject UIRectangleBase::_type(
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"NULL\"\n"
     "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SortKey\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0\"\n"
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
@@ -440,6 +466,19 @@ SFUnrecUIRectangleMouseTransformFunctorPtr *UIRectangleBase::editSFMouseTransfor
     return &_sfMouseTransformFunctor;
 }
 
+SFInt32 *UIRectangleBase::editSFSortKey(void)
+{
+    editSField(SortKeyFieldMask);
+
+    return &_sfSortKey;
+}
+
+const SFInt32 *UIRectangleBase::getSFSortKey(void) const
+{
+    return &_sfSortKey;
+}
+
+
 
 
 
@@ -478,6 +517,10 @@ UInt32 UIRectangleBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfMouseTransformFunctor.getBinSize();
     }
+    if(FieldBits::NoField != (SortKeyFieldMask & whichField))
+    {
+        returnValue += _sfSortKey.getBinSize();
+    }
 
     return returnValue;
 }
@@ -515,6 +558,10 @@ void UIRectangleBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfMouseTransformFunctor.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (SortKeyFieldMask & whichField))
+    {
+        _sfSortKey.copyToBin(pMem);
+    }
 }
 
 void UIRectangleBase::copyFromBin(BinaryDataHandler &pMem,
@@ -549,6 +596,10 @@ void UIRectangleBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
         _sfMouseTransformFunctor.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (SortKeyFieldMask & whichField))
+    {
+        _sfSortKey.copyFromBin(pMem);
     }
 }
 
@@ -624,7 +675,6 @@ UIRectangle *UIRectangleBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr UIRectangleBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -670,7 +720,6 @@ FieldContainerTransitPtr UIRectangleBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 UIRectangleBase::UIRectangleBase(void) :
@@ -681,7 +730,8 @@ UIRectangleBase::UIRectangleBase(void) :
     _sfDrawingSurface         (NULL),
     _sfRectColorMask          (NULL),
     _sfRectPolygon            (NULL),
-    _sfMouseTransformFunctor  (NULL)
+    _sfMouseTransformFunctor  (NULL),
+    _sfSortKey                (Int32(0))
 {
 }
 
@@ -693,7 +743,8 @@ UIRectangleBase::UIRectangleBase(const UIRectangleBase &source) :
     _sfDrawingSurface         (NULL),
     _sfRectColorMask          (NULL),
     _sfRectPolygon            (NULL),
-    _sfMouseTransformFunctor  (NULL)
+    _sfMouseTransformFunctor  (NULL),
+    _sfSortKey                (source._sfSortKey                )
 {
 }
 
@@ -908,6 +959,32 @@ EditFieldHandlePtr UIRectangleBase::editHandleMouseTransformFunctor(void)
 
     return returnValue;
 }
+
+GetFieldHandlePtr UIRectangleBase::getHandleSortKey         (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfSortKey,
+             this->getType().getFieldDesc(SortKeyFieldId),
+             const_cast<UIRectangleBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIRectangleBase::editHandleSortKey        (void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfSortKey,
+             this->getType().getFieldDesc(SortKeyFieldId),
+             this));
+
+
+    editSField(SortKeyFieldMask);
+
+    return returnValue;
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

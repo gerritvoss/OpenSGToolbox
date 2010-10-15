@@ -90,17 +90,13 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var bool            ListSelectionEventDetailsBase::_sfValueIsAdjusting
-    
-*/
-
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<ListSelectionEventDetails *>::_type("ListSelectionEventDetailsPtr", "EventDetailsPtr");
+DataType FieldTraits<ListSelectionEventDetails *>::_type("ListSelectionEventDetailsPtr", "SelectionEventDetailsPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(ListSelectionEventDetails *)
@@ -145,18 +141,6 @@ void ListSelectionEventDetailsBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&ListSelectionEventDetails::getHandleLastIndex));
 
     oType.addInitialDesc(pDesc);
-
-    pDesc = new SFBool::Description(
-        SFBool::getClassType(),
-        "ValueIsAdjusting",
-        "",
-        ValueIsAdjustingFieldId, ValueIsAdjustingFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&ListSelectionEventDetails::editHandleValueIsAdjusting),
-        static_cast<FieldGetMethodSig >(&ListSelectionEventDetails::getHandleValueIsAdjusting));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -175,7 +159,7 @@ ListSelectionEventDetailsBase::TypeObject ListSelectionEventDetailsBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"ListSelectionEventDetails\"\n"
-    "\tparent=\"EventDetails\"\n"
+    "\tparent=\"SelectionEventDetails\"\n"
     "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
@@ -206,17 +190,6 @@ ListSelectionEventDetailsBase::TypeObject ListSelectionEventDetailsBase::_type(
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"protected\"\n"
     "\t\tdefaultValue=\"-1\"\n"
-    "        publicRead=\"true\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"ValueIsAdjusting\"\n"
-    "\t\ttype=\"bool\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t\tdefaultValue=\"true\"\n"
     "        publicRead=\"true\"\n"
     "\t>\n"
     "\t</Field>\n"
@@ -270,19 +243,6 @@ const SFInt32 *ListSelectionEventDetailsBase::getSFLastIndex(void) const
 }
 
 
-SFBool *ListSelectionEventDetailsBase::editSFValueIsAdjusting(void)
-{
-    editSField(ValueIsAdjustingFieldMask);
-
-    return &_sfValueIsAdjusting;
-}
-
-const SFBool *ListSelectionEventDetailsBase::getSFValueIsAdjusting(void) const
-{
-    return &_sfValueIsAdjusting;
-}
-
-
 
 
 
@@ -301,10 +261,6 @@ UInt32 ListSelectionEventDetailsBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfLastIndex.getBinSize();
     }
-    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
-    {
-        returnValue += _sfValueIsAdjusting.getBinSize();
-    }
 
     return returnValue;
 }
@@ -322,10 +278,6 @@ void ListSelectionEventDetailsBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfLastIndex.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
-    {
-        _sfValueIsAdjusting.copyToBin(pMem);
-    }
 }
 
 void ListSelectionEventDetailsBase::copyFromBin(BinaryDataHandler &pMem,
@@ -340,10 +292,6 @@ void ListSelectionEventDetailsBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (LastIndexFieldMask & whichField))
     {
         _sfLastIndex.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
-    {
-        _sfValueIsAdjusting.copyFromBin(pMem);
     }
 }
 
@@ -487,16 +435,14 @@ FieldContainerTransitPtr ListSelectionEventDetailsBase::shallowCopy(void) const
 ListSelectionEventDetailsBase::ListSelectionEventDetailsBase(void) :
     Inherited(),
     _sfFirstIndex             (Int32(-1)),
-    _sfLastIndex              (Int32(-1)),
-    _sfValueIsAdjusting       (bool(true))
+    _sfLastIndex              (Int32(-1))
 {
 }
 
 ListSelectionEventDetailsBase::ListSelectionEventDetailsBase(const ListSelectionEventDetailsBase &source) :
     Inherited(source),
     _sfFirstIndex             (source._sfFirstIndex             ),
-    _sfLastIndex              (source._sfLastIndex              ),
-    _sfValueIsAdjusting       (source._sfValueIsAdjusting       )
+    _sfLastIndex              (source._sfLastIndex              )
 {
 }
 
@@ -554,31 +500,6 @@ EditFieldHandlePtr ListSelectionEventDetailsBase::editHandleLastIndex      (void
 
 
     editSField(LastIndexFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ListSelectionEventDetailsBase::getHandleValueIsAdjusting (void) const
-{
-    SFBool::GetHandlePtr returnValue(
-        new  SFBool::GetHandle(
-             &_sfValueIsAdjusting,
-             this->getType().getFieldDesc(ValueIsAdjustingFieldId),
-             const_cast<ListSelectionEventDetailsBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ListSelectionEventDetailsBase::editHandleValueIsAdjusting(void)
-{
-    SFBool::EditHandlePtr returnValue(
-        new  SFBool::EditHandle(
-             &_sfValueIsAdjusting,
-             this->getType().getFieldDesc(ValueIsAdjustingFieldId),
-             this));
-
-
-    editSField(ValueIsAdjustingFieldMask);
 
     return returnValue;
 }

@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -130,31 +131,6 @@ void ParticleSystemCoreBase::setSortingMode(const UInt32 value)
 
     _sfSortingMode.setValue(value);
 }
-//! Get the value of the ParticleSystemCore::_sfPreviousSize field.
-
-inline
-UInt32 &ParticleSystemCoreBase::editPreviousSize(void)
-{
-    editSField(PreviousSizeFieldMask);
-
-    return _sfPreviousSize.getValue();
-}
-
-//! Get the value of the ParticleSystemCore::_sfPreviousSize field.
-inline
-      UInt32  ParticleSystemCoreBase::getPreviousSize(void) const
-{
-    return _sfPreviousSize.getValue();
-}
-
-//! Set the value of the ParticleSystemCore::_sfPreviousSize field.
-inline
-void ParticleSystemCoreBase::setPreviousSize(const UInt32 value)
-{
-    editSField(PreviousSizeFieldMask);
-
-    _sfPreviousSize.setValue(value);
-}
 
 //! Get the value of the \a index element the ParticleSystemCore::_mfSort field.
 inline
@@ -171,6 +147,7 @@ UInt32 &ParticleSystemCoreBase::editSort(const UInt32 index)
     return _mfSort[index];
 }
 
+
 //! Get the value of the \a index element the ParticleSystemCore::_mfDistances field.
 inline
       Real32  ParticleSystemCoreBase::getDistances(const UInt32 index) const
@@ -184,38 +161,6 @@ Real32 &ParticleSystemCoreBase::editDistances(const UInt32 index)
     editMField(DistancesFieldMask, _mfDistances);
 
     return _mfDistances[index];
-}
-
-
-//! Get the value of the \a index element the ParticleSystemCore::_mfHistogram field.
-inline
-      UInt32  ParticleSystemCoreBase::getHistogram(const UInt32 index) const
-{
-    return _mfHistogram[index];
-}
-
-inline
-UInt32 &ParticleSystemCoreBase::editHistogram(const UInt32 index)
-{
-    editMField(HistogramFieldMask, _mfHistogram);
-
-    return _mfHistogram[index];
-}
-
-
-//! Get the value of the \a index element the ParticleSystemCore::_mfOffset field.
-inline
-      UInt32  ParticleSystemCoreBase::getOffset(const UInt32 index) const
-{
-    return _mfOffset[index];
-}
-
-inline
-UInt32 &ParticleSystemCoreBase::editOffset(const UInt32 index)
-{
-    editMField(OffsetFieldMask, _mfOffset);
-
-    return _mfOffset[index];
 }
 
 
@@ -250,21 +195,6 @@ void ParticleSystemCoreBase::execSync (      ParticleSystemCoreBase *pFrom,
                                 syncMode,
                                 uiSyncInfo,
                                 oOffsets);
-
-    if(FieldBits::NoField != (HistogramFieldMask & whichField))
-        _mfHistogram.syncWith(pFrom->_mfHistogram,
-                                syncMode,
-                                uiSyncInfo,
-                                oOffsets);
-
-    if(FieldBits::NoField != (OffsetFieldMask & whichField))
-        _mfOffset.syncWith(pFrom->_mfOffset,
-                                syncMode,
-                                uiSyncInfo,
-                                oOffsets);
-
-    if(FieldBits::NoField != (PreviousSizeFieldMask & whichField))
-        _sfPreviousSize.syncWith(pFrom->_sfPreviousSize);
 }
 #endif
 

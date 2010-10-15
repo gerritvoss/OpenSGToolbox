@@ -57,9 +57,6 @@
 #include "OSGConfig.h"
 
 
-#include "OSGParticleSystemEventDetails.h"
-#include "OSGParticleEventDetails.h"
-
 
 #include "OSGNode.h"                    // Beacon Class
 #include "OSGParticleGenerator.h"       // Generators Class
@@ -171,6 +168,14 @@ OSG_BEGIN_NAMESPACE
 /*! \var bool            ParticleSystemBase::_sfUpdateSecAttribs
     If true then the secondary position, and velocity will be updated every frame to
     the previous value of position and velocity respectively.
+*/
+
+/*! \var bool            ParticleSystemBase::_sfClearVelocities
+    If true then the velocities of every particle will be set to 0 every update before Affectors are applied.
+*/
+
+/*! \var bool            ParticleSystemBase::_sfClearAccelerations
+    If true then the accelerations of every particle will be set to 0 every update before Affectors are applied.
 */
 
 /*! \var Time            ParticleSystemBase::_sfLastElapsedTime
@@ -432,6 +437,30 @@ void ParticleSystemBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleUpdateSecAttribs),
         static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleUpdateSecAttribs));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ClearVelocities",
+        "If true then the velocities of every particle will be set to 0 every update before Affectors are applied.\n",
+        ClearVelocitiesFieldId, ClearVelocitiesFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleClearVelocities),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleClearVelocities));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ClearAccelerations",
+        "If true then the accelerations of every particle will be set to 0 every update before Affectors are applied.\n",
+        ClearAccelerationsFieldId, ClearAccelerationsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleClearAccelerations),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleClearAccelerations));
 
     oType.addInitialDesc(pDesc);
 
@@ -716,6 +745,28 @@ ParticleSystemBase::TypeObject ParticleSystemBase::_type(
     "\t>\n"
     "   If true then the secondary position, and velocity will be updated every frame to\n"
     "   the previous value of position and velocity respectively.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ClearVelocities\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   If true then the velocities of every particle will be set to 0 every update before Affectors are applied.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ClearAccelerations\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   If true then the accelerations of every particle will be set to 0 every update before Affectors are applied.\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"LastElapsedTime\"\n"
@@ -1097,6 +1148,32 @@ const SFBool *ParticleSystemBase::getSFUpdateSecAttribs(void) const
 }
 
 
+SFBool *ParticleSystemBase::editSFClearVelocities(void)
+{
+    editSField(ClearVelocitiesFieldMask);
+
+    return &_sfClearVelocities;
+}
+
+const SFBool *ParticleSystemBase::getSFClearVelocities(void) const
+{
+    return &_sfClearVelocities;
+}
+
+
+SFBool *ParticleSystemBase::editSFClearAccelerations(void)
+{
+    editSField(ClearAccelerationsFieldMask);
+
+    return &_sfClearAccelerations;
+}
+
+const SFBool *ParticleSystemBase::getSFClearAccelerations(void) const
+{
+    return &_sfClearAccelerations;
+}
+
+
 SFTime *ParticleSystemBase::editSFLastElapsedTime(void)
 {
     editSField(LastElapsedTimeFieldMask);
@@ -1408,6 +1485,14 @@ UInt32 ParticleSystemBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfUpdateSecAttribs.getBinSize();
     }
+    if(FieldBits::NoField != (ClearVelocitiesFieldMask & whichField))
+    {
+        returnValue += _sfClearVelocities.getBinSize();
+    }
+    if(FieldBits::NoField != (ClearAccelerationsFieldMask & whichField))
+    {
+        returnValue += _sfClearAccelerations.getBinSize();
+    }
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
     {
         returnValue += _sfLastElapsedTime.getBinSize();
@@ -1505,6 +1590,14 @@ void ParticleSystemBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfUpdateSecAttribs.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (ClearVelocitiesFieldMask & whichField))
+    {
+        _sfClearVelocities.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (ClearAccelerationsFieldMask & whichField))
+    {
+        _sfClearAccelerations.copyToBin(pMem);
+    }
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
     {
         _sfLastElapsedTime.copyToBin(pMem);
@@ -1599,6 +1692,14 @@ void ParticleSystemBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
     {
         _sfUpdateSecAttribs.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ClearVelocitiesFieldMask & whichField))
+    {
+        _sfClearVelocities.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ClearAccelerationsFieldMask & whichField))
+    {
+        _sfClearAccelerations.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
     {
@@ -1698,7 +1799,6 @@ ParticleSystem *ParticleSystemBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr ParticleSystemBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -1780,7 +1880,7 @@ void ParticleSystemBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _ParticleStolenEvent(dynamic_cast<ParticleStolenEventDetailsType* const>(e), ParticleStolenEventId);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -1807,7 +1907,7 @@ boost::signals2::connection ParticleSystemBase::connectEvent(UInt32 eventId,
         return _ParticleStolenEvent.connect(listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -1838,7 +1938,7 @@ boost::signals2::connection  ParticleSystemBase::connectEvent(UInt32 eventId,
         return _ParticleStolenEvent.connect(group, listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -1866,7 +1966,7 @@ void  ParticleSystemBase::disconnectEvent(UInt32 eventId, const BaseEventType::g
         _ParticleStolenEvent.disconnect(group);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -1891,7 +1991,7 @@ void  ParticleSystemBase::disconnectAllSlotsEvent(UInt32 eventId)
         _ParticleStolenEvent.disconnect_all_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -1916,7 +2016,7 @@ bool  ParticleSystemBase::isEmptyEvent(UInt32 eventId) const
         return _ParticleStolenEvent.empty();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
         break;
     }
@@ -1942,7 +2042,7 @@ UInt32  ParticleSystemBase::numSlotsEvent(UInt32 eventId) const
         return _ParticleStolenEvent.num_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
         break;
     }
@@ -1969,6 +2069,8 @@ ParticleSystemBase::ParticleSystemBase(void) :
     _sfMaxParticles           (UInt32(4294967295)),
     _sfDynamic                (bool(true)),
     _sfUpdateSecAttribs       (),
+    _sfClearVelocities        (bool(false)),
+    _sfClearAccelerations     (bool(false)),
     _sfLastElapsedTime        (Time(0.0)),
     _mfGenerators             (),
     _mfAffectors              (),
@@ -1996,6 +2098,8 @@ ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _sfMaxParticles           (source._sfMaxParticles           ),
     _sfDynamic                (source._sfDynamic                ),
     _sfUpdateSecAttribs       (source._sfUpdateSecAttribs       ),
+    _sfClearVelocities        (source._sfClearVelocities        ),
+    _sfClearAccelerations     (source._sfClearAccelerations     ),
     _sfLastElapsedTime        (source._sfLastElapsedTime        ),
     _mfGenerators             (),
     _mfAffectors              (),
@@ -2459,6 +2563,56 @@ EditFieldHandlePtr ParticleSystemBase::editHandleUpdateSecAttribs(void)
 
 
     editSField(UpdateSecAttribsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleClearVelocities (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfClearVelocities,
+             this->getType().getFieldDesc(ClearVelocitiesFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleClearVelocities(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfClearVelocities,
+             this->getType().getFieldDesc(ClearVelocitiesFieldId),
+             this));
+
+
+    editSField(ClearVelocitiesFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleClearAccelerations (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfClearAccelerations,
+             this->getType().getFieldDesc(ClearAccelerationsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleClearAccelerations(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfClearAccelerations,
+             this->getType().getFieldDesc(ClearAccelerationsFieldId),
+             this));
+
+
+    editSField(ClearAccelerationsFieldMask);
 
     return returnValue;
 }

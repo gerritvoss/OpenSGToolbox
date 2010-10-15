@@ -238,16 +238,6 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                    FileNameOrExtension);
         }
         NewFieldContainer = FCInfoIter->second._Ptr;
-        //if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()))
-        //{
-        //	//Search for File attachment
-        //	SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
-        //	if(SearchItor != (*NodeListItor)->get_attrmap().end())
-        //	{
-//                    Result.insert(NewFieldContainer);
-//                    continue;
-        //	}
-        //}
 
         if(NewFieldContainer != NULL)
         {
@@ -369,16 +359,6 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                    FileNameOrExtension);
         }
         NewFieldContainer = FCInfoIter->second._Ptr;
-        //if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()))
-        //{
-        //	//Search for File attachment
-        //	SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
-        //	if(SearchItor != (*NodeListItor)->get_attrmap().end())
-        //	{
-//                    Result.insert(NewFieldContainer);
-//                    continue;
-        //	}
-        //}
 
         if(NewFieldContainer != NULL)
         {
@@ -792,10 +772,9 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
     //Normalize the FieldContainer Ids for the file
     std::map<UInt32,UInt32> RunTimeToFileIDMap;
     UInt32 i(1);
-    for(FCFileType::FCPtrStore::iterator StoreItor(AllContainers.begin()) ; StoreItor!=AllContainers.end() ; ++StoreItor)
+    for(FCFileType::FCPtrStore::iterator StoreItor(AllContainers.begin()) ; StoreItor!=AllContainers.end() ; ++StoreItor, ++i)
     {
         RunTimeToFileIDMap.insert(std::make_pair((*StoreItor)->getId(), i));
-        ++i;
     }
 
     // root node
@@ -875,7 +854,10 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                     //Put the file path attachment back on
                     dynamic_pointer_cast<AttachmentContainer>(*FCItor)->addAttachment(att);
                 }
-                continue;
+                if(FilePathAttachment::shouldUseOnlyFileHandler((*FCItor)->getType()))
+                {
+                    continue;
+                }
             }
 
             //All of the others

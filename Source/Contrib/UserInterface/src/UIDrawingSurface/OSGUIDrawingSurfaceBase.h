@@ -63,7 +63,7 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGFieldContainer.h" // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
 #include "OSGInternalWindowFields.h"    // InternalWindows type
 #include "OSGWindowEventProducerFields.h" // EventProducer type
@@ -80,12 +80,12 @@ class UIDrawingSurface;
 
 //! \brief UIDrawingSurface Base Class.
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public FieldContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurfaceBase : public AttachmentContainer
 {
   public:
 
-    typedef FieldContainer Inherited;
-    typedef FieldContainer ParentContainer;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;

@@ -65,6 +65,7 @@
 
 #include "OSGAttachmentContainer.h" // Parent
 
+#include "OSGSysFields.h"               // Active type
 
 #include "OSGParticleSystemAffectorFields.h"
 
@@ -85,11 +86,25 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemAffectorBase : public A
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ParticleSystemAffector);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
   public:
 
+    enum
+    {
+        ActiveFieldId = Inherited::NextFieldId,
+        NextFieldId = ActiveFieldId + 1
+    };
+
+    static const OSG::BitVector ActiveFieldMask =
+        (TypeTraits<BitVector>::One << ActiveFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFBool            SFActiveType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -108,6 +123,31 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemAffectorBase : public A
     virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+
+                  SFBool              *editSFActive         (void);
+            const SFBool              *getSFActive          (void) const;
+
+
+                  bool                &editActive         (void);
+                  bool                 getActive          (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setActive         (const bool value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -131,6 +171,13 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemAffectorBase : public A
     static       void   classDescInserter(TypeObject &oType);
     static const Char8 *getClassname     (void             );
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFBool            _sfActive;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -156,6 +203,8 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemAffectorBase : public A
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
+    GetFieldHandlePtr  getHandleActive          (void) const;
+    EditFieldHandlePtr editHandleActive         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

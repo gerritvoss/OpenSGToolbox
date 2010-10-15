@@ -167,13 +167,22 @@ void TextField::keyTyped(KeyEventDetails* const e)
 {
 	if(getEnabled())
 	{
-		if(e->getKey() == e->KEY_ENTER)
-		{
+		switch(e->getKey())
+        {
+        case KeyEventDetails::KEY_ENTER:
 			produceActionPerformed();
-		}
+        case KeyEventDetails::KEY_TAB:
+	        Component::keyTyped(e); //Tab should not be inserted in a TextField
+            break;
+        default:
+	        Inherited::keyTyped(e);
+            break;
+        }
 	}
-
-	Inherited::keyTyped(e);
+    else
+    {
+	    Inherited::keyTyped(e);
+    }
 }
 
 void TextField::mouseClicked(MouseEventDetails* const e)

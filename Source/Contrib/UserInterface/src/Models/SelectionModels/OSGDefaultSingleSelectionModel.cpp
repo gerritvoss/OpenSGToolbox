@@ -108,12 +108,12 @@ void DefaultSingleSelectionModel::setSelectedIndex(Int32 index)
 
 void DefaultSingleSelectionModel::produceSelectionChanged(const Int32& SelectedIndex, const Int32& PreviouslySelectedIndex)
 {
-    std::vector<Int32> Selected;
+    std::vector<UInt32> Selected;
     if(SelectedIndex != -1)
     {
         Selected.push_back(SelectedIndex);
     }
-    std::vector<Int32> PreviouslySelected;
+    std::vector<UInt32> PreviouslySelected;
     if(PreviouslySelectedIndex != -1)
     {
         PreviouslySelected.push_back(PreviouslySelectedIndex);

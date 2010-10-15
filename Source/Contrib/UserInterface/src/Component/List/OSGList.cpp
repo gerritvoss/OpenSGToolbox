@@ -452,6 +452,7 @@ void List::handleContentsChanged(ListDataEventDetails* const e)
     {
         getSelectionModel()->clearSelection();
     }
+    updatePreferredSize();
     /*if(getModel() != NULL)
       {
       if(_BottomDrawnIndex >= 0)

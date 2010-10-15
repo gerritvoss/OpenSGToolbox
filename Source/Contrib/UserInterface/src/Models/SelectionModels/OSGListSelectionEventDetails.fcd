@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="ListSelectionEventDetails"
-	parent="EventDetails"
+	parent="SelectionEventDetails"
     library="ContribUserInterface"
     pointerfieldtypes="both"
 	structure="concrete"
@@ -33,17 +33,6 @@
 		visibility="external"
 		access="protected"
 		defaultValue="-1"
-        publicRead="true"
-	>
-	</Field>
-	<Field
-		name="ValueIsAdjusting"
-		type="bool"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		access="protected"
-		defaultValue="true"
         publicRead="true"
 	>
 	</Field>

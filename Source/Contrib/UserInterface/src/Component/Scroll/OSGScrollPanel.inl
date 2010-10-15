@@ -53,4 +53,28 @@ Component * ScrollPanel::getViewComponent  (void) const
     }
 }
 
+inline
+void ScrollPanel::scrollHorizontalUnit(Int32 Units)
+{
+    getHorizontalScrollBar()->scrollUnit(Units);
+}
+
+inline
+void ScrollPanel::scrollHorizontalBlock(Int32 Blocks)
+{
+    getHorizontalScrollBar()->scrollBlock(Blocks);
+}
+
+inline
+void ScrollPanel::scrollVerticalUnit(Int32 Units)
+{
+    getVerticalScrollBar()->scrollUnit(Units);
+}
+
+inline
+void ScrollPanel::scrollVerticalBlock(Int32 Blocks)
+{
+    getVerticalScrollBar()->scrollBlock(Blocks);
+}
+
 OSG_END_NAMESPACE

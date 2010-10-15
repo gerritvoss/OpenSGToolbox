@@ -67,6 +67,10 @@ OSG_BEGIN_NAMESPACE
  *                           Class variables                               *
 \***************************************************************************/
 
+StatElemDesc<StatTimeStampElem> WindowEventProducer::statWindowLoopTime("WindowLoopTime", 
+                                                                    "time for last window loop",
+                                                                    StatElemDescBase::RESET_NEVER);
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/

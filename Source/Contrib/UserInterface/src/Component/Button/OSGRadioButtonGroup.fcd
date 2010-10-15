@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="RadioButtonGroup"
-	parent="FieldContainer"
+	parent="AttachmentContainer"
     library="ContribUserInterface"
     pointerfieldtypes="both"
 	structure="concrete"
