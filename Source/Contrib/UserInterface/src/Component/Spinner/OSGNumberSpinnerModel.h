@@ -106,12 +106,18 @@ class NumberSpinnerModel : public AbstractSpinnerModel
 
     virtual std::string getModelName(void) const;
 
+    //The current element of the sequence as a string
+    virtual std::string getValueAsString(void) const;
 
+
+    Int16 getStringOutputPrecision(void) const;
+    void setStringOutputPrecision(Int16 p);
   protected:
     boost::any _Value;
     NumberType _Maximum;
     NumberType _Minimum;
     NumberType _StepSize;
+    Int16      _StringOutputPrecision;
 };
 
 typedef NumberSpinnerModel<Int8> Int8SpinnerModel;

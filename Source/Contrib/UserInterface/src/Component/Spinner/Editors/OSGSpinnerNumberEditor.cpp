@@ -104,21 +104,14 @@ void SpinnerNumberEditor::commitEdit(void)
 
 void SpinnerNumberEditor::handleModelStateChanged(ChangeEventDetails* const e)
 {
-    if(getSpinner()->getModel()->getValue().type() == typeid(Real32))
+    std::string Text(getSpinner()->getModel()->getValueAsString());
+    if(!Text.empty())
     {
-        //Update the Value of the TextField
-        try
-        {
-            getTextField()->setText(boost::lexical_cast<std::string>(boost::any_cast<Real32>(getSpinner()->getModel()->getValue())));
-        }
-        catch(std::exception &)
-        {
-            getTextField()->setText("0.0");
-        }
+        getTextField()->setText(Text);
     }
     else
     {
-        Inherited::handleModelStateChanged(e);
+        getTextField()->setText("0");
     }
 }
 
