@@ -36,22 +36,25 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGMULTIFIELDEDITORCOMPONENT_H_
-#define _OSGMULTIFIELDEDITORCOMPONENT_H_
+#ifndef _OSGMATRIXTRANSCOMPFIELDEDITOR_H_
+#define _OSGMATRIXTRANSCOMPFIELDEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGMultiFieldEditorComponentBase.h"
-#include "OSGCommandManager.h"
+#include "OSGMatrixTransCompFieldEditorBase.h"
+#include "OSGSpinnerFields.h"
+#include "OSGLabelFields.h"
+#include "OSGChangeEventDetailsFields.h"
+#include "OSGNumberSpinnerModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MultiFieldEditorComponent class. See \ref
-           PageContribFieldContainerEditorMultiFieldEditorComponent for a description.
+/*! \brief MatrixTransCompFieldEditor class. See \ref
+           PageContribFieldContainerEditorMatrixTransCompFieldEditor for a description.
 */
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : public MultiFieldEditorComponentBase
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MatrixTransCompFieldEditor : public MatrixTransCompFieldEditorBase
 {
   protected:
 
@@ -59,8 +62,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
 
   public:
 
-    typedef MultiFieldEditorComponentBase Inherited;
-    typedef MultiFieldEditorComponent     Self;
+    typedef MatrixTransCompFieldEditorBase Inherited;
+    typedef MatrixTransCompFieldEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -79,26 +82,28 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual const std::vector<const DataType*>& getEditableTypes(void) const;
+
     virtual UInt32 getNumRequestedRows(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in MultiFieldEditorComponentBase.
+    // Variables should all be in MatrixTransCompFieldEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    MultiFieldEditorComponent(void);
-    MultiFieldEditorComponent(const MultiFieldEditorComponent &source);
+    MatrixTransCompFieldEditor(void);
+    MatrixTransCompFieldEditor(const MatrixTransCompFieldEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MultiFieldEditorComponent(void);
+    virtual ~MatrixTransCompFieldEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -108,22 +113,98 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const MatrixTransCompFieldEditor *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
+    virtual void internalFieldChanged (void);
+    virtual void internalStartEditing (void);
+    virtual void internalStopEditing  (void);
+    virtual void internalCancelEditing(void);
+    virtual void updateLayout         (void);
+    virtual bool internalAttachField (FieldContainer* fc, UInt32 fieldId, UInt32 index);
+    void         runCommand           (void);
+
+    static std::vector<const DataType*> _EditableTypes;
+
+    //Translation
+    SpinnerRefPtr   _TranslationXEditingSpinner,
+                    _TranslationYEditingSpinner,
+                    _TranslationZEditingSpinner;
+
+    SpinnerModelPtr _TranslationXEditingSpinnerModels,
+                    _TranslationYEditingSpinnerModels,
+                    _TranslationZEditingSpinnerModels;
+
+    LabelRefPtr     _TranslationXEditingLabel,
+                    _TranslationYEditingLabel,
+                    _TranslationZEditingLabel;
+
+    LabelRefPtr   _TranslationEditingLabel;
+
+    //Rotation
+    SpinnerRefPtr   _RotationXEditingSpinner,
+                    _RotationYEditingSpinner,
+                    _RotationZEditingSpinner;
+
+    SpinnerModelPtr _RotationXEditingSpinnerModels,
+                    _RotationYEditingSpinnerModels,
+                    _RotationZEditingSpinnerModels;
+
+    LabelRefPtr     _RotationXEditingLabel,
+                    _RotationYEditingLabel,
+                    _RotationZEditingLabel;
+
+    LabelRefPtr   _RotationEditingLabel;
+
+    //Scale
+    SpinnerRefPtr   _ScaleXEditingSpinner,
+                    _ScaleYEditingSpinner,
+                    _ScaleZEditingSpinner;
+
+    SpinnerModelPtr _ScaleXEditingSpinnerModels,
+                    _ScaleYEditingSpinnerModels,
+                    _ScaleZEditingSpinnerModels;
+
+    LabelRefPtr     _ScaleXEditingLabel,
+                    _ScaleYEditingLabel,
+                    _ScaleZEditingLabel;
+
+    LabelRefPtr   _ScaleEditingLabel;
+    
+    void handleSpinnerStateChanged(ChangeEventDetails* const details);
+
+    typedef std::vector<boost::signals2::connection> ConnectionsVector;
+    ConnectionsVector _SpinnerStateChangedConnections;
+    
+    std::string getEditorValue(void) const;
+    SpinnerModelPtr createSpinnerModel(const DataType& type, Real32 stepSize) const;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class MultiFieldEditorComponentBase;
+    friend class MatrixTransCompFieldEditorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const MultiFieldEditorComponent &source);
+    void operator =(const MatrixTransCompFieldEditor &source);
 };
 
-typedef MultiFieldEditorComponent *MultiFieldEditorComponentP;
+typedef MatrixTransCompFieldEditor *MatrixTransCompFieldEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGMultiFieldEditorComponentBase.inl"
-#include "OSGMultiFieldEditorComponent.inl"
+#include "OSGMatrixTransCompFieldEditorBase.inl"
+#include "OSGMatrixTransCompFieldEditor.inl"
 
-#endif /* _OSGMULTIFIELDEDITORCOMPONENT_H_ */
+#endif /* _OSGMATRIXTRANSCOMPFIELDEDITOR_H_ */

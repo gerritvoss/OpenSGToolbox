@@ -36,22 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGMULTIFIELDEDITORCOMPONENT_H_
-#define _OSGMULTIFIELDEDITORCOMPONENT_H_
+#ifndef _OSGMATERIALMAPKEYFIELDEDITOR_H_
+#define _OSGMATERIALMAPKEYFIELDEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGMultiFieldEditorComponentBase.h"
-#include "OSGCommandManager.h"
+#include "OSGMaterialMapKeyFieldEditorBase.h"
+#include "OSGTextFieldFields.h"
+#include "OSGActionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MultiFieldEditorComponent class. See \ref
-           PageContribFieldContainerEditorMultiFieldEditorComponent for a description.
+/*! \brief MaterialMapKeyFieldEditor class. See \ref
+           PageContribFieldContainerEditorMaterialMapKeyFieldEditor for a description.
 */
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : public MultiFieldEditorComponentBase
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialMapKeyFieldEditor : public MaterialMapKeyFieldEditorBase
 {
   protected:
 
@@ -59,8 +60,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
 
   public:
 
-    typedef MultiFieldEditorComponentBase Inherited;
-    typedef MultiFieldEditorComponent     Self;
+    typedef MaterialMapKeyFieldEditorBase Inherited;
+    typedef MaterialMapKeyFieldEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -79,26 +80,26 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual UInt32 getNumRequestedRows(void) const;
+    virtual const std::vector<const DataType*>& getEditableTypes(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in MultiFieldEditorComponentBase.
+    // Variables should all be in MaterialMapKeyFieldEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    MultiFieldEditorComponent(void);
-    MultiFieldEditorComponent(const MultiFieldEditorComponent &source);
+    MaterialMapKeyFieldEditor(void);
+    MaterialMapKeyFieldEditor(const MaterialMapKeyFieldEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MultiFieldEditorComponent(void);
+    virtual ~MaterialMapKeyFieldEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -108,22 +109,55 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const MaterialMapKeyFieldEditor *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
+    virtual void internalFieldChanged (void);
+    virtual void internalStartEditing (void);
+    virtual void internalStopEditing  (void);
+    virtual void internalCancelEditing(void);
+    virtual void updateLayout         (void);
+    void         runCommand           (void);
+
+    static std::vector<const DataType*> _EditableTypes;
+    TextFieldRefPtr _EditingTextField;
+    std::string _InitialValue;
+    
+    void handleTextFieldFocusGained    (FocusEventDetails* const details);
+    void handleTextFieldFocusLost      (FocusEventDetails* const details);
+    void handleTextFieldActionPerformed(ActionEventDetails* const details);
+    void handleTextFieldKeyTyped       (KeyEventDetails* const details);
+    boost::signals2::connection _TextFieldFocusGainedConnection,
+                                _TextFieldFocusLostConnection,
+                                _TextFieldActionPerformedConnection,
+                                _TextFieldKeyTypedConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class MultiFieldEditorComponentBase;
+    friend class MaterialMapKeyFieldEditorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const MultiFieldEditorComponent &source);
+    void operator =(const MaterialMapKeyFieldEditor &source);
 };
 
-typedef MultiFieldEditorComponent *MultiFieldEditorComponentP;
+typedef MaterialMapKeyFieldEditor *MaterialMapKeyFieldEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGMultiFieldEditorComponentBase.inl"
-#include "OSGMultiFieldEditorComponent.inl"
+#include "OSGMaterialMapKeyFieldEditorBase.inl"
+#include "OSGMaterialMapKeyFieldEditor.inl"
 
-#endif /* _OSGMULTIFIELDEDITORCOMPONENT_H_ */
+#endif /* _OSGMATERIALMAPKEYFIELDEDITOR_H_ */

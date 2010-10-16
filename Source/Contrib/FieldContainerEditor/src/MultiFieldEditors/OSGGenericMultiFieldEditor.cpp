@@ -301,6 +301,12 @@ bool GenericMultiFieldEditor::internalAttachField(FieldContainer* fc, UInt32 fie
     _FieldListModel->setContainer(fc);
     _FieldListModel->setFieldId(fieldId);
 
+    //Update the List elemtent height used for this type of
+    //fc editor
+    const FieldContainerType* EditorType = FieldEditorFactory::the()->getSingleDefaultEditorType(&(fc->getFieldDescription(fieldId)->getFieldType().getContentType()));
+    FieldEditorComponentRefPtr TheEditor = dynamic_pointer_cast<FieldEditorComponent>(EditorType->createContainer());
+    _FieldList->setCellMajorAxisLength(24.0f * static_cast<Real32>(TheEditor->getNumRequestedRows()));
+
     return true;
 }
 

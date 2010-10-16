@@ -106,6 +106,11 @@ bool SingleFieldEditorComponent::internalDettachField(void)
     return true;
 }
 
+UInt32 SingleFieldEditorComponent::getNumRequestedRows(void) const
+{
+    return 1;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

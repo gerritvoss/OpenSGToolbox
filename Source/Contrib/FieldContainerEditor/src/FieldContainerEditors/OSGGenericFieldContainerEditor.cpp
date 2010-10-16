@@ -227,14 +227,7 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
             TheEditor = FieldEditorFactory::the()->createDefaultEditor(fc, Desc->getFieldId(), _CmdManager);
             if(TheEditor != NULL)
             {
-                if(Desc->getFieldType().getCardinality() == FieldType::SingleField)
-                {
-                    NumRowsForField = 1;
-                }
-                else
-                {
-                    NumRowsForField = 4;
-                }
+                NumRowsForField = TheEditor->getNumRequestedRows();
                 pushToEditors(TheEditor);
                 TheEditor->setConstraints(CenterConstraint);
 

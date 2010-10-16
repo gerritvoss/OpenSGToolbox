@@ -36,22 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGMULTIFIELDEDITORCOMPONENT_H_
-#define _OSGMULTIFIELDEDITORCOMPONENT_H_
+#ifndef _OSGMATRIXELEMENTSFIELDEDITOR_H_
+#define _OSGMATRIXELEMENTSFIELDEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGMultiFieldEditorComponentBase.h"
-#include "OSGCommandManager.h"
+#include "OSGMatrixElementsFieldEditorBase.h"
+#include "OSGTextFieldFields.h"
+#include "OSGActionEventDetailsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MultiFieldEditorComponent class. See \ref
-           PageContribFieldContainerEditorMultiFieldEditorComponent for a description.
+/*! \brief MatrixElementsFieldEditor class. See \ref
+           PageContribFieldContainerEditorMatrixElementsFieldEditor for a description.
 */
 
-class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : public MultiFieldEditorComponentBase
+class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MatrixElementsFieldEditor : public MatrixElementsFieldEditorBase
 {
   protected:
 
@@ -59,8 +60,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
 
   public:
 
-    typedef MultiFieldEditorComponentBase Inherited;
-    typedef MultiFieldEditorComponent     Self;
+    typedef MatrixElementsFieldEditorBase Inherited;
+    typedef MatrixElementsFieldEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -79,26 +80,28 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual const std::vector<const DataType*>& getEditableTypes(void) const;
+
     virtual UInt32 getNumRequestedRows(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in MultiFieldEditorComponentBase.
+    // Variables should all be in MatrixElementsFieldEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    MultiFieldEditorComponent(void);
-    MultiFieldEditorComponent(const MultiFieldEditorComponent &source);
+    MatrixElementsFieldEditor(void);
+    MatrixElementsFieldEditor(const MatrixElementsFieldEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MultiFieldEditorComponent(void);
+    virtual ~MatrixElementsFieldEditor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -108,22 +111,62 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const MatrixElementsFieldEditor *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
+    virtual void internalFieldChanged (void);
+    virtual void internalStartEditing (void);
+    virtual void internalStopEditing  (void);
+    virtual void internalCancelEditing(void);
+    virtual void updateLayout(void);
+
+    static std::vector<const DataType*> _EditableTypes;
+
+    typedef std::vector<TextFieldRefPtr> TextFieldsVector;
+    TextFieldsVector _EditingTextFields;
+    Int16 _SelectedTextField;
+    std::string _InitialValue;
+    
+    void handleTextFieldFocusGained    (FocusEventDetails* const details,
+                                        UInt32 ElementIndex);
+    void handleTextFieldFocusLost      (FocusEventDetails* const details,
+                                        UInt32 ElementIndex);
+    void handleTextFieldActionPerformed(ActionEventDetails* const details,
+                                        UInt32 ElementIndex);
+    void handleTextFieldKeyTyped       (KeyEventDetails* const details,
+                                        UInt32 ElementIndex);
+
+    typedef std::vector<boost::signals2::connection> ConnectionsVector;
+    ConnectionsVector _TextFieldConnections;
+    
+    std::string getEditorValue(void) const;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class MultiFieldEditorComponentBase;
+    friend class MatrixElementsFieldEditorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const MultiFieldEditorComponent &source);
+    void operator =(const MatrixElementsFieldEditor &source);
 };
 
-typedef MultiFieldEditorComponent *MultiFieldEditorComponentP;
+typedef MatrixElementsFieldEditor *MatrixElementsFieldEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGMultiFieldEditorComponentBase.inl"
-#include "OSGMultiFieldEditorComponent.inl"
+#include "OSGMatrixElementsFieldEditorBase.inl"
+#include "OSGMatrixElementsFieldEditor.inl"
 
-#endif /* _OSGMULTIFIELDEDITORCOMPONENT_H_ */
+#endif /* _OSGMATRIXELEMENTSFIELDEDITOR_H_ */
