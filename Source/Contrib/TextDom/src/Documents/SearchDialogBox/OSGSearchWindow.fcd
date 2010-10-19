@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+    name="SearchWindow"
+    parent="InternalWindow"
+    library="ContribTextDom"
+    pointerfieldtypes="both"
+    structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)"
+    parentProducer="AbstractWindow"
+>
+A TextDom Search And Replace Dialog Window.
+
+	<ProducedMethod
+		name="SearchWindowClosing"
+		type="SearchWindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="SearchWindowClosed"
+		type="SearchWindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="SearchButtonClicked"
+		type="SearchWindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ReplaceButtonClicked"
+		type="SearchWindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ReplaceAllButtonClicked"
+		type="SearchWindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="BookmarkAllButtonClicked"
+		type="SearchWindowEventPtr"
+	>
+	</ProducedMethod>
+
+</FieldContainer>
+

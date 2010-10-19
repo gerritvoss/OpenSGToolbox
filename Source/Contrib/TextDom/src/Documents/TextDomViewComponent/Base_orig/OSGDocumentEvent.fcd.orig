@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DocumentEvent"
+	parent="Event"
+<<<<<<< HEAD
+    library="ContribTextDom"
+=======
+    library="ContribUserInterface"
+>>>>>>> 43b0c45248e89890ff4be4e885dffd8528bdf79b
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+	<Field
+		name="Document"
+		type="Document"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="NULL"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="Offset"
+		type="Int32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="-1"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="Length"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

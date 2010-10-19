@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FixedHeightLayoutManager"
+	parent="TextDomLayoutManager"
+	library="ContribTextDom"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+	isNodeCore="false"
+    	authors="David Kabala"
+>
+
+A UI FixedHeightLayoutManager
+
+
+</FieldContainer>

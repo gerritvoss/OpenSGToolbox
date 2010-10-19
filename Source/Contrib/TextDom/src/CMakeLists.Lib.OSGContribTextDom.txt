@@ -46,6 +46,13 @@ OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/Base")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/Plain")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/Styled")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/FileHandler/PlainTextFileType")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/FileHandler/TextFileHandler")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/FileHandler/StyledTextFileType")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/TextDomViewComponent")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/SyntaxHighlighter")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/SearchDialogBox")
+
 
 ##############################################################################
 # setup build

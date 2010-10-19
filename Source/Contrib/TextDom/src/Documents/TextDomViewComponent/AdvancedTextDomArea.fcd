@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AdvancedTextDomArea"
+	parent="ComponentContainer"
+	library="ContribTextDom"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+     	isNodeCore="false"
+	parentProducer="Component"
+	authors="David Kabala (djkabala@gmail.com)"
+>
+An AdvancedTextDomArea
+
+This class supports adds features to the basic textDomArea.
+
+Features like gutter region, scroll panel are implemented 
+
+	<Field
+		name="GutterVisible"
+		type="bool"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+		name="GutterWidth"
+		type="Real32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="25"
+		access="public"
+	>
+	</Field>
+	
+
+</FieldContainer>
