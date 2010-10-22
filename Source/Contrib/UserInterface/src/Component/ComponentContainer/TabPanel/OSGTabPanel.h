@@ -95,7 +95,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanel : public TabPanelBase
 
     /*! \}                                                                 */
 
-	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
 	virtual void addTab(Component* const Tab, Component* const TabContent);
 	virtual void removeTab(Component* const Tab);
@@ -147,6 +146,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanel : public TabPanelBase
 	
 	/*! \}                                                                 */
     virtual void updateLayout(void);
+	virtual void drawInternal(Graphics* const TheGraphics, Real32 Opacity = 1.0f) const;
+	void drawContents(Graphics* const TheGraphics, Real32 Opacity) const;
+	void drawTab(UInt32 TabIndex, Graphics* const TheGraphics, Real32 Opacity) const;
 
 	//Mouse Events
     virtual void mouseClicked(MouseEventDetails* const e);

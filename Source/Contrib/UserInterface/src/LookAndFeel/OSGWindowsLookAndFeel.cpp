@@ -977,7 +977,7 @@ void WindowsLookAndFeel::init(void)
 
     //Windows Divider
     UIDrawObjectCanvasRefPtr WindowsDividerDrawObject = UIDrawObjectCanvas::create();
-    WindowsDividerDrawObject->setBackground(WindowsDividerBackground);
+    WindowsDividerDrawObject->setBackgrounds(WindowsDividerBackground);
 
     //Windows SplitPanel
     WindowsSplitPanel->setEnabled(true);

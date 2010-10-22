@@ -125,10 +125,10 @@ void TabPanel::calculateContentBorderLengths(Border* const TheBorder, Real32& Le
         Left = Right = Top = Bottom = 0.0f;
     }
 
-    Left   += getContentBorderInsets().x();
+    /*Left   += getContentBorderInsets().x();
     Right  += getContentBorderInsets().x();
     Top    += getContentBorderInsets().y();
-    Bottom += getContentBorderInsets().y();
+    Bottom += getContentBorderInsets().y();*/
 }
 
 void TabPanel::calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
@@ -176,59 +176,8 @@ void TabPanel::calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32&
     Bottom += getTabBorderInsets().y();
 }
 
-void TabPanel::drawInternal(Graphics* const Graphics, Real32 Opacity) const
+void TabPanel::drawContents(Graphics* const TheGraphics, Real32 Opacity) const
 {
-    //Draw the Tab Borders
-    //Setup the Clip Planes
-    Real32 TabBorderLeftWidth, TabBorderRightWidth,TabBorderTopWidth, TabBorderBottomWidth;
-
-    Pnt2f TabPosition, TabBorderPosition;
-    Vec2f TabSize, TabBorderSize;
-    BorderRefPtr DrawnTabBorder;
-    LayerRefPtr DrawnTabBackground;
-    for (UInt32 i = 0; i < getMFTabs()->size(); ++i)
-    {
-        TabPosition = getTabs(i)->getPosition();
-        TabSize = getTabs(i)->getSize();
-
-        DrawnTabBorder = getDrawnTabBorder(i);
-        DrawnTabBackground = getDrawnTabBackground(i);
-
-        calculateTabBorderLengths(DrawnTabBorder, TabBorderLeftWidth, TabBorderRightWidth,TabBorderTopWidth, TabBorderBottomWidth);
-
-        TabBorderPosition.setValues(TabPosition.x() - TabBorderLeftWidth, TabPosition.y() - TabBorderTopWidth);
-        TabBorderSize.setValues(TabSize.x() + TabBorderLeftWidth + TabBorderRightWidth,
-                                TabSize.y() + TabBorderTopWidth + TabBorderBottomWidth);
-
-        if(DrawnTabBorder != NULL)
-        {
-            DrawnTabBorder->draw(Graphics,
-                                 TabBorderPosition.x(), TabBorderPosition.y(),
-                                 TabBorderSize.x(), TabBorderSize.y(),
-                                 getOpacity()*Opacity);
-            //DrawnTabBorder->activateInternalDrawConstraints(Graphics,
-            //                 TabBorderPosition.x(), TabBorderPosition.y(),
-            //				 TabBorderSize.x(), TabBorderSize.y());
-        }
-
-        if(DrawnTabBackground != NULL)
-        {
-            DrawnTabBackground->draw(Graphics, TabPosition - getTabBorderInsets(), TabPosition + TabSize + getTabBorderInsets(), getOpacity()*Opacity);
-        }
-
-        //Draw the tab component
-        getTabs(i)->draw(Graphics, getOpacity()*Opacity);
-
-        setupClipping(Graphics);
-
-        if(DrawnTabBorder != NULL)
-        {
-            DrawnTabBorder->deactivateInternalDrawConstraints(Graphics,
-                                                              TabBorderPosition.x(), TabBorderPosition.y(),
-                                                              TabBorderSize.x(), TabBorderSize.y());
-        }
-    }
-
     //Draw the Content of the active tab
     if(getMFTabContents()->size() > 0 &&
        getSelectedIndex() != -1)
@@ -241,28 +190,97 @@ void TabPanel::drawInternal(Graphics* const Graphics, Real32 Opacity) const
         Real32 ContentBorderLeftWidth, ContentBorderRightWidth,ContentBorderTopWidth, ContentBorderBottomWidth;
         calculateContentBorderLengths(DrawnContentBorder, ContentBorderLeftWidth, ContentBorderRightWidth,ContentBorderTopWidth, ContentBorderBottomWidth);
 
-        Pnt2f ContentBorderPosition(ContentComponent->getPosition() - Vec2f(ContentBorderLeftWidth,ContentBorderTopWidth));
-        Vec2f ContentBorderSize(ContentComponent->getSize() + Vec2f(ContentBorderLeftWidth+ContentBorderRightWidth,ContentBorderTopWidth+ContentBorderBottomWidth));
+        Pnt2f ContentBorderPosition(ContentComponent->getPosition() - Vec2f(ContentBorderLeftWidth,ContentBorderTopWidth) - getContentBorderInsets());
+        Vec2f ContentBorderSize(ContentComponent->getSize() + Vec2f(ContentBorderLeftWidth+ContentBorderRightWidth,ContentBorderTopWidth+ContentBorderBottomWidth)+ getContentBorderInsets());
         if(DrawnContentBorder != NULL)
         {
-            DrawnContentBorder->draw(Graphics,
+            DrawnContentBorder->draw(TheGraphics,
                                      ContentBorderPosition.x(), ContentBorderPosition.y(),
                                      ContentBorderSize.x(), ContentBorderSize.y(),
                                      getOpacity()*Opacity);
         }
         if(DrawnContentBackground != NULL)
         {
-            DrawnContentBackground->draw(Graphics, ContentComponent->getPosition() - getContentBorderInsets(), ContentComponent->getPosition() + ContentComponent->getSize() + getContentBorderInsets(), getOpacity()*Opacity);
+            DrawnContentBackground->draw(TheGraphics, ContentComponent->getPosition() /*- getContentBorderInsets()*/, ContentComponent->getPosition() + ContentComponent->getSize() /*+ getContentBorderInsets()*/, getOpacity()*Opacity);
         }
 
-        ContentComponent->draw(Graphics, getOpacity()*Opacity);
+        ContentComponent->draw(TheGraphics, getOpacity()*Opacity);
 
         if(DrawnContentBorder != NULL)
         {
-            DrawnContentBorder->deactivateInternalDrawConstraints(Graphics,
+            DrawnContentBorder->deactivateInternalDrawConstraints(TheGraphics,
                                                                   ContentBorderPosition.x(), ContentBorderPosition.y(),
                                                                   ContentBorderSize.x(), ContentBorderSize.y());
         }
+    }
+}
+
+void TabPanel::drawTab(UInt32 TabIndex, Graphics* const TheGraphics, Real32 Opacity) const
+{
+    Pnt2f TabPosition(getTabs(TabIndex)->getPosition()), 
+          TabBorderPosition;
+    Vec2f TabSize(getTabs(TabIndex)->getSize()), 
+          TabBorderSize;
+
+    BorderRefPtr DrawnTabBorder(getDrawnTabBorder(TabIndex));
+
+    LayerRefPtr DrawnTabBackground(getDrawnTabBackground(TabIndex));
+
+    Real32 TabBorderLeftWidth, TabBorderRightWidth,TabBorderTopWidth, TabBorderBottomWidth;
+    calculateTabBorderLengths(DrawnTabBorder, TabBorderLeftWidth, TabBorderRightWidth,TabBorderTopWidth, TabBorderBottomWidth);
+
+    TabBorderPosition.setValues(TabPosition.x() - TabBorderLeftWidth, TabPosition.y() - TabBorderTopWidth);
+    TabBorderSize.setValues(TabSize.x() + TabBorderLeftWidth + TabBorderRightWidth,
+                            TabSize.y() + TabBorderTopWidth + TabBorderBottomWidth);
+
+    if(DrawnTabBorder != NULL)
+    {
+        DrawnTabBorder->draw(TheGraphics,
+                             TabBorderPosition.x(), TabBorderPosition.y(),
+                             TabBorderSize.x(), TabBorderSize.y(),
+                             getOpacity()*Opacity);
+        //DrawnTabBorder->activateInternalDrawConstraints(TheGraphics,
+        //                 TabBorderPosition.x(), TabBorderPosition.y(),
+        //				 TabBorderSize.x(), TabBorderSize.y());
+    }
+
+    if(DrawnTabBackground != NULL)
+    {
+        DrawnTabBackground->draw(TheGraphics, TabPosition - getTabBorderInsets(), TabPosition + TabSize + getTabBorderInsets(), getOpacity()*Opacity);
+    }
+
+    //Draw the tab component
+    getTabs(TabIndex)->draw(TheGraphics, getOpacity()*Opacity);
+
+    setupClipping(TheGraphics);
+
+    if(DrawnTabBorder != NULL)
+    {
+        DrawnTabBorder->deactivateInternalDrawConstraints(TheGraphics,
+                                                          TabBorderPosition.x(), TabBorderPosition.y(),
+                                                          TabBorderSize.x(), TabBorderSize.y());
+    }
+}
+
+void TabPanel::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
+{
+    //Draw Inactive tabs
+    for (UInt32 i = 0; i < getMFTabs()->size(); ++i)
+    {
+        if(i != getSelectedIndex())
+        {
+            drawTab(i,TheGraphics, Opacity);
+        }
+    }
+
+    //Draw Active Content
+    drawContents(TheGraphics, Opacity);
+
+    //Draw Active Tab
+    if(getSelectedIndex() != -1)
+    {
+        setupClipping(TheGraphics);
+        drawTab(getSelectedIndex(),TheGraphics, Opacity);
     }
 }
 
@@ -521,7 +539,7 @@ void TabPanel::updateLayout(void)
         {
             offset[(AxisIndex+1)%2] += largestMinorAxis;
         }
-        Size = InsideInsetsBottomRight-InsideInsetsTopLeft;
+        Size = InsideInsetsBottomRight-InsideInsetsTopLeft-(ContentBorderTopLeftWidth + ContentBorderBottomRightWidth);
         Size[(AxisIndex+1)%2] -= TabSize[(AxisIndex+1)%2];
         if(getTabContents(getSelectedIndex())->getSize() != Size)
         {

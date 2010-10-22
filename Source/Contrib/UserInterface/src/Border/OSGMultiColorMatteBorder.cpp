@@ -86,21 +86,21 @@ void MultiColorMatteBorder::draw(Graphics* const g, const Real32 x, const Real32
                 Pnt2f(x+Width, y),
                 Pnt2f(x+Width, y+getTopWidth()),
                 Pnt2f(x+getLeftWidth(), y+getTopWidth()),
-                getTopLineLeftColor(),
-                getTopLineRightColor(),
-                getTopLineRightColor(),
-                getTopLineLeftColor(),
+                getTopLineTopColor(),
+                getTopLineTopColor(),
+                getTopLineBottomColor(),
+                getTopLineBottomColor(),
                 Opacity);
     //Left
     g->drawQuad(
                 Pnt2f(x,y),
-                Pnt2f(x+getRightWidth(), y),
-                Pnt2f(x+getRightWidth(), y+Height-getBottomWidth()),
+                Pnt2f(x+getLeftWidth(), y),
+                Pnt2f(x+getLeftWidth(), y+Height-getBottomWidth()),
                 Pnt2f(x, y+Height-getBottomWidth()),
-                getLeftLineTopColor(),
-                getLeftLineTopColor(),
-                getLeftLineBottomColor(),
-                getLeftLineBottomColor(),
+                getLeftLineLeftColor(),
+                getLeftLineRightColor(),
+                getLeftLineRightColor(),
+                getLeftLineLeftColor(),
                 Opacity);
     //Right
     g->drawQuad(
@@ -108,10 +108,10 @@ void MultiColorMatteBorder::draw(Graphics* const g, const Real32 x, const Real32
                 Pnt2f(x+Width, y+getTopWidth()),
                 Pnt2f(x+Width, y+Height),
                 Pnt2f(x+Width-getRightWidth(), y+Height),
-                getRightLineTopColor(),
-                getRightLineTopColor(),
-                getRightLineBottomColor(),
-                getRightLineBottomColor(),
+                getRightLineLeftColor(),
+                getRightLineRightColor(),
+                getRightLineRightColor(),
+                getRightLineLeftColor(),
                 Opacity);
     //Bottom
     g->drawQuad(
@@ -119,10 +119,10 @@ void MultiColorMatteBorder::draw(Graphics* const g, const Real32 x, const Real32
                 Pnt2f(x+Width-getRightWidth(), y+Height-getBottomWidth()),
                 Pnt2f(x+Width-getRightWidth(), y+Height),
                 Pnt2f(x, y+Height),
-                getBottomLineLeftColor(),
-                getBottomLineRightColor(),
-                getBottomLineRightColor(),
-                getBottomLineLeftColor(),
+                getBottomLineTopColor(),
+                getBottomLineTopColor(),
+                getBottomLineBottomColor(),
+                getBottomLineBottomColor(),
                 Opacity);
     //g->drawQuad(Pnt2f(x, y+Height-getBottomWidth()), Pnt2f(x+Width, y+Height), getBottomColor(), Opacity);
 

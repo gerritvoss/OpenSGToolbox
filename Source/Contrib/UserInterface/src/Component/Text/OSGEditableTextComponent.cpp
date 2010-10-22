@@ -190,7 +190,25 @@ Layer* EditableTextComponent::getDrawnBackground(void) const
 {
 	if(getEditable())
 	{
-		return Inherited::getDrawnBackground();
+        if(getEnabled())
+        {
+            if(getFocused())
+            {
+                return getFocusedBackground();
+            }
+            else if(_MouseInComponentLastMouse)
+            {
+                return getRolloverBackground();
+            }
+            else
+            {
+                return getBackground();
+            }
+        }
+        else
+        {
+            return getDisabledBackground();
+        }
 	}
 	else
 	{
@@ -202,7 +220,25 @@ Layer* EditableTextComponent::getDrawnForeground(void) const
 {
 	if(getEditable())
 	{
-		return Inherited::getDrawnForeground();
+        if(getEnabled())
+        {
+            if(getFocused())
+            {
+                return getFocusedForeground();
+            }
+            else if(_MouseInComponentLastMouse)
+            {
+                return getRolloverForeground();
+            }
+            else
+            {
+                return getForeground();
+            }
+        }
+        else
+        {
+            return getDisabledForeground();
+        }
 	}
 	else
 	{
@@ -212,7 +248,32 @@ Layer* EditableTextComponent::getDrawnForeground(void) const
 
 Border* EditableTextComponent::getDrawnBorder(void) const
 {
-    return Inherited::getDrawnBorder();
+	if(getEditable())
+	{
+        if(getEnabled())
+        {
+            if(getFocused())
+            {
+                return getFocusedBorder();
+            }
+            else if(_MouseInComponentLastMouse)
+            {
+                return getRolloverBorder();
+            }
+            else
+            {
+                return getBorder();
+            }
+        }
+        else
+        {
+            return getDisabledBorder();
+        }
+	}
+	else
+	{
+		return getDisabledBorder();
+	}
 }
 
 void EditableTextComponent::setupCursor(void)

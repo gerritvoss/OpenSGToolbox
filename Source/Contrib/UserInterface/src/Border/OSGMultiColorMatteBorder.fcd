@@ -55,7 +55,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	>
 	</Field>
 	<Field
-		name="LeftLineTopColor"
+		name="LeftLineLeftColor"
 		type="Color4f"
 		category="data"
 		cardinality="single"
@@ -65,7 +65,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	>
 	</Field>
 	<Field
-		name="LeftLineBottomColor"
+		name="LeftLineRightColor"
 		type="Color4f"
 		category="data"
 		cardinality="single"
@@ -75,7 +75,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	>
 	</Field>
 	<Field
-		name="TopLineLeftColor"
+		name="TopLineTopColor"
 		type="Color4f"
 		category="data"
 		cardinality="single"
@@ -85,7 +85,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	>
 	</Field>
 	<Field
-		name="TopLineRightColor"
+		name="TopLineBottomColor"
 		type="Color4f"
 		category="data"
 		cardinality="single"
@@ -95,7 +95,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	>
 	</Field>
 	<Field
-		name="RightLineTopColor"
+		name="RightLineLeftColor"
 		type="Color4f"
 		category="data"
 		cardinality="single"
@@ -105,7 +105,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	>
 	</Field>
 	<Field
-		name="RightLineBottomColor"
+		name="RightLineRightColor"
 		type="Color4f"
 		category="data"
 		cardinality="single"
@@ -115,7 +115,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	>
 	</Field>
 	<Field
-		name="BottomLineLeftColor"
+		name="BottomLineTopColor"
 		type="Color4f"
 		category="data"
 		cardinality="single"
@@ -125,7 +125,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	>
 	</Field>
 	<Field
-		name="BottomLineRightColor"
+		name="BottomLineBottomColor"
 		type="Color4f"
 		category="data"
 		cardinality="single"

@@ -155,7 +155,7 @@ void TextField::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
                               .5, TextColor, getOpacity()*Opacity);
     }
 
-    //Draw the Descriptive text it empty
+    //Draw the Descriptive text if empty
     if(getDrawnText().empty() && !getEmptyDescText().empty()  && getEmptyDescTextFont() != NULL)
     {
         Alignment = calculateAlignment(TopLeft, BottomRight-TopLeft, getEmptyDescTextFont()->getBounds(getEmptyDescText()), getAlignment().y(), getAlignment().x());
