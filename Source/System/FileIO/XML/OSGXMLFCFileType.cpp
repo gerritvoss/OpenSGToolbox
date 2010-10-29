@@ -741,7 +741,7 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_i
             if(OldToNewFCLookupMap.insert(std::make_pair(OldFCId, NewFCInfo)).second == false)
             {
                 SFATAL << FileNameOrExtension << ": Could not create another FieldContainer with id: " << OldFCId
-                       << " because there is already a FieldContainer defined with that id."
+                       << " because there is already a FieldContainer defined with that id." <<
                     std::endl;
             }
         }

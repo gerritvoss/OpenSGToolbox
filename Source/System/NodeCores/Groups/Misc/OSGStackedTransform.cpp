@@ -53,6 +53,7 @@
 #endif
 
 #include "OSGRenderAction.h"
+#include "OSGNameAttachment.h"
 
 #ifdef OSG_HAVE_ACTION //CHECK
 #include "OSGIntersectActor.h"
@@ -70,6 +71,11 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
+std::string StackedTransform::TranslateName = std::string("translate");
+std::string StackedTransform::RotateXName   = std::string("rotateX");
+std::string StackedTransform::RotateYName   = std::string("rotateY");
+std::string StackedTransform::RotateZName   = std::string("rotateZ");
+std::string StackedTransform::ScaleName     = std::string("scale");
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -152,6 +158,69 @@ void StackedTransform::adjustVolume(Volume &volume)
 {
     volume.transform(_Transformation);
 }
+
+TransformationElement* StackedTransform::getElement(const std::string& Name) const
+{
+    const Char8* ElemName;
+    for(UInt32 i(0) ; i<getMFTransformElements()->size(); ++i)
+    {
+        ElemName = getName(getTransformElements(i));
+        if(ElemName != NULL &&
+           Name.compare(ElemName) == 0)
+        {
+            return getTransformElements(i);
+        }
+    }
+
+    return NULL;
+}
+
+void StackedTransform::pushToNamedTransformElements(TransformationElement * const value,
+                                    const std::string& Name)
+{
+    setName(value, Name.c_str());
+    Inherited::pushToTransformElements(value);
+}
+
+void StackedTransform::insertIntoNamedTransformElements(UInt32               uiIndex,
+                                    TransformationElement * const value,
+                                    const std::string& Name)
+{
+    setName(value, Name.c_str());
+    Inherited::insertIntoTransformElements(uiIndex, value);
+}
+
+void StackedTransform::replaceInNamedTransformElements(UInt32         uiIndex,
+                                    TransformationElement * const value,
+                                    const std::string& Name)
+{
+    setName(value, Name.c_str());
+    Inherited::replaceInTransformElements(uiIndex, value);
+}
+
+void StackedTransform::replaceObjInNamedTransformElements (TransformationElement * const pOldElem,
+                                    TransformationElement * const pNewElem,
+                                    const std::string& Name)
+{
+    setName(pNewElem, Name.c_str());
+    Inherited::replaceObjInTransformElements(pOldElem, pNewElem);
+}
+
+void StackedTransform::removeFromNamedTransformElements   (const std::string& Name)
+{
+    const Char8* ElemName;
+    for(UInt32 i(0) ; i<getMFTransformElements()->size(); ++i)
+    {
+        ElemName = getName(getTransformElements(i));
+        if(ElemName != NULL &&
+           Name.compare(ElemName) == 0)
+        {
+            Inherited::removeFromTransformElements(i);
+            return;
+        }
+    }
+}
+
 /*-------------------------------------------------------------------------*/
 /*                                Render                                   */
 

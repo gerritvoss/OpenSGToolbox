@@ -46,4 +46,11 @@ void StackedTransform::invalidateTransform(void)
     editMField(TransformElementsFieldMask, _mfTransformElements);
 }
 
+template <typename TYPE>
+inline
+TYPE* StackedTransform::getElement(const std::string& Name) const
+{
+    return dynamic_cast<TYPE*>(getElement(Name));
+}
+
 OSG_END_NAMESPACE
