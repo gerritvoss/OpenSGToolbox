@@ -752,7 +752,7 @@ Real32 DirectShowVideoWrapper::getAudioVolume(void) const
 			return 0.0;
 		}
 
-		return 1.0f - (osgabs(static_cast<Real32>(Result))/10000.0f);
+		return 1.0f - (osgAbs(static_cast<Real32>(Result))/10000.0f);
 	}
 	return 0.0;
 }
