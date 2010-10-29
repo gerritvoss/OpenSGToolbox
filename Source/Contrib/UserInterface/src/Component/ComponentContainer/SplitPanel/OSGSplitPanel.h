@@ -84,8 +84,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SplitPanel : public SplitPanelBase
 
     /*! \}                                                                 */
 
-	virtual void setDividerDrawObject( UIDrawObjectCanvas* const value );
-
 	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
     virtual void detachFromEventProducer(void);

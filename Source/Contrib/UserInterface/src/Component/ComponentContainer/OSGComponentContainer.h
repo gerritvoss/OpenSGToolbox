@@ -117,6 +117,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainer : public ComponentC
     virtual void detachFromEventProducer(void);
 
     virtual void setParentWindow(InternalWindow* const parent);
+
+    std::vector<Component*> getNamedChildren(const std::string & Name) const;
+
+    std::vector<Component*> getNamedDecendents(const std::string & Name) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

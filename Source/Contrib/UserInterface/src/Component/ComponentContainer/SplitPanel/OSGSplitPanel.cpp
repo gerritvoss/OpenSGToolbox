@@ -225,23 +225,6 @@ void SplitPanel::updateLayout(void)
     }
 }
 
-void SplitPanel::setDividerDrawObject(UIDrawObjectCanvas* const value)
-{
-    if (getDividerDrawObject() != NULL)
-    {
-        _MouseEnteredConnection.disconnect();
-        _MouseExitedConnection.disconnect();
-        _MousePressedConnection.disconnect();
-    }
-    _sfDividerDrawObject.setValue(value);
-    if (getDividerDrawObject() != NULL)
-    {
-        _MouseEnteredConnection = value->connectMouseEntered(boost::bind(&SplitPanel::dividerMouseEntered, this, _1));
-        _MouseExitedConnection = value->connectMouseExited(boost::bind(&SplitPanel::dividerMouseExited, this, _1));
-        _MousePressedConnection = value->connectMousePressed(boost::bind(&SplitPanel::dividerMousePressed, this, _1));
-	}
-}
-
 void SplitPanel::updateChildren(void)
 {
     clearChildren();
@@ -263,6 +246,7 @@ void SplitPanel::updateChildren(void)
 void SplitPanel::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
+
     _MouseEnteredConnection.disconnect();
     _MouseExitedConnection.disconnect();
     _MousePressedConnection.disconnect();
@@ -282,12 +266,6 @@ void SplitPanel::onCreate(const SplitPanel * Id)
 	{
         FieldContainerUnrecPtr TheDividerDrawObject(getDividerDrawObject()->shallowCopy());
         setDividerDrawObject(dynamic_pointer_cast<UIDrawObjectCanvas>(TheDividerDrawObject));
-        if(getDividerDrawObject() != NULL)
-        {
-            _MouseEnteredConnection = getDividerDrawObject()->connectMouseEntered(boost::bind(&SplitPanel::dividerMouseEntered, this, _1));
-            _MouseExitedConnection = getDividerDrawObject()->connectMouseExited(boost::bind(&SplitPanel::dividerMouseExited, this, _1));
-            _MousePressedConnection = getDividerDrawObject()->connectMousePressed(boost::bind(&SplitPanel::dividerMousePressed, this, _1));
-        }
 	}
 }
 
@@ -324,6 +302,19 @@ void SplitPanel::changed(ConstFieldMaskArg whichField,
     {
 		updateLayout();
 	}
+    if(whichField & DividerDrawObjectFieldMask)
+    {
+        _MouseEnteredConnection.disconnect();
+        _MouseExitedConnection.disconnect();
+        _MousePressedConnection.disconnect();
+
+        if (getDividerDrawObject() != NULL)
+        {
+            _MouseEnteredConnection = getDividerDrawObject()->connectMouseEntered(boost::bind(&SplitPanel::dividerMouseEntered, this, _1));
+            _MouseExitedConnection = getDividerDrawObject()->connectMouseExited(boost::bind(&SplitPanel::dividerMouseExited, this, _1));
+            _MousePressedConnection = getDividerDrawObject()->connectMousePressed(boost::bind(&SplitPanel::dividerMousePressed, this, _1));
+	    }
+    }
 
     if( (whichField & DividerDrawObjectFieldMask) ||
         (whichField & MinComponentFieldMask) ||

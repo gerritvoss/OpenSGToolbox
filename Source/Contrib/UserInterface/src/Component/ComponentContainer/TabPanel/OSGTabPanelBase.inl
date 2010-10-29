@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -151,7 +152,7 @@ void TabPanelBase::setTabRotation(const UInt32 value)
 //! Get the value of the TabPanel::_sfTabBorderInsets field.
 
 inline
-Vec2f &TabPanelBase::editTabBorderInsets(void)
+Vec4f &TabPanelBase::editTabBorderInsets(void)
 {
     editSField(TabBorderInsetsFieldMask);
 
@@ -160,14 +161,14 @@ Vec2f &TabPanelBase::editTabBorderInsets(void)
 
 //! Get the value of the TabPanel::_sfTabBorderInsets field.
 inline
-const Vec2f &TabPanelBase::getTabBorderInsets(void) const
+const Vec4f &TabPanelBase::getTabBorderInsets(void) const
 {
     return _sfTabBorderInsets.getValue();
 }
 
 //! Set the value of the TabPanel::_sfTabBorderInsets field.
 inline
-void TabPanelBase::setTabBorderInsets(const Vec2f &value)
+void TabPanelBase::setTabBorderInsets(const Vec4f &value)
 {
     editSField(TabBorderInsetsFieldMask);
 
